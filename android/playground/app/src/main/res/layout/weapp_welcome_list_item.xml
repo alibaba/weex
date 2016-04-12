@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout 
+	android:id="@+id/welcome_list_item_layout" 
+	android:layout_width="fill_parent" 
+	xmlns:android="http://schemas.android.com/apk/res/android" 
+	android:layout_height="wrap_content" 
+	android:paddingBottom="4dip" 
+	android:paddingLeft="12dip"
+	android:paddingRight="12dip">
+<TextView 
+	android:paddingTop="12dip"
+	android:layout_alignParentRight="true"
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content" 
+	android:visibility="gone"
+	android:id="@+id/ItemTextHide"
+	/> 
+<TextView 
+    android:text="TextView01" 
+    android:layout_height="wrap_content" 
+    android:textSize="20dip" 
+    android:layout_width="fill_parent" 
+    android:id="@+id/ItemTitle"
+    />
+<TextView 
+	android:text="TextView02" 
+	android:layout_height="wrap_content" 
+	android:layout_width="fill_parent" 
+	android:layout_below="@+id/ItemTitle" 
+	android:id="@+id/ItemText"
+	android:textColor="#999999"
+	/>
+</RelativeLayout>

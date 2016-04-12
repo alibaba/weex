@@ -1,0 +1,23 @@
+# Created by IDE
+.idea/
+
+# Created by Builder
+examples/build
+test/build
+weex_tmp
+
+# Node
+logs
+*.log
+npm-debug.log*
+node_modules
+.npm
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# Compiled binary addons (http://nodejs.org/api/addons.html)
+build
+release

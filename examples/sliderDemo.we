@@ -1,0 +1,248 @@
+<template>
+  <scroller class="body">
+
+    <ui-panel title="auto-play = false">
+      <slider class="slider" append="tree" interval="{{sliders[1].interval}}" auto-play="false">
+        <indicator class="indicator"></indicator>
+        <sliderpage repeat="{{sliders[1].sliderPages}}"></sliderpage>
+      </slider>
+    </ui-panel>
+
+    <ui-panel title="auto-play = true">
+      <slider class="slider" append="tree" interval="{{sliders[0].interval}}" auto-play="{{sliders[0].autoPlay}}">
+        <indicator class="indicator"></indicator>
+        <sliderpage repeat="{{sliders[0].sliderPages}}"></sliderpage>
+      </slider>
+    </ui-panel>
+
+    <ui-panel title="Event, {{eventCnt}} change">
+      <slider class="slider" append="tree" interval="{{sliders[0].interval}}" auto-play="{{sliders[0].autoPlay}}"
+              onchange="handleSliderChange">
+        <indicator class="indicator"></indicator>
+        <sliderpage repeat="{{sliders[0].sliderPages}}"></sliderpage>
+      </slider>
+    </ui-panel>
+
+    <ui-panel title="Indicator">
+      <slider class="slider" append="tree" interval="{{sliders[0].interval}}" auto-play="{{sliders[0].autoPlay}}"
+              onchange="handleSliderChange">
+        <indicator class="indicator"></indicator>
+        <sliderpage repeat="{{sliders[0].sliderPages}}"></sliderpage>
+      </slider>
+    </ui-panel>
+
+    <ui-panel title="Default indicator style">
+      <slider class="slider" append="tree" interval="{{sliders[0].interval}}" auto-play="{{sliders[0].autoPlay}}">
+        <indicator style="width:714;height:460;"></indicator>
+        <sliderpage repeat="{{sliders[0].sliderPages}}"></sliderpage>
+      </slider>
+    </ui-panel>
+
+    <ui-panel title="Indicator left & top">
+      <slider class="slider" append="tree" interval="{{sliders[1].interval}}" auto-play="{{sliders[1].autoPlay}}">
+        <indicator class="indicator" style="top:-140;left:-240"></indicator>
+        <sliderpage repeat="{{sliders[1].sliderPages}}"></sliderpage>
+      </slider>
+    </ui-panel>
+
+    <ui-panel title="Indicator itemColor & itemSelectedColor">
+      <slider class="slider" append="tree" interval="{{sliders[2].interval}}" auto-play="{{sliders[2].autoPlay}}">
+        <indicator class="indicator" style="itemColor:#ffffff;itemSelectedColor:rgb(217, 83, 79);"></indicator>
+        <sliderpage repeat="{{sliders[2].sliderPages}}"></sliderpage>
+      </slider>
+    </ui-panel>
+
+    <ui-panel title="Indicator itemSize">
+      <slider class="slider" append="tree" interval="{{sliders[1].interval}}" auto-play="{{sliders[1].autoPlay}}">
+        <indicator style="itemSize:40;top:160;left:180;width:714;height:460;"></indicator>
+        <sliderpage repeat="{{sliders[1].sliderPages}}"></sliderpage>
+      </slider>
+    </ui-panel>
+
+  </scroller>
+
+</template>
+
+<script>
+  module.exports = {
+    data: {
+      eventCnt: 0,
+      togglePlayMsg: '停止',
+      sliders: [
+        {
+          interval: 1000,
+          autoPlay: true,
+          sliderPages: [
+            {
+              items: [
+                {
+                  image: '//img.alicdn.com/bao/uploaded/i4/TB1RDldGFXXXXXaXVXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
+                  link: '//h5.m.taobao.com/1'
+                },
+                {
+                  image: '//img.alicdn.com/bao/uploaded/i3/TB1InZqKVXXXXauXXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
+                  link: '//h5.m.taobao.com/1'
+                }
+              ]
+            },
+            {
+              items: [
+                {
+                  image: '//img.alicdn.com/bao/uploaded/i4/TB1fj6dGpXXXXXTXXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
+                  link: '//h5.m.taobao.com/1'
+                },
+                {
+                  image: '//img.alicdn.com/bao/uploaded/i2/TB18nR_HFXXXXbOXpXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
+                  link: '//h5.m.taobao.com/1'
+                }
+              ]
+            },
+            {
+              items: [
+                {
+                  image: '//img.alicdn.com/bao/uploaded/i3/TB1AoudGFXXXXXuaXXXXXXXXXXX_!!0-item_pic.jpg',
+                  link: '//h5.m.taobao.com/1'
+                },
+                {
+                  image: '//img.alicdn.com/bao/uploaded/i3/TB1oXeULpXXXXazXpXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
+                  link: '//h5.m.taobao.com/1'
+                }
+              ]
+            }
+          ]
+        },
+        {
+          interval: 3000,
+          autoPlay: true,
+          sliderPages: [
+            {
+              items: [
+                {
+                  image: '//gd2.alicdn.com/bao/uploaded/i2/TB1o2HIIFXXXXbVXpXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg_.webp',
+                  link: '//h5.m.taobao.com/1'
+                },
+                {
+                  image: '//gd2.alicdn.com/bao/uploaded/i2/T1yViwFDhcXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
+                  link: '//h5.m.taobao.com/1'
+                }
+              ]
+            },
+            {
+              items: [
+                {
+                  image: '//gd1.alicdn.com/bao/uploaded/i1/TB1H2LZHFXXXXa_XXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
+                  link: '//h5.m.taobao.com/1'
+                },
+                {
+                  image: '//gd1.alicdn.com/bao/uploaded/i1/TB1ZxI0FpXXXXb7bVXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
+                  link: '//h5.m.taobao.com/1'
+                }
+              ]
+            },
+            {
+              items: [
+                {
+                  image: '//gd2.alicdn.com/bao/uploaded/i2/TB1jBMaJpXXXXXMXVXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg_.webp',
+                  link: '//h5.m.taobao.com/1'
+                },
+                {
+                  image: '//gd4.alicdn.com/bao/uploaded/i4/TB1i8vQJFXXXXbvXVXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg_.webp',
+                  link: '//h5.m.taobao.com/1'
+                }
+              ]
+            }
+          ]
+        },
+        {
+          interval: 5000,
+          autoPlay: true,
+          sliderPages: [
+            {
+              items: [
+                {
+                  image: '//img.alicdn.com/bao/uploaded/i4/TB1RDldGFXXXXXaXVXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
+                  link: '//h5.m.taobao.com/1'
+                },
+                {
+                  image: '//img.alicdn.com/bao/uploaded/i3/TB1InZqKVXXXXauXXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
+                  link: '//h5.m.taobao.com/1'
+                }
+              ]
+            },
+            {
+              items: [
+                {
+                  image: '//img.alicdn.com/bao/uploaded/i4/TB1fj6dGpXXXXXTXXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
+                  link: '//h5.m.taobao.com/1'
+                },
+                {
+                  image: '//img.alicdn.com/bao/uploaded/i2/TB18nR_HFXXXXbOXpXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
+                  link: '//h5.m.taobao.com/1'
+                }
+              ]
+            },
+            {
+              items: [
+                {
+                  image: '//img.alicdn.com/bao/uploaded/i3/TB1AoudGFXXXXXuaXXXXXXXXXXX_!!0-item_pic.jpg',
+                  link: '//h5.m.taobao.com/1'
+                },
+                {
+                  image: '//img.alicdn.com/bao/uploaded/i3/TB1oXeULpXXXXazXpXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
+                  link: '//h5.m.taobao.com/1'
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    methods: {
+      ready: function() {
+      },
+      togglePlay: function() {
+        var autoPlay = this.sliders[0].autoPlay
+        autoPlay = !autoPlay
+        this.sliders[0].autoPlay = autoPlay
+        this.togglePlayMsg = autoPlay ? 'pause' : 'play'
+      },
+      handleSliderChange: function() {
+        var nowCnt = this.eventCnt + 1
+        this.eventCnt = nowCnt
+      },
+      setInterval1: function() {
+        this.sliders[0].interval = 1000;
+      },
+      setInterval3: function() {
+        this.sliders[0].interval = 3000;
+      },
+      setInterval5: function() {
+        this.sliders[0].interval = 5000;
+      }
+    }
+  };
+</script>
+
+<style>
+  .body {
+    background-color: #ffffff;
+  }
+
+  .slider {
+    flex-direction: row;
+    /*margin-left: 18;*/
+    /*margin-right: 18;*/
+    width: 714;
+    height: 400;
+  }
+
+  .indicator {
+    position: absolute;
+    width: 714;
+    height: 460;
+    top: 160;
+    left: 240;
+    itemColor: #666666;
+    itemSelectedColor: rgb(40, 96, 144);
+  }
+</style>

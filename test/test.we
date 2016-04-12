@@ -1,0 +1,5 @@
+<template>
+  <container>
+    <text>Test</text>
+  </container>
+</template>

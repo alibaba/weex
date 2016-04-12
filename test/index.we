@@ -1,0 +1,48 @@
+<template>
+  <list>
+    <cell repeat="{{cases}}">
+      <indexItem title="{{title}}" url="{{url}}"></indexItem>
+    </cell>
+  </list>
+</template>
+
+<script>
+  // TODO ontouch highlight
+  module.exports = {
+    data: {
+      cases: [
+        {name: 'test', title: 'Test', url: ''},
+        {name: 'test', title: 'Test', url: ''},
+        {name: 'test', title: 'Test', url: ''},
+        {name: 'test', title: 'Test', url: ''},
+        {name: 'test', title: 'Test', url: ''},
+        {name: 'test', title: 'Test', url: ''},
+        {name: 'test', title: 'Test', url: ''},
+        {name: 'test', title: 'Test', url: ''},
+        {name: 'test', title: 'Test', url: ''}
+      ]
+    },
+    created: function() {
+      var useLocal = true; // false when releasing
+      var localBase = '//localhost:12580/test/build/';
+      var nativeBase = '//groups.alidemo.cn/weex/weex/test/build/';
+      var h5Base = './index.html?page=../../test/build/';
+
+      // in native
+      var base = useLocal ? localBase : nativeBase;
+      // in browser or WebView
+      if (typeof window === 'object') {
+        base = h5Base;
+      }
+
+      for (var i in this.cases) {
+        var ca = this.cases[i];
+        ca.url = base + ca.name + '.js';
+      }
+      //nativeLog('hit', this.cases[0].url);
+    }
+  }
+</script>
+
+<style>
+</style>

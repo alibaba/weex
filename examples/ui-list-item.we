@@ -1,0 +1,28 @@
+<template>
+  <container class="item" onclick="{{click}}">
+    <content></content>
+  </container>
+</template>
+
+<style>
+  .item {
+    padding-top: 25px;
+    padding-bottom: 25px;
+    padding-left: 35px;
+    padding-right: 35px;
+    height: 160px;
+    justify-content: center;
+    /*align-items: center;*/
+    background-color: #ffffff;
+    margin-bottom: 1px; /*FIXME @yinfeng*/
+    border-bottom-width: 1px;
+    border-color: #dddddd;
+  }
+</style>
+
+<script>
+  module.exports = {
+    data: {
+    }
+  }
+</script>

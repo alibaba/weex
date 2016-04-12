@@ -1,0 +1,133 @@
+<!doctype html>
+<html class="no-js" lang="en">
+    
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"
+        />
+        <title>Weex</title>
+        <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+        <link rel="stylesheet" href="css/vendor/foundation.min.css" />
+        <link rel="stylesheet" href="css/site.css" />
+    </head>
+    
+    <body>
+        <div class="header">
+            <div class="top-bar">
+                <div class="top-bar-title"></div>
+                <div class="top-bar-left">
+                    <ul class="dropdown menu" data-dropdown-menu>
+                        <li>
+                            <script>
+                                if( location.pathname.indexOf("html") == -1  ||  location.pathname.indexOf("index.html") != -1 ){
+                                     document.write("Weex")          
+                                  }else{
+                                     document.write("<a href='index.html'>Weex</a>")          
+                                  }
+                            </script>
+                        </li>
+                        <li> <a href="http://alibaba.github.io/weex/en-docs/index.html">Docs</a>
+
+                            <ul class="menu vertical">
+                                <li><a href="http://alibaba.github.io/weex/en-docs/tutorial.html">Tautorial</a>
+                                </li>
+                                <li><a href="http://alibaba.github.io/weex/en-docs/syntax.html">Syntax</a>
+                                </li>
+                                <li><a href="http://alibaba.github.io/weex/en-docs/android/integrating.html">Integrating</a>
+                                </li>
+                                <li><a href="http://alibaba.github.io/weex/en-docs/core-concepts/event.html">Core Concepts</a>
+                                </li>
+                                <li><a href="http://alibaba.github.io/weex/en-docs/components/common-attrs.html">Components</a>
+                                </li>
+                                <li><a href="http://alibaba.github.io/weex/en-docs/tool/weex-cli.html">Tools</a>
+                                </li>
+                                <li><a href="http://alibaba.github.io/weex/en-docs/demo/hello-world.html">Demo</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <script>
+                                if( location.pathname.indexOf("demo.html") != -1 ){
+                                     document.write("Demo")          
+                                  }else{
+                                     document.write("<a href='demo.html'>Demo</a>")          
+                                  }
+                            </script>
+                        </li>
+                        <li>
+                            <script>
+                                if( location.pathname.indexOf("community.html") != -1 ){
+                                     document.write("Community")          
+                                  }else{
+                                     document.write("<a href='community.html'>Community</a>")          
+                                  }
+                            </script>
+                        </li>
+                    </ul>
+                </div>
+                <div class="top-bar-right">
+                    <ul class="menu">
+                        <li><a href="https://github.com/alibaba/weex/">Github</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="intro">some weex show</div>
+        <div class="demo-cover">
+            <div class="row">
+                <div class="small-4 columns" data-url="//alibaba.github.io/weex/en-docs/demo/hello-world.html">
+                    <div>
+                        <img src="img/demo/start-1.png" />
+                    </div>
+                    <div class="demo-title">Hello World</div>
+                </div>
+                <div class="small-4 columns" data-url="//alibaba.github.io/weex/en-docs/demo/modal_collection.html" >
+                    <div>
+                        <img src="http://gtms01.alicdn.com/tps/i1/TB1BR.3MXXXXXbTXpXXOxa1_pXX-622-1104.jpg" />
+                    </div>
+                    <div class="demo-title">Modal Collection</div>
+                </div>
+                <div class="small-4 columns" data-url="//alibaba.github.io/weex/en-docs/demo/animation.html">
+                    <div>
+                        <img src="http://gtms02.alicdn.com/tps/i2/TB19xUQMXXXXXc0XFXX0xzaVVXX-640-1112.gif" />
+                    </div>
+                    <div class="demo-title">Animation</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="small-4 columns" data-url="//alibaba.github.io/weex/en-docs/demo/mine_sweeper.html"  >
+                    <div>
+                        <img src="http://gtms04.alicdn.com/tps/i4/TB1dX3LMXXXXXbDXVXXcprE6XXX-618-1103.jpg" />
+                    </div>
+                    <div class="demo-title">Mine Sweeper</div>
+                </div>
+                <div class="small-4 columns"  data-url="http://alibaba.github.io/weex/en-docs/demo/mine_sweeper.html" >
+                    <div>
+                        <img src="http://gtms03.alicdn.com/tps/i3/TB1pQENMXXXXXaLXVXXkIFHLVXX-624-1105.jpg" />
+                    </div>
+                    <div class="demo-title">Weex Calcuator</div>
+                </div>
+                <div class="small-4 columns" data-url="//alibaba.github.io/weex/en-docs/demo/skeleton_animation.html"  >
+                    <div>
+                        <img src="http://gtms04.alicdn.com/tps/i4/TB1XnwPMXXXXXXbXVXXBMpHLVXX-624-1106.gif" />
+                    </div>
+                    <div class="demo-title">Skeleton Animation</div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script src="js/vendor/jquery.min.js"></script>
+    <script src="js/vendor/what-input.min.js"></script>
+    <script src="js/vendor/foundation.min.js"></script>
+    <script>
+        $(document).foundation();
+    </script>
+    <script>
+        $(".demo-cover [data-url]").click(function(e){
+               window.location =  e.currentTarget.dataset["url"]
+           })
+    </script>
+
+</html>

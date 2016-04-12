@@ -1,0 +1,85 @@
+<template>
+  <scroller class="body">
+
+    <ui-panel title="Title Levels">
+      <ui-hn repeat="{{levels}}" level="{{level}}" value="H{{level}}, Level {{level}}"></ui-hn>
+    </ui-panel>
+
+    <ui-panel title="Buttons" append="tree">
+      <div style="flex-direction: row; margin-top: 10px" repeat="{{buttons}}">
+        <ui-button type="{{type}}" size="large" value="{{type}}" click="{{buttonClick}}"
+                   style=""></ui-button>
+        <ui-button type="{{type}}" size="middle" value="{{type}}" click="{{buttonClick}}"
+                   style="margin-left:10px"></ui-button>
+        <ui-button type="{{type}}" size="small" value="{{type}}" click="{{buttonClick}}"
+                   style="margin-left:10px"></ui-button>
+      </div>
+    </ui-panel>
+
+    <ui-panel title="Panels">
+      <ui-panel repeat="{{panels}}" title="Panels-{{type}}" type="{{type}}" border="1"
+                style="margin-left: 12px;margin-right: 12px;">
+        <text>Panels {{type}} content. Panels {{type}} content. Panels {{type}} content.</text>
+      </ui-panel>
+    </ui-panel>
+
+    <ui-panel title="List">
+      <ui-list-item repeat="{{tips}}">
+        <text class="item-txt">{{type}}</text>
+      </ui-list-item>
+    </ui-panel>
+
+    <ui-panel title="Tips">
+      <ui-tip repeat="{{tips}}" value="Panels {{type}} content. Panels {{type}} content. Panels {{type}} content."></ui-tip>
+    </ui-panel>
+
+  </scroller>
+</template>
+
+<script>
+  module.exports = {
+    data: {
+      levels: [
+        {level: 1},
+        {level: 2},
+        {level: 3}
+      ],
+      buttons: [
+        {type: 'default'},
+        {type: 'primary'},
+        {type: 'success'},
+        {type: 'info'},
+        {type: 'warning'},
+        {type: 'danger'},
+        {type: 'link'}
+      ],
+      panels: [
+        {type: 'default'},
+        {type: 'primary'},
+        {type: 'success'},
+        {type: 'info'},
+        {type: 'warning'},
+        {type: 'danger'}
+      ],
+      tips: [
+        {type: 'success'},
+        {type: 'info'},
+        {type: 'warning'},
+        {type: 'danger'}
+      ]
+    },
+    methods: {
+      buttonClick: function(ev) {
+        console.log(ev);
+        this.$call('modal', 'toast', {'message': 'clicked!', duration: 0.5});
+      }
+    }
+  }
+</script>
+
+<style>
+  .item-txt {
+    font-size: 48px;
+    color: #555555;
+  }
+</style>
