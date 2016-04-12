@@ -7,22 +7,42 @@ Welcome to create pull requests or open issues for code bugs, doc, examples and 
 
 ## Commit Log
 
-EBNF:
-
-```EBNF
-*|+|-
-`[[android|ios|jsfm|h5|doc|website|example|test|all]] (...)
-```
-
-e.g.
+FORMAT
 
 ```
-+ [android] add a new feature
-* [jsfm] add a new feature
+{action} [{module}] {description}
 ```
 
-## Branch
+* `{action}`
+    * `+` add
+    * `*` update or bugfix
+    * `-` remove
+* `{module}`
+    * including: android, ios, jsfm, h5, doc, website, example, test, all 
 
-* NAME: [[android|ios|jsfm|]-][feature|bugfix|doc|...]-(...)
-* e.g. `android-feature-refresh`
-* e.g. `android-bugfix-memoryleak`
+for example:
+
+* `+ [android] add refreshing for WebView`
+* `* [doc] update video auto-play property`
+* `- [example] remove abc`
+
+## Branch Name 
+
+Format: 
+
+```
+{action}-{module}-{shortName}
+```
+
+* `{action}`
+    * including: feature, bugfix
+* `{module}`, like commit log keyword
+
+for example:
+
+* `bugfix-android-memoryLeak`
+* `feature-jsfm-communication`
+
+## Pull Request
+
+[Create Pull Requests](https://github.com/alibaba/weex/compare).

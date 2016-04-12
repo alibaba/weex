@@ -6,16 +6,12 @@ Support Android 4.1 (API 16) and iOS soon. See [Weex website](http://alibaba.git
 
 ## Meet
 
-* Install `/android/playground.apk`.
+* Install [Android Playground](./android/playground.apk).
 
 ## Use
 
 * See [Tutorial](http://alibaba.github.io/weex/doc/tutorial).
 * See [Weex Documentation](http://alibaba.github.io/weex/doc) for more information.
-
-### Dev
-
-
 
 ### Android 
 
