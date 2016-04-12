@@ -18,7 +18,7 @@ FORMAT
     * `*` update or bugfix
     * `-` remove
 * `{module}`
-    * including: android, ios, jsfm, h5, doc, website, example, test, all 
+    * Including: android, ios, jsfm, h5, doc, website, example, test, all 
 
 for example:
 
@@ -35,7 +35,7 @@ Format:
 ```
 
 * `{action}`
-    * including: feature, bugfix
+    * Including: feature, bugfix
 * `{module}`, like commit log keyword
 
 for example:
