@@ -17,7 +17,6 @@ Support Android 4.1 (API 16) and iOS soon. See [Weex website](http://alibaba.git
 
 
 
-
 ### Android 
 
 0. Prerequisites
@@ -36,9 +35,6 @@ Support Android 4.1 (API 16) and iOS soon. See [Weex website](http://alibaba.git
         0. add `{name: 'newExample', title: 'New Example'}` for data.cases
         0. change `localBase` to your local IP
 
-## Contribute
+## Contributing
 
-Welcome to create pull requests or open issues for code bugs, doc, examples and anything.
-
-* [Open Issues](https://github.com/alibaba/weex/issues/new)
-* [Create Pull Requests](https://github.com/alibaba/weex/compare)
+See [Weex Contributing Guide](./CONTRIBUTING.md).
