@@ -1,0 +1,10 @@
+.list-wrap {
+	display: block;
+	overflow: hidden;
+}
+
+.list-element {
+  -webkit-box-orient: vertical;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+}

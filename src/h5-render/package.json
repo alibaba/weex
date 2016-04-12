@@ -1,0 +1,47 @@
+{
+  "name": "weex-html5",
+  "version": "0.2.4",
+  "description": "weex html5 renderer",
+  "contributors": [
+    {
+      "name": "MrRaindrop",
+      "email": "tekkahs@gmail.com"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alibaba/weex_html5"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "animationjs": "^0.1.5",
+    "carrousel": "^0.1.11",
+    "cubicbezier": "^0.1.1",
+    "envd": "^0.1.1",
+    "fixedsticky": "^0.1.0",
+    "httpurl": "^0.1.1",
+    "kountdown": "^0.1.1",
+    "lazyimg": "^0.1.0",
+    "modals": "^0.1.1",
+    "scroll-to": "0.0.2",
+    "scrolljs": "^0.1.0",
+    "transitionize": "0.0.3"
+  },
+  "scripts": {
+    "dev": "webpack --watch --config ./webpack.config.js",
+    "build": "webpack --config ./webpack.config.js",
+    "compress": "uglifyjs dist/index.js -o dist/index.mini.js",
+    "lint": "jscs --config .jscsrc  src/api/*.js src/components/*.js src/bridge/*.js test/e2e/*.js",
+    "ci": "npm run lint"
+  },
+  "main": "src/weex.js",
+  "devDependencies": {
+    "css-loader": "~0.23.1",
+    "jscs": "^2.11.0",
+    "node-sass": "^3.4.2",
+    "sass-loader": "~3.1.2",
+    "style-loader": "~0.13.0",
+    "uglifyjs": "^2.4.10",
+    "webpack": "^1.12.15"
+  }
+}

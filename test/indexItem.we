@@ -1,0 +1,26 @@
+<template>
+  <ui-list-item click="{{redirect}}">
+    <text class="item-txt">{{ title }}</text>
+  </ui-list-item>
+</template>
+
+<style>
+  .item-txt {
+    font-size: 48px;
+    color: #555;
+  }
+</style>
+
+<script>
+  module.exports = {
+    data: {
+      title: '',
+      url: ''
+    },
+    methods: {
+      redirect: function() {
+        this.$openURL(this.url);
+      }
+    }
+  }
+</script>

@@ -1,0 +1,25 @@
+<style>
+  .slideritem {
+    width: 348;
+    height: 400;
+  }
+</style>
+
+<template>
+  <image class="slideritem" src="{{image}}"></image>
+</template>
+
+<script>
+  module.exports = {
+    data: {
+      image: '',
+      link: '',
+      href: ''
+    },
+    methods: {
+      ready: function() {
+        this.href = this.link;
+      }
+    }
+  };
+</script>

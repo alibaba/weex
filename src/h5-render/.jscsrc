@@ -1,0 +1,31 @@
+{
+  "preset": "node-style-guide",
+
+  "disallowKeywordsOnNewLine": [],
+  "disallowMultipleVarDecl": {"allExcept": ["undefined"]},
+  "disallowSemicolons": true,
+  "requireCapitalizedComments": null,
+
+  "requireCurlyBraces": [
+    "if",
+    "else",
+    "for",
+    "while",
+    "do",
+    "try",
+    "catch"
+  ],
+
+  "disallowSpacesInFunction": null,
+  "disallowSpacesInNamedFunctionExpression": {
+    "beforeOpeningRoundBrace": true
+  },
+  "requireSpacesInAnonymousFunctionExpression": {
+    "beforeOpeningRoundBrace": true
+  },
+
+  "disallowSpaceBeforeComma": true,
+  "requireCommaBeforeLineBreak": false,
+  "disallowTrailingComma": true,
+  "requireTrailingComma": null
+}

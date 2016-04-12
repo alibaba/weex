@@ -1,0 +1,35 @@
+<style>
+  .sliderpage {
+    flex-direction: row;
+    justify-content: space-between;
+
+    width: 714;
+    height: 420;
+  }
+</style>
+
+<template>
+  <container class="sliderpage">
+    <slideritem repeat="{{sliderItems}}"></slideritem>
+  </container>
+</template>
+
+<script>
+  module.exports = {
+    data: {
+      items: [],
+      sliderItems: []
+    },
+    methods: {
+      ready: function() {
+        this.sliderItems = this.getSliderItems()
+      },
+      getSliderItems: function() {
+        return this.items.map(function(item, index) {
+          return item;
+        }.bind(this));
+      }
+    }
+  };
+</script>
+

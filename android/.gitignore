@@ -1,0 +1,7 @@
+playground/.gradle/
+playground/.idea/
+playground/build/
+playground/app/app.iml
+playground/app/build/
+playground/local.properties
+playground/playground.iml

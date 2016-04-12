@@ -1,0 +1,16 @@
+.gradle
+.idea
+build
+captures
+local.properties
+target
+gradle/wrapper
+bin
+.classpath
+.project
+.settings
+gen
+*.iml
+lint.xml
+project.properties
+main.js
