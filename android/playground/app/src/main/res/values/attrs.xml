@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircleImageView">
+        <attr name="border_width" format="dimension"/>
+        <attr name="border_color" format="color"/>
+        <attr name="border_overlay" format="boolean"/>
+    </declare-styleable>
+
+    <!-- Declare custom theme attributes that allow changing which styles are
+         used for button bars depending on the API level.
+         ?android:attr/buttonBarStyle is new as of API 11 so this is
+         necessary to support previous API levels. -->
+    <declare-styleable name="ButtonBarContainerTheme">
+        <attr name="metaButtonBarStyle" format="reference"/>
+        <attr name="metaButtonBarButtonStyle" format="reference"/>
+    </declare-styleable>
+</resources>

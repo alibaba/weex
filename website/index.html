@@ -1,0 +1,213 @@
+<!doctype html>
+<html class="no-js" lang="en">
+    
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"
+        />
+        <title>Weex</title>
+        <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+        <link rel="stylesheet" href="css/vendor/foundation.min.css" />
+        <link rel="stylesheet" href="css/site.css" />
+    </head>
+    
+    <body>
+        <div class="header">
+            <div class="top-bar">
+                <div class="top-bar-title"></div>
+                <div class="top-bar-left">
+                    <ul class="dropdown menu" data-dropdown-menu>
+                        <li>
+                            <script>
+                                if( location.pathname.indexOf("html") == -1  ||  location.pathname.indexOf("index.html") != -1 ){
+                                     document.write("Weex")          
+                                  }else{
+                                     document.write("<a href='index.html'>Weex</a>")          
+                                  }
+                            </script>
+                        </li>
+                        <li> <a href="http://alibaba.github.io/weex/en-docs/index.html">Docs</a>
+
+                            <ul class="menu vertical">
+                                <li><a href="http://alibaba.github.io/weex/en-docs/tutorial.html">Tautorial</a>
+                                </li>
+                                <li><a href="http://alibaba.github.io/weex/en-docs/syntax.html">Syntax</a>
+                                </li>
+                                <li><a href="http://alibaba.github.io/weex/en-docs/android/integrating.html">Integrating</a>
+                                </li>
+                                <li><a href="http://alibaba.github.io/weex/en-docs/core-concepts/event.html">Core Concepts</a>
+                                </li>
+                                <li><a href="http://alibaba.github.io/weex/en-docs/components/common-attrs.html">Components</a>
+                                </li>
+                                <li><a href="http://alibaba.github.io/weex/en-docs/tool/weex-cli.html">Tools</a>
+                                </li>
+                                <li><a href="http://alibaba.github.io/weex/en-docs/demo/hello-world.html">Demo</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <script>
+                                if( location.pathname.indexOf("demo.html") != -1 ){
+                                     document.write("Demo")          
+                                  }else{
+                                     document.write("<a href='demo.html'>Demo</a>")          
+                                  }
+                            </script>
+                        </li>
+                        <li>
+                            <script>
+                                if( location.pathname.indexOf("community.html") != -1 ){
+                                     document.write("Community")          
+                                  }else{
+                                     document.write("<a href='community.html'>Community</a>")          
+                                  }
+                            </script>
+                        </li>
+                    </ul>
+                </div>
+                <div class="top-bar-right">
+                    <ul class="menu">
+                        <li><a href="https://github.com/alibaba/weex">Github</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slogan-area">
+            <div class="middle-img">
+                <img src="img/touring.jpg" alt="just-show" />
+            </div>
+            <div class="slogan">
+                 <h1>weex</h1>
+
+                <div class="desc">A framework for building Mobile cross-platform UI</div>
+            </div>
+        </div>
+         <h1 class="align-center">Why Weex?</h1>
+
+        <div class="row features">
+            <div class="small-4 columns">
+                <div class="feature">Lightweight</div>
+                <img src="img/lightweight.png" />
+                <div class="list-wrap">
+                    <ul>
+                        <li>low footprint</li>
+                        <li>simple syntax</li>
+                        <li>easy to use</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="small-4 columns">
+                <div class="feature">Extendable</div>
+                <img src="img/extandable.png">
+                <div class="list-wrap" style="max-width:300px">
+                    <ul>
+                        <li>abundant build-in components</li>
+                        <li>extendable apis</li>
+                        <li>various events</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="small-4 columns">
+                <div class="feature">High Performance</div>
+                <img src="img/highperf.png">
+                <div class="list-wrap">
+                    <ul>
+                        <li>load fast</li>
+                        <li>render fast</li>
+                        <li>better Experience</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+         <h4 class="text-center">Weex  Example</h4>
+
+        <div class="weex-code">
+            <!-- weex source <template>
+  <container class="container"   onclick="goWeexSite" >
+    <image class="thumb" src="http://gtms03.alicdn.com/tps/i3/TB11zL.LFXXXXaTXFXX20ySQVXX-512-512.png"></image>
+    <text class="title">Click me</text>
+  </container>
+</template>
+
+<style>
+  .container{flex-direction: row;}
+  .thumb {width: 200; height: 200;}
+  .title {line-height: 200 ; text-align: center ; flex: 1; color: grey; font-size: 48; font-weight: bold; background-color: #eeeeee;}
+</style>
+
+<script>
+  module.exports = {
+    methods: {
+      goWeexSite: function () {
+        this.$openURL('//alibaba.github.io/weex/en-site/')
+      }
+    }
+  }
+</script>
+          --> <pre style='color:#000000;'>&lt;<span style='color:#800000; font-weight:bold; '>template</span><span style='color:#808030; '>></span>
+  &lt;container class="container"   onclick="goWeexSite" <span style='color:#808030; '>></span>
+    &lt;image class="thumb" src="http<span style='color:#808030; '>:</span>//gtms03.alicdn<span style='color:#808030; '>.</span>com/tps/i3/TB11zL<span style='color:#808030; '>.</span>LFXXXXaTXFXX20ySQVXX-512-512<span style='color:#808030; '>.</span>png"<span style='color:#808030; '>></span>&lt;/image<span style='color:#808030; '>></span>
+    &lt;<span style='color:#800000; font-weight:bold; '>text</span> class="<span style='color:#800000; font-weight:bold; '>title</span>"<span style='color:#808030; '>></span>Click me&lt;/<span style='color:#800000; font-weight:bold; '>text</span><span style='color:#808030; '>></span>
+  &lt;/container<span style='color:#808030; '>></span>
+&lt;/ <span style='color:#800000; font-weight:bold; '>template</span> <span style='color:#808030; '>></span>
+
+&lt;<span style='color:#800000; font-weight:bold; '>style</span><span style='color:#808030; '>></span>
+     <span style='color:#808030; '>.</span>container<span style='color:#800080; '>{</span><span style='color:#bb7977; font-weight:bold; '>flex-direction</span><span style='color:#808030; '>:</span> <span style='color:#074726; '>row</span><span style='color:#800080; '>;</span><span style='color:#800080; '>}</span>
+     <span style='color:#808030; '>.</span>thumb <span style='color:#800080; '>{</span><span style='color:#bb7977; font-weight:bold; '>width</span><span style='color:#808030; '>:</span> <span style='color:#008c00; '>200</span><span style='color:#800080; '>;</span> <span style='color:#bb7977; font-weight:bold; '>height</span><span style='color:#808030; '>:</span> <span style='color:#008c00; '>200</span><span style='color:#800080; '>;</span><span style='color:#800080; '>}</span>
+     <span style='color:#808030; '>.</span>title <span style='color:#800080; '>{</span><span style='color:#bb7977; font-weight:bold; '>line-height</span><span style='color:#808030; '>:</span> <span style='color:#008c00; '>200</span> <span style='color:#800080; '>;</span> <span style='color:#bb7977; font-weight:bold; '>text-align</span><span style='color:#808030; '>:</span> <span style='color:#074726; '>center</span> <span style='color:#800080; '>;</span> <span style='color:#bb7977; font-weight:bold; '>flex</span><span style='color:#808030; '>:</span> <span style='color:#008c00; '>1</span><span style='color:#800080; '>;</span> <span style='color:#bb7977; font-weight:bold; '>color</span><span style='color:#808030; '>:</span> <span style='color:#797997; '>grey</span><span style='color:#800080; '>;</span> <span style='color:#bb7977; font-weight:bold; '>font-size</span><span style='color:#808030; '>:</span> <span style='color:#008c00; '>48</span><span style='color:#800080; '>;</span> <span style='color:#bb7977; font-weight:bold; '>font-weight</span><span style='color:#808030; '>:</span> <span style='color:#074726; '>bold</span><span style='color:#800080; '>;</span> <span style='color:#bb7977; font-weight:bold; '>background-color</span><span style='color:#808030; '>:</span> <span style='color:#008c00; '>#</span><span style='color:#008000; '>eeeeee</span><span style='color:#800080; '>;</span><span style='color:#800080; '>}</span>
+&lt;/<span style='color:#800000; font-weight:bold; '>style</span><span style='color:#808030; '>></span>
+
+&lt;<span style='color:#800000; font-weight:bold; '>script</span><span style='color:#808030; '>></span>
+  module<span style='color:#808030; '>.</span>exports = <span style='color:#800080; '>{</span>
+    methods<span style='color:#808030; '>:</span> {
+      goWeexSite: function <span style='color:#808030; '>(</span><span style='color:#808030; '>)</span> {
+        this.$openURL<span style='color:#808030; '>(</span><span style='color:#800000; '>'</span><span style='color:#0000e6; '>//alibaba.github.io/weex/en-site/</span><span style='color:#800000; '>'</span><span style='color:#808030; '>)</span>
+              <span style='color:#800080; '>}</span>
+          <span style='color:#800080; '>}</span>
+    <span style='color:#800080; '>}</span>
+&lt;/<span style='color:#800000; font-weight:bold; '>script</span><span style='color:#808030; '>></span></pre> 
+        </div>
+        <div class="platform">
+            <div class="mobile-show">
+                <img src="img/weex_in_3.jpg" alt="weex-in-3">
+            </div>
+            <div class="platform-feature">
+                <div class="callout primary">
+                     <h5>Write Once Run Everywhere </h5>
+
+                    <p>100% code reuse across support platforms</p>
+                    <p>keep better consistent interface,save more costs in development</p>
+                </div>
+                <div class="callout primary">
+                     <h5>Native Speed in Native Platform</h5>
+
+                    <p>weex render code in native widget in Android&iOS</p>
+                    <p>preserve the quality of user experience on critical platform</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer-nav" ">
+
+          <a class="start " href="http://alibaba.github.io/weex/en-docs/tutorial.html ">GET STARTED</a>
+
+          <div class="copy-right "> 
+              <p>
+                  Released under <a href="http://www.apache.org/licenses/LICENSE-2.0.txt "> Apache License 2.0 </a>
+              </p>
+              <p>
+                  Copyright(c) 2016  <a href="http://www.alibabagroup.com/ ">Alibaba Group</a>
+              </p>
+          </div>
+      </div>
+      
+  </body>
+  <script src="js/vendor/jquery.min.js "></script>
+<script src="js/vendor/what-input.min.js "></script>
+<script src="js/vendor/foundation.min.js "></script>
+<script>
+ $(document).foundation();
+</script>
+
+</html>

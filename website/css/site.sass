@@ -1,0 +1,126 @@
+@import  vendor/_settings
+
+
+.align-center
+  text-align: center
+
+$header-height: 70px
+  
+.header
+  position: fixed
+  top: 0
+  height: $header-height
+  width: 100%
+  z-index: 10
+  
+.top-bar
+  .top-bar-title
+    height: 50px
+    width: 50px
+    background: url("../img/weex-512.png") no-repeat 
+    background-position: 0px 0px
+    -webkit-background-size: cover
+    background-size: cover
+    position: relative
+
+
+.slogan-area
+  position: relative
+  margin-top: $header-height
+  z-index: 0
+  height: 300px
+  .middle-img
+    height: 300px
+    overflow: hidden
+    img
+      width: 100%
+      position: relative
+      top: -200px
+
+
+  .slogan
+    text-align: center
+    color: white
+    position: relative
+    top: -200px
+
+.features
+  >div
+    text-align: center
+  ul
+    text-align: left
+    list-style: none
+  .list-wrap    
+    margin: 0 auto
+    max-width: 190px
+    li:before
+      content: '\2022'
+      position: absolute
+      margin-left: -30px
+      color: #2199e8
+
+.weex-code
+  background-color: rgb(241, 241, 241)
+  margin-top: 10px
+  margin-left: 40px
+  margin-right: 40px
+
+
+.platform
+  margin-top: 10px  
+  .mobile-show
+    float: left
+    img
+      width: 500px
+      width: 500px
+      margin-left: 40px
+
+  .platform-feature
+    float: right
+    margin-right: 40px
+
+.footer-nav
+  height: 240px
+  clear: both
+  background-color: rgb(8, 90, 120)
+  color: white
+  text-align: center
+  a
+    color: white
+  .start
+    letter-spacing: 1px
+    margin: 40px
+    padding: 12px 20px
+    display: inline-block
+    border: 1px solid #fff
+    border-radius: 25px
+  .copy-right
+    font-size: $cite-font-size    
+    a
+      text-decoration: underline
+
+    
+
+//demo
+.intro
+  margin-top: $header-height + 7px
+  text-align: center
+
+.demo-cover
+  width: 80%
+  margin: 0 auto
+  .row
+    margin-top: 10px
+    margin-bottom: 10px
+    .img
+      width: 80%
+    .demo-title
+      text-align: center
+  [data-url]
+    cursor: pointer    
+
+//community
+.community-info
+  margin: 0 20px
+  margin-top: $header-height + 7px
+  

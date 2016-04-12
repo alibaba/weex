@@ -1,0 +1,10 @@
+.weex-indicators {
+  position: absolute;
+  white-space: nowrap;
+
+  .weex-indicator {
+  	display: inline-block;
+    border-radius: 50%;
+  }
+
+}

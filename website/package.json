@@ -1,0 +1,26 @@
+{
+  "name": "weex-site",
+  "version": "1.0.0",
+  "description": "weex opensource website",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "scripts/lib-deploy.sh",
+    "gen":   "scripts/gen-html.js" ,
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alibaba/weex.git"
+  },
+  "keywords": [
+    "weex",
+    "website"
+  ],
+  "author": "lvyi",
+  "license": "Apache",
+  "devDependencies": {
+     "foundation-sites": "^6.1.2",
+      "underscore": "^1.8.3" ,
+      "html": "^0.0.10"
+  }
+}

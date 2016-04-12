@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">WeexApps_Android</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_wx_main">WXMainActivity</string>
+
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">WEEX\nCONTENT</string>
+</resources>

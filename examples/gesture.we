@@ -1,0 +1,318 @@
+<style>
+</style>
+
+<template>
+  <container style="height: 2000" ontouchstart="touchstartHandler" ontouchmove="touchmoveHandler" ontouchend="touchendHandler" onpanstart="panstartHandler" onpanmove="panmoveHandler" onpanend="panendHandler" onlongpress="longpressHandler">
+      <container if="{{infos.touchstart.display}}">
+        <text class="title">touchstart</text>
+        <container>
+          <container class="row">
+            <text class="item">the count of touch: {{infos.touchstart.changedTouches}}</text>
+            <text class="item">identifier: {{infos.touchstart.identifier}}</text>
+          </container>
+          <container class="row">
+            <text class="item">pageX: {{infos.touchstart.pageX}}</text>
+            <text class="item">pageY: {{infos.touchstart.pageY}}</text>
+          </container>
+          <container class="row">
+            <text class="item">screenX: {{infos.touchstart.screenX}}</text>
+            <text class="item">screenY: {{infos.touchstart.screenY}}</text>
+          </container>
+        </container>
+      </container>
+      <container if="{{infos.touchmove.display}}">
+        <text class="title">touchmove</text>
+        <container>
+          <container class="row">
+            <text class="item">the count of touch: {{infos.touchmove.changedTouches}}</text>
+            <text class="item">identifier: {{infos.touchmove.identifier}}</text>
+          </container>
+          <container class="row">
+            <text class="item">pageX: {{infos.touchmove.pageX}}</text>
+            <text class="item">pageY: {{infos.touchmove.pageY}}</text>
+          </container>
+          <container class="row">
+            <text class="item">screenX: {{infos.touchmove.screenX}}</text>
+            <text class="item">screenY: {{infos.touchmove.screenY}}</text>
+          </container>
+        </container>
+      </container>
+      <container if="{{infos.touchend.display}}">
+        <text class="title">touchend</text>
+        <container>
+          <container class="row">
+            <text class="item">the count of touch: {{infos.touchend.changedTouches}}</text>
+            <text class="item">identifier: {{infos.touchend.identifier}}</text>
+          </container>
+          <container class="row">
+            <text class="item">pageX: {{infos.touchend.pageX}}</text>
+            <text class="item">pageY: {{infos.touchend.pageY}}</text>
+          </container>
+          <container class="row">
+            <text class="item">screenX: {{infos.touchend.screenX}}</text>
+            <text class="item">screenY: {{infos.touchend.screenY}}</text>
+          </container>
+        </container>
+      </container>
+      <container if="{{infos.panstart.display}}">
+        <text class="title">panstart</text>
+        <container>
+          <container class="row">
+            <text class="item">the count of touch: {{infos.panstart.changedTouches}}</text>
+            <text class="item">identifier: {{infos.panstart.identifier}}</text>
+          </container>
+          <container class="row">
+            <text class="item">pageX: {{infos.panstart.pageX}}</text>
+            <text class="item">pageY: {{infos.panstart.pageY}}</text>
+          </container>
+          <container class="row">
+            <text class="item">screenX: {{infos.panstart.screenX}}</text>
+            <text class="item">screenY: {{infos.panstart.screenY}}</text>
+          </container>
+        </container>
+      </container>
+      <container if="{{infos.panmove.display}}">
+        <text class="title">panmove</text>
+        <container>
+          <container class="row">
+            <text class="item">the count of touch: {{infos.panmove.changedTouches}}</text>
+            <text class="item">identifier: {{infos.panmove.identifier}}</text>
+          </container>
+          <container class="row">
+            <text class="item">pageX: {{infos.panmove.pageX}}</text>
+            <text class="item">pageY: {{infos.panmove.pageY}}</text>
+          </container>
+          <container class="row">
+            <text class="item">screenX: {{infos.panmove.screenX}}</text>
+            <text class="item">screenY: {{infos.panmove.screenY}}</text>
+          </container>
+        </container>
+      </container>
+      <container if="{{infos.panend.display}}">
+        <text class="title">panend</text>
+        <container>
+          <container class="row">
+            <text class="item">the count of touch: {{infos.panend.changedTouches}}</text>
+            <text class="item">identifier: {{infos.panend.identifier}}</text>
+          </container>
+          <container class="row">
+            <text class="item">pageX: {{infos.panend.pageX}}</text>
+            <text class="item">pageY: {{infos.panend.pageY}}</text>
+          </container>
+          <container class="row">
+            <text class="item">screenX: {{infos.panend.screenX}}</text>
+            <text class="item">screenY: {{infos.panend.screenY}}</text>
+          </container>
+        </container>
+      </container>
+      <container if="{{infos.longpress.display}}">
+        <text class="title">longpress</text>
+        <container>
+          <container class="row">
+            <text class="item">the count of touch: {{infos.longpress.changedTouches}}</text>
+            <text class="item">identifier: {{infos.longpress.identifier}}</text>
+          </container>
+          <container class="row">
+            <text class="item">pageX: {{infos.longpress.pageX}}</text>
+            <text class="item">pageY: {{infos.longpress.pageY}}</text>
+          </container>
+          <container class="row">
+            <text class="item">screenX: {{infos.longpress.screenX}}</text>
+            <text class="item">screenY: {{infos.longpress.screenY}}</text>
+          </container>
+        </container>
+      </container>
+      <container class="block" style="left:{{block.left}};top:{{block.top}};background-color:{{block.backgroundColor}};width:{{block.width}};height: {{block.height}};position:absolute;"></container>
+  </container>
+</template>
+
+
+<style>
+.row {
+  flex-direction: row;
+}
+
+.title {
+  font-size: 30;
+  background-color: #333;
+  color: #FFF;
+  margin-top: 4;
+  margin-bottom: 4;
+  margin-left: 4;
+  margin-right: 4;
+}
+
+.item {
+  font-size: 26;
+  margin-top: 2;
+  margin-bottom: 2;
+  margin-left: 5;
+  margin-right: 5;
+}
+
+</style>
+
+<script>
+  module.exports = {
+    data: {
+      block: {
+        moving: false,
+        width: 100,
+        height: 100,
+        left: 300,
+        top: 500,
+        backgroundColor: 'red'
+      },
+      keys: [
+        'pageX', 'pageY', 'screenX', 'screenY', 'identifier'
+      ],
+      infos: {
+        touchstart: {
+          changedTouches: 0,
+          display: true,
+          pageX: -1,
+          pageY: -1,
+          screenX: -1,
+          screenY: -1,
+          identifier: 0
+        },
+        touchmove: {
+          changedTouches: 0,
+          display: true,
+          pageX: -1,
+          pageY: -1,
+          screenX: -1,
+          screenY: -1,
+          identifier: 0
+        },
+        touchend: {
+          changedTouches: 0,
+          display: true,
+          pageX: -1,
+          pageY: -1,
+          screenX: -1,
+          screenY: -1,
+          identifier: 0
+        },
+        panstart: {
+          changedTouches: 0,
+          display: true,
+          pageX: -1,
+          pageY: -1,
+          screenX: -1,
+          screenY: -1,
+          identifier: 0
+        },
+        panmove: {
+          changedTouches: 0,
+          display: true,
+          pageX: -1,
+          pageY: -1,
+          screenX: -1,
+          screenY: -1,
+          identifier: 0
+        },
+        panend: {
+          changedTouches: 0,
+          display: true,
+          pageX: -1,
+          pageY: -1,
+          screenX: -1,
+          screenY: -1,
+          identifier: 0
+        },
+        longpress: {
+          changedTouches: 0,
+          display: true,
+          pageX: -1,
+          pageY: -1,
+          screenX: -1,
+          screenY: -1,
+          identifier: 0
+        }
+      }
+    },
+    methods: {
+      clearTouchData: function(type) {
+        var vm = this;
+        vm.infos[type].display = true;
+        vm.infos[type].changedTouches = 0;
+        vm.keys.forEach(function(key) {
+          vm.infos[type][key] = -1;
+        });
+      },
+      setTouchData: function(type, data) {
+        var vm = this;
+        nativeLog(type)
+        vm.infos[type].display = true;
+        vm.infos[type].changedTouches = data.changedTouches.length;
+
+        var touch = data.changedTouches[0];
+        if (touch) {
+          vm.keys.forEach(function(key) {
+            vm.infos[type][key] = touch[key]
+          })
+        } else {
+          vm.clearTouchData(type)
+        }
+      },
+      checkIfOnBlock: function(e) {
+        var touch = e.changedTouches[0];
+        return (touch.pageX > this.block.left 
+              && touch.pageX < this.block.left + this.block.width 
+              && touch.pageY > this.block.top
+              && touch.pageY < this.block.top + this.block.height);
+      },
+      touchstartHandler: function (e) {
+        // this.clearTouchData('touchmove')
+        // this.clearTouchData('touchend')
+        this.setTouchData('touchstart', e);
+      },
+      touchmoveHandler: function(e) {
+        // this.clearTouchData('touchstart')
+        this.setTouchData('touchmove', e);
+      },
+      touchendHandler: function(e) {
+        // this.clearTouchData('touchmove')
+        this.setTouchData('touchend', e);
+      },
+      panstartHandler: function(e) {
+        // this.clearTouchData('panmove')
+        // this.clearTouchData('panend')
+        this.setTouchData('panstart', e);
+        if (this.checkIfOnBlock(e)) {
+          this.block.moving = true;
+          var touch = e.changedTouches[0];
+          this.block.lastX = touch.pageX;
+          this.block.lastY = touch.pageY;
+        }
+      },
+      panmoveHandler: function(e) {
+        // this.clearTouchData('panstart')
+        this.setTouchData('panmove', e);
+        if (this.block.moving) {
+          var touch = e.changedTouches[0];
+          this.block.left += touch.pageX - this.block.lastX;
+          this.block.top += touch.pageY - this.block.lastY;
+          this.block.lastX = touch.pageX;
+          this.block.lastY = touch.pageY;
+        }
+      },
+      panendHandler: function(e) {
+        // this.clearTouchData('panmove')
+        this.setTouchData('panend', e);
+        this.block.moving = false;
+      },
+      longpressHandler: function(e) {
+        // this.clearTouchData('touchstart')
+        // this.clearTouchData('touchmove')
+        // this.clearTouchData('panstart')
+        this.setTouchData('longpress', e);
+        var r = parseInt(Math.random() * 255);
+        var g = parseInt(Math.random() * 255);
+        var b = parseInt(Math.random() * 255);
+        this.block.backgroundColor = 'rgb(' + [r,g,b].join(',') + ')';
+      }
+    }
+  }
+</script>
