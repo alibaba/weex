@@ -13,8 +13,6 @@
       value: ''
     },
     methods: {
-      ready: function() {
-      }
     }
   }
 </script>
@@ -155,6 +153,12 @@
 
   .btn-txt-sz-small {
     font-size: 30px;
+  }
+
+  /*DISABLED*/
+
+  .disabled {
+    
   }
 
 </style>
