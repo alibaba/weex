@@ -99,24 +99,37 @@ export function updateActions(addonTasks) {
   }
 }
 
-export function fireEvent(ref, type, e) {
+export function fireEvent(ref, type, e, domChanges) {
+  if (Array.isArray(ref)) {
+    ref.some((ref) => {
+      return this.fireEvent(ref, type, e) !== false
+    })
+    return
+  }
+
   const el = this.doc.getRef(ref)
+
   if (el) {
     perf.start('manage event', ref + '-' + type)
     e = e || {}
     e.type = type
     e.target = el
     e.timestamp = Date.now()
-    this.eventManager.fire(el, type, e)
+    if (domChanges) {
+      updateElement(el, domChanges)
+    }
+    const result = this.eventManager.fire(el, type, e)
     perf.end('manage event', ref + '-' + type)
     this.updateActions()
-  } else {
-    return new Error(`invalid element reference "${ref}"`)
+    return result
   }
+
+  return new Error(`invalid element reference "${ref}"`)
 }
 
 export function callback(callbackId, data, ifLast) {
   const callback = this.callbacks[callbackId]
+
   if (typeof callback === 'function') {
     callback(data) // data is already a object, @see: lib/framework.js
 
@@ -125,9 +138,10 @@ export function callback(callbackId, data, ifLast) {
     }
 
     this.updateActions()
-  } else {
-    return new Error(`invalid callback id "${callbackId}"`)
+    return
   }
+
+  return new Error(`invalid callback id "${callbackId}"`)
 }
 
 export function refreshData(data) {
@@ -140,7 +154,20 @@ export function refreshData(data) {
       extend(vm, data)
     }
     this.updateActions([createAction('refreshFinish', [])])
-  } else {
-    return new Error(`invalid data "${data}"`)
+    return
+  }
+
+  return new Error(`invalid data "${data}"`)
+}
+
+function updateElement(el, changes) {
+  const attrs = changes.attrs || {}
+  for (const name in attrs) {
+    el.setAttr(name, attrs)
+  }
+  const style = changes.style || {}
+  for (const name in style) {
+    el.setStyle(name, style[name])
   }
 }
+

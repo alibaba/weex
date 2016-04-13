@@ -86,7 +86,10 @@ export function _generate(target, parentEl, context) {
 
     this._checkRepeat(target, fragBlock, repeatId, latestItemId)
 
-    list.forEach((item) => {
+    list.forEach((item, index) => {
+      if (typeof item === 'object') {
+        item.INDEX = index
+      }
       this._generate(target, fragBlock, {repeat: item})
     })
 
@@ -121,9 +124,34 @@ export function _generate(target, parentEl, context) {
     return
   }
 
+  let typeGetter = target.type
+  let type = typeGetter
+
+  if (typeof typeGetter === 'function') {
+    type = typeGetter.call(subContext)
+
+    if (!context.hasOwnProperty('type')) {
+      const newContext = {type: type}
+      const fragBlock = subContext._createBlock(parentEl)
+
+      if (parentEl.element && parentEl.children) {
+        parentEl.children.push(fragBlock)
+      }
+
+      subContext._watch(typeGetter, (value) => {
+        subContext._removeBlock(fragBlock, true)
+        subContext._generate(target, fragBlock, {type: value})
+      })
+
+      subContext._generate(target, fragBlock, newContext)
+
+      return
+    }
+  }
+
   let isComponent
-  if (this._app && this._app.customComponentMap && target.type) {
-    isComponent = this._app.customComponentMap[target.type]
+  if (this._app && this._app.customComponentMap && type) {
+    isComponent = this._app.customComponentMap[type]
   }
   else {
     isComponent = target.component
@@ -131,7 +159,7 @@ export function _generate(target, parentEl, context) {
 
   if (isComponent) {
     const Vm = this.constructor
-    const subVm = new Vm(target.type, subContext, parentEl, undefined, {
+    const subVm = new Vm(type, subContext, parentEl, undefined, {
       'hook:init': function () {
         subContext._setId(target.id, null, this)
       },
@@ -148,7 +176,7 @@ export function _generate(target, parentEl, context) {
     return
   }
 
-  const element = subContext._generateElement(target, parentEl)
+  const element = subContext._generateElement(type, target, parentEl)
   const treeMode = target.append === 'tree'
   if (!treeMode) {
     subContext._attachTarget(element, parentEl)
@@ -166,16 +194,16 @@ export function _generate(target, parentEl, context) {
  * @param  {object} template
  * @param  {object} dest
  */
-export function _generateElement(template, dest) {
+export function _generateElement(type, template, dest) {
 
   this._applyNaitveComponentOptions(template)
 
   let element
   if (dest.ref === '_documentElement') {
     // if its parent is documentElement then it's a body
-    element = this._createBody(template.type)
+    element = this._createBody(type)
   } else {
-    element = this._createElement(template.type)
+    element = this._createElement(type)
   }
   // TODO it was a root element when not in a fragment
   if (!this._rootEl) {
@@ -255,6 +283,9 @@ export function _checkRepeat(target, fragBlock, repeatId, latestItemId) {
     value.forEach((item, index) => {
       const key = item[`__wx_repeat_${repeatId}__`]
       const reused = reusedMap[key]
+      if (typeof item === 'object') {
+        item.INDEX = index
+      }
       if (reused) {
         if (reused.item === reusedList[0]) {
           reusedList.shift()

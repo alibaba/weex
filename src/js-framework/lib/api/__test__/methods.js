@@ -68,7 +68,6 @@ describe('built-in', () => {
   })
 
   beforeEach(() => {
-    vm._app.differ = Promise.resolve()
     requireSpy.reset()
     moduleSpy.reset()
   })
@@ -80,7 +79,10 @@ describe('built-in', () => {
   describe('common apis', () => {
 
     it('$', () => {
-      expect(vm.$('a')).to.deep.equal(vm._ids.a.el)
+      global.nativeLog = sinon.spy()
+      expect(vm.$('a')).to.deep.equal(vm._ids.a.vm)
+      expect(global.nativeLog.callCount).to.be.equal(1)
+      global.nativeLog = undefined
     })
 
     it('$el', () => {
