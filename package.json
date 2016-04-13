@@ -22,6 +22,7 @@
     "build": "npm run build:js-framework && npm run build:h5-render && npm run build:copy2sdk",
     "dev": "npm run clean && npm run transform",
     "serve": "npm run dev && npm run build && serve ./ -p 12580",
+    "serve-only": "npm run dev && serve ./ -p 12580",
     "watch": "watch -p \"examples/*.we\" -p \"test/*.we\" -c \"npm run dev\"",
     "ci:js-framework": "cd ./src/js-framework && npm run ci && cd ../../",
     "ci:h5-render": "cd ./src/h5-render && npm run ci && cd ../../",
