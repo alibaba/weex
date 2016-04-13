@@ -31,4 +31,4 @@ define('@weex-component/foo', function (require, exports, module) {
 ;})
 
 // require module
-bootstrap('@weex-component/foo', {"transformerVersion":"0.1.99"})
+bootstrap('@weex-component/foo', {"transformerVersion":"0.1.5"})

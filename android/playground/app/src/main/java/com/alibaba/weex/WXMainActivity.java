@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.weex.extend.ImageAdapter;
+import com.alibaba.weex.util.ScreenUtil;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXRenderErrorCode;
@@ -35,7 +36,7 @@ public class WXMainActivity extends WXBaseActivity implements IWXRenderListener 
   private static final int CAMARA_PERMISSION_REQUEST_CODE = 0x1;
 
   private static final String TAG = "IndexFragment";
-  private static String CURRENT_IP="your_current_IP";
+  private static String CURRENT_IP="30.10.192.232";
   private static final String WEEX_INDEX_URL = "http://"+CURRENT_IP+":12580/examples/build/index.js";
 
   private ViewGroup mContainer;
@@ -81,9 +82,9 @@ public class WXMainActivity extends WXBaseActivity implements IWXRenderListener 
 
     //use default assets/index.js
     if(TextUtils.equals(CURRENT_IP,"your_current_IP")){
-      mInstance.render(TAG, WXFileUtils.loadFileContent("index.js", this), options, null, outRect.width(), outRect.height(), WXRenderStrategy.APPEND_ASYNC);
+      mInstance.render(TAG, WXFileUtils.loadFileContent("index.js", this), options, null, ScreenUtil.getDisplayWidth(this), ScreenUtil.getDisplayHeight(this), WXRenderStrategy.APPEND_ASYNC);
     }else{
-      mInstance.render(TAG, WEEX_INDEX_URL, null, new HashMap<String, Object>(), null, outRect.width(), outRect.height(), WXRenderStrategy.APPEND_ASYNC);
+      mInstance.render(TAG, WEEX_INDEX_URL, null, new HashMap<String, Object>(), null, ScreenUtil.getDisplayWidth(this), ScreenUtil.getDisplayHeight(this), WXRenderStrategy.APPEND_ASYNC);
     }
     mProgressBar.setVisibility(View.VISIBLE);
     mTipView.setVisibility(View.VISIBLE);

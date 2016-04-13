@@ -67,7 +67,7 @@
   module.exports = {
     data: {
       eventCnt: 0,
-      togglePlayMsg: '停止',
+      togglePlayMsg: 'pause',
       sliders: [
         {
           interval: 1000,

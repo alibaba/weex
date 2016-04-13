@@ -51,7 +51,7 @@ EventManager.prototype.fire = function (el, type, e) {
     el = target.el
     handler = target.events[type]
     if (typeof handler === 'function') {
-      handler.call(el, e)
+      return handler.call(el, e)
     }
   }
 }
