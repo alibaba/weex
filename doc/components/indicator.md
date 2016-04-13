@@ -1,40 +1,64 @@
-## &lt;indicator> Compoent
+# &lt;indicator&gt;
 
-one child of [slider](slider.md) 
+### Summary
 
-### Style
+This component must be used as a subcomponent of a [`slider`](slider.md) component.
 
-- `itemColor`: This attribute sets the normal item color using either a named color or a color specified in the hexadecimal #RRGGBB format.
-- `itemSelectedColor`: This attribute sets the selected item color using either a named color or a color specified in the hexadecimal #RRGGBB format.
-- `itemSize`: The size of the indicator elements. Is an float attribute.
+### Subcomponents
+
+This component supports no subcomponents.
+
+### Attributes
+
+There is no specific attribute for this component other than the [common attributes](/references/common-attrs.md).
+
+### Styles
+
+- `itemColor`: &lt;colors&gt; This style attribute sets the normal item color using either a named color or a color specified in the hexadecimal #RRGGBB format.
+- `itemSelectedColor`: &lt;colors&gt; This style attribute sets the selected item color using either a named color or a color specified in the hexadecimal #RRGGBB format.
+- `itemSize`: &lt;length&gt; The size of the indicator elements, which is an float attribute.
+
+**common styles**: check out the [common styles](/references/common-attrs.md)
+
+- support flexbox related styles
+- support box model related styles
+- support ``position`` related styles
+- support ``opacity``, ``background-color`` etc.
+
+### Events
+
+**common events**: check out the [common events](/references/common-event.md)
+
+- support `click` event. Check out [common events](/references/common-event.md)
+- support `appear` / `disappear` event. Check out [common events](/references/common-event.md)
 
 ### Example
 
-```html
+```
 <template>
-      <slider class="slider">
-        <div class="slider-pages" repeat="{{itemList}}">
-          <image class="img" src="{{pictureUrl}}"></image>
-          <text class="title">{{title}}</text>
-        </div>
+  <slider class="slider">
+    <div class="slider-pages" repeat="{{itemList}}">
+      <image class="img" src="{{pictureUrl}}"></image>
+      <text class="title">{{title}}</text>
+    </div>
 
-        <indicator class="indicator"></indicator>
-      </slider>
+    <indicator class="indicator"></indicator>
+  </slider>
 </template>
 
 <style>
   .img {width: 150; height: 150;}
   .title {flex: 1; color: #ff0000; font-size: 48; font-weight: bold; background-color: #eeeeee;}
   .slider {
-        flex-direction: row;
-        margin: 18;
-        width: 714;
-        height: 230;
+    flex-direction: row;
+    margin: 18;
+    width: 714;
+    height: 230;
   }
   .slider-pages {
-        flex-direction: row;
-        width: 714;
-        height: 200;
+    flex-direction: row;
+    width: 714;
+    height: 200;
   }
   .indicator {
     width:714;
