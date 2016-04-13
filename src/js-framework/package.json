@@ -1,21 +1,20 @@
 {
   "name": "weex-jsframework",
-  "version": "0.13.3",
+  "version": "0.13.4",
   "description": "JS Framework for Weex solution which is a extendable cross-platform solution for dynamic programming and publishing projects",
   "main": "index.js",
   "scripts": {
     "dev": "webpack --watch --config ./webpack.config.js",
     "build": "webpack --config ./webpack.config.js",
-    "compress": "uglifyjs dist/index.js -o dist/index.mini.js",
+    "compress": "uglifyjs dist/index.js -o dist/index.min.js",
     "lint": "jscs --config .jscsrc polyfill/*.js polyfill/__test__/*.js lib/*.js lib/__test__/*.js lib/app/*.js lib/app/__test__/*.js lib/vm/*.js lib/vm/__test__/*.js",
     "test": "mocha --compilers js:babel-core/register polyfill/__test__/*.js lib/__test__/*.js lib/**/__test__/*.js",
     "cover": "babel-node node_modules/isparta/bin/isparta cover --report text node_modules/mocha/bin/_mocha -- --reporter dot lib/__test__/*.js lib/**/__test__/*.js",
-    "ci": "npm run lint && npm run cover",
-    "release": "./release.sh"
+    "ci": "npm run lint && npm run cover"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:alibaba/weex_js-framework.git"
+    "url": "git@github.com:alibaba/weex.git"
   },
   "author": [
     {
@@ -71,6 +70,6 @@
     "webpack": "~1.12.12"
   },
   "optionalDependencies": {
-    "weex-transformer": "~0.1.7"
+    "weex-transformer": "~0.1"
   }
 }
