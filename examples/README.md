@@ -1,4 +1,4 @@
-# Weex Examples
+# Example Guide
 
 ## Add an example
 
