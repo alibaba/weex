@@ -423,6 +423,22 @@ describe('test input and output', function () {
     delete allDocs[name]
   })
 
+  it('repeat with index case', function () {
+    var name = 'repeat-index'
+    var inputCode = readInput(name)
+    var outputCode = readOutput(name)
+    var doc = new Document(name)
+    allDocs[name] = doc
+
+    framework.createInstance(name, inputCode)
+    var expected = eval('(' + outputCode + ')')
+    var actual = doc.toJSON()
+    expect(actual).eql(expected)
+
+    framework.destroyInstance(name)
+    delete allDocs[name]
+  })
+
   it('if-refresh case', function () {
     var name = 'if-refresh'
     var inputCode = readInput(name)
@@ -471,6 +487,22 @@ describe('test input and output', function () {
         {showTitle: true, title: 'Hello World3'}
       ]
     })
+    var expected = eval('(' + outputCode + ')')
+    var actual = doc.toJSON()
+    expect(actual).eql(expected)
+
+    framework.destroyInstance(name)
+    delete allDocs[name]
+  })
+
+  it('dynamic type case', function () {
+    var name = 'dynamic-type'
+    var inputCode = readInput(name)
+    var outputCode = readOutput(name)
+    var doc = new Document(name)
+    allDocs[name] = doc
+
+    framework.createInstance(name, inputCode)
     var expected = eval('(' + outputCode + ')')
     var actual = doc.toJSON()
     expect(actual).eql(expected)

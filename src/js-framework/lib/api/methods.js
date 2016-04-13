@@ -10,16 +10,17 @@ import {typof, extend} from '../util'
  */
 
 /**
- * find the element by id
+ * @deprecated use $vm instead
+ * find the vm by id
  * Note: there is only one id in whole component
- * @alias $el
  * @param  {string} id
- * @return {Element}
+ * @return {Vm}
  */
 export function $(id) {
+  nativeLog('the Vm#$ api is deprecated, please use Vm#$vm instead')
   const info = this._ids[id]
   if (info) {
-    return info.el
+    return info.vm
   }
 }
 
