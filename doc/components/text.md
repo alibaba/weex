@@ -1,47 +1,58 @@
-# Text
+# &lt;text&gt;
 
-render text with specified style ruler , `<text>` tag can contain text value only.
+### Summary
 
-you can using variable in text value ,eg:
+Render text with specified style rule, `<text>` tag can contain text value only. You can use variable interpolation in the text content with the mark `{{}}`.
 
-'''
-<text>Hello {{name}}</text>
-'''
+### Subcomponents
 
-## Attribute
+This component supports no subcomponents but a text content.
 
-- `value`: text value for render , the  attribute is equal to content of `<text>` tag.
+### Attributes
 
-## Style
-- [common style](/references/common-style.md)
-- flexbox an other box model style (inner of cell)
-- position
-- opacity / background-color
-- `lines`:  lines number , default value is `0` for unlimited .
-- `color`: text color
-- `font-size`: 
-    + iOS: default vlaue `32`
-    + Android: platform specify
-    + HTML5: default value `24`
-- `font-style`: `normal` | `italic` 
-- `font-weight`: `normal` | `bold` 
-- `text-decoration`: `none` | `underline` | `line-through` 
-- `text-align`: `left` | `center` | `right`
+- `value`: &lt;string&gt; text value of this component. This is equal to the content of `<text>`.
 
-if not specify width , `<text>` width will be equal to container width.
+Other attributes please check out the [common attributes](/references/common-attrs.md).
 
-## Event
+### Styles
 
-cell support `click` / `appear` / `disappear` .
-please refer to  [Common Events](/references/common-event.md)
+- `lines`: specify the text lines. Default value is `0` for unlimited.
 
-## Code Example
+**text styles**: checkout [text styles](/references/text-style.md)
 
-```html
-<container>
+- support `color` style.
+- support `font-size` style.
+	+ iOS: default vlaue `32`
+  + Android: platform specify
+  + HTML5: default value `32`
+- support `font-style` style.
+- support `font-weight` style.
+- support `text-decoration` style.
+- support `text-align` style.
+
+**common styles**: check out [common styles for components](/references/common-style.md)
+
+- support flexbox related styles
+- support box model related styles
+- support ``position`` related styles
+- support ``opacity``, ``background-color`` etc.
+
+### Events
+
+**common events**: check out the [common events](/references/common-event.md)
+
+- support `click` event. Check out [common events](/references/common-event.md)
+- support `appear` / `disappear` event. Check out [common events](/references/common-event.md)
+
+### Example
+
+```
+<div>
   <text>...</text>
   <text value="..."></text>
   <text style="font-size: 24; text-decoration: underline;">{{price}}</text>
   <text value="{{...}}"></text>
-</container>
+</div>
 ```
+
+
