@@ -15,27 +15,20 @@ public class SplashActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
     setContentView(R.layout.activity_splash);
 
-    View textView=findViewById(R.id.fullscreen_content);
-    Animation scaleAnimation = new ScaleAnimation(0.5f, 1.0f, 0.5f, 1.0f);
-    scaleAnimation.setDuration(5000);
+    View textView = findViewById(R.id.fullscreen_content);
+    ScaleAnimation scaleAnimation = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+    RotateAnimation rotateAnimation = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
 
-
-    Animation rotateAnimation = new RotateAnimation(0f,360f,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
-
-    rotateAnimation.setDuration(1000);
-
-
-    AnimationSet animationSet=new AnimationSet(false);
-//    animationSet.addAnimation(scaleAnimation);
+    AnimationSet animationSet = new AnimationSet(false);
+    animationSet.addAnimation(scaleAnimation);
     animationSet.addAnimation(rotateAnimation);
+    animationSet.setDuration(1000);
 
     animationSet.setAnimationListener(new Animation.AnimationListener() {
       @Override
       public void onAnimationStart(Animation animation) {
-
       }
 
       @Override
@@ -46,10 +39,8 @@ public class SplashActivity extends AppCompatActivity {
 
       @Override
       public void onAnimationRepeat(Animation animation) {
-
       }
     });
-
     textView.startAnimation(animationSet);
   }
 }
