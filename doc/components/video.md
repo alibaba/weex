@@ -1,28 +1,48 @@
-## &lt;video> Compoent
+# &lt;video&gt;
 
-Use the **&lt;video> compoent** to embed video content in a **WeexPage**.
+### Summary
+
+Use the &lt;video&gt; component to embed video content in a weex page. The video component use src attribute to specify the source of a video.
+
+### Subcomponents
+
+This component supports no subcomponents but a text content.
 
 ### Attributes
 
-- `src`: The URL of the video to embed.
-- `play_status`: `play` | `pause` Use it control video play/pause.
-- `auto_play`: `true` | `false` A Boolean attribute. defalut value is `false`.
+- `src`: &lt;string&gt; The URL of the video to embed.
+- `play-status`: &lt;boolean&gt; `play` | `pause`. Use it to control video's play/pause. Default value is `pause`.
+- `auto-play`: &lt;boolean&gt; `true` | `false`. Use it to control whether it is playing when the page initialization finished. Defalut value is `false`.
+
+Other attributes please check out the [common attributes](/references/common-attrs.md).
+
+### Styles
+
+**common styles**: check out the [common styles](/references/common-attrs.md)
+
+- support flexbox related styles
+- support box model related styles
+- support ``position`` related styles
+- support ``opacity``, ``background-color`` etc.
 
 ### Events
 
-- `start`: Sent when playback state is Playing.
-- `pause`: Sent when playback state is Paused.
-- `finish`: Sent when playback state is Finished.
-- `fail`: Sent when playback state is Failed.
+- `start`: triggered when playback state is Playing.
+- `pause`: triggered when playback state is Paused.
+- `finish`: triggered when playback state is Finished.
+- `fail`: triggered when playback state is Failed.
 
-### Children
+**common events**: check out the [common events](/references/common-event.md)
 
-Can't hava child.
+- support `click` event. Check out [common events](/references/common-event.md)
+- support `appear` / `disappear` event. Check out [common events](/references/common-event.md)
 
 ### Example
 
-```html
-<container>
-	<video class="video" src="..." style="width:500;height:500;"></video>
-</container>
 ```
+<div>
+	<video class="video" auto-play="true" play-status="play" src="..." style="width:500;height:500;"></video>
+</div>
+```
+
+

@@ -1,26 +1,41 @@
-# Container
+# &lt;div&gt;
 
-The most fundamental container which is used to wrap any other components. It supports all the common styles, attributes and layout with flexbox.
+### Summary
 
-alias: `<div>`
+The most fundamental component which is a contianer to wrap any other components. It supports all the common styles, attributes and layout of flexbox.
 
-## Styles
+alias: `<container>` (deprecated)
 
-- flexbox an other box model style
-- position
-- opacity / background-color
+### Subcomponents
 
-See [common style](/references/common-style.md) for more.
+This type of component supports all kinds of weex components as its subcomponents including its own kind.
 
-## Events
+### Attributes
 
-See [common events](/references/common-event.md) for more.
+There is no specific attribute for this component other than the [common attributes](/references/common-attrs.md).
 
-## Examples
+### Styles
+
+**common styles**: check out the [common styles](/references/common-attrs.md)
+
+- support flexbox related styles
+- support box model related styles
+- support ``position`` related styles
+- support ``opacity``, ``background-color`` etc.
+
+### Events
+
+**common events**: check out the [common events](/references/common-event.md)
+
+- support `click` event. Check out [common events](/references/common-event.md)
+- support `appear` / `disappear` event. Check out [common events](/references/common-event.md)
+
+### Examples
 
 ```
-<container>
+<div>
   <image src="..."></image>
   <text>...</text>
-</container>
+</div>
 ```
+

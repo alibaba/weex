@@ -12,7 +12,7 @@ Before see all built-in components, let's have a look at the common things about
 
 **Component List**
 
-* [&lt;container&gt;](/components/container.md)
+* [&lt;div&gt;](/components/container.md)
 * [&lt;scroller&gt;](/components/scroller.md)
 * [&lt;list&gt;](/components/list.md)
     * [&lt;cell&gt;](/components/cell.md)
