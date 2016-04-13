@@ -29,7 +29,6 @@ See [UI Gallery Example](./ui.we) for details.
     * Attributes: 
         * `type`, ***default*** | primary | success | info | warning | danger 
         * `title`
-        * `subtitle`
         * `border`, number
 0. [**ui-hn**](./ui-hn.we)
     * Attributes: 
