@@ -31,7 +31,7 @@
     "dev": "webpack --watch --config ./webpack.config.js",
     "build": "webpack --config ./webpack.config.js",
     "compress": "uglifyjs dist/index.js -o dist/index.mini.js",
-    "lint": "jscs --config .jscsrc  src/api/*.js src/components/*.js src/bridge/*.js test/e2e/*.js",
+    "lint": "jscs --config .jscsrc  src/api/*.js src/components/*.js src/bridge/*.js",
     "ci": "npm run lint"
   },
   "main": "src/weex.js",
