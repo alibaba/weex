@@ -74,6 +74,31 @@ function weexInit() {
 weexInit()
 ```
 
+### Initialize with multiple instances
+
+```
+var weexConfig = [{
+  appId: 'weexCt1',
+  source: '//your-source-provider/bundle1.js',
+  loader: 'xhr',
+  width: document.querySelector('#weexCt1').getBoundingClientRect().width,
+  rootId: 'weexCt1'
+}, {
+  appId: 'weexCt2',
+  source: '//your-source-provider/bundle2.js',
+  loader: 'xhr',
+  width: document.querySelector('#weexCt2').getBoundingClientRect().width,
+  rootId: 'weexCt2'
+}]
+
+function weexInit() { 
+  // Init with multiple config objects for multiple instances.
+  window.weex.init(weexConfig)
+}
+
+weexInit()
+```
+
 ### use weex-toolkit to preview Demo
 
 install weex-toolkit:
