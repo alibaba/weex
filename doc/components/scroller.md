@@ -1,27 +1,43 @@
-# &lt;Scroller&gt;
+# &lt;scroller&gt;
 
-A vertical/horizontal scroller.
+### Summary
 
-## Style
+A vertical scroller which can have multiple subcomponents arranged in one column. If total height of its subcomponents is higher then the height of itself, the whole subcomponents are scrollable.
 
-- [common style](/references/common-style.md)
-- scroll-direciton: vertical/horizontal, the default is vertical.
+**Notes:** A `<scroller>` can be used as a root element or a embed element. The scoll direction of this component is column, and it can't be changed.
 
-### Notes
+### Subcomponents
 
-A `<scroller>` can be used for a root element or a embed element.
+It supports all kinds of weex components as its subcomponents.
 
-## Event
-`<scroller>` support `click` / `appear` / `disappear` , please refer to  [Common Events](/references/common-event.md)
+### Attributes
 
-## Code Example
+There is no specific attribute for this component other than the [common attributes](/references/common-attrs.md).
 
-```html
+### Styles
+
+**common styles**: check out [common styles for components](/references/common-style.md)
+
+- support flexbox related styles
+- support box model related styles
+- support ``position`` related styles
+- support ``opacity``, ``background-color`` etc.
+
+### Events
+
+**common events**: check out the [common events](/references/common-event.md)
+
+- support `click` event. Check out [common events](/references/common-event.md)
+- support `appear` / `disappear` event. Check out [common events](/references/common-event.md)
+
+### Example
+
+```
 <template>
   <scoller>
-    <container repeat="{{list}}">
+    <div repeat="{{list}}">
       <text>{{name}}: ${{price}}</text>
-    </container>
+    </div>
   </scoller>
 </template>
 
@@ -38,3 +54,6 @@ A `<scroller>` can be used for a root element or a embed element.
   }
 </script>
 ```
+
+
+

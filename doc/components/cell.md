@@ -1,26 +1,31 @@
-# Cell
-one item of [list](list.md) , optimized for high performance scrolling.
+# &lt;<cell>&gt;
 
+### Summary
 
-## Attribute
+This component must be used as a subcomponent of a [`list`](list.md) component, which is for the performance optimizing during scrolling.
 
-- `scope` : optional identifier of item structure . if your list have diverse structure of cell, you should put same `scope` value for same cell with same structure.
+### Attributes
 
-**Notes:** if you have a lot of cell with same structure , display logic control statement (  `if` or `repeat` ) inside the cell  will degrade list performance , a common way to help prevent it is setting variables for style going to change , and make these change data-driven.
+There is no specific attribute for this component other than the [common attributes](/references/common-attrs.md).
 
+**Notes:** you can't give `<cell>` a `flex` value. Width of `<cell>` is equal to the width of its parent component `<list>`, and you don't need to specify its height.
 
-## Style
+### Styles
 
-See [common style](/references/common-style.md) for more.
+**common styles**: check out the [common styles](/references/common-attrs.md)
 
-## Event
+- support flexbox related styles
+- support box model related styles
+- support ``position`` related styles
+- support ``opacity``, ``background-color`` etc.
 
-See [common events](/references/common-event.md) for more.
+### Events
 
-## Notes
-you can't give `<cell>` a `flex` value .  width of `<cell>` is equal to width of `<list>` , and `<cell>` must have a given height.
+**common events**: check out the [common events](/references/common-event.md)
 
+- support `click` event. Check out [common events](/references/common-event.md)
+- support `appear` / `disappear` event. Check out [common events](/references/common-event.md)
 
-## Code Example
+### Example
 
-please refer to  [List](list.md)
+please refer to [List](list.md)
