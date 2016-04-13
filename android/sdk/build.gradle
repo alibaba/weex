@@ -22,18 +22,18 @@ android {
     resourcePrefix "weex"
 
 //    def libsDir = projectDir.path + "/src/main/jni/"
-//    defaultConfig {
-//        minSdkVersion 14
-//        targetSdkVersion 19
-//        versionCode 1
-//        versionName "1.0"
-//        ndk {
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 19
+        versionCode 1
+        versionName "1.0"
+        ndk {
 //            moduleName "weexcore"
 //            cFlags "-I" + file(libsDir+"v8core").absolutePath
 //            ldLibs "log",libsDir + "libv8_base.a",libsDir + "libv8_snapshot.a"
-//            abiFilters "armeabi"
-//        }
-//    }
+            abiFilters "armeabi"
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -106,7 +106,8 @@ license{
                "**/CSSJustifyConvert.java",
                "**/CSSPositionTypeConvert.java",
                "**/CSSTransformFromStyle.java",
-               "**/CSSWrapConvert.java"])
+               "**/CSSWrapConvert.java",
+               "**/WXTextDomObject.java"])
 //    includes(['src/main/java/**/*.java'])
 }
 preBuild.dependsOn licenseFormat
