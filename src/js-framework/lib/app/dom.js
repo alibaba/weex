@@ -460,6 +460,9 @@ function removeIfExisted(node) {
 }
 
 Element.prototype.setAttr = function (key, value) {
+  if (this.attr[key] === value) {
+    return
+  }
   this.attr[key] = value
   if (this.attached) {
     const renderer = this.getRenderer()
@@ -470,6 +473,9 @@ Element.prototype.setAttr = function (key, value) {
 }
 
 Element.prototype.setStyle = function (key, value) {
+  if (this.style[key] === value) {
+    return
+  }
   this.style[key] = value
   if (this.attached) {
     const renderer = this.getRenderer()

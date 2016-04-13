@@ -186,7 +186,7 @@ describe('parsing a bundle file', () => {
       const ready = sinon.spy()
 
       before(() => {
-        global.needTransformerVersion = '~0.1.3'
+        global.needTransformerVersion = '~0.1'
         app.define('@weex-component/main', (require, exports, module) => {
           module.exports = {
             template: componentTemplate,
