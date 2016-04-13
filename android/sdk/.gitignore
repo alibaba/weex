@@ -4,7 +4,6 @@ build
 captures
 local.properties
 target
-gradle/wrapper
 bin
 .classpath
 .project
@@ -13,4 +12,3 @@ gen
 *.iml
 lint.xml
 project.properties
-main.js
