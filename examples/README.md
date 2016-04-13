@@ -8,13 +8,35 @@ See `ui.we` to get all the UI components.
 
 > Inspired by Bootstrap.
 
+See [UI Gallery Example](./ui.we) for details.
 
-### ui-panel
+![](http://gtms04.alicdn.com/tps/i4/TB1_v6FMpXXXXXfXXXX7XWpVpXX-278-519.gif)
 
-### ui-tip
+### Reference:
 
-### ui-button
-
-### ui-hn
-
-### ui-list-item
+0. `ui-button`
+    * Attributes: 
+        * `type`, ***default*** | primary | success | info | warning | danger | link 
+        * `size`, ***large*** | middle | small
+        * `value`
+        * `disabled`, ***false*** | true
+    * Event: 
+        * `click`
+0. `ui-panel`
+    * Attributes: 
+        * `type`, ***default*** | primary | success | info | warning | danger 
+        * `title`
+        * `subtitle`
+        * `border`, number
+0. `ui-hn`
+    * Attributes: 
+        * `level`, ***1*** | 2 | 3 
+0. `ui-tip`
+    * Attributes: 
+        * `type`, ***success*** | info | warning | danger 
+        * `value`, ***large*** | middle | small
+        * `value`
+        * `disabled`, ***false*** | true
+0. `ui-list-item`
+    * Event: 
+        * `click`
