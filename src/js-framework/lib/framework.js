@@ -28,7 +28,7 @@ var instanceMap = {}
  *
  * @param  {string} instanceId
  * @param  {string} code
- * @param  {object} [options] option `HAS_LOG` enable print log
+ * @param  {object} [options] option `debug` enable print log
  * @param  {object} [data]
  */
 export function createInstance(instanceId, code, options, data) {
@@ -36,9 +36,7 @@ export function createInstance(instanceId, code, options, data) {
   options = options || {}
 
   /* istanbul ignore if */
-  if (options.HAS_LOG) {
-    config.debug = true
-  }
+  config.debug = options.debug
 
   var result
   if (!instance) {
