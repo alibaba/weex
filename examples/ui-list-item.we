@@ -1,8 +1,29 @@
 <template>
-  <container class="item" onclick="{{click}}">
+  <container class="item" onclick="{{click}}" ontouchstart="touchstart" ontouchend="touchend"
+             style="background-color:{{bgColor}};">
     <content></content>
   </container>
 </template>
+
+<script>
+  module.exports = {
+    data: {
+      bgColor: '#ffffff',
+//      highlight: true,
+      click: function() {
+      }
+    },
+    methods: {
+      touchstart: function() {
+        // TODO adaptive opposite bgColor
+        this.bgColor = '#e6e6e6';
+      },
+      touchend: function() {
+        this.bgColor = '#ffffff';
+      }
+    }
+  }
+</script>
 
 <style>
   .item {
@@ -13,16 +34,9 @@
     height: 160px;
     justify-content: center;
     /*align-items: center;*/
-    background-color: #ffffff;
+    /*background-color: #ffffff;*/
     margin-bottom: 1px; /*FIXME @yinfeng*/
     border-bottom-width: 1px;
     border-color: #dddddd;
   }
 </style>
-
-<script>
-  module.exports = {
-    data: {
-    }
-  }
-</script>
