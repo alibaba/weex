@@ -1,10 +1,13 @@
 # Weex Examples
 
-We import a simple UI Gallery for consistent UI style. We recommend a new example can be composed with these UI components.
+## Add an example
 
-See `ui.we` to get all the UI components.
+Copy [template file](./modal.we) and build an example with [UI Gallery](#ui-gallery).  
+
 
 ## UI Gallery
+
+We import a simple UI Gallery for consistent UI style. We recommend a new example can be composed with these UI components.
 
 > Inspired by Bootstrap.
 
