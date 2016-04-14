@@ -378,8 +378,7 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     }
 
     //fixed style
-    if (mDomObj.isFixed()) {
-      if (mInstance.getRootView() != null) {
+    if (mDomObj.isFixed() && mInstance.getRootView()!=null) {
         if (mHost.getParent() instanceof ViewGroup) {
           ViewGroup viewGroup = (ViewGroup) mHost.getParent();
           viewGroup.removeView(mHost);
@@ -396,8 +395,6 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
           WXLogUtils.d("Weex_Fixed_Style", "WXComponent:setLayout :" + realLeft + " " + realTop + " " + realWidth + " " + realHeight);
           WXLogUtils.d("Weex_Fixed_Style", "WXComponent:setLayout Left:" + mDomObj.style.getLeft() + " " + (int) mDomObj.style.getTop());
         }
-
-      }
       return;
     }
 
