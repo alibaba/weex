@@ -8,9 +8,9 @@ Weex Hello World
 hello_world.we
 ```
 <template>
-  <container>
+  <div>
     <text>Hello World</text>
-  </container>
+  </div>
 </template>
 ````
 
