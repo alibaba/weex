@@ -13,35 +13,36 @@ you can using below definition in weex box-model.
 - width
 - height
 - Padding (space around content , between element content and the element border)
- - padding-left
- - padding-right
- - padding-top
- - padding-bottom
+  - padding-left
+  - padding-right
+  - padding-top
+  - padding-bottom
 - Marging (space around elements ,outside the border)
- - margin-left
- - margin-right
- - margin-top
- - margin-bottom
+  - margin-left
+  - margin-right
+  - margin-top
+  - margin-bottom
 - Border
- - border-style(solid,dashed,dotted)
- - border-width
-   - border-left-width
-   - border-top-width
-   - border-right-width
-   - border-bottom-width
- - border-color
-   - border-left-color
-   - border-top-color
-   - border-right-color
-   - border-bottom-color
- - border-radius  ( rounded borders to elements , default value is 0 meaning right angle )
-   - border-bottom-left-radius
-   - border-bottom-right-radius
-   - border-top-left-radius
-   - border-top-right-radius
+  - border-style(solid,dashed,dotted)
+  - border-width
+    - border-left-width
+    - border-top-width
+    - border-right-width
+    - border-bottom-width
+  - border-color
+    - border-left-color
+    - border-top-color
+    - border-right-color
+    - border-bottom-color
+  - border-radius  ( rounded borders to elements , default value is 0 meaning right angle )
+    - border-bottom-left-radius
+    - border-bottom-right-radius
+    - border-top-left-radius
+    - border-top-right-radius
+    
+   *For `<image>` tag,only border-style, border-width, border-color, border-radius are suppported*, 
 
-
-Notes: weex box model using `border-box` as `box-sizing` , meaning the width and height properties includes content, padding and border, but not the margin.
+Notes: weex box model using `border-box` as `box-sizing` , meaning the width and height properties includes content, padding and border, but not the margin.2. 
 
 
 example:
