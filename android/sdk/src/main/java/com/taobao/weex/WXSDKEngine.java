@@ -206,6 +206,8 @@ package com.taobao.weex;
 
 import android.app.Application;
 
+import com.taobao.weex.adapter.IWXHttpAdapter;
+import com.taobao.weex.adapter.IWXImgLoaderAdapter;
 import com.taobao.weex.adapter.IWXUserTrackAdapter;
 import com.taobao.weex.appfram.navigator.WXNavigatorModule;
 import com.taobao.weex.bridge.WXModuleManager;
@@ -245,14 +247,17 @@ public class WXSDKEngine {
   private volatile static boolean init;
   private static Object mLock = new Object();
 
+  @Deprecated
   public static void init(Application application) {
     init(application, null);
   }
 
+  @Deprecated
   public static void init(Application application, IWXUserTrackAdapter utAdapter) {
     init(application, utAdapter, null);
   }
 
+  @Deprecated
   public static void init(Application application, IWXUserTrackAdapter utAdapter, String framework) {
     synchronized (mLock) {
       if (init) {
@@ -268,6 +273,30 @@ public class WXSDKEngine {
       }
 
       WXSDKManager.getInstance().initScriptsFramework(framework);
+      register();
+    }
+  }
+
+  public static void init(Application application, String framework, IWXUserTrackAdapter utAdapter, IWXImgLoaderAdapter imgLoaderAdapter, IWXHttpAdapter httpAdapter) {
+    synchronized (mLock) {
+      if (init) {
+        return;
+      }
+      init = true;
+      WXEnvironment.sApplication = application;
+      WXEnvironment.JsFrameworkInit = false;
+      WXSoInstallMgrSdk.init(application);
+      WXEnvironment.sSupport = WXSoInstallMgrSdk.initSo(V8_SO_NAME, 1, utAdapter);
+      if (!WXEnvironment.sSupport) {
+        return;
+      }
+
+      WXSDKManager.getInstance().initScriptsFramework(framework);
+
+      WXSDKManager.getInstance().setIWXHttpAdapter(httpAdapter);
+      WXSDKManager.getInstance().setIWXImgLoaderAdapter(imgLoaderAdapter);
+      WXSDKManager.getInstance().setIWXUserTrackAdapter(utAdapter);
+
       register();
     }
   }
