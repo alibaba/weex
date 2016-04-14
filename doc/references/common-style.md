@@ -64,7 +64,7 @@ Notice that the old version of flexbox specification has differences with the ne
 
 ### Flex container
 
-Flexbox is the default and only style modle in Weex, so you don't have to add `display: flex;` in a container.
+Flexbox is the default and only style model in Weex, so you don't have to add `display: flex;` in a container.
 
 - `flex-direction`: `row` | `column`
 
@@ -84,7 +84,7 @@ The align-items property vertically aligns the flexible container's items when t
 
 ### Flex item
 
-- flex : <number>
+- flex : &lt;number&gt;
 
 the flex property specifies the length of the flex item, relative to the rest of the flex items inside the same container.  If all of the flex items set `flex: 1`, they will have equal width or height on direction of flex container's `flex-direction`. If there are two flex items, with one setting `flex: 1`, and the other setting `flex: 2`, the first one will take 1/3 container space, and the second one will take 2/3 container space. If all of flex items don't set `flex`, they will be aligned depending on the container's `justify-content` property.
 
@@ -136,10 +136,10 @@ we can use properties below to control placement of weex tag
 
 `relative` means the item is positioned relative to its normal position. `absolute` means the item is positioned relative to its container. `fixed` keeps the elements position fixed when the page is scrolling. `sticky` keeps elements positioned inside the viewport as "stuck" at the top or "relative" at its original place depending on whether does it about to scroll out of the view.
 
-- `top`:  <number>, upward offset value, default `0`
-- `bottom`: <number>, downward offset value, default `0`
-- `left`: <number>, leftward offset value, default `0`
-- `right`: <number>, rightward offset value, default `0`
+- `top`:  &lt;number&gt;, upward offset value, default `0`
+- `bottom`: &lt;number&gt;, downward offset value, default `0`
+- `left`: &lt;number&gt;, leftward offset value, default `0`
+- `right`: &lt;number&gt;, rightward offset value, default `0`
 
 ### Examples
 
@@ -161,8 +161,8 @@ we can use properties below to control placement of weex tag
 
 ## Other Common Style
 
-- `opacity`:  <number>, value within range 0 to 1. 1 is not transparent at all, 0.5 is 50% see-through, and 0 is completely transparent. 1 is the default value.
-- `background-color`: sets the background color of an element, `transparent` is the default value.
+- `opacity`:  &lt;number&gt;, value within range 0 to 1. 1 is not transparent at all, 0.5 is 50% see-through, and 0 is completely transparent. 1 is the default value.
+- `background-color`: &lt;colors&gt; sets the background color of an element, `transparent` is the default value.
 
 ## Type of Style Value
 

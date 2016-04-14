@@ -4,6 +4,10 @@
 
 This component must be used as a subcomponent of a [`list`](list.md) component, which is for the performance optimizing during scrolling.
 
+### Child Components
+
+This type of component supports all kinds of weex component as its child components.
+
 ### Attributes
 
 There is no specific attribute for this component other than the [common attributes](/references/common-attrs.md).
