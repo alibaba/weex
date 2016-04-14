@@ -6,9 +6,9 @@ The most fundamental component which is a contianer to wrap any other components
 
 alias: `<container>` (deprecated)
 
-### Subcomponents
+### Child Components
 
-This type of component supports all kinds of weex components as its subcomponents including its own kind.
+This type of component supports all kinds of weex component as its child components including its own kind.
 
 ### Attributes
 

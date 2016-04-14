@@ -4,9 +4,9 @@
 
 The weex builtin component `switch` is used to create and manage a IOS styled On/Off buttons used, for example, in the Settings app for options such as 'muted' and 'toggle color'.
 
-### Subcomponents
+### Child Components
 
-This component supports no subcomponents.
+This component supports no child components.
 
 ### Attributes
 

@@ -7,9 +7,9 @@ A slide's player to show slides (mostly as pictures) one page by another. The de
 
 **Notes:** A `<scroller>` can be used as a root element or a embed element. The scoll direction of this component is column, and it can't be changed.
 
-### Subcomponents
+### Child Components
 
-It supports all kinds of weex components as its slides, especially the `indicator` component which can be used only as a subcomponent of `slider`.
+It supports all kinds of weex components as its slides, especially the `indicator` component which can be used only as a child component of `slider`.
 
 ### Attributes
 
