@@ -6,9 +6,9 @@ For example, The content of a `<text>` component is bound with the key `notes` i
 
 ```
 <template>
-  <container>
+  <div>
     <text>{{notes}}</text>
-  </container>
+  </div>
 <template>
 
 <script>

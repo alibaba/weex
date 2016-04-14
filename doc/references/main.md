@@ -8,7 +8,7 @@
     * [Common Style](/references/common-style.md)
     * [Common Event](/references/common-event.md)
     * [Special Element](/components/special-element.md)
-    * [&lt;container&gt;](/components/container.md)
+    * [&lt;div&gt;](/components/div.md)
     * [&lt;scroller&gt;](/components/scroller.md)
     * [&lt;list&gt;](/components/list.md)
         * [&lt;cell&gt;](/components/cell.md)

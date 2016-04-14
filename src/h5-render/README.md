@@ -160,20 +160,4 @@ tnpm install -g casperjs
 casperjs test style.js
 ```
 
-### Github repo
-
-* [weex_html5](https://github.com/alibaba/weex_html5)
-* [weex_android](https://github.com/alibaba/weex_android)
-* [weex_ios](https://github.com/alibaba/weex_ios)
-* [weex_js-framework](https://github.com/alibaba/weex_js-framework)
-* [weex_transformer](https://github.com/alibaba/weex_transformer)
-* [weex_toolchain](https://github.com/alibaba/weex_toolchain)
-* [weex_samples](https://github.com/alibaba/weex_samples)
-* [weex_docs](https://github.com/alibaba/weex_docs)
-
-### Links
-
-* [weex official site](http://alibaba.github.io/weex)
-* [github weex group](https://github.com/orgs/alibaba/teams/weex/repositories)
-
 

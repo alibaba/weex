@@ -268,7 +268,7 @@ public class WXSlider extends WXVContainer implements OnPageChangeListener {
     // add to parent
     mRoot.addView(mViewPager);
     mHost = mRoot;
-
+    mViewPager.setOnPageChangeListener(this);
     registerActivityStateListener();
   }
 
