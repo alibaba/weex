@@ -268,7 +268,7 @@ public class WXSlider extends WXVContainer implements OnPageChangeListener {
     // add to parent
     mRoot.addView(mViewPager);
     mHost = mRoot;
-
+    mViewPager.setOnPageChangeListener(this);
     registerActivityStateListener();
   }
 
@@ -341,7 +341,7 @@ public class WXSlider extends WXVContainer implements OnPageChangeListener {
   public void addIndicator(WXIndicator indicator) {
     mIndicator = indicator;
     mIndicator.getView().setCircleViewPager(mViewPager);
-    mIndicator.getView().setOnPageChangeListener(this);
+//    mIndicator.getView().setOnPageChangeListener(this);
     mRoot.addView(mIndicator.getView());
   }
 
