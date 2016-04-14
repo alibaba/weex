@@ -6,9 +6,9 @@ The weex builtin component ``input`` is used to create interactive controls to a
 
 **Notes:** `<input>` does not support the common-event `click`. Please listen to the `input` or `change` event instead.
 
-### Subcomponents
+### Child Components
 
-This component supports no subcomponents.
+This component supports no child components.
 
 ### Attributes
 

@@ -2,13 +2,13 @@
 
 ### Summary
 
-A vertical scroller which can have multiple subcomponents arranged in one column. If total height of its subcomponents is higher then the height of itself, the whole subcomponents are scrollable.
+A vertical scroller which can have multiple child components arranged in one column. If total height of its child components is higher then the height of itself, the whole child components are scrollable.
 
 **Notes:** A `<scroller>` can be used as a root element or a embed element. The scoll direction of this component is column, and it can't be changed.
 
-### Subcomponents
+### Child Components
 
-It supports all kinds of weex components as its subcomponents.
+It supports all kinds of weex components as its child components.
 
 ### Attributes
 

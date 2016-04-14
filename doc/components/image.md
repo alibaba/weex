@@ -2,15 +2,15 @@
 
 ### Summary
 
-`image` tag is used to render a specified picture, and it shouldn't contain any subcomponents. You can use `img` as alias.
+`image` tag is used to render a specified picture, and it shouldn't contain any child component. You can use `img` as alias.
 
 **Notes:** the styles of `width` and `height` should be specified, otherwise it won't work.
 
 alias: `<img>`
 
-### Subcomponents
+### Child Components
 
-This component supports no subcomponents.
+This component supports no child components.
 
 ### Attributes
 
