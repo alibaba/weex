@@ -25,8 +25,9 @@
     created: function() {
       var useLocal = true; // false when releasing
       var localBase = '//localhost:12580/examples/build/';
+//      var localBase = '//30.10.193.58:12580/examples/build/';
       var nativeBase = '//groups.alidemo.cn/weex/weex/examples/build/';
-      var h5Base = './index.html?page=../../examples/build/';
+      var h5Base = './index.html?page=./examples/build/';
 
       // in native
       var base = useLocal ? localBase : nativeBase;
