@@ -479,7 +479,7 @@ public class WXScrollView extends ScrollView implements Callback, IWXScroller, W
         }
         int newPosition = getScrollY();
         if (mInitialPosition - newPosition == 0) {//has stopped
-          onScrollStoped(WXScrollView.this, getScrollX(), getScrollY());
+          onScrollStopped(WXScrollView.this, getScrollX(), getScrollY());
         } else {
           onScroll(WXScrollView.this, getScrollX(), getScrollY());
           mInitialPosition = getScrollY();
@@ -494,7 +494,7 @@ public class WXScrollView extends ScrollView implements Callback, IWXScroller, W
     return true;
   }
 
-  protected void onScrollStoped(WXScrollView scrollView, int x, int y) {
+  protected void onScrollStopped(WXScrollView scrollView, int x, int y) {
     int count = mScrollViewListeners == null ? 0 : mScrollViewListeners.size();
     for (int i = 0; i < count; ++i) {
       mScrollViewListeners.get(i).onScrollStopped(this, x, y);
