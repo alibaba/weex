@@ -8,15 +8,15 @@ Weex Mine Sweeper Demo
 
 ``` html
 <template>
-  <container>
+  <div>
     <text class="btn">{{board}}</text>
-    <container repeat="{{row}}" style="flex-direction: row; flex: 1;">
-      <container repeat="{{col}}" style="flex: 1;">
+    <div repeat="{{row}}" style="flex-direction: row; flex: 1;">
+      <div repeat="{{col}}" style="flex: 1;">
         <text tid="{{tid}}" onclick="onclick" onlongpress="onlongpress" class="{{state}} tile" around="{{around}}">{{text}}</text>
-      </container>
-    </container>
+      </div>
+    </div>
     <text onclick="restart" class="btn">START</text>
-  </container>
+  </div>
 </template>
 
 <script>
