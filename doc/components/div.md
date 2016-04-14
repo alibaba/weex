@@ -1,18 +1,18 @@
-# &lt;<cell>&gt;
+# &lt;div&gt;
 
 ### Summary
 
-This component must be used as a subcomponent of a [`list`](list.md) component, which is for the performance optimizing during scrolling.
+The most fundamental component which is a contianer to wrap any other components. It supports all the common styles, attributes and layout of flexbox.
+
+alias: `<container>` (deprecated)
 
 ### Child Components
 
-This type of component supports all kinds of weex component as its child components.
+This type of component supports all kinds of weex component as its child components including its own kind.
 
 ### Attributes
 
 There is no specific attribute for this component other than the [common attributes](/references/common-attrs.md).
-
-**Notes:** you can't give `<cell>` a `flex` value. Width of `<cell>` is equal to the width of its parent component `<list>`, and you don't need to specify its height.
 
 ### Styles
 
@@ -30,6 +30,12 @@ There is no specific attribute for this component other than the [common attribu
 - support `click` event. Check out [common events](/references/common-event.md)
 - support `appear` / `disappear` event. Check out [common events](/references/common-event.md)
 
-### Example
+### Examples
 
-please refer to [List](list.md)
+```
+<div>
+  <image src="..."></image>
+  <text>...</text>
+</div>
+```
+

@@ -32,7 +32,7 @@ A whole example:
 
 ```
 <template>
-  <container style="width: {{w}}; height: {{h}}; background-color: red;" onclick="update"></container>
+  <div style="width: {{w}}; height: {{h}}; background-color: red;" onclick="update"></div>
 </template>
 <script>
   module.exports = {
