@@ -8,7 +8,7 @@ Example:
 
 ```
 <template>
-  <container ontouchstart="handleTouchstart"></container>
+  <div ontouchstart="handleTouchstart"></div>
 </template>
 
 <script>
