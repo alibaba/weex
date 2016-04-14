@@ -7,11 +7,9 @@ Copy [template file](./template.we) and build an example with [UI Gallery](#ui-g
 
 ## UI Gallery
 
-We import a simple UI Gallery for consistent UI style. We recommend a new example can be composed with these UI components.
-
 > Inspired by Bootstrap.
 
-See [UI Gallery Example](./ui.we) for details.
+We import a simple UI Gallery for a consistent UI style. See [UI Gallery Example](./ui.we) for details.
 
 <img src="http://gtms04.alicdn.com/tps/i4/TB1_v6FMpXXXXXfXXXX7XWpVpXX-278-519.gif" width="160" /> <img src="http://gtms03.alicdn.com/tps/i3/TB13LTOMpXXXXceXXXXIxc4RpXX-944-1316.png" width="214" />
 
@@ -20,7 +18,7 @@ Reference:
 ## Button
  
 [**ui-button**](./ui-button.we)
-    
+
 * Attributes: 
     * `type`, ***default*** | primary | success | info | warning | danger | link 
     * `size`, ***large*** | middle | small
