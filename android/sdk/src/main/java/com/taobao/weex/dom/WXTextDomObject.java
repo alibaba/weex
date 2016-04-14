@@ -69,7 +69,9 @@ public class WXTextDomObject extends WXDomObject {
           .isBoring(text, textPaint);
       float desiredWidth = boring == null ? Layout.getDesiredWidth(text,
                                                                    textPaint) : Float.NaN;
-
+      if(CSSConstants.isUndefined(width)){
+        width=node.cssstyle.maxWidth;
+      }
       if (boring == null
           && (CSSConstants.isUndefined(width) || (!CSSConstants
           .isUndefined(desiredWidth) && desiredWidth <= width))) {
