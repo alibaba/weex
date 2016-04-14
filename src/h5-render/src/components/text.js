@@ -16,7 +16,7 @@ Text.prototype = Object.create(Atomic.prototype)
 
 Text.prototype.create = function () {
   var node = document.createElement('div')
-  node.style.fontSize = DEFAULT_FONT_SIZE + 'px'
+  node.style.fontSize = DEFAULT_FONT_SIZE * this.data.scale + 'px'
   this.textNode = document.createElement('span')
   // Give the developers the ability to control space
   // and line-breakers.
