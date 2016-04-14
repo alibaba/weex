@@ -8,8 +8,8 @@ Assuming you have the Android SDK installed, run `android` to open the Android S
 
 Make sure you have the following installed:
 
-1. Android SDK version 23 (compileSdkVersion in `build.gradle`)
-2. SDK build tools version 23.0.1 (buildToolsVersion in `build.gradle`)
+1. Android SDK version 23 (compileSdkVersion in [`build.gradle`](https://github.com/alibaba/weex/blob/master/android/sdk/build.gradle))
+2. SDK build tools version 23.0.1 (buildToolsVersion in [`build.gradle`](https://github.com/alibaba/weex/blob/master/android/sdk/build.gradle))
 3. Android Support Repository >= 17 (for Android Support Library)
 4. Android NDK (download & extraction instructions [here](http://developer.android.com/ndk/downloads/index.html))
 
@@ -35,7 +35,7 @@ ndk.dir=/Users/your_unix_name/android-ndk/android-ndk-r10e
 First, you need to git clone `weex` from github:
 
 ```
-git clone "GitHub repository"
+git clone https://github.com/alibaba/weex.git
 ```
 
 #### 2. Adding the `:weex_sdk_android` project
@@ -171,4 +171,4 @@ Next,
 That's it, your activity is ready to run some JavaScript code.
 
 ##Reference Example   
-`weex-samples`
+[`weex-samples`](https://github.com/alibaba/weex/tree/master/examples)
