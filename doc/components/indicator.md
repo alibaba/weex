@@ -4,9 +4,9 @@
 
 This component must be used as a subcomponent of a [`slider`](slider.md) component.
 
-### Subcomponents
+### Child Components
 
-This component supports no subcomponents.
+This component supports no child components.
 
 ### Attributes
 
@@ -14,9 +14,9 @@ There is no specific attribute for this component other than the [common attribu
 
 ### Styles
 
-- `itemColor`: &lt;colors&gt; This style attribute sets the normal item color using either a named color or a color specified in the hexadecimal #RRGGBB format.
-- `itemSelectedColor`: &lt;colors&gt; This style attribute sets the selected item color using either a named color or a color specified in the hexadecimal #RRGGBB format.
-- `itemSize`: &lt;length&gt; The size of the indicator elements, which is an float attribute.
+- `item-color`: &lt;colors&gt; This style attribute sets the normal item color using either a named color or a color specified in the hexadecimal #RRGGBB format.
+- `item-selectedColor`: &lt;colors&gt; This style attribute sets the selected item color using either a named color or a color specified in the hexadecimal #RRGGBB format.
+- `item-size`: &lt;length&gt; The size of the indicator elements, which is an float attribute.
 
 **common styles**: check out the [common styles](/references/common-attrs.md)
 
@@ -66,9 +66,9 @@ There is no specific attribute for this component other than the [common attribu
     position:absolute;
     top:1;
     left:1;
-    itemColor: red;
-    itemSelectedColor: blue;
-    itemSize: 20;
+    item-color: red;
+    item-selectedColor: blue;
+    item-size: 20;
   }
 </style>
 

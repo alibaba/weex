@@ -4,9 +4,9 @@
 
 Use the &lt;video&gt; component to embed video content in a weex page. The video component use src attribute to specify the source of a video.
 
-### Subcomponents
+### Child Components
 
-This component supports no subcomponents but a text content.
+This component supports no child components but a text content.
 
 ### Attributes
 

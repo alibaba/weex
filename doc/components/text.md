@@ -4,9 +4,9 @@
 
 Render text with specified style rule, `<text>` tag can contain text value only. You can use variable interpolation in the text content with the mark `{{}}`.
 
-### Subcomponents
+### Child Components
 
-This component supports no subcomponents but a text content.
+This component supports no child components but a text content.
 
 ### Attributes
 
