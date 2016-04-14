@@ -13,32 +13,32 @@ you can use the definition below in weex box model.
 - width
 - height
 - padding (space around content, between element content and the element border)
- - padding-left
- - padding-right
- - padding-top
- - padding-bottom
+  - padding-left
+  - padding-right
+  - padding-top
+  - padding-bottom
 - margin (space around elements, outside the border)
- - margin-left
- - margin-right
- - margin-top
- - margin-bottom
+  - margin-left
+  - margin-right
+  - margin-top
+  - margin-bottom
 - border
- - border-style (solid, dashed, dotted)
- - border-width
-   - border-left-width
-   - border-top-width
-   - border-right-width
-   - border-bottom-width
- - border-color
-   - border-left-color
-   - border-top-color
-   - border-right-color
-   - border-bottom-color
- - border-radius  (rounded borders to elements, default value is 0 meaning right angle)
-   - border-bottom-left-radius
-   - border-bottom-right-radius
-   - border-top-left-radius
-   - border-top-right-radius
+  - border-style(solid,dashed,dotted)
+  - border-width
+    - border-left-width
+    - border-top-width
+    - border-right-width
+    - border-bottom-width
+  - border-color
+    - border-left-color
+    - border-top-color
+    - border-right-color
+    - border-bottom-color
+  - border-radius  ( rounded borders to elements , default value is 0 meaning right angle )
+    - border-bottom-left-radius
+    - border-bottom-right-radius
+    - border-top-left-radius
+    - border-top-right-radius
 
 Notes: The rule of border-radius for a specific corner such as `border-top-left-radius` is not currently supported for component `<image>` and `<text>`.
 
