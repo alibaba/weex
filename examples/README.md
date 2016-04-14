@@ -2,7 +2,7 @@
 
 ## Add an example
 
-Copy [template file](./modal.we) and build an example with [UI Gallery](#ui-gallery).  
+Copy [template file](./template.we) and build an example with [UI Gallery](#ui-gallery).  
 
 
 ## UI Gallery
@@ -13,11 +13,11 @@ We import a simple UI Gallery for consistent UI style. We recommend a new exampl
 
 See [UI Gallery Example](./ui.we) for details.
 
-<img src="http://gtms04.alicdn.com/tps/i4/TB1_v6FMpXXXXXfXXXX7XWpVpXX-278-519.gif" width="160" /> <img src="http://gtms03.alicdn.com/tps/i3/TB13LTOMpXXXXceXXXXIxc4RpXX-944-1316.png" width="240" />
+<img src="http://gtms04.alicdn.com/tps/i4/TB1_v6FMpXXXXXfXXXX7XWpVpXX-278-519.gif" width="160" /> <img src="http://gtms03.alicdn.com/tps/i3/TB13LTOMpXXXXceXXXXIxc4RpXX-944-1316.png" width="214" />
 
 Reference:
 
-### Button
+## Button
  
 [**ui-button**](./ui-button.we)
     
@@ -30,9 +30,9 @@ Reference:
     * `click`
 * Example:
     
-    <img src="http://gtms02.alicdn.com/tps/i2/TB162HHMpXXXXcUXpXXSs_WZVXX-320-386.png" width="160" />
+    <img src="http://gtms01.alicdn.com/tps/i1/TB1uUzOMpXXXXXuXpXXqnuiVpXX-278-456.gif" width="160" />
 
-### Panel
+## Panel
 
 [**ui-panel**](./ui-panel.we)
 
@@ -44,7 +44,7 @@ Reference:
     
     <img src="http://gtms04.alicdn.com/tps/i4/TB18drzMpXXXXc9XFXXHO6y1XXX-319-615.png" width="160" />
     
-### Hn
+## Hn
  
 [**ui-hn**](./ui-hn.we)
 
@@ -54,7 +54,7 @@ Reference:
     
     <img src="http://gtms02.alicdn.com/tps/i2/TB1BZYMMpXXXXaYXpXXVSoUTpXX-275-203.png" width="160" />
 
-### Tip
+## Tip
  
 [**ui-tip**](./ui-tip.we)
 
@@ -67,7 +67,7 @@ Reference:
     
     <img src="http://gtms03.alicdn.com/tps/i3/TB1x5DJMpXXXXb2XpXXnTPSZVXX-320-367.png" width="160" />
 
-### List
+## List
  
 [**ui-list-item**](./ui-list-item.we)
 
