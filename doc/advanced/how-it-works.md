@@ -89,7 +89,7 @@ There are two key methods for the bridge between JS and native:
 
 Native RenderEngine will supplies many native components and modules for call.
 
-**Component** is an element in the screen which have a certain view and behavior. It could be configured with some attributes and style properties, and could response user interactions. There are some common components like `<container>`, `<text>`, `<image>` etc.
+**Component** is an element in the screen which have a certain view and behavior. It could be configured with some attributes and style properties, and could response user interactions. There are some common components like `<div>`, `<text>`, `<image>` etc.
 
 **Module** is a set of APIs which could be called from JS Framework. Some of them also have to make async callbacks to JS Framework, for example: send HTTP request.
 
