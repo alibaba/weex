@@ -76,7 +76,7 @@ public class IndexFragment extends BaseFragment implements IWXRenderListener {
     Map<String, Object> options = new HashMap<>();
     options.put("bundleUrl", WEEX_INDEX_URL);
 
-    mInstance.render(TAG, WEEX_INDEX_URL, null, new HashMap<String, Object>(), null, outRect.width(), outRect.height(), WXRenderStrategy.APPEND_ASYNC);
+    mInstance.render(TAG, WEEX_INDEX_URL, new HashMap<String, Object>(), null, outRect.width(), outRect.height(), WXRenderStrategy.APPEND_ASYNC);
     //mInstance.render(TAG, WXFileUtils.loadFileContent("index.js",getActivity()),options,null,outRect.width(),outRect.height(), WXRenderStrategy.APPEND_ASYNC);
     mProgressBar.setVisibility(View.VISIBLE);
     mTipView.setVisibility(View.VISIBLE);
