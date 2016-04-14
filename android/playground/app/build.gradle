@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.alibaba.weex"
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -53,7 +53,6 @@ dependencies {
     compile project(':weex_sdk_android')
     compile 'com.loopj.android:android-async-http:1.4.9@aar'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.facebook.fresco:fresco:0.9.0'
     compile 'com.squareup.okhttp:okhttp:2.3.0'
     compile 'com.squareup.okhttp:okhttp-ws:2.3.0'
     compile 'com.squareup.okio:okio:1.0.1'
