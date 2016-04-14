@@ -215,7 +215,6 @@ import android.widget.FrameLayout;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
-import com.taobao.weex.adapter.DefaultWXHttpAdapter;
 import com.taobao.weex.common.WXPerformance;
 import com.taobao.weex.common.WXRenderStrategy;
 import com.taobao.weex.utils.WXLogUtils;
@@ -265,9 +264,8 @@ public class NavigatorActivity extends Activity {
       public void run() {
         Rect outRect = new Rect();
         getWindow().getDecorView().getWindowVisibleDisplayFrame(outRect);
-        instance.render(WXPerformance.DEFAULT,
+        instance.renderByUrl(WXPerformance.DEFAULT,
                         intent.getData().toString(),
-                        new DefaultWXHttpAdapter(),
                         null, null, outRect.width(),
                         outRect.height(),
                         WXRenderStrategy.APPEND_ASYNC);

@@ -84,7 +84,7 @@ public class WXMainActivity extends WXBaseActivity implements IWXRenderListener 
     if(TextUtils.equals(CURRENT_IP,"your_current_IP")){
       mInstance.render(TAG, WXFileUtils.loadFileContent("index.js", this), options, null, ScreenUtil.getDisplayWidth(this), ScreenUtil.getDisplayHeight(this), WXRenderStrategy.APPEND_ASYNC);
     }else{
-      mInstance.render(TAG, WEEX_INDEX_URL, null, new HashMap<String, Object>(), null, ScreenUtil.getDisplayWidth(this), ScreenUtil.getDisplayHeight(this), WXRenderStrategy.APPEND_ASYNC);
+      mInstance.renderByUrl(TAG, WEEX_INDEX_URL, new HashMap<String, Object>(), null, ScreenUtil.getDisplayWidth(this), ScreenUtil.getDisplayHeight(this), WXRenderStrategy.APPEND_ASYNC);
     }
     mProgressBar.setVisibility(View.VISIBLE);
     mTipView.setVisibility(View.VISIBLE);
@@ -193,7 +193,7 @@ public class WXMainActivity extends WXBaseActivity implements IWXRenderListener 
     mProgressBar.setVisibility(View.GONE);
     mTipView.setVisibility(View.VISIBLE);
     if (TextUtils.equals(s, WXRenderErrorCode.WX_NETWORK_ERROR)) {
-      mTipView.setText("network error!");
+      mTipView.setText(R.string.index_tip);
     } else {
       mTipView.setText("render error:" + s1);
     }

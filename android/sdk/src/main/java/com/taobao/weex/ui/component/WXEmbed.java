@@ -210,7 +210,6 @@ import android.view.ViewGroup;
 
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.adapter.DefaultWXHttpAdapter;
 import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.common.WXPerformance;
 import com.taobao.weex.common.WXRenderStrategy;
@@ -263,8 +262,8 @@ public class WXEmbed extends WXDiv {
     });
     sdkInstance.setImgLoaderAdapter(mInstance.getImgLoaderAdapter());
     ViewGroup.LayoutParams layoutParams = getView().getLayoutParams();
-    sdkInstance.render(WXPerformance.DEFAULT,
-                       src, new DefaultWXHttpAdapter(),
+    sdkInstance.renderByUrl(WXPerformance.DEFAULT,
+                       src,
                        null, null, layoutParams.width,
                        layoutParams.height,
                        WXRenderStrategy.APPEND_ASYNC);
