@@ -9,7 +9,6 @@
   module.exports = {
     data: {
       bgColor: '#ffffff',
-//      highlight: true,
       click: function() {
       }
     },
@@ -33,9 +32,7 @@
     padding-right: 35px;
     height: 160px;
     justify-content: center;
-    /*align-items: center;*/
-    /*background-color: #ffffff;*/
-    margin-bottom: 1px; /*FIXME @yinfeng*/
+    /*margin-bottom: 1px; FUTURE */
     border-bottom-width: 1px;
     border-color: #dddddd;
   }

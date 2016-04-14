@@ -7,7 +7,8 @@
 <script>
   module.exports = {
     data: {
-      level: 1
+      level: 1,
+      value: ''
     },
     methods: {}
   }
