@@ -242,7 +242,6 @@ public class WXSDKInstance implements IWXActivityStateListener {
 
   public boolean mEnd = false;
   // adapters
-  protected IWXImgLoaderAdapter mImgLoaderAdapter;
   protected IWXUserTrackAdapter mUserTrackAdapter;
   protected IWXHttpAdapter mWXHttpAdapter;
   private IWXRenderListener mRenderListener;
@@ -314,8 +313,8 @@ public class WXSDKInstance implements IWXActivityStateListener {
     return mWXScrollViewListener;
   }
 
+  @Deprecated
   public void setIWXUserTrackAdapter(IWXUserTrackAdapter adapter) {
-    mUserTrackAdapter = adapter;
   }
 
   /**
@@ -426,7 +425,29 @@ public class WXSDKInstance implements IWXActivityStateListener {
    * @param height   Height of weex's root container, the default is match_parent
    * @param flag     RenderStrategy {@link WXRenderStrategy}
    */
-  public void render(final String pageName, final String url, IWXHttpAdapter adapter, Map<String, Object> options, final String jsonInitData, final int width, final int height, final WXRenderStrategy flag) {
+//  public void render(final String pageName, final String url, IWXHttpAdapter adapter, Map<String, Object> options, final String jsonInitData, final int width, final int height, final WXRenderStrategy flag) {
+//    if (adapter == null) {
+//      adapter = new DefaultWXHttpAdapter();
+//    }
+//
+//    WXRequest wxRequest = new WXRequest();
+//    wxRequest.url = url;
+//    if (wxRequest.paramMap == null) {
+//      wxRequest.paramMap = new HashMap<String, Object>();
+//    }
+//    wxRequest.paramMap.put("user-agent", WXHttpUtil.assembleUserAgent());
+//    if (options == null) {
+//      options = new HashMap<String, Object>();
+//    }
+//    if (!options.containsKey("bundleUrl")) {
+//      options.put("bundleUrl", url);
+//    }
+//    adapter.sendRequest(wxRequest, new WXHttpListener(pageName, options, jsonInitData, width, height, flag, System.currentTimeMillis()));
+//    mWXHttpAdapter = adapter;
+//  }
+
+  public void renderByUrl(final String pageName, final String url, Map<String, Object> options, final String jsonInitData, final int width, final int height, final WXRenderStrategy flag) {
+    IWXHttpAdapter adapter=WXSDKManager.getInstance().getIWXHttpAdapter();
     if (adapter == null) {
       adapter = new DefaultWXHttpAdapter();
     }
@@ -503,19 +524,15 @@ public class WXSDKInstance implements IWXActivityStateListener {
   }
 
   public IWXImgLoaderAdapter getImgLoaderAdapter() {
-    return mImgLoaderAdapter;
+    return WXSDKManager.getInstance().getIWXImgLoaderAdapter();
   }
 
+  @Deprecated
   public void setImgLoaderAdapter(IWXImgLoaderAdapter adapter) {
-    this.mImgLoaderAdapter = adapter;
   }
 
   public IWXHttpAdapter getWXHttpAdapter() {
-    return mWXHttpAdapter;
-  }
-
-  public void setWXHttpAdapter(IWXHttpAdapter WXHttpAdapter) {
-    mWXHttpAdapter = WXHttpAdapter;
+    return WXSDKManager.getInstance().getIWXHttpAdapter();
   }
 
   public void reloadImages() {
@@ -841,7 +858,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
         render(pageName, template, options, jsonInitData, width, height, flag);
       } else if (TextUtils.equals(WXRenderErrorCode.WX_USER_INTERCEPT_ERROR, response.statusCode)) {
         WXLogUtils.d("user intercept");
-        return;
+        onRenderError(WXRenderErrorCode.WX_USER_INTERCEPT_ERROR,response.errorMsg);
       } else {
         onRenderError(WXRenderErrorCode.WX_NETWORK_ERROR, response.errorMsg);
       }
