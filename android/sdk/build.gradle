@@ -24,7 +24,7 @@ android {
 //    def libsDir = projectDir.path + "/src/main/jni/"
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion 19
         versionCode 1
         versionName "1.0"
         ndk {
