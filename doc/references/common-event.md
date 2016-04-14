@@ -1,37 +1,37 @@
 # Common Events
 
-## click event
+## Click event
 
-If a component is bound to this event, a click event will be triggered when the user clicks on the component,
+If a `click` event is bound to a component, the event will be triggered when the user clicks on it.
+
+**Notes:** The component `input` and `switch` do not currently support this event, please use `change` or `input` event instead.
 
 **event object**
 
 * `type`: `click`
-* `target`: The object where event is triggered
+* `target`: The target component where the event is triggered
 * `timestamp`: Timestamp when event is triggered.
 
-## appear event
+## Appear event
 
-If a component in a scroller is bound to this event, an appear event will be triggered when the component comes to be visible.
+If a `appear` event is bound to a component inside a scroller, the event will be triggered when the component comes to be visible.
 
 **event object**
 
 * `type`: `appear`
-* `target`: The object where event is triggered
+* `target`: The target component where event is triggered
 * `timestamp`: Timestamp when event is triggered.
 * `direction`: The direction in which the scroller is scrolling. Should be `up` or `down`.
 
-## disappear event
+## Disappear event
 
-If a component in a scroller is bound to this event, an disappear event will be triggered when the component comes to be invisible.
+If a `disappear` event is bound to a component inside a scroller, the event will be triggered when the component scrolls out of viewport and disappears from your sight.
 
 **event object**
 
-* `type`: `appear`
+* `type`: `disappear`
 * `target`: The object where event is triggered
 * `timestamp`: Timestamp when event is triggered.
 * `direction`: The direction in which the scroller is scrolling. Should be `up` or `down`
-
-
 
 
