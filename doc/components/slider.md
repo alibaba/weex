@@ -1,27 +1,51 @@
-## &lt;slider> Compoent
+# &lt;slider&gt;
 
-Use the **&lt;slider> compoent** to embed slider in a **WeexPage**.
+### Summary
+
+A slide's player to show slides (mostly as pictures) one page by another. The default interval between two slides is 3 seconds.
+
+
+**Notes:** A `<scroller>` can be used as a root element or a embed element. The scoll direction of this component is column, and it can't be changed.
+
+### Child Components
+
+It supports all kinds of weex components as its slides, especially the `indicator` component which can be used only as a child component of `slider`.
 
 ### Attributes
 
-- `auto_play`: `true` | `false` A Boolean attribute. defalut value is `false`.
+- `auto-play`: &lt;boolean&gt; `true` | `false`. This value determines whether the slides plays automatically after the page rendering finished. The default value is `false`.
+
+Other attributes please check out the [common attributes](/references/common-attrs.md).
+
+### Styles
+
+**common styles**: check out [common styles for components](/references/common-style.md)
+
+- support flexbox related styles
+- support box model related styles
+- support ``position`` related styles
+- support ``opacity``, ``background-color`` etc.
 
 ### Events
 
-- `change`: Sent when **&lt;slider> component** page index changed.
+- `change`: triggerd when the slide's index is changed. The event object contains the attribute of `index`, which is the index number of the currently shown slide.
 
-### Children
+**common events**: check out the [common events](/references/common-event.md)
 
-Any component.
+- support `click` event. Check out [common events](/references/common-event.md)
+- support `appear` / `disappear` event. Check out [common events](/references/common-event.md)
 
 ### Example
 
-```html
-<container>
-  <slider show-indicators="false" auto-play="true" onchange="change" style="...">
-    <image repeat="{{imageList}}" src="{{src}}" style="..."></image>
-  </slider>
-</container>
+```
+<template>
+  <div>
+    <slider auto-play="true" onchange="change" style="...">
+      <image repeat="{{imageList}}" src="{{src}}" style="..."></image>
+      <indicator>
+    </slider></indicator>
+  </div>
+</template>
 
 <script>
   module.exports = {
@@ -36,3 +60,5 @@ Any component.
   }
 </script>
 ```
+
+

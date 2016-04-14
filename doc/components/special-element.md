@@ -11,18 +11,18 @@ alias: `<slot>`
 ```html
 <we-element name="item">
   <template>
-    <container>
+    <div>
       <content></content>
-    </container>
+    </div>
   </template>
 </we-element>
 
 <template>
-  <container>
+  <div>
     <item>
       <text>Content Text</text>
     </item>
-  </container>
+  </div>
 </template>
 ```
 

@@ -1,6 +1,6 @@
 # Common Attribute
 
-All of weex tags share some common attribute
+All of weex tags share some common attributes
 
 ## id
 
@@ -9,7 +9,7 @@ id="logo"
 id="item-{{index}}"
 ```
 
-`id` give weex tag unique mark for `<template>` scope . with id attribute you can easily reference weex tag.
+`id` gives weex tag a unique mark in `<template>` scope. With id attribute you can easily refer a weex tag.
 
 [more information](/syntax/id.md)
 
@@ -31,7 +31,7 @@ class="button"
 class="button {{btnStatus}}"
 ```
 
-add classname for weex tag, you can using class attribute for tag classify
+to add classname for weex tag, you can use class attribute for tag classification.
 
 ## repeat
 
@@ -39,7 +39,7 @@ add classname for weex tag, you can using class attribute for tag classify
 repeat="{{items}}"
 ```
 
-provide a list of data , using current tag as template  repeat generate weex tag .
+provide a list of data, using current tag as a template to repeatedly generate the same weex tags.
 
 [more information](/syntax/display-logic.md)
 
@@ -49,7 +49,7 @@ provide a list of data , using current tag as template  repeat generate weex tag
 if="{{opened}}"
 ```
 
-provide a boolean value to decide whether or not display current tag.
+provide a boolean value to decide whether or not to display current tag.
 
 [more information](/syntax/display-logic.md)
 
@@ -59,11 +59,11 @@ provide a boolean value to decide whether or not display current tag.
 append="tree/node"
 ```
 
-by providing the value of `tree` or `node`,  it determine the progress of rendering.
+by providing the value of `tree` or `node`, it determines the progress of rendering.
 
 [more information](/syntax/render-logic.md)
 
-##  Event Handing (onclick / onappear ...)
+## Event Handing (on...)
 
 ```
 onclick="gotoDetail"

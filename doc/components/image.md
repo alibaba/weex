@@ -1,32 +1,47 @@
-# image
+# &lt;image&gt;
 
-`image` tag render specified image, it can't contain any children tag bug can using `img` as alias.
+### Summary
+
+`image` tag is used to render a specified picture, and it shouldn't contain any child component. You can use `img` as alias.
+
+**Notes:** the styles of `width` and `height` should be specified, otherwise it won't work.
 
 alias: `<img>`
 
-## Attribute
+### Child Components
 
-- `src`: image source url
+This component supports no child components.
 
-## Style
+### Attributes
 
-- flexbox an other box model style
-- position
-- opacity / background-color
+- `src`: &lt;string&gt; image source url
 
-See [common style](/references/common-style.md) for more.
+Other attributes please check out the [common attributes](/references/common-attrs.md).
 
-### Notes
+### Styles
 
-height and width style of `image` have default value `200`
+- `width`: &lt;length&gt; the width of the component. This style should be specified.
+- `height`: &lt;length&gt; the height of the component. This style should be specifed.
 
-## Code Example
+**common styles**: check out the [common styles](/references/common-attrs.md)
 
-```html
-<container>
-  <image src="..."></image>
-  <image src="..." style="width: 200; height: 150;"></image>
-</container>
+- support flexbox related styles
+- support box model related styles
+- support ``position`` related styles
+- support ``opacity``, ``background-color`` etc.
+
+### Events
+
+**common events**: check out the [common events](/references/common-event.md)
+
+- support `click` event. Check out [common events](/references/common-event.md)
+- support `appear` / `disappear` event. Check out [common events](/references/common-event.md)
+
+### Examples
+
 ```
-
-
+<div>
+  <image src="..." ></image>
+  <text>...</text>
+</div>
+```

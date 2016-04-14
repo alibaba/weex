@@ -9,10 +9,10 @@ eg:
 ```html
 <we-element name="foo">
   <template>
-    <container>
+    <div>
       <image src="{{imageUrl}}" onclick="test"></image>
       <text>{{title}}</text>
-    </container>
+    </div>
   </template>
   <script>
     module.exports = {
@@ -52,10 +52,10 @@ Parent component can using `this.$([String id])` get context of child component.
 ```html
 <we-element name="foo">
   <template>
-    <container>
+    <div>
       <image src="{{imageUrl}}"></image>
       <text>{{title}}</text>
-    </container>
+    </div>
   </template>
   <script>
     module.exports = {
@@ -73,10 +73,10 @@ Parent component can using `this.$([String id])` get context of child component.
 </we-element>
 
 <template>
-  <container>
+  <div>
     <text onclick="test">click to update foo</text>
     <foo id="fooEl" title="..." image-url="..."></foo>
-  </container>
+  </div>
 </template>
 
 <script>
@@ -101,9 +101,9 @@ eg:
 ```html
 <we-element name="bar">
   <template>
-    <container>
+    <div>
       <image src="{{imageUrl}}"></image>
-    </container>
+    </div>
   </template>
   <script>
     module.exports = {
@@ -122,10 +122,10 @@ eg:
 
 <we-element name="foo">
   <template>
-    <container>
+    <div>
       <bar></bar>
       <text>{{title}}</text>
-    </container>
+    </div>
   </template>
   <script>
     module.exports = {
@@ -143,11 +143,11 @@ eg:
 </we-element>
 
 <template>
-  <container>
+  <div>
     <text onclick="test">click to update foo</text>
     <foo></foo>
     <foo></foo>
-  </container>
+  </div>
 </template>
 
 <script>
@@ -200,10 +200,10 @@ eg:
 </we-element>
 
 <template>
-  <container>
+  <div>
     <foo></foo>
     <bar></bar>
-  </container>
+  </div>
 </template>
 
 <script>
