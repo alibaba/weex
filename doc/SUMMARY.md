@@ -48,12 +48,12 @@
         * [JS Framework APIs](/specs/js-framework-apis.md)
         * [Virtual DOM APIs](/specs/virtual-dom-apis.md)
 * Demo
- * [Hello World](demo/hello-world.md)
- * [Modal Collection](demo/modal_collection.md)
- * [Animation](demo/animation.md)
- * [Mine Sweeper](demo/mine_sweeper.md)
- * [Weex Calcuator](demo/calcuator.md)
- * [Skeleton Animation](demo/skeleton_animation.md)
+    * [Hello World](demo/hello-world.md)
+    * [Modal](demo/modal.md)
+    * [List](demo/list.md)
+    * [Slider](demo/slider.md)
+    * [Animation](demo/animation.md)
+    * [More examples](https://github.com/alibaba/weex/tree/master/examples)
 
 * [Service & Tools](/tools/main.md)
     * [CLI](/tools/cli.md)
