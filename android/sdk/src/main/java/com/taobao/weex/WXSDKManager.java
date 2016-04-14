@@ -207,6 +207,10 @@ package com.taobao.weex;
 import android.os.Looper;
 import android.text.TextUtils;
 
+import com.taobao.weex.adapter.DefaultWXHttpAdapter;
+import com.taobao.weex.adapter.IWXHttpAdapter;
+import com.taobao.weex.adapter.IWXImgLoaderAdapter;
+import com.taobao.weex.adapter.IWXUserTrackAdapter;
 import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.bridge.WXModuleManager;
 import com.taobao.weex.common.WXRefreshData;
@@ -230,6 +234,10 @@ public class WXSDKManager {
   private final WXDomManager mWXDomManager;
   private WXBridgeManager mBridgeManager;
   private WXRenderManager mWXRenderManager;
+
+  private IWXUserTrackAdapter mIWXUserTrackAdapter;
+  private IWXImgLoaderAdapter mIWXImgLoaderAdapter;
+  private IWXHttpAdapter mIWXHttpAdapter;
 
   private WXSDKManager() {
     mWXRenderManager = new WXRenderManager();
@@ -328,5 +336,32 @@ public class WXSDKManager {
 
   String generateInstanceId() {
     return String.valueOf(sInstanceId.incrementAndGet());
+  }
+
+  public IWXUserTrackAdapter getIWXUserTrackAdapter() {
+    return mIWXUserTrackAdapter;
+  }
+
+  public void setIWXUserTrackAdapter(IWXUserTrackAdapter IWXUserTrackAdapter) {
+    mIWXUserTrackAdapter = IWXUserTrackAdapter;
+  }
+
+  public IWXImgLoaderAdapter getIWXImgLoaderAdapter() {
+    return mIWXImgLoaderAdapter;
+  }
+
+  public void setIWXImgLoaderAdapter(IWXImgLoaderAdapter IWXImgLoaderAdapter) {
+    mIWXImgLoaderAdapter = IWXImgLoaderAdapter;
+  }
+
+  public IWXHttpAdapter getIWXHttpAdapter() {
+    if(mIWXHttpAdapter==null){
+      mIWXHttpAdapter=new DefaultWXHttpAdapter();
+    }
+    return mIWXHttpAdapter;
+  }
+
+  public void setIWXHttpAdapter(IWXHttpAdapter IWXHttpAdapter) {
+    mIWXHttpAdapter = IWXHttpAdapter;
   }
 }
