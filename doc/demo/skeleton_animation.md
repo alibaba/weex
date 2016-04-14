@@ -8,14 +8,14 @@ Weex Skeleton Animation Demo
 ## weex code
 ``` html
 <template>
-    <container class="stage" style="width:{{stage.width}};height:{{stage.height}}" onclick="stop">
+    <div class="stage" style="width:{{stage.width}};height:{{stage.height}}" onclick="stop">
      <text style="font-size:24;">frame:{{frame}}</text>
-      <container repeat="{{list}}" append="tree">
-        <container class="anim" style="width:{{width}};height:{{height}};transform:{{transform}};transform-origin:{{transformOrigin}};opacity:{{alpha}};">
+      <div repeat="{{list}}" append="tree">
+        <div class="anim" style="width:{{width}};height:{{height}};transform:{{transform}};transform-origin:{{transformOrigin}};opacity:{{alpha}};">
           <image class="animImage" style="left:-{{imageX}};top:-{{imageY}};width:{{imageWidth}};height: {{imageHeight}}" src="{{imageURL}}"></image>
-        </container>
-      </container>
-    </container>
+        </div>
+      </div>
+    </div>
 </template>
 <style>
     .stage{

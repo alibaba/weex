@@ -1,6 +1,6 @@
 # Replace option
 
-The `replace` option is boolean type. It determined whether this composed component will be replaced with the `<template>` content or just as a normal `<container>` element which include the `<template>` content.
+The `replace` option is boolean type. It determined whether this composed component will be replaced with the `<template>` content or just as a normal `<div>` element which include the `<template>` content.
 
 For example:
 
@@ -24,9 +24,9 @@ For example:
 will rendered as:
 
 ```
-<container>
+<div>
   <text>Foo</text>
-</container>
+</div>
 ```
 
 but:
