@@ -103,19 +103,19 @@ define('@weex-component/ui-panel', function (require, exports, module) {
     "borderWidth": 1
   },
   "panel-primary": {
-    "borderColor": "rgb(40, 96, 144)"
+    "borderColor": "rgb(40,96,144)"
   },
   "panel-success": {
-    "borderColor": "rgb(76, 174, 76)"
+    "borderColor": "rgb(76,174,76)"
   },
   "panel-info": {
-    "borderColor": "rgb(70, 184, 218)"
+    "borderColor": "rgb(70,184,218)"
   },
   "panel-warning": {
-    "borderColor": "rgb(238, 162, 54)"
+    "borderColor": "rgb(238,162,54)"
   },
   "panel-danger": {
-    "borderColor": "rgb(212, 63, 58)"
+    "borderColor": "rgb(212,63,58)"
   },
   "panel-header": {
     "backgroundColor": "#f5f5f5",
@@ -190,7 +190,7 @@ define('@weex-component/sliderDemo', function (require, exports, module) {
   module.exports = {
     data: function () {return {
       eventCnt: 0,
-      togglePlayMsg: '停止',
+      togglePlayMsg: 'pause',
       sliders: [
         {
           interval: 1000,
@@ -362,7 +362,7 @@ define('@weex-component/sliderDemo', function (require, exports, module) {
     "top": 160,
     "left": 240,
     "itemColor": "#666666",
-    "itemSelectedColor": "#0000ff"
+    "itemSelectedColor": "rgb(40, 96, 144)"
   }
 }
 
@@ -593,7 +593,7 @@ define('@weex-component/sliderDemo', function (require, exports, module) {
               ],
               "style": {
                 "itemColor": "#ffffff",
-                "itemSelectedColor": "#ff0000"
+                "itemSelectedColor": "rgb(217, 83, 79)"
               }
             },
             {
