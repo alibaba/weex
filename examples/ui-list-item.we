@@ -15,10 +15,10 @@
     methods: {
       touchstart: function() {
         // TODO adaptive opposite bgColor
-        this.bgColor = '#e6e6e6';
+//        this.bgColor = '#e6e6e6';
       },
       touchend: function() {
-        this.bgColor = '#ffffff';
+//        this.bgColor = '#ffffff';
       }
     }
   }
