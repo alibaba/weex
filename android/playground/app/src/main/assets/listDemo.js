@@ -10,9 +10,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:1,
           scopeValue:1,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'张三丰',
-          PersonVisitTime:'昨天',
-          shopDesc:'极有家，过我想要过的生活，特卖大放送！～～～～～',
+          PersonName:'Mendeleyev',
+          PersonVisitTime:'today',
+          shopDesc:'Genius only means hard-working all one\'s life',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/bao/uploaded/i2/TB1rtOnHpXXXXXLaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd4.alicdn.com/bao/uploaded/i4/TB15KrfFVXXXXXJXXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/bao/uploaded/i2/TB1t5YBGVXXXXXcaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -28,9 +28,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:2,
           scopeValue:2,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'张无忌',
-          PersonVisitTime:'昨天',
-          shopDesc:'女士包包，自由自在！～～～～～',
+          PersonName:'Napoleon',
+          PersonVisitTime:'yesterday',
+          shopDesc:'The man who has made up his mind to win will never say "impossible "',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd1.alicdn.com/imgextra/i1/2655929383/TB2.qITjpXXXXcIXXXXXXXXXXXX_!!2655929383.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd3.alicdn.com/imgextra/i3/2655929383/TB2eWwZjpXXXXbHXXXXXXXXXXXX_!!2655929383.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/imgextra/i2/2655929383/TB2tgQWjpXXXXbZXXXXXXXXXXXX_!!2655929383.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -46,9 +46,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:3,
           scopeValue:3,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'杨过',
-          PersonVisitTime:'昨天',
-          shopDesc:'一双好鞋，陪你走遍天涯！～～～～～',
+          PersonName:'Balzac',
+          PersonVisitTime:'yesterday',
+          shopDesc:'There is no such thing as a great talent without great will - power',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd1.alicdn.com/imgextra/i1/TB1AFz9LXXXXXbrXVXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/imgextra/i2/2557954751/TB2is2njXXXXXatXpXXXXXXXXXX_!!2557954751.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/imgextra/i2/2557954751/TB2PNYGjXXXXXbXXXXXXXXXXXXX_!!2557954751.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -64,9 +64,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:4,
           scopeValue:4,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'西门吹雪',
-          PersonVisitTime:'今天',
-          shopDesc:'大侠，就要有件好衣服！～～～～～',
+          PersonName:'Thomas Carlyle',
+          PersonVisitTime:'3 day ago',
+          shopDesc:'Cease to struggle and you cease to live',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd4.alicdn.com/imgextra/i4/69426324/TB2zbwdfXXXXXa4XpXXXXXXXXXX_!!69426324.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd4.alicdn.com/imgextra/i4/69426324/TB2L7ZAfXXXXXXOXXXXXXXXXXXX_!!69426324.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd4.alicdn.com/imgextra/i4/69426324/TB2p9wufXXXXXbiXXXXXXXXXXXX_!!69426324.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -82,9 +82,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:5,
           scopeValue:5,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'黄蓉',
-          PersonVisitTime:'昨天',
-          shopDesc:'靖哥哥说了，买买买！～～～～～',
+          PersonName:'Addison',
+          PersonVisitTime:'yesterday',
+          shopDesc:'A strong man will struggle with the storms of fate',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd3.alicdn.com/bao/uploaded/i3/TB1MQ8_KVXXXXaLXVXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/imgextra/i2/53218032/TB2bGSqiXXXXXXyXpXXXXXXXXXX_!!53218032.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/bao/uploaded/i2/TB1kP2zKFXXXXbIXXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -100,9 +100,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:6,
           scopeValue:1,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'乔峰',
-          PersonVisitTime:'昨天',
-          shopDesc:'刀山火海，任我闯荡！～～～～～',
+          PersonName:'Ruskin',
+          PersonVisitTime:'yesterday',
+          shopDesc:'Living without an aim is like sailing without a compass',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd4.alicdn.com/bao/uploaded/i4/TB11yFnHXXXXXakaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd4.alicdn.com/imgextra/i4/32720628/TB2CRJUcXXXXXXwXpXXXXXXXXXX_!!32720628.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/bao/uploaded/i2/TB17LUzHXXXXXcEaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -118,9 +118,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:7,
           scopeValue:2,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'段誉',
-          PersonVisitTime:'今天',
-          shopDesc:'凌波微步，非一般的感觉！～～～～～',
+          PersonName:'Yiming',
+          PersonVisitTime:'today',
+          shopDesc:'Live a noble and honest life. Reviving past times in your old age will help you to enjoy your life again',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd4.alicdn.com/bao/uploaded/i4/TB1hvNoJXXXXXaMaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd4.alicdn.com/imgextra/i4/2058567235/TB2V8iygFXXXXaRXpXXXXXXXXXX_!!2058567235.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/imgextra/i2/2058567235/TB2im1QgFXXXXX8XXXXXXXXXXXX_!!2058567235.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -136,9 +136,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:8,
           scopeValue:3,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'虚竹',
-          PersonVisitTime:'昨天',
-          shopDesc:'内力深厚，也要保护好这双手！～～～～～',
+          PersonName:'Brown',
+          PersonVisitTime:'yesterday',
+          shopDesc:'Behind every successful man there\'s a lot u unsuccessful years',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd1.alicdn.com/bao/uploaded/i1/TB18BZ2KFXXXXb8XFXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd1.alicdn.com/imgextra/i1/2775383848/TB2r012jVXXXXXHXpXXXXXXXXXX_!!2775383848.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd3.alicdn.com/imgextra/i3/2775383848/TB2iI9VjVXXXXaoXpXXXXXXXXXX_!!2775383848.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -154,9 +154,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:9,
           scopeValue:4,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'王语嫣',
-          PersonVisitTime:'今天',
-          shopDesc:'记忆好，就要用这款学习机！～～～～～',
+          PersonName:'YIMING',
+          PersonVisitTime:'today',
+          shopDesc:'Enrich your life today,. yesterday is history.tomorrow is mystery',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd1.alicdn.com/bao/uploaded/i1/TB1JB.rLpXXXXXLXXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd4.alicdn.com/imgextra/i4/2702739128/TB2JdvmjVXXXXXjXXXXXXXXXXXX_!!2702739128.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/imgextra/i2/2702739128/TB2A.e6jVXXXXXGXpXXXXXXXXXX_!!2702739128.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -172,9 +172,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:10,
           scopeValue:5,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'令狐冲',
-          PersonVisitTime:'昨天',
-          shopDesc:'做男人，一定要剑剑剑！～～～～～',
+          PersonName:'YIMING',
+          PersonVisitTime:'yesterday',
+          shopDesc:'The secret of success is constancy to purpose',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd3.alicdn.com/bao/uploaded/i3/TB17zXOGXXXXXbEXVXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd1.alicdn.com/imgextra/i1/2265445951/TB22ACTbFXXXXXBXXXXXXXXXXXX_!!2265445951.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd3.alicdn.com/imgextra/i3/2265445951/TB2oXqUbFXXXXXIXXXXXXXXXXXX_!!2265445951.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -189,9 +189,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:11,
           scopeValue:1,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'林平之',
-          PersonVisitTime:'昨天',
-          shopDesc:'天下武功，唯辟邪剑谱！～～～～～',
+          PersonName:'YIMING',
+          PersonVisitTime:'yesterday',
+          shopDesc:'Between two stools one falls to the ground',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd4.alicdn.com/bao/uploaded/i4/TB1lktpIVXXXXXvaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/imgextra/i2/481942/TB2buYAiVXXXXcTXXXXXXXXXXXX_!!481942.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/imgextra/i2/481942/TB24UvFiVXXXXcbXXXXXXXXXXXX_!!481942.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -207,9 +207,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:12,
           scopeValue:2,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'独孤求败',
-          PersonVisitTime:'昨天',
-          shopDesc:'此生只求一败！～～～～～',
+          PersonName:'Chaplin',
+          PersonVisitTime:'yesterday',
+          shopDesc:'You have to believe in yourself. That\'s the secret of success',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/bao/uploaded/i2/TB1NuvDLXXXXXaZXFXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd4.alicdn.com/imgextra/i4/898225/TB28lpqjXXXXXXRXpXXXXXXXXXX_!!898225.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd1.alicdn.com/bao/uploaded/i1/TB15ob8JFXXXXaOXVXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -225,9 +225,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:13,
           scopeValue:3,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'王重阳',
-          PersonVisitTime:'昨天',
-          shopDesc:'江湖义士，随我一起抗金！～～～～～',
+          PersonName:'YIMING',
+          PersonVisitTime:'yesterday',
+          shopDesc:'Success grows out of struggles to overcome difficulties',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd3.alicdn.com/bao/uploaded/i3/TB16Fw_KFXXXXcYXFXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd1.alicdn.com/imgextra/i1/135961121/TB2WQsMjXXXXXXKXpXXXXXXXXXX_!!135961121.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd4.alicdn.com/imgextra/i4/135961121/TB2K_o2jXXXXXaZXXXXXXXXXXXX_!!135961121.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -243,9 +243,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:14,
           scopeValue:4,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'黄药师',
-          PersonVisitTime:'今天',
-          shopDesc:'桃花潭水三千丈！～～～～～',
+          PersonName:'YIMING',
+          PersonVisitTime:'today',
+          shopDesc:'The dictionary is the only place where success comes before work',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd4.alicdn.com/bao/uploaded/i4/2484560624/TB24KY4jFXXXXabXXXXXXXXXXXX_!!2484560624.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/imgextra/i2/2484560624/TB2tqrxjFXXXXb5XpXXXXXXXXXX_!!2484560624.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd3.alicdn.com/imgextra/i3/2484560624/TB2EhvqjVXXXXaZXpXXXXXXXXXX_!!2484560624.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -261,9 +261,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:15,
           scopeValue:5,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'洪七公',
-          PersonVisitTime:'昨天',
-          shopDesc:'年轻人，我拿武功秘籍换只鸡可否！～～～～～',
+          PersonName:'YIMING',
+          PersonVisitTime:'yesterday',
+          shopDesc:'There are no shortcuts to any place worth going',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd3.alicdn.com/bao/uploaded/i3/TB1TT7oLpXXXXXLXpXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/imgextra/i2/2674463756/TB2EuK6jVXXXXa_XpXXXXXXXXXX_!!2674463756.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd3.alicdn.com/imgextra/i3/2674463756/TB2C02ljVXXXXbPXXXXXXXXXXXX_!!2674463756.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -278,9 +278,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:16,
           scopeValue:1,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'欧阳锋',
-          PersonVisitTime:'昨天',
-          shopDesc:'天下武功，唯我蛤蟆功！～～～～～',
+          PersonName:'Johnson',
+          PersonVisitTime:'yesterday',
+          shopDesc:'Great works are performed not by strengh, but by perseverance.',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/bao/uploaded/i2/TB1UCPkHFXXXXXLXXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd3.alicdn.com/imgextra/i3/T1gCAEFwFeXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd1.alicdn.com/imgextra/i1/391593945/TB2wRS2cFXXXXbBXpXXXXXXXXXX_!!391593945.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -296,9 +296,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:17,
           scopeValue:2,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'段王爷',
-          PersonVisitTime:'昨天',
-          shopDesc:'皈依我佛，断了凡尘三千烦恼！～～～～～',
+          PersonName:'Nietzsche',
+          PersonVisitTime:'yesterday',
+          shopDesc:'If you would go up high , then use your own legs ! Do not let yourselves carried aloft',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd3.alicdn.com/bao/uploaded/i3/TB1zgRJKpXXXXcTXXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd4.alicdn.com/imgextra/i4/2560666452/TB2rbhqgVXXXXc4XpXXXXXXXXXX_!!2560666452.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/imgextra/i2/2560666452/TB2gJdWgVXXXXawXXXXXXXXXXXX_!!2560666452.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -315,7 +315,7 @@ define('@weex-component/listDemo', function (require, exports, module) {
           scopeValue:3,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
           PersonName:'周伯通',
-          PersonVisitTime:'昨天',
+          PersonVisitTime:'yesterday',
           shopDesc:'左右互搏术，一个大于俩！～～～～～',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd4.alicdn.com/bao/uploaded/i4/TB1wnQtJVXXXXXzXXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd3.alicdn.com/imgextra/i3/TB11QkkJVXXXXXsXpXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/imgextra/i2/TB1Ul77FFXXXXaJbXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
@@ -332,9 +332,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:19,
           scopeValue:4,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'杨康',
-          PersonVisitTime:'今天',
-          shopDesc:'吾乃金国小王子！～～～～～',
+          PersonName:'Emerson',
+          PersonVisitTime:'today',
+          shopDesc:'The first wealth is health',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd4.alicdn.com/bao/uploaded/i4/TB1nQwrLXXXXXaBaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd1.alicdn.com/imgextra/i1/TB1n3bLJVXXXXXaXFXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd1.alicdn.com/imgextra/i1/2324089696/TB2C0jKfFXXXXXbXXXXXXXXXXXX_!!2324089696.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -350,9 +350,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:20,
           scopeValue:5,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'小龙女',
-          PersonVisitTime:'昨天',
-          shopDesc:'清水出芙蓉，美丽天然成！～～～～～',
+          PersonName:'Eliot',
+          PersonVisitTime:'yesterday',
+          shopDesc:'What makes life dreary is the want of motive',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd4.alicdn.com/bao/uploaded/i4/TB1B7bYJXXXXXbvXXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/imgextra/i2/2452441154/TB25SUdbVXXXXbWXpXXXXXXXXXX_!!2452441154.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/imgextra/i2/2452441154/TB25DD8eFXXXXarXXXXXXXXXXXX_!!2452441154.jpeg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -367,9 +367,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:21,
           scopeValue:1,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'金轮法王',
-          PersonVisitTime:'昨天',
-          shopDesc:'龙象玻若功！～～～～～',
+          PersonName:'Franklin',
+          PersonVisitTime:'yesterday',
+          shopDesc:'At twenty years of age , the will reigns; at thirty , the wit ; and at forty , the judgment ',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd4.alicdn.com/bao/uploaded/i4/TB12qlfGpXXXXX4XXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/imgextra/i2/1884713299/TB2OG_nbpXXXXa.XXXXXXXXXXXX_!!1884713299.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/imgextra/i2/1884713299/TB2FtjhbpXXXXa6XpXXXXXXXXXX_!!1884713299.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -385,9 +385,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:22,
           scopeValue:2,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'鸠摩智',
-          PersonVisitTime:'昨天',
-          shopDesc:'小无相功！～～～～～',
+          PersonName:'Churchill',
+          PersonVisitTime:'yesterday',
+          shopDesc:'I have nothing to offer but blood, boil, tears and sweat',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd4.alicdn.com/bao/uploaded/i4/TB1fntZJVXXXXaqXpXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd3.alicdn.com/imgextra/i3/387262858/TB2edXHfVXXXXcwXXXXXXXXXXXX_!!387262858.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/imgextra/i2/387262858/TB28ytNfVXXXXbdXXXXXXXXXXXX_!!387262858.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -403,9 +403,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:23,
           scopeValue:3,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'无名老僧',
-          PersonVisitTime:'昨天',
-          shopDesc:'心中无剑，扫帚为剑！～～～～～',
+          PersonName:'Shelley',
+          PersonVisitTime:'yesterday',
+          shopDesc:'If winter comes , can spring be far behind',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd3.alicdn.com/imgextra/i3/802250449/TB2xfPPjXXXXXbxXXXXXXXXXXXX_!!802250449.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd1.alicdn.com/bao/uploaded/i1/TB1M6DWKpXXXXb7XVXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/imgextra/i2/802250449/TB2U7HmfpXXXXb4XXXXXXXXXXXX_!!802250449.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -421,9 +421,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:24,
           scopeValue:4,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'韦小宝',
-          PersonVisitTime:'今天',
-          shopDesc:'谁来陪我玩跑得快！～～～～～',
+          PersonName:'Erving',
+          PersonVisitTime:'today',
+          shopDesc:'Gods determine what you\'re going to be.',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd1.alicdn.com/bao/uploaded/i1/367266727/TB2dbU4jFXXXXcgXpXXXXXXXXXX_!!367266727.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd3.alicdn.com/imgextra/i3/367266727/TB2nrKAgXXXXXXvXpXXXXXXXXXX_!!367266727.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd1.alicdn.com/imgextra/i1/367266727/TB290STgXXXXXXdXXXXXXXXXXXX_!!367266727.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -439,9 +439,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:25,
           scopeValue:5,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'胡一刀',
-          PersonVisitTime:'昨天',
-          shopDesc:'天下武功，为刀法第一！～～～～～',
+          PersonName:'Kerr',
+          PersonVisitTime:'yesterday',
+          shopDesc:'I think success has no rules, but you can learn a lot from failure.',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd3.alicdn.com/bao/uploaded/i3/TB1uLqkFVXXXXcsXXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd1.alicdn.com/imgextra/i1/514093633/TB2GNAJXVXXXXacXXXXXXXXXXXX_!!514093633.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd4.alicdn.com/imgextra/i4/514093633/TB2x6cJXVXXXXa8XpXXXXXXXXXX_!!514093633.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -456,9 +456,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:26,
           scopeValue:1,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'陈家洛',
-          PersonVisitTime:'昨天',
-          shopDesc:'不要江山，宁要美人！～～～～～',
+          PersonName:'Franklin',
+          PersonVisitTime:'yesterday',
+          shopDesc:'Do you love life ? Then do not squander time ; for that\'s the stuff5 life is made of .',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/bao/uploaded/i2/TB19U5YGVXXXXarXpXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd3.alicdn.com/imgextra/i3/87581791/TB2sCKZbpXXXXcVXXXXXXXXXXXX_!!87581791.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd3.alicdn.com/imgextra/i3/87581791/TB21RO2bpXXXXblXXXXXXXXXXXX_!!87581791.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -474,9 +474,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:27,
           scopeValue:2,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'石破天',
-          PersonVisitTime:'昨天',
-          shopDesc:'怎么办怎么办，跟他不熟啊！～～～～～',
+          PersonName:'Bacon',
+          PersonVisitTime:'yesterday',
+          shopDesc:'To choose time is to save time .',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd4.alicdn.com/bao/uploaded/i4/TB1jcInLXXXXXbGXVXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd3.alicdn.com/imgextra/i3/215943615/TB2shwsjXXXXXaIXXXXXXXXXXXX_!!215943615.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd4.alicdn.com/imgextra/i4/215943615/TB2Qk7pjXXXXXaAXXXXXXXXXXXX_!!215943615.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -492,9 +492,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:28,
           scopeValue:3,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'霍青桐',
-          PersonVisitTime:'昨天',
-          shopDesc:'外表坚强，内心软弱的女强人',
+          PersonName:'Shakespeare',
+          PersonVisitTime:'yesterday',
+          shopDesc:'Do not , for one repulse , give up&nbsp; the purpose that you resolved to effect .',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/bao/uploaded/i2/TB1.dgTHpXXXXbwXVXXXXXXXXXX_!!2-item_pic.png_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd1.alicdn.com/imgextra/i1/89995826/TB2F7gRiVXXXXbfXXXXXXXXXXXX_!!89995826.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd4.alicdn.com/imgextra/i4/89995826/TB20J.xiVXXXXbcXpXXXXXXXXXX_!!89995826.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -510,9 +510,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:29,
           scopeValue:4,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'李莫愁',
-          PersonVisitTime:'今天',
-          shopDesc:'问情是何物，只教人生死相许！～～～～～',
+          PersonName:'Rocheforcauld',
+          PersonVisitTime:'today',
+          shopDesc:'Few things are impossible in themselves; and it is often for want of will, rather than of means, that man fails to succeed.',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd3.alicdn.com/bao/uploaded/i3/T1gyQkFTpbXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/bao/uploaded/i2/TB1kXfrGFXXXXavXXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd4.alicdn.com/bao/uploaded/i4/TB1FIxVLpXXXXaMXFXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -528,9 +528,9 @@ define('@weex-component/listDemo', function (require, exports, module) {
           id:30,
           scopeValue:5,
           PersonPhoto:'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-          PersonName:'丁典',
-          PersonVisitTime:'昨天',
-          shopDesc:'男女之情，竟可以这样凄苦！～～～～～',
+          PersonName:'Burroughs',
+          PersonVisitTime:'yesterday',
+          shopDesc:'A man can fail many times, but he isn\'t a failure until he begins to blame somebody else.',
           shopImgList:[{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd3.alicdn.com/bao/uploaded/i3/T1zc.7Fb0dXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd1.alicdn.com/imgextra/i1/63705129/T2QYlcXfXdXXXXXXXX_!!63705129.jpg_220x220.jpg'},{shopImgWidth:220,shopImgHeight:220,shopImg:'https://gd2.alicdn.com/imgextra/i2/63705129/T2hkcjXzFXXXXXXXXX_!!63705129.jpg_220x220.jpg'}],
           shopLikeImg:'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
           shopLikeText:'6',
@@ -806,7 +806,7 @@ define('@weex-component/listDemo', function (require, exports, module) {
                                 "fontSize": 20
                               },
                               "attr": {
-                                "value": "希望"
+                                "value": "Hope"
                               }
                             }
                           ]
@@ -846,7 +846,7 @@ define('@weex-component/listDemo', function (require, exports, module) {
                                 "fontSize": 20
                               },
                               "attr": {
-                                "value": "会员"
+                                "value": "Mem"
                               }
                             }
                           ]
@@ -886,7 +886,7 @@ define('@weex-component/listDemo', function (require, exports, module) {
                                 "fontSize": 20
                               },
                               "attr": {
-                                "value": "认证"
+                                "value": "auth"
                               }
                             }
                           ]
@@ -926,7 +926,7 @@ define('@weex-component/listDemo', function (require, exports, module) {
                                 "fontSize": 20
                               },
                               "attr": {
-                                "value": "加友"
+                                "value": "Friend"
                               }
                             }
                           ]
@@ -966,7 +966,7 @@ define('@weex-component/listDemo', function (require, exports, module) {
                                 "fontSize": 20
                               },
                               "attr": {
-                                "value": "留言"
+                                "value": "issue"
                               }
                             }
                           ]
@@ -1006,7 +1006,7 @@ define('@weex-component/listDemo', function (require, exports, module) {
                                 "fontSize": 20
                               },
                               "attr": {
-                                "value": "达人"
+                                "value": "super"
                               }
                             }
                           ]
@@ -1130,7 +1130,7 @@ define('@weex-component/listDemo', function (require, exports, module) {
                                         "textAlign": "center"
                                       },
                                       "attr": {
-                                        "value": "喜欢"
+                                        "value": "Up"
                                       }
                                     }
                                   ]
@@ -1173,7 +1173,7 @@ define('@weex-component/listDemo', function (require, exports, module) {
                                         "textAlign": "center"
                                       },
                                       "attr": {
-                                        "value": "不爱"
+                                        "value": "down"
                                       }
                                     }
                                   ]

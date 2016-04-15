@@ -3,7 +3,19 @@ define('@weex-component/ui-list-item', function (require, exports, module) {
 ;
   module.exports = {
     data: function () {return {
-    }}
+      bgColor: '#ffffff',
+      click: function() {
+      }
+    }},
+    methods: {
+      touchstart: function() {
+        // TODO adaptive opposite bgColor
+//        this.bgColor = '#e6e6e6';
+      },
+      touchend: function() {
+//        this.bgColor = '#ffffff';
+      }
+    }
   }
 
 
@@ -15,8 +27,6 @@ define('@weex-component/ui-list-item', function (require, exports, module) {
     "paddingRight": 35,
     "height": 160,
     "justifyContent": "center",
-    "backgroundColor": "#ffffff",
-    "marginBottom": 1,
     "borderBottomWidth": 1,
     "borderColor": "#dddddd"
   }
@@ -28,7 +38,12 @@ define('@weex-component/ui-list-item', function (require, exports, module) {
     "item"
   ],
   "events": {
-    "click": "click"
+    "click": "click",
+    "touchstart": "touchstart",
+    "touchend": "touchend"
+  },
+  "style": {
+    "backgroundColor": function () {return this.bgColor}
   },
   "children": [
     {

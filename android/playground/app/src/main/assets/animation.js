@@ -5,10 +5,14 @@ define('@weex-component/ui-button', function (require, exports, module) {
     data: function () {return {
       type: 'default',
       size: 'large',
-      value: ''
+      value: '',
+      click: null,
+      disabled: false
     }},
     methods: {
-      ready: function() {
+      clicked: function(ev) {
+        if (this.disabled) return;
+        this.click(ev);
       }
     }
   }
@@ -16,39 +20,38 @@ define('@weex-component/ui-button', function (require, exports, module) {
 
 ;module.exports.style = {
   "btn": {
-    "display": "flex",
     "marginBottom": 0,
     "alignItems": "center",
     "justifyContent": "center",
     "borderWidth": 1,
     "borderStyle": "solid",
-    "borderColor": "#333"
+    "borderColor": "#333333"
   },
   "btn-default": {
     "color": "rgb(51,51,51)"
   },
   "btn-primary": {
     "backgroundColor": "rgb(40,96,144)",
-    "borderColor": "rgb(40, 96, 144)"
+    "borderColor": "rgb(40,96,144)"
   },
   "btn-success": {
     "backgroundColor": "rgb(92,184,92)",
-    "borderColor": "rgb(76, 174, 76)"
+    "borderColor": "rgb(76,174,76)"
   },
   "btn-info": {
     "backgroundColor": "rgb(91,192,222)",
-    "borderColor": "rgb(70, 184, 218)"
+    "borderColor": "rgb(70,184,218)"
   },
   "btn-warning": {
     "backgroundColor": "rgb(240,173,78)",
-    "borderColor": "rgb(238, 162, 54)"
+    "borderColor": "rgb(238,162,54)"
   },
   "btn-danger": {
     "backgroundColor": "rgb(217,83,79)",
-    "borderColor": "rgb(212, 63, 58)"
+    "borderColor": "rgb(212,63,58)"
   },
   "btn-link": {
-    "borderColor": "transparent",
+    "borderColor": "rgba(0,0,0,0)",
     "borderRadius": 0
   },
   "btn-txt-default": {
@@ -114,8 +117,9 @@ define('@weex-component/ui-button', function (require, exports, module) {
   "type": "container",
   "classList": function () {return ['btn', 'btn-' + (this.type), 'btn-sz-' + (this.size)]},
   "events": {
-    "click": "click"
+    "click": "clicked"
   },
+  "style": {},
   "children": [
     {
       "type": "text",
@@ -151,19 +155,19 @@ define('@weex-component/ui-panel', function (require, exports, module) {
     "borderWidth": 1
   },
   "panel-primary": {
-    "borderColor": "rgb(40, 96, 144)"
+    "borderColor": "rgb(40,96,144)"
   },
   "panel-success": {
-    "borderColor": "rgb(76, 174, 76)"
+    "borderColor": "rgb(76,174,76)"
   },
   "panel-info": {
-    "borderColor": "rgb(70, 184, 218)"
+    "borderColor": "rgb(70,184,218)"
   },
   "panel-warning": {
-    "borderColor": "rgb(238, 162, 54)"
+    "borderColor": "rgb(238,162,54)"
   },
   "panel-danger": {
-    "borderColor": "rgb(212, 63, 58)"
+    "borderColor": "rgb(212,63,58)"
   },
   "panel-header": {
     "backgroundColor": "#f5f5f5",

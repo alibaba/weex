@@ -135,6 +135,66 @@ define('@weex-component/ui-button', function (require, exports, module) {
 
 // module
 
+define('@weex-component/ui-hn', function (require, exports, module) {
+
+;
+  module.exports = {
+    data: function () {return {
+      level: 1,
+      value: ''
+    }},
+    methods: {}
+  }
+
+
+;module.exports.style = {
+  "h1": {
+    "height": 110,
+    "paddingTop": 20,
+    "paddingBottom": 20
+  },
+  "h2": {
+    "height": 110,
+    "paddingTop": 20,
+    "paddingBottom": 20
+  },
+  "h3": {
+    "height": 110,
+    "paddingTop": 20,
+    "paddingBottom": 20
+  },
+  "txt-h1": {
+    "fontSize": 70
+  },
+  "txt-h2": {
+    "fontSize": 52
+  },
+  "txt-h3": {
+    "fontSize": 42
+  }
+}
+
+;module.exports.template = {
+  "type": "container",
+  "classList": function () {return ['h' + (this.level)]},
+  "style": {
+    "justifyContent": "center"
+  },
+  "children": [
+    {
+      "type": "text",
+      "classList": function () {return ['txt-h' + (this.level)]},
+      "attr": {
+        "value": function () {return this.value}
+      }
+    }
+  ]
+}
+
+;})
+
+// module
+
 define('@weex-component/ui-panel', function (require, exports, module) {
 
 ;
@@ -236,61 +296,84 @@ define('@weex-component/ui-panel', function (require, exports, module) {
 
 // module
 
-define('@weex-component/modal', function (require, exports, module) {
+define('@weex-component/ui-tip', function (require, exports, module) {
 
 ;
   module.exports = {
-    data: function () {return {}},
+    data: function () {return {
+      type: 'success',
+      value: ''
+    }}
+  }
+
+
+;module.exports.style = {
+  "tip": {
+    "paddingLeft": 36,
+    "paddingRight": 36,
+    "paddingTop": 36,
+    "paddingBottom": 36,
+    "marginBottom": 20,
+    "marginLeft": 20,
+    "marginRight": 20,
+    "marginTop": 20,
+    "borderRadius": 10
+  },
+  "tip-success": {
+    "backgroundColor": "#dff0d8",
+    "borderColor": "#d6e9c6"
+  },
+  "tip-txt-success": {
+    "color": "#3c763d"
+  },
+  "tip-info": {
+    "backgroundColor": "#d9edf7",
+    "borderColor": "#bce8f1"
+  },
+  "tip-txt-info": {
+    "color": "#31708f"
+  },
+  "tip-warning": {
+    "backgroundColor": "#fcf8e3",
+    "borderColor": "#faebcc"
+  },
+  "tip-txt-warning": {
+    "color": "#8a6d3b"
+  },
+  "tip-danger": {
+    "backgroundColor": "#f2dede",
+    "borderColor": "#ebccd1"
+  },
+  "tip-txt-danger": {
+    "color": "#a94442"
+  }
+}
+
+;module.exports.template = {
+  "type": "container",
+  "classList": function () {return ['tip', 'tip-' + (this.type)]},
+  "children": [
+    {
+      "type": "text",
+      "classList": function () {return ['tip-txt', 'tip-txt-' + (this.type)]},
+      "attr": {
+        "value": function () {return this.value}
+      }
+    }
+  ]
+}
+
+;})
+
+// module
+
+define('@weex-component/template', function (require, exports, module) {
+
+;
+  module.exports = { 
     methods: {
-      toast: function(msg, duration) {
-        if (!msg || typeof msg !== 'string') {
-          msg = 'I am Toast show!';
-        }
-
-        duration = duration || 2;
-        this.$call('modal', 'toast', {
-          'message': msg,
-          'duration': duration
-        });
-      },
-      alert: function(msg, okTitle, cancelTitle) {
-        var self = this;
-        if (!msg || typeof msg !== 'string') {
-          msg = "I am Alert!";
-        }
-        this.$call('modal', 'alert', {
-          'message': msg,
-          'okTitle': okTitle,
-          'cancelTitle': cancelTitle
-        }, function() {
-          self.toast("Click Alert OK Bnt!!");
-        });
-      },
-      confirm: function(msg, okTitle, cancelTitle) {
-        var self = this
-        if (!msg || typeof msg !== 'string') {
-          msg = "I am Confirm!";
-        }
-
-        okTitle = okTitle || "OK";
-        cancelTitle = cancelTitle || "Cancel";
-        this.$call('modal', 'confirm', {
-          'message': msg,
-          'okTitle': okTitle,
-          'cancelTitle': cancelTitle
-        }, function(result) {
-          self.toast("Click Confirm  " + result);
-        });
-      },
-      prompt: function() {
-        var self = this;
-        this.$call('modal', 'prompt', {
-          'message': 'I am Prompt!',
-          'okTitle': 'ok',
-          'cancelTitle': 'cancel'
-        }, function(result) {
-          self.toast("Click Prompt  " + result);
-        });
+      toast: function() {
+        this.$call('modal', 'toast', {'message': 'a toast', 'duration': 2});
       }
     }
   }
@@ -302,11 +385,26 @@ define('@weex-component/modal', function (require, exports, module) {
   "type": "scroller",
   "children": [
     {
+      "type": "ui-tip",
+      "attr": {
+        "type": "success",
+        "value": "It's a weex example template."
+      }
+    },
+    {
       "type": "ui-panel",
       "attr": {
-        "title": "Toast"
+        "title": "Dialog",
+        "type": "primary"
       },
       "children": [
+        {
+          "type": "ui-hn",
+          "attr": {
+            "level": "1",
+            "value": "H1"
+          }
+        },
         {
           "type": "ui-button",
           "attr": {
@@ -314,43 +412,20 @@ define('@weex-component/modal', function (require, exports, module) {
             "click": function () {return this.toast},
             "value": "Toast"
           }
-        }
-      ]
-    },
-    {
-      "type": "ui-panel",
-      "attr": {
-        "title": "Dialog"
-      },
-      "children": [
-        {
-          "type": "ui-button",
-          "attr": {
-            "type": "success",
-            "click": function () {return this.alert},
-            "value": "Alert"
-          },
-          "style": {
-            "marginBottom": 20
-          }
         },
         {
-          "type": "ui-button",
+          "type": "ui-hn",
           "attr": {
-            "type": "primary",
-            "click": function () {return this.confirm},
-            "value": "Confirm"
-          },
-          "style": {
-            "marginBottom": 20
+            "level": "2",
+            "value": "H3"
           }
         },
         {
           "type": "ui-button",
           "attr": {
             "type": "warning",
-            "click": function () {return this.prompt},
-            "value": "Prompt"
+            "click": function () {return this.toast},
+            "value": "Toast"
           }
         }
       ]
@@ -361,4 +436,4 @@ define('@weex-component/modal', function (require, exports, module) {
 ;})
 
 // require module
-bootstrap('@weex-component/modal', {"transformerVersion":"0.1.8"})
+bootstrap('@weex-component/template', {"transformerVersion":"0.1.8"})
