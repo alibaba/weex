@@ -3,7 +3,8 @@ define('@weex-component/ui-hn', function (require, exports, module) {
 ;
   module.exports = {
     data: function () {return {
-      level: 1
+      level: 1,
+      value: ''
     }},
     methods: {}
   }

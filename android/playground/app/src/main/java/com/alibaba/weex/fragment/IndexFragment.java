@@ -21,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.weex.R;
-import com.alibaba.weex.extend.ImageAdapter;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXRenderErrorCode;
@@ -70,7 +69,7 @@ public class IndexFragment extends BaseFragment implements IWXRenderListener {
     }
 
     mInstance = new WXSDKInstance(getActivity());
-    mInstance.setImgLoaderAdapter(new ImageAdapter(getActivity()));
+//    mInstance.setImgLoaderAdapter(new ImageAdapter(getActivity()));
     mInstance.registerRenderListener(this);
 
     Map<String, Object> options = new HashMap<>();
