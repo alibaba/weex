@@ -10,20 +10,27 @@
   module.exports = {
     data: {
       cases: [
-        {name: 'ui', title: 'UI Gallery', url: ''},
-        {name: 'listDemo', title: 'List'},
+        {name: 'hello', title: 'Hello World', url: ''}, // TODO
+        {name: 'listBasic', title: 'List Basic'},
+        {name: 'listDemo', title: 'List without Composition'},
         {name: 'listComposite', title: 'List with composition'},
         {name: 'sliderDemo', title: 'Slider'},
         {name: 'modal', title: 'Toast & Modal Dialogs'},
         {name: 'animation', title: 'Animation'},
         {name: 'gesture', title: 'Gesture'},
         {name: 'videoDemo', title: 'Video'},
+        {name: 'common', title: 'Common', subtitle: 'Style/Attr/Event'}, // TODO
+        {name: 'videoDemo', title: 'Video'},
+        {name: 'form', title: 'Form', subtitle: 'Input/Switch'}, // TODO
+        {name: 'image', title: 'Image', subtitle: ''}, // TODO
+        {name: 'ui', title: 'UI Gallery'},
+        {name: 'template', title: 'Example Template'}
 //        {name: '../../test/build/index', title: 'Test'}
       ]
     },
     created: function() {
       var useLocal = true; // false when releasing
-      var localBase = '//localhost:12580/examples/build/';
+      var localBase = '//' + require('./ip') + ':12580/examples/build/';
       var nativeBase = '';
       var h5Base = './index.html?page=./examples/build/';
 
@@ -39,9 +46,8 @@
         ca.url = base + ca.name + '.js';
       }
       //nativeLog('hit', this.cases[0].url);
+
+//      console.log(require('./test'));
     }
   }
 </script>
-
-<style>
-</style>
