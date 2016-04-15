@@ -37,11 +37,18 @@ function initElement(el) {
 describe('watch key or props', () => {
   var vm, cb
   var update = function () {return this.a + this.b}
+  var update2 = function () {return this.plus()}
+  var callPlus = sinon.spy()
   var methodNames = ['_watch', '_bindKey', '_bindDir']
   beforeEach(() => {
     vm = {
       _data: {a: 1, b: 2},
-      _methods: {},
+      _methods: {
+        plus: function () {
+          callPlus()
+          return this.a + this.b
+        }
+      },
       _watchers: [],
       _app: {}
     }
@@ -68,6 +75,7 @@ describe('watch key or props', () => {
     expect(cb).calledTwice
     expect(cb).calledWith(5)
   })
+
   // - update object key-value when data source changed
   it('watch k-v pairs', () => {
     var el = {attr: {c: 3}}
@@ -87,14 +95,17 @@ describe('watch key or props', () => {
   it('watch element props', () => {
     var el = {attr: {c: 3}}
     initElement(el)
-    vm._bindDir(el, 'attr', {d: 4, e: update})
-    expect(el.attr).eql({c: 3, d: 4, e: 3})
+    vm._bindDir(el, 'attr', {d: 4, e: update, f: update2})
+    expect(el.attr).eql({c: 3, d: 4, e: 3, f: 3})
+    expect(callPlus).calledOnce
     vm.a = 2
     expect(vm._data).eql({a: 2, b: 2})
-    expect(el.attr).eql({c: 3, d: 4, e: 4})
+    expect(el.attr).eql({c: 3, d: 4, e: 4, f: 4})
+    expect(callPlus).calledTwice
     vm.b = 3
     expect(vm._data).eql({a: 2, b: 3})
-    expect(el.attr).eql({c: 3, d: 4, e: 5})
+    expect(el.attr).eql({c: 3, d: 4, e: 5, f: 5})
+    expect(callPlus).calledThird
   })
 })
 
