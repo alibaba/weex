@@ -350,7 +350,7 @@ export function _checkDisplay(target, fragBlock, context) {
 export function _watchBlock(fragBlock, calc, type, handler) {
   const differ = this && this._app && this._app.differ
   const config = {}
-  const depth = fragBlock.element.depth + 1
+  const depth = (fragBlock.element.depth || 0) + 1
 
   this._watch(calc, (value) => {
     config.latestValue = value
