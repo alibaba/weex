@@ -18,7 +18,7 @@ FORMAT
     * `*` update or bugfix
     * `-` remove
 * `{module}`
-    * Including: android, ios, jsfm, h5, doc, website, example, test, all 
+    * Including: android, ios, jsfm, html5, doc, website, example, test, all 
 
 for example:
 
