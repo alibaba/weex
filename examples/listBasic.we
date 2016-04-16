@@ -1,0 +1,40 @@
+<template>
+  <div>
+    <list>
+      <cell repeat="{{items}}">
+        <text class="item">{{title}} {{id}}</text>
+      </cell>
+    </list>
+  </div>
+</template>
+
+<style>
+  .item {
+    font-size: 48px;
+    height: 100px;
+  }
+</style>
+
+<script>
+  module.exports = {
+    data: {
+      items: [
+        {id: 1, title: 'Title Start'},
+        {id: 1, title: 'Title Title'},
+        {id: 1, title: 'Title Title'},
+        {id: 1, title: 'Title Title'},
+        {id: 1, title: 'Title Title'},
+        {id: 1, title: 'Title Title'},
+        {id: 1, title: 'Title Title'},
+        {id: 1, title: 'Title Title'},
+        {id: 1, title: 'Title Title'},
+        {id: 1, title: 'Title Title'},
+        {id: 1, title: 'Title Title'},
+        {id: 1, title: 'Title Title'},
+        {id: 1, title: 'Title Title'},
+        {id: 1, title: 'Title Title'},
+        {id: 1, title: 'Title End'}
+      ]
+    }
+  }
+</script>
