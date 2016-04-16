@@ -3,7 +3,19 @@ define('@weex-component/ui-list-item', function (require, exports, module) {
 ;
   module.exports = {
     data: function () {return {
-    }}
+      bgColor: '#ffffff',
+      click: function() {
+      }
+    }},
+    methods: {
+      touchstart: function() {
+        // TODO adaptive opposite bgColor
+//        this.bgColor = '#e6e6e6';
+      },
+      touchend: function() {
+//        this.bgColor = '#ffffff';
+      }
+    }
   }
 
 
@@ -15,8 +27,6 @@ define('@weex-component/ui-list-item', function (require, exports, module) {
     "paddingRight": 35,
     "height": 160,
     "justifyContent": "center",
-    "backgroundColor": "#ffffff",
-    "marginBottom": 1,
     "borderBottomWidth": 1,
     "borderColor": "#dddddd"
   }
@@ -28,7 +38,12 @@ define('@weex-component/ui-list-item', function (require, exports, module) {
     "item"
   ],
   "events": {
-    "click": "click"
+    "click": "click",
+    "touchstart": "touchstart",
+    "touchend": "touchend"
+  },
+  "style": {
+    "backgroundColor": function () {return this.bgColor}
   },
   "children": [
     {
@@ -89,7 +104,6 @@ define('@weex-component/indexitem', function (require, exports, module) {
 define('@weex-component/index', function (require, exports, module) {
 
 ;
-  // TODO ontouch highlight
   module.exports = {
     data: function () {return {
       cases: [
@@ -101,16 +115,14 @@ define('@weex-component/index', function (require, exports, module) {
         {name: 'animation', title: 'Animation'},
         {name: 'gesture', title: 'Gesture'},
         {name: 'videoDemo', title: 'Video'},
-        {name: '../../test/build/index', title: 'Test'}
-//        {name: 'skeleton', title: 'Skeleton Animation'},
-//        {name: 'mine', title: 'Mine Sweeper'}
+//        {name: '../../test/build/index', title: 'Test'}
       ]
     }},
     created: function() {
       var useLocal = true; // false when releasing
       var localBase = 'file://assets/';
-      var nativeBase = '//groups.alidemo.cn/weex/weex/examples/build/';
-      var h5Base = './index.html?page=../../examples/build/';
+      var nativeBase = '';
+      var h5Base = './index.html?page=./examples/build/';
 
       // in native
       var base = useLocal ? localBase : nativeBase;
