@@ -121,6 +121,7 @@ define('@weex-component/index', function (require, exports, module) {
       ]
     }},
     created: function() {
+      console.log('hit', this.$getConfig().bundleUrl);
       var host = '//localhost:12580';
       var matches = /\/\/([^\/]+?)\//.exec(this.$getConfig().bundleUrl);
       if (matches && matches.length >= 2) {
