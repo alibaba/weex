@@ -15,11 +15,10 @@ define('@weex-component/ui-tip', function (require, exports, module) {
     "paddingRight": 36,
     "paddingTop": 36,
     "paddingBottom": 36,
-    "marginBottom": 20,
-    "marginLeft": 20,
-    "marginRight": 20,
-    "marginTop": 20,
     "borderRadius": 10
+  },
+  "tip-txt": {
+    "fontSize": 28
   },
   "tip-success": {
     "backgroundColor": "#dff0d8",
@@ -52,7 +51,7 @@ define('@weex-component/ui-tip', function (require, exports, module) {
 }
 
 ;module.exports.template = {
-  "type": "container",
+  "type": "div",
   "classList": function () {return ['tip', 'tip-' + (this.type)]},
   "children": [
     {

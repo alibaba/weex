@@ -9,7 +9,7 @@
       <image class="img" style=" width: 200px; height: 200px;" src="{{img}}"></image>
     </ui-panel>
 
-    <ui-panel title="100 x 100">
+    <ui-panel title="100 x 100" style="margin-bottom: 100px;">
       <image class="img" style=" width: 100px; height: 100px;" src="{{img}}"></image>
     </ui-panel>
   </scroller>

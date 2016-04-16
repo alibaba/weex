@@ -38,7 +38,7 @@ define('@weex-component/ui-hn', function (require, exports, module) {
 }
 
 ;module.exports.template = {
-  "type": "container",
+  "type": "div",
   "classList": function () {return ['h' + (this.level)]},
   "style": {
     "justifyContent": "center"
