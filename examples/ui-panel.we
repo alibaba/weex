@@ -13,7 +13,11 @@
     data: {
       type: 'default',
       title: '',
+      dataClass: '', // FIXME transfer class
       border: 0
+    },
+    ready: function() {
+      console.log(this.data);
     }
   }
 </script>
