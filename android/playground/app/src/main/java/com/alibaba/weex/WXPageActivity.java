@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.weex.constants.Constants;
-import com.alibaba.weex.extend.ImageAdapter;
 import com.alibaba.weex.https.HotRefreshManager;
 import com.alibaba.weex.https.WXHttpManager;
 import com.alibaba.weex.https.WXHttpTask;
@@ -119,7 +118,7 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
     } else {
       if (mInstance == null) {
         mInstance = new WXSDKInstance(this);
-        mInstance.setImgLoaderAdapter(new ImageAdapter(this));
+//        mInstance.setImgLoaderAdapter(new ImageAdapter(this));
         mInstance.registerRenderListener(this);
       }
       Activity ctx = this;
@@ -155,7 +154,7 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
     }
 
     mInstance = new WXSDKInstance(this);
-    mInstance.setImgLoaderAdapter(new ImageAdapter(this));
+//    mInstance.setImgLoaderAdapter(new ImageAdapter(this));
 
     mInstance.registerRenderListener(this);
 
@@ -305,8 +304,11 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.refresh, menu);
-    return true;
+    if(!TextUtils.equals("file",mUri.getScheme())){
+      getMenuInflater().inflate(R.menu.refresh, menu);
+      return true;
+    }
+    return false;
   }
 
   @Override
