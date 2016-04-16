@@ -1,8 +1,8 @@
 <template>
-  <container class="item" onclick="{{click}}" ontouchstart="touchstart" ontouchend="touchend"
+  <div class="item" onclick="{{click}}" ontouchstart="touchstart" ontouchend="touchend"
              style="background-color:{{bgColor}};">
     <content></content>
-  </container>
+  </div>
 </template>
 
 <script>

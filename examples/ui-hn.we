@@ -1,7 +1,7 @@
 <template>
-  <container class="h{{level}}" style="justify-content: center;">
+  <div class="h{{level}}" style="justify-content: center;">
     <text class="txt-h{{level}}">{{value}}</text>
-  </container>
+  </div>
 </template>
 
 <script>

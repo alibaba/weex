@@ -1,8 +1,8 @@
 <!-- Inspired by bootstrap http://getbootstrap.com/ -->
 <template>
-  <container class="tip tip-{{type}}">
+  <div class="tip tip-{{type}}">
     <text class="tip-txt tip-txt-{{type}}">{{value}}</text>
-  </container>
+  </div>
 </template>
 
 <script>

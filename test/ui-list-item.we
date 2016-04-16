@@ -1,7 +1,7 @@
 <template>
-  <container class="item" onclick="{{click}}">
+  <div class="item" onclick="{{click}}">
     <content></content>
-  </container>
+  </div>
 </template>
 
 <style>
