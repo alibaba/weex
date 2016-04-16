@@ -11,8 +11,10 @@
     data: {
       cases: [
         {name: 'hello', title: 'Hello World'},
-        {name: 'listBasic', title: 'List - Basic'},
-        {name: 'listDemo', title: 'List - Advanced'},
+//        {name: 'textDemo', title: 'Text'},
+        {name: 'imageDemo', title: 'Image'},
+        {name: 'listBasic', title: 'List (Basic)'},
+        {name: 'listDemo', title: 'List (Advanced)'},
         {name: 'sliderDemo', title: 'Slider'},
         {name: 'animation', title: 'Animation'},
         {name: 'modal', title: 'Modal'},

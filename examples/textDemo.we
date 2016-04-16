@@ -1,0 +1,30 @@
+<template>
+  <scroller>
+    <ui-panel title="width x height = 400 x 400">
+      <ui-tip type="warning" value="Weex screen width is 750" style="margin-bottom: 20px;"></ui-tip>
+      <image class="img" style=" width: 400px; height: 400px;" src="{{img}}"></image>
+    </ui-panel>
+
+    <ui-panel title="200 x 200">
+      <image class="img" style=" width: 200px; height: 200px;" src="{{img}}"></image>
+    </ui-panel>
+
+    <ui-panel title="100 x 100">
+      <image class="img" style=" width: 100px; height: 100px;" src="{{img}}"></image>
+    </ui-panel>
+  </scroller>
+</template>
+
+<style>
+  .img {
+    margin-bottom: 20px;
+  }
+</style>
+
+<script>
+  module.exports = {
+    data: {
+      img: '//img.alicdn.com/bao/uploaded/i4/TB1RDldGFXXXXXaXVXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg'
+    }
+  }
+</script>

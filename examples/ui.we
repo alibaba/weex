@@ -36,7 +36,7 @@
     </ui-panel>
 
     <ui-panel title="Tips">
-      <ui-tip repeat="{{tips}}"
+      <ui-tip repeat="{{tips}}" style="margin-bottom: 20px;"
               value="Panels {{type}} content. Panels {{type}} content. Panels {{type}} content."></ui-tip>
     </ui-panel>
 
