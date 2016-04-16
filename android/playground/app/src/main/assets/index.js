@@ -107,20 +107,27 @@ define('@weex-component/index', function (require, exports, module) {
   module.exports = {
     data: function () {return {
       cases: [
-        {name: 'ui', title: 'UI Gallery', url: ''},
         {name: 'listDemo', title: 'List'},
         {name: 'listComposite', title: 'List with composition'},
         {name: 'sliderDemo', title: 'Slider'},
         {name: 'modal', title: 'Toast & Modal Dialogs'},
         {name: 'animation', title: 'Animation'},
-        {name: 'gesture', title: 'Gesture'},
+//        {name: 'gesture', title: 'Gesture'},
         {name: 'videoDemo', title: 'Video'},
+        {name: 'ui', title: 'UI Gallery', url: ''}
 //        {name: '../../test/build/index', title: 'Test'}
       ]
     }},
     created: function() {
       var useLocal = true; // false when releasing
+      var host = '//localhost:12580';
+      var matches = /\/\/([^\/]+?)\//.exec(this.$getConfig().bundleUrl);
+      if (matches && matches.length >= 2) {
+        host = matches[1];
+      }
       var localBase = 'file://assets/';
+
+      console.log('hit', JSON.stringify());
       var nativeBase = '';
       var h5Base = './index.html?page=./examples/build/';
 
