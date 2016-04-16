@@ -390,4 +390,28 @@ public class WXSDKEngine {
   public static void addCustomOptions(String key, String value) {
     WXEnvironment.addCustomOptions(key, value);
   }
+
+  public IWXUserTrackAdapter getIWXUserTrackAdapter() {
+    return WXSDKManager.getInstance().getIWXUserTrackAdapter();
+  }
+
+  public void setIWXUserTrackAdapter(IWXUserTrackAdapter IWXUserTrackAdapter) {
+    WXSDKManager.getInstance().setIWXUserTrackAdapter(IWXUserTrackAdapter);
+  }
+
+  public IWXImgLoaderAdapter getIWXImgLoaderAdapter() {
+    return WXSDKManager.getInstance().getIWXImgLoaderAdapter();
+  }
+
+  public void setIWXImgLoaderAdapter(IWXImgLoaderAdapter IWXImgLoaderAdapter) {
+    WXSDKManager.getInstance().setIWXImgLoaderAdapter(IWXImgLoaderAdapter);
+  }
+
+  public IWXHttpAdapter getIWXHttpAdapter() {
+    return WXSDKManager.getInstance().getIWXHttpAdapter();
+  }
+
+  public void setIWXHttpAdapter(IWXHttpAdapter IWXHttpAdapter) {
+    WXSDKManager.getInstance().setIWXHttpAdapter(IWXHttpAdapter);
+  }
 }
