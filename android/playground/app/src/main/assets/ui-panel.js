@@ -5,8 +5,12 @@ define('@weex-component/ui-panel', function (require, exports, module) {
     data: function () {return {
       type: 'default',
       title: '',
+      dataClass: '', // FIXME transfer class
       border: 0
-    }}
+    }},
+    ready: function() {
+      console.log(this.data);
+    }
   }
 
 
@@ -70,7 +74,7 @@ define('@weex-component/ui-panel', function (require, exports, module) {
 }
 
 ;module.exports.template = {
-  "type": "container",
+  "type": "div",
   "classList": function () {return ['panel', 'panel-' + (this.type)]},
   "style": {
     "borderWidth": function () {return this.border}

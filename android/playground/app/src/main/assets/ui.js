@@ -15,11 +15,10 @@ define('@weex-component/ui-tip', function (require, exports, module) {
     "paddingRight": 36,
     "paddingTop": 36,
     "paddingBottom": 36,
-    "marginBottom": 20,
-    "marginLeft": 20,
-    "marginRight": 20,
-    "marginTop": 20,
     "borderRadius": 10
+  },
+  "tip-txt": {
+    "fontSize": 28
   },
   "tip-success": {
     "backgroundColor": "#dff0d8",
@@ -52,7 +51,7 @@ define('@weex-component/ui-tip', function (require, exports, module) {
 }
 
 ;module.exports.template = {
-  "type": "container",
+  "type": "div",
   "classList": function () {return ['tip', 'tip-' + (this.type)]},
   "children": [
     {
@@ -104,7 +103,7 @@ define('@weex-component/ui-list-item', function (require, exports, module) {
 }
 
 ;module.exports.template = {
-  "type": "container",
+  "type": "div",
   "classList": [
     "item"
   ],
@@ -243,7 +242,7 @@ define('@weex-component/ui-button', function (require, exports, module) {
 }
 
 ;module.exports.template = {
-  "type": "container",
+  "type": "div",
   "classList": function () {return ['btn', 'btn-' + (this.type), 'btn-sz-' + (this.size)]},
   "events": {
     "click": "clicked"
@@ -304,7 +303,7 @@ define('@weex-component/ui-hn', function (require, exports, module) {
 }
 
 ;module.exports.template = {
-  "type": "container",
+  "type": "div",
   "classList": function () {return ['h' + (this.level)]},
   "style": {
     "justifyContent": "center"
@@ -331,8 +330,12 @@ define('@weex-component/ui-panel', function (require, exports, module) {
     data: function () {return {
       type: 'default',
       title: '',
+      dataClass: '', // FIXME transfer class
       border: 0
-    }}
+    }},
+    ready: function() {
+      console.log(this.data);
+    }
   }
 
 
@@ -396,7 +399,7 @@ define('@weex-component/ui-panel', function (require, exports, module) {
 }
 
 ;module.exports.template = {
-  "type": "container",
+  "type": "div",
   "classList": function () {return ['panel', 'panel-' + (this.type)]},
   "style": {
     "borderWidth": function () {return this.border}
@@ -645,6 +648,9 @@ define('@weex-component/ui', function (require, exports, module) {
         {
           "type": "ui-tip",
           "repeat": function () {return this.tips},
+          "style": {
+            "marginBottom": 20
+          },
           "attr": {
             "value": function () {return 'Panels ' + (this.type) + ' content. Panels ' + (this.type) + ' content. Panels ' + (this.type) + ' content.'}
           }

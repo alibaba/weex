@@ -67,7 +67,7 @@ define('@weex-component/sliderpage', function (require, exports, module) {
 }
 
 ;module.exports.template = {
-  "type": "container",
+  "type": "div",
   "classList": [
     "sliderpage"
   ],
@@ -90,8 +90,12 @@ define('@weex-component/ui-panel', function (require, exports, module) {
     data: function () {return {
       type: 'default',
       title: '',
+      dataClass: '', // FIXME transfer class
       border: 0
-    }}
+    }},
+    ready: function() {
+      console.log(this.data);
+    }
   }
 
 
@@ -155,7 +159,7 @@ define('@weex-component/ui-panel', function (require, exports, module) {
 }
 
 ;module.exports.template = {
-  "type": "container",
+  "type": "div",
   "classList": function () {return ['panel', 'panel-' + (this.type)]},
   "style": {
     "borderWidth": function () {return this.border}
@@ -223,7 +227,7 @@ define('@weex-component/sliderDemo', function (require, exports, module) {
             {
               items: [
                 {
-                  image: '//img.alicdn.com/bao/uploaded/i3/TB1AoudGFXXXXXuaXXXXXXXXXXX_!!0-item_pic.jpg',
+                  image: '//img.alicdn.com/bao/uploaded/i3/TB1AoudGFXXXXXuaXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
                   link: '//h5.m.taobao.com/1'
                 },
                 {
@@ -241,7 +245,7 @@ define('@weex-component/sliderDemo', function (require, exports, module) {
             {
               items: [
                 {
-                  image: '//gd2.alicdn.com/bao/uploaded/i2/TB1o2HIIFXXXXbVXpXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg_.webp',
+                  image: '//gd2.alicdn.com/bao/uploaded/i2/TB1o2HIIFXXXXbVXpXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
                   link: '//h5.m.taobao.com/1'
                 },
                 {
@@ -265,11 +269,11 @@ define('@weex-component/sliderDemo', function (require, exports, module) {
             {
               items: [
                 {
-                  image: '//gd2.alicdn.com/bao/uploaded/i2/TB1jBMaJpXXXXXMXVXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg_.webp',
+                  image: '//gd2.alicdn.com/bao/uploaded/i2/TB1jBMaJpXXXXXMXVXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
                   link: '//h5.m.taobao.com/1'
                 },
                 {
-                  image: '//gd4.alicdn.com/bao/uploaded/i4/TB1i8vQJFXXXXbvXVXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg_.webp',
+                  image: '//gd4.alicdn.com/bao/uploaded/i4/TB1i8vQJFXXXXbvXVXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
                   link: '//h5.m.taobao.com/1'
                 }
               ]
@@ -307,7 +311,7 @@ define('@weex-component/sliderDemo', function (require, exports, module) {
             {
               items: [
                 {
-                  image: '//img.alicdn.com/bao/uploaded/i3/TB1AoudGFXXXXXuaXXXXXXXXXXX_!!0-item_pic.jpg',
+                  image: '//img.alicdn.com/bao/uploaded/i3/TB1AoudGFXXXXXuaXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
                   link: '//h5.m.taobao.com/1'
                 },
                 {

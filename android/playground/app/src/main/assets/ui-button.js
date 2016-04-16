@@ -114,7 +114,7 @@ define('@weex-component/ui-button', function (require, exports, module) {
 }
 
 ;module.exports.template = {
-  "type": "container",
+  "type": "div",
   "classList": function () {return ['btn', 'btn-' + (this.type), 'btn-sz-' + (this.size)]},
   "events": {
     "click": "clicked"
