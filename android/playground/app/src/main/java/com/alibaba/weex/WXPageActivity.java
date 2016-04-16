@@ -306,9 +306,8 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
   public boolean onCreateOptionsMenu(Menu menu) {
     if(!TextUtils.equals("file",mUri.getScheme())){
       getMenuInflater().inflate(R.menu.refresh, menu);
-      return true;
     }
-    return false;
+    return true;
   }
 
   @Override
