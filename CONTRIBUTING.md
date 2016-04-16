@@ -1,6 +1,6 @@
 # Weex Contributing Guide
 
-Welcome to create pull requests or open issues for code bugs, doc, examples and anything.
+Welcome to create pull requests or open issues for bugfix, doc, example, suggestion and anything.
 
 * [Open Issues](https://github.com/alibaba/weex/issues/new)
 * [Create Pull Requests](https://github.com/alibaba/weex/compare)
