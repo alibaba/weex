@@ -114,7 +114,7 @@ define('@weex-component/ui-button', function (require, exports, module) {
 }
 
 ;module.exports.template = {
-  "type": "container",
+  "type": "div",
   "classList": function () {return ['btn', 'btn-' + (this.type), 'btn-sz-' + (this.size)]},
   "events": {
     "click": "clicked"
@@ -175,7 +175,7 @@ define('@weex-component/ui-hn', function (require, exports, module) {
 }
 
 ;module.exports.template = {
-  "type": "container",
+  "type": "div",
   "classList": function () {return ['h' + (this.level)]},
   "style": {
     "justifyContent": "center"
@@ -195,6 +195,76 @@ define('@weex-component/ui-hn', function (require, exports, module) {
 
 // module
 
+define('@weex-component/ui-tip', function (require, exports, module) {
+
+;
+  module.exports = {
+    data: function () {return {
+      type: 'success',
+      value: ''
+    }}
+  }
+
+
+;module.exports.style = {
+  "tip": {
+    "paddingLeft": 36,
+    "paddingRight": 36,
+    "paddingTop": 36,
+    "paddingBottom": 36,
+    "borderRadius": 10
+  },
+  "tip-txt": {
+    "fontSize": 28
+  },
+  "tip-success": {
+    "backgroundColor": "#dff0d8",
+    "borderColor": "#d6e9c6"
+  },
+  "tip-txt-success": {
+    "color": "#3c763d"
+  },
+  "tip-info": {
+    "backgroundColor": "#d9edf7",
+    "borderColor": "#bce8f1"
+  },
+  "tip-txt-info": {
+    "color": "#31708f"
+  },
+  "tip-warning": {
+    "backgroundColor": "#fcf8e3",
+    "borderColor": "#faebcc"
+  },
+  "tip-txt-warning": {
+    "color": "#8a6d3b"
+  },
+  "tip-danger": {
+    "backgroundColor": "#f2dede",
+    "borderColor": "#ebccd1"
+  },
+  "tip-txt-danger": {
+    "color": "#a94442"
+  }
+}
+
+;module.exports.template = {
+  "type": "div",
+  "classList": function () {return ['tip', 'tip-' + (this.type)]},
+  "children": [
+    {
+      "type": "text",
+      "classList": function () {return ['tip-txt', 'tip-txt-' + (this.type)]},
+      "attr": {
+        "value": function () {return this.value}
+      }
+    }
+  ]
+}
+
+;})
+
+// module
+
 define('@weex-component/ui-panel', function (require, exports, module) {
 
 ;
@@ -202,8 +272,12 @@ define('@weex-component/ui-panel', function (require, exports, module) {
     data: function () {return {
       type: 'default',
       title: '',
+      dataClass: '', // FIXME transfer class
       border: 0
-    }}
+    }},
+    ready: function() {
+      console.log(this.data);
+    }
   }
 
 
@@ -267,7 +341,7 @@ define('@weex-component/ui-panel', function (require, exports, module) {
 }
 
 ;module.exports.template = {
-  "type": "container",
+  "type": "div",
   "classList": function () {return ['panel', 'panel-' + (this.type)]},
   "style": {
     "borderWidth": function () {return this.border}
@@ -296,81 +370,13 @@ define('@weex-component/ui-panel', function (require, exports, module) {
 
 // module
 
-define('@weex-component/ui-tip', function (require, exports, module) {
+define('@weex-component/template', function (require, exports, module) {
 
 ;
   module.exports = {
     data: function () {return {
-      type: 'success',
-      value: ''
-    }}
-  }
-
-
-;module.exports.style = {
-  "tip": {
-    "paddingLeft": 36,
-    "paddingRight": 36,
-    "paddingTop": 36,
-    "paddingBottom": 36,
-    "marginBottom": 20,
-    "marginLeft": 20,
-    "marginRight": 20,
-    "marginTop": 20,
-    "borderRadius": 10
-  },
-  "tip-success": {
-    "backgroundColor": "#dff0d8",
-    "borderColor": "#d6e9c6"
-  },
-  "tip-txt-success": {
-    "color": "#3c763d"
-  },
-  "tip-info": {
-    "backgroundColor": "#d9edf7",
-    "borderColor": "#bce8f1"
-  },
-  "tip-txt-info": {
-    "color": "#31708f"
-  },
-  "tip-warning": {
-    "backgroundColor": "#fcf8e3",
-    "borderColor": "#faebcc"
-  },
-  "tip-txt-warning": {
-    "color": "#8a6d3b"
-  },
-  "tip-danger": {
-    "backgroundColor": "#f2dede",
-    "borderColor": "#ebccd1"
-  },
-  "tip-txt-danger": {
-    "color": "#a94442"
-  }
-}
-
-;module.exports.template = {
-  "type": "container",
-  "classList": function () {return ['tip', 'tip-' + (this.type)]},
-  "children": [
-    {
-      "type": "text",
-      "classList": function () {return ['tip-txt', 'tip-txt-' + (this.type)]},
-      "attr": {
-        "value": function () {return this.value}
-      }
-    }
-  ]
-}
-
-;})
-
-// module
-
-define('@weex-component/template', function (require, exports, module) {
-
-;
-  module.exports = { 
+      img: '//img.alicdn.com/bao/uploaded/i4/TB1RDldGFXXXXXaXVXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg'
+    }},
     methods: {
       toast: function() {
         this.$call('modal', 'toast', {'message': 'a toast', 'duration': 2});
@@ -385,19 +391,53 @@ define('@weex-component/template', function (require, exports, module) {
   "type": "scroller",
   "children": [
     {
-      "type": "ui-tip",
+      "type": "ui-panel",
       "attr": {
-        "type": "success",
-        "value": "It's a weex example template."
-      }
+        "title": "Image",
+        "type": "primary"
+      },
+      "children": [
+        {
+          "type": "ui-tip",
+          "attr": {
+            "type": "warning",
+            "value": "Weex screen width is 750"
+          },
+          "style": {
+            "marginBottom": 20
+          }
+        },
+        {
+          "type": "image",
+          "classList": [
+            "img"
+          ],
+          "style": {
+            "width": 400,
+            "height": 400
+          },
+          "attr": {
+            "src": function () {return this.img}
+          }
+        }
+      ]
     },
     {
       "type": "ui-panel",
       "attr": {
-        "title": "Dialog",
-        "type": "primary"
+        "title": "Dialog"
       },
       "children": [
+        {
+          "type": "ui-tip",
+          "attr": {
+            "type": "success",
+            "value": "It's a weex example template."
+          },
+          "style": {
+            "marginBottom": 20
+          }
+        },
         {
           "type": "ui-hn",
           "attr": {

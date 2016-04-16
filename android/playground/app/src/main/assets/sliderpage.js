@@ -67,7 +67,7 @@ define('@weex-component/sliderpage', function (require, exports, module) {
 }
 
 ;module.exports.template = {
-  "type": "container",
+  "type": "div",
   "classList": [
     "sliderpage"
   ],

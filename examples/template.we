@@ -1,16 +1,16 @@
 <template>
   <scroller>
+    <ui-panel title="Image" type="primary">
+      <ui-tip type="warning" value="Weex screen width is 750" style="margin-bottom: 20px;"></ui-tip>
+      <image class="img" style=" width: 400px; height: 400px;" src="{{img}}"></image>
+    </ui-panel>
+    
     <ui-panel title="Dialog">
       <ui-tip type="success" value="It's a weex example template." style="margin-bottom: 20px;"></ui-tip>
       <ui-hn level="1" value="H1"></ui-hn>
       <ui-button type="primary" click="{{toast}}" value="Toast"></ui-button>
       <ui-hn level="2" value="H3"></ui-hn>
       <ui-button type="warning" click="{{toast}}" value="Toast"></ui-button>
-    </ui-panel>
-
-    <ui-panel title="Image" type="primary">
-      <ui-tip type="warning" value="Weex screen width is 750" style="margin-bottom: 20px;"></ui-tip>
-      <image class="img" style=" width: 400px; height: 400px;" src="{{img}}"></image>
     </ui-panel>
   </scroller>
 </template>
