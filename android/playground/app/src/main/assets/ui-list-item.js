@@ -33,7 +33,7 @@ define('@weex-component/ui-list-item', function (require, exports, module) {
 }
 
 ;module.exports.template = {
-  "type": "container",
+  "type": "div",
   "classList": [
     "item"
   ],

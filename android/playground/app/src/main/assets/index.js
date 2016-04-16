@@ -33,7 +33,7 @@ define('@weex-component/ui-list-item', function (require, exports, module) {
 }
 
 ;module.exports.template = {
-  "type": "container",
+  "type": "div",
   "classList": [
     "item"
   ],
@@ -107,34 +107,31 @@ define('@weex-component/index', function (require, exports, module) {
   module.exports = {
     data: function () {return {
       cases: [
-        {name: 'listDemo', title: 'List'},
-        {name: 'listComposite', title: 'List with composition'},
+        {name: 'hello', title: 'Hello World'},
+//        {name: 'textDemo', title: 'Text'},
+        {name: 'imageDemo', title: 'Image'},
+        {name: 'listBasic', title: 'List (Basic)'},
+        {name: 'listDemo', title: 'List (Advanced)'},
         {name: 'sliderDemo', title: 'Slider'},
-        {name: 'modal', title: 'Toast & Modal Dialogs'},
         {name: 'animation', title: 'Animation'},
-//        {name: 'gesture', title: 'Gesture'},
+        {name: 'modal', title: 'Modal'},
         {name: 'videoDemo', title: 'Video'},
-        {name: 'ui', title: 'UI Gallery', url: ''}
-//        {name: '../../test/build/index', title: 'Test'}
+        {name: 'ui', title: 'UI Gallery'},
+        {name: 'template', title: 'Example Template'}
       ]
     }},
     created: function() {
-      var useLocal = true; // false when releasing
       var host = '//localhost:12580';
       var matches = /\/\/([^\/]+?)\//.exec(this.$getConfig().bundleUrl);
       if (matches && matches.length >= 2) {
         host = matches[1];
       }
-      var localBase = 'file://assets/';
-
-      console.log('hit', JSON.stringify());
-      var nativeBase = '';
+      var nativeBase = 'file://assets/';
       var h5Base = './index.html?page=./examples/build/';
-
-      // in native
-      var base = useLocal ? localBase : nativeBase;
-      // in browser or WebView
+      // in Native
+      var base = nativeBase;
       if (typeof window === 'object') {
+        // in Browser or WebView
         base = h5Base;
       }
 
@@ -142,7 +139,8 @@ define('@weex-component/index', function (require, exports, module) {
         var ca = this.cases[i];
         ca.url = base + ca.name + '.js';
       }
-      //nativeLog('hit', this.cases[0].url);
+      // see log in Android Logcat
+      console.log('hit', this.cases[0].url);
     }
   }
 
