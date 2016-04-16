@@ -249,9 +249,6 @@ define('@weex-component/imageDemo', function (require, exports, module) {
       "attr": {
         "title": "100 x 100"
       },
-      "style": {
-        "marginBottom": 100
-      },
       "children": [
         {
           "type": "image",
