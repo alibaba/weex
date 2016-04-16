@@ -34,7 +34,7 @@ ndk.dir=/Users/your_unix_name/android-ndk/android-ndk-r10e
 
 First, you need to git clone `weex` from github:
 
-```
+```shell
 git clone https://github.com/alibaba/weex.git
 ```
 
@@ -42,21 +42,16 @@ git clone https://github.com/alibaba/weex.git
 
 Add the `:weex_sdk_android` project in `android/settings.gradle`:
 
-```
-gradle
-...
+```gradle
 include ':weex_sdk_android'
 
 project(':weex_sdk_android').projectDir = new File(
     rootProject.projectDir, '../weex_sdk_android')
-...
 ```
 
 Modify your `android/app/build.gradle` to use the `:weex_sdk_android` project instead of the pre-compiled library, e.g. - replace `compile 'com.taobao.android:weex_sdk:1.3.+'` with `compile project(':weex_sdk_android')`:
 
-```
-gradle
-...
+```gradle
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:23.0.1'
@@ -65,7 +60,6 @@ dependencies {
 
     ...
 }
-...
 ```
 
 #### 3. Making 3rd-party modules use your fork
@@ -117,9 +111,7 @@ This is only really used in dev mode when reloading JavaScript from the developm
 You need to add some native code in order to start the Weex runtime and get it to render something. To do this, we're going to create an `Application` to init weex, then we we're going to create an `Activity` that creates a WeexContainerView, starts a Weex application inside it and sets it as the main content view.
 
 
-```
-java init weex
-
+```java
 public class WXApplication extends Application {
     @Override
     public void onCreate() {
@@ -142,33 +134,34 @@ public class WXApplication extends Application {
 
 Next, 
 
-```
+```java
 //crate Weex instance
- WXSDKInstance mInstance = new WXSDKInstance(this);
-    //set image Adapter
-    mInstance.setImgLoaderAdapter(new ImageAdapter(this));
-    //register render listener
-    mInstance.registerRenderListener(new IWXRenderListener() {
-     @Override
-     public void onViewCreated(WXSDKInstance instance, View view) {
-         // addview
-         mViewGroup.addView(view);
-     } 
-     @Override
-     public void onRenderSuccess(WXSDKInstance instance) {
-     }
-     @Override
-     public void onRefreshSuccess(WXSDKInstance instance) {
-     }
-     @Override
-     public void onException(WXSDKInstance instance, String errCode,String msg) {
-     }
-    }); 
-  //start render weex view   
-  mInstance.render(pageName,template, null, null, -1, -1, WXRenderStrategy.APPEND_ASYNC);
+WXSDKInstance mInstance = new WXSDKInstance(this);
+//set image Adapter
+mInstance.setImgLoaderAdapter(new ImageAdapter(this));
+//register render listener
+mInstance.registerRenderListener(new IWXRenderListener() {
+   @Override
+   public void onViewCreated(WXSDKInstance instance, View view) {
+       // addview
+       mViewGroup.addView(view);
+   } 
+   @Override
+   public void onRenderSuccess(WXSDKInstance instance) {
+   }
+   @Override
+   public void onRefreshSuccess(WXSDKInstance instance) {
+   }
+   @Override
+   public void onException(WXSDKInstance instance, String errCode,String msg) {
+   }
+}); 
+//start render weex view   
+mInstance.render(pageName,template, null, null, -1, -1, WXRenderStrategy.APPEND_ASYNC);
 ```
 
 That's it, your activity is ready to run some JavaScript code.
 
-##Reference Example   
-[`weex-samples`](https://github.com/alibaba/weex/tree/master/examples)
+## Reference Example   
+
+[`Weex Examples`](https://github.com/alibaba/weex/tree/master/examples)
