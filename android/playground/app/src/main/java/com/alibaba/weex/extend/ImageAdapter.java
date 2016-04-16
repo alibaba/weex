@@ -1,21 +1,18 @@
 package com.alibaba.weex.extend;
 
-import android.app.Activity;
 import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 import com.taobao.weex.WXEnvironment;
+import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
 import com.taobao.weex.common.WXImageStrategy;
 import com.taobao.weex.dom.WXImageQuality;
 
 public class ImageAdapter implements IWXImgLoaderAdapter {
 
-  private Activity mContext;
-
-  public ImageAdapter(Activity activity) {
-    mContext = activity;
+  public ImageAdapter() {
   }
 
   @Override
@@ -83,7 +80,7 @@ public class ImageAdapter implements IWXImgLoaderAdapter {
     //
     //        dataSource.subscribe(dataSubscriber, UiThreadImmediateExecutorService.getInstance());
 
-    mContext.runOnUiThread(new Runnable() {
+    WXSDKManager.getInstance().postOnUiThread(new Runnable() {
 
       @Override
       public void run() {
@@ -103,6 +100,6 @@ public class ImageAdapter implements IWXImgLoaderAdapter {
             .resize(view.getLayoutParams().width,
                     view.getLayoutParams().height).into(view);
       }
-    });
+    },0);
   }
 }
