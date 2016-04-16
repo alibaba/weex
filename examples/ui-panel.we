@@ -1,11 +1,11 @@
 <!-- Inspired by bootstrap http://getbootstrap.com/ -->
 <template>
-  <container class="panel panel-{{type}}" style="border-width:{{border}}">
+  <div class="panel panel-{{type}}" style="border-width:{{border}}">
     <text class="panel-header panel-header-{{type}}">{{title}}</text>
     <div class="panel-body panel-body-{{type}}">
       <content></content>
     </div>
-  </container>
+  </div>
 </template>
 
 <script>
