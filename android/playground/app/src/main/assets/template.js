@@ -393,38 +393,6 @@ define('@weex-component/template', function (require, exports, module) {
     {
       "type": "ui-panel",
       "attr": {
-        "title": "Image",
-        "type": "primary"
-      },
-      "children": [
-        {
-          "type": "ui-tip",
-          "attr": {
-            "type": "warning",
-            "value": "Weex screen width is 750"
-          },
-          "style": {
-            "marginBottom": 20
-          }
-        },
-        {
-          "type": "image",
-          "classList": [
-            "img"
-          ],
-          "style": {
-            "width": 400,
-            "height": 400
-          },
-          "attr": {
-            "src": function () {return this.img}
-          }
-        }
-      ]
-    },
-    {
-      "type": "ui-panel",
-      "attr": {
         "title": "Dialog"
       },
       "children": [
@@ -466,6 +434,38 @@ define('@weex-component/template', function (require, exports, module) {
             "type": "warning",
             "click": function () {return this.toast},
             "value": "Toast"
+          }
+        }
+      ]
+    },
+    {
+      "type": "ui-panel",
+      "attr": {
+        "title": "Image",
+        "type": "primary"
+      },
+      "children": [
+        {
+          "type": "ui-tip",
+          "attr": {
+            "type": "warning",
+            "value": "Weex screen width is 750"
+          },
+          "style": {
+            "marginBottom": 20
+          }
+        },
+        {
+          "type": "image",
+          "classList": [
+            "img"
+          ],
+          "style": {
+            "width": 400,
+            "height": 400
+          },
+          "attr": {
+            "src": function () {return this.img}
           }
         }
       ]
