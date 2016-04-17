@@ -188,7 +188,7 @@ define('@weex-component/videoDemo', function (require, exports, module) {
         "fail": "onfail"
       },
       "attr": {
-        "src": "http://cloud.video.taobao.com/play/u/522794875/p/2/e/6/t/1/d/ld/fv/2/23335165.mp4",
+        "src": "http://g.tbcdn.cn/ali-wireless-h5/res/0.0.6/toy.mp4",
         "autoPlay": "true",
         "playStatus": function () {return this.playStatus}
       }

@@ -178,7 +178,7 @@ define('@weex-component/imageDemo', function (require, exports, module) {
 ;
   module.exports = {
     data: function () {return {
-      img: '//img.alicdn.com/bao/uploaded/i4/TB1RDldGFXXXXXaXVXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg'
+      img: '//gw.alicdn.com/tps/i2/TB1DpsmMpXXXXabaXXX20ySQVXX-512-512.png_400x400.jpg'
     }}
   }
 
