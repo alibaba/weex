@@ -304,8 +304,22 @@ describe('bind events', () => {
     manager = null
   })
   // - bind method to eventManager
-  it('add event to manager', () => {
+  it('add event to manager by type', () => {
     vm._bindEvents(el, {click: 'foo'})
+    expect(manager.targets.length).equal(1)
+    var target = manager.targets[0]
+    expect(target).a('object')
+    expect(target.el).equal(el)
+    expect(target.events).a('object')
+    expect(target.events.click).a('function')
+    expect(el.event.length).equal(1)
+    expect(el.event[0]).equal('click')
+  })
+  // - bind method to eventManager
+  it('add event to manager by handler', () => {
+    vm._bindEvents(el, {click: function ($event) {
+      this.foo(this.a, $event)
+    }})
     expect(manager.targets.length).equal(1)
     var target = manager.targets[0]
     expect(target).a('object')
@@ -317,13 +331,25 @@ describe('bind events', () => {
   })
   // - fireEvent to call method
   // - with right event info
-  it('fire event from manager', () => {
+  it('fire event from manager by type', () => {
     var e = {}
     vm._bindEvents(el, {click: 'foo'})
     manager.fire(el, 'click', e)
     expect(cb).calledOnce
     expect(cb).calledOn(vm)
     expect(cb).calledWith(e)
+  })
+  // - fireEvent to call method
+  // - with right event info
+  it('fire event from manager by handler', () => {
+    var e = {}
+    vm._bindEvents(el, {click: function ($event) {
+      this.foo(this.a, $event)
+    }})
+    manager.fire(el, 'click', e)
+    expect(cb).calledOnce
+    expect(cb).calledOn(vm)
+    expect(cb).calledWith(1, e)
   })
 })
 
