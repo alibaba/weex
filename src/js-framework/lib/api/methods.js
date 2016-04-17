@@ -17,7 +17,7 @@ import {typof, extend} from '../util'
  * @return {Vm}
  */
 export function $(id) {
-  nativeLog('the Vm#$ api is deprecated, please use Vm#$vm instead')
+  nativeLog('[WARNING] the Vm#$ api is deprecated, please use Vm#$vm instead')
   const info = this._ids[id]
   if (info) {
     return info.vm
@@ -117,7 +117,11 @@ export function $getConfig(callback) {
   const config = extend({
     env: global.WXEnvironment || {}
   }, this._app.options)
-  typof(callback) === 'function' && callback(config)
+  if (typof(callback) === 'function') {
+    nativeLog('[WARNING] the callback of Vm#$getConfig(callback) is deprecated, ' +
+      'this api now can directly RETURN config info.')
+    callback(config)
+  }
   return config
 }
 
