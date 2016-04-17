@@ -220,8 +220,11 @@ export function _bindEvents(el, events) {
   let i = keys.length
   while (i--) {
     const key = keys[i]
-    const handlerName = events[key]
-    this._setEvent(el, key, this[handlerName])
+    let handler = events[key]
+    if (typeof handler === 'string') {
+      handler = this[handler]
+    }
+    this._setEvent(el, key, handler)
   }
 }
 
