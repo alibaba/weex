@@ -24,9 +24,9 @@
     },
     created: function() {
       var useLocal = true; // false when releasing
-      var localBase = '//localhost:12580/test/build/';
-      var nativeBase = '//groups.alidemo.cn/weex/weex/test/build/';
-      var h5Base = './index.html?page=../../test/build/';
+      var localBase = '//' + require('../examples/ip') + ':12580/examples/build/';
+      var nativeBase = '';
+      var h5Base = './index.html?page=./test/build/';
 
       // in native
       var base = useLocal ? localBase : nativeBase;
