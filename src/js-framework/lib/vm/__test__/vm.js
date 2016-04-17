@@ -139,11 +139,25 @@ describe('generate virtual dom for a single vm', () => {
         type: 'container', attr: {a: 1, b: 2}, style: {c: 3, d: 4},
         children: [
           {type: 'image', attr: {src: function () {return this.x}}},
-          {type: 'text', attr: {value: function () {return this.y}}}
+          {type: 'text', attr: {value: function () {return this.n}}},
+          {type: 'text', attr: {value: function () {return this.m}}}
         ]
       },
       data: {
         x: '<some image url>', y: '<some text content>'
+      },
+      computed: {
+        n: function () {
+          return this.y.toUpperCase()
+        },
+        m: {
+          get: function () {
+            return this.y.toUpperCase()
+          },
+          set: function (v) {
+            this.y = v
+          }
+        }
       }
     }
 
@@ -153,32 +167,58 @@ describe('generate virtual dom for a single vm', () => {
     expect(vm._app).equal(app)
     expect(vm.x).eql('<some image url>')
     expect(vm.y).eql('<some text content>')
+    expect(vm.n).eql('<SOME TEXT CONTENT>')
+    expect(vm.m).eql('<SOME TEXT CONTENT>')
 
     var el = doc.body
     expect(el.type).eql('container')
     expect(el.attr).eql({a: 1, b: 2})
     expect(el.style).eql({c: 3, d: 4})
     expect(el.children).is.an.array
-    expect(el.children.length).eql(2)
+    expect(el.children.length).eql(3)
 
     var image = el.children[0]
     var text = el.children[1]
+    var text2 = el.children[2]
     expect(image.type).eql('image')
     expect(image.attr).eql({src: '<some image url>'})
     expect(text.type).eql('text')
-    expect(text.attr).eql({value: '<some text content>'})
+    expect(text.attr).eql({value: '<SOME TEXT CONTENT>'})
+    expect(text2.type).eql('text')
+    expect(text2.attr).eql({value: '<SOME TEXT CONTENT>'})
 
     vm.x = '<some image url>'
     differ.flush()
     expect(el).equal(doc.body)
     expect(image).equal(el.children[0])
     expect(text).equal(el.children[1])
+    expect(text2).equal(el.children[2])
 
     vm.x = 'other string value'
     differ.flush()
     expect(el).equal(doc.body)
     expect(image).equal(el.children[0])
     expect(image.attr).eql({src: 'other string value'})
+
+    vm.y = 'other string value'
+    differ.flush()
+    expect(el).equal(doc.body)
+    expect(text).equal(el.children[1])
+    expect(text.attr).eql({value: 'OTHER STRING VALUE'})
+    expect(text2).equal(el.children[2])
+    expect(text2.attr).eql({value: 'OTHER STRING VALUE'})
+
+    vm.m = 'third string value'
+    differ.flush()
+    expect(vm.x).eql('other string value')
+    expect(vm.y).eql('third string value')
+    expect(vm.n).eql('THIRD STRING VALUE')
+    expect(vm.m).eql('THIRD STRING VALUE')
+    expect(el).equal(doc.body)
+    expect(text).equal(el.children[1])
+    expect(text.attr).eql({value: 'THIRD STRING VALUE'})
+    expect(text2).equal(el.children[2])
+    expect(text2.attr).eql({value: 'THIRD STRING VALUE'})
   })
 
   it('generate an element tree with shown', () => {
