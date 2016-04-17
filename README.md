@@ -6,9 +6,9 @@ Support Android 4.1 (API 16) and iOS soon. See [Weex website](http://alibaba.git
 
 ## Meet
 
-* Install [Android Playground](http://g.tbcdn.cn/ali-wireless-h5/res/0.0.5/playground.apk).
+* Install [Android Playground](http://g.tbcdn.cn/ali-wireless-h5/res/0.0.9/playground.apk).
 
-    <img src="http://gtms03.alicdn.com/tps/i3/TB1wO.wMpXXXXaOXpXX4B0mTpXX-486-488.png" height="160" >
+    <img src="http://gtms03.alicdn.com/tps/i3/TB1uH3EMpXXXXcmXFXXdtp1PXXX-476-476.png" width="160" height="160" >
 
 ## Use
 
