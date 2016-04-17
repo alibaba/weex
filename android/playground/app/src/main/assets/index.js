@@ -121,13 +121,21 @@ define('@weex-component/index', function (require, exports, module) {
       ]
     }},
     created: function() {
-      console.log('hit', this.$getConfig().bundleUrl);
-      var host = '//localhost:12580';
-      var matches = /\/\/([^\/]+?)\//.exec(this.$getConfig().bundleUrl);
-      if (matches && matches.length >= 2) {
-        host = matches[1];
+      var bundleUrl = this.$getConfig().bundleUrl;
+      console.log('hit', bundleUrl);
+      var nativeBase;
+      if (bundleUrl.indexOf('your_current_IP') >= 0) { 
+        // in Android assets
+        nativeBase = 'file://assets/';
       }
-      var nativeBase = 'file://assets/';
+      else {
+        var host = 'localhost:12580';
+        var matches = /\/\/([^\/]+?)\//.exec(this.$getConfig().bundleUrl);
+        if (matches && matches.length >= 2) {
+          host = matches[1];
+        }
+        nativeBase = '//' + host + '/examples/build/';
+      }
       var h5Base = './index.html?page=./examples/build/';
       // in Native
       var base = nativeBase;
