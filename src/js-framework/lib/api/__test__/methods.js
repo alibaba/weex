@@ -115,8 +115,7 @@ describe('built-in', () => {
       global.WXEnvironment = {
         a: 'b'
       }
-      let configSpy = sinon.spy()
-      let config = vm.$getConfig(configSpy)
+      let config = vm.$getConfig()
       expect(config).eql({
         debug: true,
         bundleUrl: 'path_to_bundleUrl',
@@ -124,6 +123,11 @@ describe('built-in', () => {
           a: 'b'
         }
       })
+
+      global.nativeLog = sinon.spy()
+      const configSpy = sinon.spy()
+      vm.$getConfig(configSpy)
+      expect(global.nativeLog.callCount).to.be.equal(1)
       expect(configSpy.args.length).eql(1)
       expect(configSpy.args[0][0]).eql({
           debug: true,
@@ -132,6 +136,7 @@ describe('built-in', () => {
             a: 'b'
           }
         })
+      global.nativeLog = undefined
     })
 
     it('$sendHttp', () => {
