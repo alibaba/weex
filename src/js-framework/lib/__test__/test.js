@@ -343,6 +343,32 @@ describe('test input and output', function () {
     delete allDocs[name]
   })
 
+  it('computed case', function () {
+    var name = 'computed'
+    var inputCode = readInput(name)
+    var outputCode = readOutput(name)
+    var doc = new Document(name)
+    allDocs[name] = doc
+
+    framework.createInstance(name, inputCode)
+    var expected = eval('(' + outputCode + ')')
+    var actual = doc.toJSON()
+    expect(actual).eql(expected)
+
+    framework.refreshInstance(name, {x: 10})
+    expected.children[0].attr.value = 12
+    expected.children[1].attr.value = 12
+    expect(actual).eql(expected)
+
+    framework.refreshInstance(name, {m: 10})
+    expected.children[0].attr.value = 20
+    expected.children[1].attr.value = 20
+    expect(actual).eql(expected)
+
+    framework.destroyInstance(name)
+    delete allDocs[name]
+  })
+
   it('backward(register/render) case', function () {
     var name = 'backward1'
     var inputCode = readInput(name)
