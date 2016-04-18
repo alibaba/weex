@@ -363,9 +363,22 @@ describe('bind external infomations to sub vm', () => {
     '_bindSubVm', '_bindSubVmAfterInitialized']
   beforeEach(() => {
     vm = {
-      _data: {a: 1, b: 2},
+      _data: {a: 1, b: 2, c: 'class-style1'},
       _watchers: [],
-      _app: {eventManager: {add: () => {}}}
+      _app: {eventManager: {add: () => {}}},
+      _options: {
+        style: {
+          'class-style1': {
+            aaa: 1,
+            bbb: 2
+          },
+          'class-style2': {
+            aaa: 2,
+            ccc: 3
+          }
+        }
+      },
+      foo: function () {}
     }
     extendVm(vm, methodNames)
     subVm = {
@@ -412,6 +425,29 @@ describe('bind external infomations to sub vm', () => {
     expect(subVm._rootEl.style.bbb).eql(1)
     vm.a = 3
     expect(subVm._rootEl.style.bbb).eql(3)
+  })
+
+  it('bind classlist to a sub vm with root element', () => {
+    subVm._rootEl = {
+      attr: {},
+      style: {},
+      event: []
+    }
+    const template = {
+      classList: function () {
+        return [this.c]
+      }
+    }
+    initElement(subVm._rootEl)
+    vm._bindSubVm(subVm, template)
+    vm._bindSubVmAfterInitialized(subVm, template)
+    expect(subVm._rootEl.classStyle.aaa).eql(1)
+    expect(subVm._rootEl.classStyle.bbb).eql(2)
+    vm.c = 'class-style2'
+    expect(subVm._rootEl.classStyle.aaa).eql(2)
+    expect(subVm._rootEl.classStyle.bbb).to.be.undefined
+    expect(subVm._rootEl.classStyle.ccc).eql(3)
+
   })
 
   it('bind events to a sub vm with root element', () => {
