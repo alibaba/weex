@@ -13,7 +13,7 @@ Make sure you have the following installed:
 3. Android Support Repository >= 17 (for Android Support Library)
 4. Android NDK (download & extraction instructions [here](http://developer.android.com/ndk/downloads/index.html))
 
-Point Gradle to your Android SDK: either have `$ANDROID_SDK` and `$ANDROID_NDK ` defined, or create a local.properties file in the root of your react-native checkout with the following contents:
+Point Gradle to your Android SDK: either have `$ANDROID_SDK` and `$ANDROID_NDK ` defined, or create a local.properties file in the root of your weex checkout with the following contents:
 
 ```
 sdk.dir=absolute_path_to_android_sdk
@@ -42,7 +42,8 @@ git clone https://github.com/alibaba/weex.git
 
 Add the `:weex_sdk_android` project in `android/settings.gradle`:
 
-```gradle
+```
+gradle
 include ':weex_sdk_android'
 
 project(':weex_sdk_android').projectDir = new File(
@@ -51,7 +52,8 @@ project(':weex_sdk_android').projectDir = new File(
 
 Modify your `android/app/build.gradle` to use the `:weex_sdk_android` project instead of the pre-compiled library, e.g. - replace `compile 'com.taobao.android:weex_sdk:1.3.+'` with `compile project(':weex_sdk_android')`:
 
-```gradle
+```
+gradle
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:23.0.1'
@@ -68,7 +70,8 @@ If you use 3rd-party weex modules, you need to override their dependencies so th
 
 Modify your `android/app/build.gradle` and replace `compile project(':weex-custom-module')` with:
 
-```gradle
+```
+gradle
 compile(project(':weex-custom-module')) {
     exclude group: 'com.taobao.weex', module: 'weex_sdk_android'
 }
@@ -96,11 +99,11 @@ Gradle build fails in `ndk-build`. See the section about `local.properties` file
 
 ## Prepare your app
 
-In your app's `build.gradle` file add the React Native dependency:
+In your app's `build.gradle` file add the WEEX dependency:
 
     compile 'com.taobao.weex:weex_sdk:1.3.+'
 
-You can find the latest version of the react-native library on [Maven Central](). Next, make sure you have the Internet permission in your `AndroidManifest.xml`:
+You can find the latest version of the WEEX library on [JCentral](). Next, make sure you have the Internet permission in your `AndroidManifest.xml`:
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -111,7 +114,8 @@ This is only really used in dev mode when reloading JavaScript from the developm
 You need to add some native code in order to start the Weex runtime and get it to render something. To do this, we're going to create an `Application` to init weex, then we we're going to create an `Activity` that creates a WeexContainerView, starts a Weex application inside it and sets it as the main content view.
 
 
-```java
+```
+java
 public class WXApplication extends Application {
     @Override
     public void onCreate() {
@@ -134,7 +138,8 @@ public class WXApplication extends Application {
 
 Next, 
 
-```java
+```
+java
 //crate Weex instance
 WXSDKInstance mInstance = new WXSDKInstance(this);
 //set image Adapter
