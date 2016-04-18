@@ -19,6 +19,7 @@
         {name: 'animation', title: 'Animation'},
         {name: 'modal', title: 'Modal'},
         {name: 'videoDemo', title: 'Video'},
+        {name: 'calculator', title: 'Calculator'},
         {name: 'ui', title: 'UI Gallery'},
         {name: 'template', title: 'Example Template'}
       ]

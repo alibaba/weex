@@ -1,0 +1,61 @@
+<template>
+  <div style="padding: 5;">
+    <text class="result">{{getResult()}}</text>
+    <div class="row">
+      <text class="btn" onclick="input">1</text>
+      <text class="btn" onclick="input">2</text>
+      <text class="btn" onclick="input">3</text>
+      <text class="btn btn-operator" onclick="input">+</text>
+    </div>
+    <div class="row">
+      <text class="btn" onclick="input">4</text>
+      <text class="btn" onclick="input">5</text>
+      <text class="btn" onclick="input">6</text>
+      <text class="btn btn-operator" onclick="input">-</text>
+    </div>
+    <div class="row">
+      <text class="btn" onclick="input">7</text>
+      <text class="btn" onclick="input">8</text>
+      <text class="btn" onclick="input">9</text>
+      <text class="btn btn-operator" onclick="input">*</text>
+    </div>
+    <div class="row">
+      <text class="btn" onclick="input">0</text>
+      <text class="btn" onclick="input">.</text>
+      <text class="btn" onclick="clear">AC</text>
+      <text class="btn btn-operator" onclick="calculate">=</text>
+    </div>
+  </div>
+</template>
+
+<style>
+  .row {flex-direction: row;}
+  .result {color: white; background-color: #666; text-align: right;}
+  .btn {flex: 1; text-align: center; background-color: #eee;}
+  .btn-operator {color: white; background-color: #669;}
+  .btn, .result {height: 100; padding: 30; margin: 5;}
+</style>
+
+<script>
+  module.exports = {
+    data: {
+      result: ''
+    },
+    methods: {
+      getResult: function () {
+        return this.result;
+      },
+      input: function (e) {
+        var value = e.target.attr["value"];
+        this.result = this.result + value;
+      },
+      calculate: function(e) {
+        var result = eval(this.result);
+        this.result = this.result + " = " + result;
+      },
+      clear: function(e) {
+        this.result = "";
+      }
+    }
+  }
+</script>
