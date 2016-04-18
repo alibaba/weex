@@ -881,7 +881,7 @@ public class WXBridgeManager implements Callback {
     wxParams.setAppVersion(config.get("appversion"));
     wxParams.setWeexVersion(config.get("weexversion"));
     wxParams.setDeviceModel(config.get("sysmodel"));
-    String appName = config.get("appName");
+    String appName = config.get("appname");
     if (!TextUtils.isEmpty(appName)) {
       wxParams.setAppName(appName);
     }
