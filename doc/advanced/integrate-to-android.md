@@ -42,8 +42,7 @@ git clone https://github.com/alibaba/weex.git
 
 Add the `:weex_sdk_android` project in `android/settings.gradle`:
 
-```
-gradle
+```gradle
 include ':weex_sdk_android'
 
 project(':weex_sdk_android').projectDir = new File(
@@ -52,8 +51,7 @@ project(':weex_sdk_android').projectDir = new File(
 
 Modify your `android/app/build.gradle` to use the `:weex_sdk_android` project instead of the pre-compiled library, e.g. - replace `compile 'com.taobao.android:weex_sdk:1.3.+'` with `compile project(':weex_sdk_android')`:
 
-```
-gradle
+```gradle
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:23.0.1'
@@ -70,8 +68,7 @@ If you use 3rd-party weex modules, you need to override their dependencies so th
 
 Modify your `android/app/build.gradle` and replace `compile project(':weex-custom-module')` with:
 
-```
-gradle
+```gradle
 compile(project(':weex-custom-module')) {
     exclude group: 'com.taobao.weex', module: 'weex_sdk_android'
 }
@@ -114,8 +111,7 @@ This is only really used in dev mode when reloading JavaScript from the developm
 You need to add some native code in order to start the Weex runtime and get it to render something. To do this, we're going to create an `Application` to init weex, then we we're going to create an `Activity` that creates a WeexContainerView, starts a Weex application inside it and sets it as the main content view.
 
 
-```
-java
+```java
 public class WXApplication extends Application {
     @Override
     public void onCreate() {
@@ -138,8 +134,7 @@ public class WXApplication extends Application {
 
 Next, 
 
-```
-java
+```java
 //crate Weex instance
 WXSDKInstance mInstance = new WXSDKInstance(this);
 //set image Adapter
