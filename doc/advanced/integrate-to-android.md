@@ -62,7 +62,7 @@ dependencies {
 }
 ```
 
-#### 3. Making 3rd-party modules use your fork
+#### 3. Making 3rd-party modules use your project
 
 If you use 3rd-party weex modules, you need to override their dependencies so that they don't build the pre-compiled library. Otherwise you'll get an error while compiling - `Error: more than one library with package name 'com.taobao.weex'`.
 
@@ -101,7 +101,6 @@ You can find the latest version of the WEEX library on [jcenter](https://bintray
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-This is only really used in dev mode when reloading JavaScript from the development server, so you can strip this in release builds if you need to.
 
 ## Add native code
 
