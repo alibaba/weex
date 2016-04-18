@@ -19,16 +19,16 @@
                         <category android:name="android.intent.category.LAUNCHER" />
                     </intent-filter>
                 </activity> -->
-        <activity android:name="com.taobao.weex.appfram.navigator.NavigatorActivity"
-                  android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="com.taobao.android.intent.category.Navigator.push"/>
-                <data android:scheme="http"/>
-                <data android:scheme="https"/>
-            </intent-filter>
-        </activity>
+        <!--<activity android:name="com.taobao.weex.appfram.navigator.NavigatorActivity"-->
+                  <!--android:screenOrientation="portrait">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.VIEW"/>-->
+                <!--<category android:name="android.intent.category.DEFAULT"/>-->
+                <!--<category android:name="com.taobao.android.intent.category.Navigator.push"/>-->
+                <!--<data android:scheme="http"/>-->
+                <!--<data android:scheme="https"/>-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
     </application>
 
 </manifest>

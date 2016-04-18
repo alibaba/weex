@@ -13,7 +13,7 @@ Make sure you have the following installed:
 3. Android Support Repository >= 17 (for Android Support Library)
 4. Android NDK (download & extraction instructions [here](http://developer.android.com/ndk/downloads/index.html))
 
-Point Gradle to your Android SDK: either have `$ANDROID_SDK` and `$ANDROID_NDK ` defined, or create a local.properties file in the root of your react-native checkout with the following contents:
+Point Gradle to your Android SDK: either have `$ANDROID_SDK` and `$ANDROID_NDK ` defined, or create a local.properties file in the root of your weex checkout with the following contents:
 
 ```
 sdk.dir=absolute_path_to_android_sdk
@@ -76,7 +76,7 @@ compile(project(':weex-custom-module')) {
 
 ## Building from Android Studio
 
-From the Welcome screen of Android Studio choose "Import project" and select the `android` folder of your app.
+From the Welcome screen of Android Studio choose "Import project" and select the `playground` folder of your app.
 
 You should be able to use the _Run_ button to run your app on a device. 
 ## Additional notes
@@ -96,11 +96,11 @@ Gradle build fails in `ndk-build`. See the section about `local.properties` file
 
 ## Prepare your app
 
-In your app's `build.gradle` file add the React Native dependency:
+In your app's `build.gradle` file add the WEEX dependency:
 
-    compile 'com.taobao.weex:weex_sdk:1.3.+'
+    compile 'com.taobao.android:weex_sdk_android:0.4.0'
 
-You can find the latest version of the react-native library on [Maven Central](). Next, make sure you have the Internet permission in your `AndroidManifest.xml`:
+You can find the latest version of the WEEX library on [jcenter](https://dl.bintray.com/alibabaweex/maven/com/taobao/android/weex_sdk/0.4.0/weex_sdk-0.4.0.aar). Next, make sure you have the Internet permission in your `AndroidManifest.xml`:
 
     <uses-permission android:name="android.permission.INTERNET" />
 
