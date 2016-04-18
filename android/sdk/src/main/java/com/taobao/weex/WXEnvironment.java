@@ -253,13 +253,15 @@ public class WXEnvironment {
   public static Map<String, String> getConfig() {
     Map<String, String> configs = new HashMap<>();
     configs.put("os", OS);
-    configs.put("appversion", getAppVersionName());
-    configs.put("appname", sApplication.getPackageName());
-    configs.put("devid", DEV_Id);
-    configs.put("sysversion", SYS_VERSION);
-    configs.put("sysmodel", SYS_MODEL);
-    configs.put("weexversion", String.valueOf(WXSDK_VERSION));
+    configs.put("appVersion", getAppVersionName());
+    configs.put("devId", DEV_Id);
+    configs.put("sysVersion", SYS_VERSION);
+    configs.put("sysModel", SYS_MODEL);
+    configs.put("weexVersion", String.valueOf(WXSDK_VERSION));
     configs.putAll(options);
+    if(configs!=null&&configs.get("appName")==null){
+       configs.put("appName", sApplication.getPackageName());
+    }
     return configs;
   }
 
