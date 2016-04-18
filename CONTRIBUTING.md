@@ -31,17 +31,17 @@ for example:
 Format: 
 
 ```
-{action}-{module}-{shortName}
+{module}-{action}-{shortName}
 ```
 
+* `{module}`, see [commit log module](#commit-log)
 * `{action}`
     * Including: feature, bugfix
-* `{module}`, like commit log keyword
 
 for example:
 
-* `bugfix-android-memoryLeak`
-* `feature-jsfm-communication`
+* `android-bugfix-memoryLeak`
+* `jsfm-feature-communication`
 
 ## Pull Request
 
