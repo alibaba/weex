@@ -3,7 +3,19 @@ define('@weex-component/ui-list-item', function (require, exports, module) {
 ;
   module.exports = {
     data: function () {return {
-    }}
+      bgColor: '#ffffff',
+      click: function() {
+      }
+    }},
+    methods: {
+      touchstart: function() {
+        // TODO adaptive opposite bgColor
+//        this.bgColor = '#e6e6e6';
+      },
+      touchend: function() {
+//        this.bgColor = '#ffffff';
+      }
+    }
   }
 
 
@@ -15,20 +27,23 @@ define('@weex-component/ui-list-item', function (require, exports, module) {
     "paddingRight": 35,
     "height": 160,
     "justifyContent": "center",
-    "backgroundColor": "#ffffff",
-    "marginBottom": 1,
     "borderBottomWidth": 1,
     "borderColor": "#dddddd"
   }
 }
 
 ;module.exports.template = {
-  "type": "container",
+  "type": "div",
   "classList": [
     "item"
   ],
   "events": {
-    "click": "click"
+    "click": "click",
+    "touchstart": "touchstart",
+    "touchend": "touchend"
+  },
+  "style": {
+    "backgroundColor": function () {return this.bgColor}
   },
   "children": [
     {
@@ -89,33 +104,43 @@ define('@weex-component/indexitem', function (require, exports, module) {
 define('@weex-component/index', function (require, exports, module) {
 
 ;
-  // TODO ontouch highlight
   module.exports = {
     data: function () {return {
       cases: [
-        {name: 'ui', title: 'UI Gallery', url: ''},
-        {name: 'listDemo', title: 'List'},
-        {name: 'listComposite', title: 'List with composition'},
+        {name: 'hello', title: 'Hello World'},
+//        {name: 'textDemo', title: 'Text'},
+        {name: 'imageDemo', title: 'Image'},
+        {name: 'listBasic', title: 'List (Basic)'},
+        {name: 'listDemo', title: 'List (Advanced)'},
         {name: 'sliderDemo', title: 'Slider'},
-        {name: 'modal', title: 'Toast & Modal Dialogs'},
         {name: 'animation', title: 'Animation'},
-        {name: 'gesture', title: 'Gesture'},
+        {name: 'modal', title: 'Modal'},
         {name: 'videoDemo', title: 'Video'},
-        {name: '../../test/build/index', title: 'Test'}
-//        {name: 'skeleton', title: 'Skeleton Animation'},
-//        {name: 'mine', title: 'Mine Sweeper'}
+        {name: 'ui', title: 'UI Gallery'},
+        {name: 'template', title: 'Example Template'}
       ]
     }},
     created: function() {
-      var useLocal = true; // false when releasing
-      var localBase = 'file://assets/';
-      var nativeBase = '//groups.alidemo.cn/weex/weex/examples/build/';
-      var h5Base = './index.html?page=../../examples/build/';
-
-      // in native
-      var base = useLocal ? localBase : nativeBase;
-      // in browser or WebView
+      var bundleUrl = this.$getConfig().bundleUrl;
+      console.log('hit', bundleUrl);
+      var nativeBase;
+      if (bundleUrl.indexOf('your_current_IP') >= 0) { 
+        // in Android assets
+        nativeBase = 'file://assets/';
+      }
+      else {
+        var host = 'localhost:12580';
+        var matches = /\/\/([^\/]+?)\//.exec(this.$getConfig().bundleUrl);
+        if (matches && matches.length >= 2) {
+          host = matches[1];
+        }
+        nativeBase = '//' + host + '/examples/build/';
+      }
+      var h5Base = './index.html?page=./examples/build/';
+      // in Native
+      var base = nativeBase;
       if (typeof window === 'object') {
+        // in Browser or WebView
         base = h5Base;
       }
 
@@ -123,7 +148,8 @@ define('@weex-component/index', function (require, exports, module) {
         var ca = this.cases[i];
         ca.url = base + ca.name + '.js';
       }
-      //nativeLog('hit', this.cases[0].url);
+      // see log in Android Logcat
+      console.log('hit', this.cases[0].url);
     }
   }
 

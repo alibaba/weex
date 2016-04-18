@@ -188,7 +188,7 @@ define('@weex-component/gesture', function (require, exports, module) {
 }
 
 ;module.exports.template = {
-  "type": "container",
+  "type": "div",
   "style": {
     "height": 2000
   },
@@ -203,7 +203,7 @@ define('@weex-component/gesture', function (require, exports, module) {
   },
   "children": [
     {
-      "type": "container",
+      "type": "div",
       "shown": function () {return this.infos.touchstart.display},
       "children": [
         {
@@ -216,10 +216,10 @@ define('@weex-component/gesture', function (require, exports, module) {
           }
         },
         {
-          "type": "container",
+          "type": "div",
           "children": [
             {
-              "type": "container",
+              "type": "div",
               "classList": [
                 "row"
               ],
@@ -245,7 +245,7 @@ define('@weex-component/gesture', function (require, exports, module) {
               ]
             },
             {
-              "type": "container",
+              "type": "div",
               "classList": [
                 "row"
               ],
@@ -271,7 +271,7 @@ define('@weex-component/gesture', function (require, exports, module) {
               ]
             },
             {
-              "type": "container",
+              "type": "div",
               "classList": [
                 "row"
               ],
@@ -301,7 +301,7 @@ define('@weex-component/gesture', function (require, exports, module) {
       ]
     },
     {
-      "type": "container",
+      "type": "div",
       "shown": function () {return this.infos.touchmove.display},
       "children": [
         {
@@ -314,10 +314,10 @@ define('@weex-component/gesture', function (require, exports, module) {
           }
         },
         {
-          "type": "container",
+          "type": "div",
           "children": [
             {
-              "type": "container",
+              "type": "div",
               "classList": [
                 "row"
               ],
@@ -343,7 +343,7 @@ define('@weex-component/gesture', function (require, exports, module) {
               ]
             },
             {
-              "type": "container",
+              "type": "div",
               "classList": [
                 "row"
               ],
@@ -369,7 +369,7 @@ define('@weex-component/gesture', function (require, exports, module) {
               ]
             },
             {
-              "type": "container",
+              "type": "div",
               "classList": [
                 "row"
               ],
@@ -399,7 +399,7 @@ define('@weex-component/gesture', function (require, exports, module) {
       ]
     },
     {
-      "type": "container",
+      "type": "div",
       "shown": function () {return this.infos.touchend.display},
       "children": [
         {
@@ -412,10 +412,10 @@ define('@weex-component/gesture', function (require, exports, module) {
           }
         },
         {
-          "type": "container",
+          "type": "div",
           "children": [
             {
-              "type": "container",
+              "type": "div",
               "classList": [
                 "row"
               ],
@@ -441,7 +441,7 @@ define('@weex-component/gesture', function (require, exports, module) {
               ]
             },
             {
-              "type": "container",
+              "type": "div",
               "classList": [
                 "row"
               ],
@@ -467,7 +467,7 @@ define('@weex-component/gesture', function (require, exports, module) {
               ]
             },
             {
-              "type": "container",
+              "type": "div",
               "classList": [
                 "row"
               ],
@@ -497,7 +497,7 @@ define('@weex-component/gesture', function (require, exports, module) {
       ]
     },
     {
-      "type": "container",
+      "type": "div",
       "shown": function () {return this.infos.panstart.display},
       "children": [
         {
@@ -510,10 +510,10 @@ define('@weex-component/gesture', function (require, exports, module) {
           }
         },
         {
-          "type": "container",
+          "type": "div",
           "children": [
             {
-              "type": "container",
+              "type": "div",
               "classList": [
                 "row"
               ],
@@ -539,7 +539,7 @@ define('@weex-component/gesture', function (require, exports, module) {
               ]
             },
             {
-              "type": "container",
+              "type": "div",
               "classList": [
                 "row"
               ],
@@ -565,7 +565,7 @@ define('@weex-component/gesture', function (require, exports, module) {
               ]
             },
             {
-              "type": "container",
+              "type": "div",
               "classList": [
                 "row"
               ],
@@ -595,7 +595,7 @@ define('@weex-component/gesture', function (require, exports, module) {
       ]
     },
     {
-      "type": "container",
+      "type": "div",
       "shown": function () {return this.infos.panmove.display},
       "children": [
         {
@@ -608,10 +608,10 @@ define('@weex-component/gesture', function (require, exports, module) {
           }
         },
         {
-          "type": "container",
+          "type": "div",
           "children": [
             {
-              "type": "container",
+              "type": "div",
               "classList": [
                 "row"
               ],
@@ -637,7 +637,7 @@ define('@weex-component/gesture', function (require, exports, module) {
               ]
             },
             {
-              "type": "container",
+              "type": "div",
               "classList": [
                 "row"
               ],
@@ -663,7 +663,7 @@ define('@weex-component/gesture', function (require, exports, module) {
               ]
             },
             {
-              "type": "container",
+              "type": "div",
               "classList": [
                 "row"
               ],
@@ -693,7 +693,7 @@ define('@weex-component/gesture', function (require, exports, module) {
       ]
     },
     {
-      "type": "container",
+      "type": "div",
       "shown": function () {return this.infos.panend.display},
       "children": [
         {
@@ -706,10 +706,10 @@ define('@weex-component/gesture', function (require, exports, module) {
           }
         },
         {
-          "type": "container",
+          "type": "div",
           "children": [
             {
-              "type": "container",
+              "type": "div",
               "classList": [
                 "row"
               ],
@@ -735,7 +735,7 @@ define('@weex-component/gesture', function (require, exports, module) {
               ]
             },
             {
-              "type": "container",
+              "type": "div",
               "classList": [
                 "row"
               ],
@@ -761,7 +761,7 @@ define('@weex-component/gesture', function (require, exports, module) {
               ]
             },
             {
-              "type": "container",
+              "type": "div",
               "classList": [
                 "row"
               ],
@@ -791,7 +791,7 @@ define('@weex-component/gesture', function (require, exports, module) {
       ]
     },
     {
-      "type": "container",
+      "type": "div",
       "shown": function () {return this.infos.longpress.display},
       "children": [
         {
@@ -804,10 +804,10 @@ define('@weex-component/gesture', function (require, exports, module) {
           }
         },
         {
-          "type": "container",
+          "type": "div",
           "children": [
             {
-              "type": "container",
+              "type": "div",
               "classList": [
                 "row"
               ],
@@ -833,7 +833,7 @@ define('@weex-component/gesture', function (require, exports, module) {
               ]
             },
             {
-              "type": "container",
+              "type": "div",
               "classList": [
                 "row"
               ],
@@ -859,7 +859,7 @@ define('@weex-component/gesture', function (require, exports, module) {
               ]
             },
             {
-              "type": "container",
+              "type": "div",
               "classList": [
                 "row"
               ],
@@ -889,7 +889,7 @@ define('@weex-component/gesture', function (require, exports, module) {
       ]
     },
     {
-      "type": "container",
+      "type": "div",
       "classList": [
         "block"
       ],

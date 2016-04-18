@@ -209,7 +209,6 @@ import android.app.Application;
 import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
 import com.taobao.weex.adapter.IWXUserTrackAdapter;
-import com.taobao.weex.appfram.navigator.WXNavigatorModule;
 import com.taobao.weex.bridge.WXModuleManager;
 import com.taobao.weex.common.WXException;
 import com.taobao.weex.common.WXModule;
@@ -326,7 +325,7 @@ public class WXSDKEngine {
       WXModuleManager.registerModule("modal", WXModalUIModule.class, true);
       WXModuleManager.registerModule("instanceWrap", WXInstanceWrap.class, true);
       WXModuleManager.registerModule("animation", WXAnimationModule.class, true);
-      WXModuleManager.registerModule("navigator", WXNavigatorModule.class, false);
+      //WXModuleManager.registerModule("navigator", WXNavigatorModule.class, false);
       WXSDKEngine.registerModule("stream", WXStreamModule.class);
 
       registerDomObject(WXBasicComponentType.TEXT, WXTextDomObject.class);
@@ -389,5 +388,29 @@ public class WXSDKEngine {
 
   public static void addCustomOptions(String key, String value) {
     WXEnvironment.addCustomOptions(key, value);
+  }
+
+  public IWXUserTrackAdapter getIWXUserTrackAdapter() {
+    return WXSDKManager.getInstance().getIWXUserTrackAdapter();
+  }
+
+  public void setIWXUserTrackAdapter(IWXUserTrackAdapter IWXUserTrackAdapter) {
+    WXSDKManager.getInstance().setIWXUserTrackAdapter(IWXUserTrackAdapter);
+  }
+
+  public IWXImgLoaderAdapter getIWXImgLoaderAdapter() {
+    return WXSDKManager.getInstance().getIWXImgLoaderAdapter();
+  }
+
+  public void setIWXImgLoaderAdapter(IWXImgLoaderAdapter IWXImgLoaderAdapter) {
+    WXSDKManager.getInstance().setIWXImgLoaderAdapter(IWXImgLoaderAdapter);
+  }
+
+  public IWXHttpAdapter getIWXHttpAdapter() {
+    return WXSDKManager.getInstance().getIWXHttpAdapter();
+  }
+
+  public void setIWXHttpAdapter(IWXHttpAdapter IWXHttpAdapter) {
+    WXSDKManager.getInstance().setIWXHttpAdapter(IWXHttpAdapter);
   }
 }

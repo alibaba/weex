@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.weex.constants.Constants;
-import com.alibaba.weex.extend.ImageAdapter;
 import com.alibaba.weex.https.HotRefreshManager;
 import com.alibaba.weex.https.WXHttpManager;
 import com.alibaba.weex.https.WXHttpTask;
@@ -119,7 +118,7 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
     } else {
       if (mInstance == null) {
         mInstance = new WXSDKInstance(this);
-        mInstance.setImgLoaderAdapter(new ImageAdapter(this));
+//        mInstance.setImgLoaderAdapter(new ImageAdapter(this));
         mInstance.registerRenderListener(this);
       }
       Activity ctx = this;
@@ -155,7 +154,7 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
     }
 
     mInstance = new WXSDKInstance(this);
-    mInstance.setImgLoaderAdapter(new ImageAdapter(this));
+//    mInstance.setImgLoaderAdapter(new ImageAdapter(this));
 
     mInstance.registerRenderListener(this);
 
@@ -168,7 +167,7 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
         Log.e(TAG, "into--[http:onSuccess] url:" + url);
         try {
           mConfigMap.put("bundleUrl", url + Constants.WEEX_SAMPLES_KEY);
-          mInstance.render(TAG, new String(task.response.data, "utf-8"), mConfigMap, null, mContainer.getWidth(), mContainer.getHeight(), WXRenderStrategy.APPEND_ASYNC);
+          mInstance.render(TAG, new String(task.response.data, "utf-8"), mConfigMap, null, ScreenUtil.getDisplayWidth(WXPageActivity.this), ScreenUtil.getDisplayHeight(WXPageActivity.this), WXRenderStrategy.APPEND_ASYNC);
 
           //                    mInstance.render(new String(task.response.data, "utf-8"), mContainer.getWidth(), mContainer.getHeight());
         } catch (UnsupportedEncodingException e) {
@@ -305,7 +304,9 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.refresh, menu);
+    if(!TextUtils.equals("file",mUri.getScheme())){
+      getMenuInflater().inflate(R.menu.refresh, menu);
+    }
     return true;
   }
 

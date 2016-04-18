@@ -19,7 +19,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.weex.extend.ImageAdapter;
 import com.alibaba.weex.util.ScreenUtil;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.WXEnvironment;
@@ -36,7 +35,7 @@ public class WXMainActivity extends WXBaseActivity implements IWXRenderListener 
   private static final int CAMARA_PERMISSION_REQUEST_CODE = 0x1;
 
   private static final String TAG = "IndexFragment";
-  private static String CURRENT_IP="your_current_IP";
+  private static String CURRENT_IP="your_current_IP"; // your_current_IP
   private static final String WEEX_INDEX_URL = "http://"+CURRENT_IP+":12580/examples/build/index.js";
 
   private ViewGroup mContainer;
@@ -74,7 +73,7 @@ public class WXMainActivity extends WXBaseActivity implements IWXRenderListener 
     }
 
     mInstance = new WXSDKInstance(this);
-    mInstance.setImgLoaderAdapter(new ImageAdapter(this));
+//    mInstance.setImgLoaderAdapter(new ImageAdapter(this));
     mInstance.registerRenderListener(this);
 
     Map<String, Object> options = new HashMap<>();
@@ -92,8 +91,11 @@ public class WXMainActivity extends WXBaseActivity implements IWXRenderListener 
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    // Inflate the menu; this adds items to the action bar if it is present.
-    getMenuInflater().inflate(R.menu.main, menu);
+    if(TextUtils.equals(CURRENT_IP,"your_current_IP")){
+      getMenuInflater().inflate(R.menu.main_scan,menu);
+    }else{
+      getMenuInflater().inflate(R.menu.main, menu);
+    }
     return true;
   }
 

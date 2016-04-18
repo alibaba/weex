@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <ui-panel title="Transform">
       <ui-button value="Rotate" click="{{rotate}}" type="primary" size="middle"></ui-button>
       <ui-button value="Scale" click="{{scale}}" type="primary" size="middle" style="margin-top:12px;"></ui-button>
