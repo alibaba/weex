@@ -254,6 +254,7 @@ public class WXEnvironment {
     Map<String, String> configs = new HashMap<>();
     configs.put("os", OS);
     configs.put("appversion", getAppVersionName());
+    configs.put("appname", sApplication.getPackageName());
     configs.put("devid", DEV_Id);
     configs.put("sysversion", SYS_VERSION);
     configs.put("sysmodel", SYS_MODEL);

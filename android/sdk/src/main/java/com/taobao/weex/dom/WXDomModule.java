@@ -429,7 +429,7 @@ public final class WXDomModule extends WXModule {
    */
   @WXModuleAnno(moduleMethod = true, runOnUIThread = false)
   public void scrollToElement(String ref, JSONObject options) {
-    if (TextUtils.isEmpty(ref) || options == null || options.size() < 1) {
+    if (TextUtils.isEmpty(ref) || options == null) {
       return;
     }
 
