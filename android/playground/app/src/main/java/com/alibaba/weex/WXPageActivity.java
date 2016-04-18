@@ -82,7 +82,7 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
       }
     } else {
       mConfigMap.put("bundleUrl", mUri.toString() + Constants.WEEX_SAMPLES_KEY);
-      //            mUri = Uri.parse(mUri.toString() + Constants.WEEX_SAMPLES_KEY)
+      // mUri = Uri.parse(mUri.toString() + Constants.WEEX_SAMPLES_KEY)
     }
 
     if (!WXEnvironment.isSupport()) {

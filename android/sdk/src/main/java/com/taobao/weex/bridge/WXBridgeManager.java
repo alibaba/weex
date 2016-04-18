@@ -877,11 +877,12 @@ public class WXBridgeManager implements Callback {
     Map<String, String> config = WXEnvironment.getConfig();
     WXParams wxParams = new WXParams();
     wxParams.setPlatform(config.get("os"));
-    wxParams.setOsVersion(config.get("sysversion"));
-    wxParams.setAppVersion(config.get("appversion"));
-    wxParams.setWeexVersion(config.get("weexversion"));
-    wxParams.setDeviceModel(config.get("sysmodel"));
-    String appName = config.get("appname");
+    wxParams.setOsVersion(config.get("sysVersion"));
+    wxParams.setAppVersion(config.get("appVersion"));
+    wxParams.setWeexVersion(config.get("weexVersion"));
+    wxParams.setDeviceModel(config.get("sysModel"));
+    wxParams.setShouldInfoCollect(config.get("infoCollect"));
+    String appName = config.get("appName");
     if (!TextUtils.isEmpty(appName)) {
       wxParams.setAppName(appName);
     }
