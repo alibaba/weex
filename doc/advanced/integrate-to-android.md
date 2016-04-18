@@ -1,6 +1,6 @@
-# import Weex Android to your project
+# Integrate to Android
 
-You will need to build Weex from source if you want to work on a new feature/bug fix, try out the latest features which are not released yet, or maintain your own fork with patches that cannot be merged to the core.
+When you need to use the new features or to customize specific features, you can rely on the Source SDK for development。
 
 ## Prerequisites
 
@@ -79,14 +79,11 @@ compile(project(':weex-custom-module')) {
 From the Welcome screen of Android Studio choose "Import project" and select the `playground` folder of your app.
 
 You should be able to use the _Run_ button to run your app on a device. 
-## Additional notes
 
-Since the packet size limit is currently only compiled arm , X86 does not support.
+## Tip
+1. Since the packet size limit is currently only compiled arm , X86 does not support.
 
-
-## Troubleshooting
-
-Gradle build fails in `ndk-build`. See the section about `local.properties` file above.
+2. Gradle build fails in `ndk-build`. See the section about `local.properties` file above.
 
 #Quick access
  
