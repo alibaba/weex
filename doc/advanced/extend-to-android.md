@@ -16,8 +16,7 @@ For example: If you want to implement an address jumping function, you can achie
 
 Refer to the following example 
 
-```
-java
+```java
       
     import android.content.Intent;
     import android.net.Uri;
@@ -45,8 +44,7 @@ java
 
 #### Register the moulde
 
-```
-java
+```java
 /**
    * Register module. This is a wrapper method for
    * {@link WXModuleManager#registerModule(String, Class)}. 
@@ -80,8 +78,7 @@ There are label, image, div, scroll, ect. components in weex, you can also custo
 
 Refer to the following example 
 
-```
-java
+```java
 
 	package com.taobao.weextest;
     ………………
@@ -112,8 +109,7 @@ java
 #### Register the Component
 
 
-```
-java
+```java
   /**
    * Register component. The registration is singleton in {@link WXSDKEngine} level
    * @param type name of component. Same as type filed in the JS.
@@ -131,8 +127,7 @@ java
 <font color="gray">
 Weex SDK has no image download capability, you need to implement IWXImgLoaderAdapter. Refer to the following examples.
 
-```
-java
+```java
 package com.alibaba.weex.extend;
 
 import android.app.Activity;
