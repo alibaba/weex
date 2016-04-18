@@ -214,6 +214,15 @@ public class WXParams {
   private String appName;
   private String deviceWidth;
   private String deviceHeight;
+  private String  shouldInfoCollect;
+
+  public String getShouldInfoCollect() {
+    return shouldInfoCollect;
+  }
+
+  public void setShouldInfoCollect(String shouldInfoCollect) {
+    this.shouldInfoCollect = shouldInfoCollect;
+  }
 
   public String getPlatform() {
     return platform;
