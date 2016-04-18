@@ -98,9 +98,9 @@ Gradle build fails in `ndk-build`. See the section about `local.properties` file
 
 In your app's `build.gradle` file add the WEEX dependency:
 
-    compile 'com.taobao.weex:weex_sdk:1.3.+'
+    compile 'com.taobao.android:weex_sdk_android:0.4.0'
 
-You can find the latest version of the WEEX library on [JCentral](). Next, make sure you have the Internet permission in your `AndroidManifest.xml`:
+You can find the latest version of the WEEX library on [jcenter](https://dl.bintray.com/alibabaweex/maven/com/taobao/android/weex_sdk/0.4.0/weex_sdk-0.4.0.aar). Next, make sure you have the Internet permission in your `AndroidManifest.xml`:
 
     <uses-permission android:name="android.permission.INTERNET" />
 
