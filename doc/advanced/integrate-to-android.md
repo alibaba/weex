@@ -23,8 +23,8 @@ ndk.dir=absolute_path_to_android_ndk
 Example:
 
 ```
-sdk.dir=/Users/your_unix_name/android-sdk-macosx
-ndk.dir=/Users/your_unix_name/android-ndk/android-ndk-r10e
+sdk.dir=/Users/your_name/android-sdk-macosx
+ndk.dir=/Users/your_name/android-ndk/android-ndk-r10e
 ```
 
 
@@ -49,7 +49,7 @@ project(':weex_sdk_android').projectDir = new File(
     rootProject.projectDir, '../weex_sdk_android')
 ```
 
-Modify your `android/app/build.gradle` to use the `:weex_sdk_android` project instead of the pre-compiled library, e.g. - replace `compile 'com.taobao.android:weex_sdk:1.3.+'` with `compile project(':weex_sdk_android')`:
+Modify your `android/app/build.gradle` to use the `:weex_sdk_android` project instead of the pre-compiled library, e.g. - replace `compile 'com.taobao.android:weex_sdk:0.4.0` with `compile project(':weex_sdk_android')`:
 
 ```gradle
 dependencies {
@@ -98,7 +98,7 @@ Gradle build fails in `ndk-build`. See the section about `local.properties` file
 
 In your app's `build.gradle` file add the WEEX dependency:
 
-    compile 'com.taobao.android:weex_sdk_android:0.4.0'
+    compile 'com.taobao.android:weex_sdk:0.4.0'
 
 You can find the latest version of the WEEX library on [jcenter](https://bintray.com/search?query=weex_sdk&forceAgnostic=true). Next, make sure you have the Internet permission in your `AndroidManifest.xml`:
 
