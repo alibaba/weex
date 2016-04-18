@@ -67,7 +67,7 @@ define('@weex-component/sliderpage', function (require, exports, module) {
 }
 
 ;module.exports.template = {
-  "type": "container",
+  "type": "div",
   "classList": [
     "sliderpage"
   ],
@@ -90,8 +90,12 @@ define('@weex-component/ui-panel', function (require, exports, module) {
     data: function () {return {
       type: 'default',
       title: '',
+      dataClass: '', // FIXME transfer class
       border: 0
-    }}
+    }},
+    ready: function() {
+      console.log(this.data);
+    }
   }
 
 
@@ -103,19 +107,19 @@ define('@weex-component/ui-panel', function (require, exports, module) {
     "borderWidth": 1
   },
   "panel-primary": {
-    "borderColor": "rgb(40, 96, 144)"
+    "borderColor": "rgb(40,96,144)"
   },
   "panel-success": {
-    "borderColor": "rgb(76, 174, 76)"
+    "borderColor": "rgb(76,174,76)"
   },
   "panel-info": {
-    "borderColor": "rgb(70, 184, 218)"
+    "borderColor": "rgb(70,184,218)"
   },
   "panel-warning": {
-    "borderColor": "rgb(238, 162, 54)"
+    "borderColor": "rgb(238,162,54)"
   },
   "panel-danger": {
-    "borderColor": "rgb(212, 63, 58)"
+    "borderColor": "rgb(212,63,58)"
   },
   "panel-header": {
     "backgroundColor": "#f5f5f5",
@@ -155,7 +159,7 @@ define('@weex-component/ui-panel', function (require, exports, module) {
 }
 
 ;module.exports.template = {
-  "type": "container",
+  "type": "div",
   "classList": function () {return ['panel', 'panel-' + (this.type)]},
   "style": {
     "borderWidth": function () {return this.border}
@@ -187,10 +191,12 @@ define('@weex-component/ui-panel', function (require, exports, module) {
 define('@weex-component/sliderDemo', function (require, exports, module) {
 
 ;
+  var img0 = '//gw.alicdn.com/tps/i2/TB1DpsmMpXXXXabaXXX20ySQVXX-512-512.png_400x400.jpg';
+  var img1 = '//gw.alicdn.com/tps/i1/TB1M3sQMpXXXXakXXXXApNeJVXX-360-360.png';
   module.exports = {
-    data: function () {return {
+    data: {
       eventCnt: 0,
-      togglePlayMsg: '停止',
+      togglePlayMsg: 'pause',
       sliders: [
         {
           interval: 1000,
@@ -199,11 +205,11 @@ define('@weex-component/sliderDemo', function (require, exports, module) {
             {
               items: [
                 {
-                  image: '//img.alicdn.com/bao/uploaded/i4/TB1RDldGFXXXXXaXVXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
+                  image: img0,
                   link: '//h5.m.taobao.com/1'
                 },
                 {
-                  image: '//img.alicdn.com/bao/uploaded/i3/TB1InZqKVXXXXauXXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
+                  image: img0,
                   link: '//h5.m.taobao.com/1'
                 }
               ]
@@ -211,11 +217,11 @@ define('@weex-component/sliderDemo', function (require, exports, module) {
             {
               items: [
                 {
-                  image: '//img.alicdn.com/bao/uploaded/i4/TB1fj6dGpXXXXXTXXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
+                  image: img1,
                   link: '//h5.m.taobao.com/1'
                 },
                 {
-                  image: '//img.alicdn.com/bao/uploaded/i2/TB18nR_HFXXXXbOXpXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
+                  image: img1,
                   link: '//h5.m.taobao.com/1'
                 }
               ]
@@ -223,11 +229,11 @@ define('@weex-component/sliderDemo', function (require, exports, module) {
             {
               items: [
                 {
-                  image: '//img.alicdn.com/bao/uploaded/i3/TB1AoudGFXXXXXuaXXXXXXXXXXX_!!0-item_pic.jpg',
+                  image: img0,
                   link: '//h5.m.taobao.com/1'
                 },
                 {
-                  image: '//img.alicdn.com/bao/uploaded/i3/TB1oXeULpXXXXazXpXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
+                  image: img1,
                   link: '//h5.m.taobao.com/1'
                 }
               ]
@@ -241,11 +247,11 @@ define('@weex-component/sliderDemo', function (require, exports, module) {
             {
               items: [
                 {
-                  image: '//gd2.alicdn.com/bao/uploaded/i2/TB1o2HIIFXXXXbVXpXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg_.webp',
+                  image: img0,
                   link: '//h5.m.taobao.com/1'
                 },
                 {
-                  image: '//gd2.alicdn.com/bao/uploaded/i2/T1yViwFDhcXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
+                  image: img0,
                   link: '//h5.m.taobao.com/1'
                 }
               ]
@@ -253,11 +259,11 @@ define('@weex-component/sliderDemo', function (require, exports, module) {
             {
               items: [
                 {
-                  image: '//gd1.alicdn.com/bao/uploaded/i1/TB1H2LZHFXXXXa_XXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
+                  image: img1,
                   link: '//h5.m.taobao.com/1'
                 },
                 {
-                  image: '//gd1.alicdn.com/bao/uploaded/i1/TB1ZxI0FpXXXXb7bVXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
+                  image: img1,
                   link: '//h5.m.taobao.com/1'
                 }
               ]
@@ -265,11 +271,11 @@ define('@weex-component/sliderDemo', function (require, exports, module) {
             {
               items: [
                 {
-                  image: '//gd2.alicdn.com/bao/uploaded/i2/TB1jBMaJpXXXXXMXVXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg_.webp',
+                  image: img0,
                   link: '//h5.m.taobao.com/1'
                 },
                 {
-                  image: '//gd4.alicdn.com/bao/uploaded/i4/TB1i8vQJFXXXXbvXVXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg_.webp',
+                  image: img1,
                   link: '//h5.m.taobao.com/1'
                 }
               ]
@@ -283,11 +289,11 @@ define('@weex-component/sliderDemo', function (require, exports, module) {
             {
               items: [
                 {
-                  image: '//img.alicdn.com/bao/uploaded/i4/TB1RDldGFXXXXXaXVXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
+                  image: img0,
                   link: '//h5.m.taobao.com/1'
                 },
                 {
-                  image: '//img.alicdn.com/bao/uploaded/i3/TB1InZqKVXXXXauXXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
+                  image: img0,
                   link: '//h5.m.taobao.com/1'
                 }
               ]
@@ -295,11 +301,11 @@ define('@weex-component/sliderDemo', function (require, exports, module) {
             {
               items: [
                 {
-                  image: '//img.alicdn.com/bao/uploaded/i4/TB1fj6dGpXXXXXTXXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
+                  image: img1,
                   link: '//h5.m.taobao.com/1'
                 },
                 {
-                  image: '//img.alicdn.com/bao/uploaded/i2/TB18nR_HFXXXXbOXpXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
+                  image: img1,
                   link: '//h5.m.taobao.com/1'
                 }
               ]
@@ -307,11 +313,11 @@ define('@weex-component/sliderDemo', function (require, exports, module) {
             {
               items: [
                 {
-                  image: '//img.alicdn.com/bao/uploaded/i3/TB1AoudGFXXXXXuaXXXXXXXXXXX_!!0-item_pic.jpg',
+                  image: img0,
                   link: '//h5.m.taobao.com/1'
                 },
                 {
-                  image: '//img.alicdn.com/bao/uploaded/i3/TB1oXeULpXXXXazXpXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg',
+                  image: img1,
                   link: '//h5.m.taobao.com/1'
                 }
               ]
@@ -319,7 +325,7 @@ define('@weex-component/sliderDemo', function (require, exports, module) {
           ]
         }
       ]
-    }},
+    },
     methods: {
       ready: function() {
       },
@@ -359,10 +365,10 @@ define('@weex-component/sliderDemo', function (require, exports, module) {
     "position": "absolute",
     "width": 714,
     "height": 460,
-    "top": 160,
+    "top": 140,
     "left": 240,
-    "itemColor": "#666666",
-    "itemSelectedColor": "#0000ff"
+    "itemColor": "#dddddd",
+    "itemSelectedColor": "rgb(40, 96, 144)"
   }
 }
 
@@ -375,29 +381,69 @@ define('@weex-component/sliderDemo', function (require, exports, module) {
     {
       "type": "ui-panel",
       "attr": {
-        "title": "auto-play = false"
+        "title": "auto-play",
+        "type": "primary"
       },
       "children": [
         {
-          "type": "slider",
-          "classList": [
-            "slider"
-          ],
-          "append": "tree",
+          "type": "ui-panel",
           "attr": {
-            "interval": function () {return this.sliders[1].interval},
-            "autoPlay": "false"
+            "title": "auto-play = false"
           },
           "children": [
             {
-              "type": "indicator",
+              "type": "slider",
               "classList": [
-                "indicator"
+                "slider"
+              ],
+              "append": "tree",
+              "attr": {
+                "interval": function () {return this.sliders[1].interval},
+                "autoPlay": "false"
+              },
+              "children": [
+                {
+                  "type": "indicator",
+                  "classList": [
+                    "indicator"
+                  ]
+                },
+                {
+                  "type": "sliderpage",
+                  "repeat": function () {return this.sliders[1].sliderPages}
+                }
               ]
-            },
+            }
+          ]
+        },
+        {
+          "type": "ui-panel",
+          "attr": {
+            "title": "auto-play = true"
+          },
+          "children": [
             {
-              "type": "sliderpage",
-              "repeat": function () {return this.sliders[1].sliderPages}
+              "type": "slider",
+              "classList": [
+                "slider"
+              ],
+              "append": "tree",
+              "attr": {
+                "interval": function () {return this.sliders[0].interval},
+                "autoPlay": function () {return this.sliders[0].autoPlay}
+              },
+              "children": [
+                {
+                  "type": "indicator",
+                  "classList": [
+                    "indicator"
+                  ]
+                },
+                {
+                  "type": "sliderpage",
+                  "repeat": function () {return this.sliders[0].sliderPages}
+                }
+              ]
             }
           ]
         }
@@ -406,38 +452,8 @@ define('@weex-component/sliderDemo', function (require, exports, module) {
     {
       "type": "ui-panel",
       "attr": {
-        "title": "auto-play = true"
-      },
-      "children": [
-        {
-          "type": "slider",
-          "classList": [
-            "slider"
-          ],
-          "append": "tree",
-          "attr": {
-            "interval": function () {return this.sliders[0].interval},
-            "autoPlay": function () {return this.sliders[0].autoPlay}
-          },
-          "children": [
-            {
-              "type": "indicator",
-              "classList": [
-                "indicator"
-              ]
-            },
-            {
-              "type": "sliderpage",
-              "repeat": function () {return this.sliders[0].sliderPages}
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "ui-panel",
-      "attr": {
-        "title": function () {return 'Event, ' + (this.eventCnt) + ' change'}
+        "title": function () {return 'Event, ' + (this.eventCnt) + ' change'},
+        "type": "primary"
       },
       "children": [
         {
@@ -471,169 +487,179 @@ define('@weex-component/sliderDemo', function (require, exports, module) {
     {
       "type": "ui-panel",
       "attr": {
-        "title": "Indicator"
+        "title": "Indicator",
+        "type": "primary"
       },
       "children": [
         {
-          "type": "slider",
-          "classList": [
-            "slider"
-          ],
-          "append": "tree",
+          "type": "ui-panel",
           "attr": {
-            "interval": function () {return this.sliders[0].interval},
-            "autoPlay": function () {return this.sliders[0].autoPlay}
-          },
-          "events": {
-            "change": "handleSliderChange"
+            "title": "default style"
           },
           "children": [
             {
-              "type": "indicator",
+              "type": "slider",
               "classList": [
-                "indicator"
+                "slider"
+              ],
+              "append": "tree",
+              "attr": {
+                "interval": function () {return this.sliders[0].interval},
+                "autoPlay": function () {return this.sliders[0].autoPlay}
+              },
+              "events": {
+                "change": "handleSliderChange"
+              },
+              "children": [
+                {
+                  "type": "indicator",
+                  "classList": [
+                    "indicator"
+                  ]
+                },
+                {
+                  "type": "sliderpage",
+                  "repeat": function () {return this.sliders[0].sliderPages}
+                }
               ]
-            },
-            {
-              "type": "sliderpage",
-              "repeat": function () {return this.sliders[0].sliderPages}
             }
           ]
-        }
-      ]
-    },
-    {
-      "type": "ui-panel",
-      "attr": {
-        "title": "Default indicator style"
-      },
-      "children": [
+        },
         {
-          "type": "slider",
-          "classList": [
-            "slider"
-          ],
-          "append": "tree",
+          "type": "ui-panel",
           "attr": {
-            "interval": function () {return this.sliders[0].interval},
-            "autoPlay": function () {return this.sliders[0].autoPlay}
+            "title": "width & height"
           },
           "children": [
             {
-              "type": "indicator",
-              "style": {
-                "width": 714,
-                "height": 460
-              }
-            },
-            {
-              "type": "sliderpage",
-              "repeat": function () {return this.sliders[0].sliderPages}
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "ui-panel",
-      "attr": {
-        "title": "Indicator left & top"
-      },
-      "children": [
-        {
-          "type": "slider",
-          "classList": [
-            "slider"
-          ],
-          "append": "tree",
-          "attr": {
-            "interval": function () {return this.sliders[1].interval},
-            "autoPlay": function () {return this.sliders[1].autoPlay}
-          },
-          "children": [
-            {
-              "type": "indicator",
+              "type": "slider",
               "classList": [
-                "indicator"
+                "slider"
               ],
-              "style": {
-                "top": -140,
-                "left": -240
-              }
-            },
-            {
-              "type": "sliderpage",
-              "repeat": function () {return this.sliders[1].sliderPages}
+              "append": "tree",
+              "attr": {
+                "interval": function () {return this.sliders[0].interval},
+                "autoPlay": function () {return this.sliders[0].autoPlay}
+              },
+              "children": [
+                {
+                  "type": "indicator",
+                  "style": {
+                    "itemColor": "#dddddd",
+                    "width": 714,
+                    "height": 460
+                  }
+                },
+                {
+                  "type": "sliderpage",
+                  "repeat": function () {return this.sliders[0].sliderPages}
+                }
+              ]
             }
           ]
-        }
-      ]
-    },
-    {
-      "type": "ui-panel",
-      "attr": {
-        "title": "Indicator itemColor & itemSelectedColor"
-      },
-      "children": [
+        },
         {
-          "type": "slider",
-          "classList": [
-            "slider"
-          ],
-          "append": "tree",
+          "type": "ui-panel",
           "attr": {
-            "interval": function () {return this.sliders[2].interval},
-            "autoPlay": function () {return this.sliders[2].autoPlay}
+            "title": "left & top"
           },
           "children": [
             {
-              "type": "indicator",
+              "type": "slider",
               "classList": [
-                "indicator"
+                "slider"
               ],
-              "style": {
-                "itemColor": "#ffffff",
-                "itemSelectedColor": "#ff0000"
-              }
-            },
-            {
-              "type": "sliderpage",
-              "repeat": function () {return this.sliders[2].sliderPages}
+              "append": "tree",
+              "attr": {
+                "interval": function () {return this.sliders[1].interval},
+                "autoPlay": function () {return this.sliders[1].autoPlay}
+              },
+              "children": [
+                {
+                  "type": "indicator",
+                  "classList": [
+                    "indicator"
+                  ],
+                  "style": {
+                    "top": -140,
+                    "left": -240
+                  }
+                },
+                {
+                  "type": "sliderpage",
+                  "repeat": function () {return this.sliders[1].sliderPages}
+                }
+              ]
             }
           ]
-        }
-      ]
-    },
-    {
-      "type": "ui-panel",
-      "attr": {
-        "title": "Indicator itemSize"
-      },
-      "children": [
+        },
         {
-          "type": "slider",
-          "classList": [
-            "slider"
-          ],
-          "append": "tree",
+          "type": "ui-panel",
           "attr": {
-            "interval": function () {return this.sliders[1].interval},
-            "autoPlay": function () {return this.sliders[1].autoPlay}
+            "title": "itemColor & itemSelectedColor"
           },
           "children": [
             {
-              "type": "indicator",
-              "style": {
-                "itemSize": 40,
-                "top": 160,
-                "left": 180,
-                "width": 714,
-                "height": 460
-              }
-            },
+              "type": "slider",
+              "classList": [
+                "slider"
+              ],
+              "append": "tree",
+              "attr": {
+                "interval": function () {return this.sliders[2].interval},
+                "autoPlay": function () {return this.sliders[2].autoPlay}
+              },
+              "children": [
+                {
+                  "type": "indicator",
+                  "classList": [
+                    "indicator"
+                  ],
+                  "style": {
+                    "itemSelectedColor": "rgb(217, 83, 79)"
+                  }
+                },
+                {
+                  "type": "sliderpage",
+                  "repeat": function () {return this.sliders[2].sliderPages}
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "ui-panel",
+          "attr": {
+            "title": "itemSize"
+          },
+          "children": [
             {
-              "type": "sliderpage",
-              "repeat": function () {return this.sliders[1].sliderPages}
+              "type": "slider",
+              "classList": [
+                "slider"
+              ],
+              "append": "tree",
+              "attr": {
+                "interval": function () {return this.sliders[1].interval},
+                "autoPlay": function () {return this.sliders[1].autoPlay}
+              },
+              "children": [
+                {
+                  "type": "indicator",
+                  "style": {
+                    "itemColor": "#dddddd",
+                    "itemSize": 40,
+                    "top": 140,
+                    "left": 180,
+                    "width": 714,
+                    "height": 460
+                  }
+                },
+                {
+                  "type": "sliderpage",
+                  "repeat": function () {return this.sliders[1].sliderPages}
+                }
+              ]
             }
           ]
         }

@@ -1,6 +1,6 @@
 # Weex Contributing Guide
 
-Welcome to create pull requests or open issues for code bugs, doc, examples and anything.
+Welcome to create pull requests or open issues for bugfix, doc, example, suggestion and anything.
 
 * [Open Issues](https://github.com/alibaba/weex/issues/new)
 * [Create Pull Requests](https://github.com/alibaba/weex/compare)
@@ -18,7 +18,7 @@ FORMAT
     * `*` update or bugfix
     * `-` remove
 * `{module}`
-    * Including: android, ios, jsfm, h5, doc, website, example, test, all 
+    * Including: android, ios, jsfm, html5, doc, website, example, test, all 
 
 for example:
 
@@ -31,17 +31,17 @@ for example:
 Format: 
 
 ```
-{action}-{module}-{shortName}
+{module}-{action}-{shortName}
 ```
 
+* `{module}`, see [commit log module](#commit-log)
 * `{action}`
     * Including: feature, bugfix
-* `{module}`, like commit log keyword
 
 for example:
 
-* `bugfix-android-memoryLeak`
-* `feature-jsfm-communication`
+* `android-bugfix-memoryLeak`
+* `jsfm-feature-communication`
 
 ## Pull Request
 

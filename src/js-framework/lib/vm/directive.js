@@ -255,9 +255,8 @@ export function _bindDir(el, name, data) {
 export function _bindKey(el, name, key, calc) {
   const methodName = SETTERS[name]
   const obj = el[name]
-  const value = calc.call(this)
-  el[methodName](key, calc.call(this))
-  this._watch(calc, (value) => {
+  // watch the calc, and returns a value by calc.call()
+  const value = this._watch(calc, (value) => {
     function handler() {
       el[methodName](key, value)
     }
@@ -269,17 +268,21 @@ export function _bindKey(el, name, key, calc) {
       handler()
     }
   })
+
+  el[methodName](key, value)
 }
 
 /**
  * watch a calc function and callback if the calc value changes
  */
 export function _watch(calc, callback) {
-  new Watcher(this, calc, function (value, oldValue) {
+  const watcher = new Watcher(this, calc, function (value, oldValue) {
     /* istanbul ignore if */
     if (typeof value !== 'object' && value === oldValue) {
       return
     }
     callback(value)
   })
+
+  return watcher.value
 }

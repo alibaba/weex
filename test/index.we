@@ -24,7 +24,12 @@
     },
     created: function() {
       var useLocal = true; // false when releasing
-      var localBase = '//' + require('../examples/ip') + ':12580/examples/build/';
+      var host = '//localhost:12580';
+      var matches = /\/\/([^\/]+?)\//.exec(this.$getConfig().bundleUrl);
+      if (matches && matches.length >= 2) {
+        host = matches[1];
+      }
+      var localBase = '//' + host + '/test/build/';
       var nativeBase = '';
       var h5Base = './index.html?page=./test/build/';
 
