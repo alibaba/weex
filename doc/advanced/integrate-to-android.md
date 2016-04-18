@@ -76,7 +76,7 @@ compile(project(':weex-custom-module')) {
 
 ## Building from Android Studio
 
-From the Welcome screen of Android Studio choose "Import project" and select the `android` folder of your app.
+From the Welcome screen of Android Studio choose "Import project" and select the `playground` folder of your app.
 
 You should be able to use the _Run_ button to run your app on a device. 
 ## Additional notes
