@@ -148,7 +148,7 @@ export function bootstrap(name, config, data) {
       `not compatible with ${global.needTransformerVersion}`)
   }
 
-  let _checkDowngrade = downgrade.check(config.downgrade, this.options)
+  let _checkDowngrade = downgrade.check(config.downgrade)
   if (_checkDowngrade.isDowngrade) {
     this.callTasks([{
       module: 'instanceWrap',
