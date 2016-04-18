@@ -24,7 +24,7 @@ Example:
 
 ```
 sdk.dir=/Users/your_name/android-sdk-macosx
-ndk.dir=/Users/your_name/android-ndk/android-ndk-r10e
+ndk.dir=/Users/your_name/android-ndk-r10e
 ```
 
 
