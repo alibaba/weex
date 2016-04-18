@@ -2,128 +2,128 @@
 </style>
 
 <template>
-  <container style="height: 2000" ontouchstart="touchstartHandler" ontouchmove="touchmoveHandler" ontouchend="touchendHandler" onpanstart="panstartHandler" onpanmove="panmoveHandler" onpanend="panendHandler" onlongpress="longpressHandler">
-      <container if="{{infos.touchstart.display}}">
+  <div style="height: 2000" ontouchstart="touchstartHandler" ontouchmove="touchmoveHandler" ontouchend="touchendHandler" onpanstart="panstartHandler" onpanmove="panmoveHandler" onpanend="panendHandler" onlongpress="longpressHandler">
+      <div if="{{infos.touchstart.display}}">
         <text class="title">touchstart</text>
-        <container>
-          <container class="row">
+        <div>
+          <div class="row">
             <text class="item">the count of touch: {{infos.touchstart.changedTouches}}</text>
             <text class="item">identifier: {{infos.touchstart.identifier}}</text>
-          </container>
-          <container class="row">
+          </div>
+          <div class="row">
             <text class="item">pageX: {{infos.touchstart.pageX}}</text>
             <text class="item">pageY: {{infos.touchstart.pageY}}</text>
-          </container>
-          <container class="row">
+          </div>
+          <div class="row">
             <text class="item">screenX: {{infos.touchstart.screenX}}</text>
             <text class="item">screenY: {{infos.touchstart.screenY}}</text>
-          </container>
-        </container>
-      </container>
-      <container if="{{infos.touchmove.display}}">
+          </div>
+        </div>
+      </div>
+      <div if="{{infos.touchmove.display}}">
         <text class="title">touchmove</text>
-        <container>
-          <container class="row">
+        <div>
+          <div class="row">
             <text class="item">the count of touch: {{infos.touchmove.changedTouches}}</text>
             <text class="item">identifier: {{infos.touchmove.identifier}}</text>
-          </container>
-          <container class="row">
+          </div>
+          <div class="row">
             <text class="item">pageX: {{infos.touchmove.pageX}}</text>
             <text class="item">pageY: {{infos.touchmove.pageY}}</text>
-          </container>
-          <container class="row">
+          </div>
+          <div class="row">
             <text class="item">screenX: {{infos.touchmove.screenX}}</text>
             <text class="item">screenY: {{infos.touchmove.screenY}}</text>
-          </container>
-        </container>
-      </container>
-      <container if="{{infos.touchend.display}}">
+          </div>
+        </div>
+      </div>
+      <div if="{{infos.touchend.display}}">
         <text class="title">touchend</text>
-        <container>
-          <container class="row">
+        <div>
+          <div class="row">
             <text class="item">the count of touch: {{infos.touchend.changedTouches}}</text>
             <text class="item">identifier: {{infos.touchend.identifier}}</text>
-          </container>
-          <container class="row">
+          </div>
+          <div class="row">
             <text class="item">pageX: {{infos.touchend.pageX}}</text>
             <text class="item">pageY: {{infos.touchend.pageY}}</text>
-          </container>
-          <container class="row">
+          </div>
+          <div class="row">
             <text class="item">screenX: {{infos.touchend.screenX}}</text>
             <text class="item">screenY: {{infos.touchend.screenY}}</text>
-          </container>
-        </container>
-      </container>
-      <container if="{{infos.panstart.display}}">
+          </div>
+        </div>
+      </div>
+      <div if="{{infos.panstart.display}}">
         <text class="title">panstart</text>
-        <container>
-          <container class="row">
+        <div>
+          <div class="row">
             <text class="item">the count of touch: {{infos.panstart.changedTouches}}</text>
             <text class="item">identifier: {{infos.panstart.identifier}}</text>
-          </container>
-          <container class="row">
+          </div>
+          <div class="row">
             <text class="item">pageX: {{infos.panstart.pageX}}</text>
             <text class="item">pageY: {{infos.panstart.pageY}}</text>
-          </container>
-          <container class="row">
+          </div>
+          <div class="row">
             <text class="item">screenX: {{infos.panstart.screenX}}</text>
             <text class="item">screenY: {{infos.panstart.screenY}}</text>
-          </container>
-        </container>
-      </container>
-      <container if="{{infos.panmove.display}}">
+          </div>
+        </div>
+      </div>
+      <div if="{{infos.panmove.display}}">
         <text class="title">panmove</text>
-        <container>
-          <container class="row">
+        <div>
+          <div class="row">
             <text class="item">the count of touch: {{infos.panmove.changedTouches}}</text>
             <text class="item">identifier: {{infos.panmove.identifier}}</text>
-          </container>
-          <container class="row">
+          </div>
+          <div class="row">
             <text class="item">pageX: {{infos.panmove.pageX}}</text>
             <text class="item">pageY: {{infos.panmove.pageY}}</text>
-          </container>
-          <container class="row">
+          </div>
+          <div class="row">
             <text class="item">screenX: {{infos.panmove.screenX}}</text>
             <text class="item">screenY: {{infos.panmove.screenY}}</text>
-          </container>
-        </container>
-      </container>
-      <container if="{{infos.panend.display}}">
+          </div>
+        </div>
+      </div>
+      <div if="{{infos.panend.display}}">
         <text class="title">panend</text>
-        <container>
-          <container class="row">
+        <div>
+          <div class="row">
             <text class="item">the count of touch: {{infos.panend.changedTouches}}</text>
             <text class="item">identifier: {{infos.panend.identifier}}</text>
-          </container>
-          <container class="row">
+          </div>
+          <div class="row">
             <text class="item">pageX: {{infos.panend.pageX}}</text>
             <text class="item">pageY: {{infos.panend.pageY}}</text>
-          </container>
-          <container class="row">
+          </div>
+          <div class="row">
             <text class="item">screenX: {{infos.panend.screenX}}</text>
             <text class="item">screenY: {{infos.panend.screenY}}</text>
-          </container>
-        </container>
-      </container>
-      <container if="{{infos.longpress.display}}">
+          </div>
+        </div>
+      </div>
+      <div if="{{infos.longpress.display}}">
         <text class="title">longpress</text>
-        <container>
-          <container class="row">
+        <div>
+          <div class="row">
             <text class="item">the count of touch: {{infos.longpress.changedTouches}}</text>
             <text class="item">identifier: {{infos.longpress.identifier}}</text>
-          </container>
-          <container class="row">
+          </div>
+          <div class="row">
             <text class="item">pageX: {{infos.longpress.pageX}}</text>
             <text class="item">pageY: {{infos.longpress.pageY}}</text>
-          </container>
-          <container class="row">
+          </div>
+          <div class="row">
             <text class="item">screenX: {{infos.longpress.screenX}}</text>
             <text class="item">screenY: {{infos.longpress.screenY}}</text>
-          </container>
-        </container>
-      </container>
-      <container class="block" style="left:{{block.left}};top:{{block.top}};background-color:{{block.backgroundColor}};width:{{block.width}};height: {{block.height}};position:absolute;"></container>
-  </container>
+          </div>
+        </div>
+      </div>
+      <div class="block" style="left:{{block.left}};top:{{block.top}};background-color:{{block.backgroundColor}};width:{{block.width}};height: {{block.height}};position:absolute;"></div>
+  </div>
 </template>
 
 

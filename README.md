@@ -6,7 +6,9 @@ Support Android 4.1 (API 16) and iOS soon. See [Weex website](http://alibaba.git
 
 ## Meet
 
-* Install [Android Playground](./android/playground.apk).
+* Install [Android Playground](http://g.tbcdn.cn/ali-wireless-h5/res/0.0.9/playground.apk).
+
+    <img src="http://gtms03.alicdn.com/tps/i3/TB1uH3EMpXXXXcmXFXXdtp1PXXX-476-476.png" width="160" height="160" >
 
 ## Use
 
@@ -17,19 +19,18 @@ Support Android 4.1 (API 16) and iOS soon. See [Weex website](http://alibaba.git
 
 0. Prerequisites
     0. Install [Node.js](http://nodejs.org/)
-    0. `npm install`
+    0. `npm install` to install project
     0. Install [Android Environment](http://developer.android.com/training/basics/firstapp/index.html)
-0. Run
+0. Run playground
     0. `npm run serve`
-    0. Open Android Studio
-    0. `/java/com.alibaba.weex/WXMainActivity`, modify `CURRENT_IP` to your local IP
-    0. `open android/playground`, Click `Run` button
-0. Dev
-    0. npm run watch
-    0. add a new `newExample.we` file in `/examples`
-    0. modify `examples/index.we`
-        0. add `{name: 'newExample', title: 'New Example'}` for data.cases
-        0. change `localBase` to your local IP
+    0. In Android Studio
+        0. Open `android/playground`
+        0. In `app/java/com.alibaba.weex/WXMainActivity`, modify `CURRENT_IP` to your local IP
+        0. Click <img src="http://gtms04.alicdn.com/tps/i4/TB1wCcqMpXXXXakXpXX3G7tGXXX-34-44.png" height="16" > (`Run` button)
+0. Add an example
+    0. `npm run watch`
+    0. In `examples`, add a file `newExample.we`  
+    0. In `examples/index.we`, add an item `{name: 'newExample', title: 'New Example'}` for array `data.cases`
 
 ## Contributing
 

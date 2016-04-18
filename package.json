@@ -20,6 +20,7 @@
     "build:js-framework": "cd ./src/js-framework && npm run build && cd ../../",
     "build:h5-render": "cd ./src/h5-render && npm run build && cd ../../",
     "build:copy2sdk": "cp -vf ./src/js-framework/dist/index.js ./android/sdk/assets/main.js",
+    "build:copy2play": "cp -vf ./examples/build/*.js ./android/playground/app/src/main/assets/",
     "build": "npm run build:js-framework && npm run build:h5-render && npm run build:copy2sdk",
     
     "dev": "npm run clean && npm run transform",

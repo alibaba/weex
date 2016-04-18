@@ -9,9 +9,9 @@
 </style>
 
 <template>
-  <container class="sliderpage">
+  <div class="sliderpage">
     <slideritem repeat="{{sliderItems}}"></slideritem>
-  </container>
+  </div>
 </template>
 
 <script>
