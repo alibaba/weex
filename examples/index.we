@@ -28,9 +28,15 @@
       var bundleUrl = this.$getConfig().bundleUrl;
       console.log('hit', bundleUrl);
       var nativeBase;
-      if (bundleUrl.indexOf('your_current_IP') >= 0) { 
-        // in Android assets
+      var isAndroidAssets = bundleUrl.indexOf('your_current_IP') >= 0;
+      var isiOSAssets = bundleUrl.indexOf('file:///') >= 0 && bundleUrl.indexOf('WeexDemo.app') > 0;
+      if (isAndroidAssets) {
         nativeBase = 'file://assets/';
+      }
+      else if (isiOSAssets) {
+        // file:///var/mobile/Containers/Bundle/Application/{id}/WeexDemo.app/
+        // file:///Users/{user}/Library/Developer/CoreSimulator/Devices/{id}/data/Containers/Bundle/Application/{id}/WeexDemo.app/
+        nativeBase = bundleUrl.substring(0, bundleUrl.lastIndexOf('/') + 1);
       }
       else {
         var host = 'localhost:12580';
