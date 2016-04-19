@@ -1,30 +1,55 @@
 <template>
   <scroller>
-    <ui-panel title="width x height = 400 x 400">
-      <ui-tip type="warning" value="Weex screen width is 750" style="margin-bottom: 20px;"></ui-tip>
-      <image class="img" style=" width: 400px; height: 400px;" src="{{img}}"></image>
+    <ui-panel title="color">
+      <text class="txt">default is black</text>
+      <text class="txt" style="color:#286090">#286090</text>
+      <text class="txt" style="color:#0f0">#0f0</text>
+      <text class="txt" style="color:red">keyword</text>
+      <text class="txt" style="color:rgb(238, 162, 54)">rgb(238, 162, 54)</text>
+      <text class="txt" style="color:rgb(238, 162, 54, 0.5)">rgb(238, 162, 54, 0.5)</text>
     </ui-panel>
 
-    <ui-panel title="200 x 200">
-      <image class="img" style=" width: 200px; height: 200px;" src="{{img}}"></image>
+    <ui-panel title="font-size">
+      <!--<div style="flex-direction: row">-->
+        <text class="txt" style="font-size: 32px;">32</text>
+        <text class="txt" style="font-size: 64px;">64</text>
+        <text class="txt" style="font-size: 100px;">100</text>
+      <!--</div>-->
     </ui-panel>
 
-    <ui-panel title="100 x 100">
-      <image class="img" style=" width: 100px; height: 100px;" src="{{img}}"></image>
+    <ui-panel title="font-style">
+      <text class="txt" style="font-style: normal">normal</text>
+      <text class="txt" style="font-style: italic">italic</text>
+    </ui-panel>
+
+    <ui-panel title="font-weight">
+      <text class="txt" style="font-weight: normal">normal</text>
+      <text class="txt" style="font-weight: bold">bold</text>
+    </ui-panel>
+
+    <ui-panel title="text-decoration">
+      <text class="txt" style="text-decoration: none">none</text>
+      <text class="txt" style="text-decoration: underline">underline</text>
+      <text class="txt" style="text-decoration: line-through">line-through</text>
+    </ui-panel>
+
+    <ui-panel title="text-align">
+      <text class="txt" style="text-align: left">left</text>
+      <text class="txt" style="text-align: center">center</text>
+      <text class="txt" style="text-align: right">right</text>
     </ui-panel>
   </scroller>
 </template>
 
 <style>
-  .img {
-    margin-bottom: 20px;
+  .txt {
+    margin-bottom: 12px;
+    font-size: 40px;
   }
 </style>
 
 <script>
   module.exports = {
-    data: {
-      img: '//img.alicdn.com/bao/uploaded/i4/TB1RDldGFXXXXXaXVXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg'
-    }
+    data: {}
   }
 </script>
