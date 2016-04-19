@@ -6,38 +6,36 @@
   "keywords": [
     "weex"
   ],
+  "engines" : {
+    "node" : ">=4" 
+  },
   "scripts": {
     "install:js-framework": "cd ./src/js-framework && npm install && cd ../../",
     "install:h5-render": "cd ./src/h5-render && npm install && cd ../../",
     "postinstall": "npm run install:js-framework && npm run install:h5-render",
-    
-    "clean:examples":  "echo \"\\033[36;1m[Clean]\\033[0m \\033[33mexamples\\033[0m\" && rm -vf examples/build/*",
-    "clean:test":  "echo \"\\033[36;1m[Clean]\\033[0m \\033[33mtest\\033[0m\" && rm -vf test/build/*",
+    "clean:examples": "echo \"\\033[36;1m[Clean]\\033[0m \\033[33mexamples\\033[0m\" && rm -vf examples/build/*",
+    "clean:test": "echo \"\\033[36;1m[Clean]\\033[0m \\033[33mtest\\033[0m\" && rm -vf test/build/*",
     "clean": "npm run clean:examples && npm run clean:test",
     "transform:examples": "transformer examples/*.we -o examples/build",
-    "transform:test": "transformer examples/*.we -o test/build",
+    "transform:test": "transformer test/*.we -o test/build",
     "transform": "npm run transform:examples && npm run transform:test",
     "build:js-framework": "cd ./src/js-framework && npm run build && cd ../../",
     "build:h5-render": "cd ./src/h5-render && npm run build && cd ../../",
-    "build:copy2sdk": "cp -vf ./src/js-framework/dist/index.js ./android/sdk/assets/main.js",
-    "build:copy2play": "cp -vf ./examples/build/*.js ./android/playground/app/src/main/assets/",
-    "build": "npm run build:js-framework && npm run build:h5-render && npm run build:copy2sdk",
-    
+    "build": "npm run build:js-framework && npm run build:h5-render",
+    "copy:sdk": "cp -vf ./src/js-framework/dist/index.js ./android/sdk/assets/main.js",
+    "copy:ex": "cp -vf ./examples/build/*.js ./android/playground/app/src/main/assets/",
+    "copy": "npm run copy:sdk && npm run copy:ex",
     "dev": "npm run clean && npm run transform",
-    "dev-examples": "npm run clean:examples && npm run transform:examples",
     "serve": "npm run dev && npm run build && serve ./ -p 12580",
-    "serve-only": "npm run dev && serve ./ -p 12580",
-    "watch": "watch -p \"examples/*.we\" -p \"test/*.we\" -c \"npm run dev\"",
-    "watch-examples": "watch -p \"examples/*.we\" -c \"npm run dev-examples\"",
-    
+    "watch": "gazeer -p 'examples/*.we' -p 'test/*.we' -c 'transformer \"$filepath\" -o \"$dirname/build\"'",
     "ci:js-framework": "cd ./src/js-framework && npm run ci && cd ../../",
     "ci:h5-render": "cd ./src/h5-render && npm run ci && cd ../../",
     "ci": "npm run ci:js-framework && npm run ci:h5-render"
   },
   "dependencies": {},
   "devDependencies": {
-    "weex-transformer": "^0.1.8",
+    "gazeer": "^0.1.0",
     "serve": "^1.4.0",
-    "watch-cli": "^0.2.1"
+    "weex-transformer": "^0.1.8"
   }
 }
