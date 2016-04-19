@@ -12,7 +12,7 @@
  */
 package com.taobao.weex.ui.view;
 
-import android.support.v4.view.PagerAdapter;
+import com.uc.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 

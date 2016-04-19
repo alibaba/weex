@@ -12,7 +12,7 @@
  */
 package com.taobao.weex.ui.component;
 
-import android.support.v4.view.ViewPager.OnPageChangeListener;
+import com.uc.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;

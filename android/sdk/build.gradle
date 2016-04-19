@@ -7,9 +7,9 @@ buildscript {
     }
 }
 
-plugins {
-    id "com.github.hierynomus.license" version "0.12.1"
-}
+//plugins {
+//    id "com.github.hierynomus.license" version "0.12.1"
+//}
 
 apply plugin: 'com.android.library'
 
@@ -63,7 +63,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     provided 'com.android.support:recyclerview-v7:23.1.1'
-    provided 'com.android.support:support-v4:23.1.1'
+    //provided 'com.android.support:support-v4:23.1.1'
     provided 'com.android.support:appcompat-v7:23.1.1'
     provided 'com.alibaba:fastjson:1.1.45'
 
@@ -81,35 +81,35 @@ dependencies {
     testCompile 'org.robolectric:robolectric:3.0-rc3'
 }
 
-license{
-    header=file('LICENSE')
-    excludes (["**/WXDataStructureUtil.java",
-               "**/WXBackgroundDrawable.java",
-               "**/Spacing.java",
-               "**/MeasureOutput.java",
-               "**/LayoutEngine.java",
-               "**/FloatUtil.java",
-               "**/CSSWrap.java",
-               "**/CSSStyle.java",
-               "**/CSSPositionType.java",
-               "**/CSSNode.java",
-               "**/CSSLayoutContext.java",
-               "**/CSSLayout.java",
-               "**/CSSJustify.java",
-               "**/CSSFlexDirection.java",
-               "**/CSSDirection.java",
-               "**/CSSConstants.java",
-               "**/CSSAlign.java",
-               "**/CachedCSSLayout.java",
-               "**/CSSAlignConvert.java",
-               "**/CSSFlexDirectionConvert.java",
-               "**/CSSJustifyConvert.java",
-               "**/CSSPositionTypeConvert.java",
-               "**/CSSTransformFromStyle.java",
-               "**/CSSWrapConvert.java"])
-//    includes(['src/main/java/**/*.java'])
-}
-preBuild.dependsOn licenseFormat
+//license{
+//    header=file('LICENSE')
+//    excludes (["**/WXDataStructureUtil.java",
+//               "**/WXBackgroundDrawable.java",
+//               "**/Spacing.java",
+//               "**/MeasureOutput.java",
+//               "**/LayoutEngine.java",
+//               "**/FloatUtil.java",
+//               "**/CSSWrap.java",
+//               "**/CSSStyle.java",
+//               "**/CSSPositionType.java",
+//               "**/CSSNode.java",
+//               "**/CSSLayoutContext.java",
+//               "**/CSSLayout.java",
+//               "**/CSSJustify.java",
+//               "**/CSSFlexDirection.java",
+//               "**/CSSDirection.java",
+//               "**/CSSConstants.java",
+//               "**/CSSAlign.java",
+//               "**/CachedCSSLayout.java",
+//               "**/CSSAlignConvert.java",
+//               "**/CSSFlexDirectionConvert.java",
+//               "**/CSSJustifyConvert.java",
+//               "**/CSSPositionTypeConvert.java",
+//               "**/CSSTransformFromStyle.java",
+//               "**/CSSWrapConvert.java"])
+////    includes(['src/main/java/**/*.java'])
+//}
+//preBuild.dependsOn licenseFormat
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.10'
