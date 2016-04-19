@@ -18,7 +18,7 @@ Support Android 4.1 (API 16) and iOS soon. See [Weex website](http://alibaba.git
 ### Android 
 
 0. Prerequisites
-    0. Install [Node.js](http://nodejs.org/)
+    0. Install [Node.js](http://nodejs.org/) 4.0+
     0. `npm install` to install project
     0. Install [Android Environment](http://developer.android.com/training/basics/firstapp/index.html)
 0. Run playground
