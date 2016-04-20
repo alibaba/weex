@@ -39,6 +39,48 @@ Support Android 4.1 (API 16) and iOS soon. See [Weex website](http://alibaba.git
     0. In `examples`, add a file `newExample.we`  
     0. In `examples/index.we`, add an item `{name: 'newExample', title: 'New Example'}` for array `data.cases`
 
+## Scripts
+
+**clean `*.js` in the folders of `examples/build` and `test/build`**
+```shell
+npm run clean
+```
+
+**transform `*.we` in the folders of `examples` & `test`**
+```shell
+npm run transform
+```
+
+**build js-framework and h5-render**
+```shell
+npm run build
+```
+
+**copy the builded files to `playground`**
+```shell
+npm run copy
+```
+
+**npm run clean && npm run build**
+```shell
+npm run dev
+```
+
+**will run a file server at `12581` port**
+```shell
+npm run serve
+```
+
+**will run a watcher for `*.we` changed**
+```shell
+npm run watch
+```
+
+**will run test under js-framework and h5-render**
+```shell
+npm run ci
+```
+
 ## Contributing
 
 See [Weex Contributing Guide](./CONTRIBUTING.md).
