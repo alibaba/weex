@@ -10,9 +10,8 @@
     "install:js-framework": "cd ./src/js-framework && npm install && cd ../../",
     "install:h5-render": "cd ./src/h5-render && npm install && cd ../../",
     "postinstall": "npm run install:js-framework && npm run install:h5-render",
-    
-    "clean:examples":  "echo \"\\033[36;1m[Clean]\\033[0m \\033[33mexamples\\033[0m\" && rm -vf examples/build/*",
-    "clean:test":  "echo \"\\033[36;1m[Clean]\\033[0m \\033[33mtest\\033[0m\" && rm -vf test/build/*",
+    "clean:examples": "echo \"\\033[36;1m[Clean]\\033[0m \\033[33mexamples\\033[0m\" && rm -vf examples/build/*",
+    "clean:test": "echo \"\\033[36;1m[Clean]\\033[0m \\033[33mtest\\033[0m\" && rm -vf test/build/*",
     "clean": "npm run clean:examples && npm run clean:test",
     "transform:examples": "transformer examples/*.we -o examples/build",
     "transform:test": "transformer examples/*.we -o test/build",
@@ -22,22 +21,26 @@
     "build:copy2sdk": "cp -vf ./src/js-framework/dist/index.js ./android/sdk/assets/main.js",
     "build:copy2play": "cp -vf ./examples/build/*.js ./android/playground/app/src/main/assets/",
     "build": "npm run build:js-framework && npm run build:h5-render && npm run build:copy2sdk",
-    
     "dev": "npm run clean && npm run transform",
     "dev-examples": "npm run clean:examples && npm run transform:examples",
     "serve": "npm run dev && npm run build && serve ./ -p 12580",
     "serve-only": "npm run dev && serve ./ -p 12580",
     "watch": "watch -p \"examples/*.we\" -p \"test/*.we\" -c \"npm run dev\"",
     "watch-examples": "watch -p \"examples/*.we\" -c \"npm run dev-examples\"",
-    
     "ci:js-framework": "cd ./src/js-framework && npm run ci && cd ../../",
     "ci:h5-render": "cd ./src/h5-render && npm run ci && cd ../../",
-    "ci": "npm run ci:js-framework && npm run ci:h5-render"
+    "ci": "npm run ci:js-framework && npm run ci:h5-render",
+    "precommit": "email=$(git config user.email | grep -E 'alibaba-inc.com|taobao.com|tmall.com|1688.com'); if [ \"$email\" != \"\" ];then echo \"ERROR: Your git repo email is '$email'. Please run:\n\"; echo \"    git config user.email 'your.github@binded.email'\n\"; exit 1; fi"
   },
   "dependencies": {},
   "devDependencies": {
     "weex-transformer": "^0.1.8",
     "serve": "^1.4.0",
-    "watch-cli": "^0.2.1"
-  }
+    "watch-cli": "^0.2.1",
+    "pre-commit": "^1.1.2"
+  },
+  "precommit": [
+    "precommit"
+  ],
+  "precommit.silent": true
 }
