@@ -14,7 +14,7 @@ package com.taobao.weex.ui.component.list;
 
 import android.graphics.Color;
 import android.graphics.PointF;
-import android.support.v7.widget.RecyclerView;
+import com.uc.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;

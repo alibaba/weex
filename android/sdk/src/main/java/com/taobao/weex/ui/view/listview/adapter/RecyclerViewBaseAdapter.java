@@ -12,7 +12,7 @@
  */
 package com.taobao.weex.ui.view.listview.adapter;
 
-import android.support.v7.widget.RecyclerView;
+import com.uc.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 
