@@ -6,7 +6,7 @@ commit_regex='^Merge.+|[+*-] \[android|ios|jsfm|html5|doc|website|example|test|a
 if ! grep -iqE "$commit_regex" "$1"; then
     echo "\nERROR: commit log format is not correct!
         
-See https://github.com/alibaba/weex/blob/dev/CONTRIBUTING.md#commit-log"
+See https://github.com/alibaba/weex/blob/dev/CONTRIBUTING.md#commit-log\n"
 
     exit 1
 fi
