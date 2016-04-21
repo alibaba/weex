@@ -174,30 +174,30 @@ Switch.prototype.getClickHandler = function () {
 Switch.prototype.style
     = utils.extend(Object.create(Atomic.prototype.style), {
 
-  width: function (val) {
-    if (!this.options.scalable) {
-      return
-    }
-    val = parseFloat(val)
-    if (val !== val || val < 0) { // NaN
-      val = this.options.width
-    }
-    this.width = val * this.data.scale
-    this.setSize()
-  },
+      width: function (val) {
+        if (!this.options.scalable) {
+          return
+        }
+        val = parseFloat(val)
+        if (val !== val || val < 0) { // NaN
+          val = this.options.width
+        }
+        this.width = val * this.data.scale
+        this.setSize()
+      },
 
-  height: function (val) {
-    if (!this.options.scalable) {
-      return
-    }
-    val = parseFloat(val)
-    if (val !== val || val < 0) { // NaN
-      val = this.options.height
-    }
-    this.height = val * this.data.scale
-    this.setSize()
-  }
+      height: function (val) {
+        if (!this.options.scalable) {
+          return
+        }
+        val = parseFloat(val)
+        if (val !== val || val < 0) { // NaN
+          val = this.options.height
+        }
+        this.height = val * this.data.scale
+        this.setSize()
+      }
 
-})
+    })
 
 module.exports = Switch

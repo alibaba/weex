@@ -5,7 +5,7 @@ var Component = require('./component')
 
 // If nodeType is in this WHITE_LIST, just ignore it and
 // replace it with a div element.
-var WHITE_LIST = ['scroller']
+var WHITE_LIST = []
 
 function RootComponent(data, nodeType) {
   var id = data.rootId + '-root'

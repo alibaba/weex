@@ -17,6 +17,7 @@ require('scrolljs')
 //  - contentrefresh
 
 var Component = require('./component')
+var utils = require('../utils')
 
 // attrs:
 //  - scroll-direciton: none|vertical|horizontal (default is vertical)
@@ -57,7 +58,12 @@ Scroller.prototype.bindEvents = function (evts) {
   Component.prototype.bindEvents.call(this, evts)
   // to enable lazyload for Images
   this.scroller.addEventListener('scrolling', function (e) {
-    this.dispatchEvent('scroll', null, {
+    var so = e.scrollObj
+    this.dispatchEvent('scroll', {
+      originalType: 'scrolling',
+      scrollTop: so.getScrollTop(),
+      scrollLeft: so.getScrollLeft()
+    }, {
       bubbles: true
     })
   }.bind(this))

@@ -11,6 +11,7 @@ var RENDERING_INDENT = 800
 
 var _instanceMap = {}
 var typeMap = {}
+var scrollableTypes = ['scroller', 'list']
 
 function ComponentManager(instance) {
   this.instanceId = instance.instanceId
@@ -29,6 +30,10 @@ ComponentManager.getWeexInstance = function (instanceId) {
 
 ComponentManager.registerComponent = function (type, definition) {
   typeMap[type] = definition
+}
+
+ComponentManager.getScrollableTypes = function () {
+  return scrollableTypes
 }
 
 ComponentManager.prototype = {

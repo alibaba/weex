@@ -32,6 +32,46 @@ Component.prototype = {
     return ComponentManager.getInstance(this.data.instanceId)
   },
 
+  getParent: function () {
+    return this.getComponentManager().componentMap[this.parentRef]
+  },
+
+  isScrollable: function () {
+    var t = this.data.type
+    return ComponentManager.getScrollableTypes().indexOf(t) !== -1
+  },
+
+  isInScrollable: function () {
+    if (typeof this._isInScrollable === 'boolean') {
+      return this._isInScrollable
+    }
+    var parent = this.getParent()
+    if (parent
+        && (typeof parent._isInScrollable !== 'boolean')
+        && !parent.isScrollable()) {
+      if (parent.data.type === 'root') {
+        this._isInScrollable = false
+        return false
+      }
+      this._isInScrollable = parent.isInScrollable()
+      this._parentScroller = parent._parentScroller
+      return this._isInScrollable
+    }
+    if (typeof parent._isInScrollable === 'boolean') {
+      this._isInScrollable = parent._isInScrollable
+      this._parentScroller = parent._parentScroller
+      return this._isInScrollable
+    }
+    if (parent.isScrollable()) {
+      this._isInScrollable = true
+      this._parentScroller = parent
+      return true
+    }
+    if (!parent) {
+      console && console.error('isInScrollable - parent not exist.')
+    }
+  },
+
   createChildren: function () {
     var children = this.data.children
     var parentRef = this.data.ref
@@ -43,7 +83,6 @@ Component.prototype = {
         children[i].instanceId = this.data.instanceId
         children[i].scale = this.data.scale
         var child = componentManager.createElement(children[i])
-        child.parentRef = this.data.ref
         fragment.appendChild(child.node)
         child.parentRef = parentRef
         if (!isFlex
@@ -63,7 +102,6 @@ Component.prototype = {
     var componentManager = this.getComponentManager()
     var child = componentManager.createElement(data)
     this.node.appendChild(child.node)
-
     // update this.data.children
     if (!children || !children.length) {
       this.data.children = [data]
@@ -93,6 +131,7 @@ Component.prototype = {
         isAppend = true
       }
     }
+
 
     if (isAppend) {
       this.node.appendChild(child.node)
@@ -188,6 +227,9 @@ Component.prototype = {
     !data && (data = {})
     event.data = utils.extend({}, data)
     utils.extend(event, data)
+    if (type === 'appear') {
+      console.log('appear', data)
+    }
     this.node.dispatchEvent(event)
   },
 

@@ -1,6 +1,6 @@
 {
   "name": "weex-html5",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "weex html5 renderer",
   "contributors": [
     {
@@ -21,7 +21,7 @@
     "fixedsticky": "^0.1.0",
     "httpurl": "^0.1.1",
     "kountdown": "^0.1.1",
-    "lazyimg": "^0.1.0",
+    "lazyimg": "^0.1.1",
     "modals": "^0.1.1",
     "scroll-to": "0.0.2",
     "scrolljs": "^0.1.0",

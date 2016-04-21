@@ -38,7 +38,12 @@ List.prototype.bindEvents = function (evts) {
   Component.prototype.bindEvents.call(this, evts)
   // to enable lazyload for Images.
   this.scroller.addEventListener('scrolling', function (e) {
-    this.dispatchEvent('scroll', null, {
+    var so = e.scrollObj
+    this.dispatchEvent('scroll', {
+      originalType: 'scrolling',
+      scrollTop: so.getScrollTop(),
+      scrollLeft: so.getScrollLeft()
+    }, {
       bubbles: true
     })
   }.bind(this))

@@ -27,10 +27,11 @@ var LazyLoad = {
   // is no way that any image element can miss it. See source
   // code in componentMangager.js.
   startIfNeeded: function (component) {
+    var that = this
     if (component.data.type === 'image') {
       if (!lazyloadTimer) {
         lazyloadTimer = setTimeout(function () {
-          lib.img.fire()
+          that.fire()
           clearTimeout(lazyloadTimer)
           lazyloadTimer = null
         }, 16)
@@ -40,6 +41,7 @@ var LazyLoad = {
 
   loadIfNeeded: function (elementScope) {
     var notPreProcessed = elementScope.querySelectorAll('[img-src]')
+    var that = this
     // image elements which have attribute 'i-lazy-src' were elements
     // that had been preprocessed by lib-img-core, but not loaded yet, and
     // must be loaded when 'appear' events were fired. It turns out the
@@ -48,7 +50,7 @@ var LazyLoad = {
     // fired manually.
     var preProcessed = elementScope.querySelectorAll('[i-lazy-src]')
     if (notPreProcessed.length > 0 || preProcessed.length > 0) {
-      lib.img.fire()
+      that.fire()
     }
   },
 
