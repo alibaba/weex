@@ -4,7 +4,7 @@
 
 Weex is currently in Pre-release Stage.
 
-We agrees that you may discuss technical information about Weex, except that you may not fork Weex to public repository , write public reviews or post screen shots using information from current repository(https://github.com/alibaba/weex) , redistribute weex within any form.
+We agree that you may discuss technical information about Weex, except that you may not fork Weex to public repository , write public reviews or post screen shots using information from current repository(https://github.com/alibaba/weex) , redistribute weex within any form.
 
  
 > A framework for building Mobile cross-platform UI.
