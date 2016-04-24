@@ -95,7 +95,7 @@ The syntax is JavaScript (ES5) and it describes data and behavior of a Weex page
       }
     },
     created: function() {
-      this.datetime = new Date().toLocalString()
+      this.datetime = new Date().toLocaleString()
     }
   }
 </script>
