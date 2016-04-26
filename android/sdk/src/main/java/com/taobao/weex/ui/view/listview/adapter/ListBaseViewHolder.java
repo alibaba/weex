@@ -204,7 +204,7 @@
  */
 package com.taobao.weex.ui.view.listview.adapter;
 
-import android.support.v7.widget.RecyclerView;
+import android.mini.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import java.lang.ref.WeakReference;

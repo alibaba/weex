@@ -204,7 +204,7 @@
  */
 package com.taobao.weex.ui.component;
 
-import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.mini.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;

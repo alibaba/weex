@@ -204,10 +204,10 @@
  */
 package com.taobao.weex.ui.view.listview.adapter;
 
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.mini.support.v7.widget.GridLayoutManager;
+import android.mini.support.v7.widget.LinearLayoutManager;
+import android.mini.support.v7.widget.RecyclerView;
+import android.mini.support.v7.widget.StaggeredGridLayoutManager;
 
 import java.lang.ref.WeakReference;
 

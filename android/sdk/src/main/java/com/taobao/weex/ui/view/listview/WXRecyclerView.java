@@ -205,11 +205,11 @@
 package com.taobao.weex.ui.view.listview;
 
 import android.content.Context;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.OrientationHelper;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.mini.support.v7.widget.GridLayoutManager;
+import android.mini.support.v7.widget.LinearLayoutManager;
+import android.mini.support.v7.widget.OrientationHelper;
+import android.mini.support.v7.widget.RecyclerView;
+import android.mini.support.v7.widget.StaggeredGridLayoutManager;
 
 public class WXRecyclerView extends RecyclerView {
 

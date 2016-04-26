@@ -204,6 +204,7 @@
  */
 package com.taobao.weex.dom;
 
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.text.BoringLayout;
@@ -358,7 +359,7 @@ public class WXTextDomObject extends WXDomObject {
   protected int mFontSize = UNSET;
   private int mLineHeight = UNSET;
   private boolean mIsColorSet = false;
-  private int mColor;
+  private int mColor = Color.BLACK;
   private boolean mIsBackgroundColorSet = false;
   private int mBackgroundColor;
   /**
@@ -510,10 +511,10 @@ public class WXTextDomObject extends WXDomObject {
         ops.add(new SetSpanOperation(start, end,
                                      new StrikethroughSpan()));
       }
-      if (textCSSNode.mIsColorSet) {
-        ops.add(new SetSpanOperation(start, end,
-                                     new ForegroundColorSpan(textCSSNode.mColor)));
-      }
+      // We always need set text color, or text color will depend on UI Theme. 
+      // In some cases, it's totally transparent.
+      ops.add(new SetSpanOperation(start, end,
+                                   new ForegroundColorSpan(textCSSNode.mColor)));
       if (textCSSNode.mIsBackgroundColorSet) {
         ops.add(new SetSpanOperation(start, end,
                                      new BackgroundColorSpan(textCSSNode.mBackgroundColor)));

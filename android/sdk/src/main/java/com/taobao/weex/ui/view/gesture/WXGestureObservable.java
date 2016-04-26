@@ -204,7 +204,7 @@
  */
 package com.taobao.weex.ui.view.gesture;
 
-import android.support.annotation.Nullable;
+import android.mini.support.annotation.Nullable;
 import android.view.MotionEvent;
 import android.view.View;
 
