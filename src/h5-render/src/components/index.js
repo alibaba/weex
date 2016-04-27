@@ -17,6 +17,9 @@ var Video = require('./video')
 var Switch = require('./switch')
 var A = require('./a')
 var Embed = require('./embed')
+var Refresh = require('./refresh')
+var Loading = require('./loading')
+var Spinner = require('./spinner')
 
 var components = {
   init: function (Weex) {
@@ -40,6 +43,9 @@ var components = {
     Weex.registerComponent('switch', Switch)
     Weex.registerComponent('a', A)
     Weex.registerComponent('embed', Embed)
+    Weex.registerComponent('refresh', Refresh)
+    Weex.registerComponent('loading', Loading)
+    Weex.registerComponent('spinner', Spinner)
   }
 }
 

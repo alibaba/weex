@@ -227,9 +227,6 @@ Component.prototype = {
     !data && (data = {})
     event.data = utils.extend({}, data)
     utils.extend(event, data)
-    if (type === 'appear') {
-      console.log('appear', data)
-    }
     this.node.dispatchEvent(event)
   },
 
