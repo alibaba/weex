@@ -2,14 +2,14 @@
 
 ## Pre-release Notes
 
-Weex is currently in Pre-release Stage.
+Weex currently is in Pre-release Stage.
 
-We agree that you may discuss technical information about Weex, except that you may not fork Weex to public repository , write public reviews or post screen shots using information from current repository(https://github.com/alibaba/weex) , redistribute weex within any form.
+We allow you to discuss technical information about Weex, but you should not fork Weex to public repository, write public reviews or post screen shots using the information from current repository(https://github.com/alibaba/weex) , or redistribute weex within any form.
 
  
 > A framework for building Mobile cross-platform UI.
 
-Support Android 4.1 (API 16) and iOS soon. See [Weex website](http://alibaba.github.io/weex/) for more information. 
+Support Android 4.1 (API 16) and iOS is coming soon. See [Weex website](http://alibaba.github.io/weex/) for more information. 
 
 ## Meet Weex
 
@@ -38,12 +38,12 @@ Support Android 4.1 (API 16) and iOS soon. See [Weex website](http://alibaba.git
 
 ### For end-user
 
-**clean `*.js` in the folders of `examples/build` and `test/build`**
+**clean `*.js` files in `examples/build` and `test/build` folders** 
 ```shell
 npm run clean
 ```
 
-**transform `*.we` in the folders of `examples` & `test`**
+**transform `*.we` in `examples` and `test` folders**
 ```shell
 npm run transform
 ```
@@ -86,4 +86,4 @@ Please install [Git for Windows](https://git-scm.com/download/win) or [Cygwin](h
 
 ## Contributing
 
-See [Weex Contributing Guide](./CONTRIBUTING.md).
+See [Weex Contributing Guide](./CONTRIBUTING.md) for more information.
