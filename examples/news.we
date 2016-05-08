@@ -97,7 +97,7 @@
 .meta_date { right: 0; }
 .meta_date, .meta_site { font-size: 26; color: #999; }
 
-.meta { flex-direction: row; background-color: #f5f5f5; padding: 30; padding-left: 45; padding-right: 45; border-top-width: 1px; border-top-color: #eee; } 
+.meta { flex-direction: row;justify-content:space-between;background-color: #f5f5f5; padding: 30; padding-left: 45; padding-right: 45; border-top-width: 1px; border-top-color: #eee; } 
 .title { line-height: 1.8; font-family: "PT Serif", "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans CN", "Microsoft YaHei", sans-serif; color: #000; font-size: 45; font-weight: bold; }
 
 .brief {
