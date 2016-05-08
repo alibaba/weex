@@ -11,7 +11,7 @@ import Config from '../config'
 export var isReserved = (str) => {
   str += ''
   let c = (str + '').charCodeAt(0)
-  return c === 0x24 || c === 0x5F
+  return c === 0x24
 }
 
 /**
