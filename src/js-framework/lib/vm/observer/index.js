@@ -118,7 +118,7 @@ p.walk = function (obj) {
   while (i--) {
     key = keys[i]
     prefix = key.charCodeAt(0)
-    if (prefix !== 0x24 && prefix !== 0x5F) { // skip $ or _
+    if (prefix !== 0x24) { // skip $
       this.convert(key, obj[key])
     }
   }

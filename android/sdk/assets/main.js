@@ -2446,7 +2446,7 @@
 	
 	var isReserved = exports.isReserved = function isReserved(str) {
 	  var c = (str + '').charCodeAt(0);
-	  return c === 0x24 || c === 0x5F;
+	  return c === 0x24;
 	};
 	
 	/**
@@ -4499,8 +4499,8 @@
 	  while (i--) {
 	    key = keys[i];
 	    prefix = key.charCodeAt(0);
-	    if (prefix !== 0x24 && prefix !== 0x5F) {
-	      // skip $ or _
+	    if (prefix !== 0x24) {
+	      // skip $
 	      this.convert(key, obj[key]);
 	    }
 	  }
