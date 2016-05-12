@@ -1,0 +1,292 @@
+<!--
+this is a Todo-MVC demo
+http://todomvc.com/
+-->
+
+<template>
+    <list class="todo-list">
+        <cell>
+            <div class="app-title-wrap">
+                <text class="app-title">todos</text>
+            </div>
+        </cell>
+        <cell>
+            <div class="todo-area">
+                <div class="todo-input-wrap">
+                    <div class="finish-toggle">
+                        <image if="{{itemsStatus===1}}" style="width:45px;height:30px;" src="https://gw.alicdn.com/tfs/TB1CnoDJFXXXXb6XVXXXXXXXXXX-77-51.jpg"></image>
+                        <image if="{{itemsStatus===2}}" style="width:45px;height:30px;" src="https://gw.alicdn.com/tfs/TB1CnoDJFXXXXb6XVXXXXXXXXXX-77-51.jpg"></image>
+                    </div>
+                    <input class="todo-input" type="text" onchange="finishInput" placeholder="What needs to be done?" />
+                    <div class="blank"></div>
+                </div>
+            </div>
+        </cell>
+        <cell>
+            <div class="todo-item" repeat="{{todos}}">
+                <div class="todo-status-done">
+                    <image if="{{status==='item-doing'}}" style="width:70px;height:70px;" src="https://gw.alicdn.com/tfs/TB1Xr3GJFXXXXbmXVXXXXXXXXXX-153-153.jpg"></image>
+                    <image if="{{status==='item-done'}}" style="width:70px;height:70px;" src="https://gw.alicdn.com/tfs/TB1pAg1JFXXXXX8XpXXXXXXXXXX-153-153.jpg"></image>
+                </div>
+                <input class="todo-input todo-content {{status}}" disabled="{{disableStatus}}" type="text" value="{{content}}" />
+                <div class="item-control">
+                    <image class="item-control-btn" todouid="{{todoUid}}" onclick="{{editItem}}" src="https://gw.alicdn.com/tfs/TB1gME_JFXXXXcmXpXXXXXXXXXX-48-48.jpg"></image>
+                    <image class="item-control-btn" todouid="{{todoUid}}" onclick="{{delItem}}" src="https://gw.alicdn.com/tfs/TB1txI5JFXXXXagXFXXXXXXXXXX-48-48.jpg"></image>
+                </div>
+            </div>
+        </cell>
+        <cell if="{{todos.length > 0}}">
+            <div class="info-text-wrap">
+                <text class="info-text">{{todos.length}} item left</text>
+            </div>
+        </cell>
+        <cell if="{{todos.length > 0}}">
+            <div class="sorting-wrap">
+                <div class="sorting">
+                    <text class="btn" value="all" onclick="showAll"></text>
+                    <text class="btn" value="opened" onclick="showOpened"></text>
+                    <text class="btn" value="completed" onclick="showComplete"></text>
+                    <text class="btn" value="clean" onclick="cleanCompletedTodos"></text>
+                </div>
+            </div>
+        </cell>
+    </list>
+</template>
+
+<script>
+    // 引入button
+    require('weex-components');
+
+    // 用来在循环中生成index值
+    var uid = 0;
+
+    module.exports = {
+        "data":{
+            itemsStatus:0,
+            todos:[
+                {
+                    "todoUid":uid++,
+                    "status":"item-done",
+                    "content":"xxxxxx",
+                    "disableStatus":true
+                },
+                {
+                    "todoUid":uid++,
+                    "status":"item-doing",
+                    "content":"yyyyyy",
+                    "disableStatus":true
+                }
+            ]
+        },
+        methods:{
+            showAll: function() {
+
+            },
+            showOpened: function() {
+
+            },
+            showComplete: function() {
+
+            },
+            cleanCompletedTodos: function() {
+
+            },
+            finishInput: function(e) {
+//                this.$call('modal', 'alert', {
+//                    'message': "this is an debug tip",
+//                    'okTitle': "OK",
+//                    'cancelTitle': "cancel"
+//                    }, function() {
+//                });
+//                return;
+                var txt = e.value;
+
+                if (txt.trim().length>0) {
+                    this.todos.push({
+                        "todoUid":uid++,
+                        "status":"item-doing",
+                        "content":txt.trim(),
+                        "disableStatus":true
+                    });
+                    e.target.attr['value'] = '';
+                }
+            },
+            editItem: function(e) {
+                var todoUid= e.target.attr['todouid'];
+                this.__enableItemByUid(todoUid);
+                // 无法主动的focus到input上面
+            },
+            delItem: function(e) {
+                var todoUid= parseInt(e.target.attr['todouid'],10);
+                this.__removeItemByUid(todoUid);
+            },
+            __enableItemByUid: function(uid) {
+                var idxInTodos = this.__findTodoIndexByUid(uid);
+                this.todos[idxInTodos].disableStatus = false;
+            },
+            __findTodoIndexByUid: function(uid) {
+                var result = -1;
+                for (var i = 0;i < this.todos.length;i++) {
+                    if (uid === this.todos[i].todoUid) {
+                        result = i;
+                        break;
+                    }
+                }
+                return result;
+            },
+            __removeItemByUid:function(uid) {
+                var idxInTodos = this.__findTodoIndexByUid(uid);
+                this.todos.splice(idxInTodos,1);
+            }
+        },
+        created: function() {
+            this.itemsStatus = 1;
+        }
+    }
+</script>
+
+<style>
+    .todo-list {
+        flex-direction: column;
+        height:100%;
+        width:750px;
+        background-color: #f5f5f5;
+    }
+    .app-title {
+        margin-top:50px;
+        margin-bottom:50px;
+        font-size:120px;
+        text-align: center;
+        color:rgba(175, 47, 47, 0.15);
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    .todo-input-wrap {
+        display: flex;
+        flex-direction: row;
+        background-color:#fff;
+        border-top-width: 1px;
+        border-bottom-width: 1px;
+        border-style:solid;
+        border-color:#ccc;
+    }
+    .finish-toggle {
+        flex:2;
+        height:120px;
+        line-height:120px;/* not support */
+        overflow: hidden;
+        font-size:60px;
+        text-align:center;
+        font-weight:bold;
+        color:#e6e6e6;
+        flex-direction: row;
+        justify-content:center;
+        align-items:center;
+    }
+    .todo-input {
+        height:120px;
+        flex:7;
+        font-weight:100;/* not support */
+        font-size:40px;
+        margin-left:20px;
+        border-width:0;
+        /*border-style:solid;!* border style need to be write separately *!*/
+        /*border-color:#ccc;*/
+        font-style:italic;/* not support */
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;/* this feature is not supported on Android */
+        /*box-shadow:1px 1px 0 #999;!* not support *!*/
+    }
+    .blank {
+        flex:1;
+    }
+    /**
+    * .todo-item .todo-status css style not supported
+    */
+    .todo-list {
+        width:750%;
+    }
+    .todo-item {
+        display: flex;
+        flex-direction: row;
+        height:120px;
+        width:750px;
+        overflow: hidden;
+        border-bottom-width: 1px;
+        border-style:solid;
+        border-color:#ccc;
+        background-color:#fff;
+    }
+    .todo-status-done {
+        flex:2;
+        line-height:120px;
+        height:120px;
+        color:green;
+        text-align: center;
+        font-size:40px;
+        flex-direction: row;
+        justify-content:center;
+        align-items:center;
+    }
+
+    .todo-content {
+        color:#333;
+        font-style:normal;
+    }
+
+    .item-control {
+        flex:2;
+        /*padding-right:50px;*/
+        flex-direction: row;
+        align-items:center;
+    }
+
+    .item-control-btn {
+        width:48px;
+        height:48px;
+        margin-right:20px;
+    }
+
+    .info-text-wrap {
+        flex-direction: column;
+        justify-content:center;
+        width:750px;
+        height:80px;
+        background-color:#fff;
+    }
+    .info-text {
+        width:700px;
+        height:40px;
+        line-height:40px;
+        font-size:30px;
+        padding-left:50px;
+        color:#ccc;
+    }
+    .sorting-wrap {
+        width:750px;
+        height:80px;
+        background-color:#fff;
+    }
+    .sorting {
+        display: flex;
+        flex-direction: row;
+        justify-content:space-between;
+        width:550px;
+        margin-left:100px;
+        margin-right:100px;
+        height:80px;
+    }
+    .btn {
+        border-radius: 3px;
+        align-items:center;
+        margin-left:1px;
+        margin-top:15px;
+        height:50px;
+        padding-top:5px;
+        padding-left:10px;
+        padding-right:10px;
+        font-size:30px;
+        border-color:#ccc;
+        border-width:1px;
+        border-style:solid;
+        color:#999;
+    }
+</style>
