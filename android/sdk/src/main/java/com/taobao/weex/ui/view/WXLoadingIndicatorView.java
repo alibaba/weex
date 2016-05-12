@@ -202,123 +202,82 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.appfram.navigator;
+package com.taobao.weex.ui.view;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Rect;
-import android.os.Bundle;
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
-import com.taobao.weex.IWXRenderListener;
-import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.WXSDKManager;
-import com.taobao.weex.common.WXPerformance;
-import com.taobao.weex.common.WXRenderStrategy;
 import com.taobao.weex.utils.WXLogUtils;
+import com.taobao.weex.utils.WXViewUtils;
 
-public class NavigatorActivity extends Activity {
+public class WXLoadingIndicatorView extends View {
 
-  public final static String INSTANCE_ID = "instanceId";
-  private ViewGroup container;
-  private WXSDKInstance instance;
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    container=new FrameLayout(this);
-    setContentView(container,new FrameLayout.LayoutParams(
-        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-    if(getActionBar()!=null)
-      getActionBar().hide();
-    final Intent intent=getIntent();
-    instance = new WXSDKInstance(NavigatorActivity.this);
-    instance.setImgLoaderAdapter(
-            WXSDKManager.getInstance().getSDKInstance(
-                    intent.getStringExtra(INSTANCE_ID)).getImgLoaderAdapter());
-    instance.registerRenderListener(new IWXRenderListener() {
-      @Override
-      public void onViewCreated(WXSDKInstance instance, View view) {
-        container.addView(view);
-        container.requestLayout();
-      }
+    private int maxProgress = 100;
+    private int progress = 0;
 
-      @Override
-      public void onRenderSuccess(WXSDKInstance instance, int width, int height) {
+    private RectF oval;
+    private Paint paint;
 
-      }
-
-      @Override
-      public void onRefreshSuccess(WXSDKInstance instance, int width, int height) {
-
-      }
-
-      @Override
-      public void onException(WXSDKInstance instance, String errCode, String msg) {
-        WXLogUtils.e("WXEmbed", "Error code :" + errCode + ",\n error message :" + msg);
-      }
-    });
-    container.post(new Runnable() {
-      @Override
-      public void run() {
-        Rect outRect = new Rect();
-        getWindow().getDecorView().getWindowVisibleDisplayFrame(outRect);
-        instance.renderByUrl(WXPerformance.DEFAULT,
-                        intent.getData().toString(),
-                        null, null, outRect.width(),
-                        outRect.height(),
-                        WXRenderStrategy.APPEND_ASYNC);
-      }
-    });
-    instance.onActivityCreate();
-  }
-
-  @Override
-  protected void onDestroy() {
-    if (instance != null) {
-      instance.onActivityDestroy();
+    public WXLoadingIndicatorView(Context context) {
+        this(context, null);
     }
-    super.onDestroy();
-  }
 
-  @Override
-  protected void onPause() {
-    if (instance != null) {
-      instance.onActivityPause();
+    public WXLoadingIndicatorView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
     }
-    super.onPause();
-  }
 
-  @Override
-  protected void onResume() {
-    super.onResume();
-    if (instance != null) {
-      instance.onActivityResume();
+    public WXLoadingIndicatorView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        oval = new RectF();
+        paint = new Paint();
     }
-  }
 
-  @Override
-  protected void onStart() {
-    super.onStart();
-    if(instance!=null){
-      instance.onActivityStart();
-    }
-  }
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        int width = this.getWidth();
+        int height = this.getHeight();
 
-  @Override
-  protected void onStop() {
-    if(instance!=null){
-      instance.onActivityStop();
-    }
-    super.onStop();
-  }
+        if (width != height) {
+            int min = Math.min(width, height);
+            width = min;
+            height = min;
+        }
 
-  @Override
-  public void onBackPressed() {
-    if(instance!=null){
-      instance.onActivityBack();
+        paint.setAntiAlias(true);
+        paint.setColor(Color.GRAY);
+        canvas.drawColor(Color.TRANSPARENT);
+        int progressStrokeWidth = WXViewUtils.dip2px(4);
+        paint.setStrokeWidth(progressStrokeWidth);
+        paint.setStyle(Paint.Style.STROKE);
+
+        oval.left = progressStrokeWidth / 2; // 左上角x
+        oval.top = progressStrokeWidth / 2; // 左上角y
+        oval.right = width - progressStrokeWidth / 2; // 左下角x
+        oval.bottom = height - progressStrokeWidth / 2; // 右下角y
+
+        canvas.drawArc(oval, -90, ((float) progress / maxProgress) * 360, false, paint); // 绘制进度圆弧
+
+        WXLogUtils.v("tag", "progress "+progress);
     }
-    super.onBackPressed();
-  }
+
+    public int getMaxProgress() {
+        return maxProgress;
+    }
+
+    public void setMaxProgress(int maxProgress) {
+        this.maxProgress = maxProgress;
+    }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
+        this.invalidate();
+    }
+
 }
+

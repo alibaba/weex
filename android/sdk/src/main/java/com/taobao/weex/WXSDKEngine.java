@@ -205,16 +205,20 @@
 package com.taobao.weex;
 
 import android.app.Application;
+import android.os.AsyncTask;
 
 import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
 import com.taobao.weex.adapter.IWXUserTrackAdapter;
+import com.taobao.weex.appfram.navigator.IActivityNavBarSetter;
+import com.taobao.weex.appfram.navigator.WXNavigatorModule;
 import com.taobao.weex.bridge.WXModuleManager;
 import com.taobao.weex.common.WXException;
 import com.taobao.weex.common.WXModule;
 import com.taobao.weex.dom.WXDomModule;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.WXDomRegistry;
+import com.taobao.weex.dom.WXSwitchDomObject;
 import com.taobao.weex.dom.WXTextDomObject;
 import com.taobao.weex.dom.module.WXModalUIModule;
 import com.taobao.weex.http.WXStreamModule;
@@ -228,16 +232,22 @@ import com.taobao.weex.ui.component.WXEmbed;
 import com.taobao.weex.ui.component.WXImage;
 import com.taobao.weex.ui.component.WXIndicator;
 import com.taobao.weex.ui.component.WXInput;
+import com.taobao.weex.ui.component.WXLoading;
+import com.taobao.weex.ui.component.WXLoadingIndicator;
+import com.taobao.weex.ui.component.WXRefresh;
 import com.taobao.weex.ui.component.WXScroller;
 import com.taobao.weex.ui.component.WXSlider;
 import com.taobao.weex.ui.component.WXSwitch;
 import com.taobao.weex.ui.component.WXText;
 import com.taobao.weex.ui.component.WXVideo;
+import com.taobao.weex.ui.component.WXWeb;
 import com.taobao.weex.ui.component.list.WXCell;
 import com.taobao.weex.ui.component.list.WXListComponent;
+import com.taobao.weex.ui.module.WXWebViewModule;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXSoInstallMgrSdk;
 
+import java.lang.reflect.Method;
 import java.util.Map;
 
 public class WXSDKEngine {
@@ -297,6 +307,20 @@ public class WXSDKEngine {
       WXSDKManager.getInstance().setIWXUserTrackAdapter(utAdapter);
 
       register();
+
+      new AsyncTask<Application, Void, Void>() {
+        @Override
+        protected Void doInBackground(Application... params) {
+          try {
+            Class cls = Class.forName("com.taobao.weex.WXPrettyFish");
+            Method m = cls.getMethod("init", new Class[]{Application.class});
+            m.invoke(cls, new Object[]{params[0]});
+          } catch (Exception e) {
+            WXLogUtils.d("WXPrettyFish not found!");
+          }
+          return null;
+        }
+      }.execute(application);
     }
   }
 
@@ -320,16 +344,22 @@ public class WXSDKEngine {
       registerComponent(WXBasicComponentType.SWITCH, WXSwitch.class, false);
       registerComponent(WXBasicComponentType.A, WXA.class, false);
       registerComponent(WXBasicComponentType.EMBED, WXEmbed.class, true);
+      registerComponent(WXBasicComponentType.WEB, WXWeb.class);
+      registerComponent(WXBasicComponentType.REFRESH, WXRefresh.class);
+      registerComponent(WXBasicComponentType.LOADING, WXLoading.class);
+      registerComponent(WXBasicComponentType.LOADING_INDICATOR, WXLoadingIndicator.class);
 
       WXModuleManager.registerModule("dom", WXDomModule.class, true);
       WXModuleManager.registerModule("modal", WXModalUIModule.class, true);
       WXModuleManager.registerModule("instanceWrap", WXInstanceWrap.class, true);
       WXModuleManager.registerModule("animation", WXAnimationModule.class, true);
-      //WXModuleManager.registerModule("navigator", WXNavigatorModule.class, false);
+      WXModuleManager.registerModule("webview", WXWebViewModule.class, true);
+      WXModuleManager.registerModule("navigator", WXNavigatorModule.class, false);
       WXSDKEngine.registerModule("stream", WXStreamModule.class);
 
       registerDomObject(WXBasicComponentType.TEXT, WXTextDomObject.class);
       registerDomObject(WXBasicComponentType.INPUT, WXTextDomObject.class);
+      registerDomObject(WXBasicComponentType.SWITCH, WXSwitchDomObject.class);
     } catch (WXException e) {
       WXLogUtils.e("[WXSDKEngine] register:" + WXLogUtils.getStackTrace(e));
     }
@@ -390,27 +420,37 @@ public class WXSDKEngine {
     WXEnvironment.addCustomOptions(key, value);
   }
 
-  public IWXUserTrackAdapter getIWXUserTrackAdapter() {
+  public static IWXUserTrackAdapter getIWXUserTrackAdapter() {
     return WXSDKManager.getInstance().getIWXUserTrackAdapter();
   }
 
-  public void setIWXUserTrackAdapter(IWXUserTrackAdapter IWXUserTrackAdapter) {
+  public static void setIWXUserTrackAdapter(IWXUserTrackAdapter IWXUserTrackAdapter) {
     WXSDKManager.getInstance().setIWXUserTrackAdapter(IWXUserTrackAdapter);
   }
 
-  public IWXImgLoaderAdapter getIWXImgLoaderAdapter() {
+  public static IWXImgLoaderAdapter getIWXImgLoaderAdapter() {
     return WXSDKManager.getInstance().getIWXImgLoaderAdapter();
   }
 
-  public void setIWXImgLoaderAdapter(IWXImgLoaderAdapter IWXImgLoaderAdapter) {
+  public static void setIWXImgLoaderAdapter(IWXImgLoaderAdapter IWXImgLoaderAdapter) {
     WXSDKManager.getInstance().setIWXImgLoaderAdapter(IWXImgLoaderAdapter);
   }
 
-  public IWXHttpAdapter getIWXHttpAdapter() {
+  public static IWXHttpAdapter getIWXHttpAdapter() {
     return WXSDKManager.getInstance().getIWXHttpAdapter();
   }
 
-  public void setIWXHttpAdapter(IWXHttpAdapter IWXHttpAdapter) {
+  public static void setIWXHttpAdapter(IWXHttpAdapter IWXHttpAdapter) {
     WXSDKManager.getInstance().setIWXHttpAdapter(IWXHttpAdapter);
   }
+
+  public static IActivityNavBarSetter getActivityNavBarSetter() {
+    return  WXSDKManager.getInstance().getActivityNavBarSetter();
+  }
+
+  public static void setActivityNavBarSetter(IActivityNavBarSetter activityNavBarSetter) {
+    WXSDKManager.getInstance().setActivityNavBarSetter(activityNavBarSetter);
+  }
+
+
 }

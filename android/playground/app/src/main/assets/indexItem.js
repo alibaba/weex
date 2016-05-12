@@ -9,12 +9,10 @@ define('@weex-component/ui-list-item', function (require, exports, module) {
     }},
     methods: {
       touchstart: function() {
-        // FIXME android touch
         // TODO adaptive opposite bgColor
 //        this.bgColor = '#e6e6e6';
       },
       touchend: function() {
-        // FIXME android touchend not triggered
 //        this.bgColor = '#ffffff';
       }
     }

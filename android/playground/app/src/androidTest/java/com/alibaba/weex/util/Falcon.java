@@ -1,8 +1,9 @@
-package com.alibaba.weex;
+package com.alibaba.weex.util;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Looper;
@@ -109,15 +110,20 @@ public final class Falcon {
         int actionBarHeight = ScreenShot.getActionBarHeight(activity);
 
         View main = activity.getWindow().getDecorView();
-//        Bitmap bitmapMain = main.getDrawingCache();
-////        final Bitmap bitmap = Bitmap.createBitmap(main.getWidth(), main.getHeight(), ARGB_8888);
-//        // 去掉标题栏
-//        final Bitmap bitmap = Bitmap.createBitmap(bitmapMain, 0, statusBarHeight + actionBarHeight, main.getWidth(),
-//                main.getHeight() - statusBarHeight - actionBarHeight);
-//        main.destroyDrawingCache();
+        int mainWidth = main.getWidth();
+        int mainHeight = main.getHeight();
 
+        int baseWidth = 750;
+        float widthScale = ((float) baseWidth) / mainWidth;
 
-        final Bitmap bitmap = Bitmap.createBitmap(main.getWidth(), main.getHeight(), ARGB_8888);
+        // 新建立矩阵 按照宽度缩放因子自适应缩放
+        Matrix matrix = new Matrix();
+        matrix.postScale(widthScale, widthScale);
+
+        Bitmap bitmap1 = Bitmap.createBitmap(main.getWidth(), main.getHeight(), ARGB_8888);
+        final Bitmap bitmap = Bitmap.createBitmap(bitmap1, 0, statusBarHeight + actionBarHeight,
+                mainWidth, mainHeight - statusBarHeight - actionBarHeight, matrix, true);
+
 
         // We need to do it in main thread
         if (Looper.myLooper() == Looper.getMainLooper()) {
@@ -165,6 +171,7 @@ public final class Falcon {
     private static void writeBitmap(Bitmap bitmap, File toFile) throws IOException {
         OutputStream outputStream = null;
         try {
+
             outputStream = new BufferedOutputStream(new FileOutputStream(toFile));
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
         }

@@ -224,4 +224,5 @@ public interface IRecyclerAdapterListener<T extends RecyclerView.ViewHolder> {
 
   boolean onFailedToRecycleView(T holder);
 
+  long getItemId(int position);
 }

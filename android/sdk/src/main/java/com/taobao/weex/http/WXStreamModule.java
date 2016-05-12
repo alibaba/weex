@@ -206,6 +206,7 @@ package com.taobao.weex.http;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.bridge.WXBridgeManager;
@@ -286,8 +287,10 @@ public class WXStreamModule extends WXModule {
         public void run() {
           WXBridgeManager.getInstance().callback(mInstanceId, mCallback, (response == null || response.originalData == null) ? "{}" : new String(response.originalData));
         }
-      },0);
-      WXLogUtils.e("WXStreamModule", new String(response.originalData));
+      }, 0);
+      if(WXEnvironment.isApkDebugable()){
+        WXLogUtils.d("WXStreamModule",response!=null && response.originalData!=null?new String(response.originalData):"response data is NUll!");
+      }
     }
   }
 

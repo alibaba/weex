@@ -214,15 +214,15 @@ import android.widget.TextView;
 
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXDomPropConstant;
-import com.taobao.weex.common.WXException;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.WXStyle;
+import com.taobao.weex.dom.flex.CSSConstants;
 import com.taobao.weex.ui.view.WXTextView;
 
 /**
  * Text component
  */
-public class WXText extends WXComponent implements IWXRecyclerViewChild {
+public class WXText extends WXComponent{
 
   /**
    * The default text size
@@ -238,7 +238,7 @@ public class WXText extends WXComponent implements IWXRecyclerViewChild {
   @Override
   protected void initView() {
     mHost = new WXTextView(mContext);
-    getView().setEllipsize(TruncateAt.END);
+//    getView().setEllipsize(TruncateAt.END);
     //Remove padding for ascents and descents
     getView().setIncludeFontPadding(false);
   }
@@ -267,7 +267,7 @@ public class WXText extends WXComponent implements IWXRecyclerViewChild {
   }
 
   @Override
-  public View detachViewAndClearPreInfo() throws WXException {
+  public View detachViewAndClearPreInfo() {
     mPreExtra = null;
     return super.detachViewAndClearPreInfo();
   }
@@ -303,6 +303,18 @@ public class WXText extends WXComponent implements IWXRecyclerViewChild {
       temp.setMaxLines(lines);
     } else if (lines == 1) {
       temp.setSingleLine(true);
+    }
+  }
+
+  @WXComponentProp(name = WXDomPropConstant.WX_TEXT_OVERFLOW)
+  public void setTextOverFlow(String textOverFlow) {
+    TextView temp = getView();
+    if(textOverFlow.equals(WXDomPropConstant.WX_TEXT_ELLIPSIS)){
+      int lines=WXStyle.getLines(getDomObject().style);
+      if(!CSSConstants.isUndefined(lines)&&lines!=0){
+        temp.setSingleLine(true);
+        temp.setEllipsize(TruncateAt.END);
+      }
     }
   }
 }

@@ -16,6 +16,19 @@
 
 package com.google.zxing.client.android;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.DecodeHintType;
+import com.google.zxing.Result;
+import com.google.zxing.ResultMetadataType;
+import com.google.zxing.ResultPoint;
+import com.google.zxing.client.android.camera.CameraManager;
+import com.google.zxing.client.android.clipboard.ClipboardInterface;
+import com.google.zxing.client.android.history.HistoryActivity;
+import com.google.zxing.client.android.history.HistoryItem;
+import com.google.zxing.client.android.history.HistoryManager;
+import com.google.zxing.client.android.result.ResultHandler;
+import com.google.zxing.client.android.result.ResultHandlerFactory;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -47,18 +60,6 @@ import android.widget.Toast;
 
 import com.alibaba.weex.R;
 import com.alibaba.weex.WXPageActivity;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.DecodeHintType;
-import com.google.zxing.Result;
-import com.google.zxing.ResultMetadataType;
-import com.google.zxing.ResultPoint;
-import com.google.zxing.client.android.camera.CameraManager;
-import com.google.zxing.client.android.clipboard.ClipboardInterface;
-import com.google.zxing.client.android.history.HistoryActivity;
-import com.google.zxing.client.android.history.HistoryItem;
-import com.google.zxing.client.android.history.HistoryManager;
-import com.google.zxing.client.android.result.ResultHandler;
-import com.google.zxing.client.android.result.ResultHandlerFactory;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKEngine;
 
@@ -92,9 +93,9 @@ public final class CaptureActivity extends Activity implements
 
 	private static final Collection<ResultMetadataType> DISPLAYABLE_METADATA_TYPES = EnumSet
 			.of(ResultMetadataType.ISSUE_NUMBER,
-					ResultMetadataType.SUGGESTED_PRICE,
-					ResultMetadataType.ERROR_CORRECTION_LEVEL,
-					ResultMetadataType.POSSIBLE_COUNTRY);
+                            ResultMetadataType.SUGGESTED_PRICE,
+                            ResultMetadataType.ERROR_CORRECTION_LEVEL,
+                            ResultMetadataType.POSSIBLE_COUNTRY);
 
 	private CameraManager cameraManager;
 	private CaptureActivityHandler handler;
@@ -573,138 +574,37 @@ public final class CaptureActivity extends Activity implements
 	private void handleDecodeInternally(Result rawResult,
 			ResultHandler resultHandler, Bitmap barcode) {
 
-		String code = rawResult.getText();
-		if (!TextUtils.isEmpty(code)) {
-			if (code.contains("_wx_debug")) {
-				Uri uri=Uri.parse(code);
-				String debug_url=uri.getQueryParameter("_wx_debug");
-				WXEnvironment.sDebugWsUrl = debug_url;
-				WXSDKEngine.restartBridge(true);
-				finish();
-			} else {
-				Toast.makeText(this, rawResult.getText(), Toast.LENGTH_SHORT)
-						.show();
-				Intent intent;
+          String code = rawResult.getText();
+          if (!TextUtils.isEmpty(code)) {
+            Uri uri = Uri.parse(code);
+            if (uri.getPath().contains("bundle")) {
+              WXEnvironment.sDynamicMode = uri.getBooleanQueryParameter("debug", false);
+              WXEnvironment.sDynamicUrl = uri.getQueryParameter("bundle");
+              String tip=WXEnvironment.sDynamicMode?"Has switched to Dynamic Mode":"Has switched to Normal Mode";
+              Toast.makeText(this,tip,Toast.LENGTH_SHORT).show();
+              finish();
+	      return;
+            } else if (uri.getPath().contains("framework")) {
 
-				intent = new Intent(CaptureActivity.this, WXPageActivity.class);
-				intent.setData(Uri.parse(code));
-//				int index = code.lastIndexOf("/");
-//				String rootUrl = null;
-//				String itemName = null;
-//				if (index >= 0) {
-//					rootUrl = code.substring(0, index);
-//					itemName = code.substring(index + 1);
-//				} else {
-//					rootUrl = code;
-//					itemName = "";
-//				}
-//				Bundle bundle = new Bundle();
-//				bundle.putString("rootUrl", rootUrl);
-//				bundle.putString("itemName", itemName);
-//				intent.putExtras(bundle);
-				startActivity(intent);
-			}
-		}
+            }
 
-		// CharSequence displayContents = resultHandler.getDisplayContents();
-		//
-		// if (copyToClipboard && !resultHandler.areContentsSecure()) {
-		// ClipboardInterface.setText(displayContents, this);
-		// }
-		//
-		// SharedPreferences prefs =
-		// PreferenceManager.getDefaultSharedPreferences(this);
-		//
-		// if (resultHandler.getDefaultButtonID() != null &&
-		// prefs.getBoolean(PreferencesActivity.KEY_AUTO_OPEN_WEB, false)) {
-		// resultHandler.handleButtonPress(resultHandler.getDefaultButtonID());
-		// return;
-		// }
-		//
-		// statusView.setVisibility(View.GONE);
-		// viewfinderView.setVisibility(View.GONE);
-		// resultView.setVisibility(View.VISIBLE);
-		//
-		// ImageView barcodeImageView = (ImageView)
-		// findViewById(R.id.barcode_image_view);
-		// if (barcode == null) {
-		// barcodeImageView.setImageBitmap(BitmapFactory.decodeResource(getResources(),
-		// R.drawable.launcher_icon));
-		// } else {
-		// barcodeImageView.setImageBitmap(barcode);
-		// }
-		//
-		// TextView formatTextView = (TextView)
-		// findViewById(R.id.format_text_view);
-		// formatTextView.setText(rawResult.getBarcodeFormat().toString());
-		//
-		// TextView typeTextView = (TextView) findViewById(R.id.type_text_view);
-		// typeTextView.setText(resultHandler.getType().toString());
-		//
-		// DateFormat formatter =
-		// DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-		// TextView timeTextView = (TextView) findViewById(R.id.time_text_view);
-		// timeTextView.setText(formatter.format(new
-		// Date(rawResult.getTimestamp())));
-		//
-		//
-		// TextView metaTextView = (TextView) findViewById(R.id.meta_text_view);
-		// View metaTextViewLabel = findViewById(R.id.meta_text_view_label);
-		// metaTextView.setVisibility(View.GONE);
-		// metaTextViewLabel.setVisibility(View.GONE);
-		// Map<ResultMetadataType,Object> metadata =
-		// rawResult.getResultMetadata();
-		// if (metadata != null) {
-		// StringBuilder metadataText = new StringBuilder(20);
-		// for (Map.Entry<ResultMetadataType,Object> entry :
-		// metadata.entrySet()) {
-		// if (DISPLAYABLE_METADATA_TYPES.contains(entry.getKey())) {
-		// metadataText.append(entry.getValue()).append('\n');
-		// }
-		// }
-		// if (metadataText.length() > 0) {
-		// metadataText.setLength(metadataText.length() - 1);
-		// metaTextView.setText(metadataText);
-		// metaTextView.setVisibility(View.VISIBLE);
-		// metaTextViewLabel.setVisibility(View.VISIBLE);
-		// }
-		// }
-		//
-		// TextView contentsTextView = (TextView)
-		// findViewById(R.id.contents_text_view);
-		// contentsTextView.setText(displayContents);
-		// int scaledSize = Math.max(22, 32 - displayContents.length() / 4);
-		// contentsTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, scaledSize);
-		//
-		// TextView supplementTextView = (TextView)
-		// findViewById(R.id.contents_supplement_text_view);
-		// supplementTextView.setText("");
-		// supplementTextView.setOnClickListener(null);
-		// if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
-		// PreferencesActivity.KEY_SUPPLEMENTAL, true)) {
-		// SupplementalInfoRetriever.maybeInvokeRetrieval(supplementTextView,
-		// resultHandler.getResult(),
-		// historyManager,
-		// this);
-		// }
-		//
-		// int buttonCount = resultHandler.getButtonCount();
-		// ViewGroup buttonView = (ViewGroup)
-		// findViewById(R.id.result_button_view);
-		// buttonView.requestFocus();
-		// for (int x = 0; x < ResultHandler.MAX_BUTTON_COUNT; x++) {
-		// TextView button = (TextView) buttonView.getChildAt(x);
-		// if (x < buttonCount) {
-		// button.setVisibility(View.VISIBLE);
-		// button.setText(resultHandler.getButtonText(x));
-		// button.setOnClickListener(new ResultButtonListener(resultHandler,
-		// x));
-		// } else {
-		// button.setVisibility(View.GONE);
-		// }
-		// }
+            if (code.contains("_wx_debug")) {
+              uri = Uri.parse(code);
+              String debug_url = uri.getQueryParameter("_wx_debug");
+              WXEnvironment.sDebugWsUrl = debug_url;
+              WXSDKEngine.restartBridge(true);
+              finish();
+            } else {
+              Toast.makeText(this, rawResult.getText(), Toast.LENGTH_SHORT)
+                  .show();
+              Intent intent;
 
-	}
+              intent = new Intent(CaptureActivity.this, WXPageActivity.class);
+              intent.setData(Uri.parse(code));
+              startActivity(intent);
+            }
+          }
+        }
 
 	// Briefly show the contents of the barcode, then handle the result outside
 	// Barcode Scanner.

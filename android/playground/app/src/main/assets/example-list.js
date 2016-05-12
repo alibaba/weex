@@ -45,7 +45,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	;__weex_define__("@weex-component/2b3607ad57e8dd3f2dcd5329ee5d0df9", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(11);
+	__webpack_require__(12);
 
 	;
 	  __webpack_require__(1);
@@ -771,7 +771,8 @@
 /***/ },
 /* 9 */,
 /* 10 */,
-/* 11 */
+/* 11 */,
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	;__weex_define__("@weex-component/example-list-item", [], function(__weex_require__, __weex_exports__, __weex_module__){

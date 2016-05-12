@@ -211,6 +211,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.telephony.TelephonyManager;
 
+import com.taobao.weex.common.WXConfig;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXUtils;
 
@@ -226,9 +227,9 @@ public class WXEnvironment {
    * Global config
    ***************************/
 
-  public static String JS_LIB_SDK_VERSION = "v0.12.6";
+  public static String JS_LIB_SDK_VERSION = "v0.13.9";
 
-  public static String WXSDK_VERSION = "1.4.1";
+  public static String WXSDK_VERSION = "1.5.0";
   public static Application sApplication;
   public static final String DEV_Id = getDevId();
   public static int sDeafultWidth = 750;
@@ -247,20 +248,26 @@ public class WXEnvironment {
   private static Map<String, String> options = new HashMap<>();
 
   /**
+   * dynamic
+   */
+  public static boolean sDynamicMode = false;
+  public static String sDynamicUrl = "";
+
+  /**
    * Fetch system information.
    * @return map contains system information.
    */
   public static Map<String, String> getConfig() {
     Map<String, String> configs = new HashMap<>();
-    configs.put("os", OS);
-    configs.put("appVersion", getAppVersionName());
-    configs.put("devId", DEV_Id);
-    configs.put("sysVersion", SYS_VERSION);
-    configs.put("sysModel", SYS_MODEL);
-    configs.put("weexVersion", String.valueOf(WXSDK_VERSION));
+    configs.put(WXConfig.os, OS);
+    configs.put(WXConfig.appVersion, getAppVersionName());
+    configs.put(WXConfig.devId, DEV_Id);
+    configs.put(WXConfig.sysVersion, SYS_VERSION);
+    configs.put(WXConfig.sysModel, SYS_MODEL);
+    configs.put(WXConfig.weexVersion, String.valueOf(WXSDK_VERSION));
     configs.putAll(options);
-    if(configs!=null&&configs.get("appName")==null){
-       configs.put("appName", sApplication.getPackageName());
+    if(configs!=null&&configs.get(WXConfig.appName)==null){
+       configs.put(WXConfig.appName, sApplication.getPackageName());
     }
     return configs;
   }

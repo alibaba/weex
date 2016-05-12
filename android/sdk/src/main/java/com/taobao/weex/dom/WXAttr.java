@@ -346,13 +346,26 @@ public class WXAttr extends ConcurrentHashMap<String, Object> {
   }
 
   public String getLoadMoreOffset() {
-    Object src = get(WXDomPropConstant.WX_ATTR_LOADMOREOFFSET);
+    Object src = get(WXDomPropConstant.WX_ATTR_LOAD_MORE_OFFSET);
     if (src == null) {
       return null;
     }
     return src.toString();
   }
 
+  public boolean getIsRecycleImage() {
+    Object obj = get(WXDomPropConstant.WX_ATTR_RECYCLE_IMG);
+    if (obj == null) {
+      return true;
+    }
+
+    try {
+      return Boolean.parseBoolean(String.valueOf(obj));
+    } catch (Exception e) {
+      WXLogUtils.e("[WXAttr] recycleImage:" + WXLogUtils.getStackTrace(e));
+    }
+    return false;
+  }
   public String getScrollDirection() {
     Object scrollDirection = get("scrollDirection");
     if (scrollDirection == null) {

@@ -1,4 +1,4 @@
-package com.alibaba.weex;
+package com.alibaba.weex.util;
 
 import android.app.Activity;
 import android.view.View;

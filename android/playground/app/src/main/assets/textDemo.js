@@ -1,3 +1,73 @@
+define('@weex-component/ui-tip', function (require, exports, module) {
+
+;
+  module.exports = {
+    data: function () {return {
+      type: 'success',
+      value: ''
+    }}
+  }
+
+
+;module.exports.style = {
+  "tip": {
+    "paddingLeft": 36,
+    "paddingRight": 36,
+    "paddingTop": 36,
+    "paddingBottom": 36,
+    "borderRadius": 10
+  },
+  "tip-txt": {
+    "fontSize": 28
+  },
+  "tip-success": {
+    "backgroundColor": "#dff0d8",
+    "borderColor": "#d6e9c6"
+  },
+  "tip-txt-success": {
+    "color": "#3c763d"
+  },
+  "tip-info": {
+    "backgroundColor": "#d9edf7",
+    "borderColor": "#bce8f1"
+  },
+  "tip-txt-info": {
+    "color": "#31708f"
+  },
+  "tip-warning": {
+    "backgroundColor": "#fcf8e3",
+    "borderColor": "#faebcc"
+  },
+  "tip-txt-warning": {
+    "color": "#8a6d3b"
+  },
+  "tip-danger": {
+    "backgroundColor": "#f2dede",
+    "borderColor": "#ebccd1"
+  },
+  "tip-txt-danger": {
+    "color": "#a94442"
+  }
+}
+
+;module.exports.template = {
+  "type": "div",
+  "classList": function () {return ['tip', 'tip-' + (this.type)]},
+  "children": [
+    {
+      "type": "text",
+      "classList": function () {return ['tip-txt', 'tip-txt-' + (this.type)]},
+      "attr": {
+        "value": function () {return this.value}
+      }
+    }
+  ]
+}
+
+;})
+
+// module
+
 define('@weex-component/ui-panel', function (require, exports, module) {
 
 ;
@@ -5,8 +75,6 @@ define('@weex-component/ui-panel', function (require, exports, module) {
     data: function () {return {
       type: 'default',
       title: '',
-      paddingBody: 20,
-      paddingHead: 20,
       dataClass: '', // FIXME transfer class
       border: 0
     }},
@@ -41,6 +109,10 @@ define('@weex-component/ui-panel', function (require, exports, module) {
   "panel-header": {
     "backgroundColor": "#f5f5f5",
     "fontSize": 40,
+    "paddingLeft": 12,
+    "paddingRight": 12,
+    "paddingTop": 20,
+    "paddingBottom": 20,
     "color": "#333333"
   },
   "panel-header-primary": {
@@ -63,7 +135,12 @@ define('@weex-component/ui-panel', function (require, exports, module) {
     "backgroundColor": "rgb(217,83,79)",
     "color": "#ffffff"
   },
-  "panel-body": {}
+  "panel-body": {
+    "paddingLeft": 12,
+    "paddingRight": 12,
+    "paddingTop": 20,
+    "paddingBottom": 20
+  }
 }
 
 ;module.exports.template = {
@@ -76,12 +153,6 @@ define('@weex-component/ui-panel', function (require, exports, module) {
     {
       "type": "text",
       "classList": function () {return ['panel-header', 'panel-header-' + (this.type)]},
-      "style": {
-        "paddingTop": function () {return this.paddingHead},
-        "paddingBottom": function () {return this.paddingHead},
-        "paddingLeft": function () {return this.paddingHead*1.5},
-        "paddingRight": function () {return this.paddingHead*1.5}
-      },
       "attr": {
         "value": function () {return this.title}
       }
@@ -89,12 +160,6 @@ define('@weex-component/ui-panel', function (require, exports, module) {
     {
       "type": "div",
       "classList": function () {return ['panel-body', 'panel-body-' + (this.type)]},
-      "style": {
-        "paddingTop": function () {return this.paddingBody},
-        "paddingBottom": function () {return this.paddingBody},
-        "paddingLeft": function () {return this.paddingBody*1.5},
-        "paddingRight": function () {return this.paddingBody*1.5}
-      },
       "children": [
         {
           "type": "content"
@@ -111,11 +176,16 @@ define('@weex-component/ui-panel', function (require, exports, module) {
 define('@weex-component/textDemo', function (require, exports, module) {
 
 ;
+  module.exports = {
+    data: function () {return {
+      img: '//img.alicdn.com/bao/uploaded/i4/TB1RDldGFXXXXXaXVXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg'
+    }}
+  }
+
 
 ;module.exports.style = {
-  "txt": {
-    "marginBottom": 12,
-    "fontSize": 40
+  "img": {
+    "marginBottom": 20
   }
 }
 
@@ -125,74 +195,30 @@ define('@weex-component/textDemo', function (require, exports, module) {
     {
       "type": "ui-panel",
       "attr": {
-        "title": "color"
+        "title": "width x height = 400 x 400"
       },
       "children": [
         {
-          "type": "text",
-          "classList": [
-            "txt"
-          ],
+          "type": "ui-tip",
           "attr": {
-            "value": "default is black"
+            "type": "warning",
+            "value": "Weex screen width is 750"
+          },
+          "style": {
+            "marginBottom": 20
           }
         },
         {
-          "type": "text",
+          "type": "image",
           "classList": [
-            "txt"
+            "img"
           ],
           "style": {
-            "color": "#286090"
+            "width": 400,
+            "height": 400
           },
           "attr": {
-            "value": "#286090"
-          }
-        },
-        {
-          "type": "text",
-          "classList": [
-            "txt"
-          ],
-          "style": {
-            "color": "#00ff00"
-          },
-          "attr": {
-            "value": "#0f0"
-          }
-        },
-        {
-          "type": "text",
-          "classList": [
-            "txt"
-          ],
-          "style": {
-            "color": "#FF0000"
-          },
-          "attr": {
-            "value": "keyword"
-          }
-        },
-        {
-          "type": "text",
-          "classList": [
-            "txt"
-          ],
-          "style": {
-            "color": "rgb(238,162,54)"
-          },
-          "attr": {
-            "value": "rgb(238, 162, 54)"
-          }
-        },
-        {
-          "type": "text",
-          "classList": [
-            "txt"
-          ],
-          "style": {},
-          "attr": {
-            "value": "rgb(238, 162, 54, 0.5)"
+            "src": function () {return this.img}
           }
         }
       ]
@@ -200,43 +226,20 @@ define('@weex-component/textDemo', function (require, exports, module) {
     {
       "type": "ui-panel",
       "attr": {
-        "title": "font-size"
+        "title": "200 x 200"
       },
       "children": [
         {
-          "type": "text",
+          "type": "image",
           "classList": [
-            "txt"
+            "img"
           ],
           "style": {
-            "fontSize": 32
+            "width": 200,
+            "height": 200
           },
           "attr": {
-            "value": "32"
-          }
-        },
-        {
-          "type": "text",
-          "classList": [
-            "txt"
-          ],
-          "style": {
-            "fontSize": 64
-          },
-          "attr": {
-            "value": "64"
-          }
-        },
-        {
-          "type": "text",
-          "classList": [
-            "txt"
-          ],
-          "style": {
-            "fontSize": 100
-          },
-          "attr": {
-            "value": "100"
+            "src": function () {return this.img}
           }
         }
       ]
@@ -244,151 +247,20 @@ define('@weex-component/textDemo', function (require, exports, module) {
     {
       "type": "ui-panel",
       "attr": {
-        "title": "font-style"
+        "title": "100 x 100"
       },
       "children": [
         {
-          "type": "text",
+          "type": "image",
           "classList": [
-            "txt"
+            "img"
           ],
           "style": {
-            "fontStyle": "normal"
+            "width": 100,
+            "height": 100
           },
           "attr": {
-            "value": "normal"
-          }
-        },
-        {
-          "type": "text",
-          "classList": [
-            "txt"
-          ],
-          "style": {
-            "fontStyle": "italic"
-          },
-          "attr": {
-            "value": "italic"
-          }
-        }
-      ]
-    },
-    {
-      "type": "ui-panel",
-      "attr": {
-        "title": "font-weight"
-      },
-      "children": [
-        {
-          "type": "text",
-          "classList": [
-            "txt"
-          ],
-          "style": {
-            "fontWeight": "normal"
-          },
-          "attr": {
-            "value": "normal"
-          }
-        },
-        {
-          "type": "text",
-          "classList": [
-            "txt"
-          ],
-          "style": {
-            "fontWeight": "bold"
-          },
-          "attr": {
-            "value": "bold"
-          }
-        }
-      ]
-    },
-    {
-      "type": "ui-panel",
-      "attr": {
-        "title": "text-decoration"
-      },
-      "children": [
-        {
-          "type": "text",
-          "classList": [
-            "txt"
-          ],
-          "style": {
-            "textDecoration": "none"
-          },
-          "attr": {
-            "value": "none"
-          }
-        },
-        {
-          "type": "text",
-          "classList": [
-            "txt"
-          ],
-          "style": {
-            "textDecoration": "underline"
-          },
-          "attr": {
-            "value": "underline"
-          }
-        },
-        {
-          "type": "text",
-          "classList": [
-            "txt"
-          ],
-          "style": {
-            "textDecoration": "line-through"
-          },
-          "attr": {
-            "value": "line-through"
-          }
-        }
-      ]
-    },
-    {
-      "type": "ui-panel",
-      "attr": {
-        "title": "text-align"
-      },
-      "children": [
-        {
-          "type": "text",
-          "classList": [
-            "txt"
-          ],
-          "style": {
-            "textAlign": "left"
-          },
-          "attr": {
-            "value": "left"
-          }
-        },
-        {
-          "type": "text",
-          "classList": [
-            "txt"
-          ],
-          "style": {
-            "textAlign": "center"
-          },
-          "attr": {
-            "value": "center"
-          }
-        },
-        {
-          "type": "text",
-          "classList": [
-            "txt"
-          ],
-          "style": {
-            "textAlign": "right"
-          },
-          "attr": {
-            "value": "right"
+            "src": function () {return this.img}
           }
         }
       ]

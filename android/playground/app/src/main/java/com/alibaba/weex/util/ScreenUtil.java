@@ -45,18 +45,21 @@ public class ScreenUtil {
         }
 
         if (activity.getSupportActionBar() != null) {
+          int actionbar= activity.getSupportActionBar().getHeight();
+          if(actionbar==0){
             TypedArray actionbarSizeTypedArray=activity.obtainStyledAttributes(new int[]{android.R.attr.actionBarSize});
-            int actionbar= (int) actionbarSizeTypedArray.getDimension(0,0);
-            Log.e(TAG, "actionbar:" + actionbar);
-            height -= actionbar;
+            actionbar= (int) actionbarSizeTypedArray.getDimension(0,0);
+          }
+          Log.d(TAG, "actionbar:" + actionbar);
+          height -= actionbar;
         }
 
         int status = getStatusBarHeight(activity);
-        Log.e(TAG, "status:" + status);
+        Log.d(TAG, "status:" + status);
 
         height -= status;
 
-        Log.e(TAG,"height:"+height);
+        Log.d(TAG,"height:"+height);
         return height;
     }
 

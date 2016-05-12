@@ -31,6 +31,7 @@ import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRenderStrategy;
 import com.taobao.weex.utils.WXFileUtils;
+import com.taobao.weex.utils.WXLogUtils;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -113,7 +114,10 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
     initUIAndData();
 
     if (TextUtils.equals("http", mUri.getScheme()) || TextUtils.equals("https", mUri.getScheme())) {
-      loadWXfromService(mUri.toString());
+//      if url has key "_wx_tpl" then get weex bundle js
+      String weexTpl = mUri.getQueryParameter(Constants.WEEX_TPL_KEY);
+      String url=TextUtils.isEmpty(weexTpl)?mUri.toString():weexTpl;
+      loadWXfromService(url);
       startHotRefresh();
     } else {
       if (mInstance == null) {
@@ -121,11 +125,20 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
 //        mInstance.setImgLoaderAdapter(new ImageAdapter(this));
         mInstance.registerRenderListener(this);
       }
-      Activity ctx = this;
-      Rect outRect = new Rect();
-      ctx.getWindow().getDecorView().getWindowVisibleDisplayFrame(outRect);
-      String path=mUri.getScheme().equals("file")?mUri.getLastPathSegment():mUri.toString();
-      mInstance.render(TAG, WXFileUtils.loadFileContent(path, this), mConfigMap, null, ScreenUtil.getDisplayWidth(this), ScreenUtil.getDisplayHeight(this), WXRenderStrategy.APPEND_ASYNC);
+      mContainer.post(new Runnable() {
+        @Override
+        public void run() {
+          Activity ctx = WXPageActivity.this;
+          Rect outRect = new Rect();
+          ctx.getWindow().getDecorView().getWindowVisibleDisplayFrame(outRect);
+          String path=mUri.getScheme().equals("file")?mUri.getLastPathSegment():mUri.toString();
+          mInstance.render(TAG, WXFileUtils.loadFileContent(path, WXPageActivity.this),
+                           mConfigMap, null,
+                           ScreenUtil.getDisplayWidth(WXPageActivity.this), ScreenUtil
+                               .getDisplayHeight(WXPageActivity.this),
+                           WXRenderStrategy.APPEND_ASYNC);
+        }
+      });
     }
     mInstance.onActivityCreate();
   }

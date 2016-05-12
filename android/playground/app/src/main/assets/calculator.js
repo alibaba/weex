@@ -44,43 +44,28 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/70765ef005f962901c201ee23e67ecca", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/b0551e4d49782f927e9eb4bb407aa6b3", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(1);
-	  var OP = ['+', '-', '*', '/'];
-	  var inputs = [];
 	  __weex_module__.exports = {
 	    data: function () {return {
 	      result: ''
 	    }},
 	    methods: {
-	      input: function(e) {
-	        var value = e.target.attr['value'];
-	        var lastOne = inputs.length ? inputs[inputs.length - 1] : '';
-	        if (OP.indexOf(lastOne) > -1 && OP.indexOf(value) > -1) {
-	          return;
-	        }
-
-	        inputs.push(value);
-	        var buf = [], char;
-	        for (var i = 0; i < inputs.length; i++) {
-	          char = inputs[i];
-	          if (OP.indexOf(char) > -1) {
-	            char = ' ' + char + ' ';
-	          }
-	          buf.push(char);
-	        }
-	        this.result = buf.join('');
+	      getResult: function () {
+	        return this.result;
 	      },
-	      calculate: function() {
+	      input: function (e) {
+	        var value = e.target.attr["value"];
+	        this.result = this.result + value;
+	      },
+	      calculate: function(e) {
 	        var result = eval(this.result);
-	        inputs = [result];
-	        this.result = result;
+	        this.result = this.result + " = " + result;
 	      },
-	      clear: function() {
-	        inputs = [];
-	        this.result = '';
+	      clear: function(e) {
+	        this.result = "";
 	      }
 	    }
 	  }
@@ -97,7 +82,7 @@
 	        "result"
 	      ],
 	      "attr": {
-	        "value": function () {return this.result}
+	        "value": function () {return this.getResult()}
 	      }
 	    },
 	    {
@@ -335,10 +320,9 @@
 	    "flexDirection": "row"
 	  },
 	  "result": {
-	    "textAlign": "right",
-	    "backgroundColor": "#666666",
-	    "fontSize": 40,
 	    "color": "#FFFFFF",
+	    "backgroundColor": "#666666",
+	    "textAlign": "right",
 	    "height": 100,
 	    "padding": 30,
 	    "margin": 5
@@ -347,19 +331,17 @@
 	    "flex": 1,
 	    "textAlign": "center",
 	    "backgroundColor": "#eeeeee",
-	    "fontSize": 36,
 	    "height": 100,
 	    "padding": 30,
 	    "margin": 5
 	  },
 	  "btn-operator": {
-	    "backgroundColor": "#666699",
-	    "fontSize": 40,
-	    "color": "#FFFFFF"
+	    "color": "#FFFFFF",
+	    "backgroundColor": "#666699"
 	  }
 	}
 	})
-	;__weex_bootstrap__("@weex-component/70765ef005f962901c201ee23e67ecca", {
+	;__weex_bootstrap__("@weex-component/b0551e4d49782f927e9eb4bb407aa6b3", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 

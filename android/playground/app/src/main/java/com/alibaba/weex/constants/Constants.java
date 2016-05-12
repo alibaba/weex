@@ -5,7 +5,7 @@ public class Constants {
   public static final String MOCK_FILE_NAME_KEY = "mock_file_name_key";
   public static final String BUNDLE_URL = "bundle_url";
   public static final String WEEX_SAMPLES_KEY = "?weex-samples";
-
+  public static final String WEEX_TPL_KEY = "_wx_tpl";
   public static final String ASSETS_ROOT_FOLDER = "weex_js";
 
 

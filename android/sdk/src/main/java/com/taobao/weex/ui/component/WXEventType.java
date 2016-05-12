@@ -220,6 +220,12 @@ public class WXEventType {
   public static final String VIDEO_PAUSE = "pause";
   public static final String VIDEO_FINISH = "finish";
   public static final String VIDEO_FAIL = "fail";
+  public static final String WEBVIEW_ERROR = "error";
+  public static final String WEBVIEW_RECEIVEDTITLE = "receivedtitle";
+  public static final String WEBVIEW_PAGEFINISH = "pagefinish";
+  public static final String WEBVIEW_PAGESTART = "pagestart";
+  public static final String RECYCLERVIEW_ONREFRESH = "refresh";
+  public static final String RECYCLERVIEW_ONLOADING = "loading";
 
   public static final String CHANGE = "change";
 }

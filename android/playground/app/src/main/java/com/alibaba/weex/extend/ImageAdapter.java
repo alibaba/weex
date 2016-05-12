@@ -97,8 +97,7 @@ public class ImageAdapter implements IWXImgLoaderAdapter {
         }
         Picasso.with(WXEnvironment.getApplication())
             .load(temp)
-            .resize(view.getLayoutParams().width,
-                    view.getLayoutParams().height).into(view);
+            .into(view);
       }
     },0);
   }

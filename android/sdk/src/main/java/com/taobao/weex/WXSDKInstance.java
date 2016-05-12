@@ -247,9 +247,15 @@ public class WXSDKInstance implements IWXActivityStateListener {
   private IWXRenderListener mRenderListener;
   private Context mContext;
   private volatile String mInstanceId;
+
+  public WXComponent getRootCom() {
+    return mRootCom;
+  }
+
   private WXComponent mRootCom;
   private boolean mRendered;
   private WXRefreshData mLastRefreshData;
+
   /**
    * Render strategy.
    */
@@ -279,6 +285,11 @@ public class WXSDKInstance implements IWXActivityStateListener {
   private ViewGroup rootView;
 
   public WXSDKInstance(Context context) {
+    init(context);
+  }
+
+
+  public void init(Context context) {
     mContext = context;
     mActivityStateListeners = new ConcurrentLinkedQueue<>();
     mRecycleImageManager = new WXRecycleImageManager(this);
@@ -286,7 +297,12 @@ public class WXSDKInstance implements IWXActivityStateListener {
     mWXPerformance = new WXPerformance();
     mWXPerformance.WXSDKVersion = WXEnvironment.WXSDK_VERSION;
     mWXPerformance.JSLibInitTime = WXEnvironment.sJSLibInitTime;
+
+    mUserTrackAdapter=WXSDKManager.getInstance().getIWXUserTrackAdapter();
+    mWXHttpAdapter=WXSDKManager.getInstance().getIWXHttpAdapter();
   }
+
+
 
   public void setBizType(String bizType) {
     if (!TextUtils.isEmpty(bizType)) {
@@ -383,6 +399,17 @@ public class WXSDKInstance implements IWXActivityStateListener {
     if (mRendered || TextUtils.isEmpty(template)) {
       return;
     }
+
+    if(options==null){
+      options=new HashMap<>();
+    }
+
+    if(WXEnvironment.sDynamicMode && !TextUtils.isEmpty(WXEnvironment.sDynamicUrl) && options!=null && options.get("dynamicMode")==null){
+      options.put("dynamicMode","true");
+      renderByUrl(pageName,WXEnvironment.sDynamicUrl,options,jsonInitData,width,height,flag);
+      return;
+    }
+
     mWXPerformance.pageName = pageName;
     mWXPerformance.JSTemplateSize = template.length() / 1024;
 
@@ -404,47 +431,6 @@ public class WXSDKInstance implements IWXActivityStateListener {
   public void render(String template, int width, int height) {
     render(WXPerformance.DEFAULT, template, null, null, width, height, mRenderStrategy);
   }
-
-  /**
-   * @param pageName, used for performance log.
-   * @param url  template bound.js . Parameter about the request
-   * @param adapter  Adapter for HTTP connection. Null for default adapter.
-   * @param options  os   iphone/android/ipad
-   *                 weexversion    Weex version(like 1.0.0)
-   *                 appversion     App version(like 1.0.0)
-   *                 devid        Device id(like Aqh9z8dRJNBhmS9drLG5BKCmXhecHUXIZoXOctKwFebH)
-   *                 sysversion    Device system version(like 5.4.4、7.0.4, should be used with os)
-   *                 sysmodel     Device model(like iOS:"MGA82J/A", android:"MI NOTE LTE")
-   *                 Time    UNIX timestamp, UTC+08:00
-   *                 TTID(Optional)
-   *                 MarkertId
-   *                 Appname(Optional)  tm,tb,qa
-   *                 Bundleurl(Optional)  template url
-   * @param jsonInitData Initial data for rendering
-   * @param width    Width of weex's root container, the default is match_parent
-   * @param height   Height of weex's root container, the default is match_parent
-   * @param flag     RenderStrategy {@link WXRenderStrategy}
-   */
-//  public void render(final String pageName, final String url, IWXHttpAdapter adapter, Map<String, Object> options, final String jsonInitData, final int width, final int height, final WXRenderStrategy flag) {
-//    if (adapter == null) {
-//      adapter = new DefaultWXHttpAdapter();
-//    }
-//
-//    WXRequest wxRequest = new WXRequest();
-//    wxRequest.url = url;
-//    if (wxRequest.paramMap == null) {
-//      wxRequest.paramMap = new HashMap<String, Object>();
-//    }
-//    wxRequest.paramMap.put("user-agent", WXHttpUtil.assembleUserAgent());
-//    if (options == null) {
-//      options = new HashMap<String, Object>();
-//    }
-//    if (!options.containsKey("bundleUrl")) {
-//      options.put("bundleUrl", url);
-//    }
-//    adapter.sendRequest(wxRequest, new WXHttpListener(pageName, options, jsonInitData, width, height, flag, System.currentTimeMillis()));
-//    mWXHttpAdapter = adapter;
-//  }
 
   public void renderByUrl(final String pageName, final String url, Map<String, Object> options, final String jsonInitData, final int width, final int height, final WXRenderStrategy flag) {
     IWXHttpAdapter adapter=WXSDKManager.getInstance().getIWXHttpAdapter();
@@ -539,14 +525,16 @@ public class WXSDKInstance implements IWXActivityStateListener {
     if (mScrollView == null) {
       return;
     }
-    WXSDKManager.getInstance().postOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        if (mRecycleImageManager != null) {
-          mRecycleImageManager.loadImage();
+    if (mRecycleImageManager != null && mRecycleImageManager.isRecycleImage()) {
+      WXSDKManager.getInstance().postOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          if (mRecycleImageManager != null) {
+            mRecycleImageManager.loadImage();
+          }
         }
-      }
-    }, 250);
+      }, 250);
+    }
   }
 
   /********************************
@@ -820,7 +808,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
     private int width;
     private int height;
     private WXRenderStrategy flag;
-    private long startReqeustTime;
+    private long startRequestTime;
 
     private WXHttpListener(String pageName, Map<String, Object> options, String jsonInitData, int width, int height, WXRenderStrategy flag, long startRequestTime) {
       this.pageName = pageName;
@@ -829,7 +817,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
       this.width = width;
       this.height = height;
       this.flag = flag;
-      this.startReqeustTime = startRequestTime;
+      this.startRequestTime = startRequestTime;
     }
 
 
@@ -851,7 +839,8 @@ public class WXSDKInstance implements IWXActivityStateListener {
     @Override
     public void onHttpFinish(WXResponse response) {
 
-      mWXPerformance.networkTime = System.currentTimeMillis() - startReqeustTime;
+      mWXPerformance.networkTime = System.currentTimeMillis() - startRequestTime;
+      WXLogUtils.renderPerformanceLog("networkTime", mWXPerformance.networkTime);
 
       if (TextUtils.equals("200", response.statusCode)) {
         String template = new String(response.originalData);

@@ -230,7 +230,7 @@ import java.util.Map;
  *
  * Input component
  */
-public class WXInput extends WXComponent implements IWXRecyclerViewChild {
+public class WXInput extends WXComponent {
 
   private final InputMethodManager mInputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
   private String mBeforeText = "";
@@ -245,14 +245,16 @@ public class WXInput extends WXComponent implements IWXRecyclerViewChild {
   @Override
   protected void initView() {
     super.initView();
-    mHost = new WXEditText(mContext);
+    WXEditText inputView = new WXEditText(mContext);
     mTextAlign = Gravity.LEFT;
     int colorInt = WXResourceUtils.getColor("#999999");
     if (colorInt != Integer.MIN_VALUE) {
-      ((WXEditText) mHost).setHintTextColor(colorInt);
+      inputView.setHintTextColor(colorInt);
     }
 
-    ((WXEditText) mHost).setTextSize(TypedValue.COMPLEX_UNIT_PX, WXStyle.getFontSize(mDomObj.style));
+    inputView.setTextSize(TypedValue.COMPLEX_UNIT_PX, WXStyle.getFontSize(mDomObj.style));
+    inputView.setSingleLine();//default use single line , same to ios 
+    mHost = inputView;
   }
 
   @Override
@@ -261,7 +263,7 @@ public class WXInput extends WXComponent implements IWXRecyclerViewChild {
   }
 
   @Override
-  public void flushView() {
+  protected void flushView() {
     super.flushView();
     if (mHost == null) {
       return;

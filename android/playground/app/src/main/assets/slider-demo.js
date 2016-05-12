@@ -45,7 +45,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	;__weex_define__("@weex-component/559cd2049da887ae8989e25df99c5cab", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(13);
+	__webpack_require__(14);
 
 	;
 	  __webpack_require__(1);
@@ -1186,11 +1186,12 @@
 /* 10 */,
 /* 11 */,
 /* 12 */,
-/* 13 */
+/* 13 */,
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	;__weex_define__("@weex-component/slider-page", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(14);
+	__webpack_require__(15);
 
 	;
 	  __weex_module__.exports = {
@@ -1233,7 +1234,7 @@
 	})
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports) {
 
 	;__weex_define__("@weex-component/slider-item", [], function(__weex_require__, __weex_exports__, __weex_module__){

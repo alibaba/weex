@@ -267,14 +267,6 @@ class WXRenderStatement {
     return mWXSDKInstance;
   }
 
-  public void flushView(String ref) {
-    WXComponent component = mRegistry.get(ref);
-    if (component == null) {
-      return;
-    }
-    component.flushView();
-  }
-
   /**
    * create RootView ，every weex Instance View has a rootView;
    * @see com.taobao.weex.dom.WXDomStatement#createBody(JSONObject)
@@ -405,6 +397,10 @@ class WXRenderStatement {
     return component;
   }
 
+  public WXComponent getComponent(String ref) {
+    return mRegistry.get(ref);
+  }
+
   /**
    * Clear registry information that current instance contains.
    */
@@ -515,11 +511,12 @@ class WXRenderStatement {
     }
 
     int viewYInScroller=component.getAbsoluteY();
-
-    if(component.getParent()!=null){
-      viewYInScroller-=component.getParent().getAbsoluteY();
+    WXComponent ancestor=component;
+    while((ancestor=ancestor.getParent())!=null){
+      if(ancestor instanceof WXScroller){
+        viewYInScroller-=ancestor.getAbsoluteY();
+      }
     }
-
     scroller.scrollBy(0,
                       scroller.getView().getScrollY() - viewYInScroller - offsetIntF);
   }

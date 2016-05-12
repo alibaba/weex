@@ -3,12 +3,18 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.0.0'
+        classpath 'com.android.tools.build:gradle:2.1.0'
     }
 }
 
 plugins {
     id "com.github.hierynomus.license" version "0.12.1"
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
 }
 
 apply plugin: 'com.android.library'

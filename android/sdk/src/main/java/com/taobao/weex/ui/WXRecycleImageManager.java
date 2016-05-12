@@ -223,8 +223,18 @@ import java.util.List;
  */
 public class WXRecycleImageManager {
 
-  public static final int VISIBLE_TOP_SPACE = -WXViewUtils.getScreenHeight() * 3 / 5;
+  public static final int VISIBLE_TOP_SPACE = -WXViewUtils.getScreenHeight() * 1;
   public static final int VISIBLE_BOTTOM_SPACE = -VISIBLE_TOP_SPACE;
+
+  public static void setIfRecycleImage(boolean ifRecycleImage) {
+    IfRecycleImage = ifRecycleImage;
+  }
+
+  public static boolean isRecycleImage() {
+    return IfRecycleImage;
+  }
+
+  private static boolean IfRecycleImage = true;
   /**
    * Location of imageView on the screen
    */
@@ -241,6 +251,9 @@ public class WXRecycleImageManager {
   }
 
   public boolean addImage(WXComponent view) {
+    if(!IfRecycleImage){
+      return false;
+    }
     if (mAllImages != null && !mAllImages.contains(view) && mInstance != null) {
       ImageInfo imageInfo = new ImageInfo();
       imageInfo.image = view;
@@ -252,6 +265,9 @@ public class WXRecycleImageManager {
   }
 
   public void loadImage() {
+    if(!IfRecycleImage){
+      return;
+    }
     ImageInfo imageInfo;
     WXComponent component;
     int count = mAllImages.size();

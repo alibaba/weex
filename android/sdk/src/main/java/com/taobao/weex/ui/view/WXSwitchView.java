@@ -206,12 +206,12 @@ package com.taobao.weex.ui.view;
 
 import android.content.Context;
 import android.view.MotionEvent;
-import android.widget.Switch;
+import android.widget.ToggleButton;
 
 import com.taobao.weex.ui.view.gesture.WXGesture;
 import com.taobao.weex.ui.view.gesture.WXGestureObservable;
 
-public class WXSwitchView extends Switch implements WXGestureObservable {
+public class WXSwitchView extends ToggleButton implements WXGestureObservable {
 
   private WXGesture wxGesture;
 

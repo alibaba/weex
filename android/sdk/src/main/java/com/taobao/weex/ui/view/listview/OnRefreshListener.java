@@ -202,16 +202,8 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.ui.component;
+package com.taobao.weex.ui.view.listview;
 
-
-/**
- * Customize Components that wish to be reused in RecyclerView must implement this interface.
- * Then, components must check whether it should override
- * {@link WXComponent#detachViewAndClearPreInfo()} in order to be used in RecyclerView.
- * This interface provides an empty body, {@link WXComponent#detachViewAndClearPreInfo() }
- * will check whether its subclass implement this interface and execute default implementation.
- */
-public interface IWXRecyclerViewChild {
-
+public interface OnRefreshListener {
+    public void onRefresh();
 }
