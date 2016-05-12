@@ -1,8 +1,8 @@
 <template>
   <div>
     <list class="list">
-      <cell repeat="{{items}}">
-        <text class="item" onappear="onappear" ondisappear="ondisappear" index={{$index}}>{{title}} {{id}}</text>
+      <cell repeat="{{items}}" index={{$index}} onappear="onappear" ondisappear="ondisappear">
+        <text class="item" >{{title}} {{id}}</text>
       </cell>
     </list>
     <text class="count" value="Appear items:{{appearMin}} - {{appearMax}}"></text>
