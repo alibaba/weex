@@ -77,7 +77,7 @@ Weex.install(installationModule)
 
 ### Add new API
 
-You can add new API modules, or just add a new API for any existing API modules. For example, you can add a new module `user` with APIs like 'login', 'logout' etc. Or you can just add a single new method such as `setTitle` for the exsiting module `pageInfo`. Whichever way you use, the developer can invoke the API by using `$call(module, method, arg1, arg2, ...)` ([Module APIs](../references/api.md)).
+You can add new API modules, or just add a new API for any existing API modules. For example, you can add a new module `user` with APIs like 'login', 'logout' etc. Or you can just add a single new method such as `setTitle` for the exsiting module `pageInfo`. Whichever way you use, the developer can invoke the API by using `require('@weex-module/moduleName)[methodName](arg1, arg2, ...)` ([Module APIs](../references/api.md)).
 
 Steps:
 

@@ -1,4 +1,4 @@
-define('@weex-component/foo7', function (require, exports, module) {
+define('@weex-component/click', function (require, exports, module) {
 
 ;
   module.exports = {
@@ -55,4 +55,4 @@ define('@weex-component/foo7', function (require, exports, module) {
 
 // require module
 
-bootstrap('@weex-component/foo7')
+bootstrap('@weex-component/click')

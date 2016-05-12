@@ -1,73 +1,32 @@
 # stream
 
-### Summary
+## Summary
 
-Built-in module for sending http requests.
+A series of stream api. It provides a network request.
 
-### API
+## API
 
-#### $sendHttp
+### sendHttp(params, callback)
 
-arguments:
+### Arguments
 
-* params: &lt;object&gt; request parameters.
-  * method: &lt;string&gt; HTTP method.
-  * url: &lt;string&gt; HTTP URL of the sended request.
-  * header: &lt;object&gt;  HTTP request header.
-  * body: &lt;string&gt; HTTP body.
-* callback: &lt;function&gt; A callback function whose argument is the response string of the request.
+* `params`*(object)*: the request parameters.
+  * `method`*(string)*: the HTTP method like `GET`, `POST`.
+  * `url`*(string)*: the request url.
+  * `header`*(object)*: the HTTP request header.
+  * `body`*(string)*: the HTTP body.
+* `callback`*(function)*: A callback function whose argument is the response string of the request.
 
 ### Example
 
-```
-<template>
-  <scroller style="flex-direction: column;">
-    <TC_Support_MainTitle title="TC_BizModule_SendHttp"></TC_Support_MainTitle>
-    <div>
-        <text class= "btn" value = '{{btntxt}}' onclick = "sendHttp"></text>
-    </div>
-    <TC_Support_SubTitle title="Response status："></TC_Support_SubTitle>
-    <div style="flex-direction:column; margin-top:5; padding-top:5; padding-bottom:5;">
-        <text class="textarea" >{{resultType}}</text>
-    </div>
-    <TC_Support_SubTitle title="Request result："></TC_Support_SubTitle>
-    <div style="flex-direction:column; margin-top:5; padding-top:5; padding-bottom:5;">
-        <text class="textarea">{{resultData}}</text>
-    </div>
-  </scroller>
-</template>
-	
-<style>
-	.btn{ width:710; font-size: 25; border-width: 3; border-color: #cccccc; padding: 5; border-style: solid;border-radius: 3; margin: 5;font-family: "Open Sans", sans-serif; }
-	.textarea{width: 710; height: 300; font-size: 30;}
-</style>
-	
-<script>
-  module.exports = {
-    data: {
-      btntxt:'Send http request',
-      resultType:'Waitng for response',
-      resultData:'Waiting for response'
-    },
-    methods: {  
-      sendHttp:function (e) {
-        this.btntxt='Clicked，Waitng for response';
-        this.$sendHttp({
-          method: "GET",
-          url: "http://g.alicdn.com/mtb/app-hytpl/1.2.6/tbm.js",
-        }, function(ret) {
-          if(ret.indexOf('e=setTimeout(b,300))},!1),b()}(window)')>=0){
-            this.resultType="Success";
-            this.resultData=JSON.stringify(ret);
-          }else{
-            this.resultType="Failure";
-          }
-          this.btntxt='Response has been recevied，click for sending http request again';
-        }.bind(this));
-      }
-    }
-  }
-</script>
+```javascript
+var stream = require('@weex-module/stream');
+stream.sendHttp({
+  method: 'GET',
+  url: 'path/to/a/uri', // can't not support CORS yet!
+}, function(ret) {
+  // TODO after response
+});
 ```
   
     

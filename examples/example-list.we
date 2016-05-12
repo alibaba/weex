@@ -10,7 +10,7 @@
   require('weex-components');
   module.exports = {
     data: {
-      dir: 'examples',
+      dir: 'examples', // examples, test ...
       items: [
         {name: 'hello', title: 'Hello World', url: ''}
       ]

@@ -48,7 +48,7 @@ Options:
 If all works well, navigate to the directory where you save the newly created tech_list.we, then type
 
 ```
-;; weex tech_list.we   // Weex H5 renderer is not released , so , the commond not works now
+weex tech_list.we   // Weex H5 renderer is not released , so , the commond not works now
 ```
 
 A browser window will open automatically  to display  something like below

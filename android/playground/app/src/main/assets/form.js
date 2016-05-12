@@ -58,7 +58,9 @@
 	  ]
 	}
 	})
-	;__weex_bootstrap__("@weex-component/32cf12d9ab61a354757287ad95ca966c", {"transformerVersion":"0.3.1"}, undefined)
+	;__weex_bootstrap__("@weex-component/32cf12d9ab61a354757287ad95ca966c", {
+	  "transformerVersion": "0.3.1"
+	},undefined)
 
 /***/ }
 /******/ ]);

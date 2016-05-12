@@ -1,0 +1,31 @@
+<template>
+  <container if="{{!ds.isHide}}">
+    <container class="big-banner-container">
+      <banner width="{{NUMBER_750}}" height="{{NUMBER_200}}" src="{{ds.bigBannerImg}}"
+        href="{{ds.bigBannerUrl}}"></banner>
+    </container>
+    <banners ds={{ds.smallBannerItems}} width="{{NUMBER_373}}" height="{{NUMBER_224}}" direction="row" space="{{NUMBER_4}}"></banners>
+  </container>
+</template>
+
+<style>
+  .title {
+    width: 750;
+    height: 100;
+  }
+  .big-banner-container{
+    margin-bottom:4;
+  }
+</style>
+
+<script>
+  module.exports = {
+    data: {
+      NUMBER_750: 750,
+      NUMBER_200: 200,
+      NUMBER_373: 373,
+      NUMBER_224:224,
+      NUMBER_4:4
+    }
+  }
+</script>

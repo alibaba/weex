@@ -1,0 +1,46 @@
+<template>
+  <container if="{{!ds.isHide}}">
+    <image if={{ds.floorTitle}} class="title" src="{{ds.floorTitle}}"></image>
+    <banner width="{{NUMBER_750}}" height="{{NUMBER_262}}" src="{{ds.bigBannerImg}}"
+      href="{{ds.bigBannerUrl}}"></banner>
+
+    <banners ds={{ds.smallBannerItems}} width="{{NUMBER_375}}"
+      height="{{NUMBER_262}}" direction="row"></banners>
+    <container if="{{!ds.isHideStarBanner}}">
+      <banners ds={{ds.starBanners}} width="{{NUMBER_250}}" height="{{NUMBER_220}}"
+        direction="row"></banners>
+    </container>
+  </container>
+</template>
+<style>
+  .title {
+    width: 750;
+    height: 100;
+  }
+</style>
+<script>
+  module.exports = {
+    data: {
+      NUMBER_750: 750,
+      NUMBER_250: 250,
+      NUMBER_220: 220,
+      NUMBER_262: 262,
+      NUMBER_375: 375
+    },
+    methods: {
+      ready: function () {
+        var self = this;
+        self._randomStarBanner();
+      },
+      _randomStarBanner: function () {
+        var self = this;
+        if (!self.ds||!self.ds.firstStarBannerItems||!self.ds.secondStarBannerItems||!self.ds.thirdStarBannerItems) return;
+        var starBanners = [];
+        starBanners.push(self._app.Util.randomItemFromArr(self.ds.firstStarBannerItems));
+        starBanners.push(self._app.Util.randomItemFromArr(self.ds.secondStarBannerItems));
+        starBanners.push(self._app.Util.randomItemFromArr(self.ds.thirdStarBannerItems));
+        self.ds.starBanners = starBanners;
+      }
+    }
+  }
+</script>

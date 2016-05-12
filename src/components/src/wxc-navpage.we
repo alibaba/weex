@@ -1,0 +1,20 @@
+<template>
+  	<div class="wrapper">
+    	  <wxc-navbar data-role={{dataRole}} height={{height}} background-color={{backgroundColor}} title={{title}} title-color={{titleColor}} left-item-src={{leftItemSrc}} left-item-title={{leftItemTitle}} left-item-color={{leftItemColor}} right-item-src={{rightItemSrc}} right-item-title={{rightItemTitle}} right-item-color={{rightItemColor}}></wxc-navbar>
+    	  <div class="wrapper" style="margin-top:{{height}}">
+    		    <content></content>
+    	  </div>
+  	</div>
+</template>
+
+<style>
+  	.wrapper {
+  		position: absolute; 
+  		top: 0; 
+  		left: 0; 
+  		right: 0; 
+  		bottom: 0; 
+  		width: 750;
+  	}
+</style>
+

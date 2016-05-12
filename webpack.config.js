@@ -18,10 +18,10 @@ function walk(dir, root) {
     .forEach(function(file) {
       var fullpath = path.join(directory, file);
       var stat = fs.statSync(fullpath);
-
+      var extname = path.extname(fullpath);
       if (stat.isFile() &&
-            path.extname(fullpath) === '.we') {
-        var name = path.join(root, 'build', dir, path.basename(file, '.we'));
+             (extname === '.we' || extname === '.js')) {
+        var name = path.join(root, 'build', dir, path.basename(file, extname));
         entry[name] = fullpath + '?entry=true';
       } else if (stat.isDirectory() &&
                   file !== 'build') {
@@ -44,6 +44,18 @@ module.exports = {
       {
         test: /\.we(\?[^?]+)?$/,
         loader: 'weex'
+      },
+      {
+        test: /\.js(\?[^?]+)?$/,
+        loader: 'weex?type=script'
+      },
+      {
+        test: /\.css(\?[^?]+)?$/,
+        loader: 'weex?type=style'
+      }, 
+      {
+        test: /\.html(\?[^?]+)?$/,
+        loader: 'weex?type=tpl'
       }
     ]
   }

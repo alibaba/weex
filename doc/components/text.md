@@ -29,6 +29,7 @@ Other attributes please check out the [common attributes](../references/common-a
 - support `font-weight` style.
 - support `text-decoration` style.
 - support `text-align` style.
+- support `text-overflow` style.
 
 **common styles**: check out [common styles for components](../references/common-style.md)
 

@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/7cef1e872d12db640f79c49f1efdd8e2", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/eeb63808fea97e1906e47365ccb7476b", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __weex_module__.exports = {
@@ -53,12 +53,8 @@
 	      type: '0' // 0, 1
 	    }},
 	    methods: {
-	      ready: function() {
-	        // TODO issue why undefined?
-	        console.log(this.data);
-	      },
 	      bgColor: function() {
-	        return this.type == '1' ? '#BEAD92' : '#7BA3A8';
+	        return this.type == '1' ? '#7BA3A8' : '#BEAD92';
 	      }
 	    }
 	  }
@@ -79,7 +75,6 @@
 	;__weex_module__.exports.style={
 	  "item": {
 	    "marginRight": 10,
-	    "marginBottom": 10,
 	    "width": 160,
 	    "height": 75,
 	    "paddingLeft": 8,
@@ -92,7 +87,9 @@
 	  }
 	}
 	})
-	;__weex_bootstrap__("@weex-component/7cef1e872d12db640f79c49f1efdd8e2", {"transformerVersion":"0.3.1"}, undefined)
+	;__weex_bootstrap__("@weex-component/eeb63808fea97e1906e47365ccb7476b", {
+	  "transformerVersion": "0.3.1"
+	},undefined)
 
 /***/ }
 /******/ ]);

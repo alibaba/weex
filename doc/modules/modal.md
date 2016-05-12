@@ -1,108 +1,112 @@
 # modal
 
-### Summary
+## Summary
 
-Encuslate of Toast, Dialog, with toast, alert, confirm, prompt method
+A series of modal dialog api like `toast`, `alert`, `confirm` and `prompt`.
 
-### API
+## API
 
-#### toast
+### toast(options)
 
-this.$call('modal', 'toast', { 'message': arg1, 'duration': arg2 });
+#### Arguments
 
-arguments:
+* `options`*(object)*: some options.
+  * `message`*(string)*: the message that the toast shows.
+  * `duration`*(number)*: the duration(seconds) that the toast shows.
 
-* arg1: &lt;string&gt; the message that the toast shows
-* arg2: &lt;number&gt; the duration that the toast shows
 
-##### example
+##### Example
 
+```javascript
+var modal = require('@weex-module/modal');
+modal.toast({'message': 'I am toast!', 'duration': 1});
 ```
-var  msg = "I am toast!";
-var  duration = 2;
-this.$call('modal','toast',{'message':msg, 'duration': duration });
-```
 
-#### alert
+### alert(options, callback)
 
-arguments:
+#### Arguments
 
-* arg1: &lt;string&gt; the message that the alert shows
-* arg2: &lt;string&gt; the title of alert button
+* `options`*(object)*: some options.
+  * `message`*(string)*: the message that the alert shows.
+  * `okTitle`*(string)*: the title of alert button.
+* `callback`*(function)*: callback when complete.
 
-This method has a callback function whose arguments will be:
+#### Example
 
-* res &lt;object&gt; maybe a parameter object
-* res.status &lt;string&gt; introduction about this res.status
-* res.data &lt;string&gt; introduction about this res.data
-
-##### example
-
-```
-var arg1 = "I am alert!"
-var arg2 = "I'm ok"
-this.$call('modal','alert',{
-  'message':arg1,
-  'okTitle':arg2,
+```javascript
+var arg1 = 'I am alert!';
+var arg2 = 'I am ok';
+var modal = require('@weex-module/modal');
+modal.alert({
+  message: arg1,
+  okTitle: arg2
 }, function(e) {
-  nativeLog(e.status + ', ' + e.data)
-  //todoing something
-});
+  // TODO after the alert is complete.
+})
 ```
     
-#### confirm
+### confirm(options, callback)
 
-arguments:
+#### Arguments
 
-* arg1: &lt;string&gt; the message that the confirm shows
-* arg2: &lt;string&gt; the title of confirm button
-* arg3: &lt;string&gt; the title of cancel button
+* `options`*(object)*: some options.
+  * `message`*(string)*: the message that the confirm shows.
+  * `okTitle`*(string)*: the title of confirm button.
+  * `cancelTitle`*(string)*: the title of cancel button.
+* `callback`*(function)*: callback when complete.
 
 This method has a callback function whose arguments will be:
 
-* res &lt;string&gt; the title of the button the user clicked
+* `e`*(object)*: a event object.
+  * `status`*(string)*: the title of the button that clicked by user.
   
-##### example
+#### Example
 
-```
-var arg1 = "I am alert!"
-var arg2 = "I'm ok"
-var arg3 = "I'm cancel"
-this.$call('modal','confirm',{
-  'message':arg1,
-  'okTitle':arg2,
-  'cancelTitle':arg3
+```javascript
+var arg1 = 'I am alert!'
+var arg2 = 'I am ok'
+var arg3 = 'I am cancel'
+var modal = require('@weex-module/modal');
+modal.confirm({
+  message: arg1,
+  okTitle: arg2,
+  cancelTitle: arg3
 }, function(e) {
-  nativeLog(e.status + ', ' + e.data)
+  nativeLog(e.status)
+  // TODO after the confirm is complete.
 });
 ```
 
-#### prompt
+### prompt(options, callback)
 
-arguments:
+#### Arguments
 
-* arg1: &lt;string&gt; the message that the prompt shows
-* arg2: &lt;string&gt; the  title of prompt confirm button
-* arg3: &lt;string&gt; the  title of confirm cancel button
+* `options`*(object)*: some options.
+  * `message`*(string)*: the message that the prompt shows.
+  * `okTitle`*(string)*: the title of confirm button.
+  * `cancelTitle`*(string)*: the title of cancel button.
+* `callback`*(function)*: callback when complete.
    
 This method has a callback function whose arguments will be:
 
-* res &lt;object&gt; parameter object
-* res.status &lt;string&gt; the title of the button the user clicked
-* res.data &lt;string&gt; the value of the text the user entered
+* `e`*(object)*: a event object.
+  * `status`*(string)*: the title of the button that clicked by user.
+  * `data`*(string)*: the value of the text that entered by user.
 
-##### example
+#### Example
 
-```
-var arg1 = "I am prompt!"
-var arg2 = "I'm ok"
-var arg3 = "I'm cancel"  
-this.$call('modal','prompt',{
-    'message':arg1,
-    'okTitle':arg2,
-    'cancelTitle':arg3
+```javascript
+var arg1 = 'I am prompt!'
+var arg2 = 'I am ok'
+var arg3 = 'I am cancel'
+var modal = require('@weex-module/modal');
+modal.prompt({
+  message: arg1,
+  okTitle: arg2,
+  cancelTitle: arg3
 }, function(e) {
-    nativeLog(e.status + ', ' + e.data)
+  nativeLog(e.status + ', ' + e.data);
+  // TODO after the prompt is complete.
 });
 ```
 

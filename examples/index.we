@@ -6,20 +6,25 @@
   module.exports = {
     data: {
       items: [
+        // `name` key is the example filename without '.we'
+        // Support sub directory, e.g. 'new-fashion/index'
         {name: 'hello', title: 'Hello World'},
         {name: 'image-demo', title: 'Image'},
         {name: 'text-demo', title: 'Text'},
         {name: 'style', title: 'Common Style'},
+        {name: 'hyperlink',title:'A'},
         {name: 'list-basic', title: 'List (Basic)'},
         {name: 'list-demo', title: 'List (Advanced)'},
         {name: 'slider-demo', title: 'Slider'},
         {name: 'animation', title: 'Animation'},
-        //{name: 'instance-api', title: 'Instance API'},
+        {name: 'instance-api', title: 'Instance API'},
         {name: 'modal', title: 'Modal'},
+        {name: 'stream-demo', title: 'Stream'},
         {name: 'video-demo', title: 'Video'},
         {name: 'countdown-demo', title: 'Countdown'},
         {name: 'marquee-demo', title: 'Marquee'},
         {name: 'ui', title: 'UI Gallery'},
+        {name: 'new-fashion/index', title: 'Activity'},
         {name: 'calculator', title: 'Calculator'}
       ]
     }

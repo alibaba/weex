@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/38b4457674106dc782e4b6020e6d5a61", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/74232bd69aed1b57a50e49e39e9b540e", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __weex_module__.exports = {
@@ -55,6 +55,7 @@
 	    }},
 	    methods: {
 	      touchstart: function() {
+	        // FIXME android touch
 	        // TODO adaptive opposite bgColor
 	//        this.bgColor = '#e6e6e6';
 	      },
@@ -97,7 +98,7 @@
 	  }
 	}
 	})
-	;__weex_bootstrap__("@weex-component/38b4457674106dc782e4b6020e6d5a61", {"transformerVersion":"0.3.1"}, undefined)
+	;__weex_bootstrap__("@weex-component/74232bd69aed1b57a50e49e39e9b540e", {"transformerVersion":"0.3.1"}, undefined)
 
 /***/ }
 /******/ ]);

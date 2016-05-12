@@ -1,0 +1,80 @@
+<style>
+  .title{
+    width:750;
+    height:100;
+  }
+  .wrapper {
+    color: #FF4550;
+    width: 750;
+    height: 230;
+  }
+
+  .my-coupon {
+    width: 180;
+    height: 39;
+    position: absolute;
+    top: 15;
+    right: 149;
+  }
+
+  .guides {
+    height: 39;
+    width: 110;
+    position: absolute;
+    top: 15;
+    right: 32;
+  }
+
+  .lottery {
+    width: 348;
+    height: 76;
+    position: absolute;
+    top: 132;
+    right: 70;
+  }
+
+  .info {
+    font-size: 18;
+    position: absolute;
+    top: 84;
+    right: 70;
+  }
+
+  .img {
+    width: 750;
+    height: 230;
+  }
+</style>
+
+<template>
+  <container>
+    <image if={{ds.floorTitle}} class="title" src="{{ds.floorTitle}}"></image>
+    <container class="wrapper">
+      <image class="img" src={{currentStatus}}></image>
+      <container class="my-coupon" onclick="handleClick"></container>
+      <container class="guides" onclick="handleClick"></container>
+      <container class="lottery" onclick="handleClick"></container>
+    </container>
+  </container>
+</template>
+
+<script>
+  var IS_WEB = typeof window !== 'undefined';
+  var IS_APP = !IS_WEB || /AliApp\((?:tb|tm)/i.test(navigator.userAgent);
+
+  module.exports = {
+    data: {
+      currentStatus: '//img.alicdn.com/tps/i4/TB1cYBKMXXXXXayaXXXkxHk2pXX-750-228.jpg_q75.jpg'
+    },
+    methods: {
+      ready: function () {
+      },
+      handleClick: function (e) {
+        this.$call('modal', 'toast', {
+            message: 'click',
+            duration: 1
+        });
+      }
+    }
+  };
+</script>

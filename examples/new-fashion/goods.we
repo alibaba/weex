@@ -1,0 +1,76 @@
+<template>
+  <container if="{{!ds.isHide}}">
+    <image if={{ds.floorTitle}} class="title" src="{{ds.floorTitle}}"></image>
+    <slider class="slider" show-indicators="true" auto-play="true" interval="3000">
+      <container class="pannel" repeat="{{ds.bannerItems}}">
+        <container>
+          <banner style="margin-bottom:4" width="{{NUMBER_251}}" height="{{NUMBER_292}}"
+            src="{{img1}}"
+            href="{{url1}}"></banner>
+          <banner width="{{NUMBER_251}}" height="{{NUMBER_292}}"
+            src="{{img2}}"
+            href="{{url2}}"></banner>
+        </container>
+        <container  class="middle-col">
+          <banner width="{{NUMBER_240}}" height="{{NUMBER_588}}"
+            src="{{img3}}"
+            href="{{url3}}"></banner>
+        </container>
+        <container>
+          <banner style="margin-bottom:4" width="{{NUMBER_251}}" height="{{NUMBER_292}}"
+            src="{{img4}}"
+            href="{{url4}}"></banner>
+          <banner width="{{NUMBER_251}}" height="{{NUMBER_292}}"
+            src="{{img5}}"
+            href="{{url5}}"></banner>
+        </container>
+      </container>
+      <indicator
+        style="position:absolute;width:714;height:200;left:10;bottom:-80;itemSize:20;itemColor:#999999;itemSelectedColor:#000000;"></indicator>
+    </slider>
+  </container>
+</template>
+<style>
+    .title {
+      width: 750;
+      height: 100;
+    }
+
+    .slider {
+      height: 652;
+    }
+
+    .pannel {
+      width: 750;
+      height: 592;
+      flex-direction: row;
+    }
+
+    .middle-col {
+      margin-left:4;
+      margin-right:4;
+      width: 240;
+      height: 588;
+    }
+</style>
+<script>
+  module.exports = {
+    data: {
+      NUMBER_251: 251,
+      NUMBER_240: 240,
+      NUMBER_292: 292,
+      NUMBER_588: 588
+    },
+    methods: {
+      ready: function () {
+        var self = this;
+        var ds = self.ds;
+        if (!ds || !ds.bannerItems) return;
+        var bannerItems = ds.bannerItems;
+        for (var i = 0; i < bannerItems.length; i++) {
+          bannerItems[i].index = i;
+        }
+      }
+    }
+  }
+</script>

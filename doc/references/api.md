@@ -1,85 +1,77 @@
 # APIs
 
+You can access these apis through `this`(Vm) context in script methods.
+
+e.g.
+
+```html
+<script>
+module.exports = {
+    methods: {
+        somemethod: function() {
+            this.$vm('someId');
+        }
+    }
+}
+</script>
+```
+
 ## $(id)
 
-Return the vm element referenced by specific id.
+**Deprecated**, please use `$vm` instead.
+
+## $el(id)
+
+Return the element referenced by specific id.
 
 ### Arguments
 
-* `id`*(string)*: Unique identifier.
+* `id`*(string)*: the unique identifier.
 
 ### Returns
 
-* *(Vm)*: Vm object referenced.
+* *(Element)*: an Element object referenced.
 
 ### Tips
 * id is only guaranteed to be unique within the current (page)components, if you are looking for the parent components or child components, you can make use of the communication mode between components.
 * Further reading: [id](../syntax/id.md), [Communicate Between Components](../syntax/comm.md)
 
-## $scrollTo(id, offset)
+## $vm(id)
 
-Scroll to the position which has an offset to the position making a specific element visible.
-
-### Arguments
-
-* `id`*(string)*: An identify to find the element.
-* `offset`*(number)*: An offset to the visible position, default is `0`.
-
-## $transition(id, options, callback)
-
-Apply transition animation to a specific element.
+Return the vm object referenced by specific id.
 
 ### Arguments
 
-* `id`*(string)*: An identify to find the element.
-* `options`*(object)*: Transition options.
-* `options.styles`*(object)*: Specify the names and values of styles to which a transition effect should be applied.
-* `options.duration`*(number)*: Specifies the number of milliseconds a transition animation should take to complete. By default, the value is `0ms`, meaning that no animation will occur.
-* `options.timingFunction`*(string)*: Used to describe how the intermediate values of the styles being affected by a transition effect are calculated. By default, the value is `linear`.
-* `options.delay`*(number)*: Specifies the amount of milliseconds to wait between a change being requested to a property that is to be transitioned and the start of the transition effect. By default, the value is `0ms`.
-* `callback`*(Function)*: Callback which is called after the completion of transition.
+* `id`*(string)*: the unique identifier.
 
-### Examples
+### Returns
 
-$transition('id', {
-  styles: {
-    backgroundColor:'#FF0000’,
-    transformOrigin: 'left top',
-    transform: 'rotate(45deg) scale(1.5) translate(50%, 50%)'
-  },
-  timingFunction:”ease-in-out’,
-  duration:1000,
-  delay:500
-}, function(){
-  nativeLog(‘Transition is completed’);
-});
+* `vm`*(Vm)*: a Vm object referenced.
+
+### Tips
+* id is only guaranteed to be unique within the current (page)components, if you are looking for the parent components or child components, you can make use of the communication mode between components.
+* Further reading: [id](../syntax/id.md), [Communicate Between Components](../syntax/comm.md)
 
 ## $getConfig()
 
 Get the current global environment variables and configuration information.
 
-### Return
+### Returns
 
- * @return {object}
- * @property {string} bundleUrl
- * @property {boolean} debug
- * @property {object} env
- * @property {string} env.weexVersion(ex. 1.0.0)
- * @property {string} env.appName(ex. TB/TM)
- * @property {string} env.appVersion(ex. 5.0.0)
- * @property {string} env.platform(ex. iOS/Android)
- * @property {string} env.osVersion(ex. 7.0.0)
- * @property {string} env.deviceModel **native only**
- * @property {number} env.[deviceWidth=750]
- * @property {number} env.deviceHeight
-
+ * `config`*(object)*: the object of config.
+ * `bundleUrl`*(string)*: the url of bundle.
+ * `debug`*(boolean)*: if is debug mode. 
+ * `env`*(object)*: a object of envrioment.
+    * `weexVersion`*(string)*: a version of weex sdk.
+    * `appName`*(string)*: a name of app.
+    * `appVersion`*(string)*: a version of app.
+    * `platform`*(string)*: the platform, one of `iOS`, `Android` and `Web`.
+    * `osVersion`*(string)*: the version of os.
+    * `deviceModel`*(string)*: the model of device. **native only**
+    * `deviceWidth`*(number)*: the width of device, default is `750`.
+    * `deviceHeight`*(number)*: the height of device.
 
 ## $call(module, method, ...args)
 
-Call the module method registered by client.
+**Deprecated**, please use `require('@weex-module/module')[method](...args)` instead. See [modules](../modules/REAME.md) for more information
 
-### Argument
-
-* `module`*(string)*: Registered module name.
-* `method`*(string)*: Registered method name.
-* `args`*()*: method variable parameter.

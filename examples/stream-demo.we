@@ -1,0 +1,46 @@
+<template>
+  <scroller>
+    <wxc-panel title="stream.sendHttp" type="primary">
+      <wxc-panel title="method = GET">
+        <text>{{getResult}}</text>
+      </wxc-panel>
+
+      <wxc-panel title="method = POST">
+        <text>{{postResult}}</text>
+      </wxc-panel>
+    </wxc-panel>
+  </scroller>
+</template>
+
+<script>
+  require('weex-components');
+
+  module.exports = {
+    data: {
+      getResult: 'loading...',
+      postResult: 'loading...'
+    },
+    ready: function() {
+      var stream = require('@weex-module/stream');
+      var me = this;
+      var GET_URL = 'http://httpbin.org/get';
+      var POST_URL = 'http://httpbin.org/post';
+      
+      stream.sendHttp({
+        method: 'GET',
+        url: GET_URL
+      }, function(ret) {
+        console.log('get', ret);
+        me.getResult = ret;
+      });
+
+      stream.sendHttp({
+        method: 'POST',
+        url: POST_URL
+      }, function(ret) {
+        console.log('post', ret);
+        me.postResult = ret;
+      });
+    }
+  };
+</script>

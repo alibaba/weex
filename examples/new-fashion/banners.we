@@ -1,0 +1,38 @@
+<template>
+  <container>
+    <container if={{direction==='row'}} style="flex-direction:row">
+      <container repeat="{{ds}}" style="width:{{width}};height:{{height}};margin-left:{{space}}">
+        <banner width="{{width}}" height="{{height}}" src="{{img}}" href="{{url}}"></banner>
+      </container>
+    </container>
+    <container if={{direction==='column'}}>
+      <container repeat="{{ds}}" style="width:{{width}};height:{{height}};margin-top:{{space}}">
+        <banner width="{{width}}" height="{{height}}" src="{{img}}" href="{{url}}"></banner>
+      </container>
+    </container>
+  </container>
+</template>
+<script>
+  module.exports = {
+    data: {
+      space: 0,
+      width: 0,
+      height: 0,
+      spmc:0,
+      spmdprefix:'',
+      ds: []
+    },
+    methods: {
+      ready: function () {
+        var self = this;
+        var ds = self.ds;
+        var length = ds.length;
+        for (var i = 0; i < length; i++) {
+          var item = ds[i];
+          item.index = i;
+          item.space = (i % length === 0) ? 0 : self.space;
+        }
+      }
+    }
+  };
+</script>

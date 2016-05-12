@@ -45,7 +45,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	;__weex_define__("@weex-component/40204c35e9134de2421f946315fd7c0a", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(7);
+	__webpack_require__(9);
 
 	;__weex_module__.exports.template={
 	  "type": "scroller",
@@ -512,11 +512,13 @@
 	})
 
 /***/ },
-/* 7 */
+/* 7 */,
+/* 8 */,
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	;__weex_define__("@weex-component/style-box", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(8);
+	__webpack_require__(10);
 
 	;
 	  __webpack_require__(1);
@@ -779,7 +781,7 @@
 	})
 
 /***/ },
-/* 8 */
+/* 10 */
 /***/ function(module, exports) {
 
 	;__weex_define__("@weex-component/style-item", [], function(__weex_require__, __weex_exports__, __weex_module__){

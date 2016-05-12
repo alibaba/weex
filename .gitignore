@@ -1,9 +1,10 @@
 # Created by IDE
 .idea/
+*.iml
 
 # Created by Builder
-examples/build/
-test/build/
+examples/build
+test/build
 weex_tmp
 
 # Node

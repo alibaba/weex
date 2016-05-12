@@ -10,6 +10,7 @@ Text alike components share some common style rules. The text alike components c
 - `font-weight`: &lt;enum&gt; `normal` | `bold`. This property specifies the boldness of the font. Default value is `normal`.
 - `text-decoration`: &lt;enum&gt; `none` | `underline` | `line-through`. This property is used to set the text formatting to underline or line-through. The default value is `none`.
 - `text-align`: &lt;enum&gt; `left` | `center` | `right`. This property describes how inline content like text is aligned in its parent component. The default value is `left`.
+- `font-family`:<string> this property set the font-family of the text. This property **doesn't guarteen** the given font will always be set to the text. If the specified font cannot be found at the device, a typeface fallback will occurr and the default typeface will be load. The fallback mechanism may vary in different devices.
 
 The property `color` support multiple fomats of values, contains rgb, rgba, #fff, #ffffff, named-color.
 
