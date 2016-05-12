@@ -17,27 +17,22 @@ http://todomvc.com/
                         <image if="{{itemsStatus===1}}" style="width:45px;height:30px;" src="https://gw.alicdn.com/tfs/TB1CnoDJFXXXXb6XVXXXXXXXXXX-77-51.jpg"></image>
                         <image if="{{itemsStatus===2}}" style="width:45px;height:30px;" src="https://gw.alicdn.com/tfs/TB1CnoDJFXXXXb6XVXXXXXXXXXX-77-51.jpg"></image>
                     </div>
-                    <input class="todo-input" type="text" onblur="changeInput" placeholder="What needs to be done?" value="" />
+                    <input class="todo-input" type="text" onblur="finishInput" placeholder="What needs to be done?" value="" />
                     <div class="blank"></div>
                 </div>
             </div>
         </cell>
-        <cell>
+        <cell repeat="{{todos}}">
             <div class="todo-item">
                 <div class="todo-status-done">
-                    <image style="width:70px;height:70px;" src="https://gw.alicdn.com/tfs/TB1Xr3GJFXXXXbmXVXXXXXXXXXX-153-153.jpg"></image>
+                    <image if="{{status==='doing'}}" style="width:70px;height:70px;" src="https://gw.alicdn.com/tfs/TB1Xr3GJFXXXXbmXVXXXXXXXXXX-153-153.jpg"></image>
+                    <image if="{{status==='done'}}" style="width:70px;height:70px;" src="https://gw.alicdn.com/tfs/TB1pAg1JFXXXXX8XpXXXXXXXXXX-153-153.jpg"></image>
                 </div>
-                <input class="todo-input todo-content" disabled="true" type="text" value="{{test}}" />
-                <div class="blank"></div>
-            </div>
-        </cell>
-        <cell>
-            <div class="todo-item">
-                <div class="todo-status-done">
-                    <image style="width:70px;height:70px;" src="https://gw.alicdn.com/tfs/TB1pAg1JFXXXXX8XpXXXXXXXXXX-153-153.jpg"></image>
+                <input class="todo-input todo-content" disabled="true" type="text" value="{{content}}" />
+                <div class="item-control">
+                    <image class="item-control-btn" src="https://gw.alicdn.com/tfs/TB1gME_JFXXXXcmXpXXXXXXXXXX-48-48.jpg"></image>
+                    <image class="item-control-btn" src="https://gw.alicdn.com/tfs/TB1txI5JFXXXXagXFXXXXXXXXXX-48-48.jpg"></image>
                 </div>
-                <input class="todo-input todo-content" disabled="true" type="text" value="hehe" />
-                <div class="blank"></div>
             </div>
         </cell>
         <cell>
@@ -48,10 +43,10 @@ http://todomvc.com/
         <cell>
             <div class="sorting-wrap">
                 <div class="sorting">
-                    <text class="btn" value="all" onclick="allClick"></text>
-                    <text class="btn" value="opened" onclick="openedClick"></text>
-                    <text class="btn" value="completed" onclick="completedClick"></text>
-                    <text class="btn" value="clean" onclick="cleanClick"></text>
+                    <text class="btn" value="all" onclick="showAll"></text>
+                    <text class="btn" value="opened" onclick="showOpened"></text>
+                    <text class="btn" value="completed" onclick="showComplete"></text>
+                    <text class="btn" value="clean" onclick="cleanCompletedTodos"></text>
                 </div>
             </div>
         </cell>
@@ -65,22 +60,37 @@ http://todomvc.com/
     module.exports = {
         "data":{
             itemsStatus:0,
-            test:''
+            todos:[
+                {
+                    "status":"done",
+                    "content":"xxxxxx"
+                },
+                {
+                    "status":"doing",
+                    "content":"yyyyyy"
+                }
+            ]
         },
         methods:{
-            allClick: function() {
+            showAll: function() {
+                this.$call('modal', 'alert', {
+                    'message': "this is an alert",
+                    'okTitle': "OK",
+                    'cancelTitle': "cancel"
+                }, function() {
+//                    self.toast("Click Alert OK Bnt!!");
+                });
+            },
+            showOpened: function() {
 
             },
-            openedClick: function() {
+            showComplete: function() {
 
             },
-            completedClick: function() {
+            cleanCompletedTodos: function() {
 
             },
-            cleanClick: function() {
-
-            },
-            changeInput: function() {
+            finishInput: function(e) {
                 this.test = 'hahahaha';
             }
         },
@@ -177,6 +187,19 @@ http://todomvc.com/
         font-style:normal;
     }
 
+    .item-control {
+        flex:2;
+        /*padding-right:50px;*/
+        flex-direction: row;
+        align-items:center;
+    }
+
+    .item-control-btn {
+        width:48px;
+        height:48px;
+        margin-right:20px;
+    }
+
     .info-text-wrap {
         flex-direction: column;
         justify-content:center;
@@ -211,7 +234,9 @@ http://todomvc.com/
         margin-left:1px;
         margin-top:15px;
         height:50px;
-        padding:5px;
+        padding-top:5px;
+        padding-left:10px;
+        padding-right:10px;
         font-size:30px;
         border-color:#ccc;
         border-width:1px;
