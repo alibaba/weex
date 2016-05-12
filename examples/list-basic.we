@@ -1,17 +1,39 @@
 <template>
   <div>
-    <list>
+    <list class="list">
       <cell repeat="{{items}}">
-        <text class="item">{{title}} {{id}}</text>
+        <text class="item" onappear="onappear" ondisappear="ondisappear" index={{$index}}>{{title}} {{id}}</text>
       </cell>
     </list>
+    <text class="count" value="Appear items:{{appearMin}} - {{appearMax}}"></text>
   </div>
 </template>
 
 <style>
+  .list {
+    height: 810px;
+    border-width: 10px;
+    border-color: rgb(40, 96, 144);
+  }
   .item {
     font-size: 48px;
     height: 100px;
+    padding:10px;
+  }
+  .count {
+    font-size: 48px;
+    margin:10px;
+  }
+  .refresh {
+    height: 200;
+  }
+  .indicator-ref{
+    height: 100;background-color: red
+
+  }
+  .indicator-loading{
+    height: 100;background-color: #33b5e5
+
   }
 </style>
 
@@ -34,8 +56,55 @@
         {id: 12, title: 'Title Title'},
         {id: 13, title: 'Title Title'},
         {id: 14, title: 'Title Title'},
-        {id: 15, title: 'Title End'}
-      ]
+        {id: 15, title: 'Title Title'},
+        {id: 16, title: 'Title Title'},
+        {id: 17, title: 'Title Title'},
+        {id: 18, title: 'Title Title'},
+        {id: 19, title: 'Title Title'},
+        {id: 20, title: 'Title End'}
+      ],
+      appearMin:1,
+      appearMax:1,
+      appearIds:[]
+    },
+    methods: {
+      onappear: function (e) {
+        var appearId = this.items[e.target.attr.index].id;
+        var appearIds = this.appearIds;
+        appearIds.push(appearId);
+        this.getMinAndMaxIds(appearIds);
+      },
+      ondisappear:function (e) {
+        var disAppearId = this.items[e.target.attr.index].id;
+        var appearIds = this.appearIds;
+        var index = appearIds.indexOf(disAppearId);
+        if (index > -1) {
+          appearIds.splice(index, 1);
+        }
+        this.getMinAndMaxIds(appearIds);
+      },
+      getMinAndMaxIds:function (appearIds) {
+        appearIds.sort(function(a, b) {
+          return a - b;
+        });
+        this.appearIds = appearIds;
+        this.appearMax = appearIds[appearIds.length - 1];
+        this.appearMin = appearIds[0];
+      },
+      onrefresh: function(e) {
+        this.refresh_display = 'show';
+        this.$call('modal', 'toast', {
+          'message': 'onrefresh'
+        });
+        this.refresh_display = 'hide';
+      },
+      onloading: function() {
+        this.loading_display = 'show';
+        this.$call('modal', 'toast', {
+          'message': 'onloading'
+        });
+        this.loading_display = 'hide';
+      },
     }
   }
 </script>
