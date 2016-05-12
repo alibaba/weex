@@ -36,6 +36,32 @@ Component.prototype = {
     return this.getComponentManager().componentMap[this.parentRef]
   },
 
+  getParentScoller: function () {
+    if (this.isInScrollable()) {
+      return this._parentScroller
+    }
+    return null
+  },
+
+  getRootScroller: function () {
+    if (this.isInScrollable()) {
+      var scroller = this._parentScroller
+      var parent = scroller._parentScroller
+      while (parent) {
+        scroller = parent
+        parent = scroller._parentScroller
+      }
+      return scroller
+    }
+    return null
+  },
+
+  getRootContainer: function () {
+    var root = this.getComponentManager().weexInstance.getRoot()
+      || document.body
+    return root
+  },
+
   isScrollable: function () {
     var t = this.data.type
     return ComponentManager.getScrollableTypes().indexOf(t) !== -1
@@ -227,9 +253,6 @@ Component.prototype = {
     !data && (data = {})
     event.data = utils.extend({}, data)
     utils.extend(event, data)
-    if (type === 'appear') {
-      console.log('appear', data)
-    }
     this.node.dispatchEvent(event)
   },
 
@@ -297,7 +320,51 @@ Component.prototype = {
 }
 
 Component.prototype.style.position = function (value) {
-  // TODO: make it in a decent implementation
+
+  // For the elements who are fixed elements before, now
+  // are not fixed: the fixedPlaceholder has to be replaced
+  // by this element.
+  // This is a peace of hacking to fix the problem about
+  // mixing fixed and transform. See 'http://stackoverflo
+  // w.com/questions/15194313/webkit-css-transform3d-posi
+  // tion-fixed-issue' for more info.
+  if (value !== 'fixed') {
+    if (this.fixedPlaceholder) {
+      var parent = this.fixedPlaceholder.parentNode
+      parent.insertBefore(this.node, this.fixedPlaceholder)
+      parent.removeChild(this.fixedPlaceholder)
+      this.fixedPlaceholder = null
+    }
+  } else { // value === 'fixed'
+    // For the elements who are fixed: this fixedPlaceholder
+    // shoud be inserted, and the fixed element itself should
+    // be placed out in root container.
+    this.node.style.position = 'fixed'
+    var parent = this.node.parentNode
+    var replaceWithFixedPlaceholder = function () {
+      this.fixedPlaceholder = document.createElement('div')
+      this.fixedPlaceholder.classList.add('weex-fixed-placeholder')
+      this.fixedPlaceholder.style.display = 'none'
+      this.fixedPlaceholder.style.width = '0px'
+      this.fixedPlaceholder.style.height = '0px'
+      parent.insertBefore(this.fixedPlaceholder, this.node)
+      this.getRootContainer().appendChild(this.node)
+    }.bind(this)
+    if (!parent) {
+      if (this.onAppend) {
+        var pre = this.onAppend.bind(this)
+      }
+      this.onAppend = function () {
+        parent = this.node.parentNode
+        replaceWithFixedPlaceholder()
+        pre && pre()
+      }.bind(this)
+    } else {
+      replaceWithFixedPlaceholder()
+    }
+    return
+  }
+
   if (value === 'sticky') {
     this.node.style.zIndex = 100
     setTimeout(function () {
@@ -311,3 +378,6 @@ Component.prototype.style.position = function (value) {
 }
 
 module.exports = Component
+
+
+
