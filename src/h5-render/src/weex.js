@@ -41,6 +41,12 @@ var downgradable = ['list', 'scroller']
 
 ; (function getGlobalDowngradesFromUrlParams() {
 
+  // In casperjs the protocol is 'file:', but lib.httpurl
+  // can't take care of it but to throw a error.
+  if (location.protocol === 'file:') {
+    return
+  }
+
   // Get global _downgrades from url's params.
   var params = lib.httpurl(location.href).params
   for (var k in params) {
@@ -59,12 +65,12 @@ var downgradable = ['list', 'scroller']
 
 })()
 
+
 function Weex(options) {
 
   if (!(this instanceof Weex)) {
     return new Weex(options)
   }
-
   // Width of the root container. Default is window.innerWidth.
   this.width = options.width || window.innerWidth
   this.bundleUrl = options.bundleUrl || location.href
@@ -76,7 +82,6 @@ function Weex(options) {
   this.loader = options.loader
 
   this.data = options.data
-
   this.initDowngrades(options.downgrade)
   this.initScale()
   this.initComponentManager()
@@ -84,7 +89,6 @@ function Weex(options) {
   Weex.addInstance(this)
 
   protocol.injectWeexInstance(this)
-
   this.loadBundle(function (err, appCode) {
     if (!err) {
       this.createApp(config, appCode)
@@ -94,6 +98,7 @@ function Weex(options) {
   }.bind(this))
 
 }
+
 
 Weex.init = function (options) {
   if (utils.isArray(options)) {
@@ -265,7 +270,15 @@ Weex.stopTheWorld = function () {
   }
 }
 
-(function startRefreshController() {
+
+; (function startRefreshController() {
+
+  // In casperjs the protocol is 'file:', and there's no
+  // need to start a refresh controller in casperjs.
+  if (location.protocol === 'file:') {
+    return
+  }
+
   if (location.search.indexOf('hot-reload_controller') === -1)  {
     return
   }
@@ -279,15 +292,14 @@ Weex.stopTheWorld = function () {
     'echo-protocol'
   )
   client.onerror = function () {
-    console.log('refresh controller websocket connection error')
   }
   client.onmessage = function (e) {
-    console.log('Received: \'' + e.data + '\'')
     if (e.data  === 'refresh') {
       location.reload()
     }
   }
 }())
+
 
 // Weex.install(require('weex-components'))
 Weex.install(components)
