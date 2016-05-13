@@ -22,6 +22,7 @@
         {name: 'component/video-demo', title: 'Video'},
         {name: 'component/countdown-demo', title: 'Countdown'},
         {name: 'component/marquee-demo', title: 'Marquee'},
+        {name: 'component/navigator-demo', title: 'Navigator'},
         // module
         {name: 'module/instance-api', title: 'Instance API'},
         {name: 'module/modal', title: 'Modal'},
