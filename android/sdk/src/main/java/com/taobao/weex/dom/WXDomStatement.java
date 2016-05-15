@@ -321,7 +321,7 @@ class WXDomStatement {
       for (int i = 0; i < size; i++) {
         String fixedRef = root.getFixedStyleRefs().get(i);
         WXDomObject wxDomObject = mRegistry.get(fixedRef);
-        if (wxDomObject.parent != null) {
+        if (wxDomObject!=null && wxDomObject.parent != null) {
           wxDomObject.parent.remove(wxDomObject);
           root.add(wxDomObject, -1);
         }
@@ -372,14 +372,7 @@ class WXDomStatement {
     }
     mNormalTasks.clear();
     mAddDom.clear();
-
-    Iterator<String> iterator = mUpdate.iterator();
-    while (iterator.hasNext()) {
-      String ref = iterator.next();
-      mWXRenderManager.flushView(mInstanceId, ref);
-    }
     mUpdate.clear();
-
     mDirty = false;
   }
 

@@ -40,7 +40,7 @@ See [SCRIPTS.md](SCRIPTS.md) for more information.
 
 ## For Windows
 
-Please install [Git for Windows](https://git-scm.com/download/win) or [Cygwin](https://www.cygwin.com/).
+Please install [Git for Windows](https://git-scm.com/download/win).
 
 ## FAQ
 

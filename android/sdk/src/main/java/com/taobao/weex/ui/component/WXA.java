@@ -216,6 +216,11 @@ public class WXA extends WXDiv {
 
   public WXA(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
     super(instance, dom, parent, instanceId, isLazy);
+  }
+
+  @Override
+  protected void initView() {
+    super.initView();
     if (mDomObj != null && mDomObj.attr != null && !TextUtils.isEmpty((String) mDomObj.attr.get("href"))) {
 
       mHost.setOnClickListener(new View.OnClickListener() {

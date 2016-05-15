@@ -1,6 +1,6 @@
 <template>
   <scroller>
-    <wxc-panel title="Dialog">
+    <wxc-panel title="Dialog" type="primary">
       <wxc-tip type="success" value="It's a weex example template." style="margin-bottom: 20px;"></wxc-tip>
       <wxc-hn level="1" value="H1"></wxc-hn>
       <wxc-button type="primary" onclick="{{toast}}" value="Toast"></wxc-button>
@@ -11,6 +11,10 @@
     <wxc-panel title="Image" type="primary">
       <wxc-tip type="warning" value="Weex screen width is 750" style="margin-bottom: 20px;"></wxc-tip>
       <image class="img" style=" width: 400px; height: 400px;" src="{{img}}"></image>
+
+      <wxc-panel title="Image" type="default">
+        <text>sub info</text>
+      </wxc-panel>
     </wxc-panel>
   </scroller>
 </template>

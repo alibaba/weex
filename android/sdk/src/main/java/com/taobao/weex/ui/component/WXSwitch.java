@@ -215,7 +215,7 @@ import com.taobao.weex.ui.view.WXSwitchView;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WXSwitch extends WXComponent implements IWXRecyclerViewChild {
+public class WXSwitch extends WXComponent{
 
   public WXSwitch(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
     super(instance, dom, parent, instanceId, isLazy);

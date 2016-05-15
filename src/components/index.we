@@ -6,4 +6,8 @@
   require('./src/wxc-tip.we');
   require('./src/wxc-countdown.we');
   require('./src/wxc-marquee.we');
+  require('./src/wxc-navbar.we');
+  require('./src/wxc-navpage.we');
+  require('./src/wxc-tabbar.we');
+  require('./src/wxc-tabitem.we');
 </script>

@@ -1,0 +1,53 @@
+<template>
+  <container class="container">
+    <image if={{ds.floorTitle}} class="title" src="{{ds.floorTitle}}"></image>
+    <container style="margin-left:4;margin-right:4">
+    <banners ds="{{bannerItems}}" direction="column" width="{{NUMBER_742}}" height="{{NUMBER_230}}"
+      space="{{NUMBER_4}}"></banners>
+    </container>
+  </container>
+</template>
+<style>
+  .title {
+    width: 750;
+    height: 100;
+  }
+
+  .container {
+    margin-bottom: 4;
+    background-color:#C0BABC;
+  }
+</style>
+<script>
+  module.exports = {
+    data: {
+      NUMBER_742: 742,
+      NUMBER_230: 230,
+      NUMBER_4: 4
+    },
+    methods: {
+      ready: function () {
+        var self = this;
+        self._randomBrand();
+      },
+      _randomBrand: function () {
+        var self = this;
+        var bannerItems = self.ds.bannerItems;
+        bannerItems = bannerItems.sort(function(){
+          return Math.random()-0.5;
+        });
+        self.bannerItems =  bannerItems.slice(0,8);
+        for(var i=0;i<bannerItems.length;i++){
+          var item =  bannerItems[i];
+          if(i%2===0){
+            item.img = item.leftImg;
+            item.url = item.rightUrl;
+          }else{
+            item.img = item.rightImg;
+            item.url = item.rightUrl;
+          }
+        }
+      }
+    }
+  }
+</script>

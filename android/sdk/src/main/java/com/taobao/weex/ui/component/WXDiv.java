@@ -211,7 +211,7 @@ import com.taobao.weex.ui.view.WXFrameLayout;
 /**
  * div component
  */
-public class WXDiv extends WXVContainer implements IWXRecyclerViewChild {
+public class WXDiv extends WXVContainer {
 
   public WXDiv(WXSDKInstance instance, WXDomObject node, WXVContainer parent, String instanceId, boolean lazy) {
     super(instance, node, parent, instanceId, lazy);

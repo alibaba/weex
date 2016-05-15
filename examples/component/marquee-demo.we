@@ -1,0 +1,46 @@
+<template>
+  <scroller>
+    <wxc-panel title="Marquee" type="primary">
+      <wxc-marquee id="marquee" style="width: 700; height: {{marquee.height * 2}}; background-color: rgb(223, 240, 216); border-radius: 8; padding-left: 10; padding-right: 10;" step="{{marquee.height * 2}}" count="{{marquee.list.length}}" interval="{{marquee.interval}}" duration="{{marquee.duration}}">
+        <div repeat={{marquee.list}} style="height: {{marquee.height * marquee.length}}; padding-top: {{marquee.height * 0.5}}; padding-bottom: {{marquee.height * 0.5}}; overflow: hidden;">
+          <text style="height: {{marquee.height}}; color: rgb(60, 118, 61); font-size: 28;">{{text}}</text>
+        </div>
+      </wxc-marquee>
+    </wxc-panel>
+  </scroller>
+</template>
+
+<script>
+  require('weex-components');
+
+  module.exports = {
+    data: {
+      marquee: {
+        height: 30,
+        duration: 1500,
+        interval: 2000,
+        list: [
+          {text: 'Introducing Bots on Messenger'},
+          {text: 'Capturing 3D 360-Stereo VR Video'},
+          {text: 'The Future of Video on Facebook'},
+          {text: 'Announcing Vue.js 2.0'},
+          {text: 'Not Your Average Virtual-DOM'},
+          {text: 'Templates, JSX, or Hyperscript?'}
+        ]
+      }
+    },
+    ready: function() {
+      this.initMarquee('marquee');
+    },
+    methods: {
+      initMarquee: function(id) {
+        var self = this;
+
+        var $marquee = this.$vm(id);
+        $marquee.$on('change', function() {
+          console.log('marquee change');
+        });
+      }
+    }
+  }
+</script>

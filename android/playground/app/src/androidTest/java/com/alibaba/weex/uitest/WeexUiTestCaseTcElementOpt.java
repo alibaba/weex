@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.alibaba.weex.R;
-import com.alibaba.weex.ScreenShot;
-import com.alibaba.weex.ViewUtil;
+import com.alibaba.weex.util.ScreenShot;
+import com.alibaba.weex.util.ViewUtil;
 import com.alibaba.weex.WXPageActivity;
 import com.alibaba.weex.WeappJsBaseTestCase;
 import com.alibaba.weex.constants.Constants;

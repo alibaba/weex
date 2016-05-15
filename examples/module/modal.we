@@ -1,0 +1,75 @@
+<template>
+  <scroller>
+    <wxc-panel title="Toast" type="primary">
+      <wxc-button type="primary" onclick="{{toast}}" value="Toast"></wxc-button>
+    </wxc-panel>
+
+    <wxc-panel title="Dialog" type="primary">
+      <wxc-button type="success" onclick="{{alert}}" value="Alert" style="margin-bottom: 20px;"></wxc-button>
+      <wxc-button type="primary" onclick="{{confirm}}" value="Confirm" style="margin-bottom: 20px;"></wxc-button>
+      <wxc-button type="warning" onclick="{{prompt}}" value="Prompt"></wxc-button>
+    </wxc-panel>
+  </scroller>
+</template>
+
+<script>
+  require('weex-components');
+  module.exports = {
+    data: {},
+    methods: {
+      toast: function(msg, duration) {
+        if (!msg || typeof msg !== 'string') {
+          msg = 'I am Toast show!';
+        }
+
+        duration = duration || 2;
+        this.$call('modal', 'toast', {
+          'message': msg,
+          'duration': duration
+        });
+      },
+      alert: function(msg, okTitle, cancelTitle) {
+        var self = this;
+        if (!msg || typeof msg !== 'string') {
+          msg = "I am Alert!";
+        }
+        this.$call('modal', 'alert', {
+          'message': msg,
+          'okTitle': okTitle,
+          'cancelTitle': cancelTitle
+        }, function() {
+          self.toast("Click Alert OK Bnt!!");
+        });
+      },
+      confirm: function(msg, okTitle, cancelTitle) {
+        var self = this
+        if (!msg || typeof msg !== 'string') {
+          msg = "I am Confirm!";
+        }
+
+        okTitle = okTitle || "OK";
+        cancelTitle = cancelTitle || "Cancel";
+        this.$call('modal', 'confirm', {
+          'message': msg,
+          'okTitle': okTitle,
+          'cancelTitle': cancelTitle
+        }, function(result) {
+          self.toast("Click Confirm  " + result);
+        });
+      },
+      prompt: function() {
+        var self = this;
+        this.$call('modal', 'prompt', {
+          'message': 'I am Prompt!',
+          'okTitle': 'ok',
+          'cancelTitle': 'cancel'
+        }, function(result) {
+          self.toast("Click Prompt  " + result);
+        });
+      }
+    }
+  }
+</script>
+
+<style>
+</style>

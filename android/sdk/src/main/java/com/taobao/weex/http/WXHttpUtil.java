@@ -207,6 +207,7 @@ package com.taobao.weex.http;
 import android.text.TextUtils;
 
 import com.taobao.weex.WXEnvironment;
+import com.taobao.weex.common.WXConfig;
 import com.taobao.weex.utils.WXViewUtils;
 
 import java.util.Map;
@@ -222,26 +223,26 @@ public class WXHttpUtil {
     if (TextUtils.isEmpty(sDefautUA)) {
       Map<String, String> config = WXEnvironment.getConfig();
       StringBuilder builder = new StringBuilder();
-      builder.append(config.get("sysmodel"))
+      builder.append(config.get(WXConfig.sysModel))
           .append("(Android/")
-          .append(config.get("sysversion"))
+          .append(config.get(WXConfig.sysVersion))
           .append(")")
           .append(" ")
 
-          .append(TextUtils.isEmpty(config.get("appGroup")) ? "" : config.get("appGroup"))
+          .append(TextUtils.isEmpty(config.get(WXConfig.appGroup)) ? "" : config.get(WXConfig.appGroup))
           .append("(")
-          .append(TextUtils.isEmpty("config.get(\"appName\")") ? "" : config.get("appName"))
+          .append(TextUtils.isEmpty(config.get(WXConfig.appName)) ? "" : config.get(WXConfig.appName))
           .append("/")
-          .append(config.get("appversion"))
+          .append(config.get(WXConfig.appVersion))
           .append(")")
           .append(" ")
 
           .append("Weex/")
-          .append(config.get("weexversion"))
+          .append(config.get(WXConfig.weexVersion))
           .append(" ")
 
-          .append(TextUtils.isEmpty(config.get("externalUserAgent")) ? "" : config.get("externalUserAgent"))
-          .append(TextUtils.isEmpty(config.get("externalUserAgent")) ? "" : " ")
+          .append(TextUtils.isEmpty(config.get(WXConfig.externalUserAgent)) ? "" : config.get(WXConfig.externalUserAgent))
+          .append(TextUtils.isEmpty(config.get(WXConfig.externalUserAgent)) ? "" : " ")
 
           .append(WXViewUtils.getScreenWidth() + "x" + WXViewUtils.getScreenHeight());
       sDefautUA = builder.toString();

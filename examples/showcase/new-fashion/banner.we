@@ -1,0 +1,27 @@
+<template>
+  <image style="width:{{width}};height:{{height}};" src="{{src}}" image-quality="{{quality}}"
+    onclick="{{_clickHandler}}"></image>
+</template>
+<script>
+  module.exports = {
+    data: {
+        quality: 'normal',
+        width: 0,
+        height: 0,
+        src: '',
+        href: '',
+        spmc:0,
+        spmd:0
+    },
+    methods: {
+      ready: function () {
+      },
+      _clickHandler: function () {
+        this.$call('modal', 'toast', {
+          message: 'click',
+          duration: 1
+        });
+      }
+    }
+  };
+</script>

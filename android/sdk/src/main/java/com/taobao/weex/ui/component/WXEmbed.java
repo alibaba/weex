@@ -228,10 +228,11 @@ public class WXEmbed extends WXDiv {
   @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SRC)
   public void setSrc(String src) {
     this.src = src;
+    if (instance != null) {
+      instance.destroy();
+      instance=null;
+    }
     if (TextUtils.equals(getVisibility(), WXDomPropConstant.WX_VISIBILITY_VISIBLE)) {
-      if (instance != null) {
-        instance.destroy();
-      }
       instance = createInstance();
     }
   }
@@ -260,7 +261,6 @@ public class WXEmbed extends WXDiv {
         WXLogUtils.e("WXEmbed", "Error code :" + errCode + ",\n error message :" + msg);
       }
     });
-    sdkInstance.setImgLoaderAdapter(mInstance.getImgLoaderAdapter());
     ViewGroup.LayoutParams layoutParams = getView().getLayoutParams();
     sdkInstance.renderByUrl(WXPerformance.DEFAULT,
                        src,

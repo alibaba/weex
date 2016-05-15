@@ -48,7 +48,7 @@
     "build:h5-render": "cd ./src/h5-render && npm run build && cd ../../",
     "build": "npm run build:js-framework && npm run build:h5-render",
     "copy:js-framework": "cp -vf ./src/js-framework/dist/index.js ./android/sdk/assets/main.js",
-    "copy:examples": "cp -vf ./examples/build/*.js ./android/playground/app/src/main/assets/",
+    "copy:examples": "rm -rf ./android/playground/app/src/main/assets/* && cp -vrf ./examples/build/* ./android/playground/app/src/main/assets/",
     "copy": "npm run copy:js-framework && npm run copy:examples",
     "ci:js-framework": "cd ./src/js-framework && npm run ci && cd ../../",
     "ci:h5-render": "cd ./src/h5-render && npm run ci && cd ../../",

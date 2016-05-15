@@ -24,6 +24,7 @@ import android.support.annotation.Nullable;
 import com.taobao.weex.dom.flex.CSSConstants;
 import com.taobao.weex.dom.flex.FloatUtil;
 import com.taobao.weex.dom.flex.Spacing;
+import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
 import java.util.Arrays;
@@ -116,12 +117,19 @@ public class WXBackgroundDrawable extends Drawable {
     }
   }
 
+    static Paint debugPaint = new Paint();
+    static {
+      debugPaint.setColor(Color.GREEN);
+      debugPaint.setStyle(Paint.Style.STROKE);
+    }
+
   private void drawRectangularBackgroundWithBorders(Canvas canvas) {
     int useColor = WXViewUtils.multiplyColorAlpha(mColor, mAlpha);
+    Rect bounds = getBounds();
     if ((useColor >>> 24) != 0) { // color is not transparent
       mPaint.setColor(useColor);
       mPaint.setStyle(Paint.Style.FILL);
-      canvas.drawRect(getBounds(), mPaint);
+      canvas.drawRect(bounds, mPaint);
     }
     // maybe draw borders?
     if (getBorderWidth(Spacing.LEFT) > 0 || getBorderWidth(Spacing.TOP) > 0 ||
@@ -131,75 +139,93 @@ public class WXBackgroundDrawable extends Drawable {
       int borderTop = getBorderWidth(Spacing.TOP);
       int borderRight = getBorderWidth(Spacing.RIGHT);
       int borderBottom = getBorderWidth(Spacing.BOTTOM);
+
+
       int colorLeft = getBorderColor(Spacing.LEFT);
       int colorTop = getBorderColor(Spacing.TOP);
       int colorRight = getBorderColor(Spacing.RIGHT);
       int colorBottom = getBorderColor(Spacing.BOTTOM);
 
-      int width = getBounds().width();
-      int height = getBounds().height();
-      float start;
+      int width = bounds.width();
+      int height = bounds.height();
       // If the path drawn previously is of the same color,
       // there would be a slight white space between borders
       // with anti-alias set to true.
       // Therefore we need to disable anti-alias, and
       // after drawing is done, we will re-enable it.
 
-      mPathEffectForBorderStyle = mBorderStyle != null
-                                  ? mBorderStyle.getPathEffect(getFullBorderWidth())
-                                  : null;
       mPaint.setPathEffect(mPathEffectForBorderStyle);
       mPaint.setAntiAlias(false);
-      mPaint.setStyle(Paint.Style.STROKE);
 
       if (mPathForBorder == null) {
         mPathForBorder = new Path();
       }
 
       if (borderLeft > 0 && colorLeft != Color.TRANSPARENT) {
-        mPaint.setColor(colorLeft);
-        mPaint.setStrokeWidth(borderLeft);
-        start = borderLeft / 2f < 1f ? borderLeft : borderLeft / 2f;
-        mPathForBorder.reset();
-        mPathForBorder.moveTo(start, height);
-        mPathForBorder.lineTo(start, borderTop);
-        canvas.drawPath(mPathForBorder, mPaint);
+        drawBorder(canvas,colorLeft,new float[]{
+                0, 0,
+                borderLeft, borderTop,
+                borderLeft, height - borderBottom,
+                0, height
+        },mPathForBorder,mPaint);
       }
 
       if (borderTop > 0 && colorTop != Color.TRANSPARENT) {
-        mPaint.setColor(colorTop);
-        mPaint.setStrokeWidth(borderTop);
-        start = borderTop / 2f < 1f ? borderTop : borderTop / 2f;
-        mPathForBorder.reset();
-        mPathForBorder.moveTo(0, start);
-        mPathForBorder.lineTo(width - borderRight, start);
-        canvas.drawPath(mPathForBorder, mPaint);
+        drawBorder(canvas,colorTop,new float[]{
+                0, 0,
+                borderLeft, borderTop,
+                width - borderRight, borderTop,
+                width, 0
+        },mPathForBorder,mPaint);
       }
 
       if (borderRight > 0 && colorRight != Color.TRANSPARENT) {
-        mPaint.setColor(colorRight);
-        mPaint.setStrokeWidth(borderRight);
-        start = width - borderRight / 2f < 1f ? width - borderRight : width - borderRight / 2f;
-        mPathForBorder.reset();
-        mPathForBorder.moveTo(start, 0);
-        mPathForBorder.lineTo(start, height - borderBottom);
-        canvas.drawPath(mPathForBorder, mPaint);
+        drawBorder(canvas,colorRight,new float[]{
+                width, 0,
+                width, height,
+                width - borderRight, height - borderBottom,
+                width - borderRight, borderTop
+        },mPathForBorder,mPaint);
       }
 
       if (borderBottom > 0 && colorBottom != Color.TRANSPARENT) {
-        mPaint.setColor(colorBottom);
-        mPaint.setStrokeWidth(borderBottom);
-        mPathForBorder.reset();
-        start = height - borderBottom / 2f < 1f ? height - borderBottom : height - borderBottom / 2f;
-        mPathForBorder.moveTo(width, start);
-        mPathForBorder.lineTo(borderLeft, start);
-        canvas.drawPath(mPathForBorder, mPaint);
+        drawBorder(canvas,colorBottom,new float[]{
+                        0, height,
+                        width, height,
+                        width - borderRight, height - borderBottom,
+                        borderLeft, height - borderBottom
+        },mPathForBorder,mPaint);
       }
 
       // re-enable anti alias
       mPaint.setAntiAlias(true);
     }
-  }  @Override
+  }
+
+  /**
+   * draw one border
+   * @param canvas
+   * @param color
+   * @param pts
+   * @param path
+   * @param paint
+   */
+  private void drawBorder(Canvas canvas,int color,float[] pts,Path path,Paint paint){
+    paint.setColor(color);
+    path.reset();
+    path.moveTo(pts[0],pts[1]);
+
+    //exclude start point
+    for(int i=1,len=pts.length/2;i<len;i++){
+      path.lineTo(pts[i*2],pts[i*2+1]);
+    }
+
+    //back to start point
+    path.lineTo(pts[0],pts[1]);
+    canvas.drawPath(path,paint);
+  }
+
+  @Override
   protected void onBoundsChange(Rect bounds) {
     super.onBoundsChange(bounds);
     mNeedUpdatePathForBorderRadius = true;
@@ -332,6 +358,7 @@ public class WXBackgroundDrawable extends Drawable {
         outline.setRect(getBounds());
       }
     }
+
   }
 
   public void setBorderWidth(int position, float width) {

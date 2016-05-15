@@ -209,7 +209,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
-import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
 import com.taobao.weex.common.WXDomPropConstant;
@@ -218,14 +217,13 @@ import com.taobao.weex.common.WXImageStrategy;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.WXRecycleImageManager;
 import com.taobao.weex.ui.view.WXImageView;
-import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXResourceUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
 /**
  * Image component
  */
-public class WXImage extends WXComponent implements IWXRecyclerViewChild {
+public class WXImage extends WXComponent {
 
   public WXImage(WXSDKInstance instance, WXDomObject node,
                  WXVContainer parent, String instanceId, boolean lazy) {
@@ -244,19 +242,16 @@ public class WXImage extends WXComponent implements IWXRecyclerViewChild {
   }
 
   @Override
-  public void flushView() {
+  protected void flushView() {
     super.flushView();
     if (getView() != null) {
-      if (WXEnvironment.isApkDebugable()) {
-        WXLogUtils.w("WXImage instanceId: " + mInstanceId + " flushView---->ref: " + mDomObj.ref + " src: " + mDomObj.attr.get("src"));
-      }
       if (getView() instanceof IWXUpdateComponent) {
         ((IWXUpdateComponent) getView()).updateDom(mDomObj);
       }
 
       if (mDomObj.attr != null) {
         if (getAbsoluteY() <= (WXViewUtils.getScreenHeight() + WXRecycleImageManager.VISIBLE_BOTTOM_SPACE)
-            || WXViewUtils.onScreenArea(getView())) {
+            || WXViewUtils.onScreenArea(getView())||!WXRecycleImageManager.isRecycleImage()) {
           setImage(mDomObj.attr.getImageSrc(), ((ImageView) getView()));
         }
       }
@@ -329,6 +324,12 @@ public class WXImage extends WXComponent implements IWXRecyclerViewChild {
       scaleType = ScaleType.CENTER_INSIDE;
     } else if (resizeMode.equals("stretch")) {
       scaleType = ScaleType.FIT_XY;
+    }else if (resizeMode.equals("center")){
+      scaleType = ScaleType.CENTER;
+    }else if(resizeMode.equals("start")){
+      scaleType = ScaleType.FIT_START;
+    }else if(resizeMode.equals("end")){
+      scaleType = ScaleType.FIT_END;
     }
     return scaleType;
   }
@@ -342,10 +343,6 @@ public class WXImage extends WXComponent implements IWXRecyclerViewChild {
   public void setSrc(String src) {
     if (mInstance.getImgLoaderAdapter() == null) {
       return;
-    }
-
-    if (WXEnvironment.isApkDebugable()) {
-      WXLogUtils.w("WXImage instanceId: " + mInstanceId + " setSrc---->ref: " + mDomObj.ref + " src: " + src);
     }
 
     if (mDomObj.attr != null) {

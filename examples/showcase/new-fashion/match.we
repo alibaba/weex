@@ -1,0 +1,60 @@
+<template>
+  <container>
+    <image if={{ds.floorTitle}} class="title" src="{{ds.floorTitle}}"></image>
+    <container class="tm-banner" if="{{ds.isShowTmSpecBanner&&ds.tmSpecBanner&&isTM}}">
+      <banner width="{{NUMBER_750}}" height="{{NUMBER_200}}" src="{{ds.tmSpecBanner.img}}"
+        href="{{ds.tmSpecBanner.url}}"></banner>
+    </container>
+    <container repeat="{{ds.bannerItems}}" style="flex-direction:row;margin-bottom:{{NUMBER_4}}">
+      <container style="margin-right:{{NUMBER_4}}">
+        <banner width="{{NUMBER_373}}" height="{{NUMBER_240}}"
+          src="{{leftImg}}" href="{{leftUrl}}"></banner>
+      </container>
+      <container>
+        <banner width="{{NUMBER_373}}" height="{{NUMBER_240}}"
+          src="{{rightImg}}" href="{{rightUrl}}"></banner>
+      </container>
+    </container>
+  </container>
+</template>
+
+<style>
+  .title {
+    width: 750;
+    height: 100;
+  }
+  .tm-banner{
+    bottom:4;
+  }
+</style>
+
+<script>
+  module.exports = {
+    data: {
+      NUMBER_750: 750,
+      NUMBER_373: 373,
+      NUMBER_240: 240,
+      NUMBER_200: 200,
+      NUMBER_4: 4
+    },
+    methods: {
+      ready: function () {
+        var self = this;
+        self._initEnv();
+        self._addBannerIndex();
+      },
+      _initEnv: function () {
+        var self = this;
+        self.isTM = self._app.IS_TM;
+      },
+      _addBannerIndex: function () {
+        var self = this;
+        var ds = self.ds;
+        if (!ds || !ds.bannerItems) return;
+        for (var i = 0; i < ds.bannerItems.length; i++) {
+          ds.bannerItems[i].index = i;
+        }
+      }
+    }
+  }
+</script>

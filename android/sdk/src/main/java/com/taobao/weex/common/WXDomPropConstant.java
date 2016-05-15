@@ -277,6 +277,10 @@ public class WXDomPropConstant {
   public static final String WX_LINES = "lines";
   public static final String WX_FONTFAMILY = "fontFamily";
 
+  public static final String WX_TEXT_OVERFLOW = "textOverflow";
+  public static final String WX_TEXT_ELLIPSIS = "ellipsis";
+  public static final String WX_TEXT_CLIP = "clip";
+
   public static final String WX_ATTR_DISABLED = "disabled";
 
   public static final String WX_ATTR_PREFIX = "prefix";
@@ -307,7 +311,10 @@ public class WXDomPropConstant {
 
   //ListView attrs
   public static final String WX_ATTR_SCOPE = "scope";
-  public static final String WX_ATTR_LOADMOREOFFSET = "loadmoreoffset";
+  public static final String WX_ATTR_LOAD_MORE_OFFSET = "loadmoreoffset";
+
+  //Image recycle attrs
+  public static final String WX_ATTR_RECYCLE_IMG = "recycleImage";
 
   public static final String WX_OVERFLOW = "overflow";
   public static final String WX_OVERFLOW_VISIBLE = "visible";

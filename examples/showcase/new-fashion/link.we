@@ -1,0 +1,19 @@
+<template>
+  <text class="link" if={{href}} onclick="{{_clickHandler}}">{{text}}</text>
+</template>
+<script>
+  module.exports = {
+    data: {
+      text: '',
+      href: ''
+    },
+    methods: {
+      _clickHandler: function () {
+        this.$call('modal', 'toast', {
+          message: 'click',
+          duration: 1
+        });
+      }
+    }
+  };
+</script>

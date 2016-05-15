@@ -1,6 +1,6 @@
 <template>
   <div>
-    <wxc-panel title="Transform">
+    <wxc-panel title="Transform" type="primary">
       <wxc-button value="Rotate" onclick="{{rotate}}" type="primary" size="middle"></wxc-button>
       <wxc-button value="Scale" onclick="{{scale}}" type="primary" size="middle" style="margin-top:12px;"></wxc-button>
       <wxc-button value="Translate" onclick="{{translate}}" type="primary" size="middle"
@@ -9,7 +9,7 @@
                  style="margin-top:12px;"></wxc-button>
     </wxc-panel>
 
-    <wxc-panel title="Others">
+    <wxc-panel title="Others" type="primary">
       <wxc-button value="BgColor" onclick="{{color}}" type="primary" size="middle"></wxc-button>
       <wxc-button value="Opacity" onclick="{{opacity}}" type="primary" size="middle"
                  style="margin-top:12px;"></wxc-button>
