@@ -10,6 +10,7 @@
         {name: 'image-demo', title: 'Image'},
         {name: 'text-demo', title: 'Text'},
         {name: 'style', title: 'Common Style'},
+        {name: 'scroller-basic', title: 'Scroller (Basic)'},
         {name: 'list-basic', title: 'List (Basic)'},
         {name: 'list-demo', title: 'List (Advanced)'},
         {name: 'slider-demo', title: 'Slider'},
