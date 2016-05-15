@@ -1,0 +1,67 @@
+<template>
+  <scroller>
+    <wxc-panel title="Title Levels" type="primary">
+      <wxc-hn repeat="{{levels}}" level="{{level}}" value="H{{level}}, Level {{level}}"></wxc-hn>
+    </wxc-panel>
+
+    <wxc-panel title="Buttons" append="tree" type="primary">
+      <div style="flex-direction: row; margin-top: 12px" repeat="{{buttons}}">
+        <wxc-button type="{{type}}" size="large" value="{{type}}" onclick="{{clicked}}" style=""></wxc-button>
+        <wxc-button type="{{type}}" size="middle" value="{{type}}" onclick="{{clicked}}"
+                    style="margin-left:5px;width:210px;"></wxc-button>
+        <wxc-button type="{{type}}" size="small" value="{{type}}" onclick="{{clicked}}"
+                    style="margin-left:5px;"></wxc-button>
+      </div>
+
+      <!--<div style="flex-direction: row; margin-top: 12px">-->
+      <!--<wxc-button disabled="{{true}}" type="" size="large" value="Disabled" onclick="{{clicked}}"></wxc-button>-->
+      <!--<wxc-button disabled="{{false}}" type="primary" size="large" value="Enabled" onclick="{{clicked}}"-->
+      <!--style="margin-left: 12px"></wxc-button>-->
+      <!--</div>-->
+    </wxc-panel>
+
+    <wxc-panel title="Panels" type="primary">
+      <wxc-panel repeat="{{panels}}" title="Panels-{{type}}" type="{{type}}" border="1"
+                 style="margin-left: 12px;margin-right: 12px;">
+        <text>Panels {{type}} content. Panels {{type}} content. Panels {{type}} content.</text>
+      </wxc-panel>
+    </wxc-panel>
+
+    <wxc-panel title="List" type="primary">
+      <wxc-list-item repeat="{{tips}}" onclick="{{clicked}}">
+        <text class="item-txt">{{type}}</text>
+      </wxc-list-item>
+    </wxc-panel>
+
+    <wxc-panel title="Tips" type="primary">
+      <wxc-tip repeat="{{tips}}" style="margin-bottom: 20px;"
+               value="Panels {{type}} content. Panels {{type}} content. Panels {{type}} content."></wxc-tip>
+    </wxc-panel>
+  </scroller>
+</template>
+
+<script>
+  require('weex-components');
+
+  module.exports = {
+    data: {
+      levels: [{level: 1}, {level: 2}, {level: 3}],
+      buttons: [{type: 'default'}, {type: 'primary'}, {type: 'success'}, {type: 'info'}, {type: 'warning'}, {type: 'danger'}, {type: 'link'}],
+      panels: [{type: 'default'}, {type: 'primary'}, {type: 'success'}, {type: 'info'}, {type: 'warning'}, {type: 'danger'}],
+      tips: [{type: 'success'}, {type: 'info'}, {type: 'warning'}, {type: 'danger'}],
+    },
+    methods: {
+      clicked: function() {
+        var $modal = require('@weex-module/modal');
+        $modal.toast({'message': 'clicked!', duration: 0.5});
+      }
+    }
+  }
+</script>
+
+<style>
+  .item-txt {
+    font-size: 48px;
+    color: #555555;
+  }
+</style>

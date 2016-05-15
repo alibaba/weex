@@ -1,0 +1,23 @@
+<template>
+  <scroller>
+    <wxc-panel title="$getConfig()" type="primary">
+      <text>{{config}}</text>
+    </wxc-panel>
+  </scroller>
+</template>
+
+<script>
+  require('weex-components');
+
+  module.exports = {
+    data: {
+      config: ''
+    },
+    ready: function() {
+      var config = this.$getConfig();
+      console.log('config', JSON.stringify(config));
+      this.config = JSON.stringify(config, null, 2);
+    },
+    methods: {}
+  }
+</script>

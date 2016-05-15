@@ -44,263 +44,81 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/6dce51f79ed815347754cd36fdb73f89", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/d62b089ac06ebcc65bac2f06583e2aac", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
-	  __webpack_require__(1);
+	  __webpack_require__(1)
 	  __weex_module__.exports = {
 	    data: function () {return {
-	      transformOrigin: 'center center',
-	      current_rotate: 0,
-	      current_scale: 1,
-	      current_color: '#FF0000',
-	      current_opacity: 1,
-	      current_translate: '',
-	      current_transform: '',
-	      isStop: true
+	      tabItems: [
+	        {
+	          index: 0,
+	          title: "会场",
+	          titleColor: 0x0,
+	          icon: "",
+	          image: "http://gtms01.alicdn.com/tps/i1/TB1qw.hMpXXXXagXXXX9t7RGVXX-46-46.png",
+	          selectedImage: "http://gtms04.alicdn.com/tps/i4/TB16jjPMpXXXXazXVXX9t7RGVXX-46-46.png",
+	          src: "./examples/build/new-fashion/main.js",
+	          visibility: "visible",
+	        },
+	        {
+	          index: 1,
+	          title: "WEEX",
+	          titleColor: 0x0,
+	          icon:"",
+	          image: "http://gtms03.alicdn.com/tps/i3/TB1LEn9MpXXXXaUXpXX9t7RGVXX-46-46.png",
+	          selectedImage: "http://gtms02.alicdn.com/tps/i2/TB1qysbMpXXXXcnXXXX9t7RGVXX-46-46.png",
+	          src: "./examples/build/image-demo.js",
+	          visibility: "hidden",
+	        },
+	        {
+	          index: 2,
+	          title: "列表",
+	          titleColor: 0x0,
+	          icon:"",
+	          image: "http://gtms01.alicdn.com/tps/i1/TB1B0v5MpXXXXcvXpXX9t7RGVXX-46-46.png",
+	          selectedImage: "http://gtms04.alicdn.com/tps/i4/TB1NxY5MpXXXXcrXpXX9t7RGVXX-46-46.png",
+	          src: "./examples/build/list-demo.js",
+	          visibility: "hidden",
+	        }
+	      ],
 	    }},
 	    methods: {
-	      anim: function(styles, timingFunction, duration, callback) {
-	        this.$call('animation', 'transition', this._ids.block.el.ref, {
-	          styles: styles,
-	          timingFunction: timingFunction,
-	          duration: duration
-	        }, callback);
-	      },
-	      rotate: function() {
-	        var self = this;
-	        self.current_rotate += 90;
-	        self.anim({
-	          transform: 'rotate(' + self.current_rotate + 'deg)'
-	        }, 'ease-in-out', 500, function() {
-	          if (self.current_rotate === 360) {
-	            self.current_rotate = 0;
-	          }
-	          else {
-	            self.rotate();
-	          }
+	      ready: function (e) {
+	        var vm = this;
+	        vm.$on('tabBar.onClick',function(e){
+	          var detail= e.detail;
+	          nativeLog('tabBar.onClick ' + detail.index);
 	        });
 	      },
-	      translate: function() {
-	        this.current_translate = this.current_translate ? '' : 'translate(50%, 50%)';
-	        this.anim({
-	          transform: this.current_translate
-	        }, 'ease-in', 500, function() {
-	        });
-	      },
-	      scale: function() {
-	        var self = this;
-	        self.current_scale = self.current_scale === 2 ? .5 : 2
-	        self.anim({
-	          transform: 'scale(' + self.current_scale + ')'
-	        }, 'linear', 500, function() {
-	        });
-	      },
-	      transform: function() {
-	        var self = this;
-	        this.current_transform = this.current_transform ? '' : 'rotate(45deg) scale(1.5)';
-	        this.anim({
-	          transform: this.current_transform,
-	          transformOrigin: 'left top'
-	        }, 'ease-out', 500, function() {
-	          if (self.current_transform !== '') {
-	            self.anim({
-	              transform: 'rotate(-90deg) scale(1.2)',
-	              transformOrigin: 'left top'
-	            }, 'ease-out', 500, function() {
-	            })
-	          }
-	          else {
-
-	          }
-	        });
-	      },
-	      composite: function() {
-	        var self = this;
-	        self.current_transform = self.current_transform ? '' : 'rotate(45deg) scale(1.5) translate(50%, 50%)';
-	        self.current_color = self.current_color === '#F0AD4E' ? '#D9534F' : '#F0AD4E';
-	        self.current_opacity = self.current_opacity === 1 ? 0.1 : 1;
-	        this.anim({
-	          transform: this.current_transform,
-	          transformOrigin: 'left top',
-	          backgroundColor: self.current_color,
-	          opacity: self.current_opacity
-	        }, 'ease-out', 1000, function() {
-	        });
-	      },
-	      color: function() {
-	        var self = this;
-	        self.current_color = self.current_color === '#F0AD4E' ? '#D9534F' : '#F0AD4E';
-	        self.anim({
-	          backgroundColor: self.current_color
-	        }, 'linear', 500, function() {
-	        });
-	      },
-	      opacity: function() {
-	        var self = this;
-	        self.current_opacity = self.current_opacity === 1 ? 0.1 : 1;
-	        self.anim({
-	          opacity: self.current_opacity
-	        }, 'linear', 500, function() {
-	        });
-	      }
 	    }
-	  };
+	  }
 
 	;__weex_module__.exports.template={
 	  "type": "div",
 	  "children": [
 	    {
-	      "type": "wxc-panel",
-	      "attr": {
-	        "title": "Transform",
-	        "type": "primary"
-	      },
-	      "children": [
-	        {
-	          "type": "wxc-button",
-	          "attr": {
-	            "value": "Rotate",
-	            "type": "primary",
-	            "size": "middle"
-	          },
-	          "events": {
-	            "click": "rotate"
-	          }
-	        },
-	        {
-	          "type": "wxc-button",
-	          "attr": {
-	            "value": "Scale",
-	            "type": "primary",
-	            "size": "middle"
-	          },
-	          "events": {
-	            "click": "scale"
-	          },
-	          "style": {
-	            "marginTop": 12
-	          }
-	        },
-	        {
-	          "type": "wxc-button",
-	          "attr": {
-	            "value": "Translate",
-	            "type": "primary",
-	            "size": "middle"
-	          },
-	          "events": {
-	            "click": "translate"
-	          },
-	          "style": {
-	            "marginTop": 12
-	          }
-	        },
-	        {
-	          "type": "wxc-button",
-	          "attr": {
-	            "value": "Transform",
-	            "type": "success",
-	            "size": "middle"
-	          },
-	          "events": {
-	            "click": "transform"
-	          },
-	          "style": {
-	            "marginTop": 12
-	          }
-	        }
-	      ]
-	    },
-	    {
-	      "type": "wxc-panel",
-	      "attr": {
-	        "title": "Others",
-	        "type": "primary"
-	      },
-	      "children": [
-	        {
-	          "type": "wxc-button",
-	          "attr": {
-	            "value": "BgColor",
-	            "type": "primary",
-	            "size": "middle"
-	          },
-	          "events": {
-	            "click": "color"
-	          }
-	        },
-	        {
-	          "type": "wxc-button",
-	          "attr": {
-	            "value": "Opacity",
-	            "type": "primary",
-	            "size": "middle"
-	          },
-	          "events": {
-	            "click": "opacity"
-	          },
-	          "style": {
-	            "marginTop": 12
-	          }
-	        },
-	        {
-	          "type": "wxc-button",
-	          "attr": {
-	            "value": "All",
-	            "type": "success",
-	            "size": "middle"
-	          },
-	          "events": {
-	            "click": "composite"
-	          },
-	          "style": {
-	            "marginTop": 12
-	          }
-	        }
-	      ]
-	    },
-	    {
-	      "type": "div",
-	      "id": "block",
+	      "type": "wxc-tabbar",
 	      "classList": [
-	        "block"
+	        "tabbar"
 	      ],
-	      "style": {
-	        "transformOrigin": function () {return this.transformOrigin}
-	      },
-	      "children": [
-	        {
-	          "type": "text",
-	          "classList": [
-	            "block-txt"
-	          ],
-	          "attr": {
-	            "value": "Anim"
-	          }
-	        }
-	      ]
+	      "attr": {
+	        "tabItems": function () {return this.tabItems}
+	      }
 	    }
 	  ]
 	}
 	;__weex_module__.exports.style={
-	  "block": {
-	    "position": "absolute",
-	    "width": 250,
-	    "height": 250,
-	    "top": 300,
-	    "left": 400,
-	    "backgroundColor": "#F0AD4E",
-	    "alignItems": "center",
-	    "justifyContent": "center"
+	  "content": {
+	    "color": "#353535",
+	    "backgroundColor": "#666666"
 	  },
-	  "block-txt": {
-	    "color": "#FFFFFF",
-	    "fontSize": 70
+	  "tabbar": {
+	    "backgroundColor": "#ffffff"
 	  }
 	}
 	})
-	;__weex_bootstrap__("@weex-component/6dce51f79ed815347754cd36fdb73f89", {
+	;__weex_bootstrap__("@weex-component/d62b089ac06ebcc65bac2f06583e2aac", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 

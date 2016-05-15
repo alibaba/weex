@@ -44,263 +44,235 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/6dce51f79ed815347754cd36fdb73f89", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/1370bc36a490680787a4ec0c421ce383", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(1);
+
 	  __weex_module__.exports = {
 	    data: function () {return {
-	      transformOrigin: 'center center',
-	      current_rotate: 0,
-	      current_scale: 1,
-	      current_color: '#FF0000',
-	      current_opacity: 1,
-	      current_translate: '',
-	      current_transform: '',
-	      isStop: true
+	      countdown1: {
+	        remain: 5000,
+	        time: {
+	          D: '0',
+	          hh: '00',
+	          mm: '00',
+	          ss: '00'
+	        }
+	      },
+	      countdown2: {
+	        remain: 5000,
+	        time: {
+	          MM: '0',
+	          ss: '0'
+	        }
+	      }
 	    }},
+	    ready: function() {
+	      this.initCountdown('countdown1');
+	      this.initCountdown('countdown2');
+	    },
 	    methods: {
-	      anim: function(styles, timingFunction, duration, callback) {
-	        this.$call('animation', 'transition', this._ids.block.el.ref, {
-	          styles: styles,
-	          timingFunction: timingFunction,
-	          duration: duration
-	        }, callback);
-	      },
-	      rotate: function() {
+	      initCountdown: function(id) {
 	        var self = this;
-	        self.current_rotate += 90;
-	        self.anim({
-	          transform: 'rotate(' + self.current_rotate + 'deg)'
-	        }, 'ease-in-out', 500, function() {
-	          if (self.current_rotate === 360) {
-	            self.current_rotate = 0;
-	          }
-	          else {
-	            self.rotate();
-	          }
-	        });
-	      },
-	      translate: function() {
-	        this.current_translate = this.current_translate ? '' : 'translate(50%, 50%)';
-	        this.anim({
-	          transform: this.current_translate
-	        }, 'ease-in', 500, function() {
-	        });
-	      },
-	      scale: function() {
-	        var self = this;
-	        self.current_scale = self.current_scale === 2 ? .5 : 2
-	        self.anim({
-	          transform: 'scale(' + self.current_scale + ')'
-	        }, 'linear', 500, function() {
-	        });
-	      },
-	      transform: function() {
-	        var self = this;
-	        this.current_transform = this.current_transform ? '' : 'rotate(45deg) scale(1.5)';
-	        this.anim({
-	          transform: this.current_transform,
-	          transformOrigin: 'left top'
-	        }, 'ease-out', 500, function() {
-	          if (self.current_transform !== '') {
-	            self.anim({
-	              transform: 'rotate(-90deg) scale(1.2)',
-	              transformOrigin: 'left top'
-	            }, 'ease-out', 500, function() {
-	            })
-	          }
-	          else {
 
-	          }
+	        var $countdown = this.$vm(id);
+	        $countdown.$on('tick', function(e) {
+	          Object.assign(self[id].time, e.detail);
 	        });
-	      },
-	      composite: function() {
-	        var self = this;
-	        self.current_transform = self.current_transform ? '' : 'rotate(45deg) scale(1.5) translate(50%, 50%)';
-	        self.current_color = self.current_color === '#F0AD4E' ? '#D9534F' : '#F0AD4E';
-	        self.current_opacity = self.current_opacity === 1 ? 0.1 : 1;
-	        this.anim({
-	          transform: this.current_transform,
-	          transformOrigin: 'left top',
-	          backgroundColor: self.current_color,
-	          opacity: self.current_opacity
-	        }, 'ease-out', 1000, function() {
-	        });
-	      },
-	      color: function() {
-	        var self = this;
-	        self.current_color = self.current_color === '#F0AD4E' ? '#D9534F' : '#F0AD4E';
-	        self.anim({
-	          backgroundColor: self.current_color
-	        }, 'linear', 500, function() {
-	        });
-	      },
-	      opacity: function() {
-	        var self = this;
-	        self.current_opacity = self.current_opacity === 1 ? 0.1 : 1;
-	        self.anim({
-	          opacity: self.current_opacity
-	        }, 'linear', 500, function() {
+
+	        $countdown.$on('alarm', function(e) {
+	          Object.assign(self[id].time, e.detail);
 	        });
 	      }
 	    }
-	  };
+	  }
 
 	;__weex_module__.exports.template={
-	  "type": "div",
+	  "type": "scroller",
 	  "children": [
 	    {
 	      "type": "wxc-panel",
 	      "attr": {
-	        "title": "Transform",
+	        "title": "Countdown",
 	        "type": "primary"
 	      },
 	      "children": [
 	        {
-	          "type": "wxc-button",
+	          "type": "wxc-countdown",
+	          "id": "countdown1",
 	          "attr": {
-	            "value": "Rotate",
-	            "type": "primary",
-	            "size": "middle"
-	          },
-	          "events": {
-	            "click": "rotate"
-	          }
-	        },
-	        {
-	          "type": "wxc-button",
-	          "attr": {
-	            "value": "Scale",
-	            "type": "primary",
-	            "size": "middle"
-	          },
-	          "events": {
-	            "click": "scale"
+	            "remain": function () {return this.countdown1.remain}
 	          },
 	          "style": {
-	            "marginTop": 12
-	          }
+	            "width": 750,
+	            "marginTop": 20,
+	            "marginBottom": 20
+	          },
+	          "children": [
+	            {
+	              "type": "text",
+	              "classList": [
+	                "ctno1"
+	              ],
+	              "attr": {
+	                "value": function () {return this.countdown1.time.D}
+	              }
+	            },
+	            {
+	              "type": "text",
+	              "classList": [
+	                "ctno1"
+	              ],
+	              "style": {
+	                "backgroundColor": "#FFFFFF",
+	                "color": "#AAAAAA"
+	              },
+	              "attr": {
+	                "value": "day(s)"
+	              }
+	            },
+	            {
+	              "type": "text",
+	              "classList": [
+	                "ctno1"
+	              ],
+	              "attr": {
+	                "value": function () {return this.countdown1.time.hh}
+	              }
+	            },
+	            {
+	              "type": "text",
+	              "classList": [
+	                "ctno1"
+	              ],
+	              "style": {
+	                "backgroundColor": "#FFFFFF",
+	                "color": "#AAAAAA"
+	              },
+	              "attr": {
+	                "value": "hour(s)"
+	              }
+	            },
+	            {
+	              "type": "text",
+	              "classList": [
+	                "ctno1"
+	              ],
+	              "attr": {
+	                "value": function () {return this.countdown1.time.mm}
+	              }
+	            },
+	            {
+	              "type": "text",
+	              "classList": [
+	                "ctno1"
+	              ],
+	              "style": {
+	                "backgroundColor": "#FFFFFF",
+	                "color": "#AAAAAA"
+	              },
+	              "attr": {
+	                "value": "minute(s)"
+	              }
+	            },
+	            {
+	              "type": "text",
+	              "classList": [
+	                "ctno1"
+	              ],
+	              "attr": {
+	                "value": function () {return this.countdown1.time.ss}
+	              }
+	            },
+	            {
+	              "type": "text",
+	              "classList": [
+	                "ctno1"
+	              ],
+	              "style": {
+	                "backgroundColor": "#FFFFFF",
+	                "color": "#AAAAAA"
+	              },
+	              "attr": {
+	                "value": "second(s)"
+	              }
+	            }
+	          ]
 	        },
 	        {
-	          "type": "wxc-button",
+	          "type": "wxc-countdown",
+	          "id": "countdown2",
 	          "attr": {
-	            "value": "Translate",
-	            "type": "primary",
-	            "size": "middle"
-	          },
-	          "events": {
-	            "click": "translate"
+	            "remain": function () {return this.countdown2.remain}
 	          },
 	          "style": {
-	            "marginTop": 12
-	          }
-	        },
-	        {
-	          "type": "wxc-button",
-	          "attr": {
-	            "value": "Transform",
-	            "type": "success",
-	            "size": "middle"
+	            "width": 600
 	          },
-	          "events": {
-	            "click": "transform"
-	          },
-	          "style": {
-	            "marginTop": 12
-	          }
-	        }
-	      ]
-	    },
-	    {
-	      "type": "wxc-panel",
-	      "attr": {
-	        "title": "Others",
-	        "type": "primary"
-	      },
-	      "children": [
-	        {
-	          "type": "wxc-button",
-	          "attr": {
-	            "value": "BgColor",
-	            "type": "primary",
-	            "size": "middle"
-	          },
-	          "events": {
-	            "click": "color"
-	          }
-	        },
-	        {
-	          "type": "wxc-button",
-	          "attr": {
-	            "value": "Opacity",
-	            "type": "primary",
-	            "size": "middle"
-	          },
-	          "events": {
-	            "click": "opacity"
-	          },
-	          "style": {
-	            "marginTop": 12
-	          }
-	        },
-	        {
-	          "type": "wxc-button",
-	          "attr": {
-	            "value": "All",
-	            "type": "success",
-	            "size": "middle"
-	          },
-	          "events": {
-	            "click": "composite"
-	          },
-	          "style": {
-	            "marginTop": 12
-	          }
-	        }
-	      ]
-	    },
-	    {
-	      "type": "div",
-	      "id": "block",
-	      "classList": [
-	        "block"
-	      ],
-	      "style": {
-	        "transformOrigin": function () {return this.transformOrigin}
-	      },
-	      "children": [
-	        {
-	          "type": "text",
-	          "classList": [
-	            "block-txt"
-	          ],
-	          "attr": {
-	            "value": "Anim"
-	          }
+	          "children": [
+	            {
+	              "type": "text",
+	              "classList": [
+	                "ctno2"
+	              ],
+	              "attr": {
+	                "value": function () {return this.countdown2.time.MM}
+	              }
+	            },
+	            {
+	              "type": "text",
+	              "classList": [
+	                "ctno2"
+	              ],
+	              "style": {
+	                "backgroundColor": "#FFFFFF",
+	                "color": "#AAAAAA"
+	              },
+	              "attr": {
+	                "value": ":"
+	              }
+	            },
+	            {
+	              "type": "text",
+	              "classList": [
+	                "ctno2"
+	              ],
+	              "attr": {
+	                "value": function () {return this.countdown2.time.ss}
+	              }
+	            }
+	          ]
 	        }
 	      ]
 	    }
 	  ]
 	}
 	;__weex_module__.exports.style={
-	  "block": {
-	    "position": "absolute",
-	    "width": 250,
-	    "height": 250,
-	    "top": 300,
-	    "left": 400,
-	    "backgroundColor": "#F0AD4E",
-	    "alignItems": "center",
-	    "justifyContent": "center"
+	  "ctno1": {
+	    "borderRadius": 8,
+	    "paddingTop": 6,
+	    "paddingBottom": 6,
+	    "paddingRight": 4,
+	    "paddingLeft": 4,
+	    "marginLeft": 2,
+	    "marginRight": 2,
+	    "backgroundColor": "rgb(242,222,222)",
+	    "color": "rgb(169,68,66)"
 	  },
-	  "block-txt": {
-	    "color": "#FFFFFF",
-	    "fontSize": 70
+	  "ctno2": {
+	    "borderRadius": 8,
+	    "paddingTop": 30,
+	    "paddingBottom": 30,
+	    "paddingLeft": 16,
+	    "paddingRight": 16,
+	    "backgroundColor": "rgb(217,237,247)",
+	    "color": "rgb(49,112,143)",
+	    "textAlign": "center",
+	    "fontSize": 40
 	  }
 	}
 	})
-	;__weex_bootstrap__("@weex-component/6dce51f79ed815347754cd36fdb73f89", {
+	;__weex_bootstrap__("@weex-component/1370bc36a490680787a4ec0c421ce383", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
