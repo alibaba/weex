@@ -78,6 +78,7 @@ e.g.
 <template>
   <container style="flex-direction: row;">
     <text>{{fullName}}</text>
+    <text onclick="changeName"></text>
   </container>
 </template>
   
@@ -88,83 +89,32 @@ e.g.
       lastName: 'Smith'
     },
     computed: {
-      fullName: function() {
-        return this.firstName + ' ' + this.lastName
+      fullName: {
+        get: function() {
+          return this.firstName + ' ' + this.lastName
+        },
+
+        set: function(v) {
+          var s = v.split(' ')
+          this.firstName = s[0]
+          this.lastName = s[1]
+        }
       }
-    }
-  }
-</script>
-```
-
-Here we have declared a computed property fullName. The function we provided will be used as the getter function for concating firstName and lastName:
-
-## Binding method call or expression
-
-An JavaScript function call or expression can also get bound, e.g.
-
-```
-<template>
-  <container style="flex-direction: column;">
-    <text style="font-size: {{size}};">{{getFullName()}}</text>
-  </container>
-</template>
-
-<script>
-  module.exports = {
-    data: {
-      size: 48,
-      firstName: 'John',
-      lastName: 'Smith'
     },
     methods: {
-      getFullName: function () {
-        // 'John SMITH'
-        return this.firstName + ' ' + this.lastName.toUpperCase()
+      changeName: function() {
+        this.fullName = 'Terry King'
       }
     }
   }
 </script>
 ```
 
-Here the return value of `getFullName()` is bound to the `<text>` content.
+Here we have declared a computed property fullName. The function we provided will be used as the getter function for concating firstName and lastName.
 
-Now we add a event, so that we can see how data change reflects to view change:
+Otherwise when you call `changeName` after click, the setter will be invoked and this.firstName and this.lastName will be updated accordingly.
 
-```
-<template>
-  <container>
-    <text onclick="changeName">Click to Change!</text>
-    <text style="font-size: {{size}}">{{getFullName()}}</text>
-  </container>
-</template>
-
-<script>
-  module.exports = {
-    data: {
-      size: 20,
-      firstName: 'John',
-      lastName: 'Smith'
-    },
-    methods: {
-      getFullName: function () {
-        // 'John SMITH'
-        return this.firstName + ' ' + this.lastName.toUpperCase()
-      },
-      changeName: function () {
-        this.firstName = 'Mike'
-      }
-    }
-  }
-</script>
-```
-
-In this case, after we click the "Click to Change!" button, the `changeName()` method will be called, and the `firstName` field will change.Then the return value of `changeName()` get changed, Which results to the change of name displayed in the view.
-
-Once we have data-binding, the data changes will automatically trigger view changes. No more code needed :)
-
-Note: `data` and `methods` can't have duplicate fields, cause in the execution context -- `this`, we can access both of them.
-
-* [See more usage of `this` in vm APIs](../references/api.md)
+**NOTE: `data` and `methods` can't have duplicate fields. 'Cause in the execution context -- `this`, we can access both of them.**
 
 ## Usage of some special attributes in Data-Binding
 
