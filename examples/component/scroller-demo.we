@@ -1,9 +1,5 @@
 <template>
   <scroller class="list">
-    <refresh class="refresh-view" display="{{refresh_display}}" onrefresh="onrefresh">
-      <text class="refresh-arrow" if="{{(refresh_display==='hide')}}">↓ Pull To Refresh</text>
-      <loading-indicator class="indicator"></loading-indicator>
-    </refresh>
     <div class="section" repeat="{{sections}}">
       <div class="header">
         <text class="header-title">{{title}}</text>
@@ -12,38 +8,10 @@
         <text class="item-title">row {{id}}</text>
       </div>
     </div>
-    <loading class="loading-view" display="{{loading_display}}" onloading="onloading">
-      <loading-indicator class="indicator"></loading-indicator>
-    </loading>
   </scroller>
 </template>
 
 <style>
-  .refresh-view {
-    height: 80px;
-    width: 750px;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .refresh-arrow {
-    font-size: 30px;
-    color: #45b5f0;
-  }
-
-  .loading-view {
-    height: 80px;
-    width: 750px;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .indicator {
-    height: 40px;
-    width: 40px;
-    color: #45b5f0;
-  }
-
   .header {
     background-color: #45b5f0;
     padding: 20px;
@@ -73,28 +41,8 @@
   require('weex-components');
   module.exports = {
     methods: {
-      onrefresh: function(e) {
-        var self = this;
-        self.refresh_display = 'show';
-        self.$call('timer', 'setTimeout', function() {
-          self.refresh_display = 'hide';
-        }, 3000);
-      },
-      onloading: function() {
-        var self = this;
-        self.loading_display = 'show';
-        self.$call('timer', 'setTimeout', function() {
-          if (self.sections.length <= 5) {
-            self.sections.push(self.moreSections[self.sections.length - 2]);
-          }
-
-          self.loading_display = 'hide';
-        }, 3000);
-      }
     },
     data: {
-      refresh_display: 'hide',
-      loading_display: 'hide',
       sections: [
         {
           title: 'Header 1',
@@ -116,9 +64,7 @@
             {id: 10},
             {id: 11}
           ]
-        }
-      ],
-      moreSections: [
+        },
         {
           title: 'Header 3',
           items: [
@@ -159,8 +105,8 @@
             {id: 31},
             {id: 32}
           ]
-        },
+        }
       ]
-    },
+    }
   }
 </script>
