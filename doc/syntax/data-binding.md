@@ -44,6 +44,60 @@ We can also use `.` syntax to bind cascading data structure. Let's look at the f
 </script>
 ```
 
+## In-template expression
+
+Inside data bindings, Weex supports simply javascript expressions, e.g.
+
+```
+<template>
+  <container style="flex-direction: row;">
+    <text>{{firstName + ' ' + lastName}}</text>
+  </container>
+</template>
+  
+<script>
+  module.exports = {
+    data: {
+      firstName: 'John',
+      lastName: 'Smith'
+    }
+  }
+</script>
+```
+
+The expression will be evaluated in the data scope of current context.
+
+**NOTE: EACH BINDING CAN ONLY CONTAIN ONE SINGLE EXPRESSION**
+
+## Computed Properties
+
+According to simple operations, in-template expressions are very convenient. But if you want to put more logic into the template, you should use a computed property.
+
+e.g.
+```
+<template>
+  <container style="flex-direction: row;">
+    <text>{{fullName}}</text>
+  </container>
+</template>
+  
+<script>
+  module.exports = {
+    data: {
+      firstName: 'John',
+      lastName: 'Smith'
+    },
+    computed: {
+      fullName: function() {
+        return this.firstName + ' ' + this.lastName
+      }
+    }
+  }
+</script>
+```
+
+Here we have declared a computed property fullName. The function we provided will be used as the getter function for concating firstName and lastName:
+
 ## Binding method call or expression
 
 An JavaScript function call or expression can also get bound, e.g.
@@ -112,9 +166,9 @@ Note: `data` and `methods` can't have duplicate fields, cause in the execution c
 
 * [See more usage of `this` in vm APIs](../references/api.md)
 
-### Usage of some special attributes in Data-Binding
+## Usage of some special attributes in Data-Binding
 
-#### Styles: `style` or `class`
+### Styles: `style` or `class`
 
 the style of a component can be bind using the `style` attribute:
 
@@ -139,7 +193,7 @@ here if `{{size}}` and `{{status}}` have empty value, then only `class="title"` 
 
 * [See more about style and class](./style-n-class.md)
 
-#### Event Handler: `on...`
+### Event Handler: `on...`
 
 The event handler is an attribute which name has a prefix `on...`. The other part of attribute name is event type and the value is event handler name. We don't need to add mustache around the method name or add parentheses to call it.
 
@@ -159,7 +213,7 @@ The event handler is an attribute which name has a prefix `on...`. The other par
 </script>
 ```
 
-#### `if` & `repeat`
+### `if` & `repeat`
 
 `if` attribute can control the display of a component by a truthy/falsy value.
 
