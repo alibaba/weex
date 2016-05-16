@@ -44,7 +44,7 @@ Other attributes please check out the [common attributes](../references/common-a
 
 ### Example
 
-```
+```js
 <template>
   <wxc-navpage height={{...}} background-color="..." title="..." title-color="..." left-item-title="..." left-item-color="..." right-item-src="...">
       <content> ...</content>
