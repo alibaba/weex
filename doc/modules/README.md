@@ -17,3 +17,5 @@ dom.scrollTo(this.$el('someIdForElement'), {
 * [steam](./stream.md)
 * [modal](./modal.md)
 * [animation](./animation.md)
+* [navigator](./navigator.md)
+* [webview](./webview.md)

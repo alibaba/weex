@@ -23,3 +23,6 @@ Before see all built-in components, let's have a look at the common things about
 * [&lt;slider&gt;](./slider.md)
     * [&lt;indicator&gt;](./indicator.md)
 * [&lt;video&gt;](./video.md)
+* [&lt;web&gt;](./web.md)
+* [&lt;wxc-navpage&gt;](./wxc-navpage.md)
+* [&lt;wxc-navbar&gt;](./wxc-navbar.md)
