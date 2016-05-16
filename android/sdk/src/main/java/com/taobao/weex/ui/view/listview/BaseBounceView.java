@@ -415,20 +415,23 @@ public abstract class BaseBounceView<T extends View> extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        //Helper.logv("BaseBounceView onLayout scroll value:"+scrollValue+", padding top:"+getPaddingTop());
         View child0 = getChildAt(0);
+        int paddingLeft,paddingTop,childRight;
+        paddingLeft=getPaddingLeft();
+        paddingTop=getPaddingTop();
+        childRight=r-l-getPaddingRight();
         if (child0 != null) {
-            child0.layout(0, getPaddingTop(), r, b);
+            child0.layout(paddingLeft, paddingTop, childRight, b-t-paddingTop);
         }
         View child1 = getChildAt(1);
         if (child1 != null) {
             int h = child1.getMeasuredHeight();
-            child1.layout(0, -h, r, 0);
+            child1.layout(paddingLeft, -h, childRight, 0);
         }
         View child2 = getChildAt(2);
         if (child2 != null) {
             int h = child2.getMeasuredHeight();
-            child2.layout(0, b, r, b + h);
+            child2.layout(paddingLeft, b, childRight, b + h);
         }
     }
 

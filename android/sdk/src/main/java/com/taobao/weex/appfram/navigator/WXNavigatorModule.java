@@ -127,7 +127,7 @@ import org.json.JSONObject;
 public class WXNavigatorModule extends WXModule {
 
   private final static String TAG = "Navigator";
-  private final static String WEEX_NAVIGATOR_PUSH = "com.taobao.android.intent.category.Navigator.push";
+  private final static String WEEX="com.taobao.android.intent.category.WEEX";
   private final static String URL = "url";
 
   @WXModuleAnno
@@ -148,11 +148,11 @@ public class WXNavigatorModule extends WXModule {
         Uri rawUri = Uri.parse(url);
         String scheme = rawUri.getScheme();
         Uri.Builder builder = rawUri.buildUpon();
-        if (!TextUtils.equals(scheme, "http") && !TextUtils.equals(scheme, "https")) {
+        if (TextUtils.isEmpty(scheme)) {
           builder.scheme("http");
         }
         Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        intent.addCategory(WEEX_NAVIGATOR_PUSH);
+        intent.addCategory(WEEX);
         intent.putExtra(WXNavigatorActivity.INSTANCE_ID, mWXSDKInstance.getInstanceId());
         mWXSDKInstance.getContext().startActivity(intent);
         WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
