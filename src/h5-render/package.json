@@ -36,6 +36,8 @@
   },
   "main": "src/weex.js",
   "devDependencies": {
+    "casperjs": "~1.1.1",
+    "phantomjs": "~1.9.1",
     "css-loader": "~0.23.1",
     "jscs": "^2.11.0",
     "style-loader": "~0.13.1",
