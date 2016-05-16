@@ -28,6 +28,9 @@ Other attributes please check out the [common attributes](../references/common-a
 ### Events
 
 - `loadmore`: if the list scrolls to bottom, this event will be triggered immediately. You can load the next page of items in this event handler.
+- `onappear`: if the list's items scroll to visible area, this event will be triggered when list is stopped . You can do something in this event handler.
+- `ondisappear`: if the list's items scroll to invisible area, this event will be triggered when list is stopped . You can do something in this event handler.
+
 
 **common events**: check out the [common events](../references/common-event.md)
 

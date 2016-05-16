@@ -44,33 +44,36 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/bb4c39d60d7b3d1ff0a7b351afd011ed", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(16);
+	;__weex_define__("@weex-component/114e64ff480be8fdcfbd6fd445bcb06e", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
+	  __webpack_require__(18);
 	  __weex_module__.exports = {
 	    data: function () {return {
 	      items: [
 	        // `name` key is the example filename without '.we'
 	        // Support sub directory, e.g. 'new-fashion/index'
 	        {name: 'hello', title: 'Hello World'},
-	        {name: 'image-demo', title: 'Image'},
-	        {name: 'text-demo', title: 'Text'},
-	        {name: 'style', title: 'Common Style'},
-	        {name: 'hyperlink',title:'A'},
-	        {name: 'list-basic', title: 'List (Basic)'},
-	        {name: 'list-demo', title: 'List (Advanced)'},
-	        {name: 'slider-demo', title: 'Slider'},
+	        {name: 'style/index', title: 'Common Style'},
 	        {name: 'animation', title: 'Animation'},
-	        {name: 'instance-api', title: 'Instance API'},
-	        {name: 'modal', title: 'Modal'},
-	        {name: 'stream-demo', title: 'Stream'},
-	        {name: 'video-demo', title: 'Video'},
-	        {name: 'countdown-demo', title: 'Countdown'},
-	        {name: 'marquee-demo', title: 'Marquee'},
-	        {name: 'ui', title: 'UI Gallery'},
-	        {name: 'new-fashion/index', title: 'Activity'},
-	        {name: 'calculator', title: 'Calculator'}
+	        // component
+	        {name: 'component/text-demo', title: 'Text'},
+	        {name: 'component/image-demo', title: 'Image'},
+	        {name: 'component/list/list-basic', title: 'List (Basic)'},
+	        {name: 'component/list/list-demo', title: 'List (Advanced)'},
+	        {name: 'component/slider/index', title: 'Slider'},
+	        {name: 'component/hyperlink',title:'A'},
+	        {name: 'component/video-demo', title: 'Video'},
+	        {name: 'component/countdown-demo', title: 'Countdown'},
+	        {name: 'component/marquee-demo', title: 'Marquee'},
+	        // module
+	        {name: 'module/instance-api', title: 'Instance API'},
+	        {name: 'module/modal', title: 'Modal'},
+	        {name: 'module/stream-demo', title: 'Stream'},
+	        // showcase
+	        {name: 'showcase/new-fashion/index', title: 'Activity'},
+	        {name: 'showcase/calculator', title: 'Calculator'},
+	        {name: 'showcase/ui', title: 'UI Gallery'}
 	      ]
 	    }}
 	  }
@@ -82,9 +85,8 @@
 	    "dir": "examples"
 	  }
 	}
-	;__weex_module__.exports.style={}
 	})
-	;__weex_bootstrap__("@weex-component/bb4c39d60d7b3d1ff0a7b351afd011ed", {
+	;__weex_bootstrap__("@weex-component/114e64ff480be8fdcfbd6fd445bcb06e", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -653,7 +655,7 @@
 	    data: function () {return {
 	        step: 0,
 	        count: 0,
-	        index: 0,
+	        index: 1,
 	        duration: 0,
 	        interval: 0,
 	        outofview: false
@@ -678,7 +680,7 @@
 	        },
 	        animation: function(cb) {
 	            var self = this;
-	            var offset = -self.step * (self.index + 1);
+	            var offset = -self.step * self.index;
 	            var $animation = __weex_require__('@weex-module/animation');
 	            $animation.transition(this.$el('anim'), {
 	              styles: {
@@ -687,8 +689,11 @@
 	              timingFunction: 'ease',
 	              duration: self.duration
 	            }, function() {
-	                self.index = (self.index + 1) % (self.count - 1);
-	                self.$emit('change');
+	                self.index = (self.index + 1) % (self.count);
+	                self.$emit('change', {
+	                    index: self.index,
+	                    count: self.count
+	                });
 	                cb && cb();
 	            });
 	        },
@@ -1206,7 +1211,9 @@
 /***/ },
 /* 13 */,
 /* 14 */,
-/* 15 */
+/* 15 */,
+/* 16 */,
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	;__weex_define__("@weex-component/example-list-item", [], function(__weex_require__, __weex_exports__, __weex_module__){
@@ -1251,11 +1258,11 @@
 	})
 
 /***/ },
-/* 16 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	;__weex_define__("@weex-component/example-list", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(15);
+	__webpack_require__(17);
 
 	;
 	  __webpack_require__(1);

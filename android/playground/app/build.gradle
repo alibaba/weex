@@ -12,8 +12,26 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.equals('app-release.apk')) {
+                def fileName = outputFile.name.replace("app-release.apk", "playgroud.apk")
+                output.outputFile = new File(outputFile.parent, fileName)
+            }
+        }
+    }
+    signingConfigs {
+        release {
+            storeFile file("tools/weex.jks")
+            storePassword "123456"
+            keyAlias "weex"
+            keyPassword "123456"
+        }
+    }
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -38,7 +56,6 @@ android {
     testOptions {
         reportDir = "$project.buildDir/test/report"
     }
-
 
 }
 

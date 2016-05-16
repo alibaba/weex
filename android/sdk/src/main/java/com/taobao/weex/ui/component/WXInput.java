@@ -263,7 +263,7 @@ public class WXInput extends WXComponent {
   }
 
   @Override
-  protected void flushView() {
+  public void flushView() {
     super.flushView();
     if (mHost == null) {
       return;

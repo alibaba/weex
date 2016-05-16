@@ -1,0 +1,65 @@
+<template>
+    <div class="wrapper">
+        <div class="toolbar" append = "tree">
+            <wxc-button type="primary" size="small" value="back" onclick="goback"
+                    style="margin-left:30px;width:210px; margin-top:5px; margin-bottom:5px"></wxc-button>
+            <wxc-button type="primary" size="small" value="forward" onclick="goforward"
+                    style="margin-left:30px;width:210px; margin-top:5px; margin-bottom:5px"></wxc-button>
+            <wxc-button type="primary" size="small" value="refresh" onclick="refresh"
+                    style="margin-left:30px;width:210px; margin-top:5px; margin-bottom:5px"></wxc-button>        
+        </div>
+        <web class="content" id="webview" src='https://m.taobao.com/?spm=0.0.0.0&v=0#index' onpagestart="startload" onpagefinish="finishload" onerror="failload"></web>
+    </div>
+</template>
+
+<style>
+    .wrapper { 
+        width: 750; 
+        position: absolute; 
+        top: 0; 
+        left: 0; 
+        right: 0; 
+        bottom: 0;
+    }
+    .content { 
+        position: absolute; 
+        top: 0; 
+        left: 0; 
+        right: 0; 
+        bottom: 0; 
+        margin-top: 0;  
+        margin-bottom: 70;
+    }
+    .toolbar { 
+        flex-direction: row; 
+        position: fixed; 
+        bottom: 0; 
+        left: 0; 
+        right: 0;  
+        height: 70;
+    }
+</style>
+
+<script>
+    require('weex-components');
+
+    module.exports = {
+        methods: {
+            goback: function() {
+                var $webview = require('@weex-module/webview');
+                var webElement = this.$el('webview');
+                $webview.goBack(webElement.ref);           
+             },
+            goforward: function() {
+                var $webview = require('@weex-module/webview');
+                var webElement = this.$el('webview');
+                $webview.goForward(webElement.ref); 
+            },
+            refresh: function() {
+                var $webview = require('@weex-module/webview');
+                var webElement = this.$el('webview');
+                $webview.reload(webElement.ref); 
+            } 
+        }
+    }
+</script>
