@@ -9,7 +9,6 @@ A fixed height container which has multiple child components (cells) arranged in
 ### Child Components
 
 * `cell` is a available candidate to be used as a child component for `list`.
-
 * `refresh` component can be used inside list to add pull to refresh functionality.
 * `loading` component can be used inside list to add loading view at the bottom of scroller.
 
@@ -31,8 +30,8 @@ Other attributes please check out the [common attributes](../references/common-a
 ### Events
 
 - `loadmore`: if the list scrolls to bottom, this event will be triggered immediately. You can load the next page of items in this event handler.
-- `onappear`: if the list's items scroll to visible area, this event will be triggered when list is stopped . You can do something in this event handler.
-- `ondisappear`: if the list's items scroll to invisible area, this event will be triggered when list is stopped . You can do something in this event handler.
+- `onappear`: if the list's cells scroll to visible area, this event will be triggered when list is stopped. You can do something in this event handler.
+- `ondisappear`: if the list's cells scroll to invisible area, this event will be triggered when list is stopped. You can do something in this event handler.
 
 
 **common events**: check out the [common events](../references/common-event.md)
@@ -44,4 +43,4 @@ Other attributes please check out the [common attributes](../references/common-a
 
 ### Example
 
-see [list-basic demo](../../examples/component/list/list-basic.we)
+see [list-basic demo](https://github.com/alibaba/weex/blob/example/examples/component/list/list-basic.we)
