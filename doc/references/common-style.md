@@ -82,10 +82,6 @@ The align-items property vertically aligns the flexible container's items when t
 
 ![align-items](http://gtms02.alicdn.com/tps/i2/TB1VnHKMXXXXXcEaXXXDldN_pXX-1018-502.jpg)
 
-- `flex-wrap`: `wrap` | `nowrap`
-
-The flex-wrap property controls whether the flex container is single-line or multi-line. The default value is `nowarp`, means try to fit all items in single-line.
-
 ### Flex item
 
 - flex : &lt;number&gt;

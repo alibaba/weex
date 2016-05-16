@@ -205,6 +205,7 @@
 package com.taobao.weex;
 
 import android.content.Context;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -226,6 +227,7 @@ import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.view.WXScrollView;
 import com.taobao.weex.ui.view.WXScrollView.WXScrollViewListener;
 import com.taobao.weex.utils.WXConst;
+import com.taobao.weex.utils.WXFileUtils;
 import com.taobao.weex.utils.WXJsonUtils;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXReflectionUtils;
@@ -433,6 +435,19 @@ public class WXSDKInstance implements IWXActivityStateListener {
   }
 
   public void renderByUrl(final String pageName, final String url, Map<String, Object> options, final String jsonInitData, final int width, final int height, final WXRenderStrategy flag) {
+    if (options == null) {
+      options = new HashMap<String, Object>();
+    }
+    if (!options.containsKey("bundleUrl")) {
+      options.put("bundleUrl", url);
+    }
+
+    Uri uri=Uri.parse(url);
+    if(uri!=null && uri.getScheme().equals("file")){
+      render(pageName, WXFileUtils.loadFileContent(assembleFilePath(uri), mContext),options,jsonInitData,width,height,flag);
+      return;
+    }
+
     IWXHttpAdapter adapter=WXSDKManager.getInstance().getIWXHttpAdapter();
     if (adapter == null) {
       adapter = new DefaultWXHttpAdapter();
@@ -444,16 +459,16 @@ public class WXSDKInstance implements IWXActivityStateListener {
       wxRequest.paramMap = new HashMap<String, Object>();
     }
     wxRequest.paramMap.put("user-agent", WXHttpUtil.assembleUserAgent());
-    if (options == null) {
-      options = new HashMap<String, Object>();
-    }
-    if (!options.containsKey("bundleUrl")) {
-      options.put("bundleUrl", url);
-    }
     adapter.sendRequest(wxRequest, new WXHttpListener(pageName, options, jsonInitData, width, height, flag, System.currentTimeMillis()));
     mWXHttpAdapter = adapter;
   }
 
+  private String assembleFilePath(Uri uri) {
+    if(uri!=null && uri.getPath()!=null){
+      return uri.getPath().replaceFirst("/","");
+    }
+    return "";
+  }
 
   /**
    * Refresh instance asynchronously.

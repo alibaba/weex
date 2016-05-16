@@ -283,7 +283,7 @@ public class WXListComponent extends WXVContainer implements
     RecyclerViewBaseAdapter recyclerViewBaseAdapter = new RecyclerViewBaseAdapter<>(this);
     recyclerViewBaseAdapter.setHasStableIds(true);
     mHost = new BounceRecyclerView(mContext);
-    mHost.setOverScrollMode(View.OVER_SCROLL_NEVER);
+    getView().getBounceView().setOverScrollMode(View.OVER_SCROLL_NEVER);
     getView().setAdapter(recyclerViewBaseAdapter);
     getView().getBounceView().clearOnScrollListeners();
     getView().getBounceView().addOnScrollListener(new WXRecyclerViewOnScrollListener(this));
