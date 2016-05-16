@@ -6,12 +6,6 @@
       <wxc-panel title="pop to the last page">
         <wxc-button type="success" size="small" value="pop" onclick="pop"></wxc-button>
       </wxc-panel>
-      <wxc-panel title="set the navbar title">
-        <wxc-button type="primary" size="small" value="setTitle" style="width:200;" onclick="setNavBarTitle"></wxc-button>
-      </wxc-panel>
-      <wxc-panel title="clear the navbar title">
-        <wxc-button type="success" size="small" value="clearTitle"  style="width:200;" onclick="clearNavBarTitle"></wxc-button>
-      </wxc-panel>
   </wxc-navpage>
 </template>
 
@@ -97,28 +91,6 @@
           'animated' : 'true',
         }
         vm.$call('navigator','pop',params, null);
-      },
-
-      setNavBarTitle: function() {
-        var params = {
-          title:"Title"
-        };
-        this.$call('navigator','setNavBarTitle',params,function(e) {
-          nativeLog('e = ' + e);
-        });
-
-        this.title = 'I am a title';
-      },
-
-      clearNavBarTitle: function() {
-        var params = {
-          title:""
-        };
-        this.$call('navigator','setNavBarTitle',params,function(e) {
-          nativeLog('e = ' + e);
-        });
-
-        this.title = '';
       },
     }
   }
