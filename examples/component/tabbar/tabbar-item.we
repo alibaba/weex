@@ -1,0 +1,49 @@
+<template>
+    <div class="wrapper">
+        <text class="text" style="color:{{color}}">{{text}}</text>
+    </div>
+</template>
+
+<style>
+    .wrapper { 
+        width: 750; 
+        position: absolute; 
+        top: 0; 
+        left: 0; 
+        right: 0; 
+        bottom: 0;
+        align-items: center; 
+        justify-content: center;
+    }
+    .text {
+        font-size:60; 
+        font-weight: bold; 
+        font-family: "Open Sans", sans-serif;
+    }
+</style>
+
+<script>
+    module.exports = {
+        data: {
+            color: '#ff0000',
+            text: '',
+        },
+        created: function() {
+            var bundleUrl = this.$getConfig().bundleUrl;
+            nativeLog('bundleUrl = ' + bundleUrl);
+
+            if (bundleUrl.indexOf("tab1") > 0){
+                this.color = '#ff0000';
+                this.text = 'This is Tab 1 Test.';
+            }
+            else if (bundleUrl.indexOf("tab2") > 0){
+                this.color = '#00ff00';
+                this.text = 'This is Tab 2 Test.';
+            } 
+            else if (bundleUrl.indexOf("tab3") > 0){
+                this.color = '#0000ff';
+                this.text = 'This is Tab 3 Test.';
+            } 
+        }
+    }
+</script>

@@ -276,6 +276,20 @@ public class WXRenderManager {
     });
   }
 
+  public void flushView(final String instanceId, final String ref) {
+    mWXRenderHandler.post(new Runnable() {
+
+      @Override
+      public void run() {
+        WXRenderStatement statement = mRegistries.get(instanceId);
+        if (statement == null) {
+          return;
+        }
+        statement.flushView(ref);
+      }
+    });
+  }
+
   public void createInstance(WXSDKInstance instance, String instanceId) {
     mRegistries.put(instanceId, new WXRenderStatement(instance, instanceId));
   }

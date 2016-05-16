@@ -2,6 +2,7 @@
 THIS_DIR=$(dirname "$0")
 pushd "$THIS_DIR"
 
+npm run build
 npm run serve &
 npm run watch
 

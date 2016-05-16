@@ -242,7 +242,7 @@ public class WXImage extends WXComponent {
   }
 
   @Override
-  protected void flushView() {
+  public void flushView() {
     super.flushView();
     if (getView() != null) {
       if (getView() instanceof IWXUpdateComponent) {

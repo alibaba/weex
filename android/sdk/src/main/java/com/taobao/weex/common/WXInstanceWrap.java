@@ -202,10 +202,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex;
-
-import com.taobao.weex.common.WXModule;
-import com.taobao.weex.common.WXModuleAnno;
+package com.taobao.weex.common;
 
 /**
  * Report template error.

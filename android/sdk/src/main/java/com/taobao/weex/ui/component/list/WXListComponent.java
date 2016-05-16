@@ -392,6 +392,7 @@ public class WXListComponent extends WXVContainer implements
     }
     if(component!=null){
       component.bind(null);
+      component.flushView();
     }
     WXLogUtils.d(TAG, "Bind holder "+holder);
   }
