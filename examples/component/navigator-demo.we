@@ -80,10 +80,10 @@
       push: function() {
         var vm = this;
         var params = {
-          'url':  this.baseURL + 'component/navigator-demo.js',
+          'url':  this.baseURL + 'component/navigator-demo.js?test=1',
           'animated' : 'true',
         }
-        vm.$call('navigator','push',params, null);
+        vm.$call('navigator','push',params, function () {});
       },
 
       pop: function() {
@@ -91,7 +91,7 @@
         var params = {
           'animated' : 'true',
         }
-        vm.$call('navigator','pop',params, null);
+        vm.$call('navigator','pop',params, function () {});
       },
     }
   }
