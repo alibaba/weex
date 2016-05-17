@@ -1,11 +1,7 @@
-.weex-img-wrap {
+.weex-img {
 	box-sizing: border-box;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
   position: relative;
-  border: 0 solid black;
-  margin: 0;
-  padding: 0;
-  -webkit-box-align: center;
-  -webkit-box-pack: center;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position: 50%;
 }

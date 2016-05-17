@@ -17,8 +17,6 @@ var DEFAULT_RESIZE_MODE = 'stretch'
  */
 
 function Image (data) {
-  this.width = DEFAULT_SIZE
-  this.height = DEFAULT_SIZE
   this.resize = DEFAULT_RESIZE_MODE
   Atomic.call(this, data)
 }
@@ -27,68 +25,27 @@ Image.prototype = Object.create(Atomic.prototype)
 
 Image.prototype.create = function () {
   var node = document.createElement('div')
-  this.img = document.createElement('img')
-  node.appendChild(this.img)
-  node.classList.add('weex-img-wrap')
-  node.style.overflow = 'hidden'
+  node.classList.add('weex-img')
   return node
 }
 
 Image.prototype.attr = {
   src: function (val) {
-    if (!this.img.src) {
-      this.img.src = lib.img.defaultSrc
+    if (!this.src) {
+      this.src = lib.img.defaultSrc
+      this.node.style.backgroundImage = 'url(' + this.src + ')'
     }
-    LazyLoad.makeImageLazy(this.img, val)
-    this.resetImageSize()
+    LazyLoad.makeImageLazy(this.node, val)
   },
 
   resize: function (val) {
     if (RESIZE_MODES.indexOf(val) === -1) {
       val = 'stretch'
     }
-    this.resize = val
-    this.resetImageSize()
+    this.node.style.backgroundSize = val === 'stretch'
+                                    ? '100%'
+                                    : val
   }
-}
-
-Image.prototype.resetImageSize = function () {
-  this[this.resize + 'Image']()
-}
-
-Image.prototype.getOrignalSize = function () {
-  this.img.style.position = 'absolute'
-  this.img.style.width = ''
-  this.img.style.height = ''
-  var size = {
-    width: this.img.width,
-    height: this.img.height
-  }
-  this.img.style.position = ''
-  return size
-}
-
-Image.prototype.stretchImage = function () {
-  this.img.style.width = this.width + 'px'
-  this.img.style.height = this.height + 'px'
-}
-
-Image.prototype.containImage = function () {
-  var sizeObj = this.getOriginalSize()
-  var ratioX = this.width / sizeObj.width
-  var ratioY = this.height / sizeObj.height
-  var ratio = Math.min(ratioX, ratioY)
-  this.img.style.width = this.originalWidth * ratio + 'px'
-  this.img.style.height = this.originalHeight * ratio + 'px'
-}
-
-Image.prototype.coverImage = function () {
-  var sizeObj = this.getOriginalSize()
-  var ratioX = this.width / sizeObj.width
-  var ratioY = this.height / sizeObj.height
-  var ratio = Math.max(ratioX, ratioY)
-  this.img.style.width = this.originalWidth * ratio + 'px'
-  this.img.style.height = this.originalHeight * ratio + 'px'
 }
 
 Image.prototype.style = utils.extend(Object.create(Atomic.prototype.style), {
@@ -97,9 +54,7 @@ Image.prototype.style = utils.extend(Object.create(Atomic.prototype.style), {
     if (val < 0 || val !== val) {
       val = DEFAULT_SIZE
     }
-    this.width = val
     this.node.style.width = val + 'px'
-    this.resetImageSize()
   },
 
   height: function (val) {
@@ -107,14 +62,13 @@ Image.prototype.style = utils.extend(Object.create(Atomic.prototype.style), {
     if (val < 0 || val !== val) {
       val = DEFAULT_SIZE
     }
-    this.height = val
     this.node.style.height = val + 'px'
-    this.resetImageSize()
   }
 })
 
 Image.prototype.clearAttr = function () {
-  this.node.src = ''
+  this.src = ''
+  this.node.style.backgroundImage = ''
 }
 
 module.exports = Image
