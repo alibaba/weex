@@ -17,12 +17,17 @@ var Video = require('./video')
 var Switch = require('./switch')
 var A = require('./a')
 var Embed = require('./embed')
+var Refresh = require('./refresh')
+var Loading = require('./loading')
+var Spinner = require('./spinner')
+var Web = require('./web')
 
 var components = {
   init: function (Weex) {
     Weex.registerComponent('root', RootComponent)
     Weex.registerComponent('root', RootComponent)
     Weex.registerComponent('container', Container)
+    Weex.registerComponent('div', Container)
     Weex.registerComponent('image', Image)
     Weex.registerComponent('text', Text)
     Weex.registerComponent('list', List)
@@ -40,6 +45,11 @@ var components = {
     Weex.registerComponent('switch', Switch)
     Weex.registerComponent('a', A)
     Weex.registerComponent('embed', Embed)
+    Weex.registerComponent('refresh', Refresh)
+    Weex.registerComponent('loading', Loading)
+    Weex.registerComponent('spinner', Spinner)
+    Weex.registerComponent('loading-indicator', Spinner)
+    Weex.registerComponent('web', Web)
   }
 }
 

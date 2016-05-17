@@ -1,4 +1,4 @@
-.weex-refresh {
+.weex-loading {
   // -webkit-box-align: center;
   // -webkit-align-items: center;
   // align-items: center;
@@ -7,7 +7,7 @@
   // justify-content: center;
   overflow: hidden;
   position: absolute;
-  top: 0;
+  bottom: 0;
   left: 0;
   width: 100%;
   height: 0;

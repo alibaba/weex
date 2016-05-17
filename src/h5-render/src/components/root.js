@@ -4,43 +4,33 @@ var ComponentManager = require('../componentManager')
 var Component = require('./component')
 var utils = require('../utils')
 
-var scrollable = ['list', 'scroller']
+var rootCandidates = ['list', 'scroller']
 
 function RootComponent(data, nodeType) {
   var id = data.rootId + '-root'
   var componentManager = ComponentManager.getInstance(data.instanceId)
 
   // If nodeType is in the downgrades map, just ignore it and
-  // replace it with a div element.
+  // replace it with a div component.
   var downgrades = componentManager.weexInstance.downgrades
   this.data = data
-  // Return a NodeType instance.
-  if (nodeType && nodeType !== 'div' && !downgrades[nodeType]) {
-    // If the root component is a Scrolleable Component, then
-    // the html and body height should be fixed to the max height
-    // of viewport.
-    this.fixRootHeight()
-    data.type = nodeType
-    var cmp = componentManager.createElement(data)
-    cmp.node.id = id
-    return cmp
+
+  // In some situation the root component should be implemented as
+  // its own type, otherwise it has to be a div component as a root.
+  if (!nodeType
+      || rootCandidates.indexOf(nodeType) === -1
+      || downgrades[nodeType]) {
+    nodeType = 'div'
   }
 
-  // Otherwise return a common weex-container component,
-  // whose node is a div element.
-  var node = document.createElement('div')
-  this.data = data
-  this.node = node
-
-  this.createChildren()
-  this.updateAttrs(this.data.attr)
-  // issue: when add element to a list in lifetime hook 'ready', the
-  // styles is set to the classStyle, not style. This is a issue
-  // that jsframework should do something about.
-  var classStyle = this.data.classStyle
-  classStyle && this.updateStyle(this.data.classStyle)
-  this.updateStyle(this.data.style)
-  this.bindEvents(this.data.event)
+  // If the root component is a Scrolleable Component, then
+  // the html and body height should be fixed to the max height
+  // of viewport.
+  this.fixRootHeight()
+  data.type = nodeType
+  var cmp = componentManager.createElement(data)
+  cmp.node.id = id
+  return cmp
 }
 
 RootComponent.prototype = Object.create(Component.prototype)

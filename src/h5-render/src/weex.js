@@ -191,6 +191,10 @@ Weex.prototype = {
 
   getComponentManager: function () {
     return this._componentManager
+  },
+
+  getRoot: function () {
+    return document.querySelector('#' + this.rootId)
   }
 }
 
