@@ -1,5 +1,5 @@
 <template>
-  <div class="item" onclick="{{click}}" ontouchstart="touchstart" ontouchend="touchend"
+  <div class="item" ontouchstart="touchstart" ontouchend="touchend"
              style="background-color:{{bgColor}};">
     <content></content>
   </div>
@@ -8,9 +8,7 @@
 <script>
   module.exports = {
     data: {
-      bgColor: '#ffffff',
-      click: function() {
-      }
+      bgColor: '#ffffff'
     },
     methods: {
       touchstart: function() {

@@ -1,0 +1,28 @@
+{
+  "name": "weex-components",
+  "version": "0.0.6",
+  "main": "./index.we",
+  "description": "A group of simple and useful weex components",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:alibaba/weex.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alibaba/weex/issues"
+  },
+  "keywords": [
+    "weex",
+    "hybrid",
+    "webcomponent",
+    "appframework",
+    "mvvm",
+    "javascript",
+    "webkit",
+    "v8",
+    "jscore",
+    "html5",
+    "android",
+    "ios"
+  ]
+}

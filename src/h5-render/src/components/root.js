@@ -14,7 +14,7 @@ function RootComponent(data, nodeType) {
   // replace it with a div component.
   var downgrades = componentManager.weexInstance.downgrades
   this.data = data
-  
+
   // In some situation the root component should be implemented as
   // its own type, otherwise it has to be a div component as a root.
   if (!nodeType

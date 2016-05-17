@@ -3,8 +3,8 @@
     flex-direction: row;
     justify-content: space-between;
 
-    width: 714;
-    height: 420;
+    width: 714px;
+    height: 420px;
   }
 </style>
 

@@ -28,7 +28,7 @@ You can copy and paste above code to a Weex file named `tech_list.we` (`.we` is 
 The Weex CLI toolchain is Node JS based, so you need to install [Node](https://nodejs.org/en/download/stable/) first. Then you can install Weex CLI program using Node JS npm command.
 
 ```
-sudo tnpm install -g @ali/weex-toolkit
+npm install -g weex-toolkit
 ```
 
 After Weex CLI program install finished, you should test to ensure the Weex CLI is properly installed by typing weex on the command line. You should see the following help text displayed:
@@ -37,9 +37,7 @@ After Weex CLI program install finished, you should test to ensure the Weex CLI 
 Usage: weex foo/bar/your_next_best_weex_script_file.we  [options]
 
 Options:
-  -n      do not open preview browser automatic                        [boolean]
   --qr    display QR code for native runtime                           [boolean]
-  -h      specify weex server listen host                 [default: "127.0.0.1"]
   -o      transform weex JS bundle only, specify bundle file name using the
           option                                 [default: "no JSBundle output"]
   -s      start a http file server, weex .we file will be transformed on the
@@ -50,12 +48,16 @@ Options:
 If all works well, navigate to the directory where you save the newly created tech_list.we, then type
 
 ```
-weex tech_list.we
+;; weex tech_list.we   // Weex H5 renderer is not released , so , the commond not works now
 ```
 
 A browser window will open automatically  to display  something like below
 
 ![weex html5 render](http://gtms02.alicdn.com/tps/i2/TB1y151LVXXXXXXaXXXoRYgWVXX-495-584.jpg)
+
+
+**Weex H5 renderer is not released , So please using Weex Playground App based preview for a while**
+
 
 ## Intro Weex Syntax
 So  it's  time for some "boring syntax",  as  content of  tech_list.we showing,  Weex source code is  written in three parts --  *template*,  *style*, *script* just like html,css,javascript for the Web.
@@ -109,7 +111,7 @@ An QR code will be display in the terminal window, like:
 ![weex qr](http://gtms01.alicdn.com/tps/i1/TB1ggfiLVXXXXbPXXXXELJK6FXX-334-379.jpg)
 
 
-The QR code will work together with Weex playground App, you can download the app  here.  After successful installation, open Weex playground App then click scan icon at  top right corner, then scan the Qr code in your terminal.If all works well, a beautiful list will be displayed in your phone. Here, i must stress that the list is render using native widget ( no webkit ), so your app get faster loading and less memory overhead than common embedded webkit  renderer.
+The QR code will work together with Weex playground App, you can download the app  [here](http://alibaba.github.io/weex/download.html).  After successful installation, open Weex playground App then click scan icon at  top right corner, then scan the Qr code in your terminal.If all works well, a beautiful list will be displayed in your phone. Here, i must stress that the list is render using native widget ( no webkit ), so your app get faster loading and less memory overhead than common embedded webkit  renderer.
 
 ![list1 in Android](http://gtms04.alicdn.com/tps/i4/TB1FH15LVXXXXcYXFXXFzbANVXX-504-896.png)
 
@@ -195,6 +197,6 @@ You should see a  slider prepend  to our list.
 ![slider demo](http://gtms02.alicdn.com/tps/i2/TB1MB2gLVXXXXaLXpXXB8.XUXXX-596-1000.gif)
 
 
-More information about Slider Component can be found [here](/components/slider.md).
+More information about Slider Component can be found [here](components/slider.md).
 
-Just as previous example, the slider can be rendering in native, easily in Weex playground,also in your App. Please refer [the document](/advanced/main.md) for integrating Weex into your App.
+Just as previous example, the slider can be rendering in native, easily in Weex playground,also in your App. Please refer [the document](advanced/integrate-to-android.md) for integrating Weex into your App.

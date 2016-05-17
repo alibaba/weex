@@ -19,6 +19,11 @@ require('scrolljs')
 var Component = require('./component')
 var utils = require('../utils')
 
+var FLEX_DIRECTION = {
+  horizontal: 'row',
+  vertical: 'column'
+}
+
 // attrs:
 //  - scroll-direciton: none|vertical|horizontal (default is vertical)
 //  - show-scrollbar: true|false (default is true)
@@ -39,12 +44,19 @@ Scroller.prototype.create = function (nodeType) {
   var Scroll = lib.scroll
   var node = Component.prototype.create.call(this, nodeType)
   node.classList.add('weex-container', 'scroll-wrap')
+
   this.scrollElement = document.createElement('div')
   this.scrollElement.classList.add(
     'weex-container',
     'scroll-element',
     this.scrollDirection
   )
+
+  // Flex will cause a bug to rescale children's size if their total
+  // size exceed the limit of their parent. So to use box instead.
+  this.scrollElement.style.display = '-webkit-box'
+  this.scrollElement.style.display = 'box'
+
   node.appendChild(this.scrollElement)
   this.scroller = new Scroll({
     scrollElement: this.scrollElement,
@@ -105,7 +117,7 @@ Scroller.prototype.insertBefore = function (child, before) {
     isAppend = true
   } else {
     for (var l = children.length; i < l; i++) {
-      if (children[i].ref === child.data.ref) {
+      if (children[i].ref === before.data.ref) {
         break
       }
     }
@@ -125,7 +137,7 @@ Scroller.prototype.insertBefore = function (child, before) {
   }
 }
 
-Scroller.prototype.removeChild = function () {
+Scroller.prototype.removeChild = function (child) {
   var children = this.data.children
   // remove from this.data.children
   var i = 0

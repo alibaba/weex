@@ -3,6 +3,7 @@
 var Atomic = require('./atomic')
 var LazyLoad = require('../lazyLoad')
 var config = require('../config')
+var utils = require('../utils')
 
 var DEFAULT_SIZE = 200
 var RESIZE_MODES = ['cover', 'contain'] // not temporarily supported
@@ -13,14 +14,6 @@ var RESIZE_MODES = ['cover', 'contain'] // not temporarily supported
  */
 
 function Image (data) {
-  this.width = data.style && data.style.width
-               ? (data.style.width + '').replace(/[^\d]/g, '')
-               : DEFAULT_SIZE
-  this.height = data.style && data.style.height
-               ? (data.style.height + '').replace(/[^\d]/g, '')
-               : DEFAULT_SIZE
-  this.width *= data.scale
-  this.height *= data.scale
   var mode
   var attr = data.attr
   attr && (mode = attr.resize || attr.resizeMode)
@@ -49,6 +42,24 @@ Image.prototype.attr = {
     LazyLoad.makeImageLazy(this.node, value)
   }
 }
+
+Image.prototype.style = utils.extend(Object.create(Atomic.prototype.style), {
+  width: function (val) {
+    val = parseFloat(val) * this.data.scale
+    if (val < 0 || val !== val) {
+      val = DEFAULT_SIZE
+    }
+    this.node.style.width = val + 'px'
+  },
+
+  height: function (val) {
+    val = parseFloat(val) * this.data.scale
+    if (val < 0 || val !== val) {
+      val = DEFAULT_SIZE
+    }
+    this.node.style.height = val + 'px'
+  }
+})
 
 Image.prototype.clearAttr = function () {
   this.node.src = ''

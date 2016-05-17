@@ -1,7 +1,7 @@
 <template>
-  <ui-list-item click="{{redirect}}">
+  <wxc-list-item onclick="{{redirect}}">
     <text class="item-txt">{{ title }}</text>
-  </ui-list-item>
+  </wxc-list-item>
 </template>
 
 <style>
@@ -12,7 +12,7 @@
 </style>
 
 <script>
-  require('./weex-ui');
+  require('weex-components');
   module.exports = {
     data: {
       title: '',

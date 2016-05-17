@@ -10,12 +10,8 @@
       type: '0' // 0, 1
     },
     methods: {
-      ready: function() {
-        // TODO issue why undefined?
-        console.log(this.data);
-      },
       bgColor: function() {
-        return this.type == '1' ? '#BEAD92' : '#7BA3A8';
+        return this.type == '1' ? '#7BA3A8' : '#BEAD92';
       }
     }
   }
@@ -24,16 +20,13 @@
 <style>
   .item {
     margin-right: 10px;
-    margin-bottom: 10px;
+    /*margin-bottom: 10px;*/
     width: 160px;
     height: 75px;
     padding-left: 8px;
     padding-right: 8px;
     padding-top: 8px;
     padding-bottom: 8px;
-    /*border-style: solid;*/
-    /*border-color: red;*/
-    /*background-color: #BEAD92;*/
   }
 
   .txt {

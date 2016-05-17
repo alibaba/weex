@@ -20,6 +20,7 @@ var Embed = require('./embed')
 var Refresh = require('./refresh')
 var Loading = require('./loading')
 var Spinner = require('./spinner')
+var Web = require('./web')
 
 var components = {
   init: function (Weex) {
@@ -47,6 +48,7 @@ var components = {
     Weex.registerComponent('refresh', Refresh)
     Weex.registerComponent('loading', Loading)
     Weex.registerComponent('spinner', Spinner)
+    Weex.registerComponent('web', Web)
   }
 }
 

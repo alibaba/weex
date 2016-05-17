@@ -1,22 +1,22 @@
 <template>
   <scroller>
-    <ui-panel title="Dialog">
-      <ui-tip type="success" value="It's a weex example template." style="margin-bottom: 20px;"></ui-tip>
-      <ui-hn level="1" value="H1"></ui-hn>
-      <ui-button type="primary" click="{{toast}}" value="Toast"></ui-button>
-      <ui-hn level="2" value="H3"></ui-hn>
-      <ui-button type="warning" click="{{toast}}" value="Toast"></ui-button>
-    </ui-panel>
+    <wxc-panel title="Dialog">
+      <wxc-tip type="success" value="It's a weex example template." style="margin-bottom: 20px;"></wxc-tip>
+      <wxc-hn level="1" value="H1"></wxc-hn>
+      <wxc-button type="primary" onclick="{{toast}}" value="Toast"></wxc-button>
+      <wxc-hn level="2" value="H3"></wxc-hn>
+      <wxc-button type="warning" onclick="{{toast}}" value="Toast"></wxc-button>
+    </wxc-panel>
 
-    <ui-panel title="Image" type="primary">
-      <ui-tip type="warning" value="Weex screen width is 750" style="margin-bottom: 20px;"></ui-tip>
+    <wxc-panel title="Image" type="primary">
+      <wxc-tip type="warning" value="Weex screen width is 750" style="margin-bottom: 20px;"></wxc-tip>
       <image class="img" style=" width: 400px; height: 400px;" src="{{img}}"></image>
-    </ui-panel>
+    </wxc-panel>
   </scroller>
 </template>
 
 <script>
-  require('./weex-ui');
+  require('weex-components');
   module.exports = {
     data: {
       img: '//gw.alicdn.com/tps/i2/TB1DpsmMpXXXXabaXXX20ySQVXX-512-512.png_400x400.jpg'

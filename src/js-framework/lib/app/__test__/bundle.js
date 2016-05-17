@@ -186,7 +186,7 @@ describe('parsing a bundle file', () => {
       const ready = sinon.spy()
 
       before(() => {
-        global.needTransformerVersion = '~0.1'
+        global.needTransformerVersion = '>=0.1 <1.0'
         app.define('@weex-component/main', (require, exports, module) => {
           module.exports = {
             template: componentTemplate,
@@ -238,9 +238,15 @@ describe('parsing a bundle file', () => {
         expect(task2.args[2]).to.be.equal(-1)
       })
 
-      it('with a wrong transformer version', () => {
+      it('with a less wrong transformer version', () => {
         const result = app.bootstrap(
           '@weex-component/main', {transformerVersion: '0.0.1'})
+        expect(result).instanceof(Error)
+      })
+
+      it('with a bigger wrong transformer version', () => {
+        const result = app.bootstrap(
+          '@weex-component/main', {transformerVersion: '9.9.9'})
         expect(result).instanceof(Error)
       })
 

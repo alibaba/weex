@@ -56,12 +56,13 @@ Refresh.prototype.adjustHeight = function (val) {
 Refresh.prototype.handleRefresh = function (e) {
   var scrollObj = e.scrollObj
   var parent = this.getParent()
+  var scrollElement = parent.scrollElement || parent.listElement
   this.node.style.height = CLAMP + 'px'
   this.node.style.top = -CLAMP + 'px'
   var translateStr = 'translate3d(0px,' + CLAMP + 'px,0px)'
-  parent.scrollElement.style[cssPrefix + 'transform']
+  scrollElement.style[cssPrefix + 'transform']
     = cssPrefix + translateStr
-  parent.scrollElement.style.transform = translateStr
+  scrollElement.style.transform = translateStr
   this.dispatchEvent('refresh')
 }
 
@@ -75,19 +76,24 @@ Refresh.prototype.show = function () {
 Refresh.prototype.hide = function () {
   this.display = false
   var parent = this.getParent()
+  var scrollElement = parent.scrollElement || parent.listElement
   var translateStr = 'translate3d(0px,0px,0px)'
-  parent.scrollElement.style[cssPrefix + 'transform']
+  scrollElement.style[cssPrefix + 'transform']
     = cssPrefix + translateStr
-  parent.scrollElement.style.transform = translateStr
+  scrollElement.style.transform = translateStr
   this.node.style.display = 'none'
 }
 
 Refresh.prototype.attr = {
   display: function (val) {
     if (val === true || val === 'true') {
-      this.show()
+      setTimeout(function () {
+        this.show()
+      }.bind(this), 0)
     } else {
-      this.hide()
+      setTimeout(function () {
+        this.hide()
+      }.bind(this), 0)
     }
   }
 }

@@ -44,8 +44,8 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/8835c8035764710fbf48f4a3da8d1e00", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(11);
+	;__weex_define__("@weex-component/71d39ae20d682839c3cfcd1a941d1685", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	__webpack_require__(9);
 
 	;
 	  __webpack_require__(1);
@@ -118,7 +118,7 @@
 	}
 	;__weex_module__.exports.style={}
 	})
-	;__weex_bootstrap__("@weex-component/8835c8035764710fbf48f4a3da8d1e00", {"transformerVersion":"0.3.1"}, undefined)
+	;__weex_bootstrap__("@weex-component/71d39ae20d682839c3cfcd1a941d1685", {"transformerVersion":"0.3.1"}, undefined)
 
 /***/ },
 /* 1 */
@@ -570,9 +570,7 @@
 /***/ },
 /* 7 */,
 /* 8 */,
-/* 9 */,
-/* 10 */,
-/* 11 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	;__weex_define__("@weex-component/example-list-item", [], function(__weex_require__, __weex_exports__, __weex_module__){

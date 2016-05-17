@@ -52,15 +52,16 @@ Loading.prototype.adjustHeight = function (val) {
 
 Loading.prototype.handleLoading = function (e) {
   var parent = this.getParent()
-  var offset = parent.scrollElement.getBoundingClientRect().height
+  var scrollElement = parent.scrollElement || parent.listElement
+  var offset = scrollElement.getBoundingClientRect().height
             - parent.node.getBoundingClientRect().height
             + DEFAULT_HEIGHT
   this.node.style.height = DEFAULT_HEIGHT + 'px'
   this.node.style.bottom = -DEFAULT_HEIGHT + 'px'
   var translateStr = 'translate3d(0px,-' + offset + 'px,0px)'
-  parent.scrollElement.style[cssPrefix + 'transform']
+  scrollElement.style[cssPrefix + 'transform']
     = cssPrefix + translateStr
-  parent.scrollElement.style.transform = translateStr
+  scrollElement.style.transform = translateStr
   this.dispatchEvent('loading')
 }
 
@@ -74,7 +75,8 @@ Loading.prototype.show = function () {
 Loading.prototype.hide = function () {
   this.display = false
   var parent = this.getParent()
-  var scrollElementHeight = parent.scrollElement.getBoundingClientRect().height
+  var scrollElement = parent.scrollElement || parent.listElement
+  var scrollElementHeight = scrollElement.getBoundingClientRect().height
   var scrollWrapHeight = parent.node.getBoundingClientRect().height
   var left = scrollElementHeight
     - parent.scroller.getScrollTop()
@@ -83,9 +85,9 @@ Loading.prototype.hide = function () {
     var offset = scrollElementHeight
             - parent.node.getBoundingClientRect().height
     var translateStr = 'translate3d(0px,-' + offset + 'px,0px)'
-    parent.scrollElement.style[cssPrefix + 'transform']
+    scrollElement.style[cssPrefix + 'transform']
       = cssPrefix + translateStr
-    parent.scrollElement.style.transform = translateStr
+    scrollElement.style.transform = translateStr
   }
   this.node.style.display = 'none'
 }
@@ -93,9 +95,13 @@ Loading.prototype.hide = function () {
 Loading.prototype.attr = {
   display: function (val) {
     if (val === true || val === 'true') {
-      this.show()
+      setTimeout(function () {
+        this.show()
+      }.bind(this), 0)
     } else {
-      this.hide()
+      setTimeout(function () {
+        this.hide()
+      }.bind(this), 0)
     }
   }
 }

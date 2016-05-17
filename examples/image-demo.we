@@ -1,17 +1,17 @@
 <template>
   <scroller>
-    <ui-panel title="width x height = 400 x 400">
-      <ui-tip type="warning" value="Weex screen width is 750" style="margin-bottom: 20px;"></ui-tip>
+    <wxc-panel title="width x height = 400 x 400">
+      <wxc-tip type="warning" value="Weex screen width is 750" style="margin-bottom: 20px;"></wxc-tip>
       <image class="img" style=" width: 400px; height: 400px;" src="{{img}}"></image>
-    </ui-panel>
+    </wxc-panel>
 
-    <ui-panel title="200 x 200">
+    <wxc-panel title="200 x 200">
       <image class="img" style=" width: 200px; height: 200px;" src="{{img}}"></image>
-    </ui-panel>
+    </wxc-panel>
 
-    <ui-panel title="100 x 100">
+    <wxc-panel title="100 x 100">
       <image class="img" style=" width: 100px; height: 100px;" src="{{img}}"></image>
-    </ui-panel>
+    </wxc-panel>
   </scroller>
 </template>
 
@@ -22,7 +22,7 @@
 </style>
 
 <script>
-  require('./weex-ui');
+  require('weex-components');
   module.exports = {
     data: {
       img: '//gw.alicdn.com/tps/i2/TB1DpsmMpXXXXabaXXX20ySQVXX-512-512.png_400x400.jpg'

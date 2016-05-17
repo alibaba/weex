@@ -1,7 +1,6 @@
 <!-- Inspired by bootstrap http://getbootstrap.com/ -->
 <template>
-  <!--FIXME disabled opacity?-->
-  <div class="btn btn-{{type}} btn-sz-{{size}}" onclick="{{clicked}}" style="opacity:{{disabled?0.9:1}}">
+  <div class="btn btn-{{type}} btn-sz-{{size}}">
     <text class="btn-txt btn-txt-{{type}} btn-txt-sz-{{size}}">{{value}}</text>
   </div>
 </template>
@@ -11,15 +10,9 @@
     data: {
       type: 'default',
       size: 'large',
-      value: '',
-      click: null,
-      disabled: false
+      value: ''
     },
     methods: {
-      clicked: function(ev) {
-        if (this.disabled) return;
-        this.click(ev);
-      }
     }
   }
 </script>

@@ -34,7 +34,8 @@
     "install:js-framework": "cd ./src/js-framework && npm install && cd ../../",
     "install:h5-render": "cd ./src/h5-render && npm install && cd ../../",
     "install:githooks": "bash ./bin/install-hooks.sh",
-    "postinstall": "npm run install:js-framework && npm run install:h5-render && npm run install:githooks",
+    "install:components": "bash ./bin/install-components.sh",
+    "postinstall": "npm run install:js-framework && npm run install:h5-render && npm run install:githooks && npm run install:components",
     "clean:examples": "echo \"\\033[36;1m[Clean]\\033[0m \\033[33mexamples\\033[0m\" && rm -vrf examples/build/*",
     "clean:test": "echo \"\\033[36;1m[Clean]\\033[0m \\033[33mtest\\033[0m\" && rm -vrf test/build/*",
     "clean": "npm run clean:examples && npm run clean:test",
@@ -56,7 +57,7 @@
   "devDependencies": {
     "serve": "^1.4.0",
     "webpack": "^1.13.0",
-    "weex-loader": "~0.1.1",
+    "weex-loader": "^0.1.3",
     "weex-scripter": "^0.1.4",
     "weex-styler": "^0.0.17",
     "weex-templater": "^0.2.1",

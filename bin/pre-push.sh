@@ -1,7 +1,7 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Validate branch name
-branch_regex="^(\d+\.\d+\.\d+)|(master|dev|android|ios|jsfm|html5|doc|website|example|test|all)(-(bugfix|feature|hotfix)-.+)?$"
+branch_regex="^(\d+\.\d+\.\d+)|(master|dev|android|ios|jsfm|html5|component|doc|website|example|test|all)(-(bugfix|feature|hotfix)-.+)?$"
 branch_name=$(git rev-parse --abbrev-ref HEAD)
 
 if ! (echo $branch_name | grep -iqE "$branch_regex"); then

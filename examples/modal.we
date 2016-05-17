@@ -1,19 +1,19 @@
 <template>
   <scroller>
-    <ui-panel title="Toast">
-      <ui-button type="primary" click="{{toast}}" value="Toast"></ui-button>
-    </ui-panel>
+    <wxc-panel title="Toast">
+      <wxc-button type="primary" onclick="{{toast}}" value="Toast"></wxc-button>
+    </wxc-panel>
 
-    <ui-panel title="Dialog">
-      <ui-button type="success" click="{{alert}}" value="Alert" style="margin-bottom: 20px;"></ui-button>
-      <ui-button type="primary" click="{{confirm}}" value="Confirm" style="margin-bottom: 20px;"></ui-button>
-      <ui-button type="warning" click="{{prompt}}" value="Prompt"></ui-button>
-    </ui-panel>
+    <wxc-panel title="Dialog">
+      <wxc-button type="success" onclick="{{alert}}" value="Alert" style="margin-bottom: 20px;"></wxc-button>
+      <wxc-button type="primary" onclick="{{confirm}}" value="Confirm" style="margin-bottom: 20px;"></wxc-button>
+      <wxc-button type="warning" onclick="{{prompt}}" value="Prompt"></wxc-button>
+    </wxc-panel>
   </scroller>
 </template>
 
 <script>
-  require('./weex-ui');
+  require('weex-components');
   module.exports = {
     data: {},
     methods: {

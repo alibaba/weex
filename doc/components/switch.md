@@ -23,6 +23,8 @@ Other attributes please check out the [common attributes](../references/common-a
 - support ``position`` related styles
 - support ``opacity``, ``background-color`` etc.
 
+**Notes:** The `width` and `height` is not configurable and the size of this component is fixed to `100x60` (for the design width 750px).
+
 ### Events
 
 - `click`: check out [common events](../references/common-event.md)

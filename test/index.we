@@ -1,7 +1,7 @@
 <template>
   <list>
     <cell repeat="{{cases}}">
-      <indexItem title="{{title}}" url="{{url}}"></indexItem>
+      <index-item title="{{title}}" url="{{url}}"></index-item>
     </cell>
   </list>
 </template>

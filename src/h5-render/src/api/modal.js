@@ -1,6 +1,5 @@
 'use strict'
 
-var sender = require('../bridge/sender')
 var modal = require('modals')
 
 var msg = {

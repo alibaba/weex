@@ -5,8 +5,8 @@
            auto-play="true" play-status="{{playStatus}}">
     </video>
     <div style="flex-direction: row; justify-content: center;">
-      <ui-button value="Pause" click="{{pause}}"></ui-button>
-      <ui-button value="Play" click="{{play}}" type="primary" style="margin-left:20px;"></ui-button>
+      <wxc-button value="Pause" onclick="{{pause}}"></wxc-button>
+      <wxc-button value="Play" onclick="{{play}}" type="primary" style="margin-left:20px;"></wxc-button>
     </div>
   </scroller>
 </template>
@@ -20,7 +20,7 @@
 </style>
 
 <script>
-  require('./weex-ui');
+  require('weex-components');
   module.exports = {
     data: {
       playStatus: 'play'

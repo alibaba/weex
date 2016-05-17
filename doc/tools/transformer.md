@@ -6,7 +6,7 @@
 
 ```javascript
 var gulp = require('gulp')
-var weex = require('@ali/gulp-weex')
+var weex = require('gulp-weex')
 
 gulp.task('default', function () {
   return gulp.src('src/*.html')

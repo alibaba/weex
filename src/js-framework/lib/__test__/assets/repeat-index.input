@@ -28,7 +28,7 @@ define('@weex-component/repeat-index', function (require, exports, module) {
         "title"
       ],
       "attr": {
-        "value": function () {return this.INDEX + ': ' + this.title}
+        "value": function () {return this.$index + ': ' + this.title}
       }
     }
   ]

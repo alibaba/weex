@@ -1,6 +1,6 @@
 <template>
-  <div style="padding: 5;">
-    <text class="result">{{getResult()}}</text>
+  <div style="padding: 5px;">
+    <text class="result">{{result}}</text>
     <div class="row">
       <text class="btn" onclick="input">1</text>
       <text class="btn" onclick="input">2</text>
@@ -29,33 +29,72 @@
 </template>
 
 <style>
-  .row {flex-direction: row;}
-  .result {color: white; background-color: #666; text-align: right;}
-  .btn {flex: 1; text-align: center; background-color: #eee;}
-  .btn-operator {color: white; background-color: #669;}
-  .btn, .result {height: 100; padding: 30; margin: 5;}
+  .row {
+    flex-direction: row;
+  }
+
+  .result {
+    text-align: right;
+    background-color: #666;
+    font-size: 40px;
+    color: white;
+  }
+
+  .btn {
+    flex: 1;
+    text-align: center;
+    background-color: #eee;
+    font-size: 36px;
+  }
+
+  .btn, .result {
+    height: 100px;
+    padding: 30px;
+    margin: 5px;
+  }
+
+  .btn-operator {
+    background-color: #669;
+    font-size: 40px;
+    color: white;
+  }
 </style>
 
 <script>
-  require('./weex-ui');
+  require('weex-components');
+  var OP = ['+', '-', '*', '/'];
+  var inputs = [];
   module.exports = {
     data: {
       result: ''
     },
     methods: {
-      getResult: function () {
-        return this.result;
+      input: function(e) {
+        var value = e.target.attr['value'];
+        var lastOne = inputs.length ? inputs[inputs.length - 1] : '';
+        if (OP.indexOf(lastOne) > -1 && OP.indexOf(value) > -1) {
+          return;
+        }
+
+        inputs.push(value);
+        var buf = [], char;
+        for (var i = 0; i < inputs.length; i++) {
+          char = inputs[i];
+          if (OP.indexOf(char) > -1) {
+            char = ' ' + char + ' ';
+          }
+          buf.push(char);
+        }
+        this.result = buf.join('');
       },
-      input: function (e) {
-        var value = e.target.attr["value"];
-        this.result = this.result + value;
-      },
-      calculate: function(e) {
+      calculate: function() {
         var result = eval(this.result);
-        this.result = this.result + " = " + result;
+        inputs = [result];
+        this.result = result;
       },
-      clear: function(e) {
-        this.result = "";
+      clear: function() {
+        inputs = [];
+        this.result = '';
       }
     }
   }

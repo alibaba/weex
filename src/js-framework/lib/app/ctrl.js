@@ -23,6 +23,7 @@ export function init(code, data) {
   const define = bind(this.define, this)
   const bootstrap = (name, config, _data) => {
     result = this.bootstrap(name, config, _data || data)
+    this.updateActions()
     this.doc.listener.createFinish()
     this.doc.close()
   }

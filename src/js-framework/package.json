@@ -1,6 +1,6 @@
 {
   "name": "weex-jsframework",
-  "version": "0.13.7",
+  "version": "0.13.9",
   "description": "JS Framework for Weex solution which is a extendable cross-platform solution for dynamic programming and publishing projects",
   "main": "index.js",
   "scripts": {
@@ -70,6 +70,6 @@
     "webpack": "~1.12.12"
   },
   "optionalDependencies": {
-    "weex-transformer": "~0.3"
+    "weex-transformer": ">=0.1.5 <0.4"
   }
 }

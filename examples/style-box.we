@@ -1,43 +1,43 @@
 <template>
-  <scroller>
-    <ui-panel title="Box Model" padding-body="0" type="primary">
+  <div>
+    <wxc-panel title="Box Model" padding-body="0" type="primary">
       <text class="box">Box</text>
-    </ui-panel>
+    </wxc-panel>
 
-    <ui-panel title="border" type="primary">
-      <ui-panel title="border-width" type="">
+    <wxc-panel title="border" type="primary">
+      <wxc-panel title="border-width" type="">
         <div style="flex-direction: row;">
           <style-item style="border-style: solid;border-width: 2px;border-color: #333;" value=""></style-item>
-          <style-item style="border-style: solid;border-width: 4px;border-color: #333;" value=""
-                      type=""></style-item>
           <style-item style="border-style: solid;border-width: 10px;border-color: #333;" value=""></style-item>
+          <style-item style="border-style: solid;border-left-width: 4px;border-color: #333;" value=""></style-item>
+          <style-item style="border-style: solid;border-bottom-width: 4px;border-color: #333;" value=""></style-item>
         </div>
-      </ui-panel>
-      <ui-panel title="border-color" type="">
+      </wxc-panel>
+      <wxc-panel title="border-color" type="">
         <div style="flex-direction: row;">
           <style-item style="border-style: solid;border-width: 4px;border-color: #333;" value=""></style-item>
-          <style-item style="border-style: solid;border-width: 4px;border-color: #ddd;" value=""
-                      type=""></style-item>
+          <style-item style="border-style: solid;border-width: 4px;border-color: #ddd;" value=""></style-item>
           <style-item style="border-style: solid;border-width: 4px;border-color: red;" value=""></style-item>
         </div>
-      </ui-panel>
-      <ui-panel title="border-style" type="">
+      </wxc-panel>
+      <wxc-panel title="border-style" type="">
+        <wxc-tip type="warning" value="just support four edges" style="margin-bottom: 10px;"></wxc-tip>
         <div style="flex-direction: row;">
           <style-item style="border-style: solid;border-width: 4px;border-color: #333;" value=""></style-item>
-          <style-item style="border-style: dashed;border-width: 4px;border-color: #333;" value=""
-                      type=""></style-item>
+          <style-item style="border-style: dashed;border-width: 4px;border-color: #333;" value="" type=""></style-item>
           <style-item style="border-style: dotted;border-width: 4px;border-color: #333;" value=""></style-item>
         </div>
-      </ui-panel>
-      <ui-panel title="border-radius" type="">
+      </wxc-panel>
+      <wxc-panel title="border-radius" type="">
         <div style="flex-direction: row;">
-          <style-item style="height: 160px;border-radius:80px" value=""></style-item>
-          <style-item style="width: 75px;border-radius:37.5px" value=""></style-item>
+          <style-item style="width: 75px;border-radius:38px" value=""></style-item>
           <style-item style="border-radius:20px" value=""></style-item>
+          <style-item style="border-top-left-radius:20px;border-top-right-radius:20px" value=""></style-item>
+          <style-item style="border-bottom-left-radius:20px;border-bottom-right-radius:20px" value=""></style-item>
         </div>
-      </ui-panel>
-    </ui-panel>
-  </scroller>
+      </wxc-panel>
+    </wxc-panel>
+  </div>
 </template>
 
 <style>
@@ -60,7 +60,7 @@
 </style>
 
 <script>
-  require('./weex-ui');
+  require('weex-components');
   module.exports = {
     data: {
       size: 40

@@ -1,20 +1,20 @@
 <template>
   <div>
-    <ui-panel title="Transform">
-      <ui-button value="Rotate" click="{{rotate}}" type="primary" size="middle"></ui-button>
-      <ui-button value="Scale" click="{{scale}}" type="primary" size="middle" style="margin-top:12px;"></ui-button>
-      <ui-button value="Translate" click="{{translate}}" type="primary" size="middle"
-                 style="margin-top:12px;"></ui-button>
-      <ui-button value="Transform" click="{{transform}}" type="success" size="middle"
-                 style="margin-top:12px;"></ui-button>
-    </ui-panel>
+    <wxc-panel title="Transform">
+      <wxc-button value="Rotate" onclick="{{rotate}}" type="primary" size="middle"></wxc-button>
+      <wxc-button value="Scale" onclick="{{scale}}" type="primary" size="middle" style="margin-top:12px;"></wxc-button>
+      <wxc-button value="Translate" onclick="{{translate}}" type="primary" size="middle"
+                 style="margin-top:12px;"></wxc-button>
+      <wxc-button value="Transform" onclick="{{transform}}" type="success" size="middle"
+                 style="margin-top:12px;"></wxc-button>
+    </wxc-panel>
 
-    <ui-panel title="Others">
-      <ui-button value="BgColor" click="{{color}}" type="primary" size="middle"></ui-button>
-      <ui-button value="Opacity" click="{{opacity}}" type="primary" size="middle"
-                 style="margin-top:12px;"></ui-button>
-      <ui-button value="All" click="{{composite}}" type="success" size="middle" style="margin-top:12px;"></ui-button>
-    </ui-panel>
+    <wxc-panel title="Others">
+      <wxc-button value="BgColor" onclick="{{color}}" type="primary" size="middle"></wxc-button>
+      <wxc-button value="Opacity" onclick="{{opacity}}" type="primary" size="middle"
+                 style="margin-top:12px;"></wxc-button>
+      <wxc-button value="All" onclick="{{composite}}" type="success" size="middle" style="margin-top:12px;"></wxc-button>
+    </wxc-panel>
 
     <div id="block" class="block" style="transform-origin:{{transformOrigin}}">
       <text class="block-txt">Anim</text>
@@ -23,7 +23,7 @@
 </template>
 
 <script>
-  require('./weex-ui');
+  require('weex-components');
   module.exports = {
     data: {
       transformOrigin: 'center center',
