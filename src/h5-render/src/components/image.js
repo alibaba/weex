@@ -5,41 +5,46 @@ var LazyLoad = require('../lazyLoad')
 var config = require('../config')
 var utils = require('../utils')
 
+require('../styles/image.css')
+
 var DEFAULT_SIZE = 200
-var RESIZE_MODES = ['cover', 'contain'] // not temporarily supported
+var RESIZE_MODES = ['stretch', 'cover', 'contain']
+var DEFAULT_RESIZE_MODE = 'stretch'
 
 /**
- * resize=cover|contain|stretch v1.4 temporarily not supported
- * src=url
+ * resize: 'cover' | 'contain' | 'stretch', default is 'stretch'
+ * src: url
  */
 
 function Image (data) {
-  var mode
-  var attr = data.attr
-  attr && (mode = attr.resize || attr.resizeMode)
-  if (RESIZE_MODES.indexOf(mode) !== -1) {
-    this.mode = mode
-    // TODO: resize-mode is not temporarily supported.
-  }
+  this.resize = DEFAULT_RESIZE_MODE
   Atomic.call(this, data)
 }
 
 Image.prototype = Object.create(Atomic.prototype)
 
 Image.prototype.create = function () {
-  var node = document.createElement('img')
-  node.classList.add('weex-element')
-  node.style.display = 'block'
-  node.style.outline = 'none'
+  var node = document.createElement('div')
+  node.classList.add('weex-img')
   return node
 }
 
 Image.prototype.attr = {
-  src: function (value) {
-    if (!this.node.src) {
-      this.node.src = lib.img.defaultSrc
+  src: function (val) {
+    if (!this.src) {
+      this.src = lib.img.defaultSrc
+      this.node.style.backgroundImage = 'url(' + this.src + ')'
     }
-    LazyLoad.makeImageLazy(this.node, value)
+    LazyLoad.makeImageLazy(this.node, val)
+  },
+
+  resize: function (val) {
+    if (RESIZE_MODES.indexOf(val) === -1) {
+      val = 'stretch'
+    }
+    this.node.style.backgroundSize = val === 'stretch'
+                                    ? '100%'
+                                    : val
   }
 }
 
@@ -62,7 +67,8 @@ Image.prototype.style = utils.extend(Object.create(Atomic.prototype.style), {
 })
 
 Image.prototype.clearAttr = function () {
-  this.node.src = ''
+  this.src = ''
+  this.node.style.backgroundImage = ''
 }
 
 module.exports = Image

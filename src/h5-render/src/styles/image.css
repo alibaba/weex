@@ -1,0 +1,7 @@
+.weex-img {
+	box-sizing: border-box;
+  position: relative;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position: 50%;
+}
