@@ -296,8 +296,10 @@ Weex.stopTheWorld = function () {
     'echo-protocol'
   )
   client.onerror = function () {
+    console.log('refresh controller websocket connection error')
   }
   client.onmessage = function (e) {
+    console.log('Received: \'' + e.data + '\'')
     if (e.data  === 'refresh') {
       location.reload()
     }
