@@ -729,19 +729,34 @@
       handleRefresh: function (e) {
         var vm = this
         vm.displayRefresh = 'show'
-        this.$call('modal', 'alert',  {
-          message: 'refreshing.'
-        }, function () {
-          vm.displayRefresh = 'hide'
-        })
+        var timer = require('@weex-module/timer')
+        if (timer) {
+          timer.setTimeout(function () {
+            vm.displayRefresh = 'hide'
+          }, 2000)
+        } else {
+          this.$call('modal', 'alert',  {
+            message: 'refreshing.'
+          }, function () {
+            vm.displayRefresh = 'hide'
+          })
+        }
       },
       handleLoading: function (e) {
-        this.displayLoading = 'show'
+        var vm = this
+        vm.displayLoading = 'show'
         this.$call('modal', 'toast', {
           message: 'loading.'
         })
-        this.simLoadingData(this.cnt++)
-        this.displayLoading = 'hide'
+        var timer = require('@weex-module/timer')
+        if (timer) {
+          timer.setTimeout(function () {
+            this.simLoadingData(this.cnt++)
+          })
+        } else {
+          this.simLoadingData(this.cnt++)
+        }
+        vm.displayLoading = 'hide'
       },
       simLoadingData: function (num) {
         if (num >= 3) {
