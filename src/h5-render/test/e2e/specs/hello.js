@@ -15,6 +15,9 @@ casper.test.begin('hello-test', 3, {
     casper.start(config.url)
 
     .then(function () {
+      this.echo('page title: '  + this.evaluate(function () {
+        return document.title
+      }))
       return this.evaluate(function (src) {
         init(src)
       }, source)

@@ -3,9 +3,9 @@ var lib = {
   globalInit: function (casper) {
 
     // get remote logs.
-    // casper.on('remote.message', function (msg) {
-    //   this.echo(msg)
-    // })
+    casper.on('remote.message', function (msg) {
+      this.echo(msg)
+    })
 
     casper.on('page.initialized', function () {
       // sadly casperjs 1.1-beta3 hasn't support function.prototype.bind yet.
