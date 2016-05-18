@@ -64,7 +64,7 @@
           }
           nativeBase = 'http://' + host + '/' + this.dir + '/build/';
         }
-        var h5Base = './index.html?page=./' + this.dir + '/build/';
+        var h5Base = './' + this.dir + '/build/';
         // in Native
         var base = nativeBase;
         if (typeof window === 'object') {

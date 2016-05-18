@@ -1,19 +1,13 @@
 # How to customize native APIs ?
 
-Weex SDK provides only rendering capabilities, rather than have other capabilities, such as network, picture, and URL redirection. If you want the these features, you need to implement it.
+Weex SDK provides only rendering capabilities, rather than have other capabilities, such as network, picture, and URL redirection. If you want the these features, you need to implement it.   
+The example below will describe how to extend weex with native logic or 'bridge' your existed native code.
 
-#### eventModule
+## A URLHelper Example
+### Create your own `WXModule` in native:   
 
-```
-import android.content.Intent;
-import android.net.Uri;
-import android.text.TextUtils;
-
-import com.taobao.weex.common.WXModuleAnno;
-import com.taobao.weex.common.WXModule;
-
-
-public class WXEventModule extends WXModule{
+```java
+public class URLHelperModule extends WXModule{
 	private static final String WEEX_CATEGORY="com.taobao.android.intent.category.WEEX";
 	@WXModuleAnno
 	public void openURL(String url){
@@ -30,18 +24,46 @@ public class WXEventModule extends WXModule{
 }
 
 ```
-<font color="red">
-*Warning: Module need to be registered before use*  
+
+Notice the `@WXModuleAnno`, use this annotation to mark the methods you wanna expose to javascript.
+If your also want to callback to javascript, you should define a `callbackId` parameter to received 'JS callback function id':
+
+```java
+public class URLHelperModule extends WXModule{
+	
+	@WXModuleAnno
+	public void openURL(String url,String callbackId){
+		//...
+		//callback to javascript 
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("ts", System.currentTimeMillis());
+		WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId, result);
+	}
+}
+```
+
+
+### Register your module to engine:   
 
 ```
 try {
-	 WXSDKEngine.registerModule("event", WXEventModule.class);
+	 WXSDKEngine.registerModule("myURL", URLHelperModule.class);//'myURL' is the name you'll use in javascript
 	} catch (WXException e) {
 	   WXLogUtils.e(e.getMessage());
 	}
 ```
+### Now, you can use eventModule in javascript like this:   
 
-##### <font color="red">  Custom module you need to note the following points:
+```javascript
+let URLHelper = require('@weex-module/myURL');//same as you registered
+URLHelper.openURL("http://www.taobao.com",function(ts){
+	console.log("url is open at "+ts);
+});
+
+```
+
+
+## Things you need to note:
 1. Customize components must extend WXModule  
 2. @WXModuleAnno annotation must be added, as it is the only the way to recognized by Weex  
 3. The access levels of mehtod must be **public**  

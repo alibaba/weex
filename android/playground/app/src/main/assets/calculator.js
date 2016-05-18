@@ -44,207 +44,322 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/166b7ca130b38d87497f545e4cad1936", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/70765ef005f962901c201ee23e67ecca", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(1);
+	  var OP = ['+', '-', '*', '/'];
+	  var inputs = [];
 	  __weex_module__.exports = {
-	    methods: {
-	      onrefresh: function(e) {
-	        var self = this;
-	        self.refresh_display = 'show';
-	        // self.$call('timer', 'setTimeout', function() {
-	        //   self.refresh_display = 'hide';
-	        // },3000);
-	          self.refresh_display = 'hide';
-	      },
-	      onappear: function (e) {
-	        var appearId = this.rows[e.target.attr.index].id;
-	        nativeLog('+++++', appearId);
-	        var appearIds = this.appearIds;
-	        appearIds.push(appearId);
-	        this.getMinAndMaxIds(appearIds);
-	      },
-	      ondisappear:function (e) {
-	        var disAppearId = this.rows[e.target.attr.index].id;
-	        nativeLog('+++++', disAppearId);
-	        var appearIds = this.appearIds;
-	        var index = appearIds.indexOf(disAppearId);
-	        if (index > -1) {
-	          appearIds.splice(index, 1);
-	        }
-	        this.getMinAndMaxIds(appearIds);
-	      },
-	      getMinAndMaxIds:function (appearIds) {
-	        appearIds.sort(function(a, b) {
-	          return a - b;
-	        });
-	        this.appearIds = appearIds;
-	        this.appearMax = appearIds[appearIds.length - 1];
-	        this.appearMin = appearIds[0];
-	      }
-	    },
 	    data: function () {return {
-	      refresh_display : 'hide',
-	      loading_display : 'hide',
-	      appearMin:1,
-	      appearMax:1,
-	      appearIds:[],
-	      rows:[
-	        {id: 1},
-	        {id: 2},
-	        {id: 3},
-	        {id: 4},
-	        {id: 5},
-	        {id: 6},
-	        {id: 7},
-	        {id: 8},
-	        {id: 9},
-	        {id: 10},
-	        {id: 11},
-	        {id: 12},
-	        {id: 13},
-	        {id: 14},
-	        {id: 15},
-	        {id: 16},
-	        {id: 17},
-	        {id: 18},
-	        {id: 19},
-	        {id: 20},
-	        {id: 21},
-	        {id: 22},
-	        {id: 23},
-	        {id: 24},
-	        {id: 25},
-	        {id: 26},
-	        {id: 27},
-	        {id: 28},
-	        {id: 29}
-	      ]
-	    }}
+	      result: ''
+	    }},
+	    methods: {
+	      input: function(e) {
+	        var value = e.target.attr['value'];
+	        var lastOne = inputs.length ? inputs[inputs.length - 1] : '';
+	        if (OP.indexOf(lastOne) > -1 && OP.indexOf(value) > -1) {
+	          return;
+	        }
+
+	        inputs.push(value);
+	        var buf = [], char;
+	        for (var i = 0; i < inputs.length; i++) {
+	          char = inputs[i];
+	          if (OP.indexOf(char) > -1) {
+	            char = ' ' + char + ' ';
+	          }
+	          buf.push(char);
+	        }
+	        this.result = buf.join('');
+	      },
+	      calculate: function() {
+	        var result = eval(this.result);
+	        inputs = [result];
+	        this.result = result;
+	      },
+	      clear: function() {
+	        inputs = [];
+	        this.result = '';
+	      }
+	    }
 	  }
 
 	;__weex_module__.exports.template={
 	  "type": "div",
+	  "style": {
+	    "padding": 5
+	  },
 	  "children": [
 	    {
-	      "type": "list",
+	      "type": "text",
 	      "classList": [
-	        "list"
+	        "result"
+	      ],
+	      "attr": {
+	        "value": function () {return this.result}
+	      }
+	    },
+	    {
+	      "type": "div",
+	      "classList": [
+	        "row"
 	      ],
 	      "children": [
 	        {
-	          "type": "refresh",
+	          "type": "text",
 	          "classList": [
-	            "refresh-view"
+	            "btn"
 	          ],
-	          "attr": {
-	            "display": function () {return this.refresh_display}
-	          },
 	          "events": {
-	            "refresh": "onrefresh"
+	            "click": "input"
 	          },
-	          "children": [
-	            {
-	              "type": "text",
-	              "classList": [
-	                "refresh-arrow"
-	              ],
-	              "shown": function () {return (this.refresh_display==='hide')},
-	              "attr": {
-	                "value": "↓ Pull To Refresh"
-	              }
-	            },
-	            {
-	              "type": "loading-indicator"
-	            }
-	          ]
+	          "attr": {
+	            "value": "1"
+	          }
 	        },
 	        {
-	          "type": "cell",
-	          "append": "tree",
-	          "events": {
-	            "appear": "onappear",
-	            "disappear": "ondisappear"
-	          },
+	          "type": "text",
 	          "classList": [
-	            "row"
+	            "btn"
 	          ],
-	          "repeat": function () {return this.rows},
-	          "attr": {
-	            "index": function () {return this.$index}
+	          "events": {
+	            "click": "input"
 	          },
-	          "children": [
-	            {
-	              "type": "div",
-	              "classList": [
-	                "item"
-	              ],
-	              "children": [
-	                {
-	                  "type": "text",
-	                  "classList": [
-	                    "item-title"
-	                  ],
-	                  "attr": {
-	                    "value": function () {return 'row ' + (this.id)}
-	                  }
-	                }
-	              ]
-	            }
-	          ]
+	          "attr": {
+	            "value": "2"
+	          }
+	        },
+	        {
+	          "type": "text",
+	          "classList": [
+	            "btn"
+	          ],
+	          "events": {
+	            "click": "input"
+	          },
+	          "attr": {
+	            "value": "3"
+	          }
+	        },
+	        {
+	          "type": "text",
+	          "classList": [
+	            "btn",
+	            "btn-operator"
+	          ],
+	          "events": {
+	            "click": "input"
+	          },
+	          "attr": {
+	            "value": "+"
+	          }
 	        }
 	      ]
 	    },
 	    {
-	      "type": "text",
+	      "type": "div",
 	      "classList": [
-	        "count"
+	        "row"
 	      ],
-	      "attr": {
-	        "value": function () {return 'Appear items:' + (this.appearMin) + ' - ' + (this.appearMax)}
-	      }
+	      "children": [
+	        {
+	          "type": "text",
+	          "classList": [
+	            "btn"
+	          ],
+	          "events": {
+	            "click": "input"
+	          },
+	          "attr": {
+	            "value": "4"
+	          }
+	        },
+	        {
+	          "type": "text",
+	          "classList": [
+	            "btn"
+	          ],
+	          "events": {
+	            "click": "input"
+	          },
+	          "attr": {
+	            "value": "5"
+	          }
+	        },
+	        {
+	          "type": "text",
+	          "classList": [
+	            "btn"
+	          ],
+	          "events": {
+	            "click": "input"
+	          },
+	          "attr": {
+	            "value": "6"
+	          }
+	        },
+	        {
+	          "type": "text",
+	          "classList": [
+	            "btn",
+	            "btn-operator"
+	          ],
+	          "events": {
+	            "click": "input"
+	          },
+	          "attr": {
+	            "value": "-"
+	          }
+	        }
+	      ]
+	    },
+	    {
+	      "type": "div",
+	      "classList": [
+	        "row"
+	      ],
+	      "children": [
+	        {
+	          "type": "text",
+	          "classList": [
+	            "btn"
+	          ],
+	          "events": {
+	            "click": "input"
+	          },
+	          "attr": {
+	            "value": "7"
+	          }
+	        },
+	        {
+	          "type": "text",
+	          "classList": [
+	            "btn"
+	          ],
+	          "events": {
+	            "click": "input"
+	          },
+	          "attr": {
+	            "value": "8"
+	          }
+	        },
+	        {
+	          "type": "text",
+	          "classList": [
+	            "btn"
+	          ],
+	          "events": {
+	            "click": "input"
+	          },
+	          "attr": {
+	            "value": "9"
+	          }
+	        },
+	        {
+	          "type": "text",
+	          "classList": [
+	            "btn",
+	            "btn-operator"
+	          ],
+	          "events": {
+	            "click": "input"
+	          },
+	          "attr": {
+	            "value": "*"
+	          }
+	        }
+	      ]
+	    },
+	    {
+	      "type": "div",
+	      "classList": [
+	        "row"
+	      ],
+	      "children": [
+	        {
+	          "type": "text",
+	          "classList": [
+	            "btn"
+	          ],
+	          "events": {
+	            "click": "input"
+	          },
+	          "attr": {
+	            "value": "0"
+	          }
+	        },
+	        {
+	          "type": "text",
+	          "classList": [
+	            "btn"
+	          ],
+	          "events": {
+	            "click": "input"
+	          },
+	          "attr": {
+	            "value": "."
+	          }
+	        },
+	        {
+	          "type": "text",
+	          "classList": [
+	            "btn"
+	          ],
+	          "events": {
+	            "click": "clear"
+	          },
+	          "attr": {
+	            "value": "AC"
+	          }
+	        },
+	        {
+	          "type": "text",
+	          "classList": [
+	            "btn",
+	            "btn-operator"
+	          ],
+	          "events": {
+	            "click": "calculate"
+	          },
+	          "attr": {
+	            "value": "="
+	          }
+	        }
+	      ]
 	    }
 	  ]
 	}
 	;__weex_module__.exports.style={
-	  "list": {
-	    "height": 810,
-	    "borderWidth": 10,
-	    "borderColor": "#FFA500"
-	  },
-	  "count": {
-	    "fontSize": 48,
-	    "margin": 10
-	  },
-	  "refresh-view": {
-	    "height": 80,
-	    "width": 750,
-	    "justifyContent": "center",
-	    "alignItems": "center"
-	  },
-	  "refresh-arrow": {
-	    "fontSize": 30,
-	    "color": "#45b5f0"
-	  },
-	  "indicator": {
-	    "height": 40,
-	    "width": 40,
-	    "color": "#45b5f0"
-	  },
 	  "row": {
-	    "width": 750
+	    "flexDirection": "row"
 	  },
-	  "item": {
-	    "justifyContent": "center",
-	    "borderBottomWidth": 2,
-	    "borderBottomColor": "#c0c0c0",
+	  "result": {
+	    "textAlign": "right",
+	    "backgroundColor": "#666666",
+	    "fontSize": 40,
+	    "color": "#FFFFFF",
 	    "height": 100,
-	    "padding": 20
+	    "padding": 30,
+	    "margin": 5
+	  },
+	  "btn": {
+	    "flex": 1,
+	    "textAlign": "center",
+	    "backgroundColor": "#eeeeee",
+	    "fontSize": 36,
+	    "height": 100,
+	    "padding": 30,
+	    "margin": 5
+	  },
+	  "btn-operator": {
+	    "backgroundColor": "#666699",
+	    "fontSize": 40,
+	    "color": "#FFFFFF"
 	  }
 	}
 	})
-	;__weex_bootstrap__("@weex-component/166b7ca130b38d87497f545e4cad1936", {
+	;__weex_bootstrap__("@weex-component/70765ef005f962901c201ee23e67ecca", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 

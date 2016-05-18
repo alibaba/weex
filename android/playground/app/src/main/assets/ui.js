@@ -44,207 +44,187 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/166b7ca130b38d87497f545e4cad1936", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/dc5bfd50199b2ab9e6d7e925cf814646", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(1);
+
 	  __weex_module__.exports = {
-	    methods: {
-	      onrefresh: function(e) {
-	        var self = this;
-	        self.refresh_display = 'show';
-	        // self.$call('timer', 'setTimeout', function() {
-	        //   self.refresh_display = 'hide';
-	        // },3000);
-	          self.refresh_display = 'hide';
-	      },
-	      onappear: function (e) {
-	        var appearId = this.rows[e.target.attr.index].id;
-	        nativeLog('+++++', appearId);
-	        var appearIds = this.appearIds;
-	        appearIds.push(appearId);
-	        this.getMinAndMaxIds(appearIds);
-	      },
-	      ondisappear:function (e) {
-	        var disAppearId = this.rows[e.target.attr.index].id;
-	        nativeLog('+++++', disAppearId);
-	        var appearIds = this.appearIds;
-	        var index = appearIds.indexOf(disAppearId);
-	        if (index > -1) {
-	          appearIds.splice(index, 1);
-	        }
-	        this.getMinAndMaxIds(appearIds);
-	      },
-	      getMinAndMaxIds:function (appearIds) {
-	        appearIds.sort(function(a, b) {
-	          return a - b;
-	        });
-	        this.appearIds = appearIds;
-	        this.appearMax = appearIds[appearIds.length - 1];
-	        this.appearMin = appearIds[0];
-	      }
-	    },
 	    data: function () {return {
-	      refresh_display : 'hide',
-	      loading_display : 'hide',
-	      appearMin:1,
-	      appearMax:1,
-	      appearIds:[],
-	      rows:[
-	        {id: 1},
-	        {id: 2},
-	        {id: 3},
-	        {id: 4},
-	        {id: 5},
-	        {id: 6},
-	        {id: 7},
-	        {id: 8},
-	        {id: 9},
-	        {id: 10},
-	        {id: 11},
-	        {id: 12},
-	        {id: 13},
-	        {id: 14},
-	        {id: 15},
-	        {id: 16},
-	        {id: 17},
-	        {id: 18},
-	        {id: 19},
-	        {id: 20},
-	        {id: 21},
-	        {id: 22},
-	        {id: 23},
-	        {id: 24},
-	        {id: 25},
-	        {id: 26},
-	        {id: 27},
-	        {id: 28},
-	        {id: 29}
-	      ]
-	    }}
+	      levels: [{level: 1}, {level: 2}, {level: 3}],
+	      buttons: [{type: 'default'}, {type: 'primary'}, {type: 'success'}, {type: 'info'}, {type: 'warning'}, {type: 'danger'}, {type: 'link'}],
+	      panels: [{type: 'default'}, {type: 'primary'}, {type: 'success'}, {type: 'info'}, {type: 'warning'}, {type: 'danger'}],
+	      tips: [{type: 'success'}, {type: 'info'}, {type: 'warning'}, {type: 'danger'}],
+	    }},
+	    methods: {
+	      clicked: function() {
+	        var $modal = __weex_require__('@weex-module/modal');
+	        $modal.toast({'message': 'clicked!', duration: 0.5});
+	      }
+	    }
 	  }
 
 	;__weex_module__.exports.template={
-	  "type": "div",
+	  "type": "scroller",
 	  "children": [
 	    {
-	      "type": "list",
-	      "classList": [
-	        "list"
-	      ],
+	      "type": "wxc-panel",
+	      "attr": {
+	        "title": "Title Levels"
+	      },
 	      "children": [
 	        {
-	          "type": "refresh",
-	          "classList": [
-	            "refresh-view"
-	          ],
+	          "type": "wxc-hn",
+	          "repeat": function () {return this.levels},
 	          "attr": {
-	            "display": function () {return this.refresh_display}
+	            "level": function () {return this.level},
+	            "value": function () {return 'H' + (this.level) + ', Level ' + (this.level)}
+	          }
+	        }
+	      ]
+	    },
+	    {
+	      "type": "wxc-panel",
+	      "attr": {
+	        "title": "Buttons"
+	      },
+	      "append": "tree",
+	      "children": [
+	        {
+	          "type": "div",
+	          "style": {
+	            "flexDirection": "row",
+	            "marginTop": 12
 	          },
+	          "repeat": function () {return this.buttons},
+	          "children": [
+	            {
+	              "type": "wxc-button",
+	              "attr": {
+	                "type": function () {return this.type},
+	                "size": "large",
+	                "value": function () {return this.type}
+	              },
+	              "events": {
+	                "click": "clicked"
+	              }
+	            },
+	            {
+	              "type": "wxc-button",
+	              "attr": {
+	                "type": function () {return this.type},
+	                "size": "middle",
+	                "value": function () {return this.type}
+	              },
+	              "events": {
+	                "click": "clicked"
+	              },
+	              "style": {
+	                "marginLeft": 5,
+	                "width": 210
+	              }
+	            },
+	            {
+	              "type": "wxc-button",
+	              "attr": {
+	                "type": function () {return this.type},
+	                "size": "small",
+	                "value": function () {return this.type}
+	              },
+	              "events": {
+	                "click": "clicked"
+	              },
+	              "style": {
+	                "marginLeft": 5
+	              }
+	            }
+	          ]
+	        }
+	      ]
+	    },
+	    {
+	      "type": "wxc-panel",
+	      "attr": {
+	        "title": "Panels"
+	      },
+	      "children": [
+	        {
+	          "type": "wxc-panel",
+	          "repeat": function () {return this.panels},
+	          "attr": {
+	            "title": function () {return 'Panels-' + (this.type)},
+	            "type": function () {return this.type},
+	            "border": "1"
+	          },
+	          "style": {
+	            "marginLeft": 12,
+	            "marginRight": 12
+	          },
+	          "children": [
+	            {
+	              "type": "text",
+	              "attr": {
+	                "value": function () {return 'Panels ' + (this.type) + ' content. Panels ' + (this.type) + ' content. Panels ' + (this.type) + ' content.'}
+	              }
+	            }
+	          ]
+	        }
+	      ]
+	    },
+	    {
+	      "type": "wxc-panel",
+	      "attr": {
+	        "title": "List"
+	      },
+	      "children": [
+	        {
+	          "type": "wxc-list-item",
+	          "repeat": function () {return this.tips},
 	          "events": {
-	            "refresh": "onrefresh"
+	            "click": "clicked"
 	          },
 	          "children": [
 	            {
 	              "type": "text",
 	              "classList": [
-	                "refresh-arrow"
+	                "item-txt"
 	              ],
-	              "shown": function () {return (this.refresh_display==='hide')},
 	              "attr": {
-	                "value": "↓ Pull To Refresh"
+	                "value": function () {return this.type}
 	              }
-	            },
-	            {
-	              "type": "loading-indicator"
-	            }
-	          ]
-	        },
-	        {
-	          "type": "cell",
-	          "append": "tree",
-	          "events": {
-	            "appear": "onappear",
-	            "disappear": "ondisappear"
-	          },
-	          "classList": [
-	            "row"
-	          ],
-	          "repeat": function () {return this.rows},
-	          "attr": {
-	            "index": function () {return this.$index}
-	          },
-	          "children": [
-	            {
-	              "type": "div",
-	              "classList": [
-	                "item"
-	              ],
-	              "children": [
-	                {
-	                  "type": "text",
-	                  "classList": [
-	                    "item-title"
-	                  ],
-	                  "attr": {
-	                    "value": function () {return 'row ' + (this.id)}
-	                  }
-	                }
-	              ]
 	            }
 	          ]
 	        }
 	      ]
 	    },
 	    {
-	      "type": "text",
-	      "classList": [
-	        "count"
-	      ],
+	      "type": "wxc-panel",
 	      "attr": {
-	        "value": function () {return 'Appear items:' + (this.appearMin) + ' - ' + (this.appearMax)}
-	      }
+	        "title": "Tips"
+	      },
+	      "children": [
+	        {
+	          "type": "wxc-tip",
+	          "repeat": function () {return this.tips},
+	          "style": {
+	            "marginBottom": 20
+	          },
+	          "attr": {
+	            "value": function () {return 'Panels ' + (this.type) + ' content. Panels ' + (this.type) + ' content. Panels ' + (this.type) + ' content.'}
+	          }
+	        }
+	      ]
 	    }
 	  ]
 	}
 	;__weex_module__.exports.style={
-	  "list": {
-	    "height": 810,
-	    "borderWidth": 10,
-	    "borderColor": "#FFA500"
-	  },
-	  "count": {
+	  "item-txt": {
 	    "fontSize": 48,
-	    "margin": 10
-	  },
-	  "refresh-view": {
-	    "height": 80,
-	    "width": 750,
-	    "justifyContent": "center",
-	    "alignItems": "center"
-	  },
-	  "refresh-arrow": {
-	    "fontSize": 30,
-	    "color": "#45b5f0"
-	  },
-	  "indicator": {
-	    "height": 40,
-	    "width": 40,
-	    "color": "#45b5f0"
-	  },
-	  "row": {
-	    "width": 750
-	  },
-	  "item": {
-	    "justifyContent": "center",
-	    "borderBottomWidth": 2,
-	    "borderBottomColor": "#c0c0c0",
-	    "height": 100,
-	    "padding": 20
+	    "color": "#555555"
 	  }
 	}
 	})
-	;__weex_bootstrap__("@weex-component/166b7ca130b38d87497f545e4cad1936", {
+	;__weex_bootstrap__("@weex-component/dc5bfd50199b2ab9e6d7e925cf814646", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 

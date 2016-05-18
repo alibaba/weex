@@ -44,207 +44,163 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/166b7ca130b38d87497f545e4cad1936", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/2d0eb19485821566128decfe84fa4812", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	__webpack_require__(30);
+	__webpack_require__(32);
+	__webpack_require__(31);
 
 	;
 	  __webpack_require__(1);
 	  __weex_module__.exports = {
-	    methods: {
-	      onrefresh: function(e) {
-	        var self = this;
-	        self.refresh_display = 'show';
-	        // self.$call('timer', 'setTimeout', function() {
-	        //   self.refresh_display = 'hide';
-	        // },3000);
-	          self.refresh_display = 'hide';
-	      },
-	      onappear: function (e) {
-	        var appearId = this.rows[e.target.attr.index].id;
-	        nativeLog('+++++', appearId);
-	        var appearIds = this.appearIds;
-	        appearIds.push(appearId);
-	        this.getMinAndMaxIds(appearIds);
-	      },
-	      ondisappear:function (e) {
-	        var disAppearId = this.rows[e.target.attr.index].id;
-	        nativeLog('+++++', disAppearId);
-	        var appearIds = this.appearIds;
-	        var index = appearIds.indexOf(disAppearId);
-	        if (index > -1) {
-	          appearIds.splice(index, 1);
-	        }
-	        this.getMinAndMaxIds(appearIds);
-	      },
-	      getMinAndMaxIds:function (appearIds) {
-	        appearIds.sort(function(a, b) {
-	          return a - b;
-	        });
-	        this.appearIds = appearIds;
-	        this.appearMax = appearIds[appearIds.length - 1];
-	        this.appearMin = appearIds[0];
-	      }
-	    },
-	    data: function () {return {
-	      refresh_display : 'hide',
-	      loading_display : 'hide',
-	      appearMin:1,
-	      appearMax:1,
-	      appearIds:[],
-	      rows:[
-	        {id: 1},
-	        {id: 2},
-	        {id: 3},
-	        {id: 4},
-	        {id: 5},
-	        {id: 6},
-	        {id: 7},
-	        {id: 8},
-	        {id: 9},
-	        {id: 10},
-	        {id: 11},
-	        {id: 12},
-	        {id: 13},
-	        {id: 14},
-	        {id: 15},
-	        {id: 16},
-	        {id: 17},
-	        {id: 18},
-	        {id: 19},
-	        {id: 20},
-	        {id: 21},
-	        {id: 22},
-	        {id: 23},
-	        {id: 24},
-	        {id: 25},
-	        {id: 26},
-	        {id: 27},
-	        {id: 28},
-	        {id: 29}
-	      ]
-	    }}
+	    data: function () {return {}}
 	  }
 
 	;__weex_module__.exports.template={
-	  "type": "div",
+	  "type": "scroller",
 	  "children": [
 	    {
-	      "type": "list",
-	      "classList": [
-	        "list"
-	      ],
+	      "type": "style-box"
+	    },
+	    {
+	      "type": "style-flex"
+	    },
+	    {
+	      "type": "wxc-panel",
+	      "attr": {
+	        "title": "opacity",
+	        "type": "primary"
+	      },
 	      "children": [
 	        {
-	          "type": "refresh",
-	          "classList": [
-	            "refresh-view"
-	          ],
-	          "attr": {
-	            "display": function () {return this.refresh_display}
-	          },
-	          "events": {
-	            "refresh": "onrefresh"
+	          "type": "div",
+	          "style": {
+	            "flexDirection": "row"
 	          },
 	          "children": [
 	            {
-	              "type": "text",
-	              "classList": [
-	                "refresh-arrow"
-	              ],
-	              "shown": function () {return (this.refresh_display==='hide')},
+	              "type": "style-item",
+	              "style": {
+	                "opacity": 1
+	              },
 	              "attr": {
-	                "value": "↓ Pull To Refresh"
+	                "value": "1"
 	              }
 	            },
 	            {
-	              "type": "loading-indicator"
-	            }
-	          ]
-	        },
-	        {
-	          "type": "cell",
-	          "append": "tree",
-	          "events": {
-	            "appear": "onappear",
-	            "disappear": "ondisappear"
-	          },
-	          "classList": [
-	            "row"
-	          ],
-	          "repeat": function () {return this.rows},
-	          "attr": {
-	            "index": function () {return this.$index}
-	          },
-	          "children": [
+	              "type": "style-item",
+	              "style": {
+	                "opacity": 0.9
+	              },
+	              "attr": {
+	                "value": "0.9"
+	              }
+	            },
 	            {
-	              "type": "div",
-	              "classList": [
-	                "item"
-	              ],
-	              "children": [
-	                {
-	                  "type": "text",
-	                  "classList": [
-	                    "item-title"
-	                  ],
-	                  "attr": {
-	                    "value": function () {return 'row ' + (this.id)}
-	                  }
-	                }
-	              ]
+	              "type": "style-item",
+	              "style": {
+	                "opacity": 0.5
+	              },
+	              "attr": {
+	                "value": "0.5"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "opacity": 0.2
+	              },
+	              "attr": {
+	                "value": "0.2"
+	              }
 	            }
 	          ]
 	        }
 	      ]
 	    },
 	    {
-	      "type": "text",
-	      "classList": [
-	        "count"
-	      ],
+	      "type": "wxc-panel",
 	      "attr": {
-	        "value": function () {return 'Appear items:' + (this.appearMin) + ' - ' + (this.appearMax)}
-	      }
+	        "title": "background-color",
+	        "type": "primary"
+	      },
+	      "children": [
+	        {
+	          "type": "div",
+	          "children": [
+	            {
+	              "type": "style-item",
+	              "classList": [
+	                "bg-item"
+	              ],
+	              "style": {
+	                "backgroundColor": "#333333"
+	              },
+	              "attr": {
+	                "value": "#333"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "classList": [
+	                "bg-item"
+	              ],
+	              "style": {
+	                "backgroundColor": "#333333"
+	              },
+	              "attr": {
+	                "value": "#333333"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "classList": [
+	                "bg-item"
+	              ],
+	              "style": {
+	                "backgroundColor": "rgb(238,162,54)"
+	              },
+	              "attr": {
+	                "value": "rgb()"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "classList": [
+	                "bg-item"
+	              ],
+	              "style": {
+	                "backgroundColor": "rgba(238,162,54,0.5)"
+	              },
+	              "attr": {
+	                "value": "rgba()"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "classList": [
+	                "bg-item"
+	              ],
+	              "style": {
+	                "backgroundColor": "#FF0000"
+	              },
+	              "attr": {
+	                "value": "red"
+	              }
+	            }
+	          ]
+	        }
+	      ]
 	    }
 	  ]
 	}
 	;__weex_module__.exports.style={
-	  "list": {
-	    "height": 810,
-	    "borderWidth": 10,
-	    "borderColor": "#FFA500"
-	  },
-	  "count": {
-	    "fontSize": 48,
-	    "margin": 10
-	  },
-	  "refresh-view": {
-	    "height": 80,
-	    "width": 750,
-	    "justifyContent": "center",
-	    "alignItems": "center"
-	  },
-	  "refresh-arrow": {
-	    "fontSize": 30,
-	    "color": "#45b5f0"
-	  },
-	  "indicator": {
-	    "height": 40,
-	    "width": 40,
-	    "color": "#45b5f0"
-	  },
-	  "row": {
-	    "width": 750
-	  },
-	  "item": {
-	    "justifyContent": "center",
-	    "borderBottomWidth": 2,
-	    "borderBottomColor": "#c0c0c0",
-	    "height": 100,
-	    "padding": 20
+	  "bg-item": {
+	    "width": 690,
+	    "marginBottom": 10
 	  }
 	}
 	})
-	;__weex_bootstrap__("@weex-component/166b7ca130b38d87497f545e4cad1936", {
+	;__weex_bootstrap__("@weex-component/2d0eb19485821566128decfe84fa4812", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -1362,6 +1318,1012 @@
 	    "marginTop": 5,
 	    "textAlign": "center",
 	    "fontSize": 20
+	  }
+	}
+	})
+
+/***/ },
+/* 13 */,
+/* 14 */,
+/* 15 */,
+/* 16 */,
+/* 17 */,
+/* 18 */,
+/* 19 */,
+/* 20 */,
+/* 21 */,
+/* 22 */,
+/* 23 */,
+/* 24 */,
+/* 25 */,
+/* 26 */,
+/* 27 */,
+/* 28 */,
+/* 29 */,
+/* 30 */
+/***/ function(module, exports, __webpack_require__) {
+
+	;__weex_define__("@weex-component/style-box", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	__webpack_require__(31);
+
+	;
+	  __webpack_require__(1);
+	  __weex_module__.exports = {
+	    data: function () {return {
+	      size: 40
+	    }}
+	  }
+
+	;__weex_module__.exports.template={
+	  "type": "div",
+	  "children": [
+	    {
+	      "type": "wxc-panel",
+	      "attr": {
+	        "title": "Box Model",
+	        "paddingBody": "0",
+	        "type": "primary"
+	      },
+	      "children": [
+	        {
+	          "type": "text",
+	          "classList": [
+	            "box"
+	          ],
+	          "attr": {
+	            "value": "Box"
+	          }
+	        }
+	      ]
+	    },
+	    {
+	      "type": "wxc-panel",
+	      "attr": {
+	        "title": "border",
+	        "type": "primary"
+	      },
+	      "children": [
+	        {
+	          "type": "wxc-panel",
+	          "attr": {
+	            "title": "border-width",
+	            "type": ""
+	          },
+	          "children": [
+	            {
+	              "type": "div",
+	              "style": {
+	                "flexDirection": "row"
+	              },
+	              "children": [
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "borderStyle": "solid",
+	                    "borderWidth": 2,
+	                    "borderColor": "#333333"
+	                  },
+	                  "attr": {
+	                    "value": ""
+	                  }
+	                },
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "borderStyle": "solid",
+	                    "borderWidth": 10,
+	                    "borderColor": "#333333"
+	                  },
+	                  "attr": {
+	                    "value": ""
+	                  }
+	                },
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "borderStyle": "solid",
+	                    "borderLeftWidth": 4,
+	                    "borderColor": "#333333"
+	                  },
+	                  "attr": {
+	                    "value": ""
+	                  }
+	                },
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "borderStyle": "solid",
+	                    "borderBottomWidth": 4,
+	                    "borderColor": "#333333"
+	                  },
+	                  "attr": {
+	                    "value": ""
+	                  }
+	                }
+	              ]
+	            }
+	          ]
+	        },
+	        {
+	          "type": "wxc-panel",
+	          "attr": {
+	            "title": "border-color",
+	            "type": ""
+	          },
+	          "children": [
+	            {
+	              "type": "div",
+	              "style": {
+	                "flexDirection": "row"
+	              },
+	              "children": [
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "borderStyle": "solid",
+	                    "borderWidth": 4,
+	                    "borderColor": "#333333"
+	                  },
+	                  "attr": {
+	                    "value": ""
+	                  }
+	                },
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "borderStyle": "solid",
+	                    "borderWidth": 4,
+	                    "borderColor": "#dddddd"
+	                  },
+	                  "attr": {
+	                    "value": ""
+	                  }
+	                },
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "borderStyle": "solid",
+	                    "borderWidth": 4,
+	                    "borderColor": "#FF0000"
+	                  },
+	                  "attr": {
+	                    "value": ""
+	                  }
+	                }
+	              ]
+	            }
+	          ]
+	        },
+	        {
+	          "type": "wxc-panel",
+	          "attr": {
+	            "title": "border-style",
+	            "type": ""
+	          },
+	          "children": [
+	            {
+	              "type": "wxc-tip",
+	              "attr": {
+	                "type": "warning",
+	                "value": "just support four edges"
+	              },
+	              "style": {
+	                "marginBottom": 10
+	              }
+	            },
+	            {
+	              "type": "div",
+	              "style": {
+	                "flexDirection": "row"
+	              },
+	              "children": [
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "borderStyle": "solid",
+	                    "borderWidth": 4,
+	                    "borderColor": "#333333"
+	                  },
+	                  "attr": {
+	                    "value": ""
+	                  }
+	                },
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "borderStyle": "dashed",
+	                    "borderWidth": 4,
+	                    "borderColor": "#333333"
+	                  },
+	                  "attr": {
+	                    "value": "",
+	                    "type": ""
+	                  }
+	                },
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "borderStyle": "dotted",
+	                    "borderWidth": 4,
+	                    "borderColor": "#333333"
+	                  },
+	                  "attr": {
+	                    "value": ""
+	                  }
+	                }
+	              ]
+	            }
+	          ]
+	        },
+	        {
+	          "type": "wxc-panel",
+	          "attr": {
+	            "title": "border-radius",
+	            "type": ""
+	          },
+	          "children": [
+	            {
+	              "type": "div",
+	              "style": {
+	                "flexDirection": "row"
+	              },
+	              "children": [
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "width": 75,
+	                    "borderRadius": 38
+	                  },
+	                  "attr": {
+	                    "value": ""
+	                  }
+	                },
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "borderRadius": 20
+	                  },
+	                  "attr": {
+	                    "value": ""
+	                  }
+	                },
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "borderTopLeftRadius": 20,
+	                    "borderTopRightRadius": 20
+	                  },
+	                  "attr": {
+	                    "value": ""
+	                  }
+	                },
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "borderBottomLeftRadius": 20,
+	                    "borderBottomRightRadius": 20
+	                  },
+	                  "attr": {
+	                    "value": ""
+	                  }
+	                }
+	              ]
+	            }
+	          ]
+	        }
+	      ]
+	    }
+	  ]
+	}
+	;__weex_module__.exports.style={
+	  "box": {
+	    "backgroundColor": "#f5f5f5",
+	    "width": 260,
+	    "height": 260,
+	    "paddingLeft": 40,
+	    "paddingTop": 40,
+	    "paddingRight": 40,
+	    "paddingBottom": 40,
+	    "marginLeft": 40,
+	    "marginTop": 40,
+	    "marginRight": 40,
+	    "marginBottom": 40,
+	    "borderWidth": 40,
+	    "borderColor": "#333333",
+	    "borderStyle": "solid"
+	  }
+	}
+	})
+
+/***/ },
+/* 31 */
+/***/ function(module, exports) {
+
+	;__weex_define__("@weex-component/style-item", [], function(__weex_require__, __weex_exports__, __weex_module__){
+
+	;
+	  __weex_module__.exports = {
+	    data: function () {return {
+	      value: '',
+	      type: '0' // 0, 1
+	    }},
+	    methods: {
+	      bgColor: function() {
+	        return this.type == '1' ? '#7BA3A8' : '#BEAD92';
+	      }
+	    }
+	  }
+
+	;__weex_module__.exports.template={
+	  "type": "text",
+	  "classList": [
+	    "item",
+	    "txt"
+	  ],
+	  "attr": {
+	    "value": function () {return this.value}
+	  },
+	  "style": {
+	    "backgroundColor": function () {return this.bgColor()}
+	  }
+	}
+	;__weex_module__.exports.style={
+	  "item": {
+	    "marginRight": 10,
+	    "width": 160,
+	    "height": 75,
+	    "paddingLeft": 8,
+	    "paddingRight": 8,
+	    "paddingTop": 8,
+	    "paddingBottom": 8
+	  },
+	  "txt": {
+	    "color": "#eeeeee"
+	  }
+	}
+	})
+
+/***/ },
+/* 32 */
+/***/ function(module, exports, __webpack_require__) {
+
+	;__weex_define__("@weex-component/style-flex", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	__webpack_require__(31);
+
+	;
+	  __webpack_require__(1);
+
+	;__weex_module__.exports.template={
+	  "type": "div",
+	  "children": [
+	    {
+	      "type": "wxc-panel",
+	      "attr": {
+	        "title": "flex-direction",
+	        "type": "primary"
+	      },
+	      "children": [
+	        {
+	          "type": "div",
+	          "classList": [
+	            "row"
+	          ],
+	          "style": {
+	            "flexDirection": "row"
+	          },
+	          "children": [
+	            {
+	              "type": "style-item",
+	              "attr": {
+	                "value": "row"
+	              },
+	              "style": {
+	                "marginRight": 0
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "attr": {
+	                "type": "1"
+	              }
+	            }
+	          ]
+	        },
+	        {
+	          "type": "div",
+	          "classList": [
+	            "row"
+	          ],
+	          "style": {
+	            "flexDirection": "column"
+	          },
+	          "children": [
+	            {
+	              "type": "style-item",
+	              "attr": {
+	                "value": "column"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "attr": {
+	                "type": "1"
+	              }
+	            }
+	          ]
+	        }
+	      ]
+	    },
+	    {
+	      "type": "wxc-panel",
+	      "attr": {
+	        "title": "justify-content",
+	        "type": "primary"
+	      },
+	      "children": [
+	        {
+	          "type": "div",
+	          "classList": [
+	            "row"
+	          ],
+	          "style": {
+	            "justifyContent": "flex-start"
+	          },
+	          "children": [
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              },
+	              "attr": {
+	                "type": "1"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              }
+	            }
+	          ]
+	        },
+	        {
+	          "type": "div",
+	          "classList": [
+	            "row"
+	          ],
+	          "style": {
+	            "justifyContent": "flex-end"
+	          },
+	          "children": [
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              },
+	              "attr": {
+	                "type": "1"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              }
+	            }
+	          ]
+	        },
+	        {
+	          "type": "div",
+	          "classList": [
+	            "row"
+	          ],
+	          "style": {
+	            "justifyContent": "center"
+	          },
+	          "children": [
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              },
+	              "attr": {
+	                "type": "1"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              }
+	            }
+	          ]
+	        },
+	        {
+	          "type": "div",
+	          "classList": [
+	            "row"
+	          ],
+	          "style": {
+	            "justifyContent": "space-between"
+	          },
+	          "children": [
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              },
+	              "attr": {
+	                "type": "1"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              }
+	            }
+	          ]
+	        }
+	      ]
+	    },
+	    {
+	      "type": "wxc-panel",
+	      "attr": {
+	        "title": "align-items",
+	        "type": "primary"
+	      },
+	      "children": [
+	        {
+	          "type": "div",
+	          "classList": [
+	            "row",
+	            "row-align"
+	          ],
+	          "style": {
+	            "alignItems": "flex-start"
+	          },
+	          "children": [
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              },
+	              "attr": {
+	                "type": "1"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              }
+	            }
+	          ]
+	        },
+	        {
+	          "type": "div",
+	          "classList": [
+	            "row",
+	            "row-align"
+	          ],
+	          "style": {
+	            "alignItems": "flex-end"
+	          },
+	          "children": [
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              },
+	              "attr": {
+	                "type": "1"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              }
+	            }
+	          ]
+	        },
+	        {
+	          "type": "div",
+	          "classList": [
+	            "row",
+	            "row-align"
+	          ],
+	          "style": {
+	            "alignItems": "center"
+	          },
+	          "children": [
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              },
+	              "attr": {
+	                "type": "1"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              }
+	            }
+	          ]
+	        },
+	        {
+	          "type": "div",
+	          "classList": [
+	            "row",
+	            "row-align"
+	          ],
+	          "style": {
+	            "alignItems": "stretch"
+	          },
+	          "children": [
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              },
+	              "attr": {
+	                "type": "1"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              }
+	            }
+	          ]
+	        }
+	      ]
+	    },
+	    {
+	      "type": "wxc-panel",
+	      "attr": {
+	        "title": "flex",
+	        "type": "primary"
+	      },
+	      "children": [
+	        {
+	          "type": "div",
+	          "classList": [
+	            "row"
+	          ],
+	          "style": {
+	            "alignItems": "flex-start"
+	          },
+	          "children": [
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              },
+	              "attr": {
+	                "value": "no flex"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              },
+	              "attr": {
+	                "value": "no flex",
+	                "type": "1"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              },
+	              "attr": {
+	                "value": "no flex"
+	              }
+	            }
+	          ]
+	        },
+	        {
+	          "type": "div",
+	          "classList": [
+	            "row"
+	          ],
+	          "style": {
+	            "alignItems": "flex-start"
+	          },
+	          "children": [
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0
+	              },
+	              "attr": {
+	                "value": "no flex"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0,
+	                "flex": 1
+	              },
+	              "attr": {
+	                "type": "1",
+	                "value": "flex:1"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0,
+	                "flex": 2
+	              },
+	              "attr": {
+	                "value": "flex:2"
+	              }
+	            }
+	          ]
+	        },
+	        {
+	          "type": "div",
+	          "classList": [
+	            "row"
+	          ],
+	          "style": {
+	            "alignItems": "flex-start"
+	          },
+	          "children": [
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0,
+	                "flex": 1
+	              },
+	              "attr": {
+	                "value": "flex:1"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0,
+	                "flex": 1
+	              },
+	              "attr": {
+	                "type": "1",
+	                "value": "flex:1"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0,
+	                "flex": 1
+	              },
+	              "attr": {
+	                "value": "flex:1"
+	              }
+	            }
+	          ]
+	        },
+	        {
+	          "type": "div",
+	          "classList": [
+	            "row"
+	          ],
+	          "style": {
+	            "alignItems": "flex-start"
+	          },
+	          "children": [
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0,
+	                "flex": 1
+	              },
+	              "attr": {
+	                "value": "flex:1"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0,
+	                "flex": 2
+	              },
+	              "attr": {
+	                "type": "1",
+	                "value": "flex:2"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "style": {
+	                "marginRight": 0,
+	                "flex": 3
+	              },
+	              "attr": {
+	                "value": "flex:3"
+	              }
+	            }
+	          ]
+	        }
+	      ]
+	    },
+	    {
+	      "type": "wxc-panel",
+	      "attr": {
+	        "title": "flex-wrap",
+	        "type": "primary"
+	      },
+	      "children": [
+	        {
+	          "type": "div",
+	          "classList": [
+	            "row"
+	          ],
+	          "style": {
+	            "flexWrap": "wrap",
+	            "backgroundColor": "#808080",
+	            "padding": 10
+	          },
+	          "children": [
+	            {
+	              "type": "style-item",
+	              "attr": {
+	                "value": "1:wrap"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "attr": {
+	                "value": "2:wrap"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "attr": {
+	                "value": "3:wrap"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "attr": {
+	                "value": "4:wrap"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "attr": {
+	                "value": "5:wrap"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "attr": {
+	                "value": "6:wrap"
+	              }
+	            }
+	          ]
+	        },
+	        {
+	          "type": "div",
+	          "classList": [
+	            "row"
+	          ],
+	          "style": {
+	            "flexWrap": "nowrap",
+	            "backgroundColor": "#808080",
+	            "padding": 10
+	          },
+	          "children": [
+	            {
+	              "type": "style-item",
+	              "attr": {
+	                "value": "1:nowrap"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "attr": {
+	                "value": "2:nowrap"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "attr": {
+	                "value": "3:nowrap"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "attr": {
+	                "value": "4:nowrap"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "attr": {
+	                "value": "5:nowrap"
+	              }
+	            },
+	            {
+	              "type": "style-item",
+	              "attr": {
+	                "value": "6:nowrap"
+	              }
+	            }
+	          ]
+	        }
+	      ]
+	    }
+	  ]
+	}
+	;__weex_module__.exports.style={
+	  "row": {
+	    "flexDirection": "row",
+	    "marginBottom": 10
+	  },
+	  "row-align": {
+	    "height": 160,
+	    "borderWidth": 3,
+	    "borderColor": "#dddddd",
+	    "borderStyle": "solid"
 	  }
 	}
 	})

@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/166b7ca130b38d87497f545e4cad1936", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/38743e23d4766b22fcfa75fa18ac4162", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(1);
@@ -53,170 +53,197 @@
 	      onrefresh: function(e) {
 	        var self = this;
 	        self.refresh_display = 'show';
-	        // self.$call('timer', 'setTimeout', function() {
-	        //   self.refresh_display = 'hide';
-	        // },3000);
+	        self.$call('timer', 'setTimeout', function() {
 	          self.refresh_display = 'hide';
+	        }, 3000);
 	      },
-	      onappear: function (e) {
-	        var appearId = this.rows[e.target.attr.index].id;
-	        nativeLog('+++++', appearId);
-	        var appearIds = this.appearIds;
-	        appearIds.push(appearId);
-	        this.getMinAndMaxIds(appearIds);
-	      },
-	      ondisappear:function (e) {
-	        var disAppearId = this.rows[e.target.attr.index].id;
-	        nativeLog('+++++', disAppearId);
-	        var appearIds = this.appearIds;
-	        var index = appearIds.indexOf(disAppearId);
-	        if (index > -1) {
-	          appearIds.splice(index, 1);
-	        }
-	        this.getMinAndMaxIds(appearIds);
-	      },
-	      getMinAndMaxIds:function (appearIds) {
-	        appearIds.sort(function(a, b) {
-	          return a - b;
-	        });
-	        this.appearIds = appearIds;
-	        this.appearMax = appearIds[appearIds.length - 1];
-	        this.appearMin = appearIds[0];
+	      onloading: function() {
+	        var self = this;
+	        self.loading_display = 'show';
+	        self.$call('timer', 'setTimeout', function() {
+	          if (self.sections.length <= 5) {
+	            self.sections.push(self.moreSections[self.sections.length - 2]);
+	          }
+
+	          self.loading_display = 'hide';
+	        }, 3000);
 	      }
 	    },
 	    data: function () {return {
-	      refresh_display : 'hide',
-	      loading_display : 'hide',
-	      appearMin:1,
-	      appearMax:1,
-	      appearIds:[],
-	      rows:[
-	        {id: 1},
-	        {id: 2},
-	        {id: 3},
-	        {id: 4},
-	        {id: 5},
-	        {id: 6},
-	        {id: 7},
-	        {id: 8},
-	        {id: 9},
-	        {id: 10},
-	        {id: 11},
-	        {id: 12},
-	        {id: 13},
-	        {id: 14},
-	        {id: 15},
-	        {id: 16},
-	        {id: 17},
-	        {id: 18},
-	        {id: 19},
-	        {id: 20},
-	        {id: 21},
-	        {id: 22},
-	        {id: 23},
-	        {id: 24},
-	        {id: 25},
-	        {id: 26},
-	        {id: 27},
-	        {id: 28},
-	        {id: 29}
+	      refresh_display: 'hide',
+	      loading_display: 'hide',
+	      sections: [
+	        {
+	          title: 'Header 1',
+	          items: [
+	            {id: 1},
+	            {id: 2},
+	            {id: 3},
+	            {id: 4},
+	            {id: 5}
+	          ]
+	        },
+	        {
+	          title: 'Header 2',
+	          items: [
+	            {id: 6},
+	            {id: 7},
+	            {id: 8},
+	            {id: 9},
+	            {id: 10},
+	            {id: 11}
+	          ]
+	        }
+	      ],
+	      moreSections: [
+	        {
+	          title: 'Header 3',
+	          items: [
+	            {id: 12},
+	            {id: 13},
+	            {id: 14},
+	            {id: 15},
+	            {id: 16},
+	            {id: 17},
+	            {id: 18}
+	          ]
+	        },
+	        {
+	          title: 'Header 4',
+	          items: [
+	            {id: 19},
+	            {id: 20},
+	            {id: 21},
+	            {id: 22}
+	          ]
+	        },
+	        {
+	          title: 'Header 5',
+	          items: [
+	            {id: 23},
+	            {id: 24},
+	            {id: 25},
+	            {id: 26},
+	            {id: 27}
+	          ]
+	        },
+	        {
+	          title: 'Header 6',
+	          items: [
+	            {id: 28},
+	            {id: 29},
+	            {id: 30},
+	            {id: 31},
+	            {id: 32}
+	          ]
+	        },
 	      ]
-	    }}
+	    }},
 	  }
 
 	;__weex_module__.exports.template={
-	  "type": "div",
+	  "type": "scroller",
+	  "classList": [
+	    "list"
+	  ],
 	  "children": [
 	    {
-	      "type": "list",
+	      "type": "refresh",
 	      "classList": [
-	        "list"
+	        "refresh-view"
 	      ],
+	      "attr": {
+	        "display": function () {return this.refresh_display}
+	      },
+	      "events": {
+	        "refresh": "onrefresh"
+	      },
 	      "children": [
 	        {
-	          "type": "refresh",
+	          "type": "text",
 	          "classList": [
-	            "refresh-view"
+	            "refresh-arrow"
 	          ],
+	          "shown": function () {return (this.refresh_display==='hide')},
 	          "attr": {
-	            "display": function () {return this.refresh_display}
-	          },
-	          "events": {
-	            "refresh": "onrefresh"
-	          },
+	            "value": "↓ Pull To Refresh"
+	          }
+	        },
+	        {
+	          "type": "loading-indicator",
+	          "classList": [
+	            "indicator"
+	          ]
+	        }
+	      ]
+	    },
+	    {
+	      "type": "div",
+	      "classList": [
+	        "section"
+	      ],
+	      "repeat": function () {return this.sections},
+	      "children": [
+	        {
+	          "type": "div",
+	          "classList": [
+	            "header"
+	          ],
 	          "children": [
 	            {
 	              "type": "text",
 	              "classList": [
-	                "refresh-arrow"
+	                "header-title"
 	              ],
-	              "shown": function () {return (this.refresh_display==='hide')},
 	              "attr": {
-	                "value": "↓ Pull To Refresh"
+	                "value": function () {return this.title}
 	              }
-	            },
-	            {
-	              "type": "loading-indicator"
 	            }
 	          ]
 	        },
 	        {
-	          "type": "cell",
-	          "append": "tree",
-	          "events": {
-	            "appear": "onappear",
-	            "disappear": "ondisappear"
-	          },
+	          "type": "div",
 	          "classList": [
-	            "row"
+	            "item"
 	          ],
-	          "repeat": function () {return this.rows},
-	          "attr": {
-	            "index": function () {return this.$index}
-	          },
+	          "repeat": function () {return this.items},
 	          "children": [
 	            {
-	              "type": "div",
+	              "type": "text",
 	              "classList": [
-	                "item"
+	                "item-title"
 	              ],
-	              "children": [
-	                {
-	                  "type": "text",
-	                  "classList": [
-	                    "item-title"
-	                  ],
-	                  "attr": {
-	                    "value": function () {return 'row ' + (this.id)}
-	                  }
-	                }
-	              ]
+	              "attr": {
+	                "value": function () {return 'row ' + (this.id)}
+	              }
 	            }
 	          ]
 	        }
 	      ]
 	    },
 	    {
-	      "type": "text",
+	      "type": "loading",
 	      "classList": [
-	        "count"
+	        "loading-view"
 	      ],
 	      "attr": {
-	        "value": function () {return 'Appear items:' + (this.appearMin) + ' - ' + (this.appearMax)}
-	      }
+	        "display": function () {return this.loading_display}
+	      },
+	      "events": {
+	        "loading": "onloading"
+	      },
+	      "children": [
+	        {
+	          "type": "loading-indicator",
+	          "classList": [
+	            "indicator"
+	          ]
+	        }
+	      ]
 	    }
 	  ]
 	}
 	;__weex_module__.exports.style={
-	  "list": {
-	    "height": 810,
-	    "borderWidth": 10,
-	    "borderColor": "#FFA500"
-	  },
-	  "count": {
-	    "fontSize": 48,
-	    "margin": 10
-	  },
 	  "refresh-view": {
 	    "height": 80,
 	    "width": 750,
@@ -227,13 +254,26 @@
 	    "fontSize": 30,
 	    "color": "#45b5f0"
 	  },
+	  "loading-view": {
+	    "height": 80,
+	    "width": 750,
+	    "justifyContent": "center",
+	    "alignItems": "center"
+	  },
 	  "indicator": {
 	    "height": 40,
 	    "width": 40,
 	    "color": "#45b5f0"
 	  },
-	  "row": {
-	    "width": 750
+	  "header": {
+	    "backgroundColor": "#45b5f0",
+	    "padding": 20,
+	    "height": 88,
+	    "justifyContent": "center"
+	  },
+	  "header-title": {
+	    "color": "#FFFFFF",
+	    "fontWeight": "bold"
 	  },
 	  "item": {
 	    "justifyContent": "center",
@@ -244,7 +284,7 @@
 	  }
 	}
 	})
-	;__weex_bootstrap__("@weex-component/166b7ca130b38d87497f545e4cad1936", {
+	;__weex_bootstrap__("@weex-component/38743e23d4766b22fcfa75fa18ac4162", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 

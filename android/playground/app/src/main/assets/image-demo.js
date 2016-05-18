@@ -44,207 +44,174 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/166b7ca130b38d87497f545e4cad1936", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/944a1f786bb8fb094334fbec23f7fddb", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(1);
 	  __weex_module__.exports = {
-	    methods: {
-	      onrefresh: function(e) {
-	        var self = this;
-	        self.refresh_display = 'show';
-	        // self.$call('timer', 'setTimeout', function() {
-	        //   self.refresh_display = 'hide';
-	        // },3000);
-	          self.refresh_display = 'hide';
-	      },
-	      onappear: function (e) {
-	        var appearId = this.rows[e.target.attr.index].id;
-	        nativeLog('+++++', appearId);
-	        var appearIds = this.appearIds;
-	        appearIds.push(appearId);
-	        this.getMinAndMaxIds(appearIds);
-	      },
-	      ondisappear:function (e) {
-	        var disAppearId = this.rows[e.target.attr.index].id;
-	        nativeLog('+++++', disAppearId);
-	        var appearIds = this.appearIds;
-	        var index = appearIds.indexOf(disAppearId);
-	        if (index > -1) {
-	          appearIds.splice(index, 1);
-	        }
-	        this.getMinAndMaxIds(appearIds);
-	      },
-	      getMinAndMaxIds:function (appearIds) {
-	        appearIds.sort(function(a, b) {
-	          return a - b;
-	        });
-	        this.appearIds = appearIds;
-	        this.appearMax = appearIds[appearIds.length - 1];
-	        this.appearMin = appearIds[0];
-	      }
-	    },
 	    data: function () {return {
-	      refresh_display : 'hide',
-	      loading_display : 'hide',
-	      appearMin:1,
-	      appearMax:1,
-	      appearIds:[],
-	      rows:[
-	        {id: 1},
-	        {id: 2},
-	        {id: 3},
-	        {id: 4},
-	        {id: 5},
-	        {id: 6},
-	        {id: 7},
-	        {id: 8},
-	        {id: 9},
-	        {id: 10},
-	        {id: 11},
-	        {id: 12},
-	        {id: 13},
-	        {id: 14},
-	        {id: 15},
-	        {id: 16},
-	        {id: 17},
-	        {id: 18},
-	        {id: 19},
-	        {id: 20},
-	        {id: 21},
-	        {id: 22},
-	        {id: 23},
-	        {id: 24},
-	        {id: 25},
-	        {id: 26},
-	        {id: 27},
-	        {id: 28},
-	        {id: 29}
-	      ]
+	      img: '//gw.alicdn.com/tps/i2/TB1DpsmMpXXXXabaXXX20ySQVXX-512-512.png_400x400.jpg'
 	    }}
 	  }
 
 	;__weex_module__.exports.template={
-	  "type": "div",
+	  "type": "scroller",
 	  "children": [
 	    {
-	      "type": "list",
-	      "classList": [
-	        "list"
-	      ],
+	      "type": "wxc-panel",
+	      "attr": {
+	        "title": "width x height",
+	        "type": "primary"
+	      },
 	      "children": [
 	        {
-	          "type": "refresh",
-	          "classList": [
-	            "refresh-view"
-	          ],
+	          "type": "wxc-tip",
 	          "attr": {
-	            "display": function () {return this.refresh_display}
+	            "type": "warning",
+	            "value": "Weex screen width is 750"
 	          },
-	          "events": {
-	            "refresh": "onrefresh"
+	          "style": {
+	            "marginBottom": 20
+	          }
+	        },
+	        {
+	          "type": "wxc-panel",
+	          "attr": {
+	            "title": "400 X 400"
 	          },
 	          "children": [
 	            {
-	              "type": "text",
+	              "type": "image",
 	              "classList": [
-	                "refresh-arrow"
+	                "img"
 	              ],
-	              "shown": function () {return (this.refresh_display==='hide')},
+	              "style": {
+	                "width": 400,
+	                "height": 400
+	              },
 	              "attr": {
-	                "value": "↓ Pull To Refresh"
+	                "src": function () {return this.img}
 	              }
-	            },
-	            {
-	              "type": "loading-indicator"
 	            }
 	          ]
 	        },
 	        {
-	          "type": "cell",
-	          "append": "tree",
-	          "events": {
-	            "appear": "onappear",
-	            "disappear": "ondisappear"
-	          },
-	          "classList": [
-	            "row"
-	          ],
-	          "repeat": function () {return this.rows},
+	          "type": "wxc-panel",
 	          "attr": {
-	            "index": function () {return this.$index}
+	            "title": "200 x 200"
 	          },
 	          "children": [
 	            {
-	              "type": "div",
+	              "type": "image",
 	              "classList": [
-	                "item"
+	                "img"
 	              ],
-	              "children": [
-	                {
-	                  "type": "text",
-	                  "classList": [
-	                    "item-title"
-	                  ],
-	                  "attr": {
-	                    "value": function () {return 'row ' + (this.id)}
-	                  }
-	                }
-	              ]
+	              "style": {
+	                "width": 200,
+	                "height": 200
+	              },
+	              "attr": {
+	                "src": function () {return this.img}
+	              }
 	            }
 	          ]
 	        }
 	      ]
 	    },
 	    {
-	      "type": "text",
-	      "classList": [
-	        "count"
-	      ],
+	      "type": "wxc-panel",
 	      "attr": {
-	        "value": function () {return 'Appear items:' + (this.appearMin) + ' - ' + (this.appearMax)}
-	      }
+	        "title": "resize",
+	        "type": "primary"
+	      },
+	      "children": [
+	        {
+	          "type": "wxc-tip",
+	          "attr": {
+	            "type": "warning",
+	            "value": "Default value is stretch"
+	          },
+	          "style": {
+	            "marginBottom": 20
+	          }
+	        },
+	        {
+	          "type": "wxc-panel",
+	          "attr": {
+	            "title": "600 X 600     resize=contain"
+	          },
+	          "children": [
+	            {
+	              "type": "image",
+	              "classList": [
+	                "img"
+	              ],
+	              "style": {
+	                "width": 600,
+	                "height": 600
+	              },
+	              "attr": {
+	                "src": function () {return this.img},
+	                "resize": "contain"
+	              }
+	            }
+	          ]
+	        }
+	      ]
+	    },
+	    {
+	      "type": "wxc-panel",
+	      "attr": {
+	        "title": "600 X 600     resize=cover"
+	      },
+	      "children": [
+	        {
+	          "type": "image",
+	          "classList": [
+	            "img"
+	          ],
+	          "style": {
+	            "width": 600,
+	            "height": 600
+	          },
+	          "attr": {
+	            "src": function () {return this.img},
+	            "resize": "cover"
+	          }
+	        }
+	      ]
+	    },
+	    {
+	      "type": "wxc-panel",
+	      "attr": {
+	        "title": "600 X 200     resize=stretch"
+	      },
+	      "children": [
+	        {
+	          "type": "image",
+	          "classList": [
+	            "img"
+	          ],
+	          "style": {
+	            "width": 600,
+	            "height": 200
+	          },
+	          "attr": {
+	            "src": function () {return this.img},
+	            "resize": "stretch"
+	          }
+	        }
+	      ]
 	    }
 	  ]
 	}
 	;__weex_module__.exports.style={
-	  "list": {
-	    "height": 810,
-	    "borderWidth": 10,
-	    "borderColor": "#FFA500"
-	  },
-	  "count": {
-	    "fontSize": 48,
-	    "margin": 10
-	  },
-	  "refresh-view": {
-	    "height": 80,
-	    "width": 750,
-	    "justifyContent": "center",
-	    "alignItems": "center"
-	  },
-	  "refresh-arrow": {
-	    "fontSize": 30,
-	    "color": "#45b5f0"
-	  },
-	  "indicator": {
-	    "height": 40,
-	    "width": 40,
-	    "color": "#45b5f0"
-	  },
-	  "row": {
-	    "width": 750
-	  },
-	  "item": {
-	    "justifyContent": "center",
-	    "borderBottomWidth": 2,
-	    "borderBottomColor": "#c0c0c0",
-	    "height": 100,
-	    "padding": 20
+	  "img": {
+	    "marginBottom": 20
 	  }
 	}
 	})
-	;__weex_bootstrap__("@weex-component/166b7ca130b38d87497f545e4cad1936", {
+	;__weex_bootstrap__("@weex-component/944a1f786bb8fb094334fbec23f7fddb", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 

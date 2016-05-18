@@ -44,77 +44,81 @@ We can also use `.` syntax to bind cascading data structure. Let's look at the f
 </script>
 ```
 
-## Binding method call or expression
+## In-template expression
 
-An JavaScript function call or expression can also get bound, e.g.
+Inside data bindings, Weex supports simply javascript expressions, e.g.
 
 ```
 <template>
-  <container style="flex-direction: column;">
-    <text style="font-size: {{size}};">{{getFullName()}}</text>
+  <container style="flex-direction: row;">
+    <text>{{firstName + ' ' + lastName}}</text>
   </container>
 </template>
-
+  
 <script>
   module.exports = {
     data: {
-      size: 48,
+      firstName: 'John',
+      lastName: 'Smith'
+    }
+  }
+</script>
+```
+
+The expression will be evaluated in the data scope of current context.
+
+**NOTE: EACH BINDING CAN ONLY CONTAIN ONE SINGLE EXPRESSION**
+
+## Computed Properties
+
+According to simple operations, in-template expressions are very convenient. But if you want to put more logic into the template, you should use a computed property.
+
+e.g.
+```
+<template>
+  <container style="flex-direction: row;">
+    <text>{{fullName}}</text>
+    <text onclick="changeName"></text>
+  </container>
+</template>
+  
+<script>
+  module.exports = {
+    data: {
       firstName: 'John',
       lastName: 'Smith'
     },
+    computed: {
+      fullName: {
+        get: function() {
+          return this.firstName + ' ' + this.lastName
+        },
+
+        set: function(v) {
+          var s = v.split(' ')
+          this.firstName = s[0]
+          this.lastName = s[1]
+        }
+      }
+    },
     methods: {
-      getFullName: function () {
-        // 'John SMITH'
-        return this.firstName + ' ' + this.lastName.toUpperCase()
+      changeName: function() {
+        this.fullName = 'Terry King'
       }
     }
   }
 </script>
 ```
 
-Here the return value of `getFullName()` is bound to the `<text>` content.
+Here we have declared a computed property fullName. The function we provided will be used as the getter function for concating firstName and lastName.
 
-Now we add a event, so that we can see how data change reflects to view change:
+Otherwise when you call `changeName` after click, the setter will be invoked and this.firstName and this.lastName will be updated accordingly.
 
-```
-<template>
-  <container>
-    <text onclick="changeName">Click to Change!</text>
-    <text style="font-size: {{size}}">{{getFullName()}}</text>
-  </container>
-</template>
+**NOTE: `data` and `methods` can't have duplicate fields. 'Cause in the execution context -- `this`, we can access both of them.**
 
-<script>
-  module.exports = {
-    data: {
-      size: 20,
-      firstName: 'John',
-      lastName: 'Smith'
-    },
-    methods: {
-      getFullName: function () {
-        // 'John SMITH'
-        return this.firstName + ' ' + this.lastName.toUpperCase()
-      },
-      changeName: function () {
-        this.firstName = 'Mike'
-      }
-    }
-  }
-</script>
-```
+## Usage of some special attributes in Data-Binding
 
-In this case, after we click the "Click to Change!" button, the `changeName()` method will be called, and the `firstName` field will change.Then the return value of `changeName()` get changed, Which results to the change of name displayed in the view.
-
-Once we have data-binding, the data changes will automatically trigger view changes. No more code needed :)
-
-Note: `data` and `methods` can't have duplicate fields, cause in the execution context -- `this`, we can access both of them.
-
-* [See more usage of `this` in vm APIs](../references/api.md)
-
-### Usage of some special attributes in Data-Binding
-
-#### Styles: `style` or `class`
+### Styles: `style` or `class`
 
 the style of a component can be bind using the `style` attribute:
 
@@ -139,7 +143,7 @@ here if `{{size}}` and `{{status}}` have empty value, then only `class="title"` 
 
 * [See more about style and class](./style-n-class.md)
 
-#### Event Handler: `on...`
+### Event Handler: `on...`
 
 The event handler is an attribute which name has a prefix `on...`. The other part of attribute name is event type and the value is event handler name. We don't need to add mustache around the method name or add parentheses to call it.
 
@@ -159,7 +163,7 @@ The event handler is an attribute which name has a prefix `on...`. The other par
 </script>
 ```
 
-#### `if` & `repeat`
+### `if` & `repeat`
 
 `if` attribute can control the display of a component by a truthy/falsy value.
 

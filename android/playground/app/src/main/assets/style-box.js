@@ -44,83 +44,14 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/166b7ca130b38d87497f545e4cad1936", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/6833203031b24f8ce4cb9ca2b11d7266", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	__webpack_require__(31);
 
 	;
 	  __webpack_require__(1);
 	  __weex_module__.exports = {
-	    methods: {
-	      onrefresh: function(e) {
-	        var self = this;
-	        self.refresh_display = 'show';
-	        // self.$call('timer', 'setTimeout', function() {
-	        //   self.refresh_display = 'hide';
-	        // },3000);
-	          self.refresh_display = 'hide';
-	      },
-	      onappear: function (e) {
-	        var appearId = this.rows[e.target.attr.index].id;
-	        nativeLog('+++++', appearId);
-	        var appearIds = this.appearIds;
-	        appearIds.push(appearId);
-	        this.getMinAndMaxIds(appearIds);
-	      },
-	      ondisappear:function (e) {
-	        var disAppearId = this.rows[e.target.attr.index].id;
-	        nativeLog('+++++', disAppearId);
-	        var appearIds = this.appearIds;
-	        var index = appearIds.indexOf(disAppearId);
-	        if (index > -1) {
-	          appearIds.splice(index, 1);
-	        }
-	        this.getMinAndMaxIds(appearIds);
-	      },
-	      getMinAndMaxIds:function (appearIds) {
-	        appearIds.sort(function(a, b) {
-	          return a - b;
-	        });
-	        this.appearIds = appearIds;
-	        this.appearMax = appearIds[appearIds.length - 1];
-	        this.appearMin = appearIds[0];
-	      }
-	    },
 	    data: function () {return {
-	      refresh_display : 'hide',
-	      loading_display : 'hide',
-	      appearMin:1,
-	      appearMax:1,
-	      appearIds:[],
-	      rows:[
-	        {id: 1},
-	        {id: 2},
-	        {id: 3},
-	        {id: 4},
-	        {id: 5},
-	        {id: 6},
-	        {id: 7},
-	        {id: 8},
-	        {id: 9},
-	        {id: 10},
-	        {id: 11},
-	        {id: 12},
-	        {id: 13},
-	        {id: 14},
-	        {id: 15},
-	        {id: 16},
-	        {id: 17},
-	        {id: 18},
-	        {id: 19},
-	        {id: 20},
-	        {id: 21},
-	        {id: 22},
-	        {id: 23},
-	        {id: 24},
-	        {id: 25},
-	        {id: 26},
-	        {id: 27},
-	        {id: 28},
-	        {id: 29}
-	      ]
+	      size: 40
 	    }}
 	  }
 
@@ -128,66 +59,253 @@
 	  "type": "div",
 	  "children": [
 	    {
-	      "type": "list",
-	      "classList": [
-	        "list"
-	      ],
+	      "type": "wxc-panel",
+	      "attr": {
+	        "title": "Box Model",
+	        "paddingBody": "0",
+	        "type": "primary"
+	      },
 	      "children": [
 	        {
-	          "type": "refresh",
+	          "type": "text",
 	          "classList": [
-	            "refresh-view"
+	            "box"
 	          ],
 	          "attr": {
-	            "display": function () {return this.refresh_display}
-	          },
-	          "events": {
-	            "refresh": "onrefresh"
-	          },
-	          "children": [
-	            {
-	              "type": "text",
-	              "classList": [
-	                "refresh-arrow"
-	              ],
-	              "shown": function () {return (this.refresh_display==='hide')},
-	              "attr": {
-	                "value": "↓ Pull To Refresh"
-	              }
-	            },
-	            {
-	              "type": "loading-indicator"
-	            }
-	          ]
-	        },
+	            "value": "Box"
+	          }
+	        }
+	      ]
+	    },
+	    {
+	      "type": "wxc-panel",
+	      "attr": {
+	        "title": "border",
+	        "type": "primary"
+	      },
+	      "children": [
 	        {
-	          "type": "cell",
-	          "append": "tree",
-	          "events": {
-	            "appear": "onappear",
-	            "disappear": "ondisappear"
-	          },
-	          "classList": [
-	            "row"
-	          ],
-	          "repeat": function () {return this.rows},
+	          "type": "wxc-panel",
 	          "attr": {
-	            "index": function () {return this.$index}
+	            "title": "border-width",
+	            "type": ""
 	          },
 	          "children": [
 	            {
 	              "type": "div",
-	              "classList": [
-	                "item"
-	              ],
+	              "style": {
+	                "flexDirection": "row"
+	              },
 	              "children": [
 	                {
-	                  "type": "text",
-	                  "classList": [
-	                    "item-title"
-	                  ],
+	                  "type": "style-item",
+	                  "style": {
+	                    "borderStyle": "solid",
+	                    "borderWidth": 2,
+	                    "borderColor": "#333333"
+	                  },
 	                  "attr": {
-	                    "value": function () {return 'row ' + (this.id)}
+	                    "value": ""
+	                  }
+	                },
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "borderStyle": "solid",
+	                    "borderWidth": 10,
+	                    "borderColor": "#333333"
+	                  },
+	                  "attr": {
+	                    "value": ""
+	                  }
+	                },
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "borderStyle": "solid",
+	                    "borderLeftWidth": 4,
+	                    "borderColor": "#333333"
+	                  },
+	                  "attr": {
+	                    "value": ""
+	                  }
+	                },
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "borderStyle": "solid",
+	                    "borderBottomWidth": 4,
+	                    "borderColor": "#333333"
+	                  },
+	                  "attr": {
+	                    "value": ""
+	                  }
+	                }
+	              ]
+	            }
+	          ]
+	        },
+	        {
+	          "type": "wxc-panel",
+	          "attr": {
+	            "title": "border-color",
+	            "type": ""
+	          },
+	          "children": [
+	            {
+	              "type": "div",
+	              "style": {
+	                "flexDirection": "row"
+	              },
+	              "children": [
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "borderStyle": "solid",
+	                    "borderWidth": 4,
+	                    "borderColor": "#333333"
+	                  },
+	                  "attr": {
+	                    "value": ""
+	                  }
+	                },
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "borderStyle": "solid",
+	                    "borderWidth": 4,
+	                    "borderColor": "#dddddd"
+	                  },
+	                  "attr": {
+	                    "value": ""
+	                  }
+	                },
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "borderStyle": "solid",
+	                    "borderWidth": 4,
+	                    "borderColor": "#FF0000"
+	                  },
+	                  "attr": {
+	                    "value": ""
+	                  }
+	                }
+	              ]
+	            }
+	          ]
+	        },
+	        {
+	          "type": "wxc-panel",
+	          "attr": {
+	            "title": "border-style",
+	            "type": ""
+	          },
+	          "children": [
+	            {
+	              "type": "wxc-tip",
+	              "attr": {
+	                "type": "warning",
+	                "value": "just support four edges"
+	              },
+	              "style": {
+	                "marginBottom": 10
+	              }
+	            },
+	            {
+	              "type": "div",
+	              "style": {
+	                "flexDirection": "row"
+	              },
+	              "children": [
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "borderStyle": "solid",
+	                    "borderWidth": 4,
+	                    "borderColor": "#333333"
+	                  },
+	                  "attr": {
+	                    "value": ""
+	                  }
+	                },
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "borderStyle": "dashed",
+	                    "borderWidth": 4,
+	                    "borderColor": "#333333"
+	                  },
+	                  "attr": {
+	                    "value": "",
+	                    "type": ""
+	                  }
+	                },
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "borderStyle": "dotted",
+	                    "borderWidth": 4,
+	                    "borderColor": "#333333"
+	                  },
+	                  "attr": {
+	                    "value": ""
+	                  }
+	                }
+	              ]
+	            }
+	          ]
+	        },
+	        {
+	          "type": "wxc-panel",
+	          "attr": {
+	            "title": "border-radius",
+	            "type": ""
+	          },
+	          "children": [
+	            {
+	              "type": "div",
+	              "style": {
+	                "flexDirection": "row"
+	              },
+	              "children": [
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "width": 75,
+	                    "borderRadius": 38
+	                  },
+	                  "attr": {
+	                    "value": ""
+	                  }
+	                },
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "borderRadius": 20
+	                  },
+	                  "attr": {
+	                    "value": ""
+	                  }
+	                },
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "borderTopLeftRadius": 20,
+	                    "borderTopRightRadius": 20
+	                  },
+	                  "attr": {
+	                    "value": ""
+	                  }
+	                },
+	                {
+	                  "type": "style-item",
+	                  "style": {
+	                    "borderBottomLeftRadius": 20,
+	                    "borderBottomRightRadius": 20
+	                  },
+	                  "attr": {
+	                    "value": ""
 	                  }
 	                }
 	              ]
@@ -195,56 +313,29 @@
 	          ]
 	        }
 	      ]
-	    },
-	    {
-	      "type": "text",
-	      "classList": [
-	        "count"
-	      ],
-	      "attr": {
-	        "value": function () {return 'Appear items:' + (this.appearMin) + ' - ' + (this.appearMax)}
-	      }
 	    }
 	  ]
 	}
 	;__weex_module__.exports.style={
-	  "list": {
-	    "height": 810,
-	    "borderWidth": 10,
-	    "borderColor": "#FFA500"
-	  },
-	  "count": {
-	    "fontSize": 48,
-	    "margin": 10
-	  },
-	  "refresh-view": {
-	    "height": 80,
-	    "width": 750,
-	    "justifyContent": "center",
-	    "alignItems": "center"
-	  },
-	  "refresh-arrow": {
-	    "fontSize": 30,
-	    "color": "#45b5f0"
-	  },
-	  "indicator": {
-	    "height": 40,
-	    "width": 40,
-	    "color": "#45b5f0"
-	  },
-	  "row": {
-	    "width": 750
-	  },
-	  "item": {
-	    "justifyContent": "center",
-	    "borderBottomWidth": 2,
-	    "borderBottomColor": "#c0c0c0",
-	    "height": 100,
-	    "padding": 20
+	  "box": {
+	    "backgroundColor": "#f5f5f5",
+	    "width": 260,
+	    "height": 260,
+	    "paddingLeft": 40,
+	    "paddingTop": 40,
+	    "paddingRight": 40,
+	    "paddingBottom": 40,
+	    "marginLeft": 40,
+	    "marginTop": 40,
+	    "marginRight": 40,
+	    "marginBottom": 40,
+	    "borderWidth": 40,
+	    "borderColor": "#333333",
+	    "borderStyle": "solid"
 	  }
 	}
 	})
-	;__weex_bootstrap__("@weex-component/166b7ca130b38d87497f545e4cad1936", {
+	;__weex_bootstrap__("@weex-component/6833203031b24f8ce4cb9ca2b11d7266", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -1362,6 +1453,72 @@
 	    "marginTop": 5,
 	    "textAlign": "center",
 	    "fontSize": 20
+	  }
+	}
+	})
+
+/***/ },
+/* 13 */,
+/* 14 */,
+/* 15 */,
+/* 16 */,
+/* 17 */,
+/* 18 */,
+/* 19 */,
+/* 20 */,
+/* 21 */,
+/* 22 */,
+/* 23 */,
+/* 24 */,
+/* 25 */,
+/* 26 */,
+/* 27 */,
+/* 28 */,
+/* 29 */,
+/* 30 */,
+/* 31 */
+/***/ function(module, exports) {
+
+	;__weex_define__("@weex-component/style-item", [], function(__weex_require__, __weex_exports__, __weex_module__){
+
+	;
+	  __weex_module__.exports = {
+	    data: function () {return {
+	      value: '',
+	      type: '0' // 0, 1
+	    }},
+	    methods: {
+	      bgColor: function() {
+	        return this.type == '1' ? '#7BA3A8' : '#BEAD92';
+	      }
+	    }
+	  }
+
+	;__weex_module__.exports.template={
+	  "type": "text",
+	  "classList": [
+	    "item",
+	    "txt"
+	  ],
+	  "attr": {
+	    "value": function () {return this.value}
+	  },
+	  "style": {
+	    "backgroundColor": function () {return this.bgColor()}
+	  }
+	}
+	;__weex_module__.exports.style={
+	  "item": {
+	    "marginRight": 10,
+	    "width": 160,
+	    "height": 75,
+	    "paddingLeft": 8,
+	    "paddingRight": 8,
+	    "paddingTop": 8,
+	    "paddingBottom": 8
+	  },
+	  "txt": {
+	    "color": "#eeeeee"
 	  }
 	}
 	})

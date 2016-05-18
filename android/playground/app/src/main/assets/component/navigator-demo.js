@@ -44,207 +44,150 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/166b7ca130b38d87497f545e4cad1936", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/3568611e2ba68270be1f9313cb7fef62", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(1);
 	  __weex_module__.exports = {
-	    methods: {
-	      onrefresh: function(e) {
-	        var self = this;
-	        self.refresh_display = 'show';
-	        // self.$call('timer', 'setTimeout', function() {
-	        //   self.refresh_display = 'hide';
-	        // },3000);
-	          self.refresh_display = 'hide';
-	      },
-	      onappear: function (e) {
-	        var appearId = this.rows[e.target.attr.index].id;
-	        nativeLog('+++++', appearId);
-	        var appearIds = this.appearIds;
-	        appearIds.push(appearId);
-	        this.getMinAndMaxIds(appearIds);
-	      },
-	      ondisappear:function (e) {
-	        var disAppearId = this.rows[e.target.attr.index].id;
-	        nativeLog('+++++', disAppearId);
-	        var appearIds = this.appearIds;
-	        var index = appearIds.indexOf(disAppearId);
-	        if (index > -1) {
-	          appearIds.splice(index, 1);
-	        }
-	        this.getMinAndMaxIds(appearIds);
-	      },
-	      getMinAndMaxIds:function (appearIds) {
-	        appearIds.sort(function(a, b) {
-	          return a - b;
-	        });
-	        this.appearIds = appearIds;
-	        this.appearMax = appearIds[appearIds.length - 1];
-	        this.appearMin = appearIds[0];
-	      }
-	    },
 	    data: function () {return {
-	      refresh_display : 'hide',
-	      loading_display : 'hide',
-	      appearMin:1,
-	      appearMax:1,
-	      appearIds:[],
-	      rows:[
-	        {id: 1},
-	        {id: 2},
-	        {id: 3},
-	        {id: 4},
-	        {id: 5},
-	        {id: 6},
-	        {id: 7},
-	        {id: 8},
-	        {id: 9},
-	        {id: 10},
-	        {id: 11},
-	        {id: 12},
-	        {id: 13},
-	        {id: 14},
-	        {id: 15},
-	        {id: 16},
-	        {id: 17},
-	        {id: 18},
-	        {id: 19},
-	        {id: 20},
-	        {id: 21},
-	        {id: 22},
-	        {id: 23},
-	        {id: 24},
-	        {id: 25},
-	        {id: 26},
-	        {id: 27},
-	        {id: 28},
-	        {id: 29}
-	      ]
-	    }}
+	      navBarHeight: 88,
+	      title: 'Navigator',
+	      dir: 'examples',
+	      baseURL: '',
+	    }},
+	    created: function() {
+	        this.$getConfig(function (config) {
+	            var env = config.env;
+	            if(env.platform == 'iOS'){
+	              var scale = env.scale;
+	              var deviceWidth = env.deviceWidth / scale;
+	              this.navBarHeight = 64.0 * 750.0 / deviceWidth;
+	            }   
+	        }.bind(this));
+
+	        this.$on('naviBar.rightItem.click',function(e){
+	          duration = 2;
+	          this.$call('modal', 'toast', {
+	            'message': 'naviBar.rightItem.click',
+	            'duration': duration
+	           });
+	        });
+
+	        this.$on('naviBar.leftItem.click',function(e){
+	          duration = 2;
+	          this.$call('modal', 'toast', {
+	            'message': 'naviBar.leftItem.click',
+	            'duration': duration
+	           });  
+	        });
+
+	        var bundleUrl = this.$getConfig().bundleUrl;
+	        bundleUrl = new String(bundleUrl);
+	        console.log('hit', bundleUrl);
+	        var nativeBase;
+	        var isAndroidAssets = bundleUrl.indexOf('file://assets/') >= 0;
+
+	        var isiOSAssets = bundleUrl.indexOf('file:///') >= 0 && bundleUrl.indexOf('WeexDemo.app') > 0;
+	        if (isAndroidAssets) {
+	          nativeBase = 'file://assets/';
+	        }
+	        else if (isiOSAssets) {
+	          // file:///var/mobile/Containers/Bundle/Application/{id}/WeexDemo.app/
+	          // file:///Users/{user}/Library/Developer/CoreSimulator/Devices/{id}/data/Containers/Bundle/Application/{id}/WeexDemo.app/
+	          nativeBase = bundleUrl.substring(0, bundleUrl.lastIndexOf('/') + 1);
+	        }
+	        else {
+	          var host = 'localhost:12580';
+	          var matches = /\/\/([^\/]+?)\//.exec(this.$getConfig().bundleUrl);
+	          if (matches && matches.length >= 2) {
+	            host = matches[1];
+	          }
+	          nativeBase = 'http://' + host + '/' + this.dir + '/build/';
+	        }
+	        var h5Base = './index.html?page=./' + this.dir + '/build/';
+	        // in Native
+	        var base = nativeBase;
+	        if (typeof window === 'object') {
+	          // in Browser or WebView
+	          base = h5Base;
+	        }
+	        this.baseURL = base;     
+	    },
+	    methods: {
+	      push: function() {
+	        var vm = this;
+	        var params = {
+	          'url':  this.baseURL + 'component/navigator-demo.js',
+	          'animated' : 'true',
+	        }
+	        vm.$call('navigator','push',params, null);
+	      },
+
+	      pop: function() {
+	        var vm = this;
+	        var params = {
+	          'animated' : 'true',
+	        }
+	        vm.$call('navigator','pop',params, null);
+	      },
+	    }
 	  }
 
 	;__weex_module__.exports.template={
-	  "type": "div",
+	  "type": "wxc-navpage",
+	  "attr": {
+	    "dataRole": "none",
+	    "height": function () {return this.navBarHeight},
+	    "backgroundColor": "#ff5898",
+	    "title": function () {return this.title},
+	    "titleColor": "white",
+	    "leftItemTitle": "More",
+	    "leftItemColor": "white",
+	    "rightItemSrc": "http://gtms02.alicdn.com/tps/i2/TB1ED7iMpXXXXXEXXXXWA_BHXXX-48-48.png"
+	  },
 	  "children": [
 	    {
-	      "type": "list",
-	      "classList": [
-	        "list"
-	      ],
+	      "type": "wxc-panel",
+	      "attr": {
+	        "title": "push a new page"
+	      },
 	      "children": [
 	        {
-	          "type": "refresh",
-	          "classList": [
-	            "refresh-view"
-	          ],
+	          "type": "wxc-button",
 	          "attr": {
-	            "display": function () {return this.refresh_display}
+	            "type": "primary",
+	            "size": "small",
+	            "value": "push"
 	          },
 	          "events": {
-	            "refresh": "onrefresh"
-	          },
-	          "children": [
-	            {
-	              "type": "text",
-	              "classList": [
-	                "refresh-arrow"
-	              ],
-	              "shown": function () {return (this.refresh_display==='hide')},
-	              "attr": {
-	                "value": "↓ Pull To Refresh"
-	              }
-	            },
-	            {
-	              "type": "loading-indicator"
-	            }
-	          ]
-	        },
-	        {
-	          "type": "cell",
-	          "append": "tree",
-	          "events": {
-	            "appear": "onappear",
-	            "disappear": "ondisappear"
-	          },
-	          "classList": [
-	            "row"
-	          ],
-	          "repeat": function () {return this.rows},
-	          "attr": {
-	            "index": function () {return this.$index}
-	          },
-	          "children": [
-	            {
-	              "type": "div",
-	              "classList": [
-	                "item"
-	              ],
-	              "children": [
-	                {
-	                  "type": "text",
-	                  "classList": [
-	                    "item-title"
-	                  ],
-	                  "attr": {
-	                    "value": function () {return 'row ' + (this.id)}
-	                  }
-	                }
-	              ]
-	            }
-	          ]
+	            "click": "push"
+	          }
 	        }
 	      ]
 	    },
 	    {
-	      "type": "text",
-	      "classList": [
-	        "count"
-	      ],
+	      "type": "wxc-panel",
 	      "attr": {
-	        "value": function () {return 'Appear items:' + (this.appearMin) + ' - ' + (this.appearMax)}
-	      }
+	        "title": "pop to the last page"
+	      },
+	      "children": [
+	        {
+	          "type": "wxc-button",
+	          "attr": {
+	            "type": "success",
+	            "size": "small",
+	            "value": "pop"
+	          },
+	          "events": {
+	            "click": "pop"
+	          }
+	        }
+	      ]
 	    }
 	  ]
 	}
-	;__weex_module__.exports.style={
-	  "list": {
-	    "height": 810,
-	    "borderWidth": 10,
-	    "borderColor": "#FFA500"
-	  },
-	  "count": {
-	    "fontSize": 48,
-	    "margin": 10
-	  },
-	  "refresh-view": {
-	    "height": 80,
-	    "width": 750,
-	    "justifyContent": "center",
-	    "alignItems": "center"
-	  },
-	  "refresh-arrow": {
-	    "fontSize": 30,
-	    "color": "#45b5f0"
-	  },
-	  "indicator": {
-	    "height": 40,
-	    "width": 40,
-	    "color": "#45b5f0"
-	  },
-	  "row": {
-	    "width": 750
-	  },
-	  "item": {
-	    "justifyContent": "center",
-	    "borderBottomWidth": 2,
-	    "borderBottomColor": "#c0c0c0",
-	    "height": 100,
-	    "padding": 20
-	  }
-	}
 	})
-	;__weex_bootstrap__("@weex-component/166b7ca130b38d87497f545e4cad1936", {
+	;__weex_bootstrap__("@weex-component/3568611e2ba68270be1f9313cb7fef62", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 

@@ -7,8 +7,8 @@
 
 ## Rule
 
-0. File name is dash separated words, each word is lower case, like `index.we`, `ui-button.we`
-0. DO NOT use [builtin components](../doc/components) name as file name, it may fail to run. 
+0. File name is dash (`-`) separated words, and each word is lower case, e.g. `index.we`, `style-demo.we`
+0. ***DO NOT*** use [builtin components](../doc/components) name as file name, it may fail to run. 
 
 ## UI Gallery
 

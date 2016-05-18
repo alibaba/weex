@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/e077e3efc7a3f703904f0ad11733c66e", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/511f99927c0898fd52f2bdba9711d9ce", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(1);
@@ -138,7 +138,10 @@
 	              ],
 	              "style": {
 	                "width": 600,
-	                "height": 200
+	                "height": 200,
+	                "borderStyle": "solid",
+	                "borderWidth": 1,
+	                "borderColor": "#333333"
 	              },
 	              "attr": {
 	                "src": function () {return this.img},
@@ -150,7 +153,7 @@
 	        {
 	          "type": "wxc-panel",
 	          "attr": {
-	            "title": "resize=contain 600 X 600"
+	            "title": "resize=contain 600 X 200"
 	          },
 	          "children": [
 	            {
@@ -160,7 +163,10 @@
 	              ],
 	              "style": {
 	                "width": 600,
-	                "height": 600
+	                "height": 200,
+	                "borderStyle": "solid",
+	                "borderWidth": 1,
+	                "borderColor": "#333333"
 	              },
 	              "attr": {
 	                "src": function () {return this.img},
@@ -172,7 +178,7 @@
 	        {
 	          "type": "wxc-panel",
 	          "attr": {
-	            "title": "resize=cover 600 X 600"
+	            "title": "resize=cover 600 X 200"
 	          },
 	          "children": [
 	            {
@@ -182,7 +188,10 @@
 	              ],
 	              "style": {
 	                "width": 600,
-	                "height": 600
+	                "height": 200,
+	                "borderStyle": "solid",
+	                "borderWidth": 1,
+	                "borderColor": "#333333"
 	              },
 	              "attr": {
 	                "src": function () {return this.img},
@@ -201,7 +210,7 @@
 	  }
 	}
 	})
-	;__weex_bootstrap__("@weex-component/e077e3efc7a3f703904f0ad11733c66e", {
+	;__weex_bootstrap__("@weex-component/511f99927c0898fd52f2bdba9711d9ce", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 

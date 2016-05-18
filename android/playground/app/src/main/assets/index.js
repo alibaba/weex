@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/114e64ff480be8fdcfbd6fd445bcb06e", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/e186bc461decd02d9edfd73b2750de6a", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(18);
@@ -59,13 +59,18 @@
 	        // component
 	        {name: 'component/text-demo', title: 'Text'},
 	        {name: 'component/image-demo', title: 'Image'},
+	        {name: 'component/scroller-demo', title: 'Scroller'},
 	        {name: 'component/list/list-basic', title: 'List (Basic)'},
 	        {name: 'component/list/list-demo', title: 'List (Advanced)'},
 	        {name: 'component/slider/index', title: 'Slider'},
-	        {name: 'component/hyperlink',title:'A'},
+	        {name: 'component/a-demo',title:'A'},
 	        {name: 'component/video-demo', title: 'Video'},
 	        {name: 'component/countdown-demo', title: 'Countdown'},
 	        {name: 'component/marquee-demo', title: 'Marquee'},
+	        {name: 'component/web-demo', title: 'Web'},
+	        {name: 'component/navigator-demo', title: 'Navigator'},
+	        {name: 'component/tabbar/tabbar-demo', title: 'Tabbar'},
+
 	        // module
 	        {name: 'module/instance-api', title: 'Instance API'},
 	        {name: 'module/modal', title: 'Modal'},
@@ -86,7 +91,7 @@
 	  }
 	}
 	})
-	;__weex_bootstrap__("@weex-component/114e64ff480be8fdcfbd6fd445bcb06e", {
+	;__weex_bootstrap__("@weex-component/e186bc461decd02d9edfd73b2750de6a", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 

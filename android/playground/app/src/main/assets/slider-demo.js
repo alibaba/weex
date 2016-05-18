@@ -44,151 +44,243 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/166b7ca130b38d87497f545e4cad1936", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/559cd2049da887ae8989e25df99c5cab", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	__webpack_require__(28);
 
 	;
 	  __webpack_require__(1);
+	  var img0 = '//gw.alicdn.com/tps/i2/TB1DpsmMpXXXXabaXXX20ySQVXX-512-512.png_400x400.jpg';
+	  var img1 = '//gw.alicdn.com/tps/i1/TB1M3sQMpXXXXakXXXXApNeJVXX-360-360.png';
 	  __weex_module__.exports = {
-	    methods: {
-	      onrefresh: function(e) {
-	        var self = this;
-	        self.refresh_display = 'show';
-	        // self.$call('timer', 'setTimeout', function() {
-	        //   self.refresh_display = 'hide';
-	        // },3000);
-	          self.refresh_display = 'hide';
-	      },
-	      onappear: function (e) {
-	        var appearId = this.rows[e.target.attr.index].id;
-	        nativeLog('+++++', appearId);
-	        var appearIds = this.appearIds;
-	        appearIds.push(appearId);
-	        this.getMinAndMaxIds(appearIds);
-	      },
-	      ondisappear:function (e) {
-	        var disAppearId = this.rows[e.target.attr.index].id;
-	        nativeLog('+++++', disAppearId);
-	        var appearIds = this.appearIds;
-	        var index = appearIds.indexOf(disAppearId);
-	        if (index > -1) {
-	          appearIds.splice(index, 1);
-	        }
-	        this.getMinAndMaxIds(appearIds);
-	      },
-	      getMinAndMaxIds:function (appearIds) {
-	        appearIds.sort(function(a, b) {
-	          return a - b;
-	        });
-	        this.appearIds = appearIds;
-	        this.appearMax = appearIds[appearIds.length - 1];
-	        this.appearMin = appearIds[0];
-	      }
-	    },
 	    data: function () {return {
-	      refresh_display : 'hide',
-	      loading_display : 'hide',
-	      appearMin:1,
-	      appearMax:1,
-	      appearIds:[],
-	      rows:[
-	        {id: 1},
-	        {id: 2},
-	        {id: 3},
-	        {id: 4},
-	        {id: 5},
-	        {id: 6},
-	        {id: 7},
-	        {id: 8},
-	        {id: 9},
-	        {id: 10},
-	        {id: 11},
-	        {id: 12},
-	        {id: 13},
-	        {id: 14},
-	        {id: 15},
-	        {id: 16},
-	        {id: 17},
-	        {id: 18},
-	        {id: 19},
-	        {id: 20},
-	        {id: 21},
-	        {id: 22},
-	        {id: 23},
-	        {id: 24},
-	        {id: 25},
-	        {id: 26},
-	        {id: 27},
-	        {id: 28},
-	        {id: 29}
-	      ]
-	    }}
-	  }
-
-	;__weex_module__.exports.template={
-	  "type": "div",
-	  "children": [
-	    {
-	      "type": "list",
-	      "classList": [
-	        "list"
-	      ],
-	      "children": [
+	      eventCnt: 0,
+	      togglePlayMsg: 'pause',
+	      sliders: [
 	        {
-	          "type": "refresh",
-	          "classList": [
-	            "refresh-view"
-	          ],
-	          "attr": {
-	            "display": function () {return this.refresh_display}
-	          },
-	          "events": {
-	            "refresh": "onrefresh"
-	          },
-	          "children": [
+	          interval: 1000,
+	          autoPlay: true,
+	          sliderPages: [
 	            {
-	              "type": "text",
-	              "classList": [
-	                "refresh-arrow"
-	              ],
-	              "shown": function () {return (this.refresh_display==='hide')},
-	              "attr": {
-	                "value": "↓ Pull To Refresh"
-	              }
+	              items: [
+	                {
+	                  image: img0,
+	                  link: '//h5.m.taobao.com/1'
+	                },
+	                {
+	                  image: img0,
+	                  link: '//h5.m.taobao.com/1'
+	                }
+	              ]
 	            },
 	            {
-	              "type": "loading-indicator"
+	              items: [
+	                {
+	                  image: img1,
+	                  link: '//h5.m.taobao.com/1'
+	                },
+	                {
+	                  image: img1,
+	                  link: '//h5.m.taobao.com/1'
+	                }
+	              ]
+	            },
+	            {
+	              items: [
+	                {
+	                  image: img0,
+	                  link: '//h5.m.taobao.com/1'
+	                },
+	                {
+	                  image: img1,
+	                  link: '//h5.m.taobao.com/1'
+	                }
+	              ]
 	            }
 	          ]
 	        },
 	        {
-	          "type": "cell",
-	          "append": "tree",
-	          "events": {
-	            "appear": "onappear",
-	            "disappear": "ondisappear"
-	          },
-	          "classList": [
-	            "row"
-	          ],
-	          "repeat": function () {return this.rows},
+	          interval: 3000,
+	          autoPlay: true,
+	          sliderPages: [
+	            {
+	              items: [
+	                {
+	                  image: img0,
+	                  link: '//h5.m.taobao.com/1'
+	                },
+	                {
+	                  image: img0,
+	                  link: '//h5.m.taobao.com/1'
+	                }
+	              ]
+	            },
+	            {
+	              items: [
+	                {
+	                  image: img1,
+	                  link: '//h5.m.taobao.com/1'
+	                },
+	                {
+	                  image: img1,
+	                  link: '//h5.m.taobao.com/1'
+	                }
+	              ]
+	            },
+	            {
+	              items: [
+	                {
+	                  image: img0,
+	                  link: '//h5.m.taobao.com/1'
+	                },
+	                {
+	                  image: img1,
+	                  link: '//h5.m.taobao.com/1'
+	                }
+	              ]
+	            }
+	          ]
+	        },
+	        {
+	          interval: 5000,
+	          autoPlay: true,
+	          sliderPages: [
+	            {
+	              items: [
+	                {
+	                  image: img0,
+	                  link: '//h5.m.taobao.com/1'
+	                },
+	                {
+	                  image: img0,
+	                  link: '//h5.m.taobao.com/1'
+	                }
+	              ]
+	            },
+	            {
+	              items: [
+	                {
+	                  image: img1,
+	                  link: '//h5.m.taobao.com/1'
+	                },
+	                {
+	                  image: img1,
+	                  link: '//h5.m.taobao.com/1'
+	                }
+	              ]
+	            },
+	            {
+	              items: [
+	                {
+	                  image: img0,
+	                  link: '//h5.m.taobao.com/1'
+	                },
+	                {
+	                  image: img1,
+	                  link: '//h5.m.taobao.com/1'
+	                }
+	              ]
+	            }
+	          ]
+	        }
+	      ]
+	    }},
+	    methods: {
+	      ready: function() {
+	      },
+	      togglePlay: function() {
+	        var autoPlay = this.sliders[0].autoPlay
+	        autoPlay = !autoPlay
+	        this.sliders[0].autoPlay = autoPlay
+	        this.togglePlayMsg = autoPlay ? 'pause' : 'play'
+	      },
+	      handleSliderChange: function() {
+	        var nowCnt = this.eventCnt + 1
+	        this.eventCnt = nowCnt
+	      },
+	      setInterval1: function() {
+	        this.sliders[0].interval = 1000;
+	      },
+	      setInterval3: function() {
+	        this.sliders[0].interval = 3000;
+	      },
+	      setInterval5: function() {
+	        this.sliders[0].interval = 5000;
+	      }
+	    }
+	  };
+
+	;__weex_module__.exports.template={
+	  "type": "scroller",
+	  "classList": [
+	    "body"
+	  ],
+	  "children": [
+	    {
+	      "type": "wxc-panel",
+	      "attr": {
+	        "title": "auto-play",
+	        "type": "primary"
+	      },
+	      "children": [
+	        {
+	          "type": "wxc-panel",
 	          "attr": {
-	            "index": function () {return this.$index}
+	            "title": "auto-play = false",
+	            "paddingBody": "0"
 	          },
 	          "children": [
 	            {
-	              "type": "div",
+	              "type": "slider",
 	              "classList": [
-	                "item"
+	                "slider"
 	              ],
+	              "append": "tree",
+	              "attr": {
+	                "interval": function () {return this.sliders[1].interval},
+	                "autoPlay": "false"
+	              },
 	              "children": [
 	                {
-	                  "type": "text",
+	                  "type": "indicator",
 	                  "classList": [
-	                    "item-title"
-	                  ],
-	                  "attr": {
-	                    "value": function () {return 'row ' + (this.id)}
-	                  }
+	                    "indicator"
+	                  ]
+	                },
+	                {
+	                  "type": "slider-page",
+	                  "repeat": function () {return this.sliders[1].sliderPages}
+	                }
+	              ]
+	            }
+	          ]
+	        },
+	        {
+	          "type": "wxc-panel",
+	          "attr": {
+	            "title": "auto-play = true",
+	            "paddingBody": "0"
+	          },
+	          "children": [
+	            {
+	              "type": "slider",
+	              "classList": [
+	                "slider"
+	              ],
+	              "append": "tree",
+	              "attr": {
+	                "interval": function () {return this.sliders[0].interval},
+	                "autoPlay": function () {return this.sliders[0].autoPlay}
+	              },
+	              "children": [
+	                {
+	                  "type": "indicator",
+	                  "classList": [
+	                    "indicator"
+	                  ]
+	                },
+	                {
+	                  "type": "slider-page",
+	                  "repeat": function () {return this.sliders[0].sliderPages}
 	                }
 	              ]
 	            }
@@ -197,54 +289,249 @@
 	      ]
 	    },
 	    {
-	      "type": "text",
-	      "classList": [
-	        "count"
-	      ],
+	      "type": "wxc-panel",
 	      "attr": {
-	        "value": function () {return 'Appear items:' + (this.appearMin) + ' - ' + (this.appearMax)}
-	      }
+	        "title": function () {return 'Event, ' + (this.eventCnt) + ' change'},
+	        "type": "primary"
+	      },
+	      "children": [
+	        {
+	          "type": "slider",
+	          "classList": [
+	            "slider"
+	          ],
+	          "append": "tree",
+	          "attr": {
+	            "interval": function () {return this.sliders[0].interval},
+	            "autoPlay": function () {return this.sliders[0].autoPlay}
+	          },
+	          "events": {
+	            "change": "handleSliderChange"
+	          },
+	          "children": [
+	            {
+	              "type": "indicator",
+	              "classList": [
+	                "indicator"
+	              ]
+	            },
+	            {
+	              "type": "slider-page",
+	              "repeat": function () {return this.sliders[0].sliderPages}
+	            }
+	          ]
+	        }
+	      ]
+	    },
+	    {
+	      "type": "wxc-panel",
+	      "attr": {
+	        "title": "Indicator",
+	        "type": "primary"
+	      },
+	      "children": [
+	        {
+	          "type": "wxc-panel",
+	          "attr": {
+	            "title": "default style",
+	            "paddingBody": "0"
+	          },
+	          "children": [
+	            {
+	              "type": "slider",
+	              "classList": [
+	                "slider"
+	              ],
+	              "append": "tree",
+	              "attr": {
+	                "interval": function () {return this.sliders[0].interval},
+	                "autoPlay": function () {return this.sliders[0].autoPlay}
+	              },
+	              "events": {
+	                "change": "handleSliderChange"
+	              },
+	              "children": [
+	                {
+	                  "type": "indicator",
+	                  "classList": [
+	                    "indicator"
+	                  ]
+	                },
+	                {
+	                  "type": "slider-page",
+	                  "repeat": function () {return this.sliders[0].sliderPages}
+	                }
+	              ]
+	            }
+	          ]
+	        },
+	        {
+	          "type": "wxc-panel",
+	          "attr": {
+	            "title": "width & height",
+	            "paddingBody": "0"
+	          },
+	          "children": [
+	            {
+	              "type": "slider",
+	              "classList": [
+	                "slider"
+	              ],
+	              "append": "tree",
+	              "attr": {
+	                "interval": function () {return this.sliders[0].interval},
+	                "autoPlay": function () {return this.sliders[0].autoPlay}
+	              },
+	              "children": [
+	                {
+	                  "type": "indicator",
+	                  "style": {
+	                    "itemColor": "#dddddd",
+	                    "width": 714,
+	                    "height": 460
+	                  }
+	                },
+	                {
+	                  "type": "slider-page",
+	                  "repeat": function () {return this.sliders[0].sliderPages}
+	                }
+	              ]
+	            }
+	          ]
+	        },
+	        {
+	          "type": "wxc-panel",
+	          "attr": {
+	            "title": "left & top",
+	            "paddingBody": "0"
+	          },
+	          "children": [
+	            {
+	              "type": "slider",
+	              "classList": [
+	                "slider"
+	              ],
+	              "append": "tree",
+	              "attr": {
+	                "interval": function () {return this.sliders[1].interval},
+	                "autoPlay": function () {return this.sliders[1].autoPlay}
+	              },
+	              "children": [
+	                {
+	                  "type": "indicator",
+	                  "classList": [
+	                    "indicator"
+	                  ],
+	                  "style": {
+	                    "top": -140,
+	                    "left": -240
+	                  }
+	                },
+	                {
+	                  "type": "slider-page",
+	                  "repeat": function () {return this.sliders[1].sliderPages}
+	                }
+	              ]
+	            }
+	          ]
+	        },
+	        {
+	          "type": "wxc-panel",
+	          "attr": {
+	            "title": "itemColor & itemSelectedColor",
+	            "paddingBody": "0"
+	          },
+	          "children": [
+	            {
+	              "type": "slider",
+	              "classList": [
+	                "slider"
+	              ],
+	              "append": "tree",
+	              "attr": {
+	                "interval": function () {return this.sliders[2].interval},
+	                "autoPlay": function () {return this.sliders[2].autoPlay}
+	              },
+	              "children": [
+	                {
+	                  "type": "indicator",
+	                  "classList": [
+	                    "indicator"
+	                  ],
+	                  "style": {
+	                    "itemSelectedColor": "rgb(217, 83, 79)"
+	                  }
+	                },
+	                {
+	                  "type": "slider-page",
+	                  "repeat": function () {return this.sliders[2].sliderPages}
+	                }
+	              ]
+	            }
+	          ]
+	        },
+	        {
+	          "type": "wxc-panel",
+	          "attr": {
+	            "title": "itemSize",
+	            "paddingBody": "0"
+	          },
+	          "children": [
+	            {
+	              "type": "slider",
+	              "classList": [
+	                "slider"
+	              ],
+	              "append": "tree",
+	              "attr": {
+	                "interval": function () {return this.sliders[1].interval},
+	                "autoPlay": function () {return this.sliders[1].autoPlay}
+	              },
+	              "children": [
+	                {
+	                  "type": "indicator",
+	                  "style": {
+	                    "itemColor": "#dddddd",
+	                    "itemSize": 40,
+	                    "top": 140,
+	                    "left": 180,
+	                    "width": 700,
+	                    "height": 380
+	                  }
+	                },
+	                {
+	                  "type": "slider-page",
+	                  "repeat": function () {return this.sliders[1].sliderPages}
+	                }
+	              ]
+	            }
+	          ]
+	        }
+	      ]
 	    }
 	  ]
 	}
 	;__weex_module__.exports.style={
-	  "list": {
-	    "height": 810,
-	    "borderWidth": 10,
-	    "borderColor": "#FFA500"
+	  "body": {
+	    "backgroundColor": "#ffffff"
 	  },
-	  "count": {
-	    "fontSize": 48,
-	    "margin": 10
-	  },
-	  "refresh-view": {
-	    "height": 80,
-	    "width": 750,
-	    "justifyContent": "center",
-	    "alignItems": "center"
-	  },
-	  "refresh-arrow": {
-	    "fontSize": 30,
-	    "color": "#45b5f0"
+	  "slider": {
+	    "flexDirection": "row",
+	    "width": 690,
+	    "height": 360
 	  },
 	  "indicator": {
-	    "height": 40,
-	    "width": 40,
-	    "color": "#45b5f0"
-	  },
-	  "row": {
-	    "width": 750
-	  },
-	  "item": {
-	    "justifyContent": "center",
-	    "borderBottomWidth": 2,
-	    "borderBottomColor": "#c0c0c0",
-	    "height": 100,
-	    "padding": 20
+	    "position": "absolute",
+	    "width": 690,
+	    "height": 420,
+	    "top": 140,
+	    "left": 240,
+	    "itemColor": "#dddddd",
+	    "itemSelectedColor": "rgb(40, 96, 144)"
 	  }
 	}
 	})
-	;__weex_bootstrap__("@weex-component/166b7ca130b38d87497f545e4cad1936", {
+	;__weex_bootstrap__("@weex-component/559cd2049da887ae8989e25df99c5cab", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -1362,6 +1649,105 @@
 	    "marginTop": 5,
 	    "textAlign": "center",
 	    "fontSize": 20
+	  }
+	}
+	})
+
+/***/ },
+/* 13 */,
+/* 14 */,
+/* 15 */,
+/* 16 */,
+/* 17 */,
+/* 18 */,
+/* 19 */,
+/* 20 */,
+/* 21 */,
+/* 22 */,
+/* 23 */,
+/* 24 */,
+/* 25 */,
+/* 26 */,
+/* 27 */,
+/* 28 */
+/***/ function(module, exports, __webpack_require__) {
+
+	;__weex_define__("@weex-component/slider-page", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	__webpack_require__(29);
+
+	;
+	  __weex_module__.exports = {
+	    data: function () {return {
+	      items: [],
+	      sliderItems: []
+	    }},
+	    methods: {
+	      ready: function() {
+	        this.sliderItems = this.getSliderItems()
+	      },
+	      getSliderItems: function() {
+	        return this.items.map(function(item, index) {
+	          return item;
+	        }.bind(this));
+	      }
+	    }
+	  };
+
+	;__weex_module__.exports.template={
+	  "type": "div",
+	  "classList": [
+	    "slider-page"
+	  ],
+	  "children": [
+	    {
+	      "type": "slider-item",
+	      "repeat": function () {return this.sliderItems}
+	    }
+	  ]
+	}
+	;__weex_module__.exports.style={
+	  "slider-page": {
+	    "flexDirection": "row",
+	    "justifyContent": "space-between",
+	    "width": 714,
+	    "height": 420
+	  }
+	}
+	})
+
+/***/ },
+/* 29 */
+/***/ function(module, exports) {
+
+	;__weex_define__("@weex-component/slider-item", [], function(__weex_require__, __weex_exports__, __weex_module__){
+
+	;
+	  __weex_module__.exports = {
+	    data: function () {return {
+	      image: '',
+	      link: '',
+	      href: ''
+	    }},
+	    methods: {
+	      ready: function() {
+	        this.href = this.link;
+	      }
+	    }
+	  };
+
+	;__weex_module__.exports.template={
+	  "type": "image",
+	  "classList": [
+	    "slider-item"
+	  ],
+	  "attr": {
+	    "src": function () {return this.image}
+	  }
+	}
+	;__weex_module__.exports.style={
+	  "slider-item": {
+	    "width": 348,
+	    "height": 400
 	  }
 	}
 	})
