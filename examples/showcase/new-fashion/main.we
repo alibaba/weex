@@ -751,12 +751,13 @@
         var timer = require('@weex-module/timer')
         if (timer) {
           timer.setTimeout(function () {
-            this.simLoadingData(this.cnt++)
-          })
+            vm.simLoadingData(vm.cnt++)
+            vm.displayLoading = 'hide'
+          }, 2000)
         } else {
-          this.simLoadingData(this.cnt++)
+          vm.simLoadingData(vm.cnt++)
+          vm.displayLoading = 'hide'
         }
-        vm.displayLoading = 'hide'
       },
       simLoadingData: function (num) {
         if (num >= 3) {
