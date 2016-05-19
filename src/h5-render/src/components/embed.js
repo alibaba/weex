@@ -22,7 +22,6 @@ function Embed (data, nodeType) {
 Embed.prototype = Object.create(Component.prototype)
 
 Embed.prototype.create = function () {
-
   var node = document.createElement('div')
   node.id = this.id
   node.style.overflow = 'scroll'
@@ -39,7 +38,8 @@ Embed.prototype.initWeex = function () {
     bundleUrl: this.source,
     loader: this.loader,
     width: this.node.getBoundingClientRect().width,
-    rootId: this.id
+    rootId: this.id,
+    embed: true
   }
   window.weex.init(config)
 }

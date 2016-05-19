@@ -74,6 +74,7 @@ function Weex(options) {
   this.jsonpCallback = options.jsonpCallback || DEFAULT_JSON_CALLBACK_NAME
   this.source = options.source
   this.loader = options.loader
+  this.embed = options.embed ? true : false
 
   this.data = options.data
 

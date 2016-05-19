@@ -23,10 +23,13 @@ function RootComponent(data, nodeType) {
     nodeType = 'div'
   }
 
-  // If the root component is a Scrolleable Component, then
+  // If the root component is not a embed element in a webpage, then
   // the html and body height should be fixed to the max height
   // of viewport.
-  this.fixRootHeight()
+  if (!componentManager.weexInstance.embed) {
+    this.fixRootHeight()
+  }
+  !this.data.style.height && (this.data.style.height = '100%')
   data.type = nodeType
   var cmp = componentManager.createElement(data)
   cmp.node.id = id
@@ -44,8 +47,6 @@ RootComponent.prototype.fixRootHeight = function () {
   !html.style.height && (html.style.height = '100%')
   !body.style.height && (body.style.height = '100%')
   !rootContainer.style.height && (rootContainer.style.height = '100%')
-  !this.data.style.height
-    && (this.data.style.height = window.innerHeight / this.data.scale)
 }
 
 module.exports = RootComponent
