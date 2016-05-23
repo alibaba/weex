@@ -42,7 +42,9 @@ ComponentManager.prototype = {
   rendering: function () {
     function _renderingEnd() {
       // get weex instance root
-      window.dispatchEvent(new Event('renderend'))
+      var evt = document.createEvent('HTMLEvents')
+      evt.initEvent('renderend')
+      window.dispatchEvent(evt)
       this._renderingTimer = null
     }
     if (this._renderingTimer) {
@@ -52,7 +54,9 @@ ComponentManager.prototype = {
         RENDERING_INDENT
       )
     } else {
-      window.dispatchEvent(new Event('renderbegin'))
+      var evt = document.createEvent('HTMLEvents')
+      evt.initEvent('renderbegin')
+      window.dispatchEvent(evt)
       this._renderingTimer = setTimeout(
         _renderingEnd.bind(this),
         RENDERING_INDENT

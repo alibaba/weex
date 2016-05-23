@@ -4,9 +4,6 @@ bower.json
 demo
 dist
 
-# e2e tests
-test
-
 # Logs
 npm-debug.log*
 
