@@ -7,9 +7,10 @@ const DEFAULT_TAG_NAME = 'div'
 
 export const instanceMap = {}
 
-export function Document(id) {
+export function Document(id, url) {
   id = id ? id.toString() : ''
   this.id = id
+  this.URL = url
   this.nextRef = 1
   this.nodeMap = {}
   this.listener = null
