@@ -19,7 +19,7 @@ export default function AppInstance(instanceId, options) {
   this.id = instanceId
   this.options = options || {}
   this.vm = null
-  this.doc = new Document(instanceId)
+  this.doc = new Document(instanceId, this.options.bundleUrl)
   this.customComponentMap = {}
   this.callbacks = {}
   this.differ = new Differ(instanceId)
