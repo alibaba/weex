@@ -2,6 +2,7 @@
 
 require('./styles/base.css')
 
+require('./polyfill')
 var config = require('./config')
 var Loader = require('./loader')
 var utils = require('./utils')
