@@ -70,6 +70,10 @@ Both the two `text` components above have the same `font-size`, which is `64` pi
 
 * [See common styles in Weex](../references/common-style.md)
 
+
+### Notes!
+weex is basically following [HTML attribute](https://en.wikipedia.org/wiki/HTML_attribute) naming rule , so please **do not use CamelCase** in your attribute , **long-name** with “-” as delimiter is much better.
+
 ## `<script>`
 
 The syntax is JavaScript (ES5) and it describes data and behavior of a Weex page. Here we create three paragraphs:

@@ -73,3 +73,7 @@ onappear="loadMore"
 register event handlers on weex tag
 
 [more information](../syntax/events.md)
+
+### Notes!
+weex is basically following [HTML attribute](https://en.wikipedia.org/wiki/HTML_attribute) naming rule , so please **do not use CamelCase** in your attribute , **kebab-case** with “-” as delimiter is much better.
+
