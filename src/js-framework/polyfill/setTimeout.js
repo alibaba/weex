@@ -11,11 +11,15 @@ if (typeof setTimeout === 'undefined' &&
   global.setTimeout = (cb, time) => {
     timeoutMap[++timeoutId] = cb
     setTimeoutNative(timeoutId.toString(), time)
+    return timeoutId
   }
   global.setTimeoutCallback = (id) => {
     if (typeof timeoutMap[id] === 'function') {
       timeoutMap[id]()
       delete timeoutMap[id]
     }
+  }
+  global.clearTimeout = (timeoutId) => {
+    timeoutMap[timeoutId] = null
   }
 }
