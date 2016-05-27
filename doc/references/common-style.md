@@ -128,6 +128,21 @@ mixed direction alignment:
 </template>
 ```
 
+one text align left , the other float right:
+
+![one text align left , the other float right](https://cloud.githubusercontent.com/assets/12876555/15098362/3c2f54a2-156e-11e6-9570-729f4de2fff0.png)
+
+```html
+<template>
+<div style="flex-direction: row;justify-content:space-between;">
+   <text>WEEX</text>
+   <text>2016-05-08</text>
+</div>
+</template>
+```
+
+
+
 ## Position
 
 we can use properties below to control placement of weex tag
