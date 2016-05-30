@@ -284,17 +284,25 @@ public class WXInput extends WXComponent {
         if (mBeforeText.equals(s.toString())) {
           return;
         }
-        if (mDomObj.event.contains(WXEventType.INPUT)) {
+
+        String[] events = {
+          mDomObj.event.contains(WXEventType.INPUT)?WXEventType.INPUT:null,
+          mDomObj.event.contains(WXEventType.INPUT_CHANGE)?WXEventType.INPUT_CHANGE:null};
+
+        for(String event:events) {
+          if(event== null){
+            continue;
+          }
           Map<String, Object> params = new HashMap<>(2);
           params.put("value", s.toString());
           params.put("timeStamp", System.currentTimeMillis());
-          WXSDKManager.getInstance().fireEvent(mInstanceId, mDomObj.ref, WXEventType.INPUT, params);
-        }
-        if (mDomObj.event.contains(WXEventType.INPUT_CHANGE)) {
-          Map<String, Object> params = new HashMap<>(2);
-          params.put("value", s.toString());
-          params.put("timeStamp", System.currentTimeMillis());
-          WXSDKManager.getInstance().fireEvent(mInstanceId, mDomObj.ref, WXEventType.INPUT_CHANGE, params);
+
+          Map<String, Object> domChanges = new HashMap<>();
+          Map<String, Object> attrsChanges = new HashMap<>();
+          attrsChanges.put("value",s.toString());
+          domChanges.put("attrs",attrsChanges);
+
+          WXSDKManager.getInstance().fireEvent(mInstanceId, mDomObj.ref, event, params,domChanges);
         }
 
         mBeforeText = s.toString();
