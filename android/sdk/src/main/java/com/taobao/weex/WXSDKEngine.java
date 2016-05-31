@@ -184,6 +184,11 @@ public class WXSDKEngine {
     );
   }
 
+  /**
+   *
+   * @param application
+   * @param config initial configurations or null
+   */
   public static void initialize(Application application,InitConfig config){
     synchronized (mLock) {
       if (init) {

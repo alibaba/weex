@@ -17,7 +17,6 @@ public class WXApplication extends Application {
     super.onCreate();
     WXSDKEngine.addCustomOptions("appName", "WXSample");
     WXSDKEngine.addCustomOptions("appGroup", "WXApp");
-//    WXSDKEngine.addCustomOptions("infoCollect", "false");
     WXSDKEngine.initialize(this,
       new InitConfig.Builder()
       .setImgAdapter(new ImageAdapter())
