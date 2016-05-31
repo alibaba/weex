@@ -275,7 +275,7 @@ public class WXSDKManager {
     return mIWXUserTrackAdapter;
   }
 
-  public void setIWXUserTrackAdapter(IWXUserTrackAdapter IWXUserTrackAdapter) {
+  void setIWXUserTrackAdapter(IWXUserTrackAdapter IWXUserTrackAdapter) {
     mIWXUserTrackAdapter = IWXUserTrackAdapter;
   }
 
@@ -283,7 +283,7 @@ public class WXSDKManager {
     return mIWXImgLoaderAdapter;
   }
 
-  public void setIWXImgLoaderAdapter(IWXImgLoaderAdapter IWXImgLoaderAdapter) {
+  void setIWXImgLoaderAdapter(IWXImgLoaderAdapter IWXImgLoaderAdapter) {
     mIWXImgLoaderAdapter = IWXImgLoaderAdapter;
   }
 
@@ -294,7 +294,7 @@ public class WXSDKManager {
     return mIWXHttpAdapter;
   }
 
-  public void setIWXHttpAdapter(IWXHttpAdapter IWXHttpAdapter) {
+  void setIWXHttpAdapter(IWXHttpAdapter IWXHttpAdapter) {
     mIWXHttpAdapter = IWXHttpAdapter;
   }
 }
