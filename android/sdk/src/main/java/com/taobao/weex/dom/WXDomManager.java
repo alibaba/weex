@@ -516,4 +516,20 @@ public final class WXDomManager {
     }
     statement.refreshFinish();
   }
+
+  /**
+   * Notify the update has finished.
+   * @param instanceId {@link com.taobao.weex.WXSDKInstance#mInstanceId} for the instance to
+   *                                                                    notify.
+   */
+  void updateFinish(String instanceId) {
+    if (!isDomThread()) {
+      throw new WXRuntimeException("RefreshFinish operation must be done in dom thread");
+    }
+    WXDomStatement statement = mDomRegistries.get(instanceId);
+    if (statement == null) {
+      return;
+    }
+    statement.updateFinish();
+  }
 }

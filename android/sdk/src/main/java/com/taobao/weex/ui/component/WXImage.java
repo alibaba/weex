@@ -327,7 +327,7 @@ public class WXImage extends WXComponent {
     }else if (resizeMode.equals("center")){
       scaleType = ScaleType.CENTER;
     }else if(resizeMode.equals("start")){
-      scaleType = ScaleType.FIT_START;
+      scaleType = ScaleType.MATRIX;
     }else if(resizeMode.equals("end")){
       scaleType = ScaleType.FIT_END;
     }

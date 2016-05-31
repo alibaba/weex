@@ -233,6 +233,7 @@ import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXReflectionUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -443,7 +444,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
     }
 
     Uri uri=Uri.parse(url);
-    if(uri!=null && uri.getScheme().equals("file")){
+    if(uri!=null && TextUtils.equals(uri.getScheme(),"file")){
       render(pageName, WXFileUtils.loadFileContent(assembleFilePath(uri), mContext),options,jsonInitData,width,height,flag);
       return;
     }
@@ -456,7 +457,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
     WXRequest wxRequest = new WXRequest();
     wxRequest.url = url;
     if (wxRequest.paramMap == null) {
-      wxRequest.paramMap = new HashMap<String, Object>();
+      wxRequest.paramMap = new HashMap<String, String>();
     }
     wxRequest.paramMap.put("user-agent", WXHttpUtil.assembleUserAgent());
     adapter.sendRequest(wxRequest, new WXHttpListener(pageName, options, jsonInitData, width, height, flag, System.currentTimeMillis()));
@@ -643,6 +644,14 @@ public class WXSDKInstance implements IWXActivityStateListener {
     }
   }
 
+  /**
+   * call back when update finish
+   */
+  public void onUpdateFinish() {
+    WXLogUtils.d("Instance onUpdateSuccess");
+  }
+
+
   public void runOnUiThread(Runnable action) {
     WXSDKManager.getInstance().postOnUiThread(action, 0);
   }
@@ -650,6 +659,15 @@ public class WXSDKInstance implements IWXActivityStateListener {
   public void onRenderSuccess(final int width, final int height) {
     long time = System.currentTimeMillis() - mRenderStartTime;
     WXLogUtils.renderPerformanceLog("onRenderSuccess", time);
+    WXLogUtils.renderPerformanceLog("   invokeCreateInstance",mWXPerformance.communicateTime);
+    WXLogUtils.renderPerformanceLog("   TotalCallNativeTime", mWXPerformance.callNativeTime);
+    WXLogUtils.renderPerformanceLog("       TotalJsonParseTime", mWXPerformance.parseJsonTime);
+    WXLogUtils.renderPerformanceLog("   TotalBatchTime", mWXPerformance.batchTime);
+    WXLogUtils.renderPerformanceLog("       TotalCssLayoutTime", mWXPerformance.cssLayoutTime);
+    WXLogUtils.renderPerformanceLog("       TotalApplyUpdateTime", mWXPerformance.applyUpdateTime);
+    WXLogUtils.renderPerformanceLog("       TotalUpdateDomObjTime", mWXPerformance.updateDomObjTime);
+
+
     mWXPerformance.totalTime = time;
     WXLogUtils.d(WXLogUtils.WEEX_PERF_TAG, "mComponentNum:" + WXComponent.mComponentNum);
     WXComponent.mComponentNum = 0;
@@ -719,12 +737,52 @@ public class WXSDKInstance implements IWXActivityStateListener {
     }
   }
 
+
+  private boolean mCreateInstance =true;
+  public void firstScreenCreateInstanceTime(long time) {
+    if(mCreateInstance) {
+      mWXPerformance.firstScreenCreateInstanceTime = time -mRenderStartTime;
+      mCreateInstance =false;
+    }
+  }
+
+  public void callNativeTime(long time) {
+    mWXPerformance.callNativeTime += time;
+  }
+
+  public void jsonParseTime(long time) {
+    mWXPerformance.parseJsonTime += time;
+  }
+
   public void firstScreenRenderFinished(long endTime) {
     mEnd = true;
     long time = endTime - mRenderStartTime;
     mWXPerformance.screenRenderTime = time;
     WXLogUtils.renderPerformanceLog("firstScreenRenderFinished", time);
+    WXLogUtils.renderPerformanceLog("   firstScreenCreateInstanceTime", mWXPerformance.firstScreenCreateInstanceTime);
+    WXLogUtils.renderPerformanceLog("   firstScreenCallNativeTime", mWXPerformance.callNativeTime);
+    WXLogUtils.renderPerformanceLog("       firstScreenJsonParseTime", mWXPerformance.parseJsonTime);
+    WXLogUtils.renderPerformanceLog("   firstScreenBatchTime", mWXPerformance.batchTime);
+    WXLogUtils.renderPerformanceLog("       firstScreenCssLayoutTime", mWXPerformance.cssLayoutTime);
+    WXLogUtils.renderPerformanceLog("       firstScreenApplyUpdateTime", mWXPerformance.applyUpdateTime);
+    WXLogUtils.renderPerformanceLog("       firstScreenUpdateDomObjTime", mWXPerformance.updateDomObjTime);
   }
+
+  public void batchTime(long time) {
+    mWXPerformance.batchTime += time;
+  }
+  public void cssLayoutTime(long time) {
+      mWXPerformance.cssLayoutTime += time;
+  }
+
+  public void applyUpdateTime(long time) {
+      mWXPerformance.applyUpdateTime += time;
+  }
+
+  public void updateDomObjTime(long time) {
+      mWXPerformance.updateDomObjTime += time;
+    }
+
 
   public void createInstanceFinished(long time) {
     if (time > 0) {
@@ -842,12 +900,17 @@ public class WXSDKInstance implements IWXActivityStateListener {
     }
 
     @Override
+    public void onHeadersReceived(int statusCode,Map<String,List<String>> headers) {
+
+    }
+
+    @Override
     public void onHttpUploadProgress(int uploadProgress) {
 
     }
 
     @Override
-    public void onHttpResponseProgress(int responseProgress) {
+    public void onHttpResponseProgress(int loadedLength) {
 
     }
 

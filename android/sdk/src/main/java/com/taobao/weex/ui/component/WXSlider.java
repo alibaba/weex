@@ -306,6 +306,11 @@ public class WXSlider extends WXVContainer implements OnPageChangeListener {
 
   @Override
   public void remove(WXComponent child) {
+    remove(child,true);
+  }
+
+  @Override
+  public void remove(WXComponent child, boolean destroy) {
     if (child == null || child.getView() == null || mAdapter == null) {
       return;
     }

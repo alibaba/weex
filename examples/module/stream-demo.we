@@ -1,6 +1,6 @@
 <template>
   <scroller>
-    <wxc-panel title="stream.sendHttp" type="primary">
+    <wxc-panel title="stream.fetch" type="primary">
       <wxc-panel title="method = GET">
         <text>{{getResult}}</text>
       </wxc-panel>
@@ -26,20 +26,39 @@
       var GET_URL = 'http://httpbin.org/get';
       var POST_URL = 'http://httpbin.org/post';
       
-      stream.sendHttp({
+      stream.fetch({
         method: 'GET',
-        url: GET_URL
+        url: GET_URL,
+        type:'json'
       }, function(ret) {
-        console.log('get', ret);
-        me.getResult = ret;
+        if(typeof ret === 'string'){
+          ret = JSON.parse(ret);
+        }
+        if(!ret.ok){
+          me.getResult = "request failed";
+        }else{
+          console.log('get:'+ret);
+          me.getResult = ret.data;
+        }
+      },function(response){
+        console.log('get in progress:'+response.length);
+        me.getResult = "bytes received:"+response.length;
       });
 
-      stream.sendHttp({
+      stream.fetch({
         method: 'POST',
-        url: POST_URL
+        url: POST_URL,
+        type:'json'
       }, function(ret) {
-        console.log('post', ret);
-        me.postResult = ret;
+        if(typeof ret === 'string'){
+          ret = JSON.parse(ret);
+        }
+        if(!ret.ok){
+          me.postResult = "request failed";
+        }else{
+          console.log('get:'+ret);
+          me.postResult = ret.data;
+        }
       });
     }
   };

@@ -257,11 +257,12 @@ class WXDomStatement {
   private WXRenderManager mWXRenderManager;
   private ArrayList<IWXRenderTask> mNormalTasks;
   private Set<String> mUpdate;
-  private List<String> mFlushviews;
+  private List<String> mFlushViews;
   private CSSLayoutContext mLayoutContext;
   private volatile boolean mDirty;
   private boolean mDestroy;
   private Map<String, AddDomInfo> mAddDom = new HashMap<>();
+//  private Map<String,ArrayList<WXDomObject>> mFakeDom;
 
   /**
    * Create an instance of {@link WXDomStatement},
@@ -279,7 +280,7 @@ class WXDomStatement {
     mRegistry = new ConcurrentHashMap<>();
     mNormalTasks = new ArrayList<>();
     mUpdate = new HashSet<>();
-    mFlushviews = new LinkedList<>();
+    mFlushViews = new LinkedList<>();
     mWXRenderManager = renderManager;
   }
 
@@ -346,7 +347,7 @@ class WXDomStatement {
    * in the queue.
    */
   void batch() {
-
+    long start0 = System.currentTimeMillis();
     if (!mDirty || mDestroy) {
       return;
     }
@@ -355,33 +356,46 @@ class WXDomStatement {
     if (rootDom == null) {
       return;
     }
-
     rebuildingDomTree(rootDom);
-
     layoutBefore(rootDom);
-
+    long start = System.currentTimeMillis();
     rootDom.calculateLayout(mLayoutContext);
+    if(WXSDKManager.getInstance().getSDKInstance(mInstanceId)!=null) {
+      WXSDKManager.getInstance().getSDKInstance(mInstanceId).cssLayoutTime(System.currentTimeMillis() - start);
+    }
     //		if (WXEnvironment.isApkDebugable()) {
     //			WXLogUtils.d("csslayout", "------------start------------");
     //			WXLogUtils.d("csslayout", rootDom.toString());
     //			WXLogUtils.d("csslayout", "------------end------------");
     //		}
 
+    start = System.currentTimeMillis();
     applyUpdate(rootDom);
+    if(WXSDKManager.getInstance().getSDKInstance(mInstanceId)!=null) {
+      WXSDKManager.getInstance().getSDKInstance(mInstanceId).applyUpdateTime(System.currentTimeMillis() - start);
+    }
 
+    start = System.currentTimeMillis();
     updateDomObj();
+    if(WXSDKManager.getInstance().getSDKInstance(mInstanceId)!=null) {
+      WXSDKManager.getInstance().getSDKInstance(mInstanceId).updateDomObjTime(System.currentTimeMillis() - start);
+    }
     int count = mNormalTasks.size();
     for (int i = 0; i < count && !mDestroy; ++i) {
       mWXRenderManager.runOnThread(mInstanceId, mNormalTasks.get(i));
     }
-    for(String ref: mFlushviews){
+    for(String ref: mFlushViews){
       mWXRenderManager.flushView(mInstanceId,ref);
     }
-    mFlushviews.clear();
+    mFlushViews.clear();
     mNormalTasks.clear();
     mAddDom.clear();
     mUpdate.clear();
     mDirty = false;
+    if(WXSDKManager.getInstance().getSDKInstance(mInstanceId)!=null) {
+      WXSDKManager.getInstance().getSDKInstance(mInstanceId).batchTime(System.currentTimeMillis() - start0);
+    }
+
   }
 
   /**
@@ -488,7 +502,7 @@ class WXDomStatement {
       }
     });
     mDirty = true;
-    mFlushviews.add(domObject.ref);
+    mFlushViews.add(domObject.ref);
 
     if (instance != null) {
       instance.commitUTStab(WXConst.DOM_MODULE, WXErrorCode.WX_SUCCESS);
@@ -597,7 +611,7 @@ class WXDomStatement {
     });
 
     mDirty = true;
-    mFlushviews.add(domObject.ref);
+    mFlushViews.add(domObject.ref);
 
     if (instance != null) {
       instance.commitUTStab(WXConst.DOM_MODULE, WXErrorCode.WX_SUCCESS);
@@ -644,6 +658,7 @@ class WXDomStatement {
     });
 
     mDirty = true;
+    mFlushViews.add(ref);
     if (instance != null) {
       instance.commitUTStab(WXConst.DOM_MODULE, WXErrorCode.WX_SUCCESS);
     }
@@ -735,7 +750,7 @@ class WXDomStatement {
       }
     });
     mDirty = true;
-    mFlushviews.add(ref);
+    mFlushViews.add(ref);
 
     if (instance != null) {
       instance.commitUTStab(WXConst.DOM_MODULE, WXErrorCode.WX_SUCCESS);
@@ -768,7 +783,7 @@ class WXDomStatement {
 
     updateStyle(domObject, style);
     mDirty = true;
-    mFlushviews.add(ref);
+    mFlushViews.add(ref);
 
     if (instance != null) {
       instance.commitUTStab(WXConst.DOM_MODULE, WXErrorCode.WX_SUCCESS);
@@ -956,6 +971,30 @@ class WXDomStatement {
       instance.commitUTStab(WXConst.DOM_MODULE, WXErrorCode.WX_SUCCESS);
     }
   }
+
+  /**
+   * Create a command object for notifying {@link WXRenderManager} that the process of update
+   * given view is finished, and put the command object in the queue.
+   */
+  void updateFinish() {
+    if (mDestroy) {
+      return;
+    }
+    mNormalTasks.add(new IWXRenderTask() {
+
+      @Override
+      public void execute() {
+        mWXRenderManager.updateFinish(mInstanceId);
+      }
+    });
+
+    mDirty = true;
+    WXSDKInstance instance = WXSDKManager.getInstance().getSDKInstance(mInstanceId);
+    if (instance != null) {
+      instance.commitUTStab(WXConst.DOM_MODULE, WXErrorCode.WX_SUCCESS);
+    }
+  }
+
 
   /**
    * Parse the jsonObject to {@link WXDomObject} recursively

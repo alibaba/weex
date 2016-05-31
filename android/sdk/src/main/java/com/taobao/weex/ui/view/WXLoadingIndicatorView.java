@@ -233,6 +233,7 @@ public class WXLoadingIndicatorView extends View {
 
     public WXLoadingIndicatorView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        setWillNotDraw(false);
         oval = new RectF();
         paint = new Paint();
     }
@@ -250,7 +251,6 @@ public class WXLoadingIndicatorView extends View {
         }
 
         paint.setAntiAlias(true);
-        paint.setColor(Color.GRAY);
         canvas.drawColor(Color.TRANSPARENT);
         int progressStrokeWidth = WXViewUtils.dip2px(4);
         paint.setStrokeWidth(progressStrokeWidth);
@@ -263,7 +263,7 @@ public class WXLoadingIndicatorView extends View {
 
         canvas.drawArc(oval, -90, ((float) progress / maxProgress) * 360, false, paint); // 绘制进度圆弧
 
-        WXLogUtils.v("tag", "progress "+progress);
+        WXLogUtils.v("tag", "progress " + progress);
     }
 
     public int getMaxProgress() {
@@ -279,5 +279,11 @@ public class WXLoadingIndicatorView extends View {
         this.invalidate();
     }
 
+    public void setColor(int color) {
+        if (color != Integer.MIN_VALUE) {
+            paint.setColor(color);
+            invalidate();
+        }
+    }
 }
 

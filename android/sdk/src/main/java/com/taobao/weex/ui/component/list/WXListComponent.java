@@ -249,7 +249,7 @@ public class WXListComponent extends WXVContainer implements
                                                   IRecyclerAdapterListener<ListBaseViewHolder>, IOnLoadMoreListener {
 
   private String TAG = "WXListComponent";
-  private ArrayList<Integer> indoreCells;
+  private ArrayList<Integer> mFakeCells;
   private int listCellCount = 0;
   private WXRefresh mRefresh;
   private WXLoading mLoading;
@@ -289,8 +289,14 @@ public class WXListComponent extends WXVContainer implements
     getView().getBounceView().addOnScrollListener(new WXRecyclerViewOnScrollListener(this));
   }
 
+  //TODO Make this method return WXRecyclerView
   @Override
   public BounceRecyclerView getView() {
+    return (BounceRecyclerView) super.getView();
+  }
+
+  @Override
+  public BounceRecyclerView getRealView() {
     return (BounceRecyclerView) super.getView();
   }
 
@@ -304,14 +310,7 @@ public class WXListComponent extends WXVContainer implements
    */
   @Override
   public void addChild(WXComponent child) {
-    super.addChild(child);
-    int index = mChildren.indexOf(child);
-    getView().getAdapter().notifyItemInserted(index);
-    checkRefreshOrLoading(child);
-    if(child.getDomObject().containsEvent(WXEventType.APPEAR) || child.getDomObject().containsEvent(WXEventType.DISAPPEAR)){
-      mAppearComponents.put(index,child);
-      child.registerAppearEvent=true;
-    }
+    addChild(child,-1);
   }
 
   /**
@@ -350,9 +349,16 @@ public class WXListComponent extends WXVContainer implements
    */
   @Override
   public void remove(WXComponent child) {
+    remove(child,true);
+  }
+
+  @Override
+  public void remove(WXComponent child, boolean destroy) {
+    super.remove(child, destroy);
     int index = mChildren.indexOf(child);
-    child.detachViewAndClearPreInfo();
-    super.remove(child);
+    if(destroy) {
+      child.detachViewAndClearPreInfo();
+    }
     getView().getAdapter().notifyItemRemoved(index);
     if (WXEnvironment.isApkDebugable()) {
       WXLogUtils.d(TAG, "removeChild child at " + index);
@@ -386,12 +392,12 @@ public class WXListComponent extends WXVContainer implements
   @Override
   public void onBindViewHolder(ListBaseViewHolder holder, int position) {
     WXComponent component=getChild(position);
-    if (indoreCells != null
-        && indoreCells.contains(getItemViewType(position))){
+    if (mFakeCells != null
+        && mFakeCells.contains(getItemViewType(position))){
       return;
     }
     if(component!=null){
-      component.bind(null);
+      component.bind(holder.getView());
       component.flushView();
     }
     WXLogUtils.d(TAG, "Bind holder "+holder);
@@ -409,7 +415,7 @@ public class WXListComponent extends WXVContainer implements
   @Override
   public ListBaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-    if (indoreCells != null && indoreCells.contains(viewType)) {
+    if (mFakeCells != null && mFakeCells.contains(viewType)) {
       return createVHForFixedComponent();
     } else if (mChildren != null) {
       for (int i = 0; i < childCount(); i++) {
@@ -599,11 +605,11 @@ public class WXListComponent extends WXVContainer implements
 
   private void prepareFixedComponent(int position,int viewType) {
     if (mChildren.get(position).getDomObject().isFixed()) {
-      if (indoreCells == null) {
-        indoreCells = new ArrayList<>();
+      if (mFakeCells == null) {
+        mFakeCells = new ArrayList<>();
       }
-      if (!indoreCells.contains(viewType)) {
-        indoreCells.add(viewType);
+      if (!mFakeCells.contains(viewType)) {
+        mFakeCells.add(viewType);
       }
     }
   }

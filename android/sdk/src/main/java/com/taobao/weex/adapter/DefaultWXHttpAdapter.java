@@ -208,8 +208,6 @@ import android.text.TextUtils;
 
 import com.taobao.weex.common.WXRequest;
 import com.taobao.weex.common.WXResponse;
-import com.taobao.weex.http.WXHttpManager;
-import com.taobao.weex.utils.WXLogUtils;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -218,25 +216,43 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class DefaultWXHttpAdapter implements IWXHttpAdapter {
+
+  private ExecutorService mExecutorService;
+
+  private void execute(Runnable runnable){
+    if(mExecutorService==null){
+      mExecutorService = Executors.newFixedThreadPool(3);
+    }
+    mExecutorService.execute(runnable);
+  }
 
   @Override
   public void sendRequest(final WXRequest request, final OnHttpListener listener) {
     if (listener != null) {
       listener.onHttpStart();
     }
-    WXHttpManager.getInstance().execute(new Runnable() {
+    execute(new Runnable() {
       @Override
       public void run() {
         WXResponse response = new WXResponse();
         try {
           HttpURLConnection connection = openConnection(request, listener);
+          Map<String,List<String>> headers = connection.getHeaderFields();
           int responseCode = connection.getResponseCode();
+          if(listener != null){
+            listener.onHeadersReceived(responseCode,headers);
+          }
+
           response.statusCode = String.valueOf(responseCode);
-          if (responseCode == 200 || responseCode == 202) {
+          if (responseCode >= 200 && responseCode<=299) {
             response.originalData = readInputStream(connection.getInputStream(), listener).getBytes();
           } else {
             response.errorMsg = readInputStream(connection.getErrorStream(), listener);
@@ -246,6 +262,7 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
           }
         } catch (IOException e) {
           e.printStackTrace();
+          response.statusCode = "-1";
           response.errorCode="-1";
           response.errorMsg=e.getMessage();
           if(listener!=null){
@@ -272,55 +289,53 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
     connection.setReadTimeout(request.timeoutMs);
     connection.setUseCaches(false);
     connection.setDoInput(true);
-    if (!TextUtils.isEmpty(request.method)) {
-      connection.setRequestMethod(request.method);
-    }
+
     if (request.paramMap != null) {
       Set<String> keySets = request.paramMap.keySet();
       for (String key : keySets) {
-        connection.addRequestProperty(key, request.paramMap.get(key).toString());
+        connection.addRequestProperty(key, request.paramMap.get(key));
       }
     }
-    if (request.body != null) {
-      if (listener != null) {
-        listener.onHttpUploadProgress(0);
-      }
-      connection.setDoOutput(true);
+
+    if ("POST".equals(request.method)) {
       connection.setRequestMethod("POST");
-      DataOutputStream out = new DataOutputStream(connection.getOutputStream());
-      out.write(request.body.getBytes());
-      out.close();
-      if (listener != null) {
-        listener.onHttpUploadProgress(100);
+      if (request.body != null) {
+        if (listener != null) {
+          listener.onHttpUploadProgress(0);
+        }
+        connection.setDoOutput(true);
+        DataOutputStream out = new DataOutputStream(connection.getOutputStream());
+        //TODO big stream will cause OOM; Progress callback is meaningless
+        out.write(request.body.getBytes());
+        out.close();
+        if (listener != null) {
+          listener.onHttpUploadProgress(100);
+        }
       }
+    } else if (!TextUtils.isEmpty(request.method)) {
+      connection.setRequestMethod(request.method);
+    } else {
+      connection.setRequestMethod("GET");
     }
+
     return connection;
   }
 
-  private String readInputStream(InputStream inputStream, OnHttpListener listener) {
-    StringBuilder builder = new StringBuilder();
-    try {
-      int fileLen = inputStream.available();
-      BufferedReader localBufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-      char[] data = new char[2048];
-      int len = -1;
-      while ((len = localBufferedReader.read(data)) > 0) {
-        builder.append(data, 0, len);
-        if (listener != null && fileLen > 0) {
-          listener.onHttpResponseProgress((builder.length() / fileLen) * 100);
-        }
-      }
-      localBufferedReader.close();
-      if (inputStream != null) {
-        try {
-          inputStream.close();
-        } catch (IOException e) {
-          WXLogUtils.e("DefaultWXHttpAdapter: " + WXLogUtils.getStackTrace(e));
-        }
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
+  private String readInputStream(InputStream inputStream, OnHttpListener listener) throws IOException {
+    if(inputStream == null){
+      return null;
     }
+    StringBuilder builder = new StringBuilder();
+    BufferedReader localBufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+    char[] data = new char[2048];
+    int len;
+    while ((len = localBufferedReader.read(data)) != -1) {
+      builder.append(data, 0, len);
+      if (listener != null) {
+        listener.onHttpResponseProgress(builder.length());
+      }
+    }
+    localBufferedReader.close();
     return builder.toString();
   }
 

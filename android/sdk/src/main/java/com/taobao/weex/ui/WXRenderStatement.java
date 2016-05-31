@@ -439,7 +439,7 @@ class WXRenderStatement {
       return;
     }
     WXVContainer oldParent = component.getParent();
-    oldParent.remove(component);
+    oldParent.remove(component,false);
     ((WXVContainer) newParent).addChild(component, index);
   }
 
@@ -547,6 +547,15 @@ class WXRenderStatement {
   void refreshFinish(int width, int height) {
     mWXSDKInstance.onRefreshSuccess(width, height);
   }
+
+  /**
+   * weex refresh finish
+   * @see WXSDKInstance#onUpdateFinish()
+   */
+  void updateFinish() {
+    mWXSDKInstance.onUpdateFinish();
+  }
+
 
   private WXComponent generateComponentTree(WXDomObject dom, WXVContainer parent) {
     if (dom == null || parent == null) {

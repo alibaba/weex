@@ -313,7 +313,6 @@ public abstract class WXVContainer extends WXComponent {
     } else {
       mChildren.add(index, child);
     }
-    mDomObj.add(child.getDomObject(), index);
   }
 
   protected void addSubView(View child, int index) {
@@ -331,16 +330,25 @@ public abstract class WXVContainer extends WXComponent {
   }
 
   public void remove(WXComponent child) {
+    remove(child,true);
+  }
+
+  public void remove(WXComponent child, boolean destroy){
     if (child == null || mChildren == null || mChildren.size() == 0) {
       return;
     }
 
     mChildren.remove(child);
-    mDomObj.remove(child.mDomObj);
-    if (getRealView() != null) {
+    if(mInstance!=null
+            &&mInstance.getRootView()!=null
+            && child.mDomObj.isFixed()){
+      mInstance.getRootView().removeView(child.getView());
+    }else if(getRealView() != null) {
       getRealView().removeView(child.getView());
     }
-    child.destroy();
+    if(destroy) {
+      child.destroy();
+    }
   }
 
   @Override

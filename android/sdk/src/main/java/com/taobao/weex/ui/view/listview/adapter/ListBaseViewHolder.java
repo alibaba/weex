@@ -207,8 +207,6 @@ package com.taobao.weex.ui.view.listview.adapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import java.lang.ref.WeakReference;
-
 
 /**
  * There are bi-directional association between ViewHolder and View.
@@ -217,19 +215,11 @@ import java.lang.ref.WeakReference;
  */
 public class ListBaseViewHolder extends RecyclerView.ViewHolder {
 
-  private final WeakReference<View> viewWeakReference;
-
   public ListBaseViewHolder(View view) {
     super(view);
-    viewWeakReference = new WeakReference<>(view);
   }
 
   public View getView() {
-    if (viewWeakReference != null) {
-      return viewWeakReference.get();
-    } else {
-      return null;
-    }
+    return itemView;
   }
-
 }
