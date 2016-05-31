@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import com.alibaba.weex.commons.util.ScreenUtil;
-import com.alibaba.weex.commons.util.ThrowUtil;
+import com.alibaba.weex.commons.util.AssertUtil;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRenderStrategy;
@@ -57,16 +57,18 @@ public abstract class AbstractWeexActivity extends AppCompatActivity implements 
     mInstance.registerRenderListener(this);
   }
 
-  protected void renderPage(String template){
-    renderPage(template,null);
+  protected void renderPage(String template,String source){
+    renderPage(template,source,null);
   }
 
-  protected void renderPage(String template,String jsonInitData){
-    ThrowUtil.throwIfNull(mContainer,new RuntimeException("Can't render page, container is null"));
+  protected void renderPage(String template,String source,String jsonInitData){
+    AssertUtil.throwIfNull(mContainer,new RuntimeException("Can't render page, container is null"));
+    Map<String, Object> options = new HashMap<>();
+    options.put(WXSDKInstance.BUNDLE_URL, source);
     mInstance.render(
       getPageName(),
       template,
-      null,
+      options,
       jsonInitData,
       ScreenUtil.getDisplayWidth(this),
       ScreenUtil.getDisplayHeight(this),
@@ -78,9 +80,9 @@ public abstract class AbstractWeexActivity extends AppCompatActivity implements 
   }
 
   protected void renderPageByURL(String url,String jsonInitData){
-    ThrowUtil.throwIfNull(mContainer,new RuntimeException("Can't render page, container is null"));
+    AssertUtil.throwIfNull(mContainer,new RuntimeException("Can't render page, container is null"));
     Map<String, Object> options = new HashMap<>();
-    options.put("bundleUrl", url);
+    options.put(WXSDKInstance.BUNDLE_URL, url);
     mInstance.renderByUrl(
       getPageName(),
       url,

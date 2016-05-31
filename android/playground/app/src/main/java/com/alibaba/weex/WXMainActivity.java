@@ -58,7 +58,7 @@ public class WXMainActivity extends AbstractWeexActivity {
     mTipView.setVisibility(View.VISIBLE);
 
     if(TextUtils.equals(CURRENT_IP,DEFAULT_IP)){
-      renderPage(WXFileUtils.loadFileContent("index.js", this));
+      renderPage(WXFileUtils.loadFileContent("index.js", this),WEEX_INDEX_URL);
     }else{
       renderPageByURL(WEEX_INDEX_URL);
     }

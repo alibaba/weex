@@ -79,7 +79,7 @@ dependencies {
     compile (name:'prettyfish_base', ext:'aar')
     compile 'com.taobao.android:dexposed:0.1.8'
     compile 'com.loopj.android:android-async-http:1.4.9@aar'
-    compile 'com.squareup.picasso:picasso:2.5.2'
+
     compile 'com.squareup.okhttp:okhttp:2.3.0'
     compile 'com.squareup.okhttp:okhttp-ws:2.3.0'
     compile 'com.squareup.okio:okio:1.0.1'

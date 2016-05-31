@@ -244,6 +244,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class WXSDKInstance implements IWXActivityStateListener {
 
   public boolean mEnd = false;
+  public static final String BUNDLE_URL = "bundleUrl";
   // adapters
   protected IWXUserTrackAdapter mUserTrackAdapter;
   protected IWXHttpAdapter mWXHttpAdapter;
@@ -439,8 +440,8 @@ public class WXSDKInstance implements IWXActivityStateListener {
     if (options == null) {
       options = new HashMap<String, Object>();
     }
-    if (!options.containsKey("bundleUrl")) {
-      options.put("bundleUrl", url);
+    if (!options.containsKey(BUNDLE_URL)) {
+      options.put(BUNDLE_URL, url);
     }
 
     Uri uri=Uri.parse(url);
