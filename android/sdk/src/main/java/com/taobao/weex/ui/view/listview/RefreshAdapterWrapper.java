@@ -206,10 +206,8 @@ package com.taobao.weex.ui.view.listview;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 
 import com.taobao.weex.ui.view.listview.adapter.ListBaseViewHolder;
 import com.taobao.weex.ui.view.listview.adapter.RecyclerViewBaseAdapter;
@@ -363,13 +361,6 @@ public class RefreshAdapterWrapper extends RecyclerView.Adapter<ListBaseViewHold
 
         public Refreshlayout(Context context) {
             super(context);
-            setLayoutParams(
-                    new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-            ProgressBar pb = new ProgressBar(context);
-            FrameLayout.LayoutParams pbLp =
-                    new LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-            pbLp.gravity = Gravity.CENTER_HORIZONTAL;
-            addView(pb, pbLp);
         }
     }
 

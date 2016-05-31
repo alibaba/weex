@@ -1,0 +1,58 @@
+<template>
+
+    <list class="list">
+        <refresh style="" display="{{refresh_display}}" onrefresh="onrefresh">
+            <text>refresh</text>
+            <loading-indicator style="height: 100"></loading-indicator>
+        </refresh>
+        <cell repeat="{{listData()}}">
+            <text style="font-size: 50">{{id}}</text>
+        </cell>
+        <loading style="" display="{{loading_display}}" onloading="onloading">
+            <text>loading</text>
+            <loading-indicator style="height: 100"></loading-indicator>
+        </loading>
+    </list>
+
+</template>
+
+<style>
+ .refresh {
+     height: 200;
+ }
+ .list {
+
+ }
+</style>
+
+<script>
+ module.exports = {
+     methods: {
+         onrefresh: function(e) {
+             this.refresh_display = 'show';
+             this.$call('modal', 'toast', {
+                 'message': 'onrefresh'
+             });
+             this.refresh_display = 'hide';
+         },
+         onloading: function() {
+             this.loading_display = 'show';
+             this.$call('modal', 'toast', {
+                 'message': 'onloading'
+             });
+             this.loading_display = 'hide';
+         },
+         listData: function() {
+             var data = [];
+             for (var i = 0; i < 20; i++) {
+                 data.push({id:i});
+             }
+             return data;
+         }
+     },
+     data: {
+         refresh_display: 'show',
+         loading_display: 'show'
+     }
+ }
+</script>

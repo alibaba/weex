@@ -268,5 +268,4 @@ public class WXBaseRefresh extends WXVContainer {
       mLoadingIndicator = (WXLoadingIndicator) child;
     }
   }
-
 }
