@@ -1,11 +1,13 @@
 package com.alibaba.weex.commons;
 
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import com.alibaba.weex.commons.util.ScreenUtil;
+import com.alibaba.weex.commons.util.ThrowUtil;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRenderStrategy;
@@ -16,40 +18,74 @@ import java.util.Map;
 /**
  * Created by sospartan on 5/30/16.
  */
-public abstract class BaseWeexActivity extends AppCompatActivity implements IWXRenderListener {
-  private static final String TAG = "BaseWeexActivity";
+public abstract class AbstractWeexActivity extends AppCompatActivity implements IWXRenderListener {
+  private static final String TAG = "AbstractWeexActivity";
 
   private ViewGroup mContainer;
   private WXSDKInstance mInstance;
 
-  protected ViewGroup initLayout(){
-    return (ViewGroup) getWindow().findViewById(android.R.id.content);
-  }
-
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    mContainer = initLayout();
-    rebuildWeexInstance();
+    createWeexInstance();
+    mInstance.onActivityCreate();
   }
 
-  protected void rebuildWeexInstance(){
-    if (mInstance != null) {
+  protected final void setContainer(ViewGroup container){
+    mContainer = container;
+  }
+
+  protected final ViewGroup getContainer(){
+    return mContainer;
+  }
+
+  protected void destoryWeexInstance(){
+    if(mInstance != null){
+      mInstance.registerRenderListener(null);
       mInstance.destroy();
       mInstance = null;
     }
+  }
+
+  protected void createWeexInstance(){
+    destoryWeexInstance();
+
+    Rect outRect = new Rect();
+    getWindow().getDecorView().getWindowVisibleDisplayFrame(outRect);
 
     mInstance = new WXSDKInstance(this);
     mInstance.registerRenderListener(this);
+  }
 
-    String url = getBundleUrl();
+  protected void renderPage(String template){
+    renderPage(template,null);
+  }
+
+  protected void renderPage(String template,String jsonInitData){
+    ThrowUtil.throwIfNull(mContainer,new RuntimeException("Can't render page, container is null"));
+    mInstance.render(
+      getPageName(),
+      template,
+      null,
+      jsonInitData,
+      ScreenUtil.getDisplayWidth(this),
+      ScreenUtil.getDisplayHeight(this),
+      WXRenderStrategy.APPEND_ASYNC);
+  }
+
+  protected void renderPageByURL(String url){
+    renderPageByURL(url,null);
+  }
+
+  protected void renderPageByURL(String url,String jsonInitData){
+    ThrowUtil.throwIfNull(mContainer,new RuntimeException("Can't render page, container is null"));
     Map<String, Object> options = new HashMap<>();
     options.put("bundleUrl", url);
-    mInstance.render(
+    mInstance.renderByUrl(
       getPageName(),
       url,
       options,
-      getJsonInitData(),
+      jsonInitData,
       ScreenUtil.getDisplayWidth(this),
       ScreenUtil.getDisplayHeight(this),
       WXRenderStrategy.APPEND_ASYNC);
@@ -57,16 +93,6 @@ public abstract class BaseWeexActivity extends AppCompatActivity implements IWXR
 
   protected String getPageName(){
     return TAG;
-  }
-
-  /**
-   * Get bundle file url, http or file.
-   * @return
-   */
-  protected abstract String getBundleUrl();
-
-  protected String getJsonInitData(){
-    return null;
   }
 
   @Override
