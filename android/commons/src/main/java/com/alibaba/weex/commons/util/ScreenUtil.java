@@ -1,4 +1,4 @@
-package com.alibaba.weex.util;
+package com.alibaba.weex.commons.util;
 
 import android.content.res.TypedArray;
 import android.graphics.Point;

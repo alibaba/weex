@@ -25,7 +25,7 @@ import com.alibaba.weex.https.HotRefreshManager;
 import com.alibaba.weex.https.WXHttpManager;
 import com.alibaba.weex.https.WXHttpTask;
 import com.alibaba.weex.https.WXRequestListener;
-import com.alibaba.weex.util.ScreenUtil;
+import com.alibaba.weex.commons.util.ScreenUtil;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.WXDebugTool;
 import com.taobao.weex.WXEnvironment;

@@ -177,20 +177,39 @@ public class WXSDKEngine {
 
   @Deprecated
   public static void init(Application application, IWXUserTrackAdapter utAdapter, String framework) {
+    initialize(application,
+      new InitConfig.Builder()
+        .setUtAdapter(utAdapter)
+        .build()
+    );
+  }
+
+  /**
+   *
+   * @param application
+   * @param config initial configurations or null
+   */
+  public static void initialize(Application application,InitConfig config){
     synchronized (mLock) {
       if (init) {
         return;
+      }
+      if(config != null ) {
+        WXSDKManager sm = WXSDKManager.getInstance();
+        sm.setIWXHttpAdapter(config.getHttpAdapter());
+        sm.setIWXImgLoaderAdapter(config.getImgAdapter());
+        sm.setIWXUserTrackAdapter(config.getUtAdapter());
       }
       init = true;
       WXEnvironment.sApplication = application;
       WXEnvironment.JsFrameworkInit = false;
       WXSoInstallMgrSdk.init(application);
-      WXEnvironment.sSupport = WXSoInstallMgrSdk.initSo(V8_SO_NAME, 1, utAdapter);
+      WXEnvironment.sSupport = WXSoInstallMgrSdk.initSo(V8_SO_NAME, 1, config!=null?config.getUtAdapter():null);
       if (!WXEnvironment.sSupport) {
         return;
       }
 
-      WXSDKManager.getInstance().initScriptsFramework(framework);
+      WXSDKManager.getInstance().initScriptsFramework(null);
       register();
 
       if (WXEnvironment.isApkDebugable()) {
@@ -216,13 +235,15 @@ public class WXSDKEngine {
     }
   }
 
+  @Deprecated
   public static void init(Application application, String framework, IWXUserTrackAdapter utAdapter, IWXImgLoaderAdapter imgLoaderAdapter, IWXHttpAdapter httpAdapter) {
-
-    WXSDKManager.getInstance().setIWXHttpAdapter(httpAdapter);
-    WXSDKManager.getInstance().setIWXImgLoaderAdapter(imgLoaderAdapter);
-    WXSDKManager.getInstance().setIWXUserTrackAdapter(utAdapter);
-    init(application, utAdapter, framework);
-
+    initialize(application,
+      new InitConfig.Builder()
+        .setUtAdapter(utAdapter)
+        .setHttpAdapter(httpAdapter)
+        .setImgAdapter(imgLoaderAdapter)
+        .build()
+    );
   }
 
   private static void register() {

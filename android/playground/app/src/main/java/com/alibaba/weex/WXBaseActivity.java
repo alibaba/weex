@@ -21,7 +21,7 @@ import android.widget.Button;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKEngine;
 
-public class WXBaseActivity extends AppCompatActivity {
+public abstract class WXBaseActivity extends AppCompatActivity {
 
   private static final int SENSOR_SHAKE = 10;
   private SensorManager sensorManager;
