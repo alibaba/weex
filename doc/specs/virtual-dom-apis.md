@@ -12,11 +12,11 @@ Each instance has a corresponding document with the instance id. A document has 
 
 #### Members
 
-* `createBody(type: string, props: Object?): Node`  
+* `createBody(type: string, props: Object?): Element`  
 Create document body. The `type` must be one of `div`, `list` or `scroller`. And the `props` may contain `attr` object and `style` object. e.g. `createBody('div', {style: {backgroundColor: '#ffffff'}})`
-* `createElement(tagName: string, props: Object?): Node`  
+* `createElement(tagName: string, props: Object?): Element`  
 Create a certain type `Element` with props.
-* `createComment(text: string): Node`  
+* `createComment(text: string): Comment`  
 Create a `Comment` with a certain comment text.
 * `open()`  
 Set a flag which means init rendering start, so each dom update will be called immediately
