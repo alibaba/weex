@@ -212,6 +212,7 @@ import android.content.pm.PackageManager;
 import android.telephony.TelephonyManager;
 
 import com.taobao.weex.common.WXConfig;
+import com.taobao.weex.utils.LogLevel;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXUtils;
 
@@ -241,9 +242,12 @@ public class WXEnvironment {
   public static boolean sDebugMode = false;
   public static String sDebugWsUrl = "";
   public static long sJSLibInitTime = 0;
+  public static LogLevel sLogLevel= LogLevel.DEBUG;
+  public static boolean sSupportDebugTool=false;
   private static boolean isApkDebug = true;
-
   private static boolean isPerf = false;
+
+  public static boolean sShow3DLayer=true;
 
   private static Map<String, String> options = new HashMap<>();
 
@@ -265,6 +269,7 @@ public class WXEnvironment {
     configs.put(WXConfig.sysVersion, SYS_VERSION);
     configs.put(WXConfig.sysModel, SYS_MODEL);
     configs.put(WXConfig.weexVersion, String.valueOf(WXSDK_VERSION));
+    configs.put(WXConfig.logLevel,sLogLevel.getName());
     configs.putAll(options);
     if(configs!=null&&configs.get(WXConfig.appName)==null){
        configs.put(WXConfig.appName, sApplication.getPackageName());

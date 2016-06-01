@@ -4,7 +4,7 @@
  * Confidential Information and shall use it only in accordance with the terms of the license
  * agreement you entered into with Alibaba.com.
  */
-package com.alibaba.weex.extend.Components;
+package com.alibaba.weex.extend.components;
 
 import android.os.Parcel;
 import android.text.Spannable;

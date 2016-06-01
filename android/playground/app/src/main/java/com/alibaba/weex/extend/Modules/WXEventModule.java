@@ -1,4 +1,4 @@
-package com.alibaba.weex.extend.Modules;
+package com.alibaba.weex.extend.modules;
 
 import android.content.Intent;
 import android.net.Uri;

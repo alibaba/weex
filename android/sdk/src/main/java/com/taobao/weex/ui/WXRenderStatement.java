@@ -548,6 +548,15 @@ class WXRenderStatement {
     mWXSDKInstance.onRefreshSuccess(width, height);
   }
 
+  /**
+   * weex refresh finish
+   * @see WXSDKInstance#onUpdateFinish()
+   */
+  void updateFinish() {
+    mWXSDKInstance.onUpdateFinish();
+  }
+
+
   private WXComponent generateComponentTree(WXDomObject dom, WXVContainer parent) {
     if (dom == null || parent == null) {
       return null;

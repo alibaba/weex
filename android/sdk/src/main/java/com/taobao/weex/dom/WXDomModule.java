@@ -422,6 +422,17 @@ public final class WXDomModule extends WXModule {
     WXSDKManager.getInstance().getWXDomManager().sendMessage(msg);
   }
 
+  @WXModuleAnno(moduleMethod = true, runOnUIThread = false)
+  public void updateFinish() {
+    Message msg = Message.obtain();
+    WXDomTask task = new WXDomTask();
+    task.instanceId = mWXSDKInstance.getInstanceId();
+    msg.what = WXDomHandler.MsgType.WX_DOM_UPDATE_FINISH;
+    msg.obj = task;
+    WXSDKManager.getInstance().getWXDomManager().sendMessage(msg);
+  }
+
+
   /**
    * Scroll the specified {@link WXDomObject} to given offset in given duration
    * @param ref {@link WXDomObject#ref} of specified dom object

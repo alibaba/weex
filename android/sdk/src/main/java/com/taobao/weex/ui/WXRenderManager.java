@@ -433,6 +433,15 @@ public class WXRenderManager {
     statement.refreshFinish(width, height);
   }
 
+  public void updateFinish(String instanceId) {
+    WXRenderStatement statement = mRegistries.get(instanceId);
+    if (statement == null) {
+      return;
+    }
+    statement.updateFinish();
+  }
+
+
   public void startAnimation(String instanceId, String ref, String animation, String callBack) {
     WXRenderStatement statement = mRegistries.get(instanceId);
     if (statement == null) {

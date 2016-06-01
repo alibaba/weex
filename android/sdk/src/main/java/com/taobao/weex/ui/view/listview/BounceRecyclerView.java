@@ -214,7 +214,7 @@ import com.taobao.weex.ui.view.listview.adapter.RecyclerViewBaseAdapter;
 
 public class BounceRecyclerView extends BaseBounceView<RecyclerView> {
 
-    private State mState = State.RESET;
+    private State mState = State.NONE;
     private OnRefreshListener mOnRefreshListener;
     private OnLoadMoreListener mOnLoadMoreListener;
     private RefreshAdapterWrapper mRefreshAdapter;
@@ -227,7 +227,8 @@ public class BounceRecyclerView extends BaseBounceView<RecyclerView> {
         REFRESHING,
         LOADMORE,
         LOADMORE_TOP,
-        RESET
+        RESET,
+        NONE
     }
 
     public BounceRecyclerView(Context context) {
@@ -320,7 +321,7 @@ public class BounceRecyclerView extends BaseBounceView<RecyclerView> {
             } else if (getState() == State.RELEASE_TO_REFRESH_BOTTOM && null != mOnLoadMoreListener) {
                 getBounceFooterView().setVisibility(View.INVISIBLE);
                 setState(State.LOADMORE);
-            } else if (getState() != State.LOADMORE) {
+            } else if (getState() != State.LOADMORE && getState()!=State.NONE) {
                 setState(State.RESET);
             }
         }

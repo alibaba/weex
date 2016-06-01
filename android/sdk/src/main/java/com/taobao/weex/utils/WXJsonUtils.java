@@ -208,6 +208,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Tool for parse JSON
@@ -230,6 +231,7 @@ public class WXJsonUtils {
     }
     return result;
   }
+
 
   public static JSONArray parseArrayStr(String arrStr) {
     return JSONObject.parseArray(arrStr);

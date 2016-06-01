@@ -958,6 +958,30 @@ class WXDomStatement {
   }
 
   /**
+   * Create a command object for notifying {@link WXRenderManager} that the process of update
+   * given view is finished, and put the command object in the queue.
+   */
+  void updateFinish() {
+    if (mDestroy) {
+      return;
+    }
+    mNormalTasks.add(new IWXRenderTask() {
+
+      @Override
+      public void execute() {
+        mWXRenderManager.updateFinish(mInstanceId);
+      }
+    });
+
+    mDirty = true;
+    WXSDKInstance instance = WXSDKManager.getInstance().getSDKInstance(mInstanceId);
+    if (instance != null) {
+      instance.commitUTStab(WXConst.DOM_MODULE, WXErrorCode.WX_SUCCESS);
+    }
+  }
+
+
+  /**
    * Parse the jsonObject to {@link WXDomObject} recursively
    * @param map the original JSONObject
    * @return Dom Object corresponding to the JSONObject.
