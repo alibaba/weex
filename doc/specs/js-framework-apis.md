@@ -26,7 +26,7 @@ Create a Weex instance from Native Engine
 
 Example:
 
-```
+```javascript
 createInstance('x', 'define(...); define(...); define(...); bootstrap(...)')
 createInstance('x', '...', { bundleUrl, debug, ... }, { a: 1, b: 2 }})
 ```
@@ -41,7 +41,7 @@ Refresh data to an existed Weex instance with certain external data from Native 
 
 Example:
 
-```
+```javascript
 refreshInstance('x', {a: 100, b: 200})
 ```
 
@@ -53,7 +53,7 @@ Register all native components
 
 Example:
 
-```
+```javascript
 registerComponents({
   container: {}, 
   text: {}, 
@@ -75,7 +75,7 @@ Register the name, methods and args format of each module
 
 Example:
 
-```
+```javascript
 registerModules({
   event: [
     {name: 'openURL', args: ['string']}
@@ -94,7 +94,7 @@ Fire events or callbacks to an existed Weex instance from Native Engine
 
 Example:
 
-```
+```javascript
 callJS('x', [{method: 'fireEvent', args: ['x', '13', 'click', {a: 100, b: 200}]}])
 callJS('x', [{method: 'callback', args: ['x', '7', {a: 100, b: 200}, true]}])
 ```
@@ -105,7 +105,7 @@ Return a JSON object which describes the whole virtual DOM body of an existed We
 
 Example:
 
-```
+```javascript
 getRoot('x')
 // {ref: '_root', type: 'container', attr: {...}, style: {...}, children: [...]}
 ```
@@ -120,7 +120,7 @@ Make native calls from JS Framework
 
 Example:
 
-```
+```javascript
 callNative('x', [
   {module: 'dom', method: 'addElement', args: ['_root', {ref: '1', type: 'container'}, -1]},
   {module: 'dom', method: 'addElement', args: ['1', {ref: '2', type: 'text', ...}, -1]},
@@ -128,3 +128,51 @@ callNative('x', [
   ...
 ])
 ```
+
+## Supporting other JS Framework <sup>(experimental)</sup>
+
+### Register a new JS Framework
+
+```javascript
+// lib/frameworks/index.js
+
+import Vue from '...'
+import React from '...'
+import Angular from '...'
+
+export const frameworks = {
+  Vue,
+  React,
+  Angular
+}
+```
+
+### Expose JS Framework APIs
+
+```javascript
+export function createInstance (id, code, config, data) { ... }
+export function destroyInstance (id) { ... }
+export function refreshInstance (id, data) { ... }
+export function registerComponents (components) { ... }
+export function registerModules (modules) { ... }
+export function callTasks (id, tasks) { ... }
+export function getRoot (id) { ... }
+
+export function setDocument (document: Document) { ... }
+export function setTasksListener (func (id, tasks)) { ... }
+```
+
+The virtual-DOM tasks should follow [virtual-DOM spec](virtual-dom-apis.md).
+
+### JS Bundle format
+
+You must ensure the JS Bundle has its first line of code like this:
+
+```javascript
+// { "framework": "Vue" }
+...
+```
+
+to allow JS Runtime to detect which JS Framework it should be opened by.
+
+If no valid annotation found. The JS Bundle will be opened by default JS Framework of Weex.
