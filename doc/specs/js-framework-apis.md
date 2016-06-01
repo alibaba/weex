@@ -9,9 +9,10 @@ There APIs is designed for JS Framework and Native Engine working together.
 Considering the limitation of mobile phone resource, *Weex runs only one JS runtime* to handle all Weex instances. So it need a multi-instance management layer in JavaScript. These JS Framework APIs are just designed to finish the management job.
 
 * First, each Weex instance have a lifecycle, from `createInstance` to `destroyInstance`. During this period, we can import some extra data by `refreshInstance`.
-* To communicate with Native Engine, we have a couple of APIs: `callNative` and `callJS`. They are used to call each other by some commands and messages.
+* To communicate with Native Engine, we have a couple of APIs: `sendTasks` and `receiveTasks`. They are used to call each other by some commands and messages.
 * And when JS runtime start at the beginning of the app launching, we need something initialized and configured. So we supply some APIs like `registerComponents`, `registerModules`.
 * The last API is just for debugging, we supply an API named `getRoot` to return the whole virtual-DOM data for developers.
+* If any of these API calls failed, an `Error` object should be returned.
 
 ## Called by native and supplied from JS Framework
 
@@ -84,7 +85,7 @@ registerModules({
 })
 ```
 
-### `callJS(instanceId, tasks)`
+### `receiveTasks(instanceId, tasks)`
 
 Fire events or callbacks to an existed Weex instance from Native Engine
 
@@ -95,8 +96,8 @@ Fire events or callbacks to an existed Weex instance from Native Engine
 Example:
 
 ```javascript
-callJS('x', [{method: 'fireEvent', args: ['x', '13', 'click', {a: 100, b: 200}]}])
-callJS('x', [{method: 'callback', args: ['x', '7', {a: 100, b: 200}, true]}])
+receiveTasks('x', [{method: 'fireEvent', args: ['x', '13', 'click', {a: 100, b: 200}]}])
+receiveTasks('x', [{method: 'callback', args: ['x', '7', {a: 100, b: 200}, true]}])
 ```
 
 ### `getRoot(instanceId)`
@@ -112,7 +113,7 @@ getRoot('x')
 
 ## Called from JavaScript and implemented with native code
 
-### `callNative(instanceId, tasks)`
+### `sendTasks(instanceId, tasks)`
 
 Make native calls from JS Framework
 
@@ -121,7 +122,7 @@ Make native calls from JS Framework
 Example:
 
 ```javascript
-callNative('x', [
+sendTasks('x', [
   {module: 'dom', method: 'addElement', args: ['_root', {ref: '1', type: 'container'}, -1]},
   {module: 'dom', method: 'addElement', args: ['1', {ref: '2', type: 'text', ...}, -1]},
   {module: 'dom', method: 'addElement', args: ['1', {ref: '3', type: 'image', ...}, -1]},
@@ -157,15 +158,18 @@ export function destroyInstance (id) { ... }
 export function refreshInstance (id, data) { ... }
 export function registerComponents (components) { ... }
 export function registerModules (modules) { ... }
-export function callTasks (id, tasks) { ... }
+export function recieveTasks (id, tasks) { ... }
 export function getRoot (id) { ... }
-
-export function setTasksListener (func (id, tasks)) { ... }
-export function setDocument (document: Document) { ... }
-export function setEventManager (eventManager: EventManager) { ... }
 ```
 
 The virtual-DOM tasks should follow [virtual-DOM spec](virtual-dom-apis.md).
+
+### Framework Helper
+
+You can import `lib/runtime/helper.js` to get two important things:
+
+* `Document` class, see [virtual-DOM spec](virtual-dom-apis.md) for more.
+* `sendTasks` method.
 
 ### JS Bundle format
 
