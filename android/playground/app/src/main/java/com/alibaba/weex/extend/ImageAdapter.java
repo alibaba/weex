@@ -84,6 +84,9 @@ public class ImageAdapter implements IWXImgLoaderAdapter {
 
       @Override
       public void run() {
+        if(view==null||view.getLayoutParams()==null){
+          return;
+        }
         if (TextUtils.isEmpty(url)) {
           view.setImageBitmap(null);
           return;

@@ -65,7 +65,7 @@ dependencies {
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'com.android.support.test:runner:0.5'
 
-    //compile 'com.taobao.android:weex_sdk:1.3.demo-SNAPSHOT@aar'
+    //compile 'com.taobao.android:weex_sdk:0.4.+'
     /*source dependency*/
     compile project(':weex_sdk_android')
     compile 'com.loopj.android:android-async-http:1.4.9@aar'
@@ -78,5 +78,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'com.android.support:support-annotations:23.1.1'
-    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
+    //compile 'com.google.android.gms:play-services-appindexing:8.1.0'
 }

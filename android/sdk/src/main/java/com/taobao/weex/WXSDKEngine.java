@@ -284,30 +284,6 @@ public class WXSDKEngine {
 
       WXSDKManager.getInstance().initScriptsFramework(framework);
       register();
-    }
-  }
-
-  public static void init(Application application, String framework, IWXUserTrackAdapter utAdapter, IWXImgLoaderAdapter imgLoaderAdapter, IWXHttpAdapter httpAdapter) {
-    synchronized (mLock) {
-      if (init) {
-        return;
-      }
-      init = true;
-      WXEnvironment.sApplication = application;
-      WXEnvironment.JsFrameworkInit = false;
-      WXSoInstallMgrSdk.init(application);
-      WXEnvironment.sSupport = WXSoInstallMgrSdk.initSo(V8_SO_NAME, 1, utAdapter);
-      if (!WXEnvironment.sSupport) {
-        return;
-      }
-
-      WXSDKManager.getInstance().initScriptsFramework(framework);
-
-      WXSDKManager.getInstance().setIWXHttpAdapter(httpAdapter);
-      WXSDKManager.getInstance().setIWXImgLoaderAdapter(imgLoaderAdapter);
-      WXSDKManager.getInstance().setIWXUserTrackAdapter(utAdapter);
-
-      register();
 
       new AsyncTask<Application, Void, Void>() {
         @Override
@@ -323,6 +299,15 @@ public class WXSDKEngine {
         }
       }.execute(application);
     }
+  }
+
+  public static void init(Application application, String framework, IWXUserTrackAdapter utAdapter, IWXImgLoaderAdapter imgLoaderAdapter, IWXHttpAdapter httpAdapter) {
+
+    WXSDKManager.getInstance().setIWXHttpAdapter(httpAdapter);
+    WXSDKManager.getInstance().setIWXImgLoaderAdapter(imgLoaderAdapter);
+    WXSDKManager.getInstance().setIWXUserTrackAdapter(utAdapter);
+    init(application, utAdapter, framework);
+
   }
 
   private static void register() {
@@ -434,6 +419,12 @@ public class WXSDKEngine {
   }
 
   public static void setIWXImgLoaderAdapter(IWXImgLoaderAdapter IWXImgLoaderAdapter) {
+    if(IWXImgLoaderAdapter==null){
+      if(WXEnvironment.isApkDebugable()){
+        throw new IllegalStateException("ImageLoaderAdapter can not be set to null");
+      }
+      return;
+    }
     WXSDKManager.getInstance().setIWXImgLoaderAdapter(IWXImgLoaderAdapter);
   }
 

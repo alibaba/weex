@@ -1,26 +1,32 @@
 buildscript {
     repositories {
+        mavenCentral()
         jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.1.0'
+        classpath files('license/license-gradle-plugin-0.12.1.jar')
+        classpath files('license/maven-license-plugin-1.10.b1.jar')
+        classpath files('license/plexus-utils-3.0.24.jar')
     }
 }
 
-plugins {
-    id "com.github.hierynomus.license" version "0.12.1"
-}
+//plugins {
+//    id "com.github.hierynomus.license" version "0.12.1"
+//}
 
 allprojects {
     repositories {
+        mavenCentral()
         jcenter()
     }
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.hierynomus.license'
 
 
-version = "0.0.0.1"
+version = "0.4.1.3"
 
 android {
     compileSdkVersion 23
@@ -88,7 +94,7 @@ dependencies {
 }
 
 license{
-    header=file('LICENSE')
+    header=file('license/LICENSE')
     excludes (["**/WXDataStructureUtil.java",
                "**/WXBackgroundDrawable.java",
                "**/Spacing.java",

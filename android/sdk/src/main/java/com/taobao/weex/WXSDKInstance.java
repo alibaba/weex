@@ -443,7 +443,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
     }
 
     Uri uri=Uri.parse(url);
-    if(uri!=null && uri.getScheme().equals("file")){
+    if(uri!=null && TextUtils.equals(uri.getScheme(),"file")){
       render(pageName, WXFileUtils.loadFileContent(assembleFilePath(uri), mContext),options,jsonInitData,width,height,flag);
       return;
     }

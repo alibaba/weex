@@ -226,8 +226,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -257,7 +256,7 @@ class WXDomStatement {
   private WXRenderManager mWXRenderManager;
   private ArrayList<IWXRenderTask> mNormalTasks;
   private Set<String> mUpdate;
-  private List<String> mFlushviews;
+  private Set<String> mFlushes;
   private CSSLayoutContext mLayoutContext;
   private volatile boolean mDirty;
   private boolean mDestroy;
@@ -279,7 +278,7 @@ class WXDomStatement {
     mRegistry = new ConcurrentHashMap<>();
     mNormalTasks = new ArrayList<>();
     mUpdate = new HashSet<>();
-    mFlushviews = new LinkedList<>();
+    mFlushes = new LinkedHashSet<>();
     mWXRenderManager = renderManager;
   }
 
@@ -374,10 +373,10 @@ class WXDomStatement {
     for (int i = 0; i < count && !mDestroy; ++i) {
       mWXRenderManager.runOnThread(mInstanceId, mNormalTasks.get(i));
     }
-    for(String ref: mFlushviews){
+    for(String ref: mFlushes){
       mWXRenderManager.flushView(mInstanceId,ref);
     }
-    mFlushviews.clear();
+    mFlushes.clear();
     mNormalTasks.clear();
     mAddDom.clear();
     mUpdate.clear();
@@ -488,7 +487,7 @@ class WXDomStatement {
       }
     });
     mDirty = true;
-    mFlushviews.add(domObject.ref);
+    mFlushes.add(domObject.ref);
 
     if (instance != null) {
       instance.commitUTStab(WXConst.DOM_MODULE, WXErrorCode.WX_SUCCESS);
@@ -597,7 +596,7 @@ class WXDomStatement {
     });
 
     mDirty = true;
-    mFlushviews.add(domObject.ref);
+    mFlushes.add(domObject.ref);
 
     if (instance != null) {
       instance.commitUTStab(WXConst.DOM_MODULE, WXErrorCode.WX_SUCCESS);
@@ -674,8 +673,8 @@ class WXDomStatement {
       }
       return;
     }
-    parent.remove(domObject);
     clearRegistryForDom(domObject);
+    parent.remove(domObject);
 
     mNormalTasks.add(new IWXRenderTask() {
 
@@ -735,7 +734,7 @@ class WXDomStatement {
       }
     });
     mDirty = true;
-    mFlushviews.add(ref);
+    mFlushes.add(ref);
 
     if (instance != null) {
       instance.commitUTStab(WXConst.DOM_MODULE, WXErrorCode.WX_SUCCESS);
@@ -768,7 +767,7 @@ class WXDomStatement {
 
     updateStyle(domObject, style);
     mDirty = true;
-    mFlushviews.add(ref);
+    mFlushes.add(ref);
 
     if (instance != null) {
       instance.commitUTStab(WXConst.DOM_MODULE, WXErrorCode.WX_SUCCESS);

@@ -272,6 +272,7 @@ public class WXBridgeManager implements Callback {
   public static final String METHOD_CALLBACK = "callback";
   public static final String METHOD_REFRESH_INSTANCE = "refreshInstance";
   private static final String UNDEFINED = "-1";
+  private static final int INIT_FRAMEWORK_OK = 1;
   private static WXBridgeManager mBridgeManager;
   /**
    * next tick tasks, can set priority
@@ -796,13 +797,16 @@ public class WXBridgeManager implements Callback {
         return;
       }
       try {
-        long start = System.currentTimeMillis();
-        mWXBridge.initFramework(framework, assembleDefaultOptions());
-        WXEnvironment.sJSLibInitTime = System.currentTimeMillis() - start;
-        WXLogUtils.renderPerformanceLog("initFramework", WXEnvironment.sJSLibInitTime);
-        mInit = true;
-        execRegisterFailTask();
-        WXEnvironment.JsFrameworkInit = true;
+          long start = System.currentTimeMillis();
+          if(mWXBridge.initFramework(framework, assembleDefaultOptions())==INIT_FRAMEWORK_OK){
+             WXEnvironment.sJSLibInitTime = System.currentTimeMillis() - start;
+             WXLogUtils.renderPerformanceLog("initFramework", WXEnvironment.sJSLibInitTime);
+             mInit = true;
+             execRegisterFailTask();
+             WXEnvironment.JsFrameworkInit = true;
+          }else{
+              WXLogUtils.e("[WXBridgeManager] invokeInitFramework  ExecuteJavaScript fail");
+          }
       } catch (Throwable e) {
         WXLogUtils.e("[WXBridgeManager] invokeInitFramework " + e.getCause());
       }
