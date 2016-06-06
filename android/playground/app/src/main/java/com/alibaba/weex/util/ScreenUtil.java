@@ -11,7 +11,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public class ScreenUtil {
-    private static final String TAG = "WXTBUtil";
+    private static final String TAG = "WXToolBarUtil";
 
     private static boolean isSupportSmartBar = false;
 
