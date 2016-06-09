@@ -43,8 +43,8 @@ Other attributes please check out the [common attributes](../references/common-a
   <div>
     <slider auto-play="true" onchange="change" style="...">
       <image repeat="{{imageList}}" src="{{src}}" style="..."></image>
-      <indicator>
-    </slider></indicator>
+      <indicator></indicator>
+    </slider>
   </div>
 </template>
 
