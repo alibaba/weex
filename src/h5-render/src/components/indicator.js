@@ -12,6 +12,11 @@ var DEFAULT_ITEM_SELECTED_COLOR = '#0000ff'
 var DEFAULT_ITEM_SIZE = 20
 var DEFAULT_MARGIN_SIZE = 10
 
+var DEAULT_ALIGN_ITEMS = 'center'
+var DEFAULT_JUSTIFY_CONTENT = 'center'
+
+var DEFAULT_DIRECTION = 'row'
+
 // Style supported:
 //   position: (default - absolute)
 //   itemColor: color of indicator dots
@@ -19,15 +24,18 @@ var DEFAULT_MARGIN_SIZE = 10
 //   itemSize: size of indicators
 //   other layout styles
 function Indicator (data) {
-  this.direction = 'row' // 'column' is not temporarily supported.
+  this.direction = DEFAULT_DIRECTION
   this.amount = data.extra.amount
   this.index = data.extra.index
   this.sliderWidth = data.extra.width
   this.sliderHeight = data.extra.height
   var styles = data.style || {}
   this.data = data
-  this.style.width.call(this, styles.width)
-  this.style.height.call(this, styles.height)
+  !styles.width && (styles.width = this.sliderWidth)
+  !styles.height && (styles.height = this.sliderHeight)
+  !styles.alignItems && (styles.alignItems = DEAULT_ALIGN_ITEMS)
+  !styles.justifyContent && (styles.justifyContent = DEFAULT_JUSTIFY_CONTENT)
+  !styles.flexDirection && (styles.flexDirection = this.direction)
   this.itemColor = styles.itemColor || DEFAULT_ITEM_COLOR
   this.itemSelectedColor = styles.itemSelectedColor
     || DEFAULT_ITEM_SELECTED_COLOR
@@ -39,15 +47,13 @@ Indicator.prototype = Object.create(Atomic.prototype)
 
 Indicator.prototype.create = function () {
   var node = document.createElement('div')
-  node.classList.add('weex-indicators')
-  node.classList.add('weex-element')
+  node.classList.add('weex-indicators', 'weex-container')
   node.style.position = 'absolute'
   this.node = node
-  this.style.itemSize.call(this, 0)
   this.updateStyle({
     left: 0,
     top: 0,
-    itemSize: 0
+    itemSize: DEFAULT_ITEM_SIZE
   })
   return node
 }
@@ -115,47 +121,47 @@ Indicator.prototype.style
     }
   },
 
-  width: function (val) {
-    val = parseInt(val) * this.data.scale || parseInt(this.sliderWidth)
-    this.virtualWrapperWidth = val
-  },
+  // width: function (val) {
+    // val = parseInt(val) * this.data.scale || parseInt(this.sliderWidth)
+    // this.virtualWrapperWidth = val
+  // },
 
-  height: function (val) {
-    val = parseInt(val) * this.data.scale || parseInt(this.sliderHeight)
-    this.virtualWrapperHeight = val
-  },
+  // height: function (val) {
+    // val = parseInt(val) * this.data.scale || parseInt(this.sliderHeight)
+    // this.virtualWrapperHeight = val
+  // },
 
-  top: function (val) {
-    val = this.virtualWrapperHeight / 2 - this.itemSize / 2
-        + val * this.data.scale
-    this.node.style.bottom = ''
-    this.node.style.top = val + 'px'
-  },
+  // top: function (val) {
+  //   val = this.virtualWrapperHeight / 2 - this.itemSize / 2
+  //       + val * this.data.scale
+  //   this.node.style.bottom = ''
+  //   this.node.style.top = val + 'px'
+  // },
 
-  bottom: function (val) {
-    val = this.virtualWrapperHeight / 2 - this.itemSize / 2
-        + val * this.data.scale
-    this.node.style.top = ''
-    this.node.style.bottom = val + 'px'
-  },
+  // bottom: function (val) {
+  //   val = this.virtualWrapperHeight / 2 - this.itemSize / 2
+  //       + val * this.data.scale
+  //   this.node.style.top = ''
+  //   this.node.style.bottom = val + 'px'
+  // },
 
-  left: function (val) {
-    val = this.virtualWrapperWidth / 2
-          - (this.itemSize + 2 * DEFAULT_MARGIN_SIZE * this.data.scale)
-              * this.amount / 2
-          + val * this.data.scale
-    this.node.style.right = ''
-    this.node.style.left = val + 'px'
-  },
+  // left: function (val) {
+  //   val = this.virtualWrapperWidth / 2
+  //         - (this.itemSize + 2 * DEFAULT_MARGIN_SIZE * this.data.scale)
+  //             * this.amount / 2
+  //         + val * this.data.scale
+  //   this.node.style.right = ''
+  //   this.node.style.left = val + 'px'
+  // },
 
-  right: function (val) {
-    val = this.virtualWrapperWidth / 2
-          - (this.itemSize + 2 * DEFAULT_MARGIN_SIZE * this.data.scale)
-              * this.amount / 2
-          + val * this.data.scale
-    this.node.style.left = ''
-    this.node.style.right = val + 'px'
-  }
+  // right: function (val) {
+  //   val = this.virtualWrapperWidth / 2
+  //         - (this.itemSize + 2 * DEFAULT_MARGIN_SIZE * this.data.scale)
+  //             * this.amount / 2
+  //         + val * this.data.scale
+  //   this.node.style.left = ''
+  //   this.node.style.right = val + 'px'
+  // }
 })
 
 Indicator.prototype.setIndex = function (idx) {
