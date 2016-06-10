@@ -119,49 +119,7 @@ Indicator.prototype.style
       this.items[i].style.width = val + 'px'
       this.items[i].style.height = val + 'px'
     }
-  },
-
-  // width: function (val) {
-    // val = parseInt(val) * this.data.scale || parseInt(this.sliderWidth)
-    // this.virtualWrapperWidth = val
-  // },
-
-  // height: function (val) {
-    // val = parseInt(val) * this.data.scale || parseInt(this.sliderHeight)
-    // this.virtualWrapperHeight = val
-  // },
-
-  // top: function (val) {
-  //   val = this.virtualWrapperHeight / 2 - this.itemSize / 2
-  //       + val * this.data.scale
-  //   this.node.style.bottom = ''
-  //   this.node.style.top = val + 'px'
-  // },
-
-  // bottom: function (val) {
-  //   val = this.virtualWrapperHeight / 2 - this.itemSize / 2
-  //       + val * this.data.scale
-  //   this.node.style.top = ''
-  //   this.node.style.bottom = val + 'px'
-  // },
-
-  // left: function (val) {
-  //   val = this.virtualWrapperWidth / 2
-  //         - (this.itemSize + 2 * DEFAULT_MARGIN_SIZE * this.data.scale)
-  //             * this.amount / 2
-  //         + val * this.data.scale
-  //   this.node.style.right = ''
-  //   this.node.style.left = val + 'px'
-  // },
-
-  // right: function (val) {
-  //   val = this.virtualWrapperWidth / 2
-  //         - (this.itemSize + 2 * DEFAULT_MARGIN_SIZE * this.data.scale)
-  //             * this.amount / 2
-  //         + val * this.data.scale
-  //   this.node.style.left = ''
-  //   this.node.style.right = val + 'px'
-  // }
+  }
 })
 
 Indicator.prototype.setIndex = function (idx) {
