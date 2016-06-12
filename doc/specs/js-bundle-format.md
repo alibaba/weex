@@ -1,4 +1,5 @@
 # JS Bundle format
+<span class="weex-version">0.4</span>
 
 v0.3.0
 

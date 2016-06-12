@@ -1,5 +1,7 @@
 # Tutorial
 
+<span class="weex-version">0.4</span>
+
 We will make a simple but realistic list of tech that weex used, this form of list also work for a lot of e-commerce app/mobile site.
 
 ## Getting Started
@@ -8,94 +10,93 @@ Let's start easy though, making a item of list.
 
 ```html
 <template>
-  <div class="container" >
+  <div class="container">
     <div class="cell">
-       <image class="thumb" src="http://t.cn/RGE3AJt"></image>  
-       <text class="title">JavaScript</text>
+        <image class="thumb" src="http://t.cn/RGE3AJt"></image>
+        <text class="title">JavaScript</text>
     </div>
   </div>
 </template>
 
 <style>
-  .cell{margin-top:10 ; margin-left:10 ; flex-direction: row; }
-  .thumb {width: 200; height: 200; }
-  .title {text-align: center ; flex: 1; color: grey; font-size: 50; }  
+  .cell { margin-top: 10; margin-left: 10; flex-direction: row; }
+  .thumb { width: 200; height: 200; }
+  .title { text-align: center; flex: 1; color: grey; font-size: 50; }
 </style>
 ```
 
 You can copy and paste above code to a Weex file named `tech_list.we` (`.we` is our recommended the file extension name)
 
-The Weex CLI toolchain is Node JS based, so you need to install [Node](https://nodejs.org/en/download/stable/) first. Then you can install Weex CLI program using Node JS npm command.
+## Preview
+
+First you need to install [Node](https://nodejs.org/en/download/stable/). Then you can install Weex CLI program with command:
 
 ```
 npm install -g weex-toolkit
 ```
 
-After Weex CLI program install finished, you should test to ensure the Weex CLI is properly installed by typing weex on the command line. You should see the following help text displayed:
+After the installation finished, you could ensure the Weex CLI is properly installed by typing `weex` on the command line. You should see the following help text displayed:
 
 ```
+$ weex
 Usage: weex foo/bar/your_next_best_weex_script_file.we  [options]
 
 Options:
-  --qr    display QR code for native runtime                           [boolean]
-  -o      transform weex JS bundle only, specify bundle file name using the
-          option                                 [default: "no JSBundle output"]
-  -s      start a http file server, weex .we file will be transformed on the
-          server, specify local root path using the option     [default: false]
-  --help  Show help                                                    [boolean]
+  --qr     display QR code for native runtime, 
+  -o,--output  transform weex we file to JS Bundle, output path (single JS bundle file or dir)
+  -s,--server  start a http file server, weex .we file will be transforme to JS bundle on the server , specify local root path using the option  
+  ......
+  --help  Show help                    
 ```
 
-If all works well, navigate to the directory where you save the newly created tech_list.we, then type
+If all works well, navigate to the directory where you save the newly created `tech_list.we`, then type:
 
 ```
-weex tech_list.we   // Weex H5 renderer is not released , so , the commond not works now
+weex tech_list.we
 ```
 
 A browser window will open automatically  to display  something like below
 
 ![weex html5 render](http://gtms02.alicdn.com/tps/i2/TB1y151LVXXXXXXaXXXoRYgWVXX-495-584.jpg)
 
-
-**Weex H5 renderer is not released , So please using Weex Playground App based preview for a while**
-
-
 ## Intro Weex Syntax
-So  it's  time for some "boring syntax",  as  content of  tech_list.we showing,  Weex source code is  written in three parts --  *template*,  *style*, *script* just like html,css,javascript for the Web.
 
-Template is the skeleton that give weex structure, it composed by tags which surround content and apply meaning to it. Weex has two type of tag, opening tag & closing tag, we call every couple  of opening tag &  closing tag a Weex tag. Tag have *attributes*,  different attribute have different meaning,   class attribute makes it possible to define equal styles for multiple tags,  onclick attribute makes the tag  responds to click  event.
+So it's time for introduce the syntax. As the content of `tech_list.we` showing, Weex source code is written in three parts -- *template*, *style*, *script* just like html,css,javascript for the Web.
 
-Style describes how Weex tags are to be displayed. We like you, love the  CSS, so we try to keep consistent with CSS standard as possible. Weex Style support a lot of CSS features, eg:  margin, padding, fixed...... Better yet, flexbox layout (flex) is well supported in Weex Style.
+Template is the skeleton that give weex structure, it composed by tags which surround content and apply meaning to it. Weex has two type of tag, opening tag & closing tag, we call every couple of opening tag & closing tag a Weex tag. Tag have *attributes*, different attribute have different meaning, class attribute makes it possible to define equal styles for multiple tags, onclick attribute makes the tag responds to click event.
 
-Script add *data* & *logic* to Weex tags, help you easy access local or remote data and update tags. You can also define some methods for your tag  to respond to different events. Weex Script organizing learn a lot from CommonJS module style.
+Style describes how Weex tags are to be displayed. We like you, love the CSS, so we try to keep consistent with CSS standard as possible. Weex Style support a lot of CSS features, eg: margin, padding, fixed...... Better yet, flexbox layout (flex) is well supported in Weex Style.
 
-More complete information about Weex syntax can be found  in our [Syntax chapter](syntax/main.md).
+Script add *data* & *logic* to Weex tags, help you easy access local or remote data and update tags. You can also define some methods for your tag to respond to different events. Weex Script organizing learn a lot from CommonJS module style.
+
+More complete information about Weex syntax can be found in our [Syntax chapter](syntax/main.md).
 
 ## Add More Item
 
-We can't call one item an list, so we need add more item to our  tech list.  open  tech_list.we in your favorite editor  and  update it's content  like below
+We can't call one item an list, so we need add more item to our tech list. open `tech_list.we` in your favorite editor and update it's content like below:
 
 ```html
 <template>
-  <div class="container"  >
+  <div class="container">
     <div class="cell">
-       <image class="thumb" src="http://t.cn/RGE3AJt"></image>  
-       <text class="title">JavaScript</text>
+        <image class="thumb" src="http://t.cn/RGE3AJt"></image>
+        <text class="title">JavaScript</text>
     </div>
     <div class="cell">
-       <image class="thumb" src="http://t.cn/RGE3uo9"></image>
-       <text class="title">Java</text>
+        <image class="thumb" src="http://t.cn/RGE3uo9"></image>
+        <text class="title">Java</text>
     </div>
     <div class="cell">
-       <image class="thumb" src="http://t.cn/RGE31hq"></image>  
-       <text class="title">Objective C</text>
+        <image class="thumb" src="http://t.cn/RGE31hq"></image>
+        <text class="title">Objective C</text>
     </div>
   </div>
 </template>
 
 <style>
-  .cell{margin-top:10 ; margin-left:10 ; flex-direction: row; }
-  .thumb {width: 200; height: 200; }
-  .title {text-align: center ; flex: 1; color: grey; font-size: 50; }  
+  .cell{ margin-top:10 ; margin-left:10 ; flex-direction: row; }
+  .thumb { width: 200; height: 200; }
+  .title { text-align: center ; flex: 1; color: grey; font-size: 50; }
 </style>
 ```
 
@@ -105,22 +106,22 @@ Now we will try to  render our  tech_list.we  with Weex native renderer.  open y
 weex tech_list.we --qr
 
 ```
-An QR code will be display in the terminal window, like:
 
+An QR code will be display in the terminal window like:
 
-![weex qr](http://gtms01.alicdn.com/tps/i1/TB1ggfiLVXXXXbPXXXXELJK6FXX-334-379.jpg)
+![Weex CLI](images/tut-cli-qrcode.png)
 
+The QR code can work together with [Weex Playground App](http://alibaba.github.io/weex/download.html). Open it and tap the scan icon at the top-right corner, then scan the Qr code in your terminal.If all works well, a beautiful list will be displayed in your phone.
 
-The QR code will work together with Weex playground App, you can download the app  [here](http://alibaba.github.io/weex/download.html).  After successful installation, open Weex playground App then click scan icon at  top right corner, then scan the Qr code in your terminal.If all works well, a beautiful list will be displayed in your phone. Here, i must stress that the list is render using native widget ( no webkit ), so your app get faster loading and less memory overhead than common embedded webkit  renderer.
+![Second Example](images/tut-second.png)
 
-![list1 in Android](http://gtms04.alicdn.com/tps/i4/TB1FH15LVXXXXcYXFXXFzbANVXX-504-896.png)
+Here, I must stress that the list is rendered by native view ( not Webkit ), so your app get faster loading and less memory overhead than common Webview renderer.
 
-Now open tech_list.we again and trying to change some text, after changes saved the Weex playground App will  immediately display these changes.  this called **Hot-Reload**, it also works with default Weex browser renderer. We hope hot-reload will be  helpful when you debug Weex script.
+Now open tech_list.we again and trying to change some text,after changes saved the Weex playground App will immediately display these changes. we called it **Hot-Reload**. Hope it can help you use Weex better.
 
 ## Add Build-in Component
 
-Beyond writing basic tag by yourself, Weex provide  a lot of build-in components.   For example,  Slider is common to many App/Mobile Web, So Weex include  a  build-in  Slider  and you can easily using the component in your script.  Let's open tech_list.we and update it's content like below.
-
+Beyond writing basic tag by yourself, Weex provide a lot of build-in components. For example, Slider is common to many App/Mobile Web, So Weex include a build-in Slider and you can easily using the component in your script. Let's open tech_list.we and update it's content like below.
 
 ```html
 <template>
@@ -134,34 +135,34 @@ Beyond writing basic tag by yourself, Weex provide  a lot of build-in components
 
   <div class="container" onclick="goWeexSite" >
     <div class="cell">
-       <image class="thumb" src="http://t.cn/RGE3AJt"></image>  
-       <text class="title">JavaScript</text>
+        <image class="thumb" src="http://t.cn/RGE3AJt"></image>
+        <text class="title">JavaScript</text>
     </div>
     <div class="cell">
-       <image class="thumb" src="http://t.cn/RGE3uo9"></image>
-       <text class="title">Java</text>
+        <image class="thumb" src="http://t.cn/RGE3uo9"></image>
+        <text class="title">Java</text>
     </div>
     <div class="cell">
-       <image class="thumb" src="http://t.cn/RGE31hq"></image>  
-       <text class="title">Objective C</text>
+        <image class="thumb" src="http://t.cn/RGE31hq"></image>
+        <text class="title">Objective C</text>
     </div>
   </div>
 </template>
 
 <style>
-  .cell{margin-top:10 ; margin-left:10 ; flex-direction: row; }
-  .thumb {width: 200; height: 200; }
-  .title {text-align: center ; flex: 1; color: grey; font-size: 50; }
+  .cell { margin-top:10 ; margin-left:10 ; flex-direction: row; }
+  .thumb { width: 200; height: 200; }
+  .title { text-align: center ; flex: 1; color: grey; font-size: 50; }
   .slider {
-        margin: 18;
-        width: 714;
-        height: 230;
+    margin: 18;
+    width: 714;
+    height: 230;
   }
   .slider-pages {
-        flex-direction: row;
-        width: 714;
-        height: 200;
-  }  
+    flex-direction: row;
+    width: 714;
+    height: 200;
+  }
 </style>
 
 <script>
@@ -179,23 +180,21 @@ module.exports = {
     methods: {
       goWeexSite: function () {
         this.$openURL('http://alibaba.github.io/weex/')
-      }       
+      }
     }
 }
 </script>
 ```
 
-Open terminal  and run the command again.
+Open terminal and run the command again.
 
 ```
 weex tech_list.we
 ```
 
+You should see a slider prepend to our list.
 
-You should see a  slider prepend  to our list.
-
-![slider demo](http://gtms02.alicdn.com/tps/i2/TB1MB2gLVXXXXaLXpXXB8.XUXXX-596-1000.gif)
-
+![Third Example](images/tut4.gif)
 
 More information about Slider Component can be found [here](components/slider.md).
 

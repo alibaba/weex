@@ -1,10 +1,11 @@
 # Common Style
+<span class="weex-version">0.4</span>
 
 All of weex tags share some common style rules
 
 ## Box Model
 
-![box model](http://www.codeproject.com/KB/HTML/567385/boxmodel-image.png)
+![box model](../images/css-boxmodel.png)
 
 Weex box model based on the CSS box model, all of weex elements can be considered as boxes.  The term "box model" is used when talking about design and layout. The box model is essentially a box that wraps around every HTML element. It consists of margins, borders, paddings, and the actual content.
 
@@ -74,13 +75,13 @@ The flex-direction property specifies the direction of the flexible items inside
 
 The justify-content property horizontally aligns the flexible container's items when the items do not use all available space on the main-axis. `flex-start` is the default value, meaning the flex items are positioned at the beginning of the container. `flex-end`` means the items are positioned at the end of the container. `center` means the items are positioned at the center of the container. `space-between` means the items are positioned with space between the lines.
 
-![justify-content](http://www.w3.org/TR/css3-flexbox/images/flex-pack.svg)
+![justify-content](../images/css-flexbox-justify.svg)
 
 - `align-items`: `stretch` | `flex-start` | `center` | `flex-end`
 
 The align-items property vertically aligns the flexible container's items when the items do not use all available space on the cross-axis. `stretch` is  the default value, meaning the items are stretched to fit the container. `flex-start` means the items are positioned at the top of the container; `flex-end` means the items are positioned at the bottom of the container; `center` means items are positioned at the center of the container (vertically).
 
-![align-items](http://gtms02.alicdn.com/tps/i2/TB1VnHKMXXXXXcEaXXXDldN_pXX-1018-502.jpg)
+![align-items](../images/css-flexbox-align.jpg)
 
 ### Flex item
 
@@ -125,6 +126,19 @@ mixed direction alignment:
       <text style="flex: 1; font-size: 16;">$100</text>
     </div>
   </div>
+</template>
+```
+
+one text align left , the other float right:
+
+![one text align left , the other float right](../images/css-flexbox-sample.png)
+
+```html
+<template>
+<div style="flex-direction: row; justify-content: space-between;">
+   <text>WEEX</text>
+   <text>2016-05-08</text>
+</div>
 </template>
 ```
 

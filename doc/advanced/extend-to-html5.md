@@ -1,4 +1,5 @@
 ## Extend Weex HTML5
+<span class="weex-version">0.4</span>
 
 ### Intro
 

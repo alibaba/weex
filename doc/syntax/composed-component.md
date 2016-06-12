@@ -1,4 +1,5 @@
 # Composed Component
+<span class="weex-version">0.4</span>
 
 if some part of weex file is repeated often , you could create a composed component represent these part.
 

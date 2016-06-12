@@ -1,4 +1,5 @@
 # Style & Class
+<span class="weex-version">0.4</span>
 
 ## The Basic Syntax
 

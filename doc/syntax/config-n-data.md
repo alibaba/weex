@@ -1,4 +1,5 @@
 # Page Config & Data
+<span class="weex-version">0.4</span>
 
 You can write some instance config and data in some additional `<script>` at the **top-level** Weex component.
 

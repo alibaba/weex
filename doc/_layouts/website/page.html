@@ -12,9 +12,19 @@
     {% if page.previous and page.previous.path %}
     <link rel="prev" href="{{ page.previous.path|resolveFile }}" />
     {% endif %}
+
+    <link rel="stylesheet"  href="//g.alicdn.com/mtb/lab-zikuan/0.1.1/weex/weex_doc.css" >
+    <!--     
+    <link rel="stylesheet"  href="ali_addition/weex_doc.css" >
+    -->
     
-    <link rel="stylesheet"  href="http://alibaba.github.io/weex/css/weex_doc.css" >    
-    <link rel="icon" type="image/x-icon" href="http://alibaba.github.io/weex/img/favicon.ico">    
+    <link rel="icon" type="image/x-icon" href="http://alibaba.github.io/weex/img/favicon.ico">
+
+    <script src="//g.alicdn.com/mtb/lab-zikuan/0.1.1/weex/weex_doc.js"></script>
+    <!-- 
+    <script src="ali_addition/weex_doc.js"></script>
+    -->    
+    
 {% endblock %}
 
 {% block javascript %}
@@ -83,7 +93,10 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({{ template.getJSContext()|dump|safe }});
+        gitbook.page.hasChanged({{ template.getJSContext()|dump|safe }});
+        setTimeout(function(){
+           window._rePostionVersion()
+        },100);
         });
     </script>
 </div>

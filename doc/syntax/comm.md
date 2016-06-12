@@ -1,4 +1,5 @@
 # Communicate Between Components
+<span class="weex-version">0.4</span>
 
 ## For Child-Parent Communication
 

@@ -1,4 +1,5 @@
 # APIs
+<span class="weex-version">0.4</span>
 
 You can access these apis through `this`(Vm) context in script methods.
 

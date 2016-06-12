@@ -1,4 +1,5 @@
 # Transform Code into Js Bundle
+<span class="weex-version">0.4</span>
 
 Paragraphs [Maintain Your Component Code](./maintain-your-component-code.md), [Maintain Your Component Code](./maintain-your-component-code.md) and [Require 3rd Party Libs](./require-3rd-party-libs.md) show us how to write and organize weex code. However, Weex DSL code must be transformed to `js bundle` so that `js framework` can parse and execute it for iOS, Android and HTML5 portal. For more information, please refer to [How It Works
 ](/advanced/how-it-works.md) and [JS Bundle Format](../specs/js-bundle-format.md).

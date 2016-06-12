@@ -1,4 +1,5 @@
 # Render Logic Control
+<span class="weex-version">0.4</span>
 
 ## `append`
 

@@ -1,4 +1,5 @@
 # Find an Element
+<span class="weex-version">0.4</span>
 
 In Weex, we may set the `id` property for a particular element, just as unique identification of a particular element.
 

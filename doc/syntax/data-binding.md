@@ -1,4 +1,5 @@
 # Data-Binding
+<span class="weex-version">0.4</span>
 
 In Weex, we use the *mustache* syntax `{{...}}` to bind data in `<template>` which are defined in `<script>`. Once data and template is bound, the data changes will influence the corresponding template content immediately and automatically.
 
@@ -69,7 +70,8 @@ The expression will be evaluated in the data scope of current context.
 
 **NOTE: EACH BINDING CAN ONLY CONTAIN ONE SINGLE EXPRESSION**
 
-## Computed Properties
+## Computed Properties 
+<span class="weex-version">0.5</span>
 
 According to simple operations, in-template expressions are very convenient. But if you want to put more logic into the template, you should use a computed property.
 

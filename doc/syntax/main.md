@@ -1,4 +1,5 @@
 # Syntax
+<span class="weex-version">0.4</span>
 
 A simple Weex page sample is just a piece of `<template>` code, a piece of `<style>` code and a piece of `<script>` code. The three parts together describe a whole Weex page.
 
