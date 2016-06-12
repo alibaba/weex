@@ -9,7 +9,7 @@ We agree that you may discuss technical information about Weex, except that you 
  
 > A framework for building Mobile cross-platform UI.
 
-Support Android 4.1 (API 16) and iOS soon. See [Weex website](http://alibaba.github.io/weex/) for more information. 
+Support Android 4.1 (API 16) and iOS 7.0. See [Weex website](http://alibaba.github.io/weex/) for more information. 
 
 ## For Windows
 
