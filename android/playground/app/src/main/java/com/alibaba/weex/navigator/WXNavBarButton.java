@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.alibaba.weex.util.WXToolBarUtil;
 import com.taobao.weex.WXSDKManager;
 
-
 public class WXNavBarButton {
 
     public ImageView btn = null;
@@ -19,6 +18,10 @@ public class WXNavBarButton {
     public String title = "";
 
     public int setIconResId(Context context, String name) {
+
+        if (titleView == null || btn == null)
+            return -1;
+
         int res = -1;
         res = WXToolBarUtil.getResIdByName(context, name);
         iconResId = res;
@@ -30,35 +33,42 @@ public class WXNavBarButton {
     }
 
     public void setIconUrl(String url) {
-        if (btn != null) {
-            titleView.setVisibility(View.INVISIBLE);
-            btn.setVisibility(View.VISIBLE);
-            WXSDKManager.getInstance().getIWXImgLoaderAdapter().setImage(url, btn, null, null);
-        }
+
+        if (titleView == null || btn == null)
+            return;
+
+        titleView.setVisibility(View.INVISIBLE);
+        btn.setVisibility(View.VISIBLE);
+        WXSDKManager.getInstance().getIWXImgLoaderAdapter().setImage(url, btn, null, null);
     }
 
     public void setTitle(String resTitle) {
+
+        if (titleView == null || btn == null)
+            return;
+
         title = resTitle;
-        if (titleView != null) {
-            titleView.setText(title);
-            titleView.setVisibility(View.VISIBLE);
-            btn.setVisibility(View.INVISIBLE);
-        }
+        titleView.setText(title);
+        titleView.setVisibility(View.VISIBLE);
+        btn.setVisibility(View.INVISIBLE);
     }
 
     public void setTitleColor(int color) {
-        if (titleView != null) {
-            titleView.setTextColor(color);
-            titleView.setVisibility(View.VISIBLE);
-            btn.setVisibility(View.INVISIBLE);
-        }
+        if (titleView == null || btn == null)
+            return;
+
+        titleView.setTextColor(color);
+        titleView.setVisibility(View.VISIBLE);
+        btn.setVisibility(View.INVISIBLE);
     }
 
     public void clear() {
+
         if (btn != null)
             btn.setVisibility(View.INVISIBLE);
         if (titleView != null)
             titleView.setVisibility(View.INVISIBLE);
+
         iconResId = -1;
         iconBitmap = null;
         title = "";

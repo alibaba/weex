@@ -44,12 +44,14 @@ public class WXPageActivity extends WXBaseNavActivity implements IWXRenderListen
     private ProgressBar mProgressBar;
     private View mWAView;
 
-    private WXSDKInstance mInstance;
     private Handler mWXHandler;
 
     private Uri mUri;
     private HashMap mConfigMap = new HashMap<String, Object>();
 
+    /**
+     * You should setContentView here and should not call setContentView in onCreate()
+     */
     @Override
     public void getWXContentView() {
         setContentView(R.layout.activity_wxpage);
@@ -58,42 +60,13 @@ public class WXPageActivity extends WXBaseNavActivity implements IWXRenderListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Should not be call setContentView() here!
-        getBundleData();
+        getUri();
+        rendWXPage();
         setCurrentWxPageActivity(this);
-
-        if (TextUtils.equals("http", mUri.getScheme()) || TextUtils.equals("https", mUri.getScheme())) {
-//      if url has key "_wx_tpl" then get weex bundle js
-            String weexTpl = mUri.getQueryParameter(Constants.WEEX_TPL_KEY);
-            String url = TextUtils.isEmpty(weexTpl) ? mUri.toString() : weexTpl;
-            loadWXfromService(url);
-            startHotRefresh();
-        } else {
-            if (mInstance == null) {
-                mInstance = new WXSDKInstance(this);
-//        mInstance.setImgLoaderAdapter(new ImageAdapter(this));
-                mInstance.registerRenderListener(this);
-            }
-            mContainer.post(new Runnable() {
-                @Override
-                public void run() {
-                    Activity ctx = WXPageActivity.this;
-                    Rect outRect = new Rect();
-                    ctx.getWindow().getDecorView().getWindowVisibleDisplayFrame(outRect);
-                    mConfigMap.put("bundleUrl", mUri.toString());
-                    String path = mUri.getScheme().equals("file") ? assembleFilePath(mUri) : mUri.toString();
-                    mInstance.render(TAG, WXFileUtils.loadFileContent(path, WXPageActivity.this),
-                            mConfigMap, null,
-                            ScreenUtil.getDisplayWidth(WXPageActivity.this), ScreenUtil
-                                    .getDisplayHeight(WXPageActivity.this),
-                            WXRenderStrategy.APPEND_ASYNC);
-                }
-            });
-        }
         mInstance.onActivityCreate();
     }
 
-    public void getBundleData() {
+    private void getUri() {
         mUri = getIntent().getData();
         Bundle bundle = getIntent().getExtras();
         if (mUri == null && bundle == null) {
@@ -126,6 +99,38 @@ public class WXPageActivity extends WXBaseNavActivity implements IWXRenderListen
         Log.e("TestScript_Guide mUri==", mUri.toString());
     }
 
+    private void rendWXPage() {
+        if (TextUtils.equals("http", mUri.getScheme()) || TextUtils.equals("https", mUri.getScheme())) {
+//      if url has key "_wx_tpl" then get weex bundle js
+            String weexTpl = mUri.getQueryParameter(Constants.WEEX_TPL_KEY);
+            String url = TextUtils.isEmpty(weexTpl) ? mUri.toString() : weexTpl;
+            loadWXfromService(url);
+            startHotRefresh();
+        } else {
+            if (mInstance == null) {
+                mInstance = new WXSDKInstance(this);
+
+//        mInstance.setImgLoaderAdapter(new ImageAdapter(this));
+                mInstance.registerRenderListener(this);
+            }
+            mContainer.post(new Runnable() {
+                @Override
+                public void run() {
+                    Activity ctx = WXPageActivity.this;
+                    Rect outRect = new Rect();
+                    ctx.getWindow().getDecorView().getWindowVisibleDisplayFrame(outRect);
+                    mConfigMap.put("bundleUrl", mUri.toString());
+                    String path = mUri.getScheme().equals("file") ? assembleFilePath(mUri) : mUri.toString();
+                    mInstance.render(TAG, WXFileUtils.loadFileContent(path, WXPageActivity.this),
+                            mConfigMap, null,
+                            ScreenUtil.getDisplayWidth(WXPageActivity.this), ScreenUtil
+                                    .getDisplayHeight(WXPageActivity.this),
+                            WXRenderStrategy.APPEND_ASYNC);
+                }
+            });
+        }
+    }
+
     private String assembleFilePath(Uri uri) {
         if (uri != null && uri.getPath() != null) {
             return uri.getPath().replaceFirst("/", "");
@@ -148,28 +153,8 @@ public class WXPageActivity extends WXBaseNavActivity implements IWXRenderListen
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mInstance != null) {
-            mInstance.onActivityDestroy();
-        }
-        //        TopScrollHelper.getInstance(getApplicationContext()).onDestory();
         mWXHandler.obtainMessage(Constants.HOT_REFRESH_DISCONNECT).sendToTarget();
         WXDebugTool.updateScapleView(null);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mInstance != null) {
-            mInstance.onActivityResume();
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (mInstance != null) {
-            mInstance.onActivityPause();
-        }
     }
 
     private void loadWXfromService(final String url) {
@@ -180,8 +165,6 @@ public class WXPageActivity extends WXBaseNavActivity implements IWXRenderListen
         }
 
         mInstance = new WXSDKInstance(this);
-//    mInstance.setImgLoaderAdapter(new ImageAdapter(this));
-
         mInstance.registerRenderListener(this);
 
         WXHttpTask httpTask = new WXHttpTask();

@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/4fb98209eb251d741375c33c6b8370f2", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/9f4e07e74e4c9945eb0c4a91c16e8b93", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __weex_module__.exports = {
@@ -76,7 +76,7 @@
 	      */
 
 	      onclickRightItem: function (e) {
-	        nativeLog("onclickRightBtn");
+	        nativeLog("onclickRightItem");
 	      },
 
 	      ready: function (e) {
@@ -337,6 +337,9 @@
 	    "leftItemColor": "white",
 	    "rightItemSrc": "http://gtms02.alicdn.com/tps/i2/TB1ED7iMpXXXXXEXXXXWA_BHXXX-48-48.png"
 	  },
+	  "events": {
+	    "clickrightitem": "onclickRightItem"
+	  },
 	  "children": [
 	    {
 	      "type": "scroller",
@@ -348,9 +351,6 @@
 	        "right": 0,
 	        "bottom": 0,
 	        "marginTop": function () {return this.navBarHeight}
-	      },
-	      "events": {
-	        "clickrightitem": "onclickRightItem"
 	      },
 	      "children": [
 	        {
@@ -614,7 +614,7 @@
 	  }
 	})
 	})
-	;__weex_bootstrap__("@weex-component/4fb98209eb251d741375c33c6b8370f2", {
+	;__weex_bootstrap__("@weex-component/9f4e07e74e4c9945eb0c4a91c16e8b93", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 

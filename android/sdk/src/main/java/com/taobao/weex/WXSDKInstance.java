@@ -224,6 +224,7 @@ import com.taobao.weex.common.WXResponse;
 import com.taobao.weex.http.WXHttpUtil;
 import com.taobao.weex.ui.WXRecycleImageManager;
 import com.taobao.weex.ui.component.WXComponent;
+import com.taobao.weex.ui.component.WXVContainer;
 import com.taobao.weex.ui.view.WXScrollView;
 import com.taobao.weex.ui.view.WXScrollView.WXScrollViewListener;
 import com.taobao.weex.utils.WXConst;
@@ -252,10 +253,18 @@ public class WXSDKInstance implements IWXActivityStateListener {
   private volatile String mInstanceId;
 
   public WXComponent getRootCom() {
-    return mRootCom;
+
+    if (getGodCom() == null)
+      return null;
+    else
+      return ((WXVContainer) (this.getGodCom())).getChild(0);
   }
 
-  private WXComponent mRootCom;
+  public WXComponent getGodCom() {
+    return mGodCom;
+  }
+
+  private WXComponent mGodCom;
   private boolean mRendered;
   private WXRefreshData mLastRefreshData;
 
@@ -636,7 +645,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
         @Override
         public void run() {
           if (mRenderListener != null && mContext != null) {
-            mRootCom = component;
+            mGodCom = component;
             mRenderListener.onViewCreated(WXSDKInstance.this, component.getView());
           }
         }
@@ -847,10 +856,10 @@ public class WXSDKInstance implements IWXActivityStateListener {
       mRecycleImageManager = null;
     }
 
-    if (mRootCom != null && mRootCom.getView() != null) {
-      mRootCom.destroy();
-      destroyView(mRootCom.getView());
-      mRootCom = null;
+    if (mGodCom != null && mGodCom.getView() != null) {
+      mGodCom.destroy();
+      destroyView(mGodCom.getView());
+      mGodCom = null;
     }
 
     if (mActivityStateListeners != null) {

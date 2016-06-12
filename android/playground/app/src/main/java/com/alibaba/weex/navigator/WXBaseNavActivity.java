@@ -17,6 +17,9 @@ import com.alibaba.weex.R;
 import com.alibaba.weex.WXBaseActivity;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.WXSDKEngine;
+import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.ui.component.WXEventType;
 import com.taobao.weex.utils.WXResourceUtils;
 
 public abstract class WXBaseNavActivity extends WXBaseActivity implements IWXRenderListener, Handler.Callback {
@@ -24,12 +27,13 @@ public abstract class WXBaseNavActivity extends WXBaseActivity implements IWXRen
     private TextView toolbar_title;
     private WXNavBarButton leftItem = new WXNavBarButton();
     private WXNavBarButton rightItem = new WXNavBarButton();
+    protected WXSDKInstance mInstance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWXContentView();
-        setActionBarLayout();
+        setToolbarLayout();
         initToolbar();
         initUIAndData();
     }
@@ -39,7 +43,7 @@ public abstract class WXBaseNavActivity extends WXBaseActivity implements IWXRen
      */
     protected abstract void getWXContentView();
 
-    private void setActionBarLayout() {
+    private void setToolbarLayout() {
         ViewGroup viewById = (ViewGroup) getWindow().getDecorView().findViewById(android.R.id.content);
         View.inflate(this, R.layout.widget_toolbar, viewById);
     }
@@ -51,7 +55,6 @@ public abstract class WXBaseNavActivity extends WXBaseActivity implements IWXRen
         actionBar.setTitle("");
 
         toolbar_title = (TextView) findViewById(R.id.toolbar_title);
-
         leftItem.btn = (ImageView) findViewById(R.id.leftItem);
         leftItem.titleView = (TextView) findViewById(R.id.leftTitleView);
         rightItem.btn = (ImageView) findViewById(R.id.rightItem);
@@ -74,20 +77,22 @@ public abstract class WXBaseNavActivity extends WXBaseActivity implements IWXRen
             @Override
             public void onSetNavBarRightItem(String imgPath, String title, String titleColor, boolean fromNative) {
 
-                if (rightItem.btn == null || rightItem.titleView == null)
+                if (rightItem == null || rightItem.btn == null || rightItem.titleView == null)
                     return;
 
                 rightItem.btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        WXSDKManager.getInstance().fireEvent(mInstance.getInstanceId(), mInstance.getRootCom().getRef(), WXEventType.CLICK);
+                        if (mInstance.getRootCom() != null)
+                            WXSDKManager.getInstance().fireEvent(mInstance.getInstanceId(), mInstance.getRootCom().getRef(), WXEventType.CLICK_RIGHT_ITEM);
                     }
                 });
 
                 rightItem.titleView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        WXSDKManager.getInstance().fireEvent(mInstance.getInstanceId(), mInstance.getRootCom().getRef(), WXEventType.CLICK);
+                        if (mInstance.getRootCom() != null)
+                            WXSDKManager.getInstance().fireEvent(mInstance.getInstanceId(), mInstance.getRootCom().getRef(), WXEventType.CLICK_RIGHT_ITEM);
                     }
                 });
 
@@ -113,26 +118,29 @@ public abstract class WXBaseNavActivity extends WXBaseActivity implements IWXRen
 
             @Override
             public void onClearBarRightItem() {
-                rightItem.clear();
+                if (rightItem != null)
+                    rightItem.clear();
             }
 
             @Override
             public void onSetNavBarLeftItem(String imgPath, String title, String titleColor, boolean fromNative) {
 
-                if (leftItem.btn == null || leftItem.titleView == null)
+                if (leftItem == null || leftItem.btn == null || leftItem.titleView == null)
                     return;
 
                 leftItem.btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        if (mInstance.getRootCom() != null)
+                            WXSDKManager.getInstance().fireEvent(mInstance.getInstanceId(), mInstance.getRootCom().getRef(), WXEventType.CLICK_LEFT_ITEM);
                     }
                 });
 
                 leftItem.titleView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        if (mInstance.getRootCom() != null)
+                            WXSDKManager.getInstance().fireEvent(mInstance.getInstanceId(), mInstance.getRootCom().getRef(), WXEventType.CLICK_LEFT_ITEM);
                     }
                 });
 
@@ -158,9 +166,30 @@ public abstract class WXBaseNavActivity extends WXBaseActivity implements IWXRen
 
             @Override
             public void onClearNavBarLeftItem() {
-                leftItem.clear();
+                if (leftItem != null)
+                    leftItem.clear();
             }
         }));
+
+        if (mInstance != null) {
+            mInstance.onActivityResume();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mInstance != null) {
+            mInstance.onActivityDestroy();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mInstance != null) {
+            mInstance.onActivityPause();
+        }
     }
 
     /**
@@ -169,11 +198,6 @@ public abstract class WXBaseNavActivity extends WXBaseActivity implements IWXRen
     private void setToolBarTitle(String title) {
         if (toolbar_title != null)
             toolbar_title.setText(title);
-    }
-
-    private void setToolBarTitleSize(int size) {
-        if (toolbar_title != null)
-            toolbar_title.setTextSize(size);
     }
 
     private void setToolBarTitleColor(int color) {
