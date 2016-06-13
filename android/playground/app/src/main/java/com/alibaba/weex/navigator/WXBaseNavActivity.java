@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -39,13 +40,15 @@ public abstract class WXBaseNavActivity extends WXBaseActivity implements IWXRen
     }
 
     /**
-     * Activity should implement this function to set contentView
+     * You should setContentView here and should not call setContentView in onCreate()
      */
     protected abstract void getWXContentView();
 
     private void setToolbarLayout() {
         ViewGroup viewById = (ViewGroup) getWindow().getDecorView().findViewById(android.R.id.content);
-        View.inflate(this, R.layout.widget_toolbar, viewById);
+        LayoutInflater flater = LayoutInflater.from(this);
+        View toolbar_page = flater.inflate(R.layout.widget_toolbar, null);
+        ((ViewGroup)(viewById.getChildAt(0))).addView(toolbar_page,0);
     }
 
     private void initToolbar() {
@@ -195,17 +198,17 @@ public abstract class WXBaseNavActivity extends WXBaseActivity implements IWXRen
     /**
      * set Toolbar Title
      */
-    private void setToolBarTitle(String title) {
+    protected void setToolBarTitle(String title) {
         if (toolbar_title != null)
             toolbar_title.setText(title);
     }
 
-    private void setToolBarTitleColor(int color) {
+    protected void setToolBarTitleColor(int color) {
         if (toolbar_title != null)
             toolbar_title.setTextColor(color);
     }
 
-    //获取actionBar 的高度
+    //getActionBarHeight
     private int getActionBarHeight() {
         TypedArray actionbarSizeTypedArray = obtainStyledAttributes(new int[]{
                 android.R.attr.actionBarSize

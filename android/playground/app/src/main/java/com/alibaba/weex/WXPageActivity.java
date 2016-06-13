@@ -97,6 +97,16 @@ public class WXPageActivity extends WXBaseNavActivity implements IWXRenderListen
         }
 
         Log.e("TestScript_Guide mUri==", mUri.toString());
+
+        String[] titles = mUri.toString().split("/");
+        if (titles == null || titles.length <= 0)
+            return;
+        if (titles.length == 1) {
+            setToolBarTitle(titles[0]);
+            return;
+        } else {
+            setToolBarTitle(titles[titles.length-1]);
+        }
     }
 
     private void rendWXPage() {
