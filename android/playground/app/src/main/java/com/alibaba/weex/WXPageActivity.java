@@ -208,23 +208,15 @@ public class WXPageActivity extends WXBaseNavActivity implements IWXRenderListen
 
     }
 
-  @Override
-  protected void onDestroy() {
-    super.onDestroy();
-    if (mInstance != null) {
-      mInstance.onActivityDestroy();
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
-    //        TopScrollHelper.getInstance(getApplicationContext()).onDestory();
-    mWXHandler.obtainMessage(Constants.HOT_REFRESH_DISCONNECT).sendToTarget();
-  }
 
-  @Override
-  protected void onResume() {
-    super.onResume();
-    if (mInstance != null) {
-      mInstance.onActivityResume();
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
-  }
 
   public Activity getCurrentWxPageActivity() {
     return wxPageActivityInstance;
