@@ -709,8 +709,16 @@ public class WXListComponent extends WXVContainer implements
 
     private void recycleImage(View view) {
         if (view instanceof ImageView) {
-            mInstance.getImgLoaderAdapter().setImage(null, (ImageView) view,
-                    null, null);
+            if (mInstance.getImgLoaderAdapter() != null) {
+                mInstance.getImgLoaderAdapter().setImage(null, (ImageView) view,
+                        null, null);
+            } else {
+                if (WXEnvironment.isApkDebugable()) {
+                    throw new WXRuntimeException("getImgLoaderAdapter() == null");
+                }
+                WXLogUtils.e("Error getImgLoaderAdapter() == null");
+            }
+
         } else if (view instanceof ViewGroup) {
             for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
                 recycleImage(((ViewGroup) view).getChildAt(i));

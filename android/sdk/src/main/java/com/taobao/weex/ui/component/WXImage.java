@@ -293,7 +293,7 @@ public class WXImage extends WXComponent {
         if (resizeMode.equals("cover")) {
             scaleType = ScaleType.CENTER_CROP;
         } else if (resizeMode.equals("contain")) {
-            scaleType = ScaleType.CENTER_INSIDE;
+            scaleType = ScaleType.FIT_CENTER;
         } else if (resizeMode.equals("stretch")) {
             scaleType = ScaleType.FIT_XY;
         } else if (resizeMode.equals("center")) {
