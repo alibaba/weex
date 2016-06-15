@@ -204,7 +204,6 @@
  */
 package com.taobao.weex.common;
 
-import android.content.Intent;
 import com.taobao.weex.WXEnvironment;
 
 import java.util.HashMap;
@@ -333,19 +332,19 @@ public class WXPerformance {
    */
   public String errMsg;
 
-  public Map<String,String> getMeasureMap(){
-    Map<String,String> quotas = new HashMap<>();
-    quotas.put("JSTemplateSize", Double.toString(JSTemplateSize));
-    quotas.put("JSLibSize", Double.toString(JSLibSize));
-    quotas.put("communicateTime", Long.toString(communicateTime));
-    quotas.put("screenRenderTime", Long.toString(screenRenderTime));
-    quotas.put("totalTime", Double.toString(totalTime));
-    quotas.put("localReadTime", Double.toString(localReadTime));
-    quotas.put("JSLibInitTime", Long.toString(JSLibInitTime));
-    quotas.put("networkTime", Long.toString(networkTime));
-    quotas.put("templateLoadTime", Long.toString(templateLoadTime));
-    quotas.put("SDKInitInvokeTime",Long.toString(WXEnvironment.sSDKInitInvokeTime));
-    quotas.put("SDKInitExecuteTime",Long.toString(WXEnvironment.sSDKInitExecuteTime));
+  public Map<String,Double> getMeasureMap(){
+    Map<String,Double> quotas = new HashMap<>();
+    quotas.put("JSTemplateSize", JSTemplateSize);
+    quotas.put("JSLibSize", JSLibSize);
+    quotas.put("communicateTime", (double)communicateTime);
+    quotas.put("screenRenderTime", (double)screenRenderTime);
+    quotas.put("totalTime", totalTime);
+    quotas.put("localReadTime", localReadTime);
+    quotas.put("JSLibInitTime", (double)JSLibInitTime);
+    quotas.put("networkTime", (double)networkTime);
+    quotas.put("templateLoadTime", (double)templateLoadTime);
+    quotas.put("SDKInitInvokeTime",(double)WXEnvironment.sSDKInitInvokeTime);
+    quotas.put("SDKInitExecuteTime",(double)WXEnvironment.sSDKInitExecuteTime);
     return quotas;
   }
 
@@ -357,6 +356,24 @@ public class WXPerformance {
     quotas.put("JSLibVersion", JSLibVersion);
     quotas.put("WXSDKVersion", WXSDKVersion);
     return quotas;
+  }
+
+  public static String[] getDimensions(){
+    return new String[]{"bizType","templateUrl","pageName","JSLibVersion","WXSDKVersion"};
+  }
+
+  public static String[] getMeasures(){
+    return new String[]{"JSTemplateSize",
+        "JSLibSize",
+        "communicateTime",
+        "screenRenderTime",
+        "totalTime",
+        "localReadTime",
+        "JSLibInitTime",
+        "networkTime",
+        "templateLoadTime",
+        "SDKInitInvokeTime",
+        "SDKInitExecuteTime"};
   }
 
   @Override

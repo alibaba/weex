@@ -26,7 +26,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.hierynomus.license'
 
 
-version = "0.5.0.6"
+version = "0.5.0.9"
 
 android {
     compileSdkVersion 23

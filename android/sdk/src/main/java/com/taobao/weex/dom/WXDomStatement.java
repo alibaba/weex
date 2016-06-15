@@ -512,6 +512,7 @@ class WXDomStatement {
 
         @Override
         public void execute() {
+
           WXSDKInstance instance = WXSDKManager.getInstance().getSDKInstance(mInstanceId);
           if (instance == null || instance.getContext() == null) {
             WXLogUtils.e("instance is null or instance is destroy!");
@@ -530,6 +531,7 @@ class WXDomStatement {
         instance.commitUTStab(WXConst.DOM_MODULE, WXErrorCode.WX_SUCCESS);
       }
     }catch (Exception e){
+
       WXLogUtils.e("create body in dom thread failed." + e.getMessage());
     }
   }

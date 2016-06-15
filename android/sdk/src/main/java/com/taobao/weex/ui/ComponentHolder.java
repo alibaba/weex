@@ -231,7 +231,7 @@ public class ComponentHolder {
   private Map<String, Type[]> mMethodParameterTypes;
   private Constructor<? extends WXComponent> mConstructor;
 
-  ComponentHolder(Class<? extends WXComponent> clz) {
+  public ComponentHolder(Class<? extends WXComponent> clz) {
     this.mClz = clz;
     Annotation[] annotations = clz.getDeclaredAnnotations();
     for (Annotation annotation :

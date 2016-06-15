@@ -178,7 +178,11 @@ public class WXSDKManager {
 
   public static WXSDKManager getInstance() {
     if (sManager == null) {
-      sManager = new WXSDKManager();
+      synchronized (WXSDKManager.class) {
+        if (sManager == null) {
+          sManager = new WXSDKManager();
+        }
+      }
     }
     return sManager;
   }
