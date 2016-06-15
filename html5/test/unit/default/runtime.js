@@ -7,6 +7,7 @@ const {
 chai.use(sinonChai)
 
 import framework from '../../../runtime'
+import frameworks from '../../../runtime/frameworks'
 import config from '../../../default/config'
 import Vm from '../../../default/vm'
 
@@ -132,6 +133,25 @@ describe('framework entry', () => {
       const code = ''
       const result = framework.createInstance(instanceId, code)
       expect(result).to.be.an.instanceof(Error)
+    })
+
+    it('js bundle format version checker', function () {
+      const spy = sinon.spy()
+      frameworks.xxx = {
+        init: function () {},
+        createInstance: spy
+      }
+      const code = `// {"framework":"xxx","version":"0.3.1"}
+      'This is a piece of JavaScript from a third-party Framework...'`
+      framework.createInstance(instanceId + '~', code)
+      expect(spy.callCount).equal(1)
+      expect(spy.firstCall.args).eql([
+        instanceId + '~',
+        code,
+        { bundleVersion: '0.3.1' },
+        undefined
+      ])
+      delete framework.xxx
     })
   })
 

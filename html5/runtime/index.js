@@ -38,6 +38,8 @@ export function createInstance (id, code, config, data) {
       info.framework = 'Weex'
     }
     instanceMap[id] = info
+    config = config || {}
+    config.bundleVersion = info.version
     return frameworks[info.framework].createInstance(id, code, config, data)
   }
   return new Error(`invalid instance id "${id}"`)
