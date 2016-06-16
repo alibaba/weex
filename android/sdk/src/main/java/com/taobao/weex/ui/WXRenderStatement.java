@@ -307,7 +307,7 @@ class WXRenderStatement {
     WXDomObject domObject = new WXDomObject();
     domObject.type = WXBasicComponentType.DIV;
     domObject.ref = "god";
-    mGodComponent = (WXVContainer) WXComponentFactory.newInstance(mWXSDKInstance, domObject, null, mInstanceId);
+    mGodComponent = (WXVContainer) WXComponentFactory.newInstance(mWXSDKInstance, domObject, null);
     mGodComponent.createView(null, -1);
     if (mGodComponent == null) {
       if (WXEnvironment.isApkDebugable()) {
@@ -567,7 +567,7 @@ class WXRenderStatement {
       return null;
     }
     WXComponent component = WXComponentFactory.newInstance(mWXSDKInstance, dom,
-                                                           parent, mInstanceId, parent.isLazy());
+                                                           parent, parent.isLazy());
 
     mRegistry.put(dom.ref, component);
     if (component instanceof WXVContainer) {

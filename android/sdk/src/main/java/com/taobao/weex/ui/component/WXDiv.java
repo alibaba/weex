@@ -215,8 +215,8 @@ import com.taobao.weex.ui.view.WXFrameLayout;
 @Component(lazyload = false)
 public class WXDiv extends WXVContainer {
 
-  public WXDiv(WXSDKInstance instance, WXDomObject node, WXVContainer parent, String instanceId, boolean lazy) {
-    super(instance, node, parent, instanceId, lazy);
+  public WXDiv(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
+    super(instance, node, parent, lazy);
   }
 
   @Override

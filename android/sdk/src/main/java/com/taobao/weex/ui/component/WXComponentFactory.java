@@ -219,12 +219,12 @@ import com.taobao.weex.utils.WXLogUtils;
  */
 public class WXComponentFactory {
 
-  public static WXComponent newInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, String instanceId) {
-    return newInstance(instance, node, parent, instanceId, false);
+  public static WXComponent newInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent) {
+    return newInstance(instance, node, parent, false);
   }
 
-  public static WXComponent newInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, String instanceId, boolean lazy) {
-    if (instance == null || node == null || TextUtils.isEmpty(node.type) || TextUtils.isEmpty(instanceId)) {
+  public static WXComponent newInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
+    if (instance == null || node == null || TextUtils.isEmpty(node.type) ) {
       return null;
     }
 
@@ -245,7 +245,7 @@ public class WXComponentFactory {
 
     try {
       if (WXComponent.class.isAssignableFrom(holder.getComponentClass())) {
-        return holder.createInstance(instance, node, parent, instanceId, lazy);
+        return holder.createInstance(instance, node, parent, lazy);
       }
     } catch (Exception e) {
       if (WXEnvironment.isApkDebugable()) {

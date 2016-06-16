@@ -220,8 +220,8 @@ public class WXWeb extends WXComponent {
     protected IWebView mWebView;
     private String mUrl;
 
-    public WXWeb(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
-        super(instance, dom, parent, instanceId, isLazy);
+    public WXWeb(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
+        super(instance, dom, parent, isLazy);
         createView();
     }
 

@@ -4,7 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.0'
+        classpath 'com.android.tools.build:gradle:2.1.2'
         classpath files('license/license-gradle-plugin-0.12.1.jar')
         classpath files('license/maven-license-plugin-1.10.b1.jar')
         classpath files('license/plexus-utils-3.0.24.jar')

@@ -205,12 +205,17 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
 
   private boolean isUsing = false;
 
+  @Deprecated
   public WXComponent(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
+    this(instance,dom,parent,isLazy);
+  }
+
+  public WXComponent(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
     mInstance = instance;
     mContext = mInstance.getContext();
     mParent = parent;
     mDomObj = dom.clone();
-    mInstanceId = instanceId;
+    mInstanceId = instance.getInstanceId();
     mLazy = isLazy;
     mGestureType = new HashSet<>();
     ++mComponentNum;

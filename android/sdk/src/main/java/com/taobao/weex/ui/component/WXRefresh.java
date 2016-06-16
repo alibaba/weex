@@ -214,8 +214,8 @@ import com.taobao.weex.ui.view.listview.OnRefreshListener;
  */
 public class WXRefresh extends WXBaseRefresh implements OnRefreshListener {
 
-  public WXRefresh(WXSDKInstance instance, WXDomObject node, WXVContainer parent, String instanceId, boolean lazy) {
-    super(instance, node, parent, instanceId, lazy);
+  public WXRefresh(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
+    super(instance, node, parent, lazy);
   }
 
   @Override

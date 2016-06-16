@@ -241,8 +241,8 @@ public class WXInput extends WXComponent {
   private String mType = "text";
   private int mTextAlign = Gravity.LEFT;
 
-  public WXInput(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
-    super(instance, dom, parent, instanceId, isLazy);
+  public WXInput(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
+    super(instance, dom, parent, isLazy);
   }
 
   @Override

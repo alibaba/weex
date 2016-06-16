@@ -216,10 +216,6 @@ public class WXSDKEngine {
       doInitInternal(application,config);
       WXEnvironment.sSDKInitInvokeTime = System.currentTimeMillis()-start;
       init = true;
-
-      if (WXEnvironment.isApkDebugable() && WXSDKManager.getInstance().getIWXDebugAdapter()!=null) {
-        WXSDKManager.getInstance().getIWXDebugAdapter().initDebug(application);
-      }
     }
   }
 
@@ -236,6 +232,10 @@ public class WXSDKEngine {
           sm.setIWXHttpAdapter(config.getHttpAdapter());
           sm.setIWXImgLoaderAdapter(config.getImgAdapter());
           sm.setIWXUserTrackAdapter(config.getUtAdapter());
+          sm.setIWXDebugAdapter(config.getDebugAdapter());
+          if(config.getDebugAdapter()!=null){
+            config.getDebugAdapter().initDebug(application);
+          }
         }
         WXSoInstallMgrSdk.init(application);
         boolean isSoInitSuccess = WXSoInstallMgrSdk.initSo(V8_SO_NAME, 1, config!=null?config.getUtAdapter():null);

@@ -384,6 +384,7 @@ public class WXPerformance {
              + ",JSLibSize:" + JSLibSize + ",templateUrl" + templateUrl
              + ",JSTemplateSize:" + JSTemplateSize + ",communicateTime:" + communicateTime
              + ",screenRenderTime:" + screenRenderTime
+             + ",initInvokeTime:"+WXEnvironment.sSDKInitInvokeTime+",initExecuteTime:"+WXEnvironment.sSDKInitExecuteTime
              + ",totalTime:" + totalTime + ",JSLibVersion:" + JSLibVersion + ",WXSDKVersion:" + WXSDKVersion
              + ",errCode:" + errCode + ",renderFailedDetail:" + renderFailedDetail
              + ",errMsg:" + errMsg;

@@ -230,8 +230,8 @@ public class WXVideo extends WXComponent {
   private boolean mError;
   private ProgressBar mProgressBar;
 
-  public WXVideo(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
-    super(instance, dom, parent, instanceId, isLazy);
+  public WXVideo(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
+    super(instance, dom, parent, isLazy);
   }
 
   @Override

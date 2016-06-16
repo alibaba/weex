@@ -269,20 +269,34 @@ public class ComponentHolder {
     mMethods = methods;
     mMethodParameterTypes = typeMap;
     try {
-      mConstructor = mClz.getConstructor(WXSDKInstance.class, WXDomObject.class, WXVContainer.class, String.class, boolean.class);
+      mConstructor = mClz.getConstructor(WXSDKInstance.class, WXDomObject.class, WXVContainer.class, boolean.class);
     } catch (NoSuchMethodException e) {
+      try {
+        //compatible deprecated constructor
+        mConstructor = mClz.getConstructor(WXSDKInstance.class, WXDomObject.class, WXVContainer.class,String.class, boolean.class);
+      } catch (NoSuchMethodException e1) {
+        e1.printStackTrace();
+        throw new WXRuntimeException("Can't find constructor of component.");
+      }
       e.printStackTrace();
-      throw new WXRuntimeException("Can't find constructor of component.");
     }
   }
 
 
 
-  public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, String instanceId, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+  public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
     if(mConstructor == null){
       generate();
     }
-    WXComponent component =  mConstructor.newInstance(instance,node,parent,instanceId,lazy);
+    int parameters = mConstructor.getParameterTypes().length;
+    WXComponent component;
+    if(parameters == 4){
+      component =  mConstructor.newInstance(instance,node,parent,lazy);
+    }else{
+      //compatible deprecated constructor
+      component =  mConstructor.newInstance(instance,node,parent,instance.getInstanceId(),lazy);
+    }
+
     component.setHolder(this);
     return component;
   }

@@ -575,7 +575,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
   }
 
   public void registerActivityStateListener(IWXActivityStateListener listener) {
-    if (listener == null) {
+    if (listener == null || mActivityStateListeners==null) {
       return;
     }
 

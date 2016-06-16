@@ -15,8 +15,8 @@ android {
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
             def outputFile = output.outputFile
-            if (outputFile != null && outputFile.name.equals('app-release.apk')) {
-                def fileName = outputFile.name.replace("app-release.apk", "playgroud.apk")
+            if (outputFile != null && outputFile.name.equals('app-debug.apk')) {
+                def fileName = outputFile.name.replace("app-debug.apk", "playground.apk")
                 output.outputFile = new File(outputFile.parent, fileName)
             }
         }
@@ -69,10 +69,11 @@ dependencies {
     //compile 'com.taobao.android:weex_sdk:0.4.+'
     /*source dependency*/
     compile project(':weex_sdk_android')
-    compile project(':weex_debug')
+    debugCompile project(':weex_debug')
     compile project(':commons')
     compile 'com.taobao.android:dexposed:0.1.8'
     compile 'com.loopj.android:android-async-http:1.4.9@aar'
+    compile 'com.facebook.fresco:fresco:0.9.0+'
 
     compile 'com.squareup.okhttp:okhttp:2.3.0'
     compile 'com.squareup.okhttp:okhttp-ws:2.3.0'

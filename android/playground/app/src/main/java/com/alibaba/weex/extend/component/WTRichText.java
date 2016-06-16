@@ -37,12 +37,11 @@ public class WTRichText extends WXText {
    * @param instance
    * @param node
    * @param parent
-   * @param instanceId
    * @param lazy
    */
   public WTRichText(WXSDKInstance instance, WXDomObject node,
-                    WXVContainer parent, String instanceId, boolean lazy) {
-    super(instance, node, parent, instanceId, lazy);
+                    WXVContainer parent, boolean lazy) {
+    super(instance, node, parent, lazy);
   }
 
   @WXComponentProp(name = "tags")

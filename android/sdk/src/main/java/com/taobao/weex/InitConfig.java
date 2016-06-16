@@ -217,6 +217,7 @@ public class InitConfig {
   private IWXImgLoaderAdapter imgAdapter;
   private IWXUserTrackAdapter utAdapter;
   private IWXDebugAdapter debugAdapter;
+  private String framework;
 
   public IWXHttpAdapter getHttpAdapter() {
     return httpAdapter;
@@ -233,6 +234,9 @@ public class InitConfig {
   public IWXDebugAdapter getDebugAdapter(){
     return debugAdapter;
   }
+  public String getFramework() {
+    return framework;
+  }
 
   private InitConfig() {
   }
@@ -242,6 +246,7 @@ public class InitConfig {
     IWXImgLoaderAdapter imgAdapter;
     IWXUserTrackAdapter utAdapter;
     IWXDebugAdapter debugAdapter;
+    String framework;
     public Builder(){
 
     }
@@ -266,12 +271,18 @@ public class InitConfig {
       return this;
     }
 
+    public Builder setFramework(String framework){
+      this.framework=framework;
+      return this;
+    }
+
     public InitConfig build(){
       InitConfig config =  new InitConfig();
       config.httpAdapter = this.httpAdapter;
       config.imgAdapter = this.imgAdapter;
       config.utAdapter = this.utAdapter;
       config.debugAdapter=this.debugAdapter;
+      config.framework=this.framework;
       return config;
     }
   }

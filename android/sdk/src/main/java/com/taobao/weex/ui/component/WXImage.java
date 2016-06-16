@@ -227,8 +227,8 @@ import com.taobao.weex.utils.WXResourceUtils;
 public class WXImage extends WXComponent {
 
     public WXImage(WXSDKInstance instance, WXDomObject node,
-                   WXVContainer parent, String instanceId, boolean lazy) {
-        super(instance, node, parent, instanceId, lazy);
+                   WXVContainer parent, boolean lazy) {
+        super(instance, node, parent, lazy);
     }
 
     @Override

@@ -219,8 +219,8 @@ public class WXBaseRefresh extends WXVContainer {
 
   private WXLoadingIndicator mLoadingIndicator;
 
-  public WXBaseRefresh(WXSDKInstance instance, WXDomObject node, WXVContainer parent, String instanceId, boolean lazy) {
-    super(instance, node, parent, instanceId, lazy);
+  public WXBaseRefresh(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
+    super(instance, node, parent, lazy);
   }
 
   @Override

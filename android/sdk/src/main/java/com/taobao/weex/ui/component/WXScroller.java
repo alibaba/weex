@@ -162,8 +162,8 @@ public class WXScroller extends WXVContainer implements WXScrollViewListener {
   private int mContentHeight = 0;
 
   public WXScroller(WXSDKInstance instance, WXDomObject node,
-                    WXVContainer parent, String instanceId, boolean lazy) {
-    super(instance, node, parent, instanceId, lazy);
+                    WXVContainer parent, boolean lazy) {
+    super(instance, node, parent, lazy);
   }
 
   @Override

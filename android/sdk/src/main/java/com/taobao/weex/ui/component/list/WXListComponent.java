@@ -265,8 +265,8 @@ public class WXListComponent extends WXVContainer implements
     private SparseArray<WXComponent> mAppearComponents = new SparseArray<>();
     private HashMap<String, Long> mRefToViewType;
 
-    public WXListComponent(WXSDKInstance instance, WXDomObject node, WXVContainer parent, String instanceId, boolean lazy) {
-        super(instance, node, parent, instanceId, lazy);
+    public WXListComponent(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
+        super(instance, node, parent, lazy);
     }
 
     /**
@@ -649,7 +649,7 @@ public class WXListComponent extends WXVContainer implements
                 String loadMoreRetry = mDomObj.attr.getLoadMoreRetry();
 
                 if (mListCellCount != mChildren.size()
-                        || !mLoadMoreRetry.equals(loadMoreRetry)) {
+                        || mLoadMoreRetry == null || !mLoadMoreRetry.equals(loadMoreRetry)) {
                     WXSDKManager.getInstance().fireEvent(mInstanceId, mDomObj.ref, WXEventType.LIST_LOAD_MORE);
                     mListCellCount = mChildren.size();
                     mLoadMoreRetry = loadMoreRetry;

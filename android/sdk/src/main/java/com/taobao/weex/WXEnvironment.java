@@ -275,7 +275,7 @@ public class WXEnvironment {
     configs.put(WXConfig.weexVersion, String.valueOf(WXSDK_VERSION));
     configs.put(WXConfig.logLevel,sLogLevel.getName());
     configs.putAll(options);
-    if(configs!=null&&configs.get(WXConfig.appName)==null){
+    if(configs!=null&&configs.get(WXConfig.appName)==null && sApplication!=null){
        configs.put(WXConfig.appName, sApplication.getPackageName());
     }
     return configs;

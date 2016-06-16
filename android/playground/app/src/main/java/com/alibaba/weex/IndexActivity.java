@@ -1,6 +1,5 @@
 package com.alibaba.weex;
 
-import com.alibaba.weex.commons.AbstractWeexActivity;
 import com.google.zxing.client.android.CaptureActivity;
 
 import android.Manifest;
@@ -19,16 +18,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.taobao.weex.WXEnvironment;
+import com.alibaba.weex.commons.AbstractWeexActivity;
 import com.taobao.weex.WXRenderErrorCode;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.utils.WXFileUtils;
+import com.taobao.weex.utils.WXSoInstallMgrSdk;
 
 public class IndexActivity extends AbstractWeexActivity {
 
   private static final int CAMARA_PERMISSION_REQUEST_CODE = 0x1;
 
-  private static final String TAG = "IndexFragment";
+  private static final String TAG = "IndexActivity";
   private static final String DEFAULT_IP = "your_current_IP";
   private static String CURRENT_IP= DEFAULT_IP; // your_current_IP
   private static final String WEEX_INDEX_URL = "http://"+CURRENT_IP+":12580/examples/build/index.js";
@@ -48,13 +48,15 @@ public class IndexActivity extends AbstractWeexActivity {
 
     mProgressBar = (ProgressBar) findViewById(R.id.index_progressBar);
     mTipView = (TextView) findViewById(R.id.index_tip);
-    if (!WXEnvironment.isSupport()) {
-      Toast.makeText(this,"The current device does not support Weex!",Toast.LENGTH_SHORT).show();
-      finish();
-      return;
-    }
     mProgressBar.setVisibility(View.VISIBLE);
     mTipView.setVisibility(View.VISIBLE);
+
+
+    if(!WXSoInstallMgrSdk.isCPUSupport()){
+      mProgressBar.setVisibility(View.INVISIBLE);
+      mTipView.setText(R.string.cpu_not_support_tip);
+      return;
+    }
 
     if(TextUtils.equals(CURRENT_IP,DEFAULT_IP)){
       renderPage(WXFileUtils.loadFileContent("index.js", this),WEEX_INDEX_URL);

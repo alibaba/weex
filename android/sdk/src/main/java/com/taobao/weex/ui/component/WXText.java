@@ -224,8 +224,8 @@ public class WXText extends WXComponent{
   public static final int sDEFAULT_SIZE = 32;
 
   public WXText(WXSDKInstance instance, WXDomObject node,
-                WXVContainer parent, String instanceId, boolean lazy) {
-    super(instance, node, parent, instanceId, lazy);
+                WXVContainer parent, boolean lazy) {
+    super(instance, node, parent, lazy);
   }
 
   @Override

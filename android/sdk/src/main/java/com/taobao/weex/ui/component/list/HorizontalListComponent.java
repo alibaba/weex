@@ -212,8 +212,8 @@ import com.taobao.weex.ui.component.WXVContainer;
  * Created by sospartan on 6/2/16.
  */
 public class HorizontalListComponent extends WXListComponent {
-  public HorizontalListComponent(WXSDKInstance instance, WXDomObject node, WXVContainer parent, String instanceId, boolean lazy) {
-    super(instance, node, parent, instanceId, lazy);
+  public HorizontalListComponent(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
+    super(instance, node, parent, lazy);
   }
 
   @Override

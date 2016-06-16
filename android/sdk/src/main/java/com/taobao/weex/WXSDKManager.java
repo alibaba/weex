@@ -142,7 +142,6 @@ import com.taobao.weex.common.WXRefreshData;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomManager;
 import com.taobao.weex.ui.WXRenderManager;
-import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXUtils;
 
 import java.util.ArrayList;
@@ -167,13 +166,10 @@ public class WXSDKManager {
   private IWXDebugAdapter mIWXDebugAdapter;
   private IActivityNavBarSetter mActivityNavBarSetter;
 
-  private static AtomicInteger mCount=new AtomicInteger(0);
-
   private WXSDKManager() {
     mWXRenderManager = new WXRenderManager();
     mWXDomManager = new WXDomManager(mWXRenderManager);
     mBridgeManager = WXBridgeManager.getInstance();
-    WXLogUtils.e("WXSDKManager","count:"+mCount.incrementAndGet());
   }
 
   public static WXSDKManager getInstance() {
@@ -290,7 +286,6 @@ public class WXSDKManager {
   }
 
   public IWXImgLoaderAdapter getIWXImgLoaderAdapter() {
-    WXLogUtils.e("WXSDKManager","count:"+mCount.get());
     return mIWXImgLoaderAdapter;
   }
 

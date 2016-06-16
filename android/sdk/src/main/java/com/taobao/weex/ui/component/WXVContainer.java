@@ -219,8 +219,8 @@ public abstract class WXVContainer extends WXComponent {
 
   protected ArrayList<WXComponent> mChildren;
 
-  public WXVContainer(WXSDKInstance instance, WXDomObject node, WXVContainer parent, String instanceId, boolean lazy) {
-    super(instance, node, parent, instanceId, lazy);
+  public WXVContainer(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
+    super(instance, node, parent, lazy);
   }
 
   @Override
