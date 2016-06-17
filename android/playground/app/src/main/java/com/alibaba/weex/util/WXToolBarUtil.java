@@ -29,7 +29,6 @@ public class WXToolBarUtil {
     }
 
 
-    //获取iconfont对应的资源id
     public static final int getIconFontId(String name) {
         Class<R.string> c = R.string.class;
         Field field;
@@ -49,13 +48,11 @@ public class WXToolBarUtil {
         return value;
     }
 
-    //设置menu的icon可见
     public static void setIconEnable(Menu menu, boolean enable) {
         try {
             Class<?> clazz = Class.forName("com.android.internal.view.menu.MenuBuilder");
             Method m = clazz.getDeclaredMethod("setOptionalIconsVisible", boolean.class);
             m.setAccessible(true);
-            //下面传入参数
             m.invoke(menu, enable);
 
         } catch (Exception e) {
