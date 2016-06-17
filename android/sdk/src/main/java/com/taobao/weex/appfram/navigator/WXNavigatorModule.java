@@ -116,7 +116,6 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 import com.taobao.weex.WXSDKEngine;
-import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.common.WXModule;
 import com.taobao.weex.common.WXModuleAnno;
@@ -198,14 +197,6 @@ public class WXNavigatorModule extends WXModule {
                     return;
                 }
             }
-
-            try {
-                WXSDKManager.getInstance().getActivityNavBarSetter().setNavBarRightItem(param);
-            } catch (Exception e) {
-                WXLogUtils.e(TAG, WXLogUtils.getStackTrace(e));
-                WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
-                        WXConst.MSG_FAILED);
-            }
         }
 
         WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
@@ -219,14 +210,6 @@ public class WXNavigatorModule extends WXModule {
                 WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
                         WXConst.MSG_SUCCESS);
                 return;
-            }
-
-            try {
-                WXSDKManager.getInstance().getActivityNavBarSetter().clearNavBarRightItem(param);
-            } catch (Exception e) {
-                WXLogUtils.e(TAG, WXLogUtils.getStackTrace(e));
-                WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
-                        WXConst.MSG_FAILED);
             }
         }
 
@@ -244,14 +227,6 @@ public class WXNavigatorModule extends WXModule {
                     return;
                 }
             }
-
-            try {
-                WXSDKManager.getInstance().getActivityNavBarSetter().setNavBarLeftItem(param);
-            } catch (Exception e) {
-                WXLogUtils.e(TAG, WXLogUtils.getStackTrace(e));
-                WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
-                        WXConst.MSG_FAILED);
-            }
         }
 
         WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
@@ -266,14 +241,6 @@ public class WXNavigatorModule extends WXModule {
                 WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
                         WXConst.MSG_SUCCESS);
                 return;
-            }
-
-            try {
-                WXSDKManager.getInstance().getActivityNavBarSetter().clearNavBarLeftItem(param);
-            } catch (Exception e) {
-                WXLogUtils.e(TAG, WXLogUtils.getStackTrace(e));
-                WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
-                        WXConst.MSG_FAILED);
             }
         }
 
@@ -291,19 +258,10 @@ public class WXNavigatorModule extends WXModule {
                     return;
                 }
             }
-
-            try {
-                WXSDKManager.getInstance().getActivityNavBarSetter().setNavBarMoreItem(param);
-            } catch (Exception e) {
-                WXLogUtils.e(TAG, WXLogUtils.getStackTrace(e));
-                WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
-                        WXConst.MSG_FAILED);
-            }
         }
 
         WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
                 WXConst.MSG_FAILED);
-
     }
 
     @WXModuleAnno
@@ -313,14 +271,6 @@ public class WXNavigatorModule extends WXModule {
                 WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
                         WXConst.MSG_SUCCESS);
                 return;
-            }
-
-            try {
-                WXSDKManager.getInstance().getActivityNavBarSetter().clearNavBarMoreItem(param);
-            } catch (Exception e) {
-                WXLogUtils.e(TAG, WXLogUtils.getStackTrace(e));
-                WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
-                        WXConst.MSG_FAILED);
             }
         }
 
@@ -337,14 +287,6 @@ public class WXNavigatorModule extends WXModule {
                             WXConst.MSG_SUCCESS);
                     return;
                 }
-            }
-
-            try {
-                WXSDKManager.getInstance().getActivityNavBarSetter().setNavBarTitle(param);
-            } catch (Exception e) {
-                WXLogUtils.e(TAG, WXLogUtils.getStackTrace(e));
-                WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
-                        WXConst.MSG_FAILED);
             }
         }
 

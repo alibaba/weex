@@ -14,13 +14,13 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.alibaba.weex.commons.util.ScreenUtil;
 import com.alibaba.weex.constants.Constants;
 import com.alibaba.weex.https.HotRefreshManager;
 import com.alibaba.weex.https.WXHttpManager;
 import com.alibaba.weex.https.WXHttpTask;
 import com.alibaba.weex.https.WXRequestListener;
 import com.alibaba.weex.navigator.WXBaseNavActivity;
-import com.alibaba.weex.commons.util.ScreenUtil;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
@@ -28,6 +28,7 @@ import com.taobao.weex.common.WXRenderStrategy;
 import com.taobao.weex.utils.WXFileUtils;
 import com.taobao.weex.utils.WXLogUtils;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -96,15 +97,7 @@ public class WXPageActivity extends WXBaseNavActivity implements IWXRenderListen
 
         Log.e("TestScript_Guide mUri==", mUri.toString());
 
-        String[] titles = mUri.toString().split("/");
-        if (titles == null || titles.length <= 0)
-            return;
-        if (titles.length == 1) {
-            setToolBarTitle(titles[0]);
-            return;
-        } else {
-            setToolBarTitle(titles[titles.length-1]);
-        }
+        setToolBarTitle(mUri.toString().substring(mUri.toString().lastIndexOf(File.separator) + 1));
     }
 
     private void rendWXPage() {
