@@ -1,22 +1,21 @@
-<merge>
-
-    <android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.AppBarLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/appbarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar
+    <android.support.v7.widget.Toolbar
             android:id="@id/toolbar"
             style="@style/ToolBarStyle"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
-            <RelativeLayout
+        <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <ImageView
+            <ImageView
                     android:id="@id/leftItem"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
@@ -25,9 +24,9 @@
                     android:background="?android:attr/selectableItemBackground"
                     android:paddingLeft="3dp"
                     android:paddingRight="3dp"
-                    android:visibility="invisible" />
+                    android:visibility="invisible"/>
 
-                <TextView
+            <TextView
                     android:id="@id/leftTitleView"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
@@ -40,9 +39,9 @@
                     android:singleLine="true"
                     android:textColor="@color/whiteLight"
                     android:textSize="16sp"
-                    android:visibility="invisible" />
+                    android:visibility="invisible"/>
 
-                <ImageView
+            <ImageView
                     android:id="@id/rightItem"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
@@ -52,9 +51,9 @@
                     android:background="?android:attr/selectableItemBackground"
                     android:paddingLeft="3dp"
                     android:paddingRight="3dp"
-                    android:visibility="invisible" />
+                    android:visibility="invisible"/>
 
-                <TextView
+            <TextView
                     android:id="@id/rightTitleView"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
@@ -68,9 +67,9 @@
                     android:singleLine="true"
                     android:textColor="@color/whiteLight"
                     android:textSize="16sp"
-                    android:visibility="invisible" />
+                    android:visibility="invisible"/>
 
-                <TextView
+            <TextView
                     android:id="@id/toolbar_title"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -80,10 +79,8 @@
                     android:gravity="center"
                     android:singleLine="true"
                     android:textColor="@color/whiteLight"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"/>
 
-            </RelativeLayout>
-        </android.support.v7.widget.Toolbar>
-    </android.support.design.widget.AppBarLayout>
-
-</merge>
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+</android.support.design.widget.AppBarLayout>
