@@ -15,7 +15,6 @@
 import semver from 'semver'
 import * as _ from '../util'
 import * as config from '../config'
-import * as perf from '../perf'
 import Vm from '../vm'
 import * as downgrade from './downgrade'
 
@@ -52,7 +51,7 @@ export function clearCommonModules() {
 // Notice: DO NOT use function define() {},
 // it will cause error after builded by webpack
 export var define = function (name, deps, factory) {
-  perf.start('define', name)
+  _.debug('define a component', name)
 
   if (_.typof(deps) === 'function') {
     factory = deps
@@ -119,11 +118,11 @@ export var define = function (name, deps, factory) {
       commonModules[cleanName] = _module.exports
     }
   }
-
-  perf.end('define', name)
 }
 
 export function bootstrap(name, config, data) {
+  _.debug(`bootstrap for ${name}`)
+
   let cleanName
 
   if (isWeexComponent(name)) {
@@ -131,6 +130,7 @@ export function bootstrap(name, config, data) {
   } else if (isNpmModule(name)) {
     cleanName = removeJSSurfix(name)
     // check if define by old 'define' method
+    /* istanbul ignore if */
     if (!this.customComponentMap[cleanName]) {
       return new Error(`It's not a component: ${name}`)
     }
@@ -149,6 +149,7 @@ export function bootstrap(name, config, data) {
   }
 
   let _checkDowngrade = downgrade.check(config.downgrade)
+  /* istanbul ignore if */
   if (_checkDowngrade.isDowngrade) {
     this.callTasks([{
       module: 'instanceWrap',
@@ -162,28 +163,22 @@ export function bootstrap(name, config, data) {
     return new Error(`Downgrade: ${config.downgrade}`)
   }
 
-  perf.start('create vm', cleanName)
-
-  this.vm = new Vm(cleanName, {_app: this}, null, data, {
-    'hook:ready': () => {
-      perf.end('create vm', cleanName)
-    }
-  })
+  this.vm = new Vm(cleanName, null, {_app: this}, null, data)
 }
 
 /**
  * @deprecated
  */
 export function register(type, options) {
-  perf.start('register', type)
+  _.warn('Register is deprecated, please install lastest transformer.')
   this.registerComponent(type, options)
-  perf.end('register', type)
 }
 
 /**
  * @deprecated
  */
 export function render(type, data) {
+  _.warn('Render is deprecated, please install lastest transformer.')
   return this.bootstrap(type, {}, data)
 }
 
@@ -191,6 +186,7 @@ export function render(type, data) {
  * @deprecated
  */
 export function require(type) {
+  _.warn('Require is deprecated, please install lastest transformer.')
   return (data) => {
     return this.bootstrap(type, {}, data)
   }

@@ -48,7 +48,7 @@ describe('generate virtual dom for a single vm', () => {
     }
 
     var app = {doc, customComponentMap, differ}
-    var vm = new Vm('foo', {_app: app})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app})
 
     expect(vm._app).equal(app)
     expect(doc.body).is.an.object
@@ -72,7 +72,7 @@ describe('generate virtual dom for a single vm', () => {
     }
 
     var app = {doc, customComponentMap, differ}
-    var vm = new Vm('foo', {_app: app})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app})
 
     expect(vm._app).equal(app)
     var el = doc.body
@@ -102,7 +102,7 @@ describe('generate virtual dom for a single vm', () => {
     }
 
     var app = {doc, customComponentMap, differ}
-    var vm = new Vm('foo', {_app: app})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app})
 
     expect(spy.firstCall.args[0]).to.be.equal('test')
     expect(spy.firstCall.args[1]).to.be.equal('createBody')
@@ -164,7 +164,7 @@ describe('generate virtual dom for a single vm', () => {
     }
 
     var app = {doc, customComponentMap, differ}
-    var vm = new Vm('foo', {_app: app})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app})
 
     expect(vm._app).equal(app)
     expect(vm.x).eql('<some image url>')
@@ -243,7 +243,7 @@ describe('generate virtual dom for a single vm', () => {
     }
 
     var app = {doc, customComponentMap, differ}
-    var vm = new Vm('foo', {_app: app})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app})
 
     expect(vm._app).equal(app)
     expect(vm.x).eql('<some image url>')
@@ -315,7 +315,7 @@ describe('generate virtual dom for a single vm', () => {
     }
 
     var app = {doc, customComponentMap, differ}
-    var vm = new Vm('foo', {_app: app})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app})
 
     expect(vm._app).equal(app)
     expect(vm.x).eql('<some image url>')
@@ -407,7 +407,7 @@ describe('generate virtual dom for a single vm', () => {
     }
 
     var app = {doc, customComponentMap, differ}
-    var vm = new Vm('foo', {_app: app})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app})
 
     expect(vm._app).equal(app)
     expect(vm.x).eql('<some image url>')
@@ -517,7 +517,7 @@ describe('generate virtual dom for sub vm', () => {
     }
 
     var app = {doc, customComponentMap, differ}
-    var vm = new Vm('foo', {_app: app})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app})
 
 
     expect(vm._app).equal(app)
@@ -571,7 +571,7 @@ describe('generate virtual dom for sub vm', () => {
     }
 
     var app = {doc, customComponentMap, differ}
-    var vm = new Vm('foo', {_app: app})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app})
 
     expect(vm._app).equal(app)
     var el = doc.body
@@ -599,7 +599,7 @@ describe('generate virtual dom for sub vm', () => {
     }
 
     var app = {doc, customComponentMap, differ}
-    var vm = new Vm('foo', {_app: app})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app})
 
     expect(vm._app).equal(app)
     var el = doc.body
@@ -636,7 +636,7 @@ describe('generate virtual dom for sub vm', () => {
     }
 
     var app = {doc, customComponentMap, differ}
-    var vm = new Vm('foo', {_app: app})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app})
 
     expect(vm._app).equal(app)
     var el = doc.body
@@ -675,7 +675,7 @@ describe('generate virtual dom for sub vm', () => {
     }
 
     var app = {doc, customComponentMap, differ}
-    var vm = new Vm('foo', {_app: app})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app})
 
     expect(vm._app).equal(app)
     var el = doc.body
@@ -714,7 +714,7 @@ describe('generate virtual dom for sub vm', () => {
     }
 
     var app = {doc, customComponentMap, differ}
-    var vm = new Vm('foo', {_app: app})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app})
 
     expect(vm._app).equal(app)
 
@@ -760,7 +760,7 @@ describe('generate virtual dom for sub vm', () => {
     }
 
     var app = {doc, customComponentMap, differ}
-    var vm = new Vm('foo', {_app: app})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app})
 
     expect(vm._app).equal(app)
 
@@ -817,7 +817,7 @@ describe('generate virtual dom for sub vm', () => {
     }
 
     var app = {doc, customComponentMap, differ}
-    var vm = new Vm('foo', {_app: app})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app})
 
     expect(vm._app).equal(app)
 
@@ -870,7 +870,7 @@ describe('generate virtual dom for sub vm', () => {
     }
 
     var app = {doc, customComponentMap, differ}
-    var vm = new Vm('foo', {_app: app})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app})
 
     expect(vm._app).equal(app)
 
@@ -927,7 +927,7 @@ describe('generate virtual dom for sub vm', () => {
     }
 
     var app = {doc, customComponentMap, differ}
-    var vm = new Vm('foo', {_app: app})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app})
 
     var el = doc.body
 
@@ -966,7 +966,7 @@ describe('generate virtual dom for sub vm', () => {
     }
 
     var app = {doc, customComponentMap, differ}
-    var vm = new Vm('foo', {_app: app}, null, {a: 1000})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app}, null, {a: 1000})
 
     expect(vm._app).equal(app)
 
@@ -1043,7 +1043,7 @@ describe('generate dom actions', () => {
       }
     }
 
-    var vm = new Vm('foo', {_app: app})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app})
     var el = {
       ref: '_root',
       type: 'container',
@@ -1088,7 +1088,7 @@ describe('generate dom actions', () => {
       }
     }
 
-    var vm = new Vm('foo', {_app: app})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app})
     var el = {ref: '_root', type: 'container', attr: {}, style: {}}
     var prev = {ref: '3', type: 'prev', attr: {}, style: {}}
     var img = {ref: '10', type: 'image', attr: { src: 2 }, style: {}}
@@ -1160,7 +1160,7 @@ describe('generate dom actions', () => {
       }
     }
 
-    var vm = new Vm('foo', {_app: app})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app})
     var length = spy.args.length
 
     vm.x = '<some image url>'
@@ -1193,7 +1193,7 @@ describe('generate dom actions', () => {
       }
     }
 
-    var vm = new Vm('foo', {_app: app})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app})
     var length = spy.args.length
 
     expect(doc.body.pureChildren.length).eql(1)
@@ -1240,7 +1240,7 @@ describe('generate dom actions', () => {
       }
     }
 
-    var vm = new Vm('foo', {_app: app})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app})
     expect(spy.args.length).eql(4)
     var el = {ref: '_root', type: 'container', attr: {}, style: {}}
     expect(spy.args[0]).eql(['bar', 'createBody', el])
@@ -1280,7 +1280,7 @@ describe('generate dom actions', () => {
       }
     }
 
-    var vm = new Vm('foo', {_app: app})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app})
 
     // jscs:disable
     // expect(spy.args[0]).eql([ 'bar', 'createBody', 'container' ])
@@ -1312,7 +1312,7 @@ describe('generate dom actions', () => {
       }
     }
 
-    var vm = new Vm('foo', {_app: app})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app})
 
     expect(spy.args.length).eql(7)
     // body, r, r.a, r.b, r.b.d, r.b.e(tree), r.b.f, r.c
@@ -1383,7 +1383,7 @@ describe('generate dom actions', () => {
       }
     }
 
-    var vm = new Vm('foo', {_app: app})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app})
 
     checkReady(vm, () => {
       expect(spy.args.length).eql(7)
@@ -1421,7 +1421,7 @@ describe('generate dom actions', () => {
       }
     }
 
-    var vm = new Vm('foo', {_app: app})
+    var vm = new Vm('foo', customComponentMap.foo, {_app: app})
 
     checkReady(vm, () => {
 

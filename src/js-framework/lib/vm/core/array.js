@@ -1,6 +1,7 @@
-var _ = require('../util')
-var arrayProto = Array.prototype
-var arrayMethods = Object.create(arrayProto)
+import { def } from '../../util/index'
+
+const arrayProto = Array.prototype
+export const arrayMethods = Object.create(arrayProto)
 
 /**
  * Intercept mutating methods and emit events
@@ -17,18 +18,18 @@ var arrayMethods = Object.create(arrayProto)
 ]
 .forEach(function (method) {
   // cache original method
-  var original = arrayProto[method]
-  _.define(arrayMethods, method, function mutator () {
+  const original = arrayProto[method]
+  def(arrayMethods, method, function mutator () {
     // avoid leaking arguments:
     // http://jsperf.com/closure-with-arguments
-    var i = arguments.length
-    var args = new Array(i)
+    let i = arguments.length
+    const args = new Array(i)
     while (i--) {
       args[i] = arguments[i]
     }
-    var result = original.apply(this, args)
-    var ob = this.__ob__
-    var inserted
+    const result = original.apply(this, args)
+    const ob = this.__ob__
+    let inserted
     switch (method) {
       case 'push':
         inserted = args
@@ -42,7 +43,7 @@ var arrayMethods = Object.create(arrayProto)
     }
     if (inserted) ob.observeArray(inserted)
     // notify change
-    ob.notify()
+    ob.dep.notify()
     return result
   })
 })
@@ -56,7 +57,7 @@ var arrayMethods = Object.create(arrayProto)
  * @return {*} - replaced element
  */
 
-_.define(
+def(
   arrayProto,
   '$set',
   function $set (index, val) {
@@ -74,19 +75,17 @@ _.define(
  * @param {*} val
  */
 
-_.define(
+def(
   arrayProto,
   '$remove',
   function $remove (index) {
     /* istanbul ignore if */
     if (!this.length) return
     if (typeof index !== 'number') {
-      index = _.indexOf(this, index)
+      index = this.indexOf(index)
     }
     if (index > -1) {
       this.splice(index, 1)
     }
   }
 )
-
-module.exports = arrayMethods

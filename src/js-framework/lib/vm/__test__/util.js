@@ -4,7 +4,7 @@ var sinonChai = require('sinon-chai')
 var expect = chai.expect
 chai.use(sinonChai)
 
-var _ = require('../util')
+var _ = require('../../util')
 
 describe('stringify sth.', function () {
   it('convert string to string', function () {

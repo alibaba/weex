@@ -6,7 +6,8 @@ const {
 } = chai
 chai.use(sinonChai)
 
-import * as framework from '../framework'
+import framework from '../runtime'
+import frameworks from '../runtime/frameworks'
 import * as config from '../config'
 import Vm from '../vm'
 
@@ -125,6 +126,25 @@ describe('framework entry', () => {
       const result = framework.createInstance(instanceId, code)
       expect(result).to.be.an.instanceof(Error)
     })
+
+    it('js bundle format version checker', function () {
+      const spy = sinon.spy()
+      frameworks.xxx = {
+        init: function () {},
+        createInstance: spy
+      }
+      const code = `// {"framework":"xxx","version":"0.3.1"}
+      'This is a piece of JavaScript from a third-party Framework...'`
+      framework.createInstance(instanceId + '~', code)
+      expect(spy.callCount).equal(1)
+      expect(spy.firstCall.args).eql([
+        instanceId + '~',
+        code,
+        {bundleVersion: '0.3.1'},
+        undefined
+      ])
+      delete framework.xxx
+    })
   })
 
   describe('getRoot', () => {
@@ -173,7 +193,7 @@ describe('framework entry', () => {
         method: 'fireEvent',
         args: []
       }])
-      expect(result[0]).to.be.an.instanceof(Error)
+      expect(result).to.be.an.instanceof(Error)
     })
 
     it('with a non-array tasks', () => {
@@ -181,26 +201,30 @@ describe('framework entry', () => {
         method: 'fireEvent',
         args: []
       })
-      expect(result[0]).to.be.an.instanceof(Error)
+      expect(result).to.be.an.instanceof(Error)
     })
   })
 
   describe('refreshInstance', () => {
     it('modify showText to false', () => {
       framework.refreshInstance(instanceId, {showText: false})
-      expect(callNativeSpy.callCount).to.be.equal(1)
+      expect(callNativeSpy.callCount).to.be.equal(2)
 
       expect(callNativeSpy.firstCall.args[0]).to.be.equal(instanceId)
       expect(callNativeSpy.firstCall.args[1]).to.deep.equal([{
         module: 'dom',
         method: 'removeElement',
         args: ['5']
-      }, {
+      }])
+      expect(callNativeSpy.firstCall.args[2]).to.be.equal('-1')
+
+      expect(callNativeSpy.secondCall.args[0]).to.be.equal(instanceId)
+      expect(callNativeSpy.secondCall.args[1]).to.deep.equal([{
         module: 'dom',
         method: 'refreshFinish',
         args: []
       }])
-      expect(callNativeSpy.firstCall.args[2]).to.be.equal('-1')
+      expect(callNativeSpy.secondCall.args[2]).to.be.equal('-1')
     })
 
     it('with a non-exist instanceId', () => {
@@ -269,7 +293,7 @@ describe('framework entry', () => {
   describe('register methods', () => {
     it('with object of methods', () => {
       const methods = {
-        a: () => 'a'
+        a: sinon.spy()
       }
 
       framework.registerMethods(methods)

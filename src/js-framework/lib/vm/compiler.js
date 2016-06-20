@@ -10,6 +10,8 @@
  * events.js: $on
  */
 
+import * as _ from '../util/index'
+
 /**
  * build(externalDirs)
  *   createVm()
@@ -45,6 +47,7 @@ export function _build() {
     this._compile(template, this._parentEl)
   }
 
+  _.debug(`"ready" lifecycle in Vm(${this._type})`)
   this.$emit('hook:ready')
   this._ready = true
 }
@@ -66,15 +69,18 @@ export function _compile(target, dest, meta) {
   }
   meta = meta || {}
   if (context._targetIsContent(target)) {
+    _.debug('compile "content" block by', target)
     context._content = context._createBlock(dest)
     return
   }
 
   if (context._targetNeedCheckRepeat(target, meta)) {
+    _.debug('compile "repeat" logic by', target)
     context._compileRepeat(target, dest)
     return
   }
   if (context._targetNeedCheckShown(target, meta)) {
+    _.debug('compile "if" logic by', target)
     context._compileShown(target, dest, meta)
     return
   }
@@ -84,10 +90,13 @@ export function _compile(target, dest, meta) {
     return
   }
   const type = typeGetter
-  if (context._targetIsComposed(target, type)) {
-    context._compileCustomComponent(target, dest, type, meta)
+  const component = context._targetIsComposed(target, type)
+  if (component) {
+    _.debug('compile composed component by', target)
+    context._compileCustomComponent(component, target, dest, type, meta)
     return
   }
+  _.debug('compile native component by', target)
   context._compileNativeComponent(target, dest, type)
 }
 
@@ -151,10 +160,17 @@ export function _targetNeedCheckType(typeGetter, meta) {
  * @return {boolean}
  */
 export function _targetIsComposed(target, type) {
-  if (this._app && this._app.customComponentMap && type) {
-    return !!this._app.customComponentMap[type]
+  let component
+  if (this._app && this._app.customComponentMap) {
+    component = this._app.customComponentMap[type]
   }
-  return !!target.component
+  if (this._options && this._options.components) {
+    component = this._options.components[type]
+  }
+  if (target.component) {
+    component = component || {}
+  }
+  return component
 }
 
 /**
@@ -251,10 +267,10 @@ export function _compileType(target, dest, typeGetter, meta) {
  * @param {object} dest
  * @param {string} type
  */
-export function _compileCustomComponent(target, dest, type, meta) {
+export function _compileCustomComponent(component, target, dest, type, meta) {
   const Vm = this.constructor
   const context = this
-  const subVm = new Vm(type, context, dest, undefined, {
+  const subVm = new Vm(type, component, context, dest, undefined, {
     'hook:init': function () {
       context._setId(target.id, null, this)
     },
@@ -285,8 +301,10 @@ export function _compileNativeComponent(template, dest, type) {
   let element
   if (dest.ref === '_documentElement') {
     // if its parent is documentElement then it's a body
+    _.debug('compile to create body for', type)
     element = this._createBody(type)
   } else {
+    _.debug('compile to create element for', type)
     element = this._createElement(type)
   }
   // TODO it was a root element when not in a fragment
@@ -307,10 +325,12 @@ export function _compileNativeComponent(template, dest, type) {
 
   const treeMode = template.append === 'tree'
   if (!treeMode) {
+    _.debug('compile to append single node for', element)
     this._attachTarget(element, dest)
   }
   this._compileChildren(template, element)
   if (treeMode) {
+    _.debug('compile to append whole tree for', element)
     this._attachTarget(element, dest)
   }
 }
@@ -353,7 +373,7 @@ export function _bindRepeat(target, fragBlock, info) {
         if (!mergedData.hasOwnProperty('INDEX')) {
           Object.defineProperty(mergedData, 'INDEX', {
             value: () => {
-              nativeLog('[WARNING] "INDEX" in repeat is deprecated,' +
+              _.warn('"INDEX" in repeat is deprecated,' +
                 ' please use "$index" instead')
             }
           })
@@ -366,40 +386,14 @@ export function _bindRepeat(target, fragBlock, info) {
       mergedData[valueName] = item
     }
     context = context._mergeContext(mergedData)
-    // console.log(context)
     vms.push(context)
     context._compile(target, fragBlock, {repeat: item})
   }
 
-  function diffItem(vm, item) {
-    const oldItem = vm._data
-    const oldKeys = []
-    for (const key in oldItem) {
-      if (!item.hasOwnProperty(key)) {
-        vm[key] = undefined
-      }
-    }
-    for (const key in item) {
-      vm[key] = item[key]
-    }
-  }
-
-  function setItemValue(item, index, vm) {
-    let mergedData
-    if (oldStyle) {
-      if (typeof item === 'object') {
-        diffItem(vm, item)
-        vm.INDEX = index
-      }
-    }
-    else {
-      vm[keyName] = index
-      vm[valueName] = item
-    }
-  }
-
   const list = this._watchBlock(fragBlock, getter, 'repeat',
     (data) => {
+      _.debug('the "repeat" item has changed', data)
+
       if (!fragBlock) {
         return
       }
@@ -482,6 +476,8 @@ export function _bindRepeat(target, fragBlock, info) {
 export function _bindShown(target, fragBlock, meta) {
   const display = this._watchBlock(fragBlock, target.shown, 'shown',
     (display) => {
+      _.debug('the "if" item was changed', display)
+
       if (!fragBlock || !!fragBlock.display === !!display) {
         return
       }
@@ -540,6 +536,7 @@ export function _mergeContext(mergedData) {
   const context = Object.create(this)
   context._data = mergedData
   context._initData()
+  context._initComputed()
   context._realParent = this
   return context
 }

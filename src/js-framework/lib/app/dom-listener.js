@@ -12,6 +12,16 @@ Listener.prototype.createFinish = function (callback) {
   handler([createAction('createFinish', [])], callback)
 }
 
+Listener.prototype.updateFinish = function (callback) {
+  const handler = this.handler
+  handler([createAction('updateFinish', [])], callback)
+}
+
+Listener.prototype.refreshFinish = function (callback) {
+  const handler = this.handler
+  handler([createAction('refreshFinish', [])], callback)
+}
+
 Listener.prototype.createBody = function (element, ref) {
   const actions = [createAction('createBody', [element.toJSON()])]
   this.addActions(actions)

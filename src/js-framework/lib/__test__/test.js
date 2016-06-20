@@ -148,8 +148,8 @@ var chai = require('chai')
 var sinon = require('sinon')
 var sinonChai = require('sinon-chai')
 
-var framework = require('../framework')
-var pkg = require('../../package.json')
+import framework from '../runtime'
+import * as pkg from '../../package.json'
 
 Object.assign(global, framework, {
   frameworkVersion: pkg.version,
@@ -189,6 +189,20 @@ function _callNative(name, tasks, cbId) {
 }
 
 describe('test input and output', function () {
+
+  before(() => {
+    sinon.stub(console, 'log')
+    sinon.stub(console, 'info')
+    sinon.stub(console, 'warn')
+    sinon.stub(console, 'error')
+  })
+
+  after(() => {
+    console.log.restore()
+    console.info.restore()
+    console.warn.restore()
+    console.error.restore()
+  })
 
   beforeEach(function () {
     callNativeSpy.reset()
@@ -369,6 +383,22 @@ describe('test input and output', function () {
     delete allDocs[name]
   })
 
+  it('computed in repeat case', function () {
+    var name = 'computed-in-repeat'
+    var inputCode = readInput(name)
+    var outputCode = readOutput(name)
+    var doc = new Document(name)
+    allDocs[name] = doc
+
+    framework.createInstance(name, inputCode)
+    var expected = eval('(' + outputCode + ')')
+    var actual = doc.toJSON()
+    expect(actual).eql(expected)
+
+    framework.destroyInstance(name)
+    delete allDocs[name]
+  })
+
   it('backward(register/render) case', function () {
     var name = 'backward1'
     var inputCode = readInput(name)
@@ -505,6 +535,28 @@ describe('test input and output', function () {
     allDocs[name] = doc
 
     framework.createInstance(name, inputCode)
+    var expected = eval('(' + outputCode + ')')
+    var actual = doc.toJSON()
+    expect(actual).eql(expected)
+
+    framework.destroyInstance(name)
+    delete allDocs[name]
+  })
+
+  it('repeat with array track-by case', function () {
+    var name = 'repeat-track-by'
+    var inputCode = readInput(name)
+    var outputCode = readOutput(name)
+    var doc = new Document(name)
+    allDocs[name] = doc
+
+    framework.createInstance(name, inputCode)
+    framework.refreshInstance(name, {
+      titlelist: [
+        {text: 'Hello World2'},
+        {text: 'Hello World1'}
+      ]
+    })
     var expected = eval('(' + outputCode + ')')
     var actual = doc.toJSON()
     expect(actual).eql(expected)
@@ -679,6 +731,22 @@ describe('test input and output', function () {
     delete allDocs[name]
   })
 
+  it('components options', function () {
+    var name = 'components'
+    var inputCode = readInput(name)
+    var outputCode = readOutput(name)
+    var doc = new Document(name)
+    allDocs[name] = doc
+
+    framework.createInstance(name, inputCode)
+    var expected = eval('(' + outputCode + ')')
+    var actual = doc.toJSON()
+    expect(actual).eql(expected)
+
+    framework.destroyInstance(name)
+    delete allDocs[name]
+  })
+
   it('refresh twice', function () {
     var name = 'refresh2'
     var inputCode = readInput(name)
@@ -747,7 +815,6 @@ describe('test input and output', function () {
     delete allDocs[name]
   })
 
-
   it('a bigger wrong transformer version', () => {
     var name = 'transformer3'
     var inputCode = readInput(name)
@@ -787,6 +854,52 @@ describe('test input and output', function () {
     framework.createInstance(name, inputCode)
     var expected = eval('(' + outputCode + ')')
     var actual = doc.toJSON()
+    expect(actual).eql(expected)
+
+    framework.destroyInstance(name)
+    delete allDocs[name]
+  })
+
+  it('input binding', function () {
+    var name = 'input-binding'
+    var inputCode = readInput(name)
+    var outputCode = readOutput(name)
+    var doc = new Document(name)
+    allDocs[name] = doc
+
+    framework.createInstance(name, inputCode)
+    var expected = eval('(' + outputCode + ')')
+    var actual = doc.toJSON()
+    expect(actual).eql(expected)
+
+    expected.children[0].attr.value = 'abcdefg'
+    framework.callJS(name, [{
+      method: 'fireEvent',
+      args: [
+        doc.body.children[0].ref,
+        'change',
+        {},
+        {attrs: {value: 'abcdefg'}}
+      ]
+    }])
+
+    expected.children.push({type: 'text', attr: {value: '1 - abcdefg'}})
+    actual = doc.toJSON()
+    expect(actual).eql(expected)
+
+    expected.children[0].attr.value = '12345'
+    framework.callJS(name, [{
+      method: 'fireEvent',
+      args: [
+        doc.body.children[0].ref,
+        'change',
+        {},
+        {attrs: {value: '12345'}}
+      ]
+    }])
+
+    expected.children.push({type: 'text', attr: {value: '2 - 12345'}})
+    actual = doc.toJSON()
     expect(actual).eql(expected)
 
     framework.destroyInstance(name)

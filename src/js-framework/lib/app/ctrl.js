@@ -10,26 +10,37 @@
  * corresponded with the API of instance manager (framework.js)
  */
 
-import {
-  bind, extend
+import * as _ from '../util'
+import Listener from './dom-listener'
+
+export function updateActions() {
+  this.differ.flush()
+  const tasks = []
+  if (this.listener && this.listener.updates.length) {
+    tasks.push(...this.listener.updates)
+    this.listener.updates = []
+  }
+  if (tasks.length) {
+    this.callTasks(tasks)
+  }
 }
-from '../util'
-import * as perf from '../perf'
-import Listener, {createAction} from './dom-listener'
 
 export function init(code, data) {
+  _.debug('Intialize an instance with:\n', code, data)
+
   var result
   // @see: lib/app/bundle.js
-  const define = bind(this.define, this)
+  const define = _.bind(this.define, this)
   const bootstrap = (name, config, _data) => {
     result = this.bootstrap(name, config, _data || data)
     this.updateActions()
     this.doc.listener.createFinish()
     this.doc.close()
+    _.debug(`After intialized an instance(${this.id})`)
   }
 
   // backward(register/render)
-  const register = bind(this.register, this)
+  const register = _.bind(this.register, this)
   const render = (name, _data) => {
     result = this.bootstrap(name, {}, _data)
   }
@@ -39,8 +50,6 @@ export function init(code, data) {
   }
 
   const document = this.doc
-
-  perf.start('run bundle', this.id)
 
   let functionBody
   /* istanbul ignore if */
@@ -74,11 +83,12 @@ export function init(code, data) {
     define,
     bootstrap)
 
-  perf.end('run bundle', this.id)
   return result
 }
 
 export function destroy() {
+  _.debug(`Destory an instance(${this.id})`)
+
   this.id = ''
   this.eventManager = null
   this.options = null
@@ -95,22 +105,10 @@ export function getRootElement() {
   return body.toJSON ? body.toJSON() : {}
 }
 
-export function updateActions(addonTasks) {
-  this.differ.flush()
-  const tasks = []
-  if (this.listener && this.listener.updates.length) {
-    tasks.push(...this.listener.updates)
-    this.listener.updates = []
-  }
-  if (addonTasks && addonTasks.length) {
-    tasks.push(...addonTasks)
-  }
-  if (tasks.length) {
-    this.callTasks(tasks)
-  }
-}
-
 export function fireEvent(ref, type, e, domChanges) {
+  _.debug(`Fire a "${type}" event on an element(${ref})`,
+            `in instance(${this.id})`)
+
   if (Array.isArray(ref)) {
     ref.some((ref) => {
       return this.fireEvent(ref, type, e) !== false
@@ -121,7 +119,6 @@ export function fireEvent(ref, type, e, domChanges) {
   const el = this.doc.getRef(ref)
 
   if (el) {
-    perf.start('manage event', ref + '-' + type)
     e = e || {}
     e.type = type
     e.target = el
@@ -130,8 +127,8 @@ export function fireEvent(ref, type, e, domChanges) {
       updateElement(el, domChanges)
     }
     const result = this.eventManager.fire(el, type, e)
-    perf.end('manage event', ref + '-' + type)
     this.updateActions()
+    this.doc.listener.updateFinish()
     return result
   }
 
@@ -139,16 +136,20 @@ export function fireEvent(ref, type, e, domChanges) {
 }
 
 export function callback(callbackId, data, ifKeepAlive) {
+  _.debug(`Invoke a callback(${callbackId}) with`, data,
+            `in instance(${this.id})`)
+
   const callback = this.callbacks[callbackId]
 
   if (typeof callback === 'function') {
-    callback(data) // data is already a object, @see: lib/framework.js
+    callback(data) // data is already a object, @see: lib/runtime/index.js
 
     if (typeof ifKeepAlive === 'undefined' || ifKeepAlive === false) {
       this.callbacks[callbackId] = undefined
     }
 
     this.updateActions()
+    this.doc.listener.updateFinish()
     return
   }
 
@@ -156,15 +157,19 @@ export function callback(callbackId, data, ifKeepAlive) {
 }
 
 export function refreshData(data) {
+  _.debug(`Refresh with`, data,
+            `in instance[${this.id}]`)
+
   const vm = this.vm
 
   if (vm && data) {
     if (typeof vm.refreshData === 'function') {
       vm.refreshData(data)
     } else {
-      extend(vm, data)
+      _.extend(vm, data)
     }
-    this.updateActions([createAction('refreshFinish', [])])
+    this.updateActions()
+    this.doc.listener.refreshFinish()
     return
   }
 
@@ -174,11 +179,11 @@ export function refreshData(data) {
 function updateElement(el, changes) {
   const attrs = changes.attrs || {}
   for (const name in attrs) {
-    el.setAttr(name, attrs)
+    el.setAttr(name, attrs[name], true)
   }
   const style = changes.style || {}
   for (const name in style) {
-    el.setStyle(name, style[name])
+    el.setStyle(name, style[name], true)
   }
 }
 

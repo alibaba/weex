@@ -7,9 +7,10 @@ const DEFAULT_TAG_NAME = 'div'
 
 export const instanceMap = {}
 
-export function Document(id) {
+export function Document(id, url) {
   id = id ? id.toString() : ''
   this.id = id
+  this.URL = url
   this.nextRef = 1
   this.nodeMap = {}
   this.listener = null
@@ -256,8 +257,8 @@ Element.prototype.insertAfter = function (node, after) {
   node.parentRef = this.ref
   if (this.attached) {
     setAttached(node, this.depth)
-  }
-  else {
+  } else {
+    /* istanbul ignore next */
     setDetached(node)
   }
   children.splice(index + 1, 0, node)
@@ -459,12 +460,12 @@ function removeIfExisted(node) {
   }
 }
 
-Element.prototype.setAttr = function (key, value) {
+Element.prototype.setAttr = function (key, value, silent) {
   if (this.attr[key] === value) {
     return
   }
   this.attr[key] = value
-  if (this.attached) {
+  if (!silent && this.attached) {
     const renderer = this.getRenderer()
     if (renderer) {
       renderer.setAttr(this.ref, key, value)
@@ -472,12 +473,13 @@ Element.prototype.setAttr = function (key, value) {
   }
 }
 
-Element.prototype.setStyle = function (key, value) {
+Element.prototype.setStyle = function (key, value, silent) {
+  /* istanbul ignore if */
   if (this.style[key] === value) {
     return
   }
   this.style[key] = value
-  if (this.attached) {
+  if (!silent && this.attached) {
     const renderer = this.getRenderer()
     if (renderer) {
       renderer.setStyle(this.ref, key, value)

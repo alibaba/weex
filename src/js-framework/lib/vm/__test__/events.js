@@ -59,7 +59,7 @@ describe('bind and fire events', () => {
     }
 
     const app = {doc, customComponentMap, eventManager}
-    const vm = new Vm('foo', {_app: app})
+    const vm = new Vm('foo', customComponentMap.foo, {_app: app})
 
     checkReady(vm, function () {
 
@@ -108,7 +108,7 @@ describe('bind and fire events', () => {
     }
 
     const app = {doc, customComponentMap, eventManager}
-    const vm = new Vm('foo', {_app: app})
+    const vm = new Vm('foo', customComponentMap.foo, {_app: app})
 
     checkReady(vm, function () {
 
@@ -250,7 +250,7 @@ describe('bind and fire events', () => {
     }
 
     const app = {doc, customComponentMap, eventManager}
-    const vm = new Vm('foo', {_app: app})
+    const vm = new Vm('foo', customComponentMap.foo, {_app: app})
 
     checkReady(vm, function () {
       doc.close()
@@ -312,7 +312,7 @@ describe('bind and fire events', () => {
     }
 
     const app = {doc, customComponentMap, eventManager}
-    const vm = new Vm('foo', {_app: app})
+    const vm = new Vm('foo', customComponentMap.foo, {_app: app})
 
     checkReady(vm, function () {
       doc.close()
@@ -386,7 +386,7 @@ describe('bind and fire events', () => {
 
     const app = {doc, customComponentMap, eventManager}
     const evSpy = sinon.spy()
-    const vm = new Vm('foo', {_app: app}, null, null,
+    const vm = new Vm('foo', customComponentMap.foo, {_app: app}, null, null,
       {
         'hook:init': () => evSpy('hook:init'),
         'hook:created': () => evSpy('hook:created'),

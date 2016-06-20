@@ -1,10 +1,10 @@
 import './polyfill'
-import * as framework from './lib/framework'
+import runtime from './lib/runtime'
 import {version, optionalDependencies} from './package.json'
 
-for (let methodName in framework) {
+for (let methodName in runtime) {
     global[methodName] = function (...args) {
-        const ret = framework[methodName](...args)
+        const ret = runtime[methodName](...args)
         if (ret instanceof Error) {
             console.error(ret.toString())
         } else if (ret instanceof Array) {

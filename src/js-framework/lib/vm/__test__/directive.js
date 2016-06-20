@@ -6,15 +6,16 @@ chai.use(sinonChai)
 
 import * as directive from '../directive.js'
 
-import scope from '../instance/scope'
+import * as state from '../core/state.js'
 import EventManager from '../../app/event'
+import {nativeComponentMap} from '../../config'
 
 function extendVm(vm, methodNames) {
-  Object.assign(vm, scope)
+  Object.assign(vm, state)
   methodNames.forEach((name) => {
     vm[name] = directive[name]
   })
-  vm._initScope()
+  vm._initState()
 }
 
 function initElement(el) {
@@ -123,20 +124,49 @@ describe('apply component options', () => {
     vm = null
   })
 
-  it('apply "append tree" to slider', () => {
+  it('apply top prop', () => {
+    nativeComponentMap['test-apply'] = {
+      type: 'test-apply1',
+      append: 'tree'
+    }
     const template = {
-      type: 'slider'
+      type: 'test-apply'
     }
     vm._applyNaitveComponentOptions(template)
+    expect(template.type).to.be.equal('test-apply')
     expect(template.append).to.be.equal('tree')
+
+    delete nativeComponentMap['test-apply']
   })
 
-  it('apply "append tree" to cell', () => {
+  it('apply a object', () => {
+    nativeComponentMap['test-apply'] = {
+      classList: ['c'],
+      attr: {
+        a: 'a',
+        b: 'b'
+      }
+    }
+    const spy = sinon.spy()
     const template = {
-      type: 'cell'
+      type: 'test-apply',
+      classList: spy,
+      attr: {
+        b: '2'
+      }
     }
     vm._applyNaitveComponentOptions(template)
-    expect(template.append).to.be.equal('tree')
+
+    expect(template).to.deep.equal({
+      type: 'test-apply',
+      classList: spy,
+      attr: {
+        a: 'a',
+        b: '2'
+      }
+    })
+
+    delete nativeComponentMap['test-apply']
   })
 })
 
@@ -151,6 +181,21 @@ describe('set props', () => {
     '_watch', '_bindKey', '_bindDir',
     '_setId', '_setAttr', '_setClass', '_setStyle',
     '_setEvent', '_bindEvents', '_bindElement']
+
+  before(() => {
+    sinon.stub(console, 'log')
+    sinon.stub(console, 'info')
+    sinon.stub(console, 'warn')
+    sinon.stub(console, 'error')
+  })
+
+  after(() => {
+    console.log.restore()
+    console.info.restore()
+    console.warn.restore()
+    console.error.restore()
+  })
+
   beforeEach(() => {
     el = {
       attr: {}, style: {}
@@ -317,9 +362,7 @@ describe('bind events', () => {
   })
   // - bind method to eventManager
   it('add event to manager by handler', () => {
-    vm._bindEvents(el, {click: function ($event) {
-      this.foo(this.a, $event)
-    }})
+    vm._bindEvents(el, {click: sinon.spy()})
     expect(manager.targets.length).equal(1)
     var target = manager.targets[0]
     expect(target).a('object')
@@ -427,6 +470,22 @@ describe('bind external infomations to sub vm', () => {
     expect(subVm._rootEl.style.bbb).eql(3)
   })
 
+  it('bind simply classlist to a sub vm with root element', () => {
+    subVm._rootEl = {
+      attr: {},
+      style: {},
+      event: []
+    }
+    const template = {
+      classList: ['class-style1']
+    }
+    initElement(subVm._rootEl)
+    vm._bindSubVm(subVm, template)
+    vm._bindSubVmAfterInitialized(subVm, template)
+    expect(subVm._rootEl.classStyle.aaa).eql(1)
+    expect(subVm._rootEl.classStyle.bbb).eql(2)
+  })
+
   it('bind classlist to a sub vm with root element', () => {
     subVm._rootEl = {
       attr: {},
@@ -447,7 +506,6 @@ describe('bind external infomations to sub vm', () => {
     expect(subVm._rootEl.classStyle.aaa).eql(2)
     expect(subVm._rootEl.classStyle.bbb).to.be.undefined
     expect(subVm._rootEl.classStyle.ccc).eql(3)
-
   })
 
   it('bind events to a sub vm with root element', () => {

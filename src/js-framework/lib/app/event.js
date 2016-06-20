@@ -10,7 +10,7 @@ export default function EventManager() {
 }
 
 EventManager.prototype._get = function (el, force) {
-  var index = _.indexOf(this.els, el)
+  var index = this.els.indexOf(el)
   var target
   if (index >= 0) {
     target = this.targets[index]

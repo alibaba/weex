@@ -1,17 +1,174 @@
 /// lang.js
-import Config from '../config'
 
 /**
- * Check is a string starts with $ or _
+ * Check if a string starts with $ or _
  *
  * @param {String} str
  * @return {Boolean}
  */
 
-export var isReserved = (str) => {
-  str += ''
-  let c = (str + '').charCodeAt(0)
+export function isReserved (str) {
+  const c = (str + '').charCodeAt(0)
   return c === 0x24 || c === 0x5F
+}
+
+/**
+ * Define a property.
+ *
+ * @param {Object} obj
+ * @param {String} key
+ * @param {*} val
+ * @param {Boolean} [enumerable]
+ */
+
+export function def (obj, key, val, enumerable) {
+  Object.defineProperty(obj, key, {
+    value: val,
+    enumerable: !!enumerable,
+    writable: true,
+    configurable: true
+  })
+}
+
+/// env.js
+
+// can we use __proto__?
+export const hasProto = '__proto__' in {}
+
+// Browser environment sniffing
+export const inBrowser =
+  typeof window !== 'undefined' &&
+  Object.prototype.toString.call(window) !== '[object Object]'
+
+// detect devtools
+export const devtools = inBrowser && window.__VUE_DEVTOOLS_GLOBAL_HOOK__
+
+// UA sniffing for working around browser-specific quirks
+const UA = inBrowser && window.navigator.userAgent.toLowerCase()
+const isIos = UA && /(iphone|ipad|ipod|ios)/i.test(UA)
+const isWechat = UA && UA.indexOf('micromessenger') > 0
+
+/**
+ * Defer a task to execute it asynchronously. Ideally this
+ * should be executed as a microtask, so we leverage
+ * MutationObserver if it's available, and fallback to
+ * setTimeout(0).
+ *
+ * @param {Function} cb
+ * @param {Object} ctx
+ */
+
+export const nextTick = (function () {
+  let callbacks = []
+  let pending = false
+  let timerFunc
+  function nextTickHandler () {
+    pending = false
+    const copies = callbacks.slice(0)
+    callbacks = []
+    for (let i = 0; i < copies.length; i++) {
+      copies[i]()
+    }
+  }
+
+  /* istanbul ignore if */
+  if (typeof MutationObserver !== 'undefined' && !(isWechat && isIos)) {
+    let counter = 1
+    const observer = new MutationObserver(nextTickHandler)
+    const textNode = document.createTextNode(counter)
+    observer.observe(textNode, {
+      characterData: true
+    })
+    timerFunc = function () {
+      counter = (counter + 1) % 2
+      textNode.data = counter
+    }
+  } else {
+    // webpack attempts to inject a shim for setImmediate
+    // if it is used as a global, so we have to work around that to
+    // avoid bundling unnecessary code.
+    const context = inBrowser
+      ? window
+      : typeof global !== 'undefined' ? global : {}
+    timerFunc = context.setImmediate || setTimeout
+  }
+  return function (cb, ctx) {
+    const func = ctx
+      ? function () { cb.call(ctx) }
+      : cb
+    callbacks.push(func)
+    if (pending) return
+    pending = true
+    timerFunc(nextTickHandler, 0)
+  }
+})()
+
+let _Set
+/* istanbul ignore if */
+if (typeof Set !== 'undefined' && Set.toString().match(/native code/)) {
+  // use native Set when available.
+  _Set = Set
+} else {
+  // a non-standard Set polyfill that only works with primitive keys.
+  _Set = function () {
+    this.set = Object.create(null)
+  }
+  _Set.prototype.has = function (key) {
+    return this.set[key] !== undefined
+  }
+  _Set.prototype.add = function (key) {
+    this.set[key] = 1
+  }
+  _Set.prototype.clear = function () {
+    this.set = Object.create(null)
+  }
+}
+
+export { _Set }
+
+/// shared
+
+/**
+ * Remove an item from an array
+ *
+ * @param {Array} arr
+ * @param {*} item
+ */
+
+export function remove (arr, item) {
+  if (arr.length) {
+    const index = arr.indexOf(item)
+    if (index > -1) {
+      return arr.splice(index, 1)
+    }
+  }
+}
+
+/**
+ * Check whether the object has the property.
+ *
+ * @param {Object} obj
+ * @param {String} key
+ * @return {Boolean}
+ */
+const hasOwnProperty = Object.prototype.hasOwnProperty
+export function hasOwn (obj, key) {
+  return hasOwnProperty.call(obj, key)
+}
+
+/**
+ * Create a cached version of a pure function.
+ *
+ * @param {Function} fn
+ * @return {Function}
+ */
+
+export function cached (fn) {
+  const cache = Object.create(null)
+  return function cachedFn (str) {
+    const hit = cache[str]
+    return hit || (cache[str] = fn(str))
+  }
 }
 
 /**
@@ -21,13 +178,28 @@ export var isReserved = (str) => {
  * @return {String}
  */
 
-let camelRE = /-(\w)/g
+const camelizeRE = /-(\w)/g
+export const camelize = cached(str => {
+  return str.replace(camelizeRE, toUpper)
+})
+
 function toUpper (_, c) {
-  return c ? c.toUpperCase () : ''
+  return c ? c.toUpperCase() : ''
 }
-export var camelize = (str) => {
-  return str.replace(camelRE, toUpper)
-}
+
+/**
+ * Hyphenate a camelCase string.
+ *
+ * @param {String} str
+ * @return {String}
+ */
+
+const hyphenateRE = /([a-z\d])([A-Z])/g
+export const hyphenate = cached(str => {
+  return str
+    .replace(hyphenateRE, '$1-$2')
+    .toLowerCase()
+})
 
 /**
  * Simple bind, faster than native
@@ -37,9 +209,9 @@ export var camelize = (str) => {
  * @return {Function}
  */
 
-export var bind = function (fn, ctx) {
+export function bind (fn, ctx) {
   return function (a) {
-    let l = arguments.length
+    const l = arguments.length
     return l
       ? l > 1
         ? fn.apply(ctx, arguments)
@@ -56,10 +228,10 @@ export var bind = function (fn, ctx) {
  * @return {Array}
  */
 
-export var toArray = (list, start) => {
+export function toArray (list, start) {
   start = start || 0
   let i = list.length - start
-  let ret = new Array(i)
+  const ret = new Array(i)
   while (i--) {
     ret[i] = list[i + start]
   }
@@ -73,7 +245,7 @@ export var toArray = (list, start) => {
  * @param {Object} from
  */
 
-export var extend = (target, ...src) => {
+export function extend (target, ...src) {
   if (typeof Object.assign === 'function') {
     Object.assign(target, ...src)
   } else {
@@ -97,8 +269,8 @@ export var extend = (target, ...src) => {
  * @return {Boolean}
  */
 
-export var isObject = (obj) => {
-  return !!(obj && typeof obj === 'object')
+export function isObject (obj) {
+  return obj !== null && typeof obj === 'object'
 }
 
 /**
@@ -109,9 +281,10 @@ export var isObject = (obj) => {
  * @return {Boolean}
  */
 
-let toString = Object.prototype.toString
-export var isPlainObject = (obj) => {
-  return toString.call(obj) === '[object Object]'
+const toString = Object.prototype.toString
+const OBJECT_STRING = '[object Object]'
+export function isPlainObject (obj) {
+  return toString.call(obj) === OBJECT_STRING
 }
 
 /**
@@ -121,11 +294,11 @@ export var isPlainObject = (obj) => {
  * @return {Boolean}
  */
 
-export var isArray = (obj) => {
-  return Array.isArray(obj)
-}
+export const isArray = Array.isArray
 
-export var stringify = (x) => {
+/// other
+
+export function stringify (x) {
   return typeof x === 'undefined' || x === null || typeof(x) === 'function'
     ? ''
     : typeof x === 'object'
@@ -137,12 +310,12 @@ export var stringify = (x) => {
       : x.toString()
 }
 
-export var typof = (v) => {
+export function typof (v) {
   let s = Object.prototype.toString.call(v)
   return s.substring(8, s.length - 1).toLowerCase()
 }
 
-export var normalize = (v) => {
+export function normalize (v) {
   let type = typof(v)
 
   switch(type) {
@@ -160,77 +333,44 @@ export var normalize = (v) => {
     case 'object':
     case 'function':
       return v
-    default:
-      return JSON.stringify(v)
   }
 }
 
-/**
- * Define a non-enumerable property
- *
- * @param {Object} obj
- * @param {String} key
- * @param {*} val
- * @param {Boolean} [enumerable]
- */
-
-export var define = (obj, key, val, enumerable) => {
-  Object.defineProperty(obj, key, {
-    value: val,
-    enumerable: !!enumerable,
-    writable: true,
-    configurable: true
-  })
-}
+const enableLog = typeof console !== 'undefined' && global.IS_PRODUCT !== true
 
 /**
- * Manual indexOf because it's slightly faster than
- * native.
- *
- * @param {Array} arr
- * @param {*} obj
- */
-
-export var indexOf = (arr, obj) => {
-  for (let i = 0, l = arr.length; i < l; i++) {
-    if (arr[i] === obj) return i
-  }
-  return -1
-}
-
-
-/// debug.js
-
-
-const hasConsole = typeof console !== 'undefined'
-
-/**
- * Log a message.
- *
  * @param {String} msg
  */
-
-export var log = (msg) => {
-  const _config = Config || {}
-  if (hasConsole && _config.debug) {
-    console.log.call(this, '[info]: ', msg)
-  }
+export function error (...args) {
+  enableLog && console.error && console.error('[JS Framework]', ...args)
 }
 
 /**
- * We've got a problem here.
- *
  * @param {String} msg
  */
-
-export var warn = (msg) => {
-  // if (hasConsole && (!config.silent || config.debug)) {
-  if (hasConsole) {
-    console.warn.call(this, '[warn]: ', msg)
-    /* istanbul ignore if */
-    // if (config.debug) {
-    //   /* jshint debug: true */
-    //   debugger
-    // }
-  }
+export function warn (...args) {
+  enableLog && console.warn && console.warn('[JS Framework]', ...args)
 }
+
+/**
+ * @param {String} msg
+ */
+export function info (...args) {
+  enableLog && console.info && console.info('[JS Framework]', ...args)
+}
+
+/**
+ * @param {String} msg
+ */
+export function debug (...args) {
+  enableLog && console.debug && console.debug('[JS Framework]', ...args)
+}
+
+/**
+ * @param {String} msg
+ */
+export function log (...args) {
+  enableLog && console.log && console.log('[JS Framework]', ...args)
+}
+
+

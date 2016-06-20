@@ -4,6 +4,7 @@ import sinonChai from 'sinon-chai'
 const {expect} = chai
 chai.use(sinonChai)
 
+import '../../../polyfill/consolelog'
 import * as modules from '../modules'
 import * as methods from '../methods'
 import {registerModules, requireModule, clearModules, registerMethods} from '../../app/register'
@@ -78,11 +79,21 @@ describe('built-in', () => {
 
   describe('common apis', () => {
 
+    before(() => {
+      sinon.stub(console, 'warn')
+    })
+
+    beforeEach(() => {
+      console.warn.reset()
+    })
+
+    after(() => {
+      console.warn.restore()
+    })
+
     it('$', () => {
-      global.nativeLog = sinon.spy()
       expect(vm.$('a')).to.deep.equal(vm._ids.a.vm)
-      expect(global.nativeLog.callCount).to.be.equal(1)
-      global.nativeLog = undefined
+      expect(console.warn.callCount).to.be.equal(1)
     })
 
     it('$el', () => {
@@ -124,10 +135,9 @@ describe('built-in', () => {
         }
       })
 
-      global.nativeLog = sinon.spy()
       const configSpy = sinon.spy()
       vm.$getConfig(configSpy)
-      expect(global.nativeLog.callCount).to.be.equal(1)
+      expect(console.warn.callCount).to.be.equal(1)
       expect(configSpy.args.length).eql(1)
       expect(configSpy.args[0][0]).eql({
           debug: true,
@@ -136,7 +146,6 @@ describe('built-in', () => {
             a: 'b'
           }
         })
-      global.nativeLog = undefined
     })
 
     it('$sendHttp', () => {

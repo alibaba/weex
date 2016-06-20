@@ -11,6 +11,10 @@ We agree that you may discuss technical information about Weex, except that you 
 
 Support Android 4.1 (API 16) and iOS soon. See [Weex website](http://alibaba.github.io/weex/) for more information. 
 
+## For Windows
+
+Please ***INSTALL [Git for Windows](https://git-scm.com/download/win)*** and run all the following commands in git-bash.
+
 ## Meet Weex
 
 * [Install Playground](http://alibaba.github.io/weex/download.html).
@@ -37,10 +41,6 @@ Support Android 4.1 (API 16) and iOS soon. See [Weex website](http://alibaba.git
 ## Scripts
 
 See [SCRIPTS.md](SCRIPTS.md) for more information.
-
-## For Windows
-
-Please install [Git for Windows](https://git-scm.com/download/win).
 
 ## FAQ
 

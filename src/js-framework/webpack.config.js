@@ -6,7 +6,9 @@ var sourceMapPlugin = new webpack.SourceMapDevToolPlugin({
 })
 
 var version = pkg.version
-var banner = `(this.nativeLog || function(s) {console.log(s)})('START JS FRAMEWORK: ${pkg.version}');`;
+var date = new Date().toISOString().split('T')[0].replace(/\-/g, '')
+var banner = `(this.nativeLog || function(s) {console.log(s)})` + 
+  `('START JS FRAMEWORK: ${version} Build ${date}');`;
 
 var bannerPlugin = new webpack.BannerPlugin(banner, {
   raw: true

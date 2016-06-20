@@ -3,9 +3,9 @@
  * Directive Parser
  */
 
-import {bind, extend} from '../util'
+import * as _ from '../util/index'
 
-import Watcher from './watcher'
+import Watcher from './core/watcher'
 import {nativeComponentMap} from '../config'
 
 const SETTERS = {
@@ -23,7 +23,18 @@ export function _applyNaitveComponentOptions(template) {
   const options = nativeComponentMap[type]
 
   if (typeof options === 'object') {
-    extend(template, options)
+    for (const key in options) {
+      if (template[key] == null) {
+        template[key] = options[key]
+      } else if (_.typof(template[key]) === 'object' &&
+        _.typof(options[key]) === 'object') {
+        for (const subkey in options[key]) {
+          if (template[key][subkey] == null) {
+            template[key][subkey] = options[key][subkey]
+          }
+        }
+      }
+    }
   }
 }
 
@@ -110,6 +121,7 @@ function mergeStyle(target, vm, subVm) {
 function mergeClassStyle(target, vm, subVm) {
   var css = vm._options && vm._options.style || {}
 
+  /* istanbul ignore if */
   if (!subVm._rootEl) {
     return
   }
@@ -119,7 +131,7 @@ function mergeClassStyle(target, vm, subVm) {
       setClassStyle(subVm._rootEl, css, v)
     })
     setClassStyle(subVm._rootEl, css, value)
-  } else if (target) {
+  } else if (target != null) {
     setClassStyle(subVm._rootEl, css, target)
   }
 }
@@ -129,7 +141,7 @@ function mergeEvent(target, vm, subVm) {
     for (const type in target) {
       const handler = vm[target[type]]
       if (handler) {
-        subVm._rootEl.addEvent(type, bind(handler, vm))
+        subVm._rootEl.addEvent(type, _.bind(handler, vm))
       }
     }
   }
@@ -229,7 +241,7 @@ export function _setStyle(el, style) {
  * add an event type and handler to an element and generate a dom update
  */
 export function _setEvent(el, type, handler) {
-  el.addEvent(type, bind(handler, this))
+  el.addEvent(type, _.bind(handler, this))
 }
 
 /**
@@ -246,6 +258,10 @@ export function _bindEvents(el, events) {
     let handler = events[key]
     if (typeof handler === 'string') {
       handler = this[handler]
+      /* istanbul ignore if */
+      if (!handler) {
+        _.error(`The method "${handler}" is not defined.`)
+      }
     }
     this._setEvent(el, key, handler)
   }
@@ -266,10 +282,8 @@ export function _bindDir(el, name, data) {
     const key = keys[i]
     const value = data[key]
     if (typeof value === 'function') {
-      const update = value
-      this._bindKey(el, name, key, update)
-    }
-    else {
+      this._bindKey(el, name, key, value)
+    } else {
       el[SETTERS[name]](key, value)
     }
   }
@@ -289,8 +303,7 @@ export function _bindKey(el, name, key, calc) {
     const differ = this && this._app && this._app.differ
     if (differ) {
       differ.append('element', el.depth, el.ref, handler)
-    }
-    else {
+    } else {
       handler()
     }
   })

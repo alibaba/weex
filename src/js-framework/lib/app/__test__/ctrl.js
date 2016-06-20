@@ -114,6 +114,11 @@ describe('the api of app', () => {
       app.fireEvent('_root', 'click')
       expect(app.eventManager.fire.calledOnce).to.be.true
       expect(app.eventManager.fire.args[0][1]).to.be.equal('click')
+
+      const task = spy1.firstCall.args[0][0]
+      expect(task.module).to.be.equal('dom')
+      expect(task.method).to.be.equal('updateFinish')
+      expect(task.args.length).to.be.equal(0)
     })
 
     it('error', () => {
@@ -130,6 +135,11 @@ describe('the api of app', () => {
       expect(spy2.calledOnce).to.be.true
       expect(spy2.args[0][0]).to.deep.equal(data)
       expect(app.callbacks[1]).to.be.a('function')
+
+      const task = spy1.firstCall.args[0][0]
+      expect(task.module).to.be.equal('dom')
+      expect(task.method).to.be.equal('updateFinish')
+      expect(task.args.length).to.be.equal(0)
     })
 
     it('multiple called', () => {
@@ -157,6 +167,7 @@ describe('the api of app', () => {
       const data = {b: 'c'}
       app.refreshData(data)
       expect(app.vm).to.deep.equal(data)
+
       const task = spy1.firstCall.args[0][0]
       expect(task.module).to.be.equal('dom')
       expect(task.method).to.be.equal('refreshFinish')
