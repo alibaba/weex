@@ -204,6 +204,8 @@
  */
 package com.taobao.weex.dom;
 
+import android.util.Log;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXEnvironment;
@@ -512,7 +514,6 @@ class WXDomStatement {
 
         @Override
         public void execute() {
-
           WXSDKInstance instance = WXSDKManager.getInstance().getSDKInstance(mInstanceId);
           if (instance == null || instance.getContext() == null) {
             WXLogUtils.e("instance is null or instance is destroy!");

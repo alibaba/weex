@@ -222,6 +222,7 @@ import com.taobao.weex.common.WXRefreshData;
 import com.taobao.weex.common.WXRenderStrategy;
 import com.taobao.weex.common.WXRequest;
 import com.taobao.weex.common.WXResponse;
+import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.http.WXHttpUtil;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXVContainer;
@@ -239,7 +240,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-//import com.taobao.weex.ui.WXRecycleImageManager;
 
 /**
  * Each instance of WXSDKInstance represents an running weex instance.
@@ -249,7 +249,6 @@ public class WXSDKInstance implements IWXActivityStateListener {
 
   public boolean mEnd = false;
   public static final String BUNDLE_URL = "bundleUrl";
-  // adapters
   protected IWXUserTrackAdapter mUserTrackAdapter;
   protected IWXHttpAdapter mWXHttpAdapter;
   private IWXRenderListener mRenderListener;
@@ -279,8 +278,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
    * Refresh start time
    */
   private long mRefreshStartTime;
-//  private WXRecycleImageManager mRecycleImageManager;
-  private ConcurrentLinkedQueue<IWXActivityStateListener> mActivityStateListeners;
+  private ConcurrentLinkedQueue<IWXActivityStateListener> mActivityStateListeners = new ConcurrentLinkedQueue<>();
   private WXPerformance mWXPerformance;
   private ScrollView mScrollView;
   private WXScrollViewListener mWXScrollViewListener;
@@ -306,8 +304,6 @@ public class WXSDKInstance implements IWXActivityStateListener {
 
   public void init(Context context) {
     mContext = context;
-    mActivityStateListeners = new ConcurrentLinkedQueue<>();
-//    mRecycleImageManager = new WXRecycleImageManager(this);
 
     mWXPerformance = new WXPerformance();
     mWXPerformance.WXSDKVersion = WXEnvironment.WXSDK_VERSION;
@@ -473,7 +469,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
     if (wxRequest.paramMap == null) {
       wxRequest.paramMap = new HashMap<String, String>();
     }
-    wxRequest.paramMap.put("user-agent", WXHttpUtil.assembleUserAgent());
+    wxRequest.paramMap.put("user-agent", WXHttpUtil.assembleUserAgent(mContext,WXEnvironment.getConfig()));
     adapter.sendRequest(wxRequest, new WXHttpListener(pageName, options, jsonInitData, width, height, flag, System.currentTimeMillis()));
     mWXHttpAdapter = adapter;
   }
@@ -524,6 +520,13 @@ public class WXSDKInstance implements IWXActivityStateListener {
   }
 
   public Context getContext() {
+    if(mContext == null){
+      mContext = WXEnvironment.sApplication;
+      if(WXEnvironment.isApkDebugable()){
+        throw new WXRuntimeException("WXSdkInstance mContext == null");
+      }
+      WXLogUtils.e("WXSdkInstance mContext == null");
+    }
     return mContext;
   }
 
@@ -535,9 +538,6 @@ public class WXSDKInstance implements IWXActivityStateListener {
     return mGodViewWidth;
   }
 
-//  public WXRecycleImageManager getRecycleImageManager() {
-//    return mRecycleImageManager;
-//  }
 
   public IWXImgLoaderAdapter getImgLoaderAdapter() {
     return WXSDKManager.getInstance().getIWXImgLoaderAdapter();
@@ -555,16 +555,6 @@ public class WXSDKInstance implements IWXActivityStateListener {
     if (mScrollView == null) {
       return;
     }
-//    if (mRecycleImageManager != null && mRecycleImageManager.isRecycleImage()) {
-//      WXSDKManager.getInstance().postOnUiThread(new Runnable() {
-//        @Override
-//        public void run() {
-//          if (mRecycleImageManager != null) {
-//            mRecycleImageManager.loadImage();
-//          }
-//        }
-//      }, 250);
-//    }
   }
 
   /********************************
@@ -577,6 +567,9 @@ public class WXSDKInstance implements IWXActivityStateListener {
   public void registerActivityStateListener(IWXActivityStateListener listener) {
     if (listener == null || mActivityStateListeners==null) {
       return;
+    }
+    if(mActivityStateListeners == null){
+       mActivityStateListeners = new ConcurrentLinkedQueue<>();
     }
 
     if (!mActivityStateListeners.contains(listener)) {
@@ -859,10 +852,6 @@ public class WXSDKInstance implements IWXActivityStateListener {
 
   public void destroy() {
     WXSDKManager.getInstance().destroyInstance(mInstanceId);
-//    if (mRecycleImageManager != null) {
-//      mRecycleImageManager.destroy();
-//      mRecycleImageManager = null;
-//    }
 
     if (mGodCom != null && mGodCom.getView() != null) {
       mGodCom.destroy();

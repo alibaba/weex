@@ -202,58 +202,76 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.ui.component;
+package com.taobao.weex.common;
 
-import android.text.TextUtils;
-
-import com.taobao.weex.WXEnvironment;
-import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.common.WXRuntimeException;
-import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.ui.ComponentHolder;
-import com.taobao.weex.ui.WXComponentRegistry;
+import com.taobao.weex.bridge.Invoker;
+import com.taobao.weex.bridge.MethodInvoker;
+import com.taobao.weex.bridge.ModuleFactory;
+import com.taobao.weex.common.WXModule;
+import com.taobao.weex.common.WXModuleAnno;
 import com.taobao.weex.utils.WXLogUtils;
 
-/**
- * Component factory
- */
-public class WXComponentFactory {
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-  public static WXComponent newInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent) {
-    return newInstance(instance, node, parent, false);
+/**
+ * Use class
+ * Created by sospartan on 6/17/16.
+ */
+public class TypeModuleFactory<T extends WXModule> implements ModuleFactory<T> {
+  public static final String TAG = "TypeModuleFactory";
+  Class<T> mClazz;
+  ArrayList<String> mMethods;
+  Map<String, Invoker> mMethodMap;
+
+  public TypeModuleFactory(Class<T> clz) {
+    mClazz = clz;
   }
 
-  public static WXComponent newInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
-    if (instance == null || node == null || TextUtils.isEmpty(node.type) ) {
-      return null;
-    }
-
-    ComponentHolder holder = WXComponentRegistry.getComponent(node.type);
-    if (holder == null) {
-      if (WXEnvironment.isApkDebugable()) {
-        StringBuilder tag = new StringBuilder();
-        tag.append("WXComponentFactory error type:[");
-        tag.append(node.type).append("]").append(" class not found");
-        WXLogUtils.e(tag.toString());
-      }
-      //For compatible reason of JS framework, unregistered type will be treated as container.
-      holder = WXComponentRegistry.getComponent(WXBasicComponentType.CONTAINER);
-      if(holder == null){
-        throw new WXRuntimeException("Container component not found.");
-      }
-    }
-
+  private void generateMethodMap() {
+    WXLogUtils.d(TAG, "extractMethodNames");
+    ArrayList<String> methods = new ArrayList<>();
+    HashMap<String, Invoker> methodMap = new HashMap<>();
     try {
-      return holder.createInstance(instance, node, parent, lazy);
-    } catch (Exception e) {
-      if (WXEnvironment.isApkDebugable()) {
-        StringBuilder builder = new StringBuilder("WXComponentFactory Exception type:[");
-        builder.append(node.type).append("] ");
-        builder.append(WXLogUtils.getStackTrace(e));
-        WXLogUtils.e(builder.toString());
+      for (Method method : mClazz.getMethods()) {
+        // iterates all the annotations available in the method
+        for (Annotation anno : method.getDeclaredAnnotations()) {
+          if (anno != null && anno instanceof WXModuleAnno) {
+            methods.add(method.getName());
+            methodMap.put(method.getName(), new MethodInvoker(method));
+            break;
+          }
+        }
       }
+    } catch (Throwable e) {
+      WXLogUtils.e("[WXModuleManager] extractMethodNames:" + e.getStackTrace());
     }
+    mMethods = methods;
+    mMethodMap = methodMap;
+  }
 
-    return null;
+
+  @Override
+  public T buildInstance() throws IllegalAccessException, InstantiationException {
+    return mClazz.newInstance();
+  }
+
+  @Override
+  public ArrayList<String> getMethodNames() {
+    if (mMethods == null) {
+      generateMethodMap();
+    }
+    return mMethods;
+  }
+
+  @Override
+  public Map<String, Invoker> getMethodMap() {
+    if (mMethodMap == null) {
+      generateMethodMap();
+    }
+    return mMethodMap;
   }
 }

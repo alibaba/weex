@@ -202,58 +202,18 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.ui.component;
+package com.taobao.weex.bridge;
 
-import android.text.TextUtils;
+import com.taobao.weex.common.WXModule;
 
-import com.taobao.weex.WXEnvironment;
-import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.common.WXRuntimeException;
-import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.ui.ComponentHolder;
-import com.taobao.weex.ui.WXComponentRegistry;
-import com.taobao.weex.utils.WXLogUtils;
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
- * Component factory
+ * Created by sospartan on 6/17/16.
  */
-public class WXComponentFactory {
-
-  public static WXComponent newInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent) {
-    return newInstance(instance, node, parent, false);
-  }
-
-  public static WXComponent newInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
-    if (instance == null || node == null || TextUtils.isEmpty(node.type) ) {
-      return null;
-    }
-
-    ComponentHolder holder = WXComponentRegistry.getComponent(node.type);
-    if (holder == null) {
-      if (WXEnvironment.isApkDebugable()) {
-        StringBuilder tag = new StringBuilder();
-        tag.append("WXComponentFactory error type:[");
-        tag.append(node.type).append("]").append(" class not found");
-        WXLogUtils.e(tag.toString());
-      }
-      //For compatible reason of JS framework, unregistered type will be treated as container.
-      holder = WXComponentRegistry.getComponent(WXBasicComponentType.CONTAINER);
-      if(holder == null){
-        throw new WXRuntimeException("Container component not found.");
-      }
-    }
-
-    try {
-      return holder.createInstance(instance, node, parent, lazy);
-    } catch (Exception e) {
-      if (WXEnvironment.isApkDebugable()) {
-        StringBuilder builder = new StringBuilder("WXComponentFactory Exception type:[");
-        builder.append(node.type).append("] ");
-        builder.append(WXLogUtils.getStackTrace(e));
-        WXLogUtils.e(builder.toString());
-      }
-    }
-
-    return null;
-  }
+public interface ModuleFactory<T extends WXModule> {
+  ArrayList<String> getMethodNames();
+  Map<String, Invoker> getMethodMap();
+  T buildInstance() throws IllegalAccessException, InstantiationException;
 }

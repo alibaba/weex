@@ -143,6 +143,7 @@ import com.taobao.weex.IWXActivityStateListener;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.bridge.Invoker;
 import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.common.IWXObject;
 import com.taobao.weex.common.WXDomPropConstant;
@@ -158,10 +159,7 @@ import com.taobao.weex.ui.view.gesture.WXGesture;
 import com.taobao.weex.ui.view.gesture.WXGestureObservable;
 import com.taobao.weex.ui.view.gesture.WXGestureType;
 import com.taobao.weex.ui.view.listview.BounceRecyclerView;
-import com.taobao.weex.utils.WXLogUtils;
-import com.taobao.weex.utils.WXResourceUtils;
-import com.taobao.weex.utils.WXUtils;
-import com.taobao.weex.utils.WXViewUtils;
+import com.taobao.weex.utils.*;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -423,45 +421,19 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     Iterator<Entry<String, Object>> iterator = props.entrySet().iterator();
     while (iterator.hasNext()) {
       String key = iterator.next().getKey();
-      Method method = mHolder.getMethod(key);
-      if (method != null) {
+      Invoker invoker = mHolder.getMethod(key);
+      if (invoker != null) {
         try {
-          Type[] paramClazzs = mHolder.getMethodTypes(key);
+          Type[] paramClazzs = invoker.getParameterTypes();
           if (paramClazzs.length != 1) {
-            WXLogUtils.e("[WXComponent] setX method only one parameter：" + method);
+            WXLogUtils.e("[WXComponent] setX method only one parameter：" + invoker);
             return;
           }
           Object param;
-          Type paramClazz = paramClazzs[0];
-          Object value = props.get(key);
-          String sValue;
-          if (value instanceof String) {
-            sValue = (String) value;
-          } else {
-            sValue = JSON.toJSONString(value);
-          }
-
-          if (paramClazz == int.class) {
-            param = WXUtils.getInt(sValue);
-          } else if (paramClazz == String.class) {
-            param = sValue;
-          } else if (paramClazz == long.class) {
-            param = WXUtils.getLong(sValue);
-          } else if (paramClazz == double.class) {
-            param = WXUtils.getDouble(sValue);
-          } else if (paramClazz == float.class) {
-            param = WXUtils.getFloat(sValue);
-          } else if (ParameterizedType.class.isAssignableFrom(paramClazz.getClass())) {
-            param = JSON.parseObject(sValue, paramClazz);
-          } else if (IWXObject.class.isAssignableFrom(paramClazz.getClass())) {
-            param = JSON.parseObject(sValue, paramClazz);
-          } else {
-            param = JSON.parseObject(sValue, paramClazz);
-          }
-
-          method.invoke(this, param);
+          param = WXReflectionUtils.parseArgument(paramClazzs[0],props.get(key));
+          invoker.invoke(this, param);
         } catch (Exception e) {
-          WXLogUtils.e("[WXComponent] updateProperties :" + "class:" + getClass() + "method:" + method.getName() + " function " + WXLogUtils.getStackTrace(e));
+          WXLogUtils.e("[WXComponent] updateProperties :" + "class:" + getClass() + "method:" + invoker.toString() + " function " + WXLogUtils.getStackTrace(e));
         }
       }
     }

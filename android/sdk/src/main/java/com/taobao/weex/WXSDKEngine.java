@@ -118,12 +118,10 @@ import com.taobao.weex.adapter.IWXImgLoaderAdapter;
 import com.taobao.weex.adapter.IWXUserTrackAdapter;
 import com.taobao.weex.appfram.navigator.IActivityNavBarSetter;
 import com.taobao.weex.appfram.navigator.WXNavigatorModule;
+import com.taobao.weex.bridge.ModuleFactory;
 import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.bridge.WXModuleManager;
-import com.taobao.weex.common.Destroyable;
-import com.taobao.weex.common.WXException;
-import com.taobao.weex.common.WXInstanceWrap;
-import com.taobao.weex.common.WXModule;
+import com.taobao.weex.common.*;
 import com.taobao.weex.dom.WXDomModule;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.WXDomRegistry;
@@ -339,10 +337,10 @@ public class WXSDKEngine {
    * @param moduleName  module name
    * @param moduleClass module to be registered.
    * @return true for registration success, false for otherwise.
-   * @see {@link WXModuleManager#registerModule(String, WXModuleManager.ModuleFactory, boolean)}
+   * @see {@link WXModuleManager#registerModule(String, ModuleFactory, boolean)}
    */
   public static <T extends WXModule> boolean registerModule(String moduleName, Class<T> moduleClass,boolean global) throws WXException {
-    return registerModule(moduleName, new WXModuleManager.ModuleFactory<>(moduleClass),global);
+    return registerModule(moduleName, new TypeModuleFactory(moduleClass),global);
   }
 
   /**
@@ -352,13 +350,13 @@ public class WXSDKEngine {
    * @param moduleName  module name
    * @param factory module factory to be registered. You can override {@link DestroyableModuleFactory#buildInstance()} to customize module creation.
    * @return true for registration success, false for otherwise.
-   * @see {@link WXModuleManager#registerModule(String, WXModuleManager.ModuleFactory, boolean)}
+   * @see {@link WXModuleManager#registerModule(String, ModuleFactory, boolean)}
    */
   public static <T extends WXModule> boolean registerModuleWithFactory(String moduleName, DestroyableModuleFactory factory, boolean global) throws WXException {
     return registerModule(moduleName, factory,global);
   }
 
-  private static <T extends WXModule> boolean registerModule(String moduleName, WXModuleManager.ModuleFactory factory, boolean global) throws WXException {
+  private static <T extends WXModule> boolean registerModule(String moduleName, ModuleFactory factory, boolean global) throws WXException {
     return WXModuleManager.registerModule(moduleName, factory,global);
   }
 
@@ -371,7 +369,7 @@ public class WXSDKEngine {
    */
   public static abstract class DestroyableModule extends WXModule implements Destroyable {}
 
-  public static  abstract  class DestroyableModuleFactory<T extends DestroyableModule> extends WXModuleManager.ModuleFactory<T>{
+  public static  abstract  class DestroyableModuleFactory<T extends DestroyableModule> extends TypeModuleFactory<T> {
     public DestroyableModuleFactory(Class<T> clz) {
       super(clz);
     }

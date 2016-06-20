@@ -205,6 +205,8 @@
 package com.taobao.weex.ui;
 
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.bridge.Invoker;
+import com.taobao.weex.bridge.MethodInvoker;
 import com.taobao.weex.common.Component;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomObject;
@@ -227,8 +229,7 @@ import java.util.Map;
 public class ComponentHolder {
   public static final String TAG = "ComponentHolder";
   private final Class<? extends WXComponent> mClz;
-  private Map<String, Method> mMethods;
-  private Map<String, Type[]> mMethodParameterTypes;
+  private Map<String, Invoker> mMethods;
   private Constructor<? extends WXComponent> mConstructor;
 
   public ComponentHolder(Class<? extends WXComponent> clz) {
@@ -247,8 +248,7 @@ public class ComponentHolder {
 
   private synchronized void generate(){
     WXLogUtils.d(TAG,"Generate Component:"+mClz.getSimpleName());
-    HashMap<String, Method> methods = new HashMap<>();
-    Map<String, Type[]> typeMap = new HashMap<>();
+    HashMap<String, Invoker> methods = new HashMap<>();
 
     Annotation[] annotations;
     Annotation anno;
@@ -259,15 +259,13 @@ public class ComponentHolder {
         anno = annotations[i];
         if (anno != null && anno instanceof WXComponentProp) {
           String name = ((WXComponentProp) anno).name();
-          methods.put(name, method);
-          typeMap.put(name,method.getGenericParameterTypes());
+          methods.put(name, new MethodInvoker(method));
           break;
         }
       }
     }
 
     mMethods = methods;
-    mMethodParameterTypes = typeMap;
     try {
       mConstructor = mClz.getConstructor(WXSDKInstance.class, WXDomObject.class, WXVContainer.class, boolean.class);
     } catch (NoSuchMethodException e) {
@@ -301,25 +299,12 @@ public class ComponentHolder {
     return component;
   }
 
-  public Class<? extends WXComponent> getComponentClass(){
-    return mClz;
-  }
-
-  public Method getMethod(String name){
+  public Invoker getMethod(String name){
     if(mMethods == null){
       generate();
     }
 
     return mMethods.get(name);
   }
-
-  public Type[] getMethodTypes(String methodName){
-    if(mMethods == null){
-      generate();
-    }
-
-    return mMethodParameterTypes.get(methodName);
-  }
-
 
 }

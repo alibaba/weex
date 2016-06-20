@@ -264,9 +264,14 @@ public class WXComponentRegistry {
       return false;
     }
 
-    String type = componentInfo.get("style");
+    String type = componentInfo.get("type");
     if (type == null) {
-      return false;
+      if (WXEnvironment.isApkDebugable()) {
+        throw new WXException("Exist duplicate component:" + type);
+      } else {
+        WXLogUtils.e("WXComponentRegistry Exist duplicate component: " + type);
+        return false;
+      }
     }
     if (sTypeComponentMap.containsKey(type)) {
       if (WXEnvironment.isApkDebugable()) {

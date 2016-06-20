@@ -204,9 +204,9 @@
  */
 package com.taobao.weex.http;
 
+import android.content.Context;
 import android.text.TextUtils;
 
-import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.common.WXConfig;
 import com.taobao.weex.utils.WXViewUtils;
 
@@ -219,9 +219,8 @@ public class WXHttpUtil {
 
   private static String sDefautUA = null;
 
-  public static String assembleUserAgent() {
+  public static String assembleUserAgent(Context ctx,Map<String, String> config) {
     if (TextUtils.isEmpty(sDefautUA)) {
-      Map<String, String> config = WXEnvironment.getConfig();
       StringBuilder builder = new StringBuilder();
       builder.append(config.get(WXConfig.sysModel))
           .append("(Android/")
@@ -244,7 +243,7 @@ public class WXHttpUtil {
           .append(TextUtils.isEmpty(config.get(WXConfig.externalUserAgent)) ? "" : config.get(WXConfig.externalUserAgent))
           .append(TextUtils.isEmpty(config.get(WXConfig.externalUserAgent)) ? "" : " ")
 
-          .append(WXViewUtils.getScreenWidth(WXEnvironment.sApplication) + "x" + WXViewUtils.getScreenHeight(WXEnvironment.sApplication));
+          .append(WXViewUtils.getScreenWidth(ctx) + "x" + WXViewUtils.getScreenHeight(ctx));
       sDefautUA = builder.toString();
     }
     return sDefautUA;
