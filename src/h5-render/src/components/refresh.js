@@ -1,6 +1,7 @@
 'use strict'
 
 var Component = require('./component')
+var logger = require('../logger')
 
 require('../styles/refresh.css')
 
@@ -17,6 +18,7 @@ var IEMobile = !!ua.match(/IEMobile/i)
 var cssPrefix = Firefox ? '-moz-' : IEMobile ? '-ms-' : '-webkit-'
 
 function Refresh (data) {
+  this.isRefreshing = false
   Component.call(this, data)
 }
 
@@ -35,12 +37,18 @@ Refresh.prototype.onAppend = function () {
     return
   }
   parent.scroller.addEventListener('pulldown', function (e) {
+    if (self.isRefreshing) {
+      return self.adJustPosition(Math.abs(e.scrollObj.getScrollTop()))
+    }
     self.adjustHeight(Math.abs(e.scrollObj.getScrollTop()))
-    if (!this.display) {
+    if (!self.display) {
       self.show()
     }
   })
   parent.scroller.addEventListener('pulldownend', function (e) {
+    if (self.isRefreshing) {
+      return self.adJustPosition(0)
+    }
     var top = Math.abs(e.scrollObj.getScrollTop())
     if (top > CLAMP) {
       self.handleRefresh(e)
@@ -50,6 +58,10 @@ Refresh.prototype.onAppend = function () {
 
 Refresh.prototype.adjustHeight = function (val) {
   this.node.style.height = val + 'px'
+  this.node.style.top = -val + 'px'
+}
+
+Refresh.prototype.adJustPosition = function (val) {
   this.node.style.top = -val + 'px'
 }
 
@@ -64,6 +76,7 @@ Refresh.prototype.handleRefresh = function (e) {
     = cssPrefix + translateStr
   scrollElement.style.transform = translateStr
   this.dispatchEvent('refresh')
+  this.isRefreshing = true
 }
 
 Refresh.prototype.show = function () {
@@ -84,6 +97,7 @@ Refresh.prototype.hide = function () {
     scrollElement.style.transform = translateStr
   }
   this.node.style.display = 'none'
+  this.isRefreshing = false
 }
 
 Refresh.prototype.attr = {
@@ -97,10 +111,9 @@ Refresh.prototype.attr = {
         this.hide()
       }.bind(this), 0)
     } else {
-      // TODO
-      console.error('h5render:attribute value of refresh \'display\' '
-          + val
-          + ' is invalid. Should be \'show\' or \'hide\'')
+      logger.error('attr \'display\' of <refresh>\': value '
+        + val
+        + ' is invalid. Should be \'show\' or \'hide\'')
     }
   }
 }
