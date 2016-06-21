@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <embed class="content" style="visibility:{{visibility}}" repeat={{tabItems}} src={{src}} type="weex"></embed>
+        <embed class="content" style="visibility:{{visibility}}" repeat={{tabItems}} src={{src}} loader={{loader}} jsonp-callback={{jsonpCallback}} type="weex"></embed>
         <div class="tabbar" append = "tree">
             <wxc-tabitem repeat={{tabItems}} index={{index}} icon={{icon}} title={{title}} title-color={{titleColor}}></wxc-tabItem>
         </div>

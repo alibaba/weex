@@ -61,36 +61,36 @@
 <script>
     module.exports = {
         data: {
-          dataRole: 'navbar',
+          dataRole: 'none',
 
-          //导航条背景色
+          //the background-color of navbar
           backgroundColor: 'black',
 
-          //导航条高度
+          //the height of navbar
           height: 88,
 
-          //导航条标题 
+          //the title of navbar
           title: "",
 
-          //导航条标题颜色
+          //the text-color of title
           titleColor: 'black',
 
-          //右侧按钮图片
+          //the image-url of rightItem
           rightItemSrc: '',
 
-          //右侧按钮标题
+          //the title of rightItem
           rightItemTitle: '',
 
-          //右侧按钮标题颜色
+          //the text-color of rightItem
           rightItemColor: 'black',
 
-          //左侧按钮图片
+          //the image-url of leftItem
           leftItemSrc: '',
 
-          //左侧按钮标题
+          //the title of leftItem
           leftItemTitle: '',
 
-          //左侧按钮颜色
+          //the text-color of leftItem
           leftItemColor: 'black',
         },
         methods: {

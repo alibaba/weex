@@ -68,7 +68,7 @@ Flexbox is the default and only style model in Weex, so you don't have to add `d
 
 - `flex-direction`: `row` | `column`
 
-The flex-direction property specifies the direction of the flexible items inside the flex container. The default value of flex-direction is `row` (left-to-right, top-to-bottom).
+The flex-direction property specifies the direction of the flexible items inside the flex container. Default value of flex-direction is `column` (top-to-bottom).
 
 - `justify-content`: `flex-start` | `flex-end` | `center` | `space-between`
 

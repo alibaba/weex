@@ -1,0 +1,34 @@
+<template>
+  <example-list items="{{items}}" root="{{root}}"></example-list>
+</template>
+
+<script>
+  require('../include/example-list.we');
+  module.exports = {
+    data: {
+      root: 'examples/syntax',
+      items: [
+        {name: 'hello-world', title: 'Hello World'},
+        {name: 'hello-world-1', title: 'Hello World 1'},
+        {name: 'hello-world-2', title: 'Hello World 2'},
+        {name: 'hello-world-3', title: 'Hello World 3'},
+        {name: 'hello-world-4', title: 'Hello World 4'},
+        {name: 'hello-world-5', title: 'Hello World 5'},
+        {name: 'script-component', title: 'Script Component'},
+        {name: 'script-data', title: 'Script Data'},
+        {name: 'script-events', title: 'Script Event'},
+        {name: 'script-instance', title: 'Script Instance'},
+        {name: 'script-lifecycle', title: 'Script Lifecycle'},
+        {name: 'script-module', title: 'Script Module'},
+        {name: 'script-options', title: 'Script Option'},
+        {name: 'template-class', title: 'Template Class'},
+        {name: 'template-content', title: 'Template Content'},
+        {name: 'template-event', title: 'Template Event'},
+        {name: 'template-if', title: 'Template IF'},
+        {name: 'template-repeat', title: 'Template Repeat'},
+        {name: 'template-repeat-update', title: 'Template Repeat Update'},
+        {name: 'template-style', title: 'Template Style'}
+      ]
+    }
+  }
+</script>

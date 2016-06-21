@@ -24,6 +24,7 @@ function walk(dir, root) {
         var name = path.join(root, 'build', dir, path.basename(file, extname));
         entry[name] = fullpath + '?entry=true';
       } else if (stat.isDirectory() &&
+                  file !== 'include' &&
                   file !== 'build') {
         var subdir = path.join(dir, file);
         walk(subdir, root);
