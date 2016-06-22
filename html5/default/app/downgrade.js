@@ -1,5 +1,5 @@
 import semver from 'semver'
-import { extend, isPlainObject, typof } from '../util'
+import { isPlainObject, typof } from '../util'
 
 /**
  * [normalizeVersion description]
@@ -90,37 +90,51 @@ export function getError (key, val, criteria) {
 export function check (config, deviceInfo) {
   deviceInfo = deviceInfo || global.WXEnvironment
   deviceInfo = isPlainObject(deviceInfo) ? deviceInfo : {}
-  config = isPlainObject(config) ? config : {}
-  const platform = deviceInfo.platform || 'unknow'
-  const dPlatform = platform.toLowerCase()
-  const cObj = config[dPlatform] || {}
 
   let result = {
     isDowngrade: false // defautl is pass
   }
 
-  for (const i in deviceInfo) {
-    const key = i
-    const keyLower = key.toLowerCase()
-    const val = deviceInfo[i]
-    const isVersion = keyLower.indexOf('version') >= 0
-    const isDeviceModel = keyLower.indexOf('devicemodel') >= 0
-    const criteria = cObj[i]
+  if (typof(config) === 'function') {
+    let customDowngrade = config.call(this, deviceInfo, {
+      semver: semver,
+      normalizeVersion: this.normalizeVersion
+    })
 
-    if (criteria && isVersion) {
-      const c = this.normalizeVersion(criteria)
-      const d = this.normalizeVersion(deviceInfo[i])
+    customDowngrade = !!customDowngrade
 
-      if (semver.satisfies(d, c)) {
-        result = extend(this.getError(key, val, criteria))
-        break
+    result = customDowngrade ? this.getError('custom', '', 'custom params') : result
+  }
+  else {
+    config = isPlainObject(config) ? config : {}
+
+    const platform = deviceInfo.platform || 'unknow'
+    const dPlatform = platform.toLowerCase()
+    const cObj = config[dPlatform] || {}
+
+    for (const i in deviceInfo) {
+      const key = i
+      const keyLower = key.toLowerCase()
+      const val = deviceInfo[i]
+      const isVersion = keyLower.indexOf('version') >= 0
+      const isDeviceModel = keyLower.indexOf('devicemodel') >= 0
+      const criteria = cObj[i]
+
+      if (criteria && isVersion) {
+        const c = this.normalizeVersion(criteria)
+        const d = this.normalizeVersion(deviceInfo[i])
+
+        if (semver.satisfies(d, c)) {
+          result = this.getError(key, val, criteria)
+          break
+        }
       }
-    }
-    else if (isDeviceModel) {
-      const _criteria = typof(criteria) === 'array' ? criteria : [criteria]
-      if (_criteria.indexOf(val) >= 0) {
-        result = extend(this.getError(key, val, criteria))
-        break
+      else if (isDeviceModel) {
+        const _criteria = typof(criteria) === 'array' ? criteria : [criteria]
+        if (_criteria.indexOf(val) >= 0) {
+          result = this.getError(key, val, criteria)
+          break
+        }
       }
     }
   }
