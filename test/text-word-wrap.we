@@ -1,0 +1,13 @@
+<template>
+  <div>
+    <text style="font-size:30;margin-left: 10;color:#0000ff;width:500;background-color:#00FF00;">{{title}}</text>
+  </div>
+</template>
+
+<script>
+  module.exports = {
+    data: {
+      title:'{"fontSize":40,"marginTop":15,"marginLeft":15,"marginBottom":15,"marginRight":15,"textDecoration":"underline","color":"#33a3dc","width":500,"height":50,"borderWidth":3,"borderColor":"#cccccc","overflow":"hidden","borderStyle":"solid","textAlign":"center","borderRadius":5}',
+    },
+  }
+</script>
