@@ -313,6 +313,14 @@ do {\
     textContainer.maximumNumberOfLines = _lines > 0 ? _lines : 0;
     textContainer.size = (CGSize){isnan(width) ? CGFLOAT_MAX : width, CGFLOAT_MAX};
     
+
+    //fix https://github.com/alibaba/weex/issues/552
+    CGFloat x = CGFLOAT_MAX-textContainer.size.height;
+    if((x >= -FLT_EPSILON) && (x <= FLT_EPSILON)) {
+        CGSize textContainerSize = _textStorage.size;
+        textContainer.size = textContainerSize;
+    }
+
     [layoutManager addTextContainer:textContainer];
     [layoutManager ensureLayoutForTextContainer:textContainer];
     
