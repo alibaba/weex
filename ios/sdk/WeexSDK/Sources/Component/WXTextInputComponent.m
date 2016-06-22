@@ -64,6 +64,7 @@
 @property (nonatomic) BOOL focusEvent;
 @property (nonatomic) BOOL blurEvent;
 @property (nonatomic) BOOL changeEvent;
+@property (nonatomic) BOOL clickEvent;
 @property (nonatomic, strong) NSString *changeEventString;
 
 @end
@@ -87,6 +88,7 @@
         _focusEvent = NO;
         _blurEvent = NO;
         _changeEvent = NO;
+        _clickEvent = NO;
         
         _inputView = [[WXTextInputView alloc] init];
         if (attributes[@"type"]) {
@@ -193,6 +195,9 @@
     if ([eventName isEqualToString:@"change"]) {
         _changeEvent = YES;
     }
+    if ([eventName isEqualToString:@"click"]) {
+        _clickEvent = YES;
+    }
 }
 
 #pragma Remove Event
@@ -210,6 +215,9 @@
     }
     if ([eventName isEqualToString:@"change"]) {
         _changeEvent = NO;
+    }
+    if ([eventName isEqualToString:@"click"]) {
+        _clickEvent = NO;
     }
 }
 
@@ -285,6 +293,9 @@
     _changeEventString = [textField text];
     if (_focusEvent) {
         [self fireEvent:@"focus" params:nil];
+    }
+    if (_clickEvent) {
+        [self fireEvent:@"click" params:nil];
     }
 }
 

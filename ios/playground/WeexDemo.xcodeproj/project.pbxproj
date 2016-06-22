@@ -357,7 +357,6 @@
 				TargetAttributes = {
 					775BEE7A1C1E8ECC008D1629 = {
 						CreatedOnToolsVersion = 7.1.1;
-						DevelopmentTeam = E9NTP5L2G2;
 					};
 					775BEE931C1E8ECC008D1629 = {
 						CreatedOnToolsVersion = 7.1.1;
@@ -640,7 +639,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -678,7 +677,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -688,7 +687,6 @@
 		};
 		775BEEA91C1E8ECC008D1629 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5AF8846546DAC65CAC038806 /* Pods-WeexDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
@@ -717,7 +715,6 @@
 		};
 		775BEEAA1C1E8ECC008D1629 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9420131417A731ED089B0814 /* Pods-WeexDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
@@ -772,9 +769,9 @@
 		};
 		84361D721CA10F8E00F43825 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5AF8846546DAC65CAC038806 /* Pods-WeexDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
@@ -807,9 +804,9 @@
 		};
 		84361D741CA10F8E00F43825 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9420131417A731ED089B0814 /* Pods-WeexDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
