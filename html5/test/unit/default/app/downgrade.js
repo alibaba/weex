@@ -147,5 +147,95 @@ describe('downgrade', () => {
         expect(test.isDowngrade).to.be.equal(should)
       })
     })
+
+    it('should be using using custom check', () => {
+      const deviceInfo = {
+        platform: 'iOS',
+        osVersion: '9.2',
+        appVersion: '5.4.0',
+        weexVersion: '1.3.0',
+        deviceModel: 'iPhone6.2'
+      }
+
+      const cases = [
+        [
+          function () {
+
+          }, false
+        ],
+        [
+          function () {
+            return true
+          }, true
+        ],
+        [
+          function () {
+            return false
+          }, false
+        ],
+        [
+          function (deviceInfo) {
+            if (deviceInfo.platform === 'iOS') {
+              return true
+            }
+            return false
+          }, true
+        ],
+        [
+          function (deviceInfo, tools) {
+            if (deviceInfo.osVersion === '9.2') {
+              return true
+            }
+            return false
+          }, true
+        ],
+        [
+          function (deviceInfo, tools) {
+            if (tools.normalizeVersion(deviceInfo.osVersion) === '9.2.0') {
+              return true
+            }
+            return false
+          }, true
+        ],
+        [
+          function (deviceInfo, tools) {
+            return tools.semver.satisfies(tools.normalizeVersion(deviceInfo.osVersion), '9.2.0')
+          }, true
+        ],
+        [
+          function (deviceInfo, tools) {
+            return tools.semver.satisfies(deviceInfo.appVersion, '5.4.0')
+          }, true
+        ],
+        [
+          function (deviceInfo, tools) {
+            return tools.semver.satisfies(deviceInfo.weexVersion, '1.3.0')
+          }, true
+        ],
+        [
+          function (deviceInfo, tools) {
+            return deviceInfo.deviceModel === 'iPhone6.2'
+          }, true
+        ],
+        [
+          function (deviceInfo, tools) {
+            return deviceInfo.deviceModel === 'AndroidPad'
+          }, false
+        ],
+        [
+          function (deviceInfo, tools) {
+            return ['iPhone6.2', 'iPhone7.1'].indexOf(deviceInfo.deviceModel) >= 0
+          }, true
+        ]
+      ]
+
+      cases.map(function (item, index) {
+        const criteria = item[0]
+        const should = item[1]
+        const test = Downgrade.check(criteria, deviceInfo)
+
+        expect(test.isDowngrade).to.be.equal(should)
+      })
+    })
   })
 })
