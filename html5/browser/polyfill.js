@@ -1,4 +1,3 @@
 'use strict'
 
-require('./logger')
-require('es6-promise')
+global.Promise = require('lie')

@@ -20,9 +20,9 @@
     "es6-promise": "^3.2.1",
     "fixedsticky": "^0.1.0",
     "httpurl": "^0.1.1",
-    "kountdown": "^0.1.1",
+    "kountdown": "^0.1.2",
     "lazyimg": "^0.1.1",
-    "modals": "^0.1.3",
+    "modals": "^0.1.5",
     "scroll-to": "0.0.2",
     "transitionize": "0.0.3"
   },

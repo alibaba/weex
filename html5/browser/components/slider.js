@@ -20,7 +20,7 @@ function Slider (data) {
   this.isPageShow = true
   this.isDomRendering = true
 
-  // bind event 'pageshow' and 'pagehide' on window.
+  // bind event 'pageshow', 'pagehide' and 'visibilitychange' on window.
   this._idleWhenPageDisappear()
   // bind event 'renderBegin' and 'renderEnd' on window.
   this._idleWhenDomRendering()
@@ -32,13 +32,23 @@ Slider.prototype = Object.create(Component.prototype)
 
 Slider.prototype._idleWhenPageDisappear = function () {
   const _this = this
-  window.addEventListener('pageshow', function () {
+  function handlePageShow () {
     _this.isPageShow = true
     _this.autoPlay && !_this.isDomRendering && _this.play()
-  })
-  window.addEventListener('pagehide', function () {
+  }
+  function handlePageHide () {
     _this.isPageShow = false
     _this.stop()
+  }
+  window.addEventListener('pageshow', handlePageShow)
+  window.addEventListener('pagehide', handlePageHide)
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible') {
+      handlePageShow()
+    }
+    else if (document.visibilityState === 'hidden') {
+      handlePageHide()
+    }
   })
 }
 
@@ -111,7 +121,6 @@ Slider.prototype.removeChild = function (child) {
 
 Slider.prototype.insertBefore = function (child, before) {
   const children = this.data.children
-  // const childIndex = this.children.indexOf(before.data)
   let childIndex = -1
   for (let i = 0, l = children.length; i < l; i++) {
     if (children[i].ref === before.data.ref) {

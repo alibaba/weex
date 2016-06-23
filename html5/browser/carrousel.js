@@ -247,7 +247,7 @@ function Carrousel(element, options) {
     items.slide(-1)
   }
 
-  ArrayFrom(element.querySelectorAll('li')).forEach(function (el) {
+  ArrayFrom(element.children).forEach(function (el) {
     el.style.position = 'absolute'
     el.style.top = '0'
     el.style.left = itemLength * itemStep + 'px'
@@ -389,8 +389,7 @@ function Carrousel(element, options) {
         e.preventDefault()
         e.stopPropagation()
         panning = false
-
-        if (e.isflick) {
+        if (e.isSwipe) {
           if (displacement < 0) {
             items.next()
           } else {

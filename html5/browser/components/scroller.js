@@ -56,14 +56,9 @@ Scroller.prototype.create = function (nodeType) {
     this.direction + '-scroller'
   )
 
-  // Flex will cause a bug to rescale children's size if their total
-  // size exceed the limit of their parent. So to use box instead.
-  this.scrollElement.style.display = '-webkit-box'
-  this.scrollElement.style.display = 'box'
-  this.scrollElement.style.webkitBoxOrient = this.direction === 'h'
-    ? 'horizontal'
-    : 'vertical'
-  this.scrollElement.style.boxOrient = this.scrollElement.style.webkitBoxOrient
+  this.scrollElement.style.webkitBoxOrient = directionMap[this.direction][1]
+  this.scrollElement.style.webkitFlexDirection = directionMap[this.direction][0]
+  this.scrollElement.style.flexDirection = directionMap[this.direction][0]
 
   node.appendChild(this.scrollElement)
   this.scroller = new Scroll({
@@ -195,7 +190,12 @@ Scroller.prototype.insertBefore = function (child, before) {
     children.push(child.data)
   }
   else {
-    if (before.fixedPlaceholder) {
+    const refreshLoadingPlaceholder = before.refreshPlaceholder
+      || before.loadingPlaceholder
+    if (refreshLoadingPlaceholder) {
+      this.listElement.insertBefore(child.node, refreshLoadingPlaceholder)
+    }
+    else if (before.fixedPlaceholder) {
       this.scrollElement.insertBefore(child.node, before.fixedPlaceholder)
     }
     else {
@@ -228,6 +228,11 @@ Scroller.prototype.removeChild = function (child) {
   }
   // remove from componentMap recursively
   componentManager.removeElementByRef(child.data.ref)
+  const refreshLoadingPlaceholder = child.refreshPlaceholder
+    || child.loadingPlaceholder
+  if (refreshLoadingPlaceholder) {
+    this.scrollElement.removeChild(refreshLoadingPlaceholder)
+  }
   if (child.fixedPlaceholder) {
     this.scrollElement.removeChild(child.fixedPlaceholder)
   }
@@ -237,6 +242,30 @@ Scroller.prototype.removeChild = function (child) {
   setTimeout(function () {
     this.scroller.refresh()
   }.bind(this), 0)
+}
+
+Scroller.prototype.onAppend = function () {
+  this._refreshWhenDomRenderend()
+}
+
+Scroller.prototype.onRemove = function () {
+  this._removeEvents()
+}
+
+Scroller.prototype._refreshWhenDomRenderend = function () {
+  const self = this
+  if (!this.renderendHandler) {
+    this.renderendHandler = function () {
+      self.scroller.refresh()
+    }
+  }
+  window.addEventListener('renderend', this.renderendHandler)
+}
+
+Scroller.prototype._removeEvents = function () {
+  if (this.renderendHandler) {
+    window.removeEventListener('renderend', this.renderendHandler)
+  }
 }
 
 module.exports = Scroller

@@ -27,7 +27,7 @@ Image.prototype = Object.create(Atomic.prototype)
 
 Image.prototype.create = function () {
   const node = document.createElement('div')
-  node.classList.add('weex-img')
+  node.classList.add('weex-img', 'weex-element')
   return node
 }
 

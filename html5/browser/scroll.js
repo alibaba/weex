@@ -849,17 +849,31 @@ function Scroll(element, options) {
     refresh: function () {
       var el = this.element
       var isVertical = (this.axis === 'y')
-      var type = isVertical?'height':'width'
+      var type = isVertical ? 'height' : 'width'
+      var size, rect, extraSize
+
+      function getExtraSize(el, isVertical) {
+        var extraType = isVertical ? ['top', 'bottom'] : ['left', 'right']
+        return parseFloat(
+          getComputedStyle(el.firstElementChild)['margin-' + extraType[0]]
+        ) + parseFloat(
+          getComputedStyle(el.lastElementChild)['margin-' + extraType[1]]
+        )
+      }
 
       if (this.options[type] != null) {
         // use options
-        el.style[type] = this.options[type] + 'px'
+        size = this.options[type]
+      } else if (el.childElementCount <= 0) {
+        el.style[type] = 'auto'
+        size = null
       } else if (!!this.options.useElementRect) {
         el.style[type] = 'auto'
-        el.style[type] = getBoundingClientRect(el)[type] + 'px'
-      } else if (el.childElementCount > 0) {
-        var range
-        var rect
+        rect = getBoundingClientRect(el)
+        size = rect[type]
+        size += getExtraSize(el, isVertical)
+      } else {
+        var range, rect
         var firstEl = el.firstElementChild
         var lastEl = el.lastElementChild
 
@@ -871,7 +885,7 @@ function Scroll(element, options) {
         }
 
         if (rect) {
-          el.style[type] = rect[type] + 'px'
+          size = rect[type]
         } else {
           // use child offsets
           while (firstEl) {
@@ -892,17 +906,22 @@ function Scroll(element, options) {
             }
           }
 
-          el.style[type] = (getBoundingClientRect(lastEl)[
+          size = getBoundingClientRect(lastEl)[
               isVertical ? 'bottom' : 'right']
             - getBoundingClientRect(firstEl)[
-              isVertical ? 'top' : 'left'])
-            + 'px'
+              isVertical ? 'top' : 'left']
         }
+
+        size += getExtraSize(el, isVertical)
+
       }
+
+      el.style[type] = size ? size + 'px' : 'auto'
 
       this.transformOffset = getTransformOffset(this)
       this.minScrollOffset = getMinScrollOffset(this)
       this.maxScrollOffset = getMaxScrollOffset(this)
+
       this.scrollTo(
         -this.transformOffset[this.axis]
         - this.options[this.axis + 'PaddingTop']

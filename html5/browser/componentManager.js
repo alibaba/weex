@@ -138,6 +138,8 @@ ComponentManager.prototype = {
           || document.body
     body.appendChild(root.node)
     root._appended = true
+
+    this.handleAppend(root)
   },
 
   appendChild: function (parentRef, data) {

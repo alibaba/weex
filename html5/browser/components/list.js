@@ -38,17 +38,20 @@ List.prototype.create = function (nodeType) {
     this.direction + '-list'
   )
 
-  // Flex will cause a bug to rescale children's size if their total
-  // size exceed the limit of their parent. So to use box instead.
-  this.listElement.style.display = '-webkit-box'
-  this.listElement.style.display = 'box'
-  this.listElement.style.webkitBoxOrient = this.direction === 'h'
-    ? 'horizontal'
-    : 'vertical'
-  this.listElement.style.boxOrient = this.listElement.style.webkitBoxOrient
+  this.listElement.style.webkitBoxOrient = directionMap[this.direction][1]
+  this.listElement.style.webkitFlexDirection = directionMap[this.direction][0]
+  this.listElement.style.flexDirection = directionMap[this.direction][0]
 
   node.appendChild(this.listElement)
   this.scroller = new Scroll({
+    // if the direction is x, then the bounding rect of the scroll element
+    // should be got by the 'Range' API other than the 'getBoundingClientRect'
+    // API, because the width outside the viewport won't be count in by
+    // 'getBoundingClientRect'.
+    // Otherwise should use the element rect in case there is a child scroller
+    // or list in this scroller. If using 'Range', the whole scroll element
+    // including the hiding part will be count in the rect.
+    useElementRect: this.direction === 'v',
     scrollElement: this.listElement,
     direction: this.direction === 'h' ? 'x' : 'y'
   })
@@ -167,7 +170,12 @@ List.prototype.insertBefore = function (child, before) {
     children.push(child.data)
   }
   else {
-    if (before.fixedPlaceholder) {
+    const refreshLoadingPlaceholder = before.refreshPlaceholder
+      || before.loadingPlaceholder
+    if (refreshLoadingPlaceholder) {
+      this.listElement.insertBefore(child.node, refreshLoadingPlaceholder)
+    }
+    else if (before.fixedPlaceholder) {
       this.listElement.insertBefore(child.node, before.fixedPlaceholder)
     }
     else {
@@ -200,6 +208,11 @@ List.prototype.removeChild = function (child) {
   }
   // remove from componentMap recursively
   componentManager.removeElementByRef(child.data.ref)
+  const refreshLoadingPlaceholder = child.refreshPlaceholder
+    || child.loadingPlaceholder
+  if (child.refreshPlaceholder) {
+    this.scrollElement.removeChild(refreshLoadingPlaceholder)
+  }
   if (child.fixedPlaceholder) {
     this.listElement.removeChild(child.fixedPlaceholder)
   }
@@ -209,6 +222,30 @@ List.prototype.removeChild = function (child) {
   setTimeout(function () {
     this.scroller.refresh()
   }.bind(this), 0)
+}
+
+List.prototype.onAppend = function () {
+  this._refreshWhenDomRenderend()
+}
+
+List.prototype.onRemove = function () {
+  this._removeEvents()
+}
+
+List.prototype._refreshWhenDomRenderend = function () {
+  const self = this
+  if (!this.renderendHandler) {
+    this.renderendHandler = function () {
+      self.scroller.refresh()
+    }
+  }
+  window.addEventListener('renderend', this.renderendHandler)
+}
+
+List.prototype._removeEvents = function () {
+  if (this.renderendHandler) {
+    window.removeEventListener('renderend', this.renderendHandler)
+  }
 }
 
 module.exports = List
