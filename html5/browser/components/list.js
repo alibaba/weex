@@ -211,7 +211,7 @@ List.prototype.removeChild = function (child) {
   const refreshLoadingPlaceholder = child.refreshPlaceholder
     || child.loadingPlaceholder
   if (child.refreshPlaceholder) {
-    this.scrollElement.removeChild(refreshLoadingPlaceholder)
+    this.listElement.removeChild(refreshLoadingPlaceholder)
   }
   if (child.fixedPlaceholder) {
     this.listElement.removeChild(child.fixedPlaceholder)

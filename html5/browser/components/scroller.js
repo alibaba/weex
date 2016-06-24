@@ -193,7 +193,7 @@ Scroller.prototype.insertBefore = function (child, before) {
     const refreshLoadingPlaceholder = before.refreshPlaceholder
       || before.loadingPlaceholder
     if (refreshLoadingPlaceholder) {
-      this.listElement.insertBefore(child.node, refreshLoadingPlaceholder)
+      this.scrollElement.insertBefore(child.node, refreshLoadingPlaceholder)
     }
     else if (before.fixedPlaceholder) {
       this.scrollElement.insertBefore(child.node, before.fixedPlaceholder)
