@@ -11,14 +11,14 @@ $git pull origin doc
 ## Install Gitbook
 we use [gitbook](https://github.com/GitbookIO/gitbook) for document site building,so you need install gitbook first
 
-1. Install [Node.js](http://nodejs.org/) 4.0+
-2. Install gitbook-cli
+*. Install [Node.js](http://nodejs.org/) 4.0+
+*. Install gitbook-cli
     
 ```shell
 $npm install -g gitbook-cli
 ```
-3. check gitbook template version in book.json(“gitbook” attribute)
-4. install gitbook template
+*. check gitbook template version in book.json(“gitbook” attribute)
+*. install gitbook template
 
 ```
 $gitbook fetch [GITBOOK_TEMPLATE_VERSION_IN_book.json]
