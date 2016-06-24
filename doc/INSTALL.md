@@ -1,6 +1,6 @@
 # Weex Document Site Build Process
 
-0. Get Latest Document Source
+## Get Latest Document Source
 we maintain latest weex document in [doc branch](https://github.com/alibaba/weex/tree/doc) , please checkout this branch & pull latest content.      
 
 ```shell
@@ -8,7 +8,7 @@ $git checkout doc
 $git pull origin doc
 ```
 
-0. Install Gitbook
+## Install Gitbook
 we use [gitbook](https://github.com/GitbookIO/gitbook) for document site building,so you need install gitbook first
 
     0. Install [Node.js](http://nodejs.org/) 4.0+
@@ -24,13 +24,13 @@ $npm install -g gitbook-cli
 $gitbook fetch [GITBOOK_TEMPLATE_VERSION_IN_book.json]
 ```
 
-0. Build Document Site
+## Build Document Site
 ```
 $gitbook build
 ```
 build result will be exist in `_book` directory.
 
-0. Preview
+## Preview
 ```
 $gitbook serve
 ```
