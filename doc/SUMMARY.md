@@ -15,7 +15,7 @@
     * [How-tos](/how-to/main.md)
         * [Require 3rd-party Libs](/how-to/require-3rd-party-libs.md)
         * [Preview In Browser](/how-to/preview-in-browser.md)
-        * [Preview in Native]/how-to/preview-in-playground-app.md)        
+        * [Preview in Native](/how-to/preview-in-playground-app.md)        
         * [Customize a native Component](/how-to/customize-a-native-component.md)
         * [Customize native APIs](/how-to/cuszomize-native-apis.md)
         * [Debug in html5 renderer](/how-to/debug-with-html5.md)
