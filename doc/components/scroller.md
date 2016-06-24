@@ -13,7 +13,9 @@ It supports all kinds of weex components as its child components.
 
 ### Attributes
 
-There is no specific attribute for this component other than the [common attributes](../references/common-attrs.md).
+- `show-scrollbar`: &lt;boolean&gt; `true` | `false`. This value determines whether the scrollbar show. The default value is `true`.
+
+Other attributes please check out the [common attributes](../references/common-attrs.md).
 
 ### Styles
 
