@@ -291,7 +291,7 @@ function Scroll(element, options) {
   }
 
   function setTransitionEndHandler(h, t) {
-    if (!options.useFrameAnimation) {
+    if (options.useFrameAnimation) {
       return
     }
     transitionEndHandler = null
@@ -417,9 +417,9 @@ function Scroll(element, options) {
       } else {
         // css
         var offset =  s1.toFixed(0)
+        setTransitionEndHandler(scrollEnd, 400)
         setTransitionStyle(that, '0.4s', 'ease')
         setTransformStyle(that, offset)
-        setTransitionEndHandler(scrollEnd, 400)
 
         lib.animation.requestFrame(function doScroll() {
           if (isScrolling && that.enabled) {
@@ -615,16 +615,16 @@ function Scroll(element, options) {
             } else {
               // css
               var offset = s1.toFixed(0)
+              setTransitionEndHandler(
+                scrollEnd,
+                (t1 / 1000).toFixed(2) * 1000
+              )
               setTransitionStyle(
                 that,
                 (t1 / 1000).toFixed(2) + 's',
                 'cubic-bezier(' + timeFunction1 + ')'
               )
               setTransformStyle(that, offset)
-              setTransitionEndHandler(
-                scrollEnd,
-                (t1 / 1000).toFixed(2) * 1000
-              )
             }
           } else {
             scrollEnd()
@@ -678,13 +678,6 @@ function Scroll(element, options) {
             scrollAnimation.play()
           } else {
             var offset = s2.toFixed(0)
-            setTransitionStyle(
-              that,
-              ((t1 + t2) / 1000).toFixed(2) + 's',
-              'ease-out'
-            )
-            setTransformStyle(that, offset)
-
             setTransitionEndHandler(function (e) {
               if (!that.enabled) {
                 return
@@ -704,6 +697,13 @@ function Scroll(element, options) {
                 scrollEnd()
               }
             }, ((t1 + t2) / 1000).toFixed(2) * 1000)
+
+            setTransitionStyle(
+              that,
+              ((t1 + t2) / 1000).toFixed(2) + 's',
+              'ease-out'
+            )
+            setTransformStyle(that, offset)
           }
         } else {
           scrollEnd()
@@ -739,13 +739,13 @@ function Scroll(element, options) {
         } else {
           // css
           var offset = s.toFixed(0)
+          setTransitionEndHandler(scrollEnd, (t0 / 1000).toFixed(2) * 1000)
           setTransitionStyle(
             that,
             (t0 / 1000).toFixed(2) + 's',
             'cubic-bezier(' + timeFunction + ')'
           )
           setTransformStyle(that, offset)
-          setTransitionEndHandler(scrollEnd, (t0 / 1000).toFixed(2) * 1000)
         }
       }
 
@@ -1022,9 +1022,9 @@ function Scroll(element, options) {
 
           scrollAnimation.play()
         } else {
+          setTransitionEndHandler(scrollEnd, 400)
           setTransitionStyle(that, '0.4s', 'ease-in-out')
           setTransformStyle(that, offset)
-          setTransitionEndHandler(scrollEnd, 400)
 
           lib.animation.requestFrame(function () {
             if (isScrolling && that.enabled) {
