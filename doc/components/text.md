@@ -36,8 +36,8 @@ Other attributes please check out the [common attributes](../references/common-a
 
 - support flexbox related styles
 - support box model related styles
-- support ``position`` related styles
-- support ``opacity``, ``background-color`` etc.
+- support `position` related styles
+- support `opacity`, `background-color` etc.
 
 ### Events
 

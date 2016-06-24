@@ -1,7 +1,7 @@
 'use strict'
 
 var Atomic = require('./atomic')
-require('kountdown/build/countdown')
+require('kountdown')
 
 var FORMATTER_REGEXP = /(\\)?(dd*|hh?|mm?|ss?)/gi
 

@@ -37,14 +37,16 @@ There is no specific attribute for this component other than the [common attribu
 
 ```
 <template>
-  <slider class="slider">
-    <div class="slider-pages" repeat="{{itemList}}">
-      <image class="img" src="{{pictureUrl}}"></image>
-      <text class="title">{{title}}</text>
-    </div>
+  <div>
+    <slider class="slider">
+      <div class="slider-pages" repeat="{{itemList}}">
+        <image class="img" src="{{pictureUrl}}"></image>
+        <text class="title">{{title}}</text>
+      </div>
 
-    <indicator class="indicator"></indicator>
-  </slider>
+      <indicator class="indicator"></indicator>
+    </slider>
+  </div>
 </template>
 
 <style>

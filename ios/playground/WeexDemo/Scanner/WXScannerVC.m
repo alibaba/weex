@@ -20,8 +20,6 @@
 @property (nonatomic, strong) AVCaptureVideoPreviewLayer *captureLayer;
 @property (nonatomic, strong) UIView *sanFrameView;
 
-@property (nonatomic) BOOL opened;
-
 @end
 
 @implementation WXScannerVC
@@ -72,13 +70,10 @@
 {
     [_captureLayer removeFromSuperlayer];
     [_session stopRunning];
-    if (!_opened) {
-        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-        _opened = YES;
-        if (metadataObjects.count > 0) {
-            AVMetadataMachineReadableCodeObject * metadataObject = [metadataObjects objectAtIndex : 0 ];
-            [self openURL:metadataObject.stringValue];
-        }
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+    if (metadataObjects.count > 0) {
+        AVMetadataMachineReadableCodeObject * metadataObject = [metadataObjects objectAtIndex : 0 ];
+        [self openURL:metadataObject.stringValue];
     }
 }
 
