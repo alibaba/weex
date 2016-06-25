@@ -7,7 +7,7 @@ You can use a simply way like `require('@weex-module/name')` to access the apis 
 
 ```javascript
 var dom = require('@weex-module/dom');
-dom.scrollTo(this.$el('someIdForElement'), {
+dom.scrollToElement(this.$el('someIdForElement'), {
     offset: 0
 });
 ```
