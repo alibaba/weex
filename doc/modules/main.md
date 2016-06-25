@@ -11,12 +11,3 @@ dom.scrollToElement(this.$el('someIdForElement'), {
     offset: 0
 });
 ```
-
-## Table of Contents
-
-* [dom](./dom.md)
-* [stream](./stream.md)
-* [modal](./modal.md)
-* [animation](./animation.md)
-* [navigator](./navigator.md)
-* [webview](./webview.md)
