@@ -27,6 +27,8 @@ There is no specific attribute for this component other than the [common attribu
 
 **Note:** There are some specific details about the style `width` and `height` on this component: the position of indicator will not only depend on the `top`, `left`, `bottom` and `right`, but also depend on the value of `width` and `height`. Imagine there is a virtual container outside the indicator, and it inherit the `width` and `height` of the indicator. The `top`, `left`, `right` and `bottom` will always take effect on this container, not the indicator points themselves, and the indicator points will be positioned in the center of it. And also you should know the default `width` and `height` is the parent slider's `width` and `height`.
 
+**Note:** `background-color` is not recommended to apply on this component, and you should use `item-color` and `item-selectedColor` instead.
+
 ### Events
 
 **common events**: check out the [common events](../references/common-event.md)
