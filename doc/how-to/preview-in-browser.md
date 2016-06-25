@@ -11,21 +11,15 @@ npm install -g weex-toolkit
 Check whether the toolkit is working by typeing `weex` in cmd line. Normally you should see the following help text:
 
 ```
-Usage: weex foo/bar/your_next_best_weex_script_file.we  [options]
-
 Options:
-  -n      do not open preview browser automatic                        [boolean]
-  --qr    display QR code for native runtime                           [boolean]
-  -h      specify weex server listen host                 [default: "127.0.0.1"]
-  -o      transform weex JS bundle only, specify bundle file name using the
-          option                                 [default: "no JSBundle output"]
-  -s      start a http file server, weex .we file will be transformed on the
-          server , specify local root path using the option     [default: false]
-  --help  Show help                                                    [boolean]
+  --qr     display QR code for native runtime, 
+  -o,--output  transform weex we file to JS Bundle, output path (single JS bundle file or dir)
+  -s,--server  start a http file server, weex .we file will be transforme to JS bundle on the server , specify local root path using the option  
+  ......
+  --help  Show help                    
 ```
 
 If all works well, navigate to the path the xxx.we file you want to preview in, and type the command:
-
 ```
 weex xxx.we
 ```

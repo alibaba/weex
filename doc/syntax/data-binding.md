@@ -1,4 +1,6 @@
 # Data-Binding
+<span class="weex-version">0.4</span>
+<a href="https://github.com/weexteam/article/issues/5"  class="weex-translate">cn</a>
 
 In Weex, we use the *mustache* syntax `{{...}}` to bind data in `<template>` which are defined in `<script>`. Once data and template is bound, the data changes will influence the corresponding template content immediately and automatically.
 
@@ -69,7 +71,8 @@ The expression will be evaluated in the data scope of current context.
 
 **NOTE: EACH BINDING CAN ONLY CONTAIN ONE SINGLE EXPRESSION**
 
-## Computed Properties
+## Computed Properties 
+<span class="weex-version">0.5</span>
 
 According to simple operations, in-template expressions are very convenient. But if you want to put more logic into the template, you should use a computed property.
 
@@ -114,7 +117,7 @@ Here we have declared a computed property fullName. The function we provided wil
 
 Otherwise when you call `changeName` after click, the setter will be invoked and this.firstName and this.lastName will be updated accordingly.
 
-**NOTE: `data` and `methods` can't have duplicate fields. 'Cause in the execution context -- `this`, we can access both of them.**
+**NOTE: `data` and `methods` can't have duplicated fields. 'Cause in the execution context -- `this`, we can access both of them.**
 
 ## Usage of some special attributes in Data-Binding
 
@@ -190,6 +193,22 @@ The event handler is an attribute which name has a prefix `on...`. The other par
 ```
 
 We can also use `repeat` attribute to generate a list.
+
+**NOTE: When you want to mutate an array in `data`. Something limitations existing below:**
+
+When you directly set an item with the index (`vm.items[0] = {};`), it won't trigger view update. So we have a prototype methods: `$set(index, item)`.
+
+```
+// same as `example1.items[0] = ...` but triggers view update
+example1.items.$set(0, { childMsg: 'Changed!'})
+```
+
+When you modify the length of the Array (`vm.items.length = 0`), it won't trigger view update too. We recommend you just replace `items` with an empty array instead.
+
+```
+// same as `example2.items.length = 0` but triggers view update
+example2.items = []
+```
 
 * [See more about display logic control](./display-logic.md)
 
