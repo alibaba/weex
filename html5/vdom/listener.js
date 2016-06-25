@@ -23,7 +23,15 @@ Listener.prototype.refreshFinish = function (callback) {
 }
 
 Listener.prototype.createBody = function (element) {
-  const actions = [createAction('createBody', [element.toJSON()])]
+  const body = element.toJSON()
+  const children = body.children
+  delete body.children
+  const actions = [createAction('createBody', [body])]
+  if (children) {
+    actions.push.apply(actions, children.map(child => {
+      return createAction('addElement', [body.ref, child, -1])
+    }))
+  }
   this.addActions(actions)
 }
 

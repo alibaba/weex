@@ -109,16 +109,20 @@ describe('generate virtual dom for a single vm', () => {
       attr: {
         append: 'tree'
       },
-      style: {},
-      children: [{
-        ref: spy.firstCall.args[2].children[0].ref,
-        type: 'text',
-        attr: {
-          value: '<some text content>'
-        },
-        style: {}
-      }]
+      style: {}
     })
+    expect(spy.secondCall.args[0]).to.be.equal('test')
+    expect(spy.secondCall.args[1]).to.be.equal('addElement')
+    expect(spy.secondCall.args[2]).to.be.equal('_root')
+    expect(spy.secondCall.args[3]).to.deep.equal({
+      ref: spy.secondCall.args[3].ref,
+      type: 'text',
+      attr: {
+        value: '<some text content>'
+      },
+      style: {}
+    })
+    expect(spy.secondCall.args[4]).to.be.equal(-1)
 
     expect(vm._app).equal(app)
     const el = doc.body
