@@ -65,7 +65,7 @@
         * [JS Bundle Format](/specs/js-bundle-format.md)
         * [JS Framework APIs](/specs/js-framework-apis.md)
         * [Virtual DOM APIs](/specs/virtual-dom-apis.md)
-* [Examples](demo/main.md)
+* Examples
     * [Hello World](demo/hello-world.md)
     * [Modal](demo/modal.md)
     * [List](demo/list.md)
@@ -73,7 +73,7 @@
     * [Animation](demo/animation.md)
     * [More](https://github.com/alibaba/weex/tree/dev/examples)
     
-* [Service & Tools](/tools/main.md)
+* Service & Tools
     * [CLI](/tools/cli.md)
     * [Transformer](/tools/transformer.md)
     * [Playground App](/tools/playground-app.md)

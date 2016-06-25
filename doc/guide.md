@@ -1,3 +1,3 @@
 # Guide
 
-Start Weex tourist from here.
+***Keep calm and code on.***

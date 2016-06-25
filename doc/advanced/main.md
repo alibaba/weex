@@ -1,3 +1,3 @@
 # Advanced
 
-You will learn how weex works and how to integrate and extend weex.
+You will learn how Weex works and how to integrate and extend Weex.
