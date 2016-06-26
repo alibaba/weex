@@ -34,7 +34,6 @@ export function init (code, data) {
     result = this.bootstrap(name, config, _data || data)
     this.updateActions()
     this.doc.listener.createFinish()
-    this.doc.close()
     _.debug(`After intialized an instance(${this.id})`)
   }
 
@@ -118,9 +117,11 @@ export function fireEvent (ref, type, e, domChanges) {
   const el = this.doc.getRef(ref)
 
   if (el) {
+    this.doc.close()
     const result = this.doc.fireEvent(el, type, e, domChanges)
     this.updateActions()
     this.doc.listener.updateFinish()
+    this.doc.open()
     return result
   }
 
@@ -134,6 +135,7 @@ export function callback (callbackId, data, ifKeepAlive) {
   const callback = this.callbacks[callbackId]
 
   if (typeof callback === 'function') {
+    this.doc.close()
     callback(data) // data is already a object, @see: lib/runtime/index.js
 
     if (typeof ifKeepAlive === 'undefined' || ifKeepAlive === false) {
@@ -142,6 +144,7 @@ export function callback (callbackId, data, ifKeepAlive) {
 
     this.updateActions()
     this.doc.listener.updateFinish()
+    this.doc.open()
     return
   }
 
@@ -155,6 +158,7 @@ export function refreshData (data) {
   const vm = this.vm
 
   if (vm && data) {
+    this.doc.close()
     if (typeof vm.refreshData === 'function') {
       vm.refreshData(data)
     }
@@ -163,6 +167,7 @@ export function refreshData (data) {
     }
     this.updateActions()
     this.doc.listener.refreshFinish()
+    this.doc.open()
     return
   }
 
