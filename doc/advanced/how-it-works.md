@@ -77,6 +77,9 @@ bootstrap('@weex-component/main')
 
 Additionally, the transformer could also do more things: combo the bundles, bootstrap with config and external data. For more information, please see the syntax specs.
 
+## NOTICE
+Most of Weex utility output JS Bundle after  [Webpack](https://webpack.github.io/) re-bundle. So the eventual format of Weex JSBundle is webpack packed .
+
 ## JS Framework
 
 JS Framework will run in native JavaScript engine at the beginning preparation phase. It has `define()` and `bootstrap()` functions for each the bunlde code. Once a JS bundle requested from server, the code will be executed. `define()` will register all modules first, then `bootstrap()` will start compiling main component into virtual DOM and send rendering calls to native.
