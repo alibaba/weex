@@ -1,5 +1,7 @@
-const OriginPromise = global.Promise ||
-                        function () {}
+const polyfillPromise = require('core-js/fn/promise')
+const OriginPromise = global.Promise
+                      || polyfillPromise
+                      || function () {}
 const MSG = 'Using "Promise" is unexpected'
 
 const _once = {
