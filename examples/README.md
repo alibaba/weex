@@ -14,7 +14,7 @@
 
 > Inspired by Bootstrap.
 
-We import a simple UI Gallery for a consistent UI style. See [UI Gallery Example](./ui.we) for details.
+We import a simple UI Gallery for a consistent UI style. See [UI Gallery Example](./index.we) for details.
 
 <img src="http://gtms04.alicdn.com/tps/i4/TB1_v6FMpXXXXXfXXXX7XWpVpXX-278-519.gif" width="160" /> <img src="http://gtms03.alicdn.com/tps/i3/TB13LTOMpXXXXceXXXXIxc4RpXX-944-1316.png" width="214" />
 

@@ -284,12 +284,12 @@ public class RefreshAdapterWrapper extends RecyclerView.Adapter<ListBaseViewHold
         switch (mStatus) {
             case REFRESH:
                 if (viewType == ITEM_TYPE_REFRESH && mRefreshLayout != null) {
-                    return new ListBaseViewHolder(mRefreshLayout.getView());
+                    return new ListBaseViewHolder(mRefreshLayout.getView(),viewType);
                 }
                 break;
             case LOADMORE:
                 if (viewType == ITEM_TYPE_LOADMORE && mLoadMoreLayout != null) {
-                    return new ListBaseViewHolder(mLoadMoreLayout.getView());
+                    return new ListBaseViewHolder(mLoadMoreLayout.getView(),viewType);
                 }
                 break;
         }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="fab_bg_action">#AAFF0000</color>
+    <color name="fab_bg_click_b">#AAAA0000</color>
+    <color name="fab_bg_opaque">#99000000</color>
+    <color name="fab_bg_pressed">#EE333333</color>
+    <color name="fab_bg_trans">#55000000</color>
+    <color name="pf_bg_aa_black">#aa000000</color>
+    <color name="pf_bg_white">#FFFFFF</color>
+    <color name="pf_blue_dark">#FF283593</color>
+    <color name="pf_boundary_1">#FFFF0000</color>
+    <color name="pf_boundary_2">#FF00FF00</color>
+    <color name="pf_boundary_3">#FF0000FF</color>
+    <color name="pf_boundary_4">#FF990099</color>
+    <color name="pf_boundary_5">#FF3333FF</color>
+    <color name="pf_boundary_6">#FF009999</color>
+    <color name="pf_font_blue">#0000FF</color>
+    <color name="pf_white">#FFFFFFFF</color>
+</resources>

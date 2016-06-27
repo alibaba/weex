@@ -48,7 +48,7 @@ public class DebugServerProxy implements IWXDebugProxy {
     private MethodDispatcher mMethodDispatcher;
     private Iterable<ChromeDevtoolsDomain> mDomainModules;
     private JsonRpcPeer mPeer;
-    private String mRemoteUrl = WXEnvironment.sDebugWsUrl;
+    private String mRemoteUrl = WXEnvironment.sDebugProxyUrl;
     private WXBridgeManager mJsManager;
     private Context mContext;
     private DebugBridge mBridge;

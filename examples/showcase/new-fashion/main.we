@@ -27,7 +27,7 @@
       <refresh class="refresh" onRefresh="handleRefresh" display="{{displayRefresh}}"
         style="flex-direction:row;">
         <loading-indicator></loading-indicator>
-        <text style="margin-left:36;color:#eee;">下拉刷新...</text>
+        <text style="margin-left:36px;color:#eee;">下拉刷新...</text>
       </refresh>
       <headlines if="{{show0}}" ds="{{showData.header}}" append="tree"></headlines>
       <category if="{{show0}}" ds="{{showData.category}}" append="tree"></category>
@@ -728,19 +728,35 @@
       handleRefresh: function (e) {
         var vm = this
         vm.displayRefresh = 'show'
-        this.$call('modal', 'alert',  {
-          message: 'refreshing.'
-        }, function () {
-          vm.displayRefresh = 'hide'
-        })
+        var timer = require('@weex-module/timer')
+        if (timer) {
+          timer.setTimeout(function () {
+            vm.displayRefresh = 'hide'
+          }, 2000)
+        } else {
+          this.$call('modal', 'alert',  {
+            message: 'refreshing.'
+          }, function () {
+            vm.displayRefresh = 'hide'
+          })
+        }
       },
       handleLoading: function (e) {
-        this.displayLoading = 'show'
+        var vm = this
+        vm.displayLoading = 'show'
         this.$call('modal', 'toast', {
           message: 'loading.'
         })
-        this.simLoadingData(this.cnt++)
-        this.displayLoading = 'hide'
+        var timer = require('@weex-module/timer')
+        if (timer) {
+          timer.setTimeout(function () {
+            vm.simLoadingData(vm.cnt++)
+            vm.displayLoading = 'hide'
+          }, 2000)
+        } else {
+          vm.simLoadingData(vm.cnt++)
+          vm.displayLoading = 'hide'
+        }
       },
       simLoadingData: function (num) {
         if (num >= 3) {

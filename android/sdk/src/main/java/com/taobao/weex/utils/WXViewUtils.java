@@ -204,12 +204,14 @@
  */
 package com.taobao.weex.utils;
 
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.common.WXRuntimeException;
 
 /**
  * Utility class for views
@@ -238,14 +240,33 @@ public class WXViewUtils {
       if (weexHeight >= 0 || weexHeight == -2) {
         return weexHeight;
       }
-      return getScreenHeight();
+      return getScreenHeight(WXEnvironment.sApplication);
     }
     return -3;
   }
+
+  @Deprecated
   public static int getScreenHeight() {
-    return WXEnvironment.sApplication.getResources()
-        .getDisplayMetrics()
-        .heightPixels;
+    if(WXEnvironment.sApplication!=null){
+      return WXEnvironment.sApplication.getResources()
+              .getDisplayMetrics()
+              .heightPixels;
+    }
+    if(WXEnvironment.isApkDebugable()){
+      throw new WXRuntimeException("Error Context is null When getScreenHeight");
+    }
+    return 0;
+  }
+
+  public static int getScreenHeight(Context cxt) {
+    if(cxt!=null){
+      return cxt.getResources().getDisplayMetrics().heightPixels;
+    }
+    if(WXEnvironment.isApkDebugable()){
+      throw new WXRuntimeException("Error Context is null When getScreenHeight");
+    }
+    return 0;
+
   }
 
   public static int getWeexWidth(String instanceId) {
@@ -255,15 +276,46 @@ public class WXViewUtils {
       if (weexWidth >= 0 || weexWidth == -2) {
         return weexWidth;
       }
-      return getScreenWidth();
+      return getScreenWidth(WXEnvironment.sApplication);
     }
     return -3;
   }
 
-  public static int getScreenWidth() {
-    return  WXEnvironment.sApplication.getResources()
-        .getDisplayMetrics()
-        .widthPixels;
+  @Deprecated
+  public static int getScreenWidth( ) {
+    if(WXEnvironment.sApplication!=null) {
+      int width = WXEnvironment.sApplication.getResources().getDisplayMetrics().widthPixels;
+
+      if(WXEnvironment.SETTING_FORCE_VERTICAL_SCREEN){
+        int height = WXEnvironment.sApplication.getResources()
+                .getDisplayMetrics()
+                .heightPixels;
+        width = height > width ?width:height;
+      }
+      return width;
+    }
+    if(WXEnvironment.isApkDebugable()){
+      throw new WXRuntimeException("Error Context is null When getScreenHeight");
+    }
+    return 0;
+  }
+
+  public static int getScreenWidth(Context cxt) {
+    if(cxt!=null){
+      int width = WXEnvironment.sApplication.getResources().getDisplayMetrics().widthPixels;
+
+      if(WXEnvironment.SETTING_FORCE_VERTICAL_SCREEN){
+        int height = WXEnvironment.sApplication.getResources()
+                .getDisplayMetrics()
+                .heightPixels;
+        width = height > width ?width:height;
+      }
+      return width;
+    }
+    if(WXEnvironment.isApkDebugable()){
+      throw new WXRuntimeException("Error Context is null When getScreenHeight");
+    }
+    return 0;
   }
 
   /**
@@ -281,7 +333,7 @@ public class WXViewUtils {
     if (mUseWebPx) {
       return (float) Math.rint(pxValue);
     } else {
-      float realPx = (pxValue * getScreenWidth() / WXEnvironment.sDeafultWidth);
+      float realPx = (pxValue * getScreenWidth() / WXEnvironment.sDefaultWidth);
       return realPx > 0.005 && realPx < 1 ? 1 : (float) Math.rint(realPx);
     }
   }
@@ -290,7 +342,7 @@ public class WXViewUtils {
     if (mUseWebPx) {
       return (int) pxValue;
     } else {
-      float realPx = (pxValue * getScreenWidth() / WXEnvironment.sDeafultWidth);
+      float realPx = (pxValue * getScreenWidth() / WXEnvironment.sDefaultWidth);
       return realPx > 0.005 && realPx < 1 ? 1 : (int) realPx - 1;
     }
   }
@@ -310,7 +362,7 @@ public class WXViewUtils {
     if (mUseWebPx) {
       return pxValue;
     } else {
-      float realPx = (pxValue * WXEnvironment.sDeafultWidth / getScreenWidth());
+      float realPx = (pxValue * WXEnvironment.sDefaultWidth / getScreenWidth());
       return realPx > 0.005 && realPx < 1 ? 1 : realPx;
     }
   }
@@ -348,7 +400,7 @@ public class WXViewUtils {
       viewH = view.getHeight();
     }
 
-    return (p[1] > 0 && (p[1] - WXViewUtils.getScreenHeight() < 0))
+    return (p[1] > 0 && (p[1] - WXViewUtils.getScreenHeight(WXEnvironment.sApplication) < 0))
            || (viewH + p[1] > 0 && p[1] <= 0);
   }
 

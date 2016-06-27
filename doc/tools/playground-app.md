@@ -3,7 +3,7 @@ Weex Playground App
 
 One of best parts of Weex is Native Runtime . After preview your `we file` render in H5 using weex-toolkit CLI , you can try Native Runtime in a standalone App , this is Weex Playground App . More then that ,Weex playground App preset  a lot of  Demo & ShowCase ,so you will get to experience  performance of Weex native runtime  easily.
 
-Android version of Playground App can be downloaded [here](http://empty-now).  iOS version will soon be ready to download.
+Android version of Playground App can be downloaded [here](http://alibaba.github.io/weex/download.html).  iOS version will soon be ready to download.
 
 
 ## Screenshot 

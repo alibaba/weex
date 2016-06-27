@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/tv_data"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:gravity="center_vertical" />
+
+</LinearLayout><!-- From: file:/Users/ricky/Desktop/ricky/allgitcode/prettyfish/prettyfish_base/src/main/res/layout/prettyfish_datarow.xml -->
