@@ -31,9 +31,7 @@
     "node": ">=4"
   },
   "scripts": {
-    "install:githooks": "bash ./bin/install-hooks.sh",
-    "install:components": "bash ./bin/install-components.sh",
-    "postinstall": "npm run install:githooks && npm run install:components",
+    "postinstall": "bash ./bin/install-hooks.sh",
     "build:browser": "webpack --config build/webpack.browser.config.js",
     "build:native": "webpack --config build/webpack.native.config.js",
     "build:examples": "webpack --config build/webpack.examples.config.js",
@@ -75,7 +73,8 @@
     "modals": "^0.1.5",
     "scroll-to": "0.0.2",
     "semver": "^5.1.0",
-    "transitionize": "0.0.3"
+    "transitionize": "0.0.3",
+    "weex-components": "^0.1.2"
   },
   "devDependencies": {
     "babel-cli": "~6.4.5",
@@ -99,6 +98,6 @@
     "sinon-chai": "^2.8.0",
     "style-loader": "^0.13.1",
     "webpack": "^1.13.1",
-    "weex-loader": "^0.1.5"
+    "weex-loader": "^0.2.0"
   }
 }
