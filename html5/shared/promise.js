@@ -4,25 +4,22 @@ const OriginPromise = global.Promise
                       || function () {}
 const MSG = 'Using "Promise" is unexpected'
 
-const _once = {
-  promise: false
-}
+let once = false
 
 const UnexpectedPromise = function (...args) {
-  if (!_once.promise) {
+  if (!once) {
     console.warn(MSG)
-    _once.promise = true
+    once = true
   }
   return new OriginPromise(...args)
 }
 
 const fn = ['all', 'race', 'resolve', 'reject']
 fn.forEach(n => {
-  _once[n] = false
   UnexpectedPromise[n] = function (...args) {
-    if (!_once[n]) {
+    if (!once) {
       console.warn(MSG)
-      _once[n] = true
+      once = true
     }
     return OriginPromise[n] && OriginPromise[n](...args)
   }
