@@ -99,6 +99,6 @@
     "sinon-chai": "^2.8.0",
     "style-loader": "^0.13.1",
     "webpack": "^1.13.1",
-    "weex-loader": "^0.1.4"
+    "weex-loader": "^0.1.5"
   }
 }
