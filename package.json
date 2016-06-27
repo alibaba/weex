@@ -36,6 +36,8 @@
     "build:native": "webpack --config build/webpack.native.config.js",
     "build:examples": "webpack --config build/webpack.examples.config.js",
     "build:test": "webpack --config build/webpack.test.config.js",
+    "dist:browser": "npm run build:browser && bash ./bin/dist-browser.sh",
+    "dist": "npm run dist:browser",
     "dev:browser": "webpack --watch --config build/webpack.browser.config.js",
     "dev:native": "webpack --watch --config build/webpack.native.config.js",
     "dev:examples": "webpack --watch --config build/webpack.examples.config.js",
@@ -97,6 +99,7 @@
     "sinon": "^1.17.4",
     "sinon-chai": "^2.8.0",
     "style-loader": "^0.13.1",
+    "uglify-js": "^2.6.4",
     "webpack": "^1.13.1",
     "weex-loader": "^0.2.0"
   }
