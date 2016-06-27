@@ -208,11 +208,10 @@ import android.text.TextUtils;
 
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.common.WXException;
 import com.taobao.weex.ui.component.WXComponent;
-import com.taobao.weex.ui.component.WXComponentPropCache;
 import com.taobao.weex.utils.WXLogUtils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -222,35 +221,58 @@ import java.util.Map;
  */
 public class WXComponentRegistry {
 
-  private static Map<String, Class<? extends WXComponent>> sComponent = new HashMap<>();
+  private static Map<String, ComponentHolder> sTypeComponentMap = new HashMap<>();
+  private static Map<String, String> sClassTypeMap = new HashMap<>();
 
   public static boolean registerComponent(String type, Class<? extends WXComponent> clazz, boolean appendTree) throws WXException {
     if (clazz == null || TextUtils.isEmpty(type)) {
       return false;
     }
 
-//    if (sComponent.containsKey(type)) {
-//      if (WXEnvironment.isApkDebugable()) {
-//        throw new WXException("Exist duplicate component :" + type);
-//      } else {
-//        WXLogUtils.e("WXComponentRegistry Exist duplicate component: " + type);
-//        return false;
-//      }
-//    }
-
-    WXComponentPropCache.getMethods(clazz);
-
     Map<String, String> componentInfo = new HashMap<>();
     componentInfo.put("type", type);
     if (appendTree) {
       componentInfo.put("append", "tree");
     }
-
-    return registerNativeComponent(type, clazz) && registerJSComponent(componentInfo);
+    registerInternal(type,clazz,componentInfo);
+    return true;
   }
 
-  public static boolean registerNativeComponent(String type, Class<? extends WXComponent> clazz) throws WXException {
-    sComponent.put(type, clazz);
+  private static void registerInternal(final String type,final Class<? extends WXComponent> clazz, final Map<String, String> componentInfo){
+    WXBridgeManager.getInstance().getJSHandler().post(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          registerNativeComponent(type, clazz);
+          registerJSComponent(componentInfo);
+        } catch (WXException e) {
+          e.printStackTrace();
+        }
+
+      }
+    });
+  }
+
+  private static boolean registerNativeComponent(String type, Class<? extends WXComponent> clazz) throws WXException {
+    if (type == null) {
+      if (WXEnvironment.isApkDebugable()) {
+        throw new WXException("Component name required." );
+      } else {
+        WXLogUtils.e("Component name required." + type);
+        return false;
+      }
+    }
+    //same component class for different name
+    ComponentHolder holder;
+    if(sClassTypeMap.get(clazz.getName()) == null){
+      holder = new ComponentHolder(clazz);
+      sClassTypeMap.put(clazz.getName(),type);
+    }else{
+      //use the same holder
+      holder = sTypeComponentMap.get(sClassTypeMap.get(clazz.getName()));
+    }
+
+    sTypeComponentMap.put(type, holder);
     return true;
   }
 
@@ -266,25 +288,17 @@ public class WXComponentRegistry {
       return false;
     }
 
-    String type = componentInfo.get("style");
-    if (type == null) {
+    String type = componentInfo.get("type");
+    if(type == null){
       return false;
+    }else{
+      registerInternal(type,clazz,componentInfo);
+      return true;
     }
-    if (sComponent.containsKey(type)) {
-      if (WXEnvironment.isApkDebugable()) {
-        throw new WXException("Exist duplicate component:" + type);
-      } else {
-        WXLogUtils.e("WXComponentRegistry Exist duplicate component: " + type);
-        return false;
-      }
-    }
-
-    WXComponentPropCache.getMethods(clazz);
-
-    return registerNativeComponent(type, clazz) && registerJSComponent(componentInfo);
   }
 
-  public static Class<? extends WXComponent> getComponent(String type) {
-    return sComponent.get(type);
+  public static ComponentHolder getComponent(String type) {
+    return sTypeComponentMap.get(type);
   }
+
 }

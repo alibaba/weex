@@ -13,6 +13,8 @@ It supports all kinds of weex components as its child components.
 
 ### Attributes
 
+- `scrollDirection`: &lt;string&gt; define scroll direction of component, `horizontal` or `vertical`.
+
 There is no specific attribute for this component other than the [common attributes](../references/common-attrs.md).
 
 ### Styles

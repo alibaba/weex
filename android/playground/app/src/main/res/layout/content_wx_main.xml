@@ -18,5 +18,7 @@
               android:layout_height="wrap_content"
               android:layout_below="@+id/index_progressBar"
               android:layout_centerHorizontal="true"
+              android:layout_alignWithParentIfMissing="true"
+              android:layout_margin="10dp"
               android:text="loading...." android:visibility="gone"/>
 </RelativeLayout>

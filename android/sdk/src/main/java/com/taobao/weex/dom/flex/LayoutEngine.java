@@ -201,9 +201,10 @@ public class LayoutEngine {
       node.lastLayout.parentMaxWidth = parentMaxWidth;
 
       layoutNodeImpl(layoutContext, node, parentMaxWidth, parentDirection);
-      node.lastLayout.copy(node.csslayout);
+      node.updateLastLayout(node.csslayout);
     } else {
       node.csslayout.copy(node.lastLayout);
+      node.updateLastLayout(node.lastLayout);//nothing changed
     }
 
     node.markHasNewLayout();

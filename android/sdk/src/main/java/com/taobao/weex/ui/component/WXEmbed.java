@@ -221,8 +221,8 @@ public class WXEmbed extends WXDiv {
   private String src;
   private WXSDKInstance instance;
 
-  public WXEmbed(WXSDKInstance instance, WXDomObject node, WXVContainer parent, String instanceId, boolean lazy) {
-    super(instance, node, parent, instanceId, lazy);
+  public WXEmbed(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
+    super(instance, node, parent, lazy);
   }
 
   @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SRC)
