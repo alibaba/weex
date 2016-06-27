@@ -1,4 +1,6 @@
 # &lt;list&gt;(&lt;vlist&gt;,&lt;hlist&gt;)
+<span class="weex-version">0.4</span>
+
 
 ### Summary
 
@@ -53,16 +55,16 @@ These transform functions are supported:
 
 ### Events
 
-- `loadmore`: if the list scrolls to bottom, this event will be triggered immediately. You can load the next page of items in this event handler.
-- `onappear`: if the list's cells scroll to visible area, this event will be triggered when list is stopped. You can do something in this event handler.
-- `ondisappear`: if the list's cells scroll to invisible area, this event will be triggered when list is stopped. You can do something in this event handler.
+- `loadmore` <sup class="wx-v">0.5</sup>: if the list scrolls to bottom, this event will be triggered immediately. You can load the next page of items in this event handler.
+- `onappear` <sup class="wx-v">0.5</sup>: if the list's cells scroll to visible area, this event will be triggered when list is stopped. You can do something in this event handler.
+- `ondisappear` <sup class="wx-v">0.5</sup>: if the list's cells scroll to invisible area, this event will be triggered when list is stopped. You can do something in this event handler.
 
 
 **common events**: check out the [common events](../references/common-event.md)
 
 - support `click` event. Check out [common events](../references/common-event.md)
 - support `appear` / `disappear` event. Check out [common events](../references/common-event.md)
-- support `refresh` event .  If a refresh component is inside scroller, this event will be triggered when the scroller is swiping down.
+- support `refresh` event  <sup class="wx-v">0.5</sup>.  If a refresh component is inside scroller, this event will be triggered when the scroller is swiping down.
 - support `loading` event .  If a loading component is inside scroller, this event will be triggered when user scrolling to the bottom.
 
 ### Example

@@ -11,15 +11,15 @@
 {% endblock %}
 
 {% block style %}
-    {# Include theme css before plugins css #}
+    {### Include theme css before plugins css ###}
     <link rel="stylesheet" href="{{ "style.css"|resolveAsset }}">
 
     {{ super() }}
 
-    {# Custom stylesheets for the book #}
+    {### Custom stylesheets for the book ###}
 
     {% for type, style in config.styles %}
-        {% if style|fileExists and type == "website" %}
+        {% if fileExists(style) and type == "website" %}
         <link rel="stylesheet" href="{{ style|resolveFile }}">
         {% endif %}
     {% endfor %}
