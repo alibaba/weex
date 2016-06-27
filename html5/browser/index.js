@@ -6,8 +6,6 @@ require('../native')
 
 require('./styles/base.css')
 
-require('./polyfill')
-
 const config = require('./config')
 const Loader = require('./loader')
 const utils = require('./utils')
