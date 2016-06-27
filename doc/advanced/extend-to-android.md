@@ -65,7 +65,7 @@ Refer to the following example
 <font color="gray">
 There are label, image, div, scroll, ect. components in weex, you can also customize your own components.  
 
-#### Step to customize a components 
+#### Step to customize a component
 
 1. Customize components must extend WXComponent or WXContainer  
 2. @WXComponentProp(name=value(value is attr or style of dsl)) for it be recognized by weex SDK.
