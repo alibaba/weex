@@ -7,6 +7,133 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A0497041D0E867400D20A06 /* PDApplicationCacheDomain.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496841D0E867400D20A06 /* PDApplicationCacheDomain.h */; };
+		0A0497051D0E867400D20A06 /* PDApplicationCacheDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496851D0E867400D20A06 /* PDApplicationCacheDomain.m */; };
+		0A0497061D0E867400D20A06 /* PDApplicationCacheTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496861D0E867400D20A06 /* PDApplicationCacheTypes.h */; };
+		0A0497071D0E867400D20A06 /* PDApplicationCacheTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496871D0E867400D20A06 /* PDApplicationCacheTypes.m */; };
+		0A0497081D0E867400D20A06 /* PDConsoleDomain.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496881D0E867400D20A06 /* PDConsoleDomain.h */; };
+		0A0497091D0E867400D20A06 /* PDConsoleDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496891D0E867400D20A06 /* PDConsoleDomain.m */; };
+		0A04970A1D0E867400D20A06 /* PDConsoleTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A04968A1D0E867400D20A06 /* PDConsoleTypes.h */; };
+		0A04970B1D0E867400D20A06 /* PDConsoleTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A04968B1D0E867400D20A06 /* PDConsoleTypes.m */; };
+		0A04970C1D0E867400D20A06 /* PDCSSDomain.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A04968C1D0E867400D20A06 /* PDCSSDomain.h */; };
+		0A04970D1D0E867400D20A06 /* PDCSSDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A04968D1D0E867400D20A06 /* PDCSSDomain.m */; };
+		0A04970E1D0E867400D20A06 /* PDCSSTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A04968E1D0E867400D20A06 /* PDCSSTypes.h */; };
+		0A04970F1D0E867400D20A06 /* PDCSSTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A04968F1D0E867400D20A06 /* PDCSSTypes.m */; };
+		0A0497101D0E867400D20A06 /* PDDatabaseDomain.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496901D0E867400D20A06 /* PDDatabaseDomain.h */; };
+		0A0497111D0E867400D20A06 /* PDDatabaseDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496911D0E867400D20A06 /* PDDatabaseDomain.m */; };
+		0A0497121D0E867400D20A06 /* PDDatabaseTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496921D0E867400D20A06 /* PDDatabaseTypes.h */; };
+		0A0497131D0E867400D20A06 /* PDDatabaseTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496931D0E867400D20A06 /* PDDatabaseTypes.m */; };
+		0A0497141D0E867400D20A06 /* PDDebuggerDomain.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496941D0E867400D20A06 /* PDDebuggerDomain.h */; };
+		0A0497151D0E867400D20A06 /* PDDebuggerDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496951D0E867400D20A06 /* PDDebuggerDomain.m */; };
+		0A0497161D0E867400D20A06 /* PDDebuggerTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496961D0E867400D20A06 /* PDDebuggerTypes.h */; };
+		0A0497171D0E867400D20A06 /* PDDebuggerTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496971D0E867400D20A06 /* PDDebuggerTypes.m */; };
+		0A0497181D0E867400D20A06 /* PDDOMDebuggerDomain.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496981D0E867400D20A06 /* PDDOMDebuggerDomain.h */; };
+		0A0497191D0E867400D20A06 /* PDDOMDebuggerDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496991D0E867400D20A06 /* PDDOMDebuggerDomain.m */; };
+		0A04971A1D0E867400D20A06 /* PDDOMDomain.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A04969A1D0E867400D20A06 /* PDDOMDomain.h */; };
+		0A04971B1D0E867400D20A06 /* PDDOMDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A04969B1D0E867400D20A06 /* PDDOMDomain.m */; };
+		0A04971C1D0E867400D20A06 /* PDDOMStorageDomain.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A04969C1D0E867400D20A06 /* PDDOMStorageDomain.h */; };
+		0A04971D1D0E867400D20A06 /* PDDOMStorageDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A04969D1D0E867400D20A06 /* PDDOMStorageDomain.m */; };
+		0A04971E1D0E867400D20A06 /* PDDOMStorageTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A04969E1D0E867400D20A06 /* PDDOMStorageTypes.h */; };
+		0A04971F1D0E867400D20A06 /* PDDOMStorageTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A04969F1D0E867400D20A06 /* PDDOMStorageTypes.m */; };
+		0A0497201D0E867400D20A06 /* PDDOMTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496A01D0E867400D20A06 /* PDDOMTypes.h */; };
+		0A0497211D0E867400D20A06 /* PDDOMTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496A11D0E867400D20A06 /* PDDOMTypes.m */; };
+		0A0497221D0E867400D20A06 /* PDFileSystemDomain.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496A21D0E867400D20A06 /* PDFileSystemDomain.h */; };
+		0A0497231D0E867400D20A06 /* PDFileSystemDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496A31D0E867400D20A06 /* PDFileSystemDomain.m */; };
+		0A0497241D0E867400D20A06 /* PDFileSystemTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496A41D0E867400D20A06 /* PDFileSystemTypes.h */; };
+		0A0497251D0E867400D20A06 /* PDFileSystemTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496A51D0E867400D20A06 /* PDFileSystemTypes.m */; };
+		0A0497261D0E867400D20A06 /* PDIndexedDBDomain.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496A61D0E867400D20A06 /* PDIndexedDBDomain.h */; };
+		0A0497271D0E867400D20A06 /* PDIndexedDBDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496A71D0E867400D20A06 /* PDIndexedDBDomain.m */; };
+		0A0497281D0E867400D20A06 /* PDIndexedDBTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496A81D0E867400D20A06 /* PDIndexedDBTypes.h */; };
+		0A0497291D0E867400D20A06 /* PDIndexedDBTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496A91D0E867400D20A06 /* PDIndexedDBTypes.m */; };
+		0A04972A1D0E867400D20A06 /* PDInspectorDomain.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496AA1D0E867400D20A06 /* PDInspectorDomain.h */; };
+		0A04972B1D0E867400D20A06 /* PDInspectorDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496AB1D0E867400D20A06 /* PDInspectorDomain.m */; };
+		0A04972C1D0E867400D20A06 /* PDMemoryDomain.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496AC1D0E867400D20A06 /* PDMemoryDomain.h */; };
+		0A04972D1D0E867400D20A06 /* PDMemoryDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496AD1D0E867400D20A06 /* PDMemoryDomain.m */; };
+		0A04972E1D0E867400D20A06 /* PDMemoryTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496AE1D0E867400D20A06 /* PDMemoryTypes.h */; };
+		0A04972F1D0E867400D20A06 /* PDMemoryTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496AF1D0E867400D20A06 /* PDMemoryTypes.m */; };
+		0A0497301D0E867400D20A06 /* PDNetworkDomain.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496B01D0E867400D20A06 /* PDNetworkDomain.h */; };
+		0A0497311D0E867400D20A06 /* PDNetworkDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496B11D0E867400D20A06 /* PDNetworkDomain.m */; };
+		0A0497321D0E867400D20A06 /* PDNetworkTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496B21D0E867400D20A06 /* PDNetworkTypes.h */; };
+		0A0497331D0E867400D20A06 /* PDNetworkTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496B31D0E867400D20A06 /* PDNetworkTypes.m */; };
+		0A0497341D0E867400D20A06 /* PDPageDomain.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496B41D0E867400D20A06 /* PDPageDomain.h */; };
+		0A0497351D0E867400D20A06 /* PDPageDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496B51D0E867400D20A06 /* PDPageDomain.m */; };
+		0A0497361D0E867400D20A06 /* PDPageTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496B61D0E867400D20A06 /* PDPageTypes.h */; };
+		0A0497371D0E867400D20A06 /* PDPageTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496B71D0E867400D20A06 /* PDPageTypes.m */; };
+		0A0497381D0E867400D20A06 /* PDProfilerDomain.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496B81D0E867400D20A06 /* PDProfilerDomain.h */; };
+		0A0497391D0E867400D20A06 /* PDProfilerDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496B91D0E867400D20A06 /* PDProfilerDomain.m */; };
+		0A04973A1D0E867400D20A06 /* PDProfilerDomainController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496BA1D0E867400D20A06 /* PDProfilerDomainController.h */; };
+		0A04973B1D0E867400D20A06 /* PDProfilerDomainController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496BB1D0E867400D20A06 /* PDProfilerDomainController.m */; };
+		0A04973C1D0E867400D20A06 /* PDProfilerTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496BC1D0E867400D20A06 /* PDProfilerTypes.h */; };
+		0A04973D1D0E867400D20A06 /* PDProfilerTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496BD1D0E867400D20A06 /* PDProfilerTypes.m */; };
+		0A04973E1D0E867400D20A06 /* PDRuntimeDomain.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496BE1D0E867400D20A06 /* PDRuntimeDomain.h */; };
+		0A04973F1D0E867400D20A06 /* PDRuntimeDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496BF1D0E867400D20A06 /* PDRuntimeDomain.m */; };
+		0A0497401D0E867400D20A06 /* PDRuntimeTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496C01D0E867400D20A06 /* PDRuntimeTypes.h */; };
+		0A0497411D0E867400D20A06 /* PDRuntimeTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496C11D0E867400D20A06 /* PDRuntimeTypes.m */; };
+		0A0497421D0E867400D20A06 /* PDTimelineDomain.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496C21D0E867400D20A06 /* PDTimelineDomain.h */; };
+		0A0497431D0E867400D20A06 /* PDTimelineDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496C31D0E867400D20A06 /* PDTimelineDomain.m */; };
+		0A0497441D0E867400D20A06 /* PDTimelineDomainController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496C41D0E867400D20A06 /* PDTimelineDomainController.h */; };
+		0A0497451D0E867400D20A06 /* PDTimelineDomainController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496C51D0E867400D20A06 /* PDTimelineDomainController.m */; };
+		0A0497461D0E867400D20A06 /* PDTimelineTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496C61D0E867400D20A06 /* PDTimelineTypes.h */; };
+		0A0497471D0E867400D20A06 /* PDTimelineTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496C71D0E867400D20A06 /* PDTimelineTypes.m */; };
+		0A0497481D0E867400D20A06 /* PDWebGLDomain.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496C81D0E867400D20A06 /* PDWebGLDomain.h */; };
+		0A0497491D0E867400D20A06 /* PDWebGLDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496C91D0E867400D20A06 /* PDWebGLDomain.m */; };
+		0A04974A1D0E867400D20A06 /* PDWebGLTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496CA1D0E867400D20A06 /* PDWebGLTypes.h */; };
+		0A04974B1D0E867400D20A06 /* PDWebGLTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496CB1D0E867400D20A06 /* PDWebGLTypes.m */; };
+		0A04974C1D0E867400D20A06 /* PDWorkerDomain.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496CC1D0E867400D20A06 /* PDWorkerDomain.h */; };
+		0A04974D1D0E867400D20A06 /* PDWorkerDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496CD1D0E867400D20A06 /* PDWorkerDomain.m */; };
+		0A04974E1D0E867400D20A06 /* NSArray+PD_JSONObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496CF1D0E867400D20A06 /* NSArray+PD_JSONObject.h */; };
+		0A04974F1D0E867400D20A06 /* NSArray+PD_JSONObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496D01D0E867400D20A06 /* NSArray+PD_JSONObject.m */; };
+		0A0497501D0E867400D20A06 /* NSArray+PDRuntimePropertyDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496D11D0E867400D20A06 /* NSArray+PDRuntimePropertyDescriptor.h */; };
+		0A0497511D0E867400D20A06 /* NSArray+PDRuntimePropertyDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496D21D0E867400D20A06 /* NSArray+PDRuntimePropertyDescriptor.m */; };
+		0A0497521D0E867400D20A06 /* NSData+PDDebugger.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496D31D0E867400D20A06 /* NSData+PDDebugger.h */; };
+		0A0497531D0E867400D20A06 /* NSData+PDDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496D41D0E867400D20A06 /* NSData+PDDebugger.m */; };
+		0A0497541D0E867400D20A06 /* NSDate+PD_JSONObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496D51D0E867400D20A06 /* NSDate+PD_JSONObject.h */; };
+		0A0497551D0E867400D20A06 /* NSDate+PD_JSONObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496D61D0E867400D20A06 /* NSDate+PD_JSONObject.m */; };
+		0A0497561D0E867400D20A06 /* NSDate+PDDebugger.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496D71D0E867400D20A06 /* NSDate+PDDebugger.h */; };
+		0A0497571D0E867400D20A06 /* NSDate+PDDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496D81D0E867400D20A06 /* NSDate+PDDebugger.m */; };
+		0A0497581D0E867400D20A06 /* NSDictionary+PDRuntimePropertyDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496D91D0E867400D20A06 /* NSDictionary+PDRuntimePropertyDescriptor.h */; };
+		0A0497591D0E867400D20A06 /* NSDictionary+PDRuntimePropertyDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496DA1D0E867400D20A06 /* NSDictionary+PDRuntimePropertyDescriptor.m */; };
+		0A04975A1D0E867400D20A06 /* NSError+PD_JSONObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496DB1D0E867400D20A06 /* NSError+PD_JSONObject.h */; };
+		0A04975B1D0E867400D20A06 /* NSError+PD_JSONObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496DC1D0E867400D20A06 /* NSError+PD_JSONObject.m */; };
+		0A04975C1D0E867400D20A06 /* NSManagedObject+PDRuntimePropertyDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496DD1D0E867400D20A06 /* NSManagedObject+PDRuntimePropertyDescriptor.h */; };
+		0A04975D1D0E867400D20A06 /* NSManagedObject+PDRuntimePropertyDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496DE1D0E867400D20A06 /* NSManagedObject+PDRuntimePropertyDescriptor.m */; };
+		0A04975E1D0E867400D20A06 /* NSObject+PDRuntimePropertyDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496DF1D0E867400D20A06 /* NSObject+PDRuntimePropertyDescriptor.h */; };
+		0A04975F1D0E867400D20A06 /* NSObject+PDRuntimePropertyDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496E01D0E867400D20A06 /* NSObject+PDRuntimePropertyDescriptor.m */; };
+		0A0497601D0E867400D20A06 /* NSOrderedSet+PDRuntimePropertyDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496E11D0E867400D20A06 /* NSOrderedSet+PDRuntimePropertyDescriptor.h */; };
+		0A0497611D0E867400D20A06 /* NSOrderedSet+PDRuntimePropertyDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496E21D0E867400D20A06 /* NSOrderedSet+PDRuntimePropertyDescriptor.m */; };
+		0A0497621D0E867400D20A06 /* NSSet+PDRuntimePropertyDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496E31D0E867400D20A06 /* NSSet+PDRuntimePropertyDescriptor.h */; };
+		0A0497631D0E867400D20A06 /* NSSet+PDRuntimePropertyDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496E41D0E867400D20A06 /* NSSet+PDRuntimePropertyDescriptor.m */; };
+		0A0497641D0E867400D20A06 /* PDConsoleDomainController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496E51D0E867400D20A06 /* PDConsoleDomainController.h */; };
+		0A0497651D0E867400D20A06 /* PDConsoleDomainController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496E61D0E867400D20A06 /* PDConsoleDomainController.m */; };
+		0A0497661D0E867400D20A06 /* PDContainerIndex.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496E71D0E867400D20A06 /* PDContainerIndex.h */; };
+		0A0497671D0E867400D20A06 /* PDContainerIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496E81D0E867400D20A06 /* PDContainerIndex.m */; };
+		0A0497681D0E867400D20A06 /* PDDebugger.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496E91D0E867400D20A06 /* PDDebugger.h */; };
+		0A0497691D0E867400D20A06 /* PDDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496EA1D0E867400D20A06 /* PDDebugger.m */; };
+		0A04976A1D0E867400D20A06 /* PDDebuggerDomainController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496EB1D0E867400D20A06 /* PDDebuggerDomainController.h */; };
+		0A04976B1D0E867400D20A06 /* PDDebuggerDomainController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496EC1D0E867400D20A06 /* PDDebuggerDomainController.m */; };
+		0A04976C1D0E867400D20A06 /* PDDefinitions.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496ED1D0E867400D20A06 /* PDDefinitions.h */; };
+		0A04976D1D0E867500D20A06 /* PDDefinitions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496EE1D0E867400D20A06 /* PDDefinitions.m */; };
+		0A04976E1D0E867500D20A06 /* PDDomainController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496EF1D0E867400D20A06 /* PDDomainController.h */; };
+		0A04976F1D0E867500D20A06 /* PDDomainController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496F01D0E867400D20A06 /* PDDomainController.m */; };
+		0A0497701D0E867500D20A06 /* PDDOMDomainController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496F11D0E867400D20A06 /* PDDOMDomainController.h */; };
+		0A0497711D0E867500D20A06 /* PDDOMDomainController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496F21D0E867400D20A06 /* PDDOMDomainController.m */; };
+		0A0497721D0E867500D20A06 /* PDDynamicDebuggerDomain.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496F31D0E867400D20A06 /* PDDynamicDebuggerDomain.h */; };
+		0A0497731D0E867500D20A06 /* PDDynamicDebuggerDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496F41D0E867400D20A06 /* PDDynamicDebuggerDomain.m */; };
+		0A0497741D0E867500D20A06 /* PDIndexedDBDomainController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496F51D0E867400D20A06 /* PDIndexedDBDomainController.h */; };
+		0A0497751D0E867500D20A06 /* PDIndexedDBDomainController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496F61D0E867400D20A06 /* PDIndexedDBDomainController.m */; };
+		0A0497761D0E867500D20A06 /* PDInspectorDomainController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496F71D0E867400D20A06 /* PDInspectorDomainController.h */; };
+		0A0497771D0E867500D20A06 /* PDInspectorDomainController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496F81D0E867400D20A06 /* PDInspectorDomainController.m */; };
+		0A0497781D0E867500D20A06 /* PDNetworkDomainController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496F91D0E867400D20A06 /* PDNetworkDomainController.h */; };
+		0A0497791D0E867500D20A06 /* PDNetworkDomainController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496FA1D0E867400D20A06 /* PDNetworkDomainController.m */; };
+		0A04977A1D0E867500D20A06 /* PDObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496FB1D0E867400D20A06 /* PDObject.h */; };
+		0A04977B1D0E867500D20A06 /* PDObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496FC1D0E867400D20A06 /* PDObject.m */; };
+		0A04977C1D0E867500D20A06 /* PDPageDomainController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496FD1D0E867400D20A06 /* PDPageDomainController.h */; };
+		0A04977D1D0E867500D20A06 /* PDPageDomainController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0496FE1D0E867400D20A06 /* PDPageDomainController.m */; };
+		0A04977E1D0E867500D20A06 /* PDPrettyStringPrinter.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0496FF1D0E867400D20A06 /* PDPrettyStringPrinter.h */; };
+		0A04977F1D0E867500D20A06 /* PDPrettyStringPrinter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0497001D0E867400D20A06 /* PDPrettyStringPrinter.m */; };
+		0A0497801D0E867500D20A06 /* PDRuntimeDomainController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0497011D0E867400D20A06 /* PDRuntimeDomainController.h */; };
+		0A0497811D0E867500D20A06 /* PDRuntimeDomainController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0497021D0E867400D20A06 /* PDRuntimeDomainController.m */; };
+		0A0497821D0E867500D20A06 /* PonyDebugger.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0497031D0E867400D20A06 /* PonyDebugger.h */; };
 		2A1F57B71C75C6A600B58017 /* WXTextInputComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A1F57B51C75C6A600B58017 /* WXTextInputComponent.h */; };
 		2A1F57B81C75C6A600B58017 /* WXTextInputComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A1F57B61C75C6A600B58017 /* WXTextInputComponent.m */; };
 		2A42AF881C23B33E00818EA6 /* WeexSDK_MTL.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 2A42AF871C23B33E00818EA6 /* WeexSDK_MTL.h */; };
@@ -76,8 +203,6 @@
 		744BEA561D05178F00452B5D /* WXComponent+Display.m in Sources */ = {isa = PBXBuildFile; fileRef = 744BEA541D05178F00452B5D /* WXComponent+Display.m */; };
 		744BEA591D0520F300452B5D /* WXComponent+Layout.h in Headers */ = {isa = PBXBuildFile; fileRef = 744BEA571D0520F300452B5D /* WXComponent+Layout.h */; };
 		744BEA5A1D0520F300452B5D /* WXComponent+Layout.m in Sources */ = {isa = PBXBuildFile; fileRef = 744BEA581D0520F300452B5D /* WXComponent+Layout.m */; };
-		744BEA5D1D052A4F00452B5D /* WXComponent+ViewManangement.h in Headers */ = {isa = PBXBuildFile; fileRef = 744BEA5B1D052A4F00452B5D /* WXComponent+ViewManangement.h */; };
-		744BEA5E1D052A4F00452B5D /* WXComponent+ViewManangement.m in Sources */ = {isa = PBXBuildFile; fileRef = 744BEA5C1D052A4F00452B5D /* WXComponent+ViewManangement.m */; };
 		745ED2DA1C5F2C7E002DB5A8 /* WXView.h in Headers */ = {isa = PBXBuildFile; fileRef = 745ED2D61C5F2C7E002DB5A8 /* WXView.h */; };
 		745ED2DB1C5F2C7E002DB5A8 /* WXView.m in Sources */ = {isa = PBXBuildFile; fileRef = 745ED2D71C5F2C7E002DB5A8 /* WXView.m */; };
 		7461F8901CFB373100F62D44 /* WXDisplayQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 7461F88C1CFB373100F62D44 /* WXDisplayQueue.h */; };
@@ -94,6 +219,10 @@
 		7469869C1C4DEAC20054A57E /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7469869B1C4DEAC20054A57E /* libicucore.tbd */; };
 		7469869F1C4E2C000054A57E /* NSArray+Weex.h in Headers */ = {isa = PBXBuildFile; fileRef = 7469869D1C4E2C000054A57E /* NSArray+Weex.h */; };
 		746986A01C4E2C010054A57E /* NSArray+Weex.m in Sources */ = {isa = PBXBuildFile; fileRef = 7469869E1C4E2C000054A57E /* NSArray+Weex.m */; };
+		747A787C1D1BAAC900DED9D0 /* WXComponent+ViewManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 747A787A1D1BAAC900DED9D0 /* WXComponent+ViewManagement.h */; };
+		747A787D1D1BAAC900DED9D0 /* WXComponent+ViewManagement.m in Sources */ = {isa = PBXBuildFile; fileRef = 747A787B1D1BAAC900DED9D0 /* WXComponent+ViewManagement.m */; };
+		74896F301D1AC79400D1D593 /* NSObject+WXSwizzle.h in Headers */ = {isa = PBXBuildFile; fileRef = 74896F2E1D1AC79400D1D593 /* NSObject+WXSwizzle.h */; };
+		74896F311D1AC79400D1D593 /* NSObject+WXSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 74896F2F1D1AC79400D1D593 /* NSObject+WXSwizzle.m */; };
 		748B25181C44A6F9005D491E /* WXSDKInstance_private.h in Headers */ = {isa = PBXBuildFile; fileRef = 748B25161C44A6F9005D491E /* WXSDKInstance_private.h */; };
 		74915F471C8EB02B00BEBCC0 /* WXAssert.h in Headers */ = {isa = PBXBuildFile; fileRef = 74915F451C8EB02B00BEBCC0 /* WXAssert.h */; };
 		74915F481C8EB02B00BEBCC0 /* WXAssert.m in Sources */ = {isa = PBXBuildFile; fileRef = 74915F461C8EB02B00BEBCC0 /* WXAssert.m */; };
@@ -195,6 +324,133 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0A0496841D0E867400D20A06 /* PDApplicationCacheDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDApplicationCacheDomain.h; sourceTree = "<group>"; };
+		0A0496851D0E867400D20A06 /* PDApplicationCacheDomain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDApplicationCacheDomain.m; sourceTree = "<group>"; };
+		0A0496861D0E867400D20A06 /* PDApplicationCacheTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDApplicationCacheTypes.h; sourceTree = "<group>"; };
+		0A0496871D0E867400D20A06 /* PDApplicationCacheTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDApplicationCacheTypes.m; sourceTree = "<group>"; };
+		0A0496881D0E867400D20A06 /* PDConsoleDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDConsoleDomain.h; sourceTree = "<group>"; };
+		0A0496891D0E867400D20A06 /* PDConsoleDomain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDConsoleDomain.m; sourceTree = "<group>"; };
+		0A04968A1D0E867400D20A06 /* PDConsoleTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDConsoleTypes.h; sourceTree = "<group>"; };
+		0A04968B1D0E867400D20A06 /* PDConsoleTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDConsoleTypes.m; sourceTree = "<group>"; };
+		0A04968C1D0E867400D20A06 /* PDCSSDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDCSSDomain.h; sourceTree = "<group>"; };
+		0A04968D1D0E867400D20A06 /* PDCSSDomain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDCSSDomain.m; sourceTree = "<group>"; };
+		0A04968E1D0E867400D20A06 /* PDCSSTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDCSSTypes.h; sourceTree = "<group>"; };
+		0A04968F1D0E867400D20A06 /* PDCSSTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDCSSTypes.m; sourceTree = "<group>"; };
+		0A0496901D0E867400D20A06 /* PDDatabaseDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDDatabaseDomain.h; sourceTree = "<group>"; };
+		0A0496911D0E867400D20A06 /* PDDatabaseDomain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDDatabaseDomain.m; sourceTree = "<group>"; };
+		0A0496921D0E867400D20A06 /* PDDatabaseTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDDatabaseTypes.h; sourceTree = "<group>"; };
+		0A0496931D0E867400D20A06 /* PDDatabaseTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDDatabaseTypes.m; sourceTree = "<group>"; };
+		0A0496941D0E867400D20A06 /* PDDebuggerDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDDebuggerDomain.h; sourceTree = "<group>"; };
+		0A0496951D0E867400D20A06 /* PDDebuggerDomain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDDebuggerDomain.m; sourceTree = "<group>"; };
+		0A0496961D0E867400D20A06 /* PDDebuggerTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDDebuggerTypes.h; sourceTree = "<group>"; };
+		0A0496971D0E867400D20A06 /* PDDebuggerTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDDebuggerTypes.m; sourceTree = "<group>"; };
+		0A0496981D0E867400D20A06 /* PDDOMDebuggerDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDDOMDebuggerDomain.h; sourceTree = "<group>"; };
+		0A0496991D0E867400D20A06 /* PDDOMDebuggerDomain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDDOMDebuggerDomain.m; sourceTree = "<group>"; };
+		0A04969A1D0E867400D20A06 /* PDDOMDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDDOMDomain.h; sourceTree = "<group>"; };
+		0A04969B1D0E867400D20A06 /* PDDOMDomain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDDOMDomain.m; sourceTree = "<group>"; };
+		0A04969C1D0E867400D20A06 /* PDDOMStorageDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDDOMStorageDomain.h; sourceTree = "<group>"; };
+		0A04969D1D0E867400D20A06 /* PDDOMStorageDomain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDDOMStorageDomain.m; sourceTree = "<group>"; };
+		0A04969E1D0E867400D20A06 /* PDDOMStorageTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDDOMStorageTypes.h; sourceTree = "<group>"; };
+		0A04969F1D0E867400D20A06 /* PDDOMStorageTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDDOMStorageTypes.m; sourceTree = "<group>"; };
+		0A0496A01D0E867400D20A06 /* PDDOMTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDDOMTypes.h; sourceTree = "<group>"; };
+		0A0496A11D0E867400D20A06 /* PDDOMTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDDOMTypes.m; sourceTree = "<group>"; };
+		0A0496A21D0E867400D20A06 /* PDFileSystemDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDFileSystemDomain.h; sourceTree = "<group>"; };
+		0A0496A31D0E867400D20A06 /* PDFileSystemDomain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDFileSystemDomain.m; sourceTree = "<group>"; };
+		0A0496A41D0E867400D20A06 /* PDFileSystemTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDFileSystemTypes.h; sourceTree = "<group>"; };
+		0A0496A51D0E867400D20A06 /* PDFileSystemTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDFileSystemTypes.m; sourceTree = "<group>"; };
+		0A0496A61D0E867400D20A06 /* PDIndexedDBDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDIndexedDBDomain.h; sourceTree = "<group>"; };
+		0A0496A71D0E867400D20A06 /* PDIndexedDBDomain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDIndexedDBDomain.m; sourceTree = "<group>"; };
+		0A0496A81D0E867400D20A06 /* PDIndexedDBTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDIndexedDBTypes.h; sourceTree = "<group>"; };
+		0A0496A91D0E867400D20A06 /* PDIndexedDBTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDIndexedDBTypes.m; sourceTree = "<group>"; };
+		0A0496AA1D0E867400D20A06 /* PDInspectorDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDInspectorDomain.h; sourceTree = "<group>"; };
+		0A0496AB1D0E867400D20A06 /* PDInspectorDomain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDInspectorDomain.m; sourceTree = "<group>"; };
+		0A0496AC1D0E867400D20A06 /* PDMemoryDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDMemoryDomain.h; sourceTree = "<group>"; };
+		0A0496AD1D0E867400D20A06 /* PDMemoryDomain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDMemoryDomain.m; sourceTree = "<group>"; };
+		0A0496AE1D0E867400D20A06 /* PDMemoryTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDMemoryTypes.h; sourceTree = "<group>"; };
+		0A0496AF1D0E867400D20A06 /* PDMemoryTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDMemoryTypes.m; sourceTree = "<group>"; };
+		0A0496B01D0E867400D20A06 /* PDNetworkDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDNetworkDomain.h; sourceTree = "<group>"; };
+		0A0496B11D0E867400D20A06 /* PDNetworkDomain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDNetworkDomain.m; sourceTree = "<group>"; };
+		0A0496B21D0E867400D20A06 /* PDNetworkTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDNetworkTypes.h; sourceTree = "<group>"; };
+		0A0496B31D0E867400D20A06 /* PDNetworkTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDNetworkTypes.m; sourceTree = "<group>"; };
+		0A0496B41D0E867400D20A06 /* PDPageDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDPageDomain.h; sourceTree = "<group>"; };
+		0A0496B51D0E867400D20A06 /* PDPageDomain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDPageDomain.m; sourceTree = "<group>"; };
+		0A0496B61D0E867400D20A06 /* PDPageTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDPageTypes.h; sourceTree = "<group>"; };
+		0A0496B71D0E867400D20A06 /* PDPageTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDPageTypes.m; sourceTree = "<group>"; };
+		0A0496B81D0E867400D20A06 /* PDProfilerDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDProfilerDomain.h; sourceTree = "<group>"; };
+		0A0496B91D0E867400D20A06 /* PDProfilerDomain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDProfilerDomain.m; sourceTree = "<group>"; };
+		0A0496BA1D0E867400D20A06 /* PDProfilerDomainController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDProfilerDomainController.h; sourceTree = "<group>"; };
+		0A0496BB1D0E867400D20A06 /* PDProfilerDomainController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDProfilerDomainController.m; sourceTree = "<group>"; };
+		0A0496BC1D0E867400D20A06 /* PDProfilerTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDProfilerTypes.h; sourceTree = "<group>"; };
+		0A0496BD1D0E867400D20A06 /* PDProfilerTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDProfilerTypes.m; sourceTree = "<group>"; };
+		0A0496BE1D0E867400D20A06 /* PDRuntimeDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDRuntimeDomain.h; sourceTree = "<group>"; };
+		0A0496BF1D0E867400D20A06 /* PDRuntimeDomain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDRuntimeDomain.m; sourceTree = "<group>"; };
+		0A0496C01D0E867400D20A06 /* PDRuntimeTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDRuntimeTypes.h; sourceTree = "<group>"; };
+		0A0496C11D0E867400D20A06 /* PDRuntimeTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDRuntimeTypes.m; sourceTree = "<group>"; };
+		0A0496C21D0E867400D20A06 /* PDTimelineDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDTimelineDomain.h; sourceTree = "<group>"; };
+		0A0496C31D0E867400D20A06 /* PDTimelineDomain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDTimelineDomain.m; sourceTree = "<group>"; };
+		0A0496C41D0E867400D20A06 /* PDTimelineDomainController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDTimelineDomainController.h; sourceTree = "<group>"; };
+		0A0496C51D0E867400D20A06 /* PDTimelineDomainController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDTimelineDomainController.m; sourceTree = "<group>"; };
+		0A0496C61D0E867400D20A06 /* PDTimelineTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDTimelineTypes.h; sourceTree = "<group>"; };
+		0A0496C71D0E867400D20A06 /* PDTimelineTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDTimelineTypes.m; sourceTree = "<group>"; };
+		0A0496C81D0E867400D20A06 /* PDWebGLDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDWebGLDomain.h; sourceTree = "<group>"; };
+		0A0496C91D0E867400D20A06 /* PDWebGLDomain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDWebGLDomain.m; sourceTree = "<group>"; };
+		0A0496CA1D0E867400D20A06 /* PDWebGLTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDWebGLTypes.h; sourceTree = "<group>"; };
+		0A0496CB1D0E867400D20A06 /* PDWebGLTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDWebGLTypes.m; sourceTree = "<group>"; };
+		0A0496CC1D0E867400D20A06 /* PDWorkerDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDWorkerDomain.h; sourceTree = "<group>"; };
+		0A0496CD1D0E867400D20A06 /* PDWorkerDomain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDWorkerDomain.m; sourceTree = "<group>"; };
+		0A0496CF1D0E867400D20A06 /* NSArray+PD_JSONObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+PD_JSONObject.h"; sourceTree = "<group>"; };
+		0A0496D01D0E867400D20A06 /* NSArray+PD_JSONObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+PD_JSONObject.m"; sourceTree = "<group>"; };
+		0A0496D11D0E867400D20A06 /* NSArray+PDRuntimePropertyDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+PDRuntimePropertyDescriptor.h"; sourceTree = "<group>"; };
+		0A0496D21D0E867400D20A06 /* NSArray+PDRuntimePropertyDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+PDRuntimePropertyDescriptor.m"; sourceTree = "<group>"; };
+		0A0496D31D0E867400D20A06 /* NSData+PDDebugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+PDDebugger.h"; sourceTree = "<group>"; };
+		0A0496D41D0E867400D20A06 /* NSData+PDDebugger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+PDDebugger.m"; sourceTree = "<group>"; };
+		0A0496D51D0E867400D20A06 /* NSDate+PD_JSONObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+PD_JSONObject.h"; sourceTree = "<group>"; };
+		0A0496D61D0E867400D20A06 /* NSDate+PD_JSONObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+PD_JSONObject.m"; sourceTree = "<group>"; };
+		0A0496D71D0E867400D20A06 /* NSDate+PDDebugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+PDDebugger.h"; sourceTree = "<group>"; };
+		0A0496D81D0E867400D20A06 /* NSDate+PDDebugger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+PDDebugger.m"; sourceTree = "<group>"; };
+		0A0496D91D0E867400D20A06 /* NSDictionary+PDRuntimePropertyDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+PDRuntimePropertyDescriptor.h"; sourceTree = "<group>"; };
+		0A0496DA1D0E867400D20A06 /* NSDictionary+PDRuntimePropertyDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+PDRuntimePropertyDescriptor.m"; sourceTree = "<group>"; };
+		0A0496DB1D0E867400D20A06 /* NSError+PD_JSONObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+PD_JSONObject.h"; sourceTree = "<group>"; };
+		0A0496DC1D0E867400D20A06 /* NSError+PD_JSONObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSError+PD_JSONObject.m"; sourceTree = "<group>"; };
+		0A0496DD1D0E867400D20A06 /* NSManagedObject+PDRuntimePropertyDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject+PDRuntimePropertyDescriptor.h"; sourceTree = "<group>"; };
+		0A0496DE1D0E867400D20A06 /* NSManagedObject+PDRuntimePropertyDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+PDRuntimePropertyDescriptor.m"; sourceTree = "<group>"; };
+		0A0496DF1D0E867400D20A06 /* NSObject+PDRuntimePropertyDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+PDRuntimePropertyDescriptor.h"; sourceTree = "<group>"; };
+		0A0496E01D0E867400D20A06 /* NSObject+PDRuntimePropertyDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+PDRuntimePropertyDescriptor.m"; sourceTree = "<group>"; };
+		0A0496E11D0E867400D20A06 /* NSOrderedSet+PDRuntimePropertyDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSOrderedSet+PDRuntimePropertyDescriptor.h"; sourceTree = "<group>"; };
+		0A0496E21D0E867400D20A06 /* NSOrderedSet+PDRuntimePropertyDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSOrderedSet+PDRuntimePropertyDescriptor.m"; sourceTree = "<group>"; };
+		0A0496E31D0E867400D20A06 /* NSSet+PDRuntimePropertyDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSSet+PDRuntimePropertyDescriptor.h"; sourceTree = "<group>"; };
+		0A0496E41D0E867400D20A06 /* NSSet+PDRuntimePropertyDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSSet+PDRuntimePropertyDescriptor.m"; sourceTree = "<group>"; };
+		0A0496E51D0E867400D20A06 /* PDConsoleDomainController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDConsoleDomainController.h; sourceTree = "<group>"; };
+		0A0496E61D0E867400D20A06 /* PDConsoleDomainController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDConsoleDomainController.m; sourceTree = "<group>"; };
+		0A0496E71D0E867400D20A06 /* PDContainerIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDContainerIndex.h; sourceTree = "<group>"; };
+		0A0496E81D0E867400D20A06 /* PDContainerIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDContainerIndex.m; sourceTree = "<group>"; };
+		0A0496E91D0E867400D20A06 /* PDDebugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDDebugger.h; sourceTree = "<group>"; };
+		0A0496EA1D0E867400D20A06 /* PDDebugger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDDebugger.m; sourceTree = "<group>"; };
+		0A0496EB1D0E867400D20A06 /* PDDebuggerDomainController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDDebuggerDomainController.h; sourceTree = "<group>"; };
+		0A0496EC1D0E867400D20A06 /* PDDebuggerDomainController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDDebuggerDomainController.m; sourceTree = "<group>"; };
+		0A0496ED1D0E867400D20A06 /* PDDefinitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDDefinitions.h; sourceTree = "<group>"; };
+		0A0496EE1D0E867400D20A06 /* PDDefinitions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDDefinitions.m; sourceTree = "<group>"; };
+		0A0496EF1D0E867400D20A06 /* PDDomainController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDDomainController.h; sourceTree = "<group>"; };
+		0A0496F01D0E867400D20A06 /* PDDomainController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDDomainController.m; sourceTree = "<group>"; };
+		0A0496F11D0E867400D20A06 /* PDDOMDomainController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDDOMDomainController.h; sourceTree = "<group>"; };
+		0A0496F21D0E867400D20A06 /* PDDOMDomainController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDDOMDomainController.m; sourceTree = "<group>"; };
+		0A0496F31D0E867400D20A06 /* PDDynamicDebuggerDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDDynamicDebuggerDomain.h; sourceTree = "<group>"; };
+		0A0496F41D0E867400D20A06 /* PDDynamicDebuggerDomain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDDynamicDebuggerDomain.m; sourceTree = "<group>"; };
+		0A0496F51D0E867400D20A06 /* PDIndexedDBDomainController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDIndexedDBDomainController.h; sourceTree = "<group>"; };
+		0A0496F61D0E867400D20A06 /* PDIndexedDBDomainController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDIndexedDBDomainController.m; sourceTree = "<group>"; };
+		0A0496F71D0E867400D20A06 /* PDInspectorDomainController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDInspectorDomainController.h; sourceTree = "<group>"; };
+		0A0496F81D0E867400D20A06 /* PDInspectorDomainController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDInspectorDomainController.m; sourceTree = "<group>"; };
+		0A0496F91D0E867400D20A06 /* PDNetworkDomainController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDNetworkDomainController.h; sourceTree = "<group>"; };
+		0A0496FA1D0E867400D20A06 /* PDNetworkDomainController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDNetworkDomainController.m; sourceTree = "<group>"; };
+		0A0496FB1D0E867400D20A06 /* PDObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDObject.h; sourceTree = "<group>"; };
+		0A0496FC1D0E867400D20A06 /* PDObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDObject.m; sourceTree = "<group>"; };
+		0A0496FD1D0E867400D20A06 /* PDPageDomainController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDPageDomainController.h; sourceTree = "<group>"; };
+		0A0496FE1D0E867400D20A06 /* PDPageDomainController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDPageDomainController.m; sourceTree = "<group>"; };
+		0A0496FF1D0E867400D20A06 /* PDPrettyStringPrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDPrettyStringPrinter.h; sourceTree = "<group>"; };
+		0A0497001D0E867400D20A06 /* PDPrettyStringPrinter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDPrettyStringPrinter.m; sourceTree = "<group>"; };
+		0A0497011D0E867400D20A06 /* PDRuntimeDomainController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDRuntimeDomainController.h; sourceTree = "<group>"; };
+		0A0497021D0E867400D20A06 /* PDRuntimeDomainController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDRuntimeDomainController.m; sourceTree = "<group>"; };
+		0A0497031D0E867400D20A06 /* PonyDebugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PonyDebugger.h; sourceTree = "<group>"; };
 		2A1BE5011C23AB0500F141D6 /* WeexSDK_xcode7.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WeexSDK_xcode7.h; sourceTree = "<group>"; };
 		2A1BE5031C23AB0500F141D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2A1F57B51C75C6A600B58017 /* WXTextInputComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXTextInputComponent.h; sourceTree = "<group>"; };
@@ -269,8 +525,6 @@
 		744BEA541D05178F00452B5D /* WXComponent+Display.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WXComponent+Display.m"; sourceTree = "<group>"; };
 		744BEA571D0520F300452B5D /* WXComponent+Layout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "WXComponent+Layout.h"; path = "Layout/WXComponent+Layout.h"; sourceTree = "<group>"; };
 		744BEA581D0520F300452B5D /* WXComponent+Layout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "WXComponent+Layout.m"; path = "Layout/WXComponent+Layout.m"; sourceTree = "<group>"; };
-		744BEA5B1D052A4F00452B5D /* WXComponent+ViewManangement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WXComponent+ViewManangement.h"; sourceTree = "<group>"; };
-		744BEA5C1D052A4F00452B5D /* WXComponent+ViewManangement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WXComponent+ViewManangement.m"; sourceTree = "<group>"; };
 		745ED2D61C5F2C7E002DB5A8 /* WXView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXView.h; sourceTree = "<group>"; };
 		745ED2D71C5F2C7E002DB5A8 /* WXView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXView.m; sourceTree = "<group>"; };
 		7461F88C1CFB373100F62D44 /* WXDisplayQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXDisplayQueue.h; sourceTree = "<group>"; };
@@ -286,6 +540,10 @@
 		7469869B1C4DEAC20054A57E /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
 		7469869D1C4E2C000054A57E /* NSArray+Weex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Weex.h"; sourceTree = "<group>"; };
 		7469869E1C4E2C000054A57E /* NSArray+Weex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Weex.m"; sourceTree = "<group>"; };
+		747A787A1D1BAAC900DED9D0 /* WXComponent+ViewManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WXComponent+ViewManagement.h"; sourceTree = "<group>"; };
+		747A787B1D1BAAC900DED9D0 /* WXComponent+ViewManagement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WXComponent+ViewManagement.m"; sourceTree = "<group>"; };
+		74896F2E1D1AC79400D1D593 /* NSObject+WXSwizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+WXSwizzle.h"; sourceTree = "<group>"; };
+		74896F2F1D1AC79400D1D593 /* NSObject+WXSwizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+WXSwizzle.m"; sourceTree = "<group>"; };
 		748B25161C44A6F9005D491E /* WXSDKInstance_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXSDKInstance_private.h; sourceTree = "<group>"; };
 		74915F451C8EB02B00BEBCC0 /* WXAssert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXAssert.h; sourceTree = "<group>"; };
 		74915F461C8EB02B00BEBCC0 /* WXAssert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXAssert.m; sourceTree = "<group>"; };
@@ -397,6 +655,158 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0A0496821D0E85F900D20A06 /* inspector */ = {
+			isa = PBXGroup;
+			children = (
+				0A0496831D0E867400D20A06 /* DerivedSources */,
+				0A0496CE1D0E867400D20A06 /* PonyDebugger */,
+			);
+			name = inspector;
+			sourceTree = "<group>";
+		};
+		0A0496831D0E867400D20A06 /* DerivedSources */ = {
+			isa = PBXGroup;
+			children = (
+				0A0496841D0E867400D20A06 /* PDApplicationCacheDomain.h */,
+				0A0496851D0E867400D20A06 /* PDApplicationCacheDomain.m */,
+				0A0496861D0E867400D20A06 /* PDApplicationCacheTypes.h */,
+				0A0496871D0E867400D20A06 /* PDApplicationCacheTypes.m */,
+				0A0496881D0E867400D20A06 /* PDConsoleDomain.h */,
+				0A0496891D0E867400D20A06 /* PDConsoleDomain.m */,
+				0A04968A1D0E867400D20A06 /* PDConsoleTypes.h */,
+				0A04968B1D0E867400D20A06 /* PDConsoleTypes.m */,
+				0A04968C1D0E867400D20A06 /* PDCSSDomain.h */,
+				0A04968D1D0E867400D20A06 /* PDCSSDomain.m */,
+				0A04968E1D0E867400D20A06 /* PDCSSTypes.h */,
+				0A04968F1D0E867400D20A06 /* PDCSSTypes.m */,
+				0A0496901D0E867400D20A06 /* PDDatabaseDomain.h */,
+				0A0496911D0E867400D20A06 /* PDDatabaseDomain.m */,
+				0A0496921D0E867400D20A06 /* PDDatabaseTypes.h */,
+				0A0496931D0E867400D20A06 /* PDDatabaseTypes.m */,
+				0A0496941D0E867400D20A06 /* PDDebuggerDomain.h */,
+				0A0496951D0E867400D20A06 /* PDDebuggerDomain.m */,
+				0A0496961D0E867400D20A06 /* PDDebuggerTypes.h */,
+				0A0496971D0E867400D20A06 /* PDDebuggerTypes.m */,
+				0A0496981D0E867400D20A06 /* PDDOMDebuggerDomain.h */,
+				0A0496991D0E867400D20A06 /* PDDOMDebuggerDomain.m */,
+				0A04969A1D0E867400D20A06 /* PDDOMDomain.h */,
+				0A04969B1D0E867400D20A06 /* PDDOMDomain.m */,
+				0A04969C1D0E867400D20A06 /* PDDOMStorageDomain.h */,
+				0A04969D1D0E867400D20A06 /* PDDOMStorageDomain.m */,
+				0A04969E1D0E867400D20A06 /* PDDOMStorageTypes.h */,
+				0A04969F1D0E867400D20A06 /* PDDOMStorageTypes.m */,
+				0A0496A01D0E867400D20A06 /* PDDOMTypes.h */,
+				0A0496A11D0E867400D20A06 /* PDDOMTypes.m */,
+				0A0496A21D0E867400D20A06 /* PDFileSystemDomain.h */,
+				0A0496A31D0E867400D20A06 /* PDFileSystemDomain.m */,
+				0A0496A41D0E867400D20A06 /* PDFileSystemTypes.h */,
+				0A0496A51D0E867400D20A06 /* PDFileSystemTypes.m */,
+				0A0496A61D0E867400D20A06 /* PDIndexedDBDomain.h */,
+				0A0496A71D0E867400D20A06 /* PDIndexedDBDomain.m */,
+				0A0496A81D0E867400D20A06 /* PDIndexedDBTypes.h */,
+				0A0496A91D0E867400D20A06 /* PDIndexedDBTypes.m */,
+				0A0496AA1D0E867400D20A06 /* PDInspectorDomain.h */,
+				0A0496AB1D0E867400D20A06 /* PDInspectorDomain.m */,
+				0A0496AC1D0E867400D20A06 /* PDMemoryDomain.h */,
+				0A0496AD1D0E867400D20A06 /* PDMemoryDomain.m */,
+				0A0496AE1D0E867400D20A06 /* PDMemoryTypes.h */,
+				0A0496AF1D0E867400D20A06 /* PDMemoryTypes.m */,
+				0A0496B01D0E867400D20A06 /* PDNetworkDomain.h */,
+				0A0496B11D0E867400D20A06 /* PDNetworkDomain.m */,
+				0A0496B21D0E867400D20A06 /* PDNetworkTypes.h */,
+				0A0496B31D0E867400D20A06 /* PDNetworkTypes.m */,
+				0A0496B41D0E867400D20A06 /* PDPageDomain.h */,
+				0A0496B51D0E867400D20A06 /* PDPageDomain.m */,
+				0A0496B61D0E867400D20A06 /* PDPageTypes.h */,
+				0A0496B71D0E867400D20A06 /* PDPageTypes.m */,
+				0A0496B81D0E867400D20A06 /* PDProfilerDomain.h */,
+				0A0496B91D0E867400D20A06 /* PDProfilerDomain.m */,
+				0A0496BA1D0E867400D20A06 /* PDProfilerDomainController.h */,
+				0A0496BB1D0E867400D20A06 /* PDProfilerDomainController.m */,
+				0A0496BC1D0E867400D20A06 /* PDProfilerTypes.h */,
+				0A0496BD1D0E867400D20A06 /* PDProfilerTypes.m */,
+				0A0496BE1D0E867400D20A06 /* PDRuntimeDomain.h */,
+				0A0496BF1D0E867400D20A06 /* PDRuntimeDomain.m */,
+				0A0496C01D0E867400D20A06 /* PDRuntimeTypes.h */,
+				0A0496C11D0E867400D20A06 /* PDRuntimeTypes.m */,
+				0A0496C21D0E867400D20A06 /* PDTimelineDomain.h */,
+				0A0496C31D0E867400D20A06 /* PDTimelineDomain.m */,
+				0A0496C41D0E867400D20A06 /* PDTimelineDomainController.h */,
+				0A0496C51D0E867400D20A06 /* PDTimelineDomainController.m */,
+				0A0496C61D0E867400D20A06 /* PDTimelineTypes.h */,
+				0A0496C71D0E867400D20A06 /* PDTimelineTypes.m */,
+				0A0496C81D0E867400D20A06 /* PDWebGLDomain.h */,
+				0A0496C91D0E867400D20A06 /* PDWebGLDomain.m */,
+				0A0496CA1D0E867400D20A06 /* PDWebGLTypes.h */,
+				0A0496CB1D0E867400D20A06 /* PDWebGLTypes.m */,
+				0A0496CC1D0E867400D20A06 /* PDWorkerDomain.h */,
+				0A0496CD1D0E867400D20A06 /* PDWorkerDomain.m */,
+			);
+			name = DerivedSources;
+			path = inspector/DerivedSources;
+			sourceTree = "<group>";
+		};
+		0A0496CE1D0E867400D20A06 /* PonyDebugger */ = {
+			isa = PBXGroup;
+			children = (
+				0A0496CF1D0E867400D20A06 /* NSArray+PD_JSONObject.h */,
+				0A0496D01D0E867400D20A06 /* NSArray+PD_JSONObject.m */,
+				0A0496D11D0E867400D20A06 /* NSArray+PDRuntimePropertyDescriptor.h */,
+				0A0496D21D0E867400D20A06 /* NSArray+PDRuntimePropertyDescriptor.m */,
+				0A0496D31D0E867400D20A06 /* NSData+PDDebugger.h */,
+				0A0496D41D0E867400D20A06 /* NSData+PDDebugger.m */,
+				0A0496D51D0E867400D20A06 /* NSDate+PD_JSONObject.h */,
+				0A0496D61D0E867400D20A06 /* NSDate+PD_JSONObject.m */,
+				0A0496D71D0E867400D20A06 /* NSDate+PDDebugger.h */,
+				0A0496D81D0E867400D20A06 /* NSDate+PDDebugger.m */,
+				0A0496D91D0E867400D20A06 /* NSDictionary+PDRuntimePropertyDescriptor.h */,
+				0A0496DA1D0E867400D20A06 /* NSDictionary+PDRuntimePropertyDescriptor.m */,
+				0A0496DB1D0E867400D20A06 /* NSError+PD_JSONObject.h */,
+				0A0496DC1D0E867400D20A06 /* NSError+PD_JSONObject.m */,
+				0A0496DD1D0E867400D20A06 /* NSManagedObject+PDRuntimePropertyDescriptor.h */,
+				0A0496DE1D0E867400D20A06 /* NSManagedObject+PDRuntimePropertyDescriptor.m */,
+				0A0496DF1D0E867400D20A06 /* NSObject+PDRuntimePropertyDescriptor.h */,
+				0A0496E01D0E867400D20A06 /* NSObject+PDRuntimePropertyDescriptor.m */,
+				0A0496E11D0E867400D20A06 /* NSOrderedSet+PDRuntimePropertyDescriptor.h */,
+				0A0496E21D0E867400D20A06 /* NSOrderedSet+PDRuntimePropertyDescriptor.m */,
+				0A0496E31D0E867400D20A06 /* NSSet+PDRuntimePropertyDescriptor.h */,
+				0A0496E41D0E867400D20A06 /* NSSet+PDRuntimePropertyDescriptor.m */,
+				0A0496E51D0E867400D20A06 /* PDConsoleDomainController.h */,
+				0A0496E61D0E867400D20A06 /* PDConsoleDomainController.m */,
+				0A0496E71D0E867400D20A06 /* PDContainerIndex.h */,
+				0A0496E81D0E867400D20A06 /* PDContainerIndex.m */,
+				0A0496E91D0E867400D20A06 /* PDDebugger.h */,
+				0A0496EA1D0E867400D20A06 /* PDDebugger.m */,
+				0A0496EB1D0E867400D20A06 /* PDDebuggerDomainController.h */,
+				0A0496EC1D0E867400D20A06 /* PDDebuggerDomainController.m */,
+				0A0496ED1D0E867400D20A06 /* PDDefinitions.h */,
+				0A0496EE1D0E867400D20A06 /* PDDefinitions.m */,
+				0A0496EF1D0E867400D20A06 /* PDDomainController.h */,
+				0A0496F01D0E867400D20A06 /* PDDomainController.m */,
+				0A0496F11D0E867400D20A06 /* PDDOMDomainController.h */,
+				0A0496F21D0E867400D20A06 /* PDDOMDomainController.m */,
+				0A0496F31D0E867400D20A06 /* PDDynamicDebuggerDomain.h */,
+				0A0496F41D0E867400D20A06 /* PDDynamicDebuggerDomain.m */,
+				0A0496F51D0E867400D20A06 /* PDIndexedDBDomainController.h */,
+				0A0496F61D0E867400D20A06 /* PDIndexedDBDomainController.m */,
+				0A0496F71D0E867400D20A06 /* PDInspectorDomainController.h */,
+				0A0496F81D0E867400D20A06 /* PDInspectorDomainController.m */,
+				0A0496F91D0E867400D20A06 /* PDNetworkDomainController.h */,
+				0A0496FA1D0E867400D20A06 /* PDNetworkDomainController.m */,
+				0A0496FB1D0E867400D20A06 /* PDObject.h */,
+				0A0496FC1D0E867400D20A06 /* PDObject.m */,
+				0A0496FD1D0E867400D20A06 /* PDPageDomainController.h */,
+				0A0496FE1D0E867400D20A06 /* PDPageDomainController.m */,
+				0A0496FF1D0E867400D20A06 /* PDPrettyStringPrinter.h */,
+				0A0497001D0E867400D20A06 /* PDPrettyStringPrinter.m */,
+				0A0497011D0E867400D20A06 /* PDRuntimeDomainController.h */,
+				0A0497021D0E867400D20A06 /* PDRuntimeDomainController.m */,
+				0A0497031D0E867400D20A06 /* PonyDebugger.h */,
+			);
+			name = PonyDebugger;
+			path = inspector/PonyDebugger;
+			sourceTree = "<group>";
+		};
 		2A1BE5001C23AB0500F141D6 /* WeexSDK_xcode7 */ = {
 			isa = PBXGroup;
 			children = (
@@ -471,8 +881,8 @@
 			children = (
 				745ED2D61C5F2C7E002DB5A8 /* WXView.h */,
 				745ED2D71C5F2C7E002DB5A8 /* WXView.m */,
-				744BEA5B1D052A4F00452B5D /* WXComponent+ViewManangement.h */,
-				744BEA5C1D052A4F00452B5D /* WXComponent+ViewManangement.m */,
+				747A787A1D1BAAC900DED9D0 /* WXComponent+ViewManagement.h */,
+				747A787B1D1BAAC900DED9D0 /* WXComponent+ViewManagement.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -495,6 +905,7 @@
 			children = (
 				74A4BA591CABBBD000195969 /* WXDebugTool.h */,
 				74A4BA5A1CABBBD000195969 /* WXDebugTool.m */,
+				0A0496821D0E85F900D20A06 /* inspector */,
 			);
 			path = Debug;
 			sourceTree = "<group>";
@@ -690,6 +1101,8 @@
 				74A4BA991CB3BAA100195969 /* WXThreadSafeMutableDictionary.m */,
 				7461F8A61CFC33A800F62D44 /* WXThreadSafeMutableArray.h */,
 				7461F8A71CFC33A800F62D44 /* WXThreadSafeMutableArray.m */,
+				74896F2E1D1AC79400D1D593 /* NSObject+WXSwizzle.h */,
+				74896F2F1D1AC79400D1D593 /* NSObject+WXSwizzle.m */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -791,86 +1204,151 @@
 			buildActionMask = 2147483647;
 			files = (
 				7408C48E1CFB345D000BCCD0 /* WXComponent+Events.h in Headers */,
+				0A0497421D0E867400D20A06 /* PDTimelineDomain.h in Headers */,
+				0A04976E1D0E867500D20A06 /* PDDomainController.h in Headers */,
 				775BEE711C1BD977008D1629 /* WXModuleProtocol.h in Headers */,
+				0A0497041D0E867400D20A06 /* PDApplicationCacheDomain.h in Headers */,
 				7469869F1C4E2C000054A57E /* NSArray+Weex.h in Headers */,
+				0A0497261D0E867400D20A06 /* PDIndexedDBDomain.h in Headers */,
+				0A04977A1D0E867500D20A06 /* PDObject.h in Headers */,
 				74CC7A201C2BF9DC00829368 /* WXListComponent.h in Headers */,
 				74FD6E041C7C0E9600DBEB6D /* WXScrollerProtocol.h in Headers */,
 				77D161201C02DDB40010B15B /* WXSDKEngine.h in Headers */,
 				745ED2DA1C5F2C7E002DB5A8 /* WXView.h in Headers */,
 				59D3CA411CF9ED57008835DC /* Layout.h in Headers */,
 				2AE5B7521CAB7DBD0082FDDB /* WXAComponent.h in Headers */,
+				0A0497321D0E867400D20A06 /* PDNetworkTypes.h in Headers */,
 				77D1614F1C02E3880010B15B /* WXUtility.h in Headers */,
 				743933B41C7ED9AA00773BB7 /* WXSimulatorShortcutMananger.h in Headers */,
 				74915F471C8EB02B00BEBCC0 /* WXAssert.h in Headers */,
+				0A0497181D0E867400D20A06 /* PDDOMDebuggerDomain.h in Headers */,
+				0A04976A1D0E867400D20A06 /* PDDebuggerDomainController.h in Headers */,
 				2A8E658A1C7C7AA20025C7B7 /* WXVideoComponent.h in Headers */,
 				59A5961C1CB630F10012CD52 /* WXComponent+Navigation.h in Headers */,
 				775BEE6E1C1BD8F4008D1629 /* WXImgLoaderProtocol.h in Headers */,
+				0A04971A1D0E867400D20A06 /* PDDOMDomain.h in Headers */,
 				7410811F1CED585A001BC6E5 /* WXComponentManager.h in Headers */,
+				0A0497241D0E867400D20A06 /* PDFileSystemTypes.h in Headers */,
 				59A583081CF5B2FD0081FD3E /* WXNavigationDefaultImpl.h in Headers */,
 				775BEE4E1C16F993008D1629 /* WXDefine.h in Headers */,
 				77D161241C02DDD10010B15B /* WXSDKInstance.h in Headers */,
 				74A4BAA61CB4F98300195969 /* WXStreamModule.h in Headers */,
+				0A04975E1D0E867400D20A06 /* NSObject+PDRuntimePropertyDescriptor.h in Headers */,
 				744BEA591D0520F300452B5D /* WXComponent+Layout.h in Headers */,
 				74A4BA5B1CABBBD000195969 /* WXDebugTool.h in Headers */,
 				2A837AB41CD9DE9200AEDF03 /* WXLoadingIndicator.h in Headers */,
+				0A0497741D0E867500D20A06 /* PDIndexedDBDomainController.h in Headers */,
+				747A787C1D1BAAC900DED9D0 /* WXComponent+ViewManagement.h in Headers */,
 				77E65A061C10507B008B8775 /* WXModuleManager.h in Headers */,
 				77E659FA1C0EE579008B8775 /* WXBridgeMethod.h in Headers */,
-				744BEA5D1D052A4F00452B5D /* WXComponent+ViewManangement.h in Headers */,
 				2AE5B7561CABA04E0082FDDB /* WXEventModuleProtocol.h in Headers */,
 				D362F94F1C83EDA20003F546 /* WXWebViewModule.h in Headers */,
 				77D161381C02DE940010B15B /* WXBridgeManager.h in Headers */,
+				0A0497401D0E867400D20A06 /* PDRuntimeTypes.h in Headers */,
 				77D161281C02DE1A0010B15B /* WXSDKManager.h in Headers */,
 				59D3CA681D00544B008835DC /* WeexSDK.h in Headers */,
+				0A04972C1D0E867400D20A06 /* PDMemoryDomain.h in Headers */,
 				59CE27E81CC387DB000BE37A /* WXEmbedComponent.h in Headers */,
 				2A837AB21CD9DE9200AEDF03 /* WXLoadingComponent.h in Headers */,
 				7423899F1C32733800D748CA /* WXType.h in Headers */,
 				59A582FC1CF5B17B0081FD3E /* WXBridgeContext.h in Headers */,
+				0A0497561D0E867400D20A06 /* NSDate+PDDebugger.h in Headers */,
 				77D161621C02ED790010B15B /* WXLog.h in Headers */,
 				77D1614B1C02E3790010B15B /* WXConvert.h in Headers */,
 				59A596221CB6311F0012CD52 /* WXNavigatorModule.h in Headers */,
 				77E659DA1C07F594008B8775 /* WXDomModule.h in Headers */,
 				2A1F57B71C75C6A600B58017 /* WXTextInputComponent.h in Headers */,
+				0A0497081D0E867400D20A06 /* PDConsoleDomain.h in Headers */,
 				74A4BA9A1CB3BAA100195969 /* WXThreadSafeMutableDictionary.h in Headers */,
+				0A04974C1D0E867400D20A06 /* PDWorkerDomain.h in Headers */,
 				74A4BA9E1CB3C0A100195969 /* WXHandlerFactory.h in Headers */,
 				7423899B1C3174EB00D748CA /* WXWeakObjectWrapper.h in Headers */,
+				0A0497201D0E867400D20A06 /* PDDOMTypes.h in Headers */,
+				0A0497541D0E867400D20A06 /* NSDate+PD_JSONObject.h in Headers */,
+				0A0497781D0E867500D20A06 /* PDNetworkDomainController.h in Headers */,
+				0A0497061D0E867400D20A06 /* PDApplicationCacheTypes.h in Headers */,
+				0A04970A1D0E867400D20A06 /* PDConsoleTypes.h in Headers */,
+				0A0497701D0E867500D20A06 /* PDDOMDomainController.h in Headers */,
+				0A0497721D0E867500D20A06 /* PDDynamicDebuggerDomain.h in Headers */,
+				0A04971C1D0E867400D20A06 /* PDDOMStorageDomain.h in Headers */,
+				0A0497221D0E867400D20A06 /* PDFileSystemDomain.h in Headers */,
+				0A0497281D0E867400D20A06 /* PDIndexedDBTypes.h in Headers */,
+				0A04970C1D0E867400D20A06 /* PDCSSDomain.h in Headers */,
 				59A596191CB630E50012CD52 /* WXNavigationProtocol.h in Headers */,
+				0A0497381D0E867400D20A06 /* PDProfilerDomain.h in Headers */,
 				59A5962F1CB632050012CD52 /* WXBaseViewController.h in Headers */,
 				74A4BA961CB365D100195969 /* WXAppConfiguration.h in Headers */,
+				0A04973C1D0E867400D20A06 /* PDProfilerTypes.h in Headers */,
 				7461F8921CFB373100F62D44 /* WXLayer.h in Headers */,
+				0A04972A1D0E867400D20A06 /* PDInspectorDomain.h in Headers */,
 				594C28931CF9E61A009793A4 /* WXAnimationModule.h in Headers */,
 				D3FC0DF71C508B2A002B9E31 /* WXTimerModule.h in Headers */,
 				D312CE3B1C730DEB00046D68 /* WXWebComponent.h in Headers */,
 				741081261CEDB4EC001BC6E5 /* WXComponent_internal.h in Headers */,
 				77E65A191C155F25008B8775 /* WXScrollerComponent.h in Headers */,
 				2AC750241C7565690041D390 /* WXIndicatorComponent.h in Headers */,
+				0A04977E1D0E867500D20A06 /* PDPrettyStringPrinter.h in Headers */,
 				748B25181C44A6F9005D491E /* WXSDKInstance_private.h in Headers */,
 				77E65A0D1C155E99008B8775 /* WXDivComponent.h in Headers */,
 				7461F8901CFB373100F62D44 /* WXDisplayQueue.h in Headers */,
 				77E659F11C0C3612008B8775 /* WXModuleFactory.h in Headers */,
 				77D161431C02DEE40010B15B /* WXBridgeProtocol.h in Headers */,
+				0A0497121D0E867400D20A06 /* PDDatabaseTypes.h in Headers */,
+				0A0497581D0E867400D20A06 /* NSDictionary+PDRuntimePropertyDescriptor.h in Headers */,
+				0A0497601D0E867400D20A06 /* NSOrderedSet+PDRuntimePropertyDescriptor.h in Headers */,
+				0A0497521D0E867400D20A06 /* NSData+PDDebugger.h in Headers */,
 				59A582D41CF481110081FD3E /* WXAppMonitorProtocol.h in Headers */,
+				0A04976C1D0E867400D20A06 /* PDDefinitions.h in Headers */,
+				0A0497501D0E867400D20A06 /* NSArray+PDRuntimePropertyDescriptor.h in Headers */,
+				0A0497681D0E867400D20A06 /* PDDebugger.h in Headers */,
+				0A04974A1D0E867400D20A06 /* PDWebGLTypes.h in Headers */,
+				0A0497141D0E867400D20A06 /* PDDebuggerDomain.h in Headers */,
 				2A44AB111C1AD5B00067A7EA /* WXSliderComponent.h in Headers */,
+				0A04974E1D0E867400D20A06 /* NSArray+PD_JSONObject.h in Headers */,
+				0A04973A1D0E867400D20A06 /* PDProfilerDomainController.h in Headers */,
+				0A04975A1D0E867400D20A06 /* NSError+PD_JSONObject.h in Headers */,
+				0A0497481D0E867400D20A06 /* PDWebGLDomain.h in Headers */,
 				2A837AB61CD9DE9200AEDF03 /* WXRefreshComponent.h in Headers */,
+				0A04971E1D0E867400D20A06 /* PDDOMStorageTypes.h in Headers */,
+				0A0497101D0E867400D20A06 /* PDDatabaseDomain.h in Headers */,
+				0A0497801D0E867500D20A06 /* PDRuntimeDomainController.h in Headers */,
 				59A596311CB632050012CD52 /* WXRootViewController.h in Headers */,
 				77E65A151C155EB5008B8775 /* WXTextComponent.h in Headers */,
+				0A0497821D0E867500D20A06 /* PonyDebugger.h in Headers */,
 				74CC7A1C1C2BC5F800829368 /* WXCellComponent.h in Headers */,
+				0A0497621D0E867400D20A06 /* NSSet+PDRuntimePropertyDescriptor.h in Headers */,
+				74896F301D1AC79400D1D593 /* NSObject+WXSwizzle.h in Headers */,
 				59A596241CB6311F0012CD52 /* WXStorageModule.h in Headers */,
 				74A4BA851CAD453400195969 /* WXNetworkProtocol.h in Headers */,
 				7461F8A81CFC33A800F62D44 /* WXThreadSafeMutableArray.h in Headers */,
+				0A0497441D0E867400D20A06 /* PDTimelineDomainController.h in Headers */,
 				77E65A111C155EA8008B8775 /* WXImageComponent.h in Headers */,
+				0A0497661D0E867400D20A06 /* PDContainerIndex.h in Headers */,
+				0A04972E1D0E867400D20A06 /* PDMemoryTypes.h in Headers */,
 				2A60CE9C1C91733E00857B9F /* WXSwitchComponent.h in Headers */,
+				0A04975C1D0E867400D20A06 /* NSManagedObject+PDRuntimePropertyDescriptor.h in Headers */,
 				2A4445BF1CA8FD56009E7C6D /* WXTextComponentProtocol.h in Headers */,
 				746319021C60AFC100EFEBD4 /* WXThreadSafeCounter.h in Headers */,
+				0A04970E1D0E867400D20A06 /* PDCSSTypes.h in Headers */,
 				77D1613C1C02DEA60010B15B /* WXJSCoreBridge.h in Headers */,
 				59A5830A1CF5B2FD0081FD3E /* WXNetworkDefaultImpl.h in Headers */,
 				77D161401C02DEB50010B15B /* WXWebSocketBridge.h in Headers */,
 				2AAFC1B61C48DFF70026D2FE /* WXSDKError.h in Headers */,
+				0A0497361D0E867400D20A06 /* PDPageTypes.h in Headers */,
 				D317338C1C57257000BB7539 /* WXTransform.h in Headers */,
+				0A0497301D0E867400D20A06 /* PDNetworkDomain.h in Headers */,
+				0A04973E1D0E867400D20A06 /* PDRuntimeDomain.h in Headers */,
+				0A0497461D0E867400D20A06 /* PDTimelineTypes.h in Headers */,
 				77D161301C02DE4E0010B15B /* WXComponent.h in Headers */,
+				0A0497641D0E867400D20A06 /* PDConsoleDomainController.h in Headers */,
 				2AFEB17B1C747139000507FA /* WXInstanceWrap.h in Headers */,
 				744BEA551D05178F00452B5D /* WXComponent+Display.h in Headers */,
+				0A04977C1D0E867500D20A06 /* PDPageDomainController.h in Headers */,
+				0A0497341D0E867400D20A06 /* PDPageDomain.h in Headers */,
 				741081231CED6756001BC6E5 /* WXComponentFactory.h in Headers */,
+				0A0497161D0E867400D20A06 /* PDDebuggerTypes.h in Headers */,
 				59D3CA4A1CFC3CE1008835DC /* NSTimer+Weex.h in Headers */,
+				0A0497761D0E867500D20A06 /* PDInspectorDomainController.h in Headers */,
 				746319291C71B92600EFEBD4 /* WXModalUIModule.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1035,72 +1513,137 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A04972F1D0E867400D20A06 /* PDMemoryTypes.m in Sources */,
 				77E65A071C10507B008B8775 /* WXModuleManager.m in Sources */,
+				0A0497191D0E867400D20A06 /* PDDOMDebuggerDomain.m in Sources */,
 				77D161291C02DE1A0010B15B /* WXSDKManager.m in Sources */,
 				7461F8911CFB373100F62D44 /* WXDisplayQueue.m in Sources */,
+				0A0497071D0E867400D20A06 /* PDApplicationCacheTypes.m in Sources */,
+				0A0497631D0E867400D20A06 /* NSSet+PDRuntimePropertyDescriptor.m in Sources */,
+				74896F311D1AC79400D1D593 /* NSObject+WXSwizzle.m in Sources */,
 				746986A01C4E2C010054A57E /* NSArray+Weex.m in Sources */,
 				77E65A0E1C155E99008B8775 /* WXDivComponent.m in Sources */,
 				2A60CE9D1C91733E00857B9F /* WXSwitchComponent.m in Sources */,
 				2A837AB71CD9DE9200AEDF03 /* WXRefreshComponent.m in Sources */,
 				74A4BA9B1CB3BAA100195969 /* WXThreadSafeMutableDictionary.m in Sources */,
+				0A04976B1D0E867400D20A06 /* PDDebuggerDomainController.m in Sources */,
+				0A0497091D0E867400D20A06 /* PDConsoleDomain.m in Sources */,
 				77E65A1A1C155F25008B8775 /* WXScrollerComponent.m in Sources */,
+				747A787D1D1BAAC900DED9D0 /* WXComponent+ViewManagement.m in Sources */,
 				2A837AB51CD9DE9200AEDF03 /* WXLoadingIndicator.m in Sources */,
+				0A04977B1D0E867500D20A06 /* PDObject.m in Sources */,
+				0A04970D1D0E867400D20A06 /* PDCSSDomain.m in Sources */,
 				59D3CA401CF9ED57008835DC /* Layout.c in Sources */,
 				59A5830B1CF5B2FD0081FD3E /* WXNetworkDefaultImpl.m in Sources */,
+				0A0497251D0E867400D20A06 /* PDFileSystemTypes.m in Sources */,
 				77D161311C02DE4E0010B15B /* WXComponent.m in Sources */,
+				0A04976F1D0E867500D20A06 /* PDDomainController.m in Sources */,
+				0A04970B1D0E867400D20A06 /* PDConsoleTypes.m in Sources */,
 				77E659DB1C07F594008B8775 /* WXDomModule.m in Sources */,
+				0A0497171D0E867400D20A06 /* PDDebuggerTypes.m in Sources */,
 				D3FC0DF81C508B2A002B9E31 /* WXTimerModule.m in Sources */,
+				0A04976D1D0E867500D20A06 /* PDDefinitions.m in Sources */,
+				0A0497671D0E867400D20A06 /* PDContainerIndex.m in Sources */,
+				0A0497151D0E867400D20A06 /* PDDebuggerDomain.m in Sources */,
 				594C28921CF9E61A009793A4 /* WXAnimationModule.m in Sources */,
 				59A5961D1CB630F10012CD52 /* WXComponent+Navigation.m in Sources */,
 				77D161631C02ED790010B15B /* WXLog.m in Sources */,
 				744BEA5A1D0520F300452B5D /* WXComponent+Layout.m in Sources */,
+				0A0497471D0E867400D20A06 /* PDTimelineTypes.m in Sources */,
 				59A582FD1CF5B17B0081FD3E /* WXBridgeContext.m in Sources */,
+				0A0497551D0E867400D20A06 /* NSDate+PD_JSONObject.m in Sources */,
+				0A04972D1D0E867400D20A06 /* PDMemoryDomain.m in Sources */,
+				0A04973F1D0E867400D20A06 /* PDRuntimeDomain.m in Sources */,
 				743933B51C7ED9AA00773BB7 /* WXSimulatorShortcutMananger.m in Sources */,
+				0A0497411D0E867400D20A06 /* PDRuntimeTypes.m in Sources */,
+				0A0497351D0E867400D20A06 /* PDPageDomain.m in Sources */,
+				0A0497311D0E867400D20A06 /* PDNetworkDomain.m in Sources */,
+				0A0497271D0E867400D20A06 /* PDIndexedDBDomain.m in Sources */,
 				744BEA5E1D052A4F00452B5D /* WXComponent+ViewManangement.m in Sources */,
+				0A04974D1D0E867400D20A06 /* PDWorkerDomain.m in Sources */,
+				0A04971D1D0E867400D20A06 /* PDDOMStorageDomain.m in Sources */,
+				0A0497731D0E867500D20A06 /* PDDynamicDebuggerDomain.m in Sources */,
+				0A0497711D0E867500D20A06 /* PDDOMDomainController.m in Sources */,
 				741081201CED585A001BC6E5 /* WXComponentManager.m in Sources */,
 				D312CE3C1C730DEB00046D68 /* WXWebComponent.m in Sources */,
+				0A04977D1D0E867500D20A06 /* PDPageDomainController.m in Sources */,
 				D317338D1C57257000BB7539 /* WXTransform.m in Sources */,
 				7461F8A91CFC33A800F62D44 /* WXThreadSafeMutableArray.m in Sources */,
 				2AC750251C7565690041D390 /* WXIndicatorComponent.m in Sources */,
+				0A0497791D0E867500D20A06 /* PDNetworkDomainController.m in Sources */,
 				59D3CA4B1CFC3CE1008835DC /* NSTimer+Weex.m in Sources */,
+				0A04977F1D0E867500D20A06 /* PDPrettyStringPrinter.m in Sources */,
+				0A0497691D0E867400D20A06 /* PDDebugger.m in Sources */,
+				0A04973B1D0E867400D20A06 /* PDProfilerDomainController.m in Sources */,
+				0A0497291D0E867400D20A06 /* PDIndexedDBTypes.m in Sources */,
+				0A0497751D0E867500D20A06 /* PDIndexedDBDomainController.m in Sources */,
+				0A04971F1D0E867400D20A06 /* PDDOMStorageTypes.m in Sources */,
 				59A596321CB632050012CD52 /* WXRootViewController.m in Sources */,
 				2A8E658B1C7C7AA20025C7B7 /* WXVideoComponent.m in Sources */,
+				0A0497051D0E867400D20A06 /* PDApplicationCacheDomain.m in Sources */,
 				77E65A161C155EB5008B8775 /* WXTextComponent.m in Sources */,
 				746319031C60AFC100EFEBD4 /* WXThreadSafeCounter.m in Sources */,
+				0A0497491D0E867400D20A06 /* PDWebGLDomain.m in Sources */,
+				0A0497771D0E867500D20A06 /* PDInspectorDomainController.m in Sources */,
 				74A4BAA71CB4F98300195969 /* WXStreamModule.m in Sources */,
 				77E659F21C0C3612008B8775 /* WXModuleFactory.m in Sources */,
+				0A0497391D0E867400D20A06 /* PDProfilerDomain.m in Sources */,
+				0A0497331D0E867400D20A06 /* PDNetworkTypes.m in Sources */,
+				0A04975B1D0E867400D20A06 /* NSError+PD_JSONObject.m in Sources */,
 				59CE27E91CC387DB000BE37A /* WXEmbedComponent.m in Sources */,
 				77D161251C02DDD10010B15B /* WXSDKInstance.m in Sources */,
 				74915F481C8EB02B00BEBCC0 /* WXAssert.m in Sources */,
 				59A596251CB6311F0012CD52 /* WXStorageModule.m in Sources */,
 				2AFEB17C1C747139000507FA /* WXInstanceWrap.m in Sources */,
 				74A4BA5C1CABBBD000195969 /* WXDebugTool.m in Sources */,
+				0A04975D1D0E867400D20A06 /* NSManagedObject+PDRuntimePropertyDescriptor.m in Sources */,
 				2AAFC1B71C48DFF70026D2FE /* WXSDKError.m in Sources */,
+				0A0497131D0E867400D20A06 /* PDDatabaseTypes.m in Sources */,
 				741081241CED6756001BC6E5 /* WXComponentFactory.m in Sources */,
 				D362F9501C83EDA20003F546 /* WXWebViewModule.m in Sources */,
 				2A1F57B81C75C6A600B58017 /* WXTextInputComponent.m in Sources */,
+				0A0497611D0E867400D20A06 /* NSOrderedSet+PDRuntimePropertyDescriptor.m in Sources */,
 				74CC7A1D1C2BC5F800829368 /* WXCellComponent.m in Sources */,
+				0A04975F1D0E867400D20A06 /* NSObject+PDRuntimePropertyDescriptor.m in Sources */,
 				77E65A121C155EA8008B8775 /* WXImageComponent.m in Sources */,
+				0A0497571D0E867400D20A06 /* NSDate+PDDebugger.m in Sources */,
 				2A837AB31CD9DE9200AEDF03 /* WXLoadingComponent.m in Sources */,
 				2AE5B7531CAB7DBD0082FDDB /* WXAComponent.m in Sources */,
+				0A0497651D0E867400D20A06 /* PDConsoleDomainController.m in Sources */,
+				0A0497111D0E867400D20A06 /* PDDatabaseDomain.m in Sources */,
+				0A0497211D0E867400D20A06 /* PDDOMTypes.m in Sources */,
 				59A596301CB632050012CD52 /* WXBaseViewController.m in Sources */,
 				74CC7A211C2BF9DC00829368 /* WXListComponent.m in Sources */,
 				7423899C1C3174EB00D748CA /* WXWeakObjectWrapper.m in Sources */,
 				744BEA561D05178F00452B5D /* WXComponent+Display.m in Sources */,
 				7408C48F1CFB345D000BCCD0 /* WXComponent+Events.m in Sources */,
+				0A0497451D0E867400D20A06 /* PDTimelineDomainController.m in Sources */,
+				0A0497591D0E867400D20A06 /* NSDictionary+PDRuntimePropertyDescriptor.m in Sources */,
 				745ED2DB1C5F2C7E002DB5A8 /* WXView.m in Sources */,
+				0A04974F1D0E867400D20A06 /* NSArray+PD_JSONObject.m in Sources */,
 				59A596231CB6311F0012CD52 /* WXNavigatorModule.m in Sources */,
+				0A04974B1D0E867400D20A06 /* PDWebGLTypes.m in Sources */,
 				77D161211C02DDB40010B15B /* WXSDKEngine.m in Sources */,
 				74A4BA971CB365D100195969 /* WXAppConfiguration.m in Sources */,
+				0A04973D1D0E867400D20A06 /* PDProfilerTypes.m in Sources */,
+				0A04972B1D0E867400D20A06 /* PDInspectorDomain.m in Sources */,
 				59A583091CF5B2FD0081FD3E /* WXNavigationDefaultImpl.m in Sources */,
+				0A0497371D0E867400D20A06 /* PDPageTypes.m in Sources */,
+				0A04971B1D0E867400D20A06 /* PDDOMDomain.m in Sources */,
 				7463192A1C71B92600EFEBD4 /* WXModalUIModule.m in Sources */,
 				77D161501C02E3880010B15B /* WXUtility.m in Sources */,
 				74A4BA9F1CB3C0A100195969 /* WXHandlerFactory.m in Sources */,
 				7461F8931CFB373100F62D44 /* WXLayer.m in Sources */,
+				0A0497231D0E867400D20A06 /* PDFileSystemDomain.m in Sources */,
 				77D161411C02DEB50010B15B /* WXWebSocketBridge.m in Sources */,
 				59D3CA471CFC3CC0008835DC /* WXSliderComponent.m in Sources */,
 				77D1613D1C02DEA60010B15B /* WXJSCoreBridge.m in Sources */,
+				0A0497531D0E867400D20A06 /* NSData+PDDebugger.m in Sources */,
 				77D1614C1C02E3790010B15B /* WXConvert.m in Sources */,
+				0A0497431D0E867400D20A06 /* PDTimelineDomain.m in Sources */,
+				0A0497511D0E867400D20A06 /* NSArray+PDRuntimePropertyDescriptor.m in Sources */,
+				0A04970F1D0E867400D20A06 /* PDCSSTypes.m in Sources */,
+				0A0497811D0E867500D20A06 /* PDRuntimeDomainController.m in Sources */,
 				77E659FB1C0EE579008B8775 /* WXBridgeMethod.m in Sources */,
 				77D161391C02DE940010B15B /* WXBridgeManager.m in Sources */,
 			);

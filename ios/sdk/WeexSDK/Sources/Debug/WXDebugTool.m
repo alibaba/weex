@@ -14,6 +14,8 @@
 #import "WXSDKManager.h"
 #import "WXSDKEngine.h"
 
+#import "PonyDebugger.h"
+
 static BOOL WXIsDebug;
 static NSString* WXDebugrepBundleJS;
 static NSString* WXDebugrepJSFramework;
@@ -35,9 +37,11 @@ static NSString* WXDebugrepJSFramework;
 
 + (BOOL)isDebug
 {
+    /*
 #ifdef DEBUG
     return YES;
 #endif
+     */
     return WXIsDebug;
 }
 
@@ -110,6 +114,58 @@ static NSString* WXDebugrepJSFramework;
                         }
                     }];
     }
+}
+
+#pragma mark weex inspector
++ (void)launchInspectorWithSocketUrl:(NSURL *)url {
+    
+    PDDebugger *debugger = [PDDebugger defaultInstance];
+    //    [debugger serverStartWithHost:@"localhost" port:9009];
+    
+    // Enable Network debugging, and automatically track network traffic that comes through any classes that implement either NSURLConnectionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate or NSURLSessionDataDelegate methods.
+    [debugger enableNetworkTrafficDebugging];
+    [debugger forwardAllNetworkTraffic];
+    
+    // Enable Core Data debugging, and broadcast the main managed object context.
+    //     [debugger enableCoreDataDebugging];
+    //     [debugger addManagedObjectContext:self.managedObjectContext withName:@"PonyDebugger Test App MOC"];
+    
+    // Enable View Hierarchy debugging. This will swizzle UIView methods to monitor changes in the hierarchy
+    // Choose a few UIView key paths to display as attributes of the dom nodes
+    [debugger enableViewHierarchyDebugging];
+    [debugger setDisplayedViewAttributeKeyPaths:@[@"frame", @"hidden", @"alpha", @"opaque", @"accessibilityLabel", @"text"]];
+    
+    // Enable remote logging to the DevTools Console via PDLog()/PDLogObjects().
+    [debugger enableRemoteLogging];
+    
+    // Enable remote logging to the DevTools source.
+    [debugger enableRemoteDebugger];
+    //    [debugger remoteDebuggertest];
+    
+    [debugger enableTimeline];
+    
+    [debugger enableCSSStyle];
+    
+    // Connect to a specific host
+    if ([url isKindOfClass:NSString.class]) {
+        url = [NSURL URLWithString:(NSString *)url];
+    }
+    
+    // Prevents app crashing on argument type error like sending NSNull instead of NSURL
+    if (![url isKindOfClass:NSURL.class]) {
+        url = nil;
+    }
+    [debugger connectToURL:url];
+    // Or auto connect via bonjour discovery
+    //[debugger autoConnect];
+    // Or to a specific ponyd bonjour service
+    //[debugger autoConnectToBonjourServiceNamed:@"MY PONY"];
+
+}
+
++ (void)launchDebugWithSocketUrl:(NSString *)url {
+    [WXDebugTool setDebug:YES];
+    [WXSDKEngine connectDebugServer:url];
 }
 
 @end

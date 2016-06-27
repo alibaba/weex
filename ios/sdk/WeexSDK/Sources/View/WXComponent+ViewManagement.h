@@ -8,6 +8,6 @@
 
 #import <WeexSDK/WeexSDK.h>
 
-@interface WXComponent (ViewManangement)
+@interface WXComponent (ViewManagement)
 
 @end

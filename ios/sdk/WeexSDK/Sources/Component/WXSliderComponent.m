@@ -385,8 +385,8 @@
 
 -(void)setIndicatorView:(WXIndicatorView *)indicatorView
 {
-    NSAssert(_sliderView, @"");
-    [_sliderView setIndicator:indicatorView];
+    //NSAssert(_sliderView, @"");
+    [(WXSliderView *)self.view setIndicator:indicatorView];
 }
 
 #pragma mark Private Methods

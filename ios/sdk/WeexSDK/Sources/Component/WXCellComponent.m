@@ -44,8 +44,9 @@
     return ^(CALayer *layer, BOOL finished) {
         if ([super displayCompeletionBlock]) {
             [super displayCompeletionBlock](layer, finished);
-            [self.list cellDidRendered:self];
         }
+        
+        [self.list cellDidRendered:self];
     };
 }
 

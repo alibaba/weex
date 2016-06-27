@@ -12,7 +12,8 @@
 #import "NSArray+Weex.h"
 #import "WXAssert.h"
 #import "WXUtility.h"
-#import "WXSDKInstance.h"
+#import "NSObject+WXSwizzle.h"
+#import "WXSDKInstance_private.h"
 
 @interface WXTableView : UITableView
 
@@ -51,6 +52,8 @@
         
         _cellComponents = [NSMutableArray wx_mutableArrayUsingWeakReferences];
         _completedCells = [NSMutableArray wx_mutableArrayUsingWeakReferences];
+        
+        [self fixFlicker];
     }
     
     return self;
@@ -104,6 +107,10 @@
         
         cellComponent.indexPath = [NSIndexPath indexPathForRow:insertIndex inSection:0];
         [_cellComponents insertObject:subcomponent atIndex:insertIndex];
+        
+        for (WXCellComponent *cell in _cellComponents) {
+            cell.indexPath = [NSIndexPath indexPathForRow:[_cellComponents indexOfObject:cell] inSection:0];
+        }
     }
 }
 
@@ -136,6 +143,7 @@
     
     [_completedCells removeObject:cell];
     
+    WXLogVerbose(@"Delete cell:%@ at row:%ld", cell.ref, (long)indexPath.row);
     [UIView performWithoutAnimation:^{
         [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
     }];
@@ -149,9 +157,14 @@
     WXAssert(indexPath, @"Laid out cell:%@ has not been inserted to cell list before", cell);
 
     if (indexPath.row == 0) {
-        cell.absolutePosition = CGPointZero;
+        if (_tableView.tableHeaderView) {
+            cell.absolutePosition = CGPointMake(0, _tableView.tableHeaderView.frame.size.height);
+        } else {
+            cell.absolutePosition = CGPointZero;
+        }
+
     } else {
-        WXCellComponent *previousCell = _cellComponents[indexPath.row - 1];
+        WXCellComponent *previousCell = [_cellComponents wx_safeObjectAtIndex:(indexPath.row - 1)];
         CGPoint previousCellPostion = previousCell.absolutePosition;
         cell.absolutePosition = CGPointMake(previousCellPostion.x, previousCellPostion.y + previousCell.calculatedFrame.size.height);
     }
@@ -160,12 +173,12 @@
     
     if (![_completedCells containsObject:cell]) {
         [_completedCells addObject:cell];
-        WXLogVerbose(@"Insert cell at row:%ld", (long)indexPath.row);
+        WXLogVerbose(@"Insert cell:%@ at row:%ld", cell.ref, (long)indexPath.row);
         [UIView performWithoutAnimation:^{
             [_tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
         }];
     } else {
-        WXLogVerbose(@"Reload cell at row:%ld", (long)indexPath.row);
+        WXLogVerbose(@"Reload cell:%@ at row:%ld", cell.ref, (long)indexPath.row);
         [UIView performWithoutAnimation:^{
             [_tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
         }];
@@ -217,9 +230,8 @@
     NSArray *visibleIndexPaths = [tableView indexPathsForVisibleRows];
     if (![visibleIndexPaths containsObject:indexPath]) {
         WXCellComponent *component = [_cellComponents wx_safeObjectAtIndex:indexPath.row];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [component _unloadView];
-        });
+        // Must invoke synchronously otherwise it will remove the view just added.
+        [component _unloadView];
     }
 }
 
@@ -244,18 +256,25 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    WXLogVerbose(@"Getting cell at row:%ld", (long)indexPath.row);
     static NSString *reuseIdentifier = @"WXTableViewCell";
-    
-    WXCellComponent *cell = _cellComponents[indexPath.row];
-    if (cell.scope.length > 0) {
-        //        reuseIdentifier = cell.scope;
-    }
     
     UITableViewCell *cellView = [_tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
     if (!cellView) {
         cellView = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
         cellView.backgroundColor = [UIColor clearColor];
     } else {
+    }
+    
+    WXCellComponent *cell = [_cellComponents wx_safeObjectAtIndex:indexPath.row];
+    
+    if (!cell) {
+        return cellView;
+    }
+    
+    if (![_completedCells containsObject:cell]) {
+        // only inserted, not finish layout yet
+        return cellView;
     }
     
     if (cell.view.superview == cellView.contentView) {
@@ -268,6 +287,8 @@
     
     [cellView.contentView addSubview:cell.view];
     
+    WXLogVerbose(@"Created cell:%@ view:%@ cellView:%@ at row:%ld", cell.ref, cell.view, cellView, (long)indexPath.row);
+    
     return cellView;
 }
 
@@ -275,7 +296,7 @@
 
 - (void)setLoadmoreretry:(NSUInteger)loadmoreretry
 {
-    if (loadmoreretry > self.loadmoreretry) {
+    if (loadmoreretry != self.loadmoreretry) {
         _previousLoadMoreRowNumber = 0;
     }
     
@@ -292,6 +313,24 @@
 {
     BOOL superNeedLoadMore = [super isNeedLoadMore];
     return superNeedLoadMore && _previousLoadMoreRowNumber != [self tableView:_tableView numberOfRowsInSection:0];
+}
+
+- (void)fixFlicker
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        //(ง •̀_•́)ง┻━┻ Stupid scoll view, always reset content offset to zero after insert cells, any other more elegant way?
+        NSString *a = @"ntOffsetIfNe";
+        NSString *b = @"adjustConte";
+        
+        NSString *originSelector = [NSString stringWithFormat:@"_%@%@cessary", b, a];
+        [[self class] weex_swizzle:[WXTableView class] Method:NSSelectorFromString(originSelector) withMethod:@selector(fixedFlickerSelector)];
+    });
+}
+
+- (void)fixedFlickerSelector
+{
+    // DO NOT delete this method.
 }
 
 

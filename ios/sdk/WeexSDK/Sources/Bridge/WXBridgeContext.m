@@ -19,6 +19,9 @@
 #import "WXSDKError.h"
 #import "WXAssert.h"
 #import "WXSDKManager.h"
+#import "WXDebugTool.h"
+#import "WXModuleManager.h"
+#import "WXSDKInstance_private.h"
 
 @interface WXBridgeContext ()
 
@@ -73,6 +76,7 @@
 - (id<WXBridgeProtocol>)jsBridge
 {
     WXAssertBridgeThread();
+    _debugJS = [WXDebugTool isDebug];
     
     Class bridgeClass = _debugJS ? [WXWebSocketBridge class] : [WXJSCoreBridge class];
     
@@ -171,9 +175,9 @@
     
     NSArray *args = nil;
     if (data){
-        args = @[instance, temp, options, data];
+        args = @[instance, temp, options ?: @{}, data];
     } else {
-        args = @[instance, temp, options];
+        args = @[instance, temp, options ?: @{}];
     }
     
     WXSDKInstance *sdkInstance = [WXSDKManager instanceForID:instance] ;

@@ -15,6 +15,8 @@
 #import <sys/utsname.h>
 #import <UIKit/UIScreen.h>
 
+static NSString *const WXClientIDKey = @"com.taobao.Weex.clientID";
+
 void WXPerformBlockOnMainThread(void (^ _Nonnull block)())
 {
     if ([NSThread isMainThread]) {
@@ -80,26 +82,6 @@ CGSize WXScreenSize(void)
     return [UIScreen mainScreen].bounds.size;
 }
 
-CGFloat WXScreenResizeRadio(void)
-{
-    static CGFloat resizeScale;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        CGSize size = WXScreenSize();
-        CGFloat deviceWidth;
-        if (size.width > size.height) {
-            // Landscape
-            deviceWidth = size.height;
-        } else {
-            deviceWidth = size.width;
-        }
-        
-        resizeScale = deviceWidth / WXDefaultScreenWidth;
-    });
-    
-    return resizeScale;
-}
-
 CGFloat WXRoundPixelValue(CGFloat value)
 {
     CGFloat scale = WXScreenScale();
@@ -144,7 +126,7 @@ CGPoint WXPixelPointResize(CGPoint value)
 + (NSDictionary *)getEnvironment
 {
     NSString *platform = @"iOS";
-    NSString *sysVersion = [[UIDevice currentDevice] systemVersion];
+    NSString *sysVersion = [[UIDevice currentDevice] systemVersion] ?: @"";
     NSString *weexVersion = WX_SDK_VERSION;
     NSString *machine = [self deviceName] ? : @"";
     NSString *appVersion = [WXAppConfiguration appVersion] ? : @"";
@@ -164,8 +146,33 @@ CGPoint WXPixelPointResize(CGPoint value)
                                     @"deviceWidth":@(deviceWidth * scale),
                                     @"deviceHeight":@(deviceHeight * scale),
                                     @"scale":@(scale),
-                                    @"logLevel":[WXLog logLevelString]
+                                    @"logLevel":[WXLog logLevelString] ?: @"error"
                                 }];
+    return data;
+}
+
++ (NSDictionary *)getDebugEnvironment {
+    NSString *platform = @"iOS";
+    NSString *weexVersion = [WXAppConfiguration appVersion];
+    NSString *machine = [self deviceName] ? : @"";
+    NSString *appName = [WXAppConfiguration appName] ? : @"";
+    NSString *clientID = [[NSUserDefaults standardUserDefaults] stringForKey:WXClientIDKey];
+    if (!clientID) {
+        CFUUIDRef uuid = CFUUIDCreate(NULL);
+        clientID = CFBridgingRelease(CFUUIDCreateString(NULL, uuid));
+        assert(clientID);
+        CFRelease(uuid);
+        
+        [[NSUserDefaults standardUserDefaults] setObject:clientID forKey:WXClientIDKey];
+    }
+    
+    NSMutableDictionary *data = [NSMutableDictionary dictionaryWithDictionary:@{
+                                                            @"platform":platform,
+                                                            @"weexVersion":weexVersion,
+                                                            @"model":machine,
+                                                            @"name":appName,
+                                                            @"deviceId":clientID,
+                                                        }];
     return data;
 }
 
@@ -362,9 +369,13 @@ CGPoint WXPixelPointResize(CGPoint value)
 
 + (NSString *)deviceName
 {
-    struct utsname systemInfo;
-    uname(&systemInfo);
-    return [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
+//    struct utsname systemInfo;
+//    uname(&systemInfo);
+//    NSString *machine = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
+    NSString *machine = [[UIDevice currentDevice] model];
+    NSString *systemVer = [[UIDevice currentDevice] systemVersion] ? : @"";
+    NSString *model = [NSString stringWithFormat:@"%@:%@",machine,systemVer];
+    return model;
 }
 
 + (void)addStatTrack:(NSString *)appName
@@ -384,6 +395,31 @@ CGPoint WXPixelPointResize(CGPoint value)
                                   ^(NSData *data, NSURLResponse *response, NSError *error) {
                                   }];
     [task resume];
+}
+
+CGFloat WXScreenResizeRadio(void)
+{
+    return [WXUtility screenResizeScale];
+}
+
++ (CGFloat)screenResizeScale
+{
+    static CGFloat resizeScale;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        CGSize size = WXScreenSize();
+        CGFloat deviceWidth;
+        if (size.width > size.height) {
+            // Landscape
+            deviceWidth = size.height;
+        } else {
+            deviceWidth = size.width;
+        }
+        
+        resizeScale = deviceWidth / WXDefaultScreenWidth;
+    });
+    
+    return resizeScale;
 }
 
 @end
