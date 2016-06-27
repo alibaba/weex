@@ -8,7 +8,7 @@ you can use `<we-element>` tag to create composed component, the value of `name`
 <we-element name="foo">
   <template>
     <container style="flex-direction: row;">
-      <image src="{{image}}"></image>
+      <image src="{{image}}" style="width:100;height:100;"></image>
       <text>{{title}}</text>
     </container>
   </template>
