@@ -213,8 +213,7 @@ import com.taobao.weex.ui.component.WXVContainer;
  */
 public class WXCell extends WXVContainer {
 
-  public WXCell(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
-    super(instance, dom, parent, instanceId, true);
-  }
-
+    public WXCell(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
+        super(instance, dom, parent,true );
+    }
 }

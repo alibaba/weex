@@ -248,9 +248,8 @@ public class WXSlider extends WXVContainer implements OnPageChangeListener {
 
   private boolean mShowIndicators;
 
-  public WXSlider(WXSDKInstance instance, WXDomObject node, WXVContainer parent,
-                  String instanceId, boolean lazy) {
-    super(instance, node, parent, instanceId, lazy);
+  public WXSlider(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
+    super(instance, node, parent, lazy);
   }
 
   @Override
@@ -306,6 +305,11 @@ public class WXSlider extends WXVContainer implements OnPageChangeListener {
 
   @Override
   public void remove(WXComponent child) {
+    remove(child,true);
+  }
+
+  @Override
+  public void remove(WXComponent child, boolean destroy) {
     if (child == null || child.getView() == null || mAdapter == null) {
       return;
     }
@@ -337,6 +341,18 @@ public class WXSlider extends WXVContainer implements OnPageChangeListener {
       mViewPager.stopAutoScroll();
     }
   }
+
+//  @Override
+//  protected void bindImpl(View view) {
+//    if(view==null){
+//      super.bindImpl(view);
+//    }
+//    else if(view instanceof ViewGroup){
+//      if(((ViewGroup) view).getChildAt(0) instanceof WXCircleViewPager){
+//        super.bindImpl(((ViewGroup) view).getChildAt(0));
+//      }
+//    }
+//  }
 
   public void addIndicator(WXIndicator indicator) {
     mIndicator = indicator;

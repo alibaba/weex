@@ -281,6 +281,8 @@ public class WXDomPropConstant {
   public static final String WX_TEXT_ELLIPSIS = "ellipsis";
   public static final String WX_TEXT_CLIP = "clip";
 
+  public static final String WX_TEXT_LINE_HEIGHT="lineHeight";
+
   public static final String WX_ATTR_DISABLED = "disabled";
 
   public static final String WX_ATTR_PREFIX = "prefix";
@@ -311,6 +313,7 @@ public class WXDomPropConstant {
 
   //ListView attrs
   public static final String WX_ATTR_SCOPE = "scope";
+  public static final String WX_ATTR_LOAD_MORE_RETRY = "loadmoreretry";
   public static final String WX_ATTR_LOAD_MORE_OFFSET = "loadmoreoffset";
 
   //Image recycle attrs

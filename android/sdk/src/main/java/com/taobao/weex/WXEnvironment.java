@@ -212,7 +212,9 @@ import android.content.pm.PackageManager;
 import android.telephony.TelephonyManager;
 
 import com.taobao.weex.common.WXConfig;
+import com.taobao.weex.utils.LogLevel;
 import com.taobao.weex.utils.WXLogUtils;
+import com.taobao.weex.utils.WXSoInstallMgrSdk;
 import com.taobao.weex.utils.WXUtils;
 
 import java.util.HashMap;
@@ -227,23 +229,32 @@ public class WXEnvironment {
    * Global config
    ***************************/
 
-  public static String JS_LIB_SDK_VERSION = "v0.13.9";
+  public static String JS_LIB_SDK_VERSION = "v0.13.10";
 
-  public static String WXSDK_VERSION = "1.5.0";
+  public static String WXSDK_VERSION = "1.5.2.2";
   public static Application sApplication;
   public static final String DEV_Id = getDevId();
-  public static int sDeafultWidth = 750;
-  public volatile static boolean sSupport = false;
+  public static int sDefaultWidth = 750;
   public volatile static boolean JsFrameworkInit = false;
+
+  public static final String SETTING_EXCLUDE_X86SUPPORT = "env_exclude_x86";
+
+  public static boolean SETTING_FORCE_VERTICAL_SCREEN = false;
   /**
    * Debug model
    */
   public static boolean sDebugMode = false;
   public static String sDebugWsUrl = "";
   public static long sJSLibInitTime = 0;
-  private static boolean isApkDebug = true;
 
+  public static long sSDKInitInvokeTime = 0;//调用SDK初始化的耗时
+  public static long sSDKInitExecuteTime = 0;//SDK初始化执行耗时
+
+  public static LogLevel sLogLevel= LogLevel.DEBUG;
+  private static boolean isApkDebug = true;
   private static boolean isPerf = false;
+
+  public static boolean sShow3DLayer=true;
 
   private static Map<String, String> options = new HashMap<>();
 
@@ -265,8 +276,9 @@ public class WXEnvironment {
     configs.put(WXConfig.sysVersion, SYS_VERSION);
     configs.put(WXConfig.sysModel, SYS_MODEL);
     configs.put(WXConfig.weexVersion, String.valueOf(WXSDK_VERSION));
+    configs.put(WXConfig.logLevel,sLogLevel.getName());
     configs.putAll(options);
-    if(configs!=null&&configs.get(WXConfig.appName)==null){
+    if(configs!=null&&configs.get(WXConfig.appName)==null && sApplication!=null){
        configs.put(WXConfig.appName, sApplication.getPackageName());
     }
     return configs;
@@ -294,12 +306,15 @@ public class WXEnvironment {
   }
 
   public static boolean isSupport() {
+    boolean excludeX86 = "true".equals(options.get(SETTING_EXCLUDE_X86SUPPORT));
+    boolean isX86AndExcluded = WXSoInstallMgrSdk.isX86()&&excludeX86;
+    boolean isCPUSupport = WXSoInstallMgrSdk.isCPUSupport()&&!isX86AndExcluded;
     if (WXEnvironment.isApkDebugable()) {
-      WXLogUtils.d("WXEnvironment.sSupport:" + WXEnvironment.sSupport
-                   + " WXEnvironment.JsFrameworkInit:" + WXEnvironment.JsFrameworkInit
+      WXLogUtils.d("WXEnvironment.sSupport:" + isCPUSupport
+                   + " WXSDKEngine.isInitialized():" + WXSDKEngine.isInitialized()
                    + " !WXUtils.isTabletDevice():" + !WXUtils.isTabletDevice());
     }
-    return WXEnvironment.sSupport && WXEnvironment.JsFrameworkInit && !WXUtils.isTabletDevice();
+    return isCPUSupport && WXSDKEngine.isInitialized() && !WXUtils.isTabletDevice();
   }
 
   public static boolean isApkDebugable() {

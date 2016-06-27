@@ -206,6 +206,7 @@ package com.taobao.weex.ui.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 import android.widget.ImageView;
@@ -241,6 +242,24 @@ public class WXImageView extends ImageView implements IWXUpdateComponent, WXGest
   public void setImageDrawable(Drawable drawable) {
     drawable = mImageShapeFeature.wrapDrawable(drawable);
     super.setImageDrawable(drawable);
+    if(getScaleType()==ScaleType.MATRIX && getDrawable()!=null){
+      Matrix matrix = getImageMatrix();
+      int dwidth = getDrawable().getIntrinsicWidth();
+      int dheight = getDrawable().getIntrinsicHeight();
+
+      int vwidth = getWidth() - getPaddingLeft() - getPaddingRight();
+      int vheight = getHeight() - getPaddingTop() - getPaddingBottom();
+
+      float scale;
+      if (dwidth * vheight > vwidth * dheight) {
+        scale = (float) vheight / (float) dheight;
+      } else {
+        scale = (float) vwidth / (float) dwidth;
+      }
+
+      matrix.setScale(scale, scale);
+      setImageMatrix(matrix);
+    }
   }
 
   @Override
