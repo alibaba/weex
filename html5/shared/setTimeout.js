@@ -3,7 +3,7 @@ const {
 } = global
 
 const MSG = 'Use "global.setTimeout"  is unexpected, ' +
-              'please use require("@weex-module").setTimeout instead.'
+              'please use require("@weex-module/timer").setTimeout instead.'
 
 // fix no setTimeout on Android V8
 /* istanbul ignore if */
