@@ -13,7 +13,6 @@
         * [Communications](/syntax/comm.md)
         * [Page Config & Data](/syntax/config-n-data.md)
     * [How-tos](/how-to/main.md)
-        * [Require 3rd-party Libs](/how-to/require-3rd-party-libs.md)
         * [Preview In Browser](/how-to/preview-in-browser.md)
         * [Preview in Native](/how-to/preview-in-playground-app.md)        
         * [Customize a native Component](/how-to/customize-a-native-component.md)
@@ -55,7 +54,7 @@
         * [web](/components/web.md)
         * [wxc-tabbar](/components/wxc-tabbar.md)
         * [wxc-navpage](/components/wxc-navpage.md)
-    * [Built-in Modules](/modules/README.md)
+    * [Built-in Modules](/modules/main.md)
         * [dom](/modules/dom.md)
         * [stream](/modules/stream.md)
         * [modal](/modules/modal.md)
@@ -66,15 +65,15 @@
         * [JS Bundle Format](/specs/js-bundle-format.md)
         * [JS Framework APIs](/specs/js-framework-apis.md)
         * [Virtual DOM APIs](/specs/virtual-dom-apis.md)
-* [Examples](demo/main.md)
+* Examples
     * [Hello World](demo/hello-world.md)
     * [Modal](demo/modal.md)
     * [List](demo/list.md)
     * [Slider](demo/slider.md)
     * [Animation](demo/animation.md)
     * [More](https://github.com/alibaba/weex/tree/dev/examples)
-
-* [Service & Tools](/tools/main.md)
+    
+* Service & Tools
     * [CLI](/tools/cli.md)
     * [Transformer](/tools/transformer.md)
     * [Playground App](/tools/playground-app.md)
