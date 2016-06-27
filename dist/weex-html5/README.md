@@ -151,6 +151,8 @@ var weex = require('weex-html5')
 weex.install(require('./myAPIModule.js'))
 ```
 
+### MORE
+
 * More info: [Weex official site](http://alibaba.github.io/weex/)
 * Document : [Weex DOC](http://alibaba.github.io/weex/doc/)
 
