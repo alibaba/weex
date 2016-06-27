@@ -10,7 +10,7 @@ You can create a file named `foo.we` to define a composed component, the compone
 <!-- foo.we -->
 <template>
   <container style="flex-direction: row;">
-    <image src="{{image}}"></image>
+    <image src="{{image}}" style="width:100;height:100;"></image>
     <text>{{title}}</text>
   </container>
 </template>
