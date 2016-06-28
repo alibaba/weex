@@ -202,82 +202,78 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.ui.view;
+package com.taobao.weex.ui.view.listview.adapter;
 
-import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
-import android.util.AttributeSet;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.taobao.weex.utils.WXLogUtils;
-import com.taobao.weex.utils.WXViewUtils;
+public class TransformItemDecoration extends RecyclerView.ItemDecoration{
+  boolean mIsVertical = true;
+  float mAlpha = -1f;
+  int mXTranslate = 0;
+  int mYTranslate = 0;
+  int mRotation = 0;
+  float mScaleX = 0;
+  float mScaleY  = 0;
 
-public class WXLoadingIndicatorView extends View {
+  public TransformItemDecoration(boolean isVertical,float alpha,int translateX,int translateY,int rotation,float scaleX,float scaleY){
+    this.mIsVertical = isVertical;
+    this.mAlpha = alpha;
+    this.mXTranslate = translateX;
+    this.mYTranslate = translateY;
+    this.mRotation = rotation;
+    this.mScaleX = scaleX;
+    this.mScaleY = scaleY;
+  }
 
-    private int maxProgress = 100;
-    private int progress = 0;
 
-    private RectF oval;
-    private Paint paint;
+  @Override
+  public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
+    super.onDrawOver(c, parent, state);
+    int width = parent.getWidth();
+    int height = parent.getHeight();
+    for (int i = 0,count=parent.getChildCount(); i < count; i++) {
+      updateItem(parent.getChildAt(i),width,height);
+    }
+  }
 
-    public WXLoadingIndicatorView(Context context) {
-        this(context, null);
+  private void updateItem(View child, int width, int height) {
+    int size,childCenter,containerSize;
+    if (mIsVertical) {
+      containerSize = height;
+      size = child.getHeight();
+      childCenter = child.getTop() + size / 2;
+    } else {
+      containerSize = width;
+      size = child.getWidth();
+      childCenter = child.getLeft() + size / 2;
     }
 
-    public WXLoadingIndicatorView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+    final int actionDistance = (containerSize + size) / 2;
+    final float effectsAmount = Math.min(1.0f, Math.max(-1.0f, (1.0f / actionDistance) * (childCenter - containerSize/2)));
+
+
+    if(mAlpha>0){
+      child.setAlpha(1-mAlpha*Math.abs(effectsAmount));
     }
 
-    public WXLoadingIndicatorView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        oval = new RectF();
-        paint = new Paint();
+    if(mScaleX>0||mScaleY>0){
+      child.setScaleX(1-mScaleX*Math.abs(effectsAmount));
+      child.setScaleY(1-mScaleY*Math.abs(effectsAmount));
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        int width = this.getWidth();
-        int height = this.getHeight();
-
-        if (width != height) {
-            int min = Math.min(width, height);
-            width = min;
-            height = min;
-        }
-
-        paint.setAntiAlias(true);
-        paint.setColor(Color.GRAY);
-        canvas.drawColor(Color.TRANSPARENT);
-        int progressStrokeWidth = WXViewUtils.dip2px(4);
-        paint.setStrokeWidth(progressStrokeWidth);
-        paint.setStyle(Paint.Style.STROKE);
-
-        oval.left = progressStrokeWidth / 2; // 左上角x
-        oval.top = progressStrokeWidth / 2; // 左上角y
-        oval.right = width - progressStrokeWidth / 2; // 左下角x
-        oval.bottom = height - progressStrokeWidth / 2; // 右下角y
-
-        canvas.drawArc(oval, -90, ((float) progress / maxProgress) * 360, false, paint); // 绘制进度圆弧
-
-        WXLogUtils.v("tag", "progress "+progress);
+    if(mRotation!=0){
+      child.setRotation(mRotation * effectsAmount);
     }
 
-    public int getMaxProgress() {
-        return maxProgress;
+    if(mXTranslate!=0){
+      child.setTranslationX(mXTranslate * Math.abs( effectsAmount));
     }
 
-    public void setMaxProgress(int maxProgress) {
-        this.maxProgress = maxProgress;
+    if(mYTranslate!=0){
+      child.setTranslationY(mYTranslate * Math.abs( effectsAmount));
     }
 
-    public void setProgress(int progress) {
-        this.progress = progress;
-        this.invalidate();
-    }
-
+  }
 }
-

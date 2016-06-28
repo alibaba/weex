@@ -202,8 +202,13 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.ui.view.listview;
+package com.taobao.weex.ui.view;
 
-public interface OnLoadMoreListener {
-    public void onLoadMore();
+import android.content.Context;
+
+public class WXBaseRefreshLayout extends WXFrameLayout {
+
+  public WXBaseRefreshLayout(Context context) {
+    super(context);
+  }
 }

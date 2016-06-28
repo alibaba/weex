@@ -202,98 +202,127 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.ui.view.listview;
+package com.taobao.weex.ui.view.refresh.core;
 
 import android.content.Context;
+import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
-public interface IRefreshLayout {
+import com.taobao.weex.ui.view.refresh.circlebar.CircleProgressBar;
 
-    public View getView();
-    public void onPull(float scale);
-    public void refreshing();
-    public void resetRefreshing();
-    public void setVisibility(int visibility);
-    public void setPullLabel(CharSequence pullLabel);
-    public void setRefreshingLabel(CharSequence refreshingLabel);
-    public void setReleaseLabel(CharSequence releaseLabel);
-    public void setSuccessLabel(CharSequence releaseLabel);
-    public String getRefreshingSuccessLabelText(Context context);
-    public String getPullLabelText(Context context);
-    public String getReleaseLabelText(Context context);
-    public String getRefreshingLabelText(Context context);
+public class WXRefreshView extends FrameLayout {
 
-    public class Adapter implements IRefreshLayout {
+  private CircleProgressBar circleProgressBar;
+  private LinearLayout linearLayout;
 
-        View view;
+  public WXRefreshView(Context context) {
+    super(context);
+    setupViews();
+  }
 
-        public Adapter(View view) {
-            this.view = view;
+  public WXRefreshView(Context context, AttributeSet attrs) {
+    super(context, attrs);
+    setupViews();
+  }
+
+  public WXRefreshView(Context context, AttributeSet attrs, int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+    setupViews();
+  }
+
+  private void setupViews() {
+    linearLayout = new LinearLayout(getContext());
+    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams
+                                                                     .MATCH_PARENT,LinearLayout
+        .LayoutParams.MATCH_PARENT);
+    linearLayout.setOrientation(LinearLayout.VERTICAL);
+    linearLayout.setGravity(Gravity.CENTER);
+    addView(linearLayout,lp);
+  }
+
+  /**
+   * Setting refresh view or loading view
+   *
+   * @param view refresh or loading
+   */
+  public void setRefreshView(final View view) {
+    if (view == null)
+      return;
+    post(new Runnable() {
+      @Override
+      public void run() {
+        View child = null;
+        View temp = view;
+        if (view.getParent() != null) {
+          ((ViewGroup) view.getParent()).removeView(view);
         }
-
-        @Override
-        public View getView() {
-            return view;
+        for (int i = 0;i<((ViewGroup)temp).getChildCount(); i++) {
+          child = ((ViewGroup) temp).getChildAt(i);
+          if (child instanceof CircleProgressBar)
+            circleProgressBar = (CircleProgressBar) child;
         }
+        linearLayout.addView(temp);
+      }
+    });
+  }
 
-        @Override
-        public void onPull(float scale) {
-
-        }
-
-        @Override
-        public void refreshing() {
-
-        }
-
-        @Override
-        public void resetRefreshing() {
-
-        }
-
-        @Override
-        public void setVisibility(int visibility) {
-            this.view.setVisibility(visibility);
-        }
-
-        @Override
-        public void setPullLabel(CharSequence pullLabel) {
-
-        }
-
-        @Override
-        public void setRefreshingLabel(CharSequence refreshingLabel) {
-
-        }
-
-        @Override
-        public void setReleaseLabel(CharSequence releaseLabel) {
-
-        }
-
-        @Override
-        public void setSuccessLabel(CharSequence releaseLabel) {
-
-        }
-
-        @Override
-        public String getRefreshingSuccessLabelText(Context context) {
-            return null;
-        }
-
-        @Override
-        public String getPullLabelText(Context context) {
-            return null;
-        }
-
-        @Override
-        public String getReleaseLabelText(Context context) {
-            return null;
-        }
-
-        @Override
-        public String getRefreshingLabelText(Context context) {
-            return null;
-        }
+  /**
+   * Set loading_indicator bgColor
+   *
+   * @param color
+   */
+  public void setProgressBgColor(int color) {
+    if (circleProgressBar != null) {
+      circleProgressBar.setBackgroundColor(color);
     }
+  }
+
+  /**
+   * Set loading_indicator color
+   *
+   * @param color
+   */
+  public void setProgressColor(int color) {
+    if (circleProgressBar != null) {
+      circleProgressBar.setColorSchemeColors(color);
+    }
+  }
+
+  protected void startAnimation() {
+    if (circleProgressBar != null) {
+      circleProgressBar.start();
+    }
+  }
+
+  /**
+   * Set the start and end trim for the progress spinner arc.
+   *
+   * @param startAngle start angle
+   * @param endAngle end angle
+   */
+  public void setStartEndTrim(float startAngle, float endAngle) {
+    if (circleProgressBar != null) {
+      circleProgressBar.setStartEndTrim(startAngle, endAngle);
+    }
+  }
+
+  protected void stopAnimation() {
+    if (circleProgressBar != null) {
+      circleProgressBar.stop();
+    }
+  }
+
+  /**
+   * Set the amount of rotation to apply to the progress spinner.
+   *
+   * @param rotation Rotation is from [0..1]
+   */
+  public void setProgressRotation(float rotation) {
+    if (circleProgressBar != null)
+      circleProgressBar.setProgressRotation(rotation);
+  }
 }

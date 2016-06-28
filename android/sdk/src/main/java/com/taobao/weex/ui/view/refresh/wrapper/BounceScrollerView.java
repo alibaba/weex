@@ -202,175 +202,33 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.ui.view.listview;
+package com.taobao.weex.ui.view.refresh.wrapper;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 
-import com.taobao.weex.ui.view.listview.adapter.ListBaseViewHolder;
-import com.taobao.weex.ui.view.listview.adapter.RecyclerViewBaseAdapter;
+import com.taobao.weex.ui.component.WXScroller;
+import com.taobao.weex.ui.view.WXScrollView;
 
-public class RefreshAdapterWrapper extends RecyclerView.Adapter<ListBaseViewHolder> {
+public class BounceScrollerView extends BaseBounceView<WXScrollView> {
 
-    private static final int ITEM_TYPE_REFRESH = 0xffffff;
-    private static final int ITEM_TYPE_LOADMORE = 0xffffff + 1;
-
-
-    private Status mStatus = Status.NORMAL;
-    private RecyclerViewBaseAdapter mInnerRecyclerViewAdapter;
-    private IRefreshLayout mRefreshLayout;
-    private IRefreshLayout mLoadMoreLayout;
-
-    private enum Status {
-        NORMAL,
-        REFRESH,
-        LOADMORE
-    }
-
-    public RefreshAdapterWrapper(Context context, RecyclerViewBaseAdapter adapter) {
-        mInnerRecyclerViewAdapter = adapter;
-        init(context);
-    }
-
-    public void refreshing() {
-        mStatus = Status.REFRESH;
-        if (mRefreshLayout != null) {
-            mRefreshLayout.refreshing();
-        }
-        notifyDataSetChanged();
-    }
-
-    public void resetRefreshing() {
-        mStatus = Status.NORMAL;
-        if (mRefreshLayout != null) {
-            mRefreshLayout.resetRefreshing();
-        }
-        if (mLoadMoreLayout != null) {
-            mLoadMoreLayout.resetRefreshing();
-        }
-        notifyDataSetChanged();
-    }
-
-    public void loadingMore() {
-        mStatus = Status.LOADMORE;
-        if (mLoadMoreLayout != null) {
-            mLoadMoreLayout.refreshing();
-        }
-        notifyDataSetChanged();
-    }
-
-    /*public void setRefreshLayout(IRefreshLayout refreshLayout) {
-        mRefreshLayout = refreshLayout;
-    }
-
-    public void setLoadMoreLayout(IRefreshLayout loadMoreLayout) {
-        mLoadMoreLayout = loadMoreLayout;
-    }*/
-
-    public boolean isRefreshing() {
-        return mStatus == Status.REFRESH;
-    }
-
-    public boolean isLoadingMore() {
-        return mStatus == Status.LOADMORE;
+    public BounceScrollerView(Context context, int orientation,WXScroller waScroller) {
+        super(context,orientation);
+        if (getInnerView() != null)
+            getInnerView().setWAScroller(waScroller);
     }
 
     @Override
-    public ListBaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        switch (mStatus) {
-            case REFRESH:
-                if (viewType == ITEM_TYPE_REFRESH && mRefreshLayout != null) {
-                    return new ListBaseViewHolder(mRefreshLayout.getView(),viewType);
-                }
-                break;
-            case LOADMORE:
-                if (viewType == ITEM_TYPE_LOADMORE && mLoadMoreLayout != null) {
-                    return new ListBaseViewHolder(mLoadMoreLayout.getView(),viewType);
-                }
-                break;
-        }
-        return mInnerRecyclerViewAdapter.onCreateViewHolder(parent, viewType);
+    public WXScrollView setInnerView(Context context) {
+        return new WXScrollView(context);
     }
 
     @Override
-    public void onBindViewHolder(ListBaseViewHolder holder, int position) {
-        if (position == 0) {
-            switch (mStatus) {
-                case REFRESH:
-                    //holder.setData();
-                    return;
-            }
-        } else if (position == getItemCount() - 1) {
-            switch (mStatus) {
-                case LOADMORE:
-                    return;
-            }
-        }
-        mInnerRecyclerViewAdapter.onBindViewHolder(holder, position);
+    public void onRefreshingComplete() {
+        //TODO update scroller dataset
     }
 
     @Override
-    public int getItemCount() {
-        return mInnerRecyclerViewAdapter.getItemCount();
+    public void onLoadmoreComplete() {
+        //TODO update scroller dataset
     }
-
-    @Override
-    public int getItemViewType(int position) {
-        if (position == 0) {
-            switch (mStatus) {
-                case REFRESH:
-                    return ITEM_TYPE_REFRESH;
-            }
-        } else if (position == getItemCount() - 1) {
-            switch (mStatus) {
-                case LOADMORE:
-                    return ITEM_TYPE_LOADMORE;
-            }
-        }
-        return mInnerRecyclerViewAdapter.getItemViewType(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return mInnerRecyclerViewAdapter.getItemId(position);
-    }
-
-    @Override
-    public void onViewRecycled(ListBaseViewHolder holder) {
-        mInnerRecyclerViewAdapter.onViewRecycled(holder);
-    }
-
-    @Override
-    public void onViewDetachedFromWindow(ListBaseViewHolder holder) {
-        mInnerRecyclerViewAdapter.onViewDetachedFromWindow(holder);
-    }
-
-    @Override
-    public boolean onFailedToRecycleView(ListBaseViewHolder holder) {
-        return mInnerRecyclerViewAdapter.onFailedToRecycleView(holder);
-    }
-
-    private void init(Context context) {
-        mRefreshLayout = new IRefreshLayout.Adapter(new Refreshlayout(context));
-        mLoadMoreLayout = new IRefreshLayout.Adapter(new Refreshlayout(context));
-    }
-
-    private class Refreshlayout extends FrameLayout {
-
-        public Refreshlayout(Context context) {
-            super(context);
-            setLayoutParams(
-                    new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-            ProgressBar pb = new ProgressBar(context);
-            FrameLayout.LayoutParams pbLp =
-                    new LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-            pbLp.gravity = Gravity.CENTER_HORIZONTAL;
-            addView(pb, pbLp);
-        }
-    }
-
 }

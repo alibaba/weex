@@ -202,8 +202,204 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.ui.view.listview;
+package com.taobao.weex.ui.view.refresh.wrapper;
 
-public interface OnRefreshListener {
-    public void onRefresh();
+import android.content.Context;
+import android.support.v7.widget.OrientationHelper;
+import android.util.AttributeSet;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+
+import com.taobao.weex.ui.view.refresh.core.WXRefreshView;
+import com.taobao.weex.ui.view.refresh.core.WXSwipeLayout;
+
+/**
+ * BounceView(SwipeLayout) contains Scroller/List and refresh/loading view
+ * @param <T> InnerView
+ */
+public abstract class BaseBounceView<T extends View> extends ViewGroup {
+
+    private int mOrientation = OrientationHelper.VERTICAL;
+    protected WXSwipeLayout swipeLayout;
+    private T innerView;
+
+    public BaseBounceView(Context context,int orientation) {
+        this(context, null,orientation);
+    }
+
+    public BaseBounceView(Context context, AttributeSet attrs,int orientataion) {
+        super(context, attrs);
+        mOrientation = orientataion;
+        init(context);
+    }
+
+    public int getOrientation(){
+        return mOrientation;
+    }
+
+    private void init(Context context) {
+        createBounceView(context);
+    }
+
+    boolean isVertical(){
+        return mOrientation==OrientationHelper.VERTICAL;
+    }
+
+    public void setOnRefreshListener(WXSwipeLayout.WXOnRefreshListener onRefreshListener) {
+        if (swipeLayout != null)
+            swipeLayout.setOnRefreshListener(onRefreshListener);
+    }
+
+    public void setOnLoadingListener(WXSwipeLayout.WXOnLoadingListener onLoadingListener) {
+        if (swipeLayout != null)
+            swipeLayout.setOnLoadingListener(onLoadingListener);
+    }
+
+    public void finishPullRefresh() {
+        if (swipeLayout != null)
+            swipeLayout.finishPullRefresh();
+    }
+
+    public void finishPullLoad() {
+        if (swipeLayout != null)
+            swipeLayout.finishPullLoad();
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        //Helper.logv("BaseBounceView onMeasure");
+        View child0 = getChildAt(0);
+        int w = 0;
+        int h = 0;
+        if (child0 != null) {
+            child0.measure(widthMeasureSpec, heightMeasureSpec);
+            w = child0.getMeasuredWidth();
+            h = child0.getMeasuredHeight();
+        }
+        measureChild(w,h,1);
+        measureChild(w,h,2);
+    }
+
+    private void measureChild(int w,int h,int index){
+        View child = getChildAt(index);
+        if (child != null) {
+            LayoutParams lp = child.getLayoutParams();
+            if(isVertical()) {
+                child.measure(
+                        MeasureSpec.makeMeasureSpec(w, MeasureSpec.EXACTLY),
+                        MeasureSpec.makeMeasureSpec(lp.height, lp.height > 0 ? MeasureSpec.EXACTLY : MeasureSpec.AT_MOST)
+                );
+            }else{
+                child.measure(
+                        MeasureSpec.makeMeasureSpec(lp.width, lp.width > 0 ? MeasureSpec.EXACTLY : MeasureSpec.AT_MOST),
+                        MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY)
+                );
+            }
+        }
+    }
+
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        View child0 = getChildAt(0);
+        int paddingLeft,paddingTop,childRight,childBottom;
+        paddingLeft=getPaddingLeft();
+        paddingTop=getPaddingTop();
+        childRight=r-l-getPaddingRight();
+        childBottom = b-t-getPaddingBottom();
+
+        if (child0 != null) {
+            if(isVertical()){
+                child0.layout(paddingLeft, paddingTop, childRight, b-t-paddingTop);
+            }else{
+                child0.layout(paddingLeft, paddingTop, r-l-paddingLeft, childBottom);
+            }
+
+        }
+        View child1 = getChildAt(1);
+        if (child1 != null) {
+            if(isVertical()) {
+                int h = child1.getMeasuredHeight();
+                child1.layout(paddingLeft, -h, childRight, 0);
+            }else{
+                int w = child1.getMeasuredWidth();
+                child1.layout(-w, paddingTop, 0, childBottom);
+            }
+        }
+        View child2 = getChildAt(2);
+        if (child2 != null) {
+            if(isVertical()) {
+                int h = child2.getMeasuredHeight();
+                child2.layout(paddingLeft, b, childRight, b + h);
+            }else{
+                int w = child2.getMeasuredWidth();
+                child2.layout(r, paddingTop, r+w , childBottom);
+            }
+        }
+    }
+
+    /**
+     * Init Swipelayout
+     */
+    private WXSwipeLayout createBounceView(Context context) {
+        swipeLayout = new WXSwipeLayout(context);
+        swipeLayout.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+        innerView = setInnerView(context);
+        if (innerView == null)
+            return null;
+        swipeLayout.addView(innerView, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+        addView(swipeLayout, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        return swipeLayout;
+    }
+
+    /**
+     * @return the child of swipelayout : recyclerview or scrollview
+     */
+    public T getInnerView() {
+        return innerView;
+    }
+
+    public abstract T setInnerView(Context context);
+
+    /**
+     *
+     * @param headerView should be {@link WXRefreshView}
+     */
+    public void setHeaderView(View headerView) {
+        setRefreshEnable(true);
+        if (swipeLayout != null)
+            if (swipeLayout.getHeaderView() != null)
+                swipeLayout.getHeaderView().setRefreshView(headerView);
+    }
+
+    /**
+     *
+     * @param footerView should be {@link WXRefreshView}
+     */
+    public void setFooterView(View footerView) {
+        setLoadmoreEnable(true);
+        if (swipeLayout != null)
+            if (swipeLayout.getFooterView() != null)
+                swipeLayout.getFooterView().setRefreshView(footerView);
+    }
+
+    public void setRefreshEnable(boolean enable) {
+        if (swipeLayout != null)
+            swipeLayout.setPullRefreshEnable(enable);
+    }
+
+    public void setLoadmoreEnable(boolean enable) {
+        if (swipeLayout != null)
+            swipeLayout.setPullLoadEnable(enable);
+    }
+
+    public WXSwipeLayout getSwipeLayout() {
+        return swipeLayout;
+    }
+
+    public abstract void onRefreshingComplete();
+
+    public abstract void onLoadmoreComplete();
 }

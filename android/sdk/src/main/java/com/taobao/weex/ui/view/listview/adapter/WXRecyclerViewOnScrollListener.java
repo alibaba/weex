@@ -256,10 +256,6 @@ public class WXRecyclerViewOnScrollListener extends RecyclerView.OnScrollListene
       if (visibleItemCount > 0 && currentScrollState == RecyclerView.SCROLL_STATE_IDLE) {
         if (listener != null && listener.get() != null) {
           listener.get().onLoadMore(bottomOffset);
-//          if(layoutManager instanceof LinearLayoutManager){
-//            LinearLayoutManager linearLayoutManager=(LinearLayoutManager)layoutManager;
-//            listener.get().notifyAppearStateChange(linearLayoutManager.findFirstVisibleItemPosition(),linearLayoutManager.findLastVisibleItemPosition());
-//          }
         }
       }
     }
