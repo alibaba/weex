@@ -27,4 +27,4 @@ html5/test/e2e/screenshots
 html5/test/e2e/logs
 
 # legacy
-src
+/src
