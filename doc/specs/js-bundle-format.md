@@ -1,4 +1,5 @@
 # JS Bundle format
+<span class="weex-version">0.4</span>
 
 v0.3.0
 
@@ -35,6 +36,12 @@ bootstrap('@weex-component/b')
 As the sample above, the component name should be hyphenated (a-z, 0-9, "-"). Other characters are not allowed.
 
 And, the method call `bootstrap()` allows 1~3 parameters: root module name (String), config info (optional JSON) and external data (optional JSON).
+
+
+## NOTICE
+After Weex added multi-module support ( support using `require` in your `<script>` tag  include other we file or js code into current we file). we begin using [Webpack](https://webpack.github.io/) as module bundler in our tool chain. So the eventual format of Weex JSBundle is webpack packed .
+
+if you are JS Ninja, explore [weex-transformer](https://www.npmjs.com/package/weex-transformer) will give your unpacked , original Weex JS Bundle .
 
 ## Content of Composed Components
 

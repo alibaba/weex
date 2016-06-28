@@ -1,4 +1,6 @@
 # &lt;a&gt;
+<span class="weex-version">0.5</span>
+
 ###Summary
 &lt;a&gt; defines a hyperlink to a page in the web. Its purpose and syntax is very simliar to [&lt;a&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a) in HTML5.
 

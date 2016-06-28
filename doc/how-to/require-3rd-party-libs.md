@@ -1,4 +1,5 @@
 # How to require 3rd Party Libs ?
+<span class="weex-version">0.4</span>
 
 In the paragraph [Maintain Your Component Code](./maintain-your-component-code.md), we learn that JavaScript code can be written in `<script>` tag in one component. But there must be some common functions or modules in your project, such as parsing url params, extending properties from some objects to another object and so on. It's a bad practice to copy and paste them in each component, therefore there's a urgent need of `require`. Weex provides CommonJS `require` syntax for developers.
 

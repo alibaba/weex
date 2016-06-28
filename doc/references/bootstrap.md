@@ -1,4 +1,5 @@
 # Bootstrap
+<span class="weex-version">0.4</span>
 
 Besides its default meaning, `<script>` tag supports two more configuration with its `type` property *in the top level component of a page*.
 

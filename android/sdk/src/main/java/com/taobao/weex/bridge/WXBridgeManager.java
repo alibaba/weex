@@ -204,6 +204,7 @@
  */
 package com.taobao.weex.bridge;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Looper;
@@ -218,6 +219,7 @@ import com.taobao.weex.WXRenderErrorCode;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.IWXBridge;
+import com.taobao.weex.common.IWXDebugProxy;
 import com.taobao.weex.common.WXConfig;
 import com.taobao.weex.common.WXErrorCode;
 import com.taobao.weex.common.WXJSBridgeMsgType;
@@ -306,17 +308,8 @@ public class WXBridgeManager implements Callback {
   private StringBuilder mLodBuilder = new StringBuilder(500);
 
   private WXBridgeManager() {
-    if (WXEnvironment.sDebugMode) {
-      HackedClass<Object> waBridge;
-      try {
-        waBridge = WXHack.into("com.taobao.weex.bridge.WXWebsocketBridge");
-        mWXBridge = (IWXBridge) waBridge.constructor(
-            WXBridgeManager.class)
-            .getInstance(WXBridgeManager.this);
-      } catch (HackAssertionException e) {
-        e.printStackTrace();
-      }
-    } else {
+    launchInspector(WXEnvironment.sRemoteDebugMode);
+    if (mWXBridge == null) {
       mWXBridge = new WXBridge();
     }
     mJSThread = new WXThread("WeexJSBridgeThread", this);
@@ -334,6 +327,24 @@ public class WXBridgeManager implements Callback {
     return mBridgeManager;
   }
 
+  private void launchInspector(boolean remoteDebug) {
+    if (WXEnvironment.isApkDebugable()) {
+      try {
+        HackedClass<Object> waBridge = WXHack.into("com.taobao.weex.devtools.debug.DebugServerProxy");
+
+        IWXDebugProxy debugProxy = (IWXDebugProxy) waBridge.constructor(Context.class, WXBridgeManager.class)
+                .getInstance(WXEnvironment.getApplication(), WXBridgeManager.this);
+        if (debugProxy != null) {
+          debugProxy.start();
+          if (remoteDebug) {
+            mWXBridge = debugProxy.getWXBridge();
+          }
+        }
+      } catch (HackAssertionException e) {
+        WXLogUtils.e("launchInspector HackAssertionException " + e);
+      }
+    }
+  }
   public boolean callModuleMethod(String instanceId, String moduleStr, String methodStr, JSONArray args) {
     return WXModuleManager.callModuleMethod(instanceId, moduleStr, methodStr, args);
   }
@@ -353,17 +364,8 @@ public class WXBridgeManager implements Callback {
    */
   public void restart() {
     mInit = false;
-    if (WXEnvironment.sDebugMode) {
-      HackedClass<Object> waBridge;
-      try {
-        waBridge = WXHack.into("com.taobao.weex.bridge.WXWebsocketBridge");
-        mWXBridge = (IWXBridge) waBridge.constructor(
-            WXBridgeManager.class)
-            .getInstance(WXBridgeManager.this);
-      } catch (HackAssertionException e) {
-        e.printStackTrace();
-      }
-    } else {
+    launchInspector(WXEnvironment.sRemoteDebugMode);
+    if (mWXBridge == null) {
       mWXBridge = new WXBridge();
     }
   }
@@ -409,7 +411,7 @@ public class WXBridgeManager implements Callback {
    * @param tasks tasks to be executed
    * @param callback next tick id
    */
-  void callNative(String instanceId, String tasks, String callback) {
+  public void callNative(String instanceId, String tasks, String callback) {
     if (TextUtils.isEmpty(tasks)) {
       if (WXEnvironment.isApkDebugable()) {
         WXLogUtils.e("[WXBridgeManager] callNative: call Native tasks is null");
