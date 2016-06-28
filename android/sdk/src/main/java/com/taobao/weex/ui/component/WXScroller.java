@@ -165,12 +165,9 @@ public class WXScroller extends WXVContainer implements WXScrollViewListener {
 
   private int mContentHeight = 0;
 
-  private WXScrollView tempscview;
-
   public WXScroller(WXSDKInstance instance, WXDomObject node,
                     WXVContainer parent, boolean lazy) {
     super(instance, node, parent, lazy);
-    tempscview = new WXScrollView(mContext);
   }
 
   private Handler handler=new Handler();
@@ -208,7 +205,7 @@ public class WXScroller extends WXVContainer implements WXScrollViewListener {
       }
     }
 
-    int count = tempscview.getChildCount();
+    int count = getRealView().getChildCount();
     index = index >= count ? -1 : index;
     if (index == -1) {
       getRealView().addView(child);

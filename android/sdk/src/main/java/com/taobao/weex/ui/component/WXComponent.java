@@ -275,7 +275,7 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
       return;
     }
 
-    if (this instanceof WXRefresh) {
+    if (this instanceof WXRefresh && mParent instanceof WXScroller) {
       refreshMargin = mDomObj.csslayout.dimensions[CSSLayout.DIMENSION_HEIGHT];
     }
 
