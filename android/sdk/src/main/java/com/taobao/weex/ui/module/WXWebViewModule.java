@@ -207,6 +207,7 @@ package com.taobao.weex.ui.module;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.WXModule;
 import com.taobao.weex.common.WXModuleAnno;
+import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXWeb;
 
 public class WXWebViewModule extends WXModule{
@@ -233,11 +234,14 @@ public class WXWebViewModule extends WXModule{
     }
 
     private void action(Action action, String ref) {
-        WXWeb webComponent =
-                (WXWeb) WXSDKManager.getInstance()
+
+        WXComponent webComponent =
+                WXSDKManager.getInstance()
                         .getWXRenderManager()
                         .getWXComponent(mWXSDKInstance.getInstanceId(), ref);
-        webComponent.setAction(action.name());
+        if(webComponent instanceof WXWeb) {
+            ((WXWeb) webComponent).setAction(action.name());
+        }
     }
 
 }

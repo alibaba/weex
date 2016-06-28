@@ -1,14 +1,39 @@
 # Transform Code into Js Bundle
+<span class="weex-version">0.4</span>
 
 Paragraphs [Maintain Your Component Code](./maintain-your-component-code.md), [Maintain Your Component Code](./maintain-your-component-code.md) and [Require 3rd Party Libs](./require-3rd-party-libs.md) show us how to write and organize weex code. However, Weex DSL code must be transformed to `js bundle` so that `js framework` can parse and execute it for iOS, Android and HTML5 portal. For more information, please refer to [How It Works
 ](/advanced/how-it-works.md) and [JS Bundle Format](../specs/js-bundle-format.md).
 
 Now come back to the topic `transform code into js bundle`. There are several ways to achieve the goal.
 
+## weex-toolkit
+```bash
+$npm install -g weex-toolkit
+```
+
+### transform a `we file` to JS Bundle
+```
+$weex your_best_weex.we  -o .
+```
+`your_best_weex.we` will be transform to JS Bundle file `your_best_weex.js` , saved in your current directory
+
+### transform a `we file` to JS Bundle , watch this file ，auto run transformer if change happen.
+```
+$weex your_best_weex.we  -o . --watch
+```
+
+### transform every we file in a directory 
+```
+$weex we/file/storage/path  -o outputpath
+```
+every `we file` in `we/file/storage/path` we be transform to JS Bundle  , saved in `outputpath` path
+
+please access [npmjs.com](https://www.npmjs.com/package/weex-toolkit) for more information about weex-toolkit.
+
 ## transformer
 
 ```bash
-tnpm install weex-transformer
+npm install weex-transformer
 ```
 
 ### CLI Tool
@@ -53,7 +78,7 @@ returns:
 ## gulp weex
 
 ```bash
-tnpm install gulp-weex
+npm install gulp-weex
 ```
 
 ```javascript

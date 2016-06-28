@@ -206,18 +206,28 @@ package com.taobao.weex.bridge;
 
 import android.os.Handler;
 
+import android.os.HandlerThread;
+import android.os.Looper;
+import com.taobao.weex.WXSDKInstance;
 import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 
 /**
  * Created by lixinke on 16/2/24.
  */
+@RunWith(RobolectricTestRunner.class)
 public class WXBridgeManagerTest extends TestCase {
 
     public void setUp() throws Exception {
         super.setUp();
-
     }
 
+    @Test
     public void testGetJSHander() throws Exception {
         Handler handler=WXBridgeManager.getInstance().getJSHandler();
         assertNotNull(handler);
@@ -237,8 +247,6 @@ public class WXBridgeManagerTest extends TestCase {
     public void testSetStackTopInstance() throws Exception {
 
         WXBridgeManager.getInstance().setStackTopInstance("");
-
-
     }
 
     public void testCallNative() throws Exception {

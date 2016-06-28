@@ -206,6 +206,7 @@ package com.taobao.weex.common;
 
 import com.taobao.weex.WXEnvironment;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class WXPerformance {
@@ -253,12 +254,48 @@ public class WXPerformance {
    * Time used for
    * {@link com.taobao.weex.bridge.WXBridgeManager#createInstance(String, String, Map, String)}
    */
-  public double communicateTime;
+  public long communicateTime;
 
   /**
    * Time spent when rendering first screen
    */
-  public double screenRenderTime;
+  public long screenRenderTime;
+
+  /**
+   * Call native Time spent when rendering first screen
+   */
+  public long callNativeTime;
+
+  /**
+   * Create Instance Time spent when rendering first screen
+   */
+  public long firstScreenJSFExecuteTime;
+
+  /**
+   * Call native Time spent when rendering first screen
+   */
+  public long batchTime;
+
+  /**
+   * Call native Time spent when rendering first screen
+   */
+  public long parseJsonTime;
+
+  /**
+   *  UpdateDomObj Time spent when rendering first screen
+   */
+  public long updateDomObjTime;
+
+  /**
+   *  ApplyUpdate Time spent when rendering first screen
+   */
+  public long applyUpdateTime;
+
+
+  /**
+   *  CssLayout Time spent when rendering first screen
+   */
+  public long cssLayoutTime;
 
   /**
    * Time spent, the unit is micro second
@@ -269,6 +306,11 @@ public class WXPerformance {
    * load bundle js time, unite ms
    */
   public long networkTime;
+
+  /**
+   * component Count
+   */
+  public long componentCount;
 
   /**
    * Version of JavaScript libraray
@@ -295,6 +337,52 @@ public class WXPerformance {
    */
   public String errMsg;
 
+  public Map<String,Double> getMeasureMap(){
+    Map<String,Double> quotas = new HashMap<>();
+    quotas.put("JSTemplateSize", JSTemplateSize);
+    quotas.put("JSLibSize", JSLibSize);
+    quotas.put("communicateTime", (double)communicateTime);
+    quotas.put("screenRenderTime", (double)screenRenderTime);
+    quotas.put("totalTime", totalTime);
+    quotas.put("localReadTime", localReadTime);
+    quotas.put("JSLibInitTime", (double)JSLibInitTime);
+    quotas.put("networkTime", (double)networkTime);
+    quotas.put("templateLoadTime", (double)templateLoadTime);
+    quotas.put("SDKInitInvokeTime",(double)WXEnvironment.sSDKInitInvokeTime);
+    quotas.put("SDKInitExecuteTime",(double)WXEnvironment.sSDKInitExecuteTime);
+    quotas.put("firstScreenJSFExecuteTime",(double) firstScreenJSFExecuteTime);
+    quotas.put("componentCount",(double)componentCount);
+    return quotas;
+  }
+
+  public Map<String,String> getDimensionMap(){
+    Map<String,String> quotas = new HashMap<>();
+    quotas.put("bizType", bizType);
+    quotas.put("templateUrl", templateUrl);
+    quotas.put("pageName", pageName);
+    quotas.put("JSLibVersion", JSLibVersion);
+    quotas.put("WXSDKVersion", WXSDKVersion);
+    return quotas;
+  }
+
+  public static String[] getDimensions(){
+    return new String[]{"bizType","templateUrl","pageName","JSLibVersion","WXSDKVersion"};
+  }
+
+  public static String[] getMeasures(){
+    return new String[]{"JSTemplateSize",
+        "JSLibSize",
+        "communicateTime",
+        "screenRenderTime",
+        "totalTime",
+        "localReadTime",
+        "JSLibInitTime",
+        "networkTime",
+        "templateLoadTime",
+        "SDKInitInvokeTime",
+        "SDKInitExecuteTime"};
+  }
+
   @Override
   public String toString() {
     if (WXEnvironment.isApkDebugable()) {
@@ -303,6 +391,9 @@ public class WXPerformance {
              + ",JSLibSize:" + JSLibSize + ",templateUrl" + templateUrl
              + ",JSTemplateSize:" + JSTemplateSize + ",communicateTime:" + communicateTime
              + ",screenRenderTime:" + screenRenderTime
+             + ",firstScreenJSFExecuteTime:" + firstScreenJSFExecuteTime
+             + ",componentCount:" + componentCount
+             + ",initInvokeTime:"+WXEnvironment.sSDKInitInvokeTime+",initExecuteTime:"+WXEnvironment.sSDKInitExecuteTime
              + ",totalTime:" + totalTime + ",JSLibVersion:" + JSLibVersion + ",WXSDKVersion:" + WXSDKVersion
              + ",errCode:" + errCode + ",renderFailedDetail:" + renderFailedDetail
              + ",errMsg:" + errMsg;

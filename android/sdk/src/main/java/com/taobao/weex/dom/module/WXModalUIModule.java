@@ -287,8 +287,7 @@ public class WXModalUIModule extends WXModule {
         }
       }
       if (TextUtils.isEmpty(message)) {
-        WXLogUtils.e("[WXModalUIModule] alert param parse is null ");
-        return;
+        message="";
       }
       AlertDialog.Builder builder = new AlertDialog.Builder(mWXSDKInstance.getContext());
       builder.setMessage(message);
@@ -329,8 +328,7 @@ public class WXModalUIModule extends WXModule {
         }
       }
       if (TextUtils.isEmpty(message)) {
-        WXLogUtils.e("[WXModalUIModule] confirm param parse is null ");
-        return;
+        message="";
       }
       AlertDialog.Builder builder = new AlertDialog.Builder(mWXSDKInstance.getContext());
       builder.setMessage(message);
@@ -382,8 +380,7 @@ public class WXModalUIModule extends WXModule {
       }
 
       if (TextUtils.isEmpty(message)) {
-        WXLogUtils.e("[WXModalUIModule] confirm param parse is null ");
-        return;
+        message="";
       }
       AlertDialog.Builder builder = new AlertDialog.Builder(mWXSDKInstance.getContext());
       builder.setMessage(message);

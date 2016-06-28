@@ -1,4 +1,6 @@
 # navigator
+<span class="weex-version">0.4</span>
+
 ## Summary
 
 A series of navigator operation apis like `push`, `pop`.

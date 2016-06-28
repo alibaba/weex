@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.taobao.weex.inspector">
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="19"
+        tools:overrideLibrary="com.taobao.weappplus_sdk"/>
+
+    <application/>
+
+</manifest>

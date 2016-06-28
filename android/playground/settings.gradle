@@ -1,3 +1,13 @@
 include ':app'
-include ":weex_sdk_android"
-project(":weex_sdk_android").projectDir=new File("../sdk")
+
+include ":weex_sdk"
+project(":weex_sdk").projectDir=new File("../sdk")
+
+include ":inspector"
+project(":inspector").projectDir=new File("../inspector")
+
+include ":commons"
+project(":commons").projectDir=new File("../commons")
+
+include ":weex_debug"
+project(":weex_debug").projectDir=new File("../weex_debug")

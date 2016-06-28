@@ -211,7 +211,7 @@ public class WXRequest {
   /**
    * The request parameter
    */
-  public Map<String, Object> paramMap;
+  public Map<String, String> paramMap;
 
   /**
    * The request URL
@@ -230,4 +230,6 @@ public class WXRequest {
    * The request time out
    */
   public int timeoutMs = 2500;
+
+
 }

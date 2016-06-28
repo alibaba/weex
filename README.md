@@ -1,5 +1,7 @@
 # Weex
 
+[![CircleCI](https://circleci.com/gh/alibaba/weex/tree/dev.svg?style=svg&circle-token=b83b047a3a01f6ec26458a455530a5ddc261925f)](https://circleci.com/gh/alibaba/weex/tree/dev) [![Gitter](https://img.shields.io/gitter/room/weexteam/cn.svg?maxAge=2592000)](https://gitter.im/weexteam) <sub>(English Gitter)</sub> [![Gitter](https://img.shields.io/gitter/room/weexteam/cn.svg?maxAge=2592000)](https://gitter.im/weexteam/cn) <sub>(Chinese 中文聊天室)</sub>
+
 ## Pre-release Notes
 
 Weex is currently in Pre-release Stage.
@@ -39,15 +41,17 @@ Please ***INSTALL [Git for Windows](https://git-scm.com/download/win)*** and run
 0. [Add an example](./examples/README.md#add-an-example)
 
 ### iOS
+
 0. Prerequisites
-    0. Install [Node.js](http://nodejs.org/) 4.0+
-    0. Under project root
-        0. `npm install`, install project
+	0. Install [Node.js](http://nodejs.org/) 4.0+
+    0. Under project root 
+        0. `npm install`, install project 
         0. `./start`
     0. Install [iOS Environment](https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/AppStoreDistributionTutorial/Setup/Setup.html)
     0. Install [CocoaPods](https://guides.cocoapods.org/using/getting-started.html)
- 0. Open `ios/playground`
-    0. Run `pod install` in ios/playground
+ 0. Run playground
+    0. `cd ios/playground`
+    0. `pod install`
     0. Open `WeexDemo.xcworkspace` in Xcode
     0. Click <img src="http://img1.tbcdn.cn/L1/461/1/5470b677a2f2eaaecf412cc55eeae062dbc275f9" height="16" > (`Run` button) or use default hot key `cmd + r` in xcode
     0. If you want to run demo on your device. In `DemoDefine.h`(you can search this file by Xcode default hot key `cmd+space+o`), modify `CURRENT_IP` to your local IP

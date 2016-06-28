@@ -90,10 +90,15 @@ public class WXBackgroundDrawable extends Drawable {
 
   @Override
   public void draw(Canvas canvas) {
-    if ((!CSSConstants.isUndefined(mBorderRadius) && mBorderRadius > 0) || mBorderCornerRadii != null) {
-      drawRoundedBackgroundWithBorders(canvas);
-    } else {
+
+    updatePathEffect();
+    boolean roundedBorders = mBorderCornerRadii != null ||
+    (!CSSConstants.isUndefined(mBorderRadius) && mBorderRadius > 0);
+
+    if ((mBorderStyle == null || mBorderStyle == BorderStyle.SOLID) && !roundedBorders) {
       drawRectangularBackgroundWithBorders(canvas);
+    }else{
+      drawRoundedBackgroundWithBorders(canvas);
     }
   }
 
@@ -103,7 +108,7 @@ public class WXBackgroundDrawable extends Drawable {
     if ((useColor >>> 24) != 0) { // color is not transparent
       mPaint.setColor(useColor);
       mPaint.setStyle(Paint.Style.FILL);
-      canvas.drawPath(mPathForBorderRadius, mPaint);
+      canvas.drawPath(mPathForBorderRadiusOutline, mPaint);
     }
     // maybe draw borders?
     float fullBorderWidth = getFullBorderWidth();
@@ -112,16 +117,9 @@ public class WXBackgroundDrawable extends Drawable {
       mPaint.setColor(WXViewUtils.multiplyColorAlpha(borderColor, mAlpha));
       mPaint.setStyle(Paint.Style.STROKE);
       mPaint.setStrokeWidth(fullBorderWidth);
-      mPaint.setPathEffect(mPathEffectForBorderStyle);
       canvas.drawPath(mPathForBorderRadius, mPaint);
     }
   }
-
-    static Paint debugPaint = new Paint();
-    static {
-      debugPaint.setColor(Color.GREEN);
-      debugPaint.setStyle(Paint.Style.STROKE);
-    }
 
   private void drawRectangularBackgroundWithBorders(Canvas canvas) {
     int useColor = WXViewUtils.multiplyColorAlpha(mColor, mAlpha);
@@ -154,7 +152,6 @@ public class WXBackgroundDrawable extends Drawable {
       // Therefore we need to disable anti-alias, and
       // after drawing is done, we will re-enable it.
 
-      mPaint.setPathEffect(mPathEffectForBorderStyle);
       mPaint.setAntiAlias(false);
 
       if (mPathForBorder == null) {
@@ -266,18 +263,18 @@ public class WXBackgroundDrawable extends Drawable {
     float bottomLeftRadius = mBorderCornerRadii != null && !CSSConstants.isUndefined(mBorderCornerRadii[3]) ? mBorderCornerRadii[3] : defaultBorderRadius;
 
     mPathForBorderRadius.addRoundRect(
-        mTempRectForBorderRadius,
-        new float[]{
-            topLeftRadius,
-            topLeftRadius,
-            topRightRadius,
-            topRightRadius,
-            bottomRightRadius,
-            bottomRightRadius,
-            bottomLeftRadius,
-            bottomLeftRadius
-        },
-        Path.Direction.CW);
+            mTempRectForBorderRadius,
+            new float[]{
+                    topLeftRadius,
+                    topLeftRadius,
+                    topRightRadius,
+                    topRightRadius,
+                    bottomRightRadius,
+                    bottomRightRadius,
+                    bottomLeftRadius,
+                    bottomLeftRadius
+            },
+            Path.Direction.CW);
 
     float extraRadiusForOutline = 0;
 
@@ -286,23 +283,33 @@ public class WXBackgroundDrawable extends Drawable {
     }
 
     mPathForBorderRadiusOutline.addRoundRect(
-        mTempRectForBorderRadiusOutline,
-        new float[]{
-            topLeftRadius + extraRadiusForOutline,
-            topLeftRadius + extraRadiusForOutline,
-            topRightRadius + extraRadiusForOutline,
-            topRightRadius + extraRadiusForOutline,
-            bottomRightRadius + extraRadiusForOutline,
-            bottomRightRadius + extraRadiusForOutline,
-            bottomLeftRadius + extraRadiusForOutline,
-            bottomLeftRadius + extraRadiusForOutline
-        },
-        Path.Direction.CW);
+            mTempRectForBorderRadiusOutline,
+            new float[]{
+                    topLeftRadius + extraRadiusForOutline,
+                    topLeftRadius + extraRadiusForOutline,
+                    topRightRadius + extraRadiusForOutline,
+                    topRightRadius + extraRadiusForOutline,
+                    bottomRightRadius + extraRadiusForOutline,
+                    bottomRightRadius + extraRadiusForOutline,
+                    bottomLeftRadius + extraRadiusForOutline,
+                    bottomLeftRadius + extraRadiusForOutline
+            },
+            Path.Direction.CW);
+
+  }
+
+  private void updatePathEffect() {
 
     mPathEffectForBorderStyle = mBorderStyle != null
                                 ? mBorderStyle.getPathEffect(getFullBorderWidth())
                                 : null;
-  }  @Override
+    mPaint.setPathEffect(mPathEffectForBorderStyle);
+  }
+
+
+
+
+  @Override
   public void setAlpha(int alpha) {
     if (alpha != mAlpha) {
       mAlpha = alpha;
@@ -316,7 +323,9 @@ public class WXBackgroundDrawable extends Drawable {
   private float getFullBorderWidth() {
     return (mBorderWidth != null && !CSSConstants.isUndefined(mBorderWidth.getRaw(Spacing.ALL))) ?
            mBorderWidth.getRaw(Spacing.ALL) : 0f;
-  }  @Override
+  }
+
+  @Override
   public int getAlpha() {
     return mAlpha;
   }
@@ -328,14 +337,18 @@ public class WXBackgroundDrawable extends Drawable {
   private int getFullBorderColor() {
     return (mBorderColor != null && !CSSConstants.isUndefined(mBorderColor.getRaw(Spacing.ALL))) ?
            (int) (long) mBorderColor.getRaw(Spacing.ALL) : DEFAULT_BORDER_COLOR;
-  }  @Override
+  }
+
+  @Override
   public void setColorFilter(ColorFilter cf) {
     // do nothing
   }
 
   private int getBorderWidth(int position) {
     return mBorderWidth != null ? Math.round(mBorderWidth.get(position)) : 0;
-  }  @Override
+  }
+
+  @Override
   public int getOpacity() {
     return WXViewUtils.getOpacityFromColor(WXViewUtils.multiplyColorAlpha(
         mColor, mAlpha));
@@ -344,7 +357,9 @@ public class WXBackgroundDrawable extends Drawable {
   private int getBorderColor(int position) {
     // Check ReactStylesDiffMap#getColorInt() to see why this is needed
     return mBorderColor != null ? (int) (long) mBorderColor.get(position) : DEFAULT_BORDER_COLOR;
-  }  /* Android's elevation implementation requires this to be implemented to know where to draw the shadow. */
+  }
+
+  /* Android's elevation implementation requires this to be implemented to know where to draw the shadow. */
   @Override
   public void getOutline(@NonNull Outline outline) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {

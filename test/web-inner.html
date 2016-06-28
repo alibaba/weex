@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>IN WEB COMP</title>
+  <style>
+    #btn {
+      padding: 10px;
+      background-color: #f7f7f7;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>INNER WEB (in the &lt;web&gt; component)</h1>
+
+<h3 id="btn">SEND MESSAGE (Click Me !)</h3>
+<hr>
+<h4>MESSAGE content: </h4>
+<p id="msg"></p>
+  
+<script>
+  var btn = document.querySelector('#btn')
+  var msgP = document.querySelector('#msg')
+  var msg = {
+    type: 'weex',
+    content: [{
+      module: 'event',
+      method: 'openURL',
+      args: ['//m.taobao.com']
+    }],
+    from: location.host
+  }
+  msgP.innerHTML = JSON.stringify(msg)
+  btn.addEventListener('click', function () {
+    window.parent.postMessage(msg, '*')
+  })
+</script>
+</body>
+</html>

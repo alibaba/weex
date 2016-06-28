@@ -1,0 +1,76 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.2.3'
+        classpath files('../sdk/license/license-gradle-plugin-0.12.1.jar')
+        classpath files('../sdk/license/maven-license-plugin-1.10.b1.jar')
+        classpath files('../sdk/license/plexus-utils-3.0.24.jar')
+    }
+}
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.hierynomus.license'
+
+repositories {
+    jcenter()
+}
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+    resourcePrefix "weexcomm"
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 19
+        versionCode 1
+        versionName "1.0"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:support-v4:23.1.1'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile project(':weex_sdk')
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.facebook.fresco:fresco:0.10.0'
+
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.hamcrest:hamcrest-core:1.3'
+    testCompile 'org.javassist:javassist:3.20.0-GA'
+    testCompile 'org.mockito:mockito-core:1.10.19'
+    testCompile 'org.objenesis:objenesis:2.1'
+    testCompile 'org.powermock:powermock-core:1.6.4'
+    testCompile 'org.powermock:powermock-api-mockito:1.6.4'
+    testCompile 'org.powermock:powermock-module-junit4-common:1.6.4'
+    testCompile 'org.powermock:powermock-module-junit4:1.6.4'
+    testCompile 'org.powermock:powermock-module-junit4-legacy:1.6.4'
+    testCompile 'org.powermock:powermock-module-testng:1.6.4'
+    testCompile 'org.robolectric:robolectric:3.0-rc3'
+}
+
+license{
+    header=file('../sdk/license/LICENSE')
+    excludes ([])
+}
+
+preBuild.dependsOn licenseFormat
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.10'
+}

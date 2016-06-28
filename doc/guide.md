@@ -1,5 +1,4 @@
 # Guide
-
 * [Tutorial](tutorial.md)
 * [Syntax](syntax/main.md)
     * [Data Binding](syntax/data-binding.md)

@@ -5,11 +5,11 @@ import android.app.Application;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
+import android.test.TouchUtils;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.alibaba.weex.R;
 import com.alibaba.weex.util.ScreenShot;
@@ -57,9 +57,10 @@ public class WeexUiTestCaseTcTextStyleRow extends ActivityInstrumentationTestCas
 
         mViewGroup = (ViewGroup) waTestPageActivity.findViewById(R.id.container);
         setViewGroup(mViewGroup);
+        TouchUtils.scrollToBottom(this, waTestPageActivity, mViewGroup);
 
-        mCaseListIndexView = getTestCaseListViewByText("TC_");
-        Thread.sleep(3000);
+
+        mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, "TC_");        Thread.sleep(3000);
     }
 
 //    public void testPreConditions()
@@ -73,10 +74,10 @@ public class WeexUiTestCaseTcTextStyleRow extends ActivityInstrumentationTestCas
     public void testTextStyleRow(){
 
         for(final View caseView : mCaseListIndexView){
-           if (((TextView)caseView).getText().toString().equals("TC_Text")){
+           if (((WXTextView)caseView).getText().toString().equals("TC_Text")){
                Log.e(TAG, "TC_Text find");
 
-               final TextView inputView  = (TextView)caseView;
+               final WXTextView inputView  = (WXTextView)caseView;
                 mInstrumentation.runOnMainSync(new Runnable() {
                     @Override
                     public void run() {
@@ -95,12 +96,14 @@ public class WeexUiTestCaseTcTextStyleRow extends ActivityInstrumentationTestCas
                Log.e(TAG, myGroup.toString());
 
                ArrayList<View> inputListView = new ArrayList<View>();
-               myGroup.findViewsWithText(inputListView, "TC_Text_Style_Row", View.FIND_VIEWS_WITH_TEXT);
+               inputListView = ViewUtil.findViewWithText(myGroup, "TC_Text_Style_Row");
+
+//               myGroup.findViewsWithText(inputListView, "TC_Text_Style_Row", View.FIND_VIEWS_WITH_TEXT);
 
                Log.e(TAG, "TC_Text_Style_Row size== " + inputListView.size());
 
                if(inputListView.size()!=0){
-                  final TextView inputTypeView = (TextView)inputListView.get(0);
+                  final WXTextView inputTypeView = (WXTextView)inputListView.get(0);
 
                    mInstrumentation.runOnMainSync(new Runnable() {
                        @Override
@@ -130,8 +133,8 @@ public class WeexUiTestCaseTcTextStyleRow extends ActivityInstrumentationTestCas
 
                inputListView = ViewUtil.getAllChildViews(myGroup);
                for(View view :inputListView) {
-                   if (view instanceof TextView || view instanceof WXTextView) {
-                       final TextView inputTypeView = (TextView) view;
+                   if (view instanceof WXTextView || view instanceof WXTextView) {
+                       final WXTextView inputTypeView = (WXTextView) view;
                        mInstrumentation.runOnMainSync(new Runnable() {
                            @Override
                            public void run() {
@@ -172,7 +175,7 @@ public class WeexUiTestCaseTcTextStyleRow extends ActivityInstrumentationTestCas
         mViewGroup.findViewsWithText(outViews, byText, View.FIND_VIEWS_WITH_TEXT);
 
         for (View view :  outViews){
-            String viewText = ((TextView)view).getText().toString();
+            String viewText = ((WXTextView)view).getText().toString();
             Log.e(TAG, "viewText ==" + viewText);
 
 
@@ -186,10 +189,10 @@ public class WeexUiTestCaseTcTextStyleRow extends ActivityInstrumentationTestCas
     public View findMyCaseByText(String caseText){
         if (mCaseListIndexView.size() == 0) return null;
 
-        TextView view = null;
+        WXTextView view = null;
         for(int i=0; i<mCaseListIndexView.size();i++){
 
-            view = (TextView)mCaseListIndexView.get(i);
+            view = (WXTextView)mCaseListIndexView.get(i);
 
             if (view.getText().toString().toLowerCase().contains(caseText.toLowerCase())){
                 return view;
