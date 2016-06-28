@@ -2,30 +2,13 @@ machine:
   node:
     version: 4.2.1
 test:
-  pre:
-    # start the emulator
-    - emulator -avd circleci-android19 -no-audio -no-window:
-        background: true
-        parallel: true
-        timeout: 600
-    # wait for it to have booted
-    - circle-android wait-for-boot
   override:
-    # - cd android/playground && ./gradlew assembleDebug
-    # - cp -r android/playground/app/build/outputs $CIRCLE_ARTIFACTS # playground artifacts
-    # - cp -r android/sdk/build/outputs/ $CIRCLE_ARTIFACTS # sdk artifacts
-    # - cd android/playground && ./gradlew testDebugUnitTest 
-    # - cp -r android/sdk/build/reports/tests/debug/ $CIRCLE_ARTIFACTS/unit_test_report
-    
-    
-    # run tests  against the emulator.
-    - cp -vf test/circleci-android/Constants.java android/playground/app/src/main/java/com/alibaba/weex/constants/Constants.java
-    - cd android/playground && ./gradlew clean cAT
-    # copy the build outputs to artifacts
-    - cp -r android/playground/app/build/outputs $CIRCLE_ARTIFACTS
-    # copy the test results to the test results directory.
-    - cp -r android/playground/app/build/outputs/androidTest-results/* $CIRCLE_TEST_REPORTS
-    - cp -r android/playground/app/build/test/* $CIRCLE_TEST_REPORTS 
+    - npm run test
+    - cd android/playground && ./gradlew assembleDebug
+    - cp -r android/playground/app/build/outputs $CIRCLE_ARTIFACTS # playground artifacts
+    - cp -r android/sdk/build/outputs/ $CIRCLE_ARTIFACTS # sdk artifacts
+    - cd android/playground && ./gradlew testDebugUnitTest 
+    - cp -r android/sdk/build/reports/tests/debug/ $CIRCLE_ARTIFACTS/unit_test_report 
 
 dependencies: 
   cache_directories:
