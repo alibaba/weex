@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.alibaba.weex.R;
 import com.alibaba.weex.util.ScreenShot;
@@ -16,6 +15,7 @@ import com.alibaba.weex.util.ViewUtil;
 import com.alibaba.weex.WXPageActivity;
 import com.alibaba.weex.WeappJsBaseTestCase;
 import com.alibaba.weex.constants.Constants;
+import com.taobao.weex.ui.view.WXTextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,8 +57,7 @@ public class WeexUiTestCaseTcElementOpt extends ActivityInstrumentationTestCase2
         mViewGroup = (ViewGroup) waTestPageActivity.findViewById(R.id.container);
         setViewGroup(mViewGroup);
 
-        mCaseListIndexView = getTestCaseListViewByText("TC_");
-        Thread.sleep(1000);
+mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, "TC_");        Thread.sleep(1000);
     }
 
 //    public void testPreConditions()
@@ -72,10 +71,10 @@ public class WeexUiTestCaseTcElementOpt extends ActivityInstrumentationTestCase2
     public void testElementOpt() {
 
         for (final View caseView : mCaseListIndexView) {
-            if (((TextView) caseView).getText().toString().equals("TC_Event")) {
+            if (((WXTextView) caseView).getText().toString().equals("TC_Event")) {
                 Log.e(TAG, "TC_Event find");
 
-                final TextView inputView = (TextView) caseView;
+                final WXTextView inputView = (WXTextView) caseView;
                 mInstrumentation.runOnMainSync(new Runnable() {
                     @Override
                     public void run() {
@@ -89,12 +88,13 @@ public class WeexUiTestCaseTcElementOpt extends ActivityInstrumentationTestCase2
                 setActivity(WXPageActivity.wxPageActivityInstance);
                 ViewGroup optGroup = (ViewGroup) (getActivity().findViewById(R.id.container));
                 ArrayList<View> otpViewList = new ArrayList<View>();
-                optGroup.findViewsWithText(otpViewList, "TC_Event_ElementOpt", View.FIND_VIEWS_WITH_TEXT);
+                otpViewList = ViewUtil.findViewWithText(optGroup, "TC_Event_ElementOpt");
+//                optGroup.findViewsWithText(otpViewList, "TC_Event_ElementOpt", View.FIND_VIEWS_WITH_TEXT);
                 sleep(2000);
 
                 for (View view : otpViewList) {
-                    if (view instanceof TextView) {
-                        final TextView optView = (TextView) view;
+                    if (view instanceof WXTextView) {
+                        final WXTextView optView = (WXTextView) view;
                         mInstrumentation.runOnMainSync(new Runnable() {
                             @Override
                             public void run() {
@@ -118,13 +118,13 @@ public class WeexUiTestCaseTcElementOpt extends ActivityInstrumentationTestCase2
                 List<View> optListView = util.getAllChildViews(getActivity().findViewById(R.id.container));
                 //分别点击“文本1”一次，“文本1，点击我增加控件”一次，"文本2"两次，截图
                 for (View child : optListView) {
-                    if (child instanceof TextView) {
+                    if (child instanceof WXTextView) {
 
-                        String childValue = ((TextView) child).getText().toString();
+                        String childValue = ((WXTextView) child).getText().toString();
                         Log.e(TAG, "opt child vaule : " + childValue);
 
                         if (childValue.equals("点击我，在我上方增加一个文本")) {
-                            final TextView wenbenClickAndThenAddText = (TextView) child;
+                            final WXTextView wenbenClickAndThenAddText = (WXTextView) child;
                             mInstrumentation.runOnMainSync(new Runnable() {
                                 @Override
                                 public void run() {
@@ -143,15 +143,15 @@ public class WeexUiTestCaseTcElementOpt extends ActivityInstrumentationTestCase2
                 List<View> optListView1 = util1.getAllChildViews(getActivity().findViewById(R.id.container));
                 //分别点击“文本1”一次，“文本1，点击我增加控件”一次，"文本2"两次，截图
                 for (View child1 : optListView1) {
-                    if (child1 instanceof TextView) {
+                    if (child1 instanceof WXTextView) {
 
-                        String childValue1 = ((TextView) child1).getText().toString();
+                        String childValue1 = ((WXTextView) child1).getText().toString();
                         Log.e(TAG, "opt child1 vaule : " + childValue1);
 
                         if (childValue1.equals("文本1，点击我增加控件")) {
                             Log.e(TAG, "childValue.equals(\"文本1，点击我增加控件\")");
 
-                            final TextView wenbenClickAndThenAddText1 = (TextView) child1;
+                            final WXTextView wenbenClickAndThenAddText1 = (WXTextView) child1;
                             mInstrumentation.runOnMainSync(new Runnable() {
                                 @Override
                                 public void run() {
@@ -171,15 +171,15 @@ public class WeexUiTestCaseTcElementOpt extends ActivityInstrumentationTestCase2
                 /////////////////////////////////////////
                 optListView1 = util1.getAllChildViews(getActivity().findViewById(R.id.container));
                 for(View child : optListView1){
-                    if (child instanceof TextView) {
+                    if (child instanceof WXTextView) {
 
-                        String childValue = ((TextView) child).getText().toString();
+                        String childValue = ((WXTextView) child).getText().toString();
                         Log.e(TAG, "点击我，在我下方增加一个文本 vaule : " + childValue);
 
                         if(childValue.equals("点击我，在我下方增加一个文本")){
                             Log.e(TAG, "childValue.equals(\"点击我，在我下方增加一个文本\")");
 
-                            final TextView wenbenClickAndThenAddText1 = (TextView)child;
+                            final WXTextView wenbenClickAndThenAddText1 = (WXTextView)child;
                             mInstrumentation.runOnMainSync(new Runnable() {
                                 @Override
                                 public void run() {
@@ -202,15 +202,15 @@ public class WeexUiTestCaseTcElementOpt extends ActivityInstrumentationTestCase2
                 ////////////////////////////////////////////////////////
                 optListView1 = util1.getAllChildViews(getActivity().findViewById(R.id.container));
                 for(View child : optListView1){
-                    if (child instanceof TextView) {
+                    if (child instanceof WXTextView) {
 
-                        String childValue = ((TextView) child).getText().toString();
+                        String childValue = ((WXTextView) child).getText().toString();
                         Log.e(TAG, "文本2，点击我自动消失 vaule : " + childValue);
 
                         if(childValue.equals("文本2，点击我自动消失")){
                             Log.e(TAG, "childValue.equals(\"文本2，点击我自动消失\")");
 
-                            final TextView wenbenClickAndThenAddText1 = (TextView)child;
+                            final WXTextView wenbenClickAndThenAddText1 = (WXTextView)child;
                             mInstrumentation.runOnMainSync(new Runnable() {
                                 @Override
                                 public void run() {
@@ -232,15 +232,15 @@ public class WeexUiTestCaseTcElementOpt extends ActivityInstrumentationTestCase2
                 ////////////////////////////////////////////////////////
                 optListView1 = util1.getAllChildViews(getActivity().findViewById(R.id.container));
                 for(View child : optListView1){
-                    if (child instanceof TextView) {
+                    if (child instanceof WXTextView) {
 
-                        String childValue = ((TextView) child).getText().toString();
+                        String childValue = ((WXTextView) child).getText().toString();
                         Log.e(TAG, "文本2，点击我自动消失 vaule : " + childValue);
 
                         if(childValue.equals("文本2，点击我自动消失")){
                             Log.e(TAG, "childValue.equals(\"文本2，点击我自动消失\")");
 
-                            final TextView wenbenClickAndThenAddText1 = (TextView)child;
+                            final WXTextView wenbenClickAndThenAddText1 = (WXTextView)child;
                             mInstrumentation.runOnMainSync(new Runnable() {
                                 @Override
                                 public void run() {
@@ -263,9 +263,9 @@ public class WeexUiTestCaseTcElementOpt extends ActivityInstrumentationTestCase2
                 //////////////////////////////
                 optListView1 = util1.getAllChildViews(getActivity().findViewById(R.id.container));
                 for(View child : optListView1){
-                    if (child instanceof TextView) {
+                    if (child instanceof WXTextView) {
 
-                        String childValue = ((TextView) child).getText().toString();
+                        String childValue = ((WXTextView) child).getText().toString();
                         Log.e(TAG, "点击测试Move方法 vaule : " + childValue);
 
                         if(childValue.equals("点击测试Move方法")){
@@ -379,7 +379,7 @@ public class WeexUiTestCaseTcElementOpt extends ActivityInstrumentationTestCase2
         mViewGroup.findViewsWithText(outViews, byText, View.FIND_VIEWS_WITH_TEXT);
 
         for (View view :  outViews){
-            String viewText = ((TextView)view).getText().toString();
+            String viewText = ((WXTextView)view).getText().toString();
             Log.e(TAG, "viewText ==" + viewText);
 
         }
@@ -392,10 +392,10 @@ public class WeexUiTestCaseTcElementOpt extends ActivityInstrumentationTestCase2
     public View findMyCaseByText(String caseText){
         if (mCaseListIndexView.size() == 0) return null;
 
-        TextView view = null;
+        WXTextView view = null;
         for(int i=0; i<mCaseListIndexView.size();i++){
 
-            view = (TextView)mCaseListIndexView.get(i);
+            view = (WXTextView)mCaseListIndexView.get(i);
 
             if (view.getText().toString().toLowerCase().contains(caseText.toLowerCase())){
                 return view;

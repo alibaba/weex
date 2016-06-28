@@ -204,6 +204,7 @@
  */
 package com.taobao.weex.ui.component;
 
+import android.util.TypedValue;
 import android.widget.CompoundButton;
 
 import com.taobao.weex.WXSDKInstance;
@@ -217,14 +218,15 @@ import java.util.Map;
 
 public class WXSwitch extends WXComponent{
 
-  public WXSwitch(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
-    super(instance, dom, parent, instanceId, isLazy);
+  public WXSwitch(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
+    super(instance, dom, parent, isLazy);
   }
 
   @Override
   protected void initView() {
     super.initView();
     mHost = new WXSwitchView(mContext);
+    getView().setTextSize(TypedValue.COMPLEX_UNIT_PX,22);
   }
 
   @Override

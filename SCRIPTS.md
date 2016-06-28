@@ -2,51 +2,17 @@
 
 There are several scripts for end-user and developer.
 
-## For end-user
+**For end users you can only know `npm run build` and `npm run serve` to start and `npm run dev:examples` to write or modify a demo.**
 
-**clean `*.js` in `examples/build` and `test/build` folders**
-```shell
-npm run clean
-```
-
-**create `.we` file(run `npm run create -- -h` for help)**
-```shell
-npm run create -- [name] -o [directory]
-```
-
-**transform `*.we` in `examples` and `test` folders**
-```shell
-npm run transform
-```
-
-**npm run clean && npm run transform**
-```shell
-npm run dev
-```
-
-**run a file server at `12580` port**
-```shell
-npm run serve
-```
-
-**run a watcher for `*.we` changed**
-```shell
-npm run watch
-```
-
-## For SDK Developer
-
-**build js-framework and h5-render**
-```shell
-npm run build
-```
-
-**run test under js-framework and h5-render**
-```shell
-npm run ci
-```
-
-**copy the built files to `playground`**
-```shell
-npm run copy
-```
+* `npm run build:browser`: build HTML5 renderer to `dist/browser.js`.
+* `npm run build:native`: build JS framework for native renderer to `dist/native.js`.
+* `npm run build:examples`: build all js bundles from `examples/` to `examples/build/`.
+* `npm run build:test`: build all js bundles from `test/` to `test/build/`.
+* `npm run build`: build all above.
+* `npm run dev:browser`, `npm run dev:native`, `npm run dev:examples`, `npm run dev:test` are the watcher mode for all build scripts, any file changes will automatically be built.
+* `npm run serve`: run a http server so you can access all examples in browser through `http://localhost:12580/`. **note: you must run `npm run build` first to prepare all the built files.**
+* `npm run clean:examples`: clean `examples/build/`.
+* `npm run clean:test`: clean `test/build/`.
+* `npm run clean`: clean both `examples/build/` and `test/build/`.
+* `npm run copy`: copy JS framework and examples into Android project.
+* `npm run lint`, `npm run test`, `npm run cover` and `npm run ci` are something quality assurance.

@@ -253,6 +253,19 @@ public class WXSoInstallMgrSdk {
     mContext = c;
   }
 
+  public static boolean isX86(){
+    String cpuType = _cpuType();
+    return cpuType.equalsIgnoreCase(X86);
+  }
+
+  public static boolean isCPUSupport(){
+    String cpuType = _cpuType();
+    if (cpuType.equalsIgnoreCase(MIPS) ) {
+      return false;
+    }
+    return true;
+  }
+
   /**
    * Load so library.
    * First, it will try use {@link System#loadLibrary(String)} to load library.
@@ -263,7 +276,7 @@ public class WXSoInstallMgrSdk {
    */
   public static boolean initSo(String libName, int version, IWXUserTrackAdapter utAdapter) {
     String cpuType = _cpuType();
-    if (cpuType.equalsIgnoreCase(MIPS) || cpuType.equalsIgnoreCase(X86)) {
+    if (cpuType.equalsIgnoreCase(MIPS) ) {
       return false;
     }
 
@@ -280,17 +293,17 @@ public class WXSoInstallMgrSdk {
 
       InitSuc = true;
     } catch (Exception e) {
-      if (cpuType.contains(ARMEABI)) {
+      if (cpuType.contains(ARMEABI)||cpuType.contains(X86)) {
         commit(utAdapter, WXErrorCode.WX_ERR_LOAD_SO.getErrorCode(), WXErrorCode.WX_ERR_LOAD_SO.getErrorMsg() + ":" + e.getMessage());
       }
       InitSuc = false;
     } catch (java.lang.UnsatisfiedLinkError e2) {
-      if (cpuType.contains(ARMEABI)) {
+      if (cpuType.contains(ARMEABI)||cpuType.contains(X86)) {
         commit(utAdapter, WXErrorCode.WX_ERR_LOAD_SO.getErrorCode(), WXErrorCode.WX_ERR_LOAD_SO.getErrorMsg() + ":" + e2.getMessage());
       }
       InitSuc = false;
     } catch (java.lang.Error e3) {
-      if (cpuType.contains(ARMEABI)) {
+      if (cpuType.contains(ARMEABI)||cpuType.contains(X86)) {
         commit(utAdapter, WXErrorCode.WX_ERR_LOAD_SO.getErrorCode(), WXErrorCode.WX_ERR_LOAD_SO.getErrorMsg() + ":" + e3.getMessage());
       }
       InitSuc = false;
@@ -319,7 +332,7 @@ public class WXSoInstallMgrSdk {
         }
 
         //Fail for loading file from libs, extract so library from so and load it.
-        if (cpuType.equalsIgnoreCase(MIPS) || cpuType.equalsIgnoreCase(X86)) {
+        if (cpuType.equalsIgnoreCase(MIPS)) {
           return false;
         } else {
           try {

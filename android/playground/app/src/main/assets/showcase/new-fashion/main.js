@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/baa6430ed97f67450c99f0ab9340d767", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/73a943c402110a473f70526894de4e0c", [], function(__weex_require__, __weex_exports__, __weex_module__){
 	__webpack_require__(22);
 	__webpack_require__(23);
 	__webpack_require__(24);
@@ -63,8 +63,8 @@
 	      show0: true,
 	      show1: false,
 	      show2: false,
-	      displayRefresh: true,
-	      displayLoading: true,
+	      displayRefresh: 'show',
+	      displayLoading: 'show',
 	    }},
 	    methods: {
 	      ready: function () {
@@ -573,42 +573,15 @@
 	          var self = this;
 	          var config = self.$getConfig(function () {
 	                  }) || {};
-	          console.log('config', config)
-	          // self._app.IS_TM = config.appname === 'TM';
 	          self._app.IS_H5 = typeof window === 'object';
 	          self._app.IS_TEST = config.bundleUrl ? config.bundleUrl.indexOf('wh_test') > -1 : false;
 	          self._app.OS = config.os;
 	          self._app.PLATFORM = config.platform;
-	          // var spma = 'a222r';
-	          // var spmb = '7952482';
 	          var title = '新风尚主会场';
-	          self.$setTitle(title);
 	          self._app.config = {
-	              // spma: spma,
-	              // spmb: spmb,
 	              title: title,
-	              pageName: '2016-xfs-main',
-	              // pageSpm: [spma, spmb, 0, 0].join('.')
+	              pageName: '2016-xfs-main'
 	          };
-
-	          if (self._app.IS_H5) {
-	              // self.$setSpm(spma, spmb);
-	              if (window.lib && lib.mtop && lib.mtop.config) {
-	                  window.lib.mtop.config.prefix = 'api';
-	                  window.lib.mtop.config.subDomain = 'm';
-	              }
-	          } else {
-	              if (self._app.PLATFORM === "android") {
-	                  self.$userTrack('enter', self._app.config.pageName, "", {
-	                      'spm-cnt': self._app.config.pageSpm
-	                  });
-	              } else {
-	                  self.$call('utInfo', 'enterEvent', self._app.config.pageName, {
-	                      'spm-cnt': self._app.config.pageSpm
-	                  });
-	              }
-	          }
-
 	      },
 	      _initUtil: function () {
 	          var self = this;
@@ -762,20 +735,36 @@
 	      },
 	      handleRefresh: function (e) {
 	        var vm = this
-	        vm.displayRefresh = true
-	        this.$call('modal', 'alert',  {
-	          message: 'refreshing.'
-	        }, function () {
-	          vm.displayRefresh = false
-	        })
+	        vm.displayRefresh = 'show'
+	        var timer = __weex_require__('@weex-module/timer')
+	        if (timer) {
+	          timer.setTimeout(function () {
+	            vm.displayRefresh = 'hide'
+	          }, 2000)
+	        } else {
+	          this.$call('modal', 'alert',  {
+	            message: 'refreshing.'
+	          }, function () {
+	            vm.displayRefresh = 'hide'
+	          })
+	        }
 	      },
 	      handleLoading: function (e) {
-	        this.displayLoading = true
+	        var vm = this
+	        vm.displayLoading = 'show'
 	        this.$call('modal', 'toast', {
 	          message: 'loading.'
 	        })
-	        this.simLoadingData(this.cnt++)
-	        this.displayLoading = false
+	        var timer = __weex_require__('@weex-module/timer')
+	        if (timer) {
+	          timer.setTimeout(function () {
+	            vm.simLoadingData(vm.cnt++)
+	            vm.displayLoading = 'hide'
+	          }, 2000)
+	        } else {
+	          vm.simLoadingData(vm.cnt++)
+	          vm.displayLoading = 'hide'
+	        }
 	      },
 	      simLoadingData: function (num) {
 	        if (num >= 3) {
@@ -789,16 +778,15 @@
 	    }
 	  };
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "wxc-navpage",
 	  "attr": {
-	    "dataRole": "navbar",
+	    "dataRole": "none",
 	    "height": function () {return this.navBarHeight},
 	    "backgroundColor": "#ff5898",
 	    "title": "新风尚会场",
 	    "titleColor": "white",
-	    "leftItemTitle": "更多",
-	    "leftItemColor": "white",
 	    "rightItemSrc": "http://gtms02.alicdn.com/tps/i2/TB1ED7iMpXXXXXEXXXXWA_BHXXX-48-48.png"
 	  },
 	  "children": [
@@ -810,6 +798,9 @@
 	      "children": [
 	        {
 	          "type": "refresh",
+	          "classList": [
+	            "refresh"
+	          ],
 	          "events": {
 	            "refresh": "handleRefresh"
 	          },
@@ -821,7 +812,7 @@
 	          },
 	          "children": [
 	            {
-	              "type": "spinner"
+	              "type": "loading-indicator"
 	            },
 	            {
 	              "type": "text",
@@ -901,6 +892,9 @@
 	        },
 	        {
 	          "type": "loading",
+	          "classList": [
+	            "loading"
+	          ],
 	          "events": {
 	            "loading": "handleLoading"
 	          },
@@ -922,15 +916,31 @@
 	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "content": {
 	    "color": "#353535",
-	    "backgroundColor": "#666666"
+	    "backgroundColor": "#666666",
+	    "position": "absolute",
+	    "top": 0,
+	    "left": 0,
+	    "right": 0,
+	    "bottom": 0
+	  },
+	  "refresh": {
+	    "display": "flex",
+	    "alignItems": "center",
+	    "justifyContent": "center"
+	  },
+	  "loading": {
+	    "display": "flex",
+	    "alignItems": "center",
+	    "justifyContent": "center"
 	  }
-	}
 	})
-	;__weex_bootstrap__("@weex-component/baa6430ed97f67450c99f0ab9340d767", {
+	})
+	;__weex_bootstrap__("@weex-component/73a943c402110a473f70526894de4e0c", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -972,7 +982,8 @@
 	    }
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": function () {return ['btn', 'btn-' + (this.type), 'btn-sz-' + (this.size)]},
 	  "children": [
@@ -984,8 +995,9 @@
 	      }
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "btn": {
 	    "marginBottom": 0,
 	    "alignItems": "center",
@@ -1078,7 +1090,7 @@
 	  "btn-txt-sz-small": {
 	    "fontSize": 30
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -1096,7 +1108,8 @@
 	    methods: {}
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": function () {return ['h' + (this.level)]},
 	  "style": {
@@ -1111,8 +1124,9 @@
 	      }
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "h1": {
 	    "height": 110,
 	    "paddingTop": 20,
@@ -1137,7 +1151,7 @@
 	  "txt-h3": {
 	    "fontSize": 42
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -1164,7 +1178,8 @@
 	    }
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": [
 	    "item"
@@ -1181,8 +1196,9 @@
 	      "type": "content"
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "item": {
 	    "paddingTop": 25,
 	    "paddingBottom": 25,
@@ -1193,7 +1209,7 @@
 	    "borderBottomWidth": 1,
 	    "borderColor": "#dddddd"
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -1216,7 +1232,8 @@
 	    }
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": function () {return ['panel', 'panel-' + (this.type)]},
 	  "style": {
@@ -1252,8 +1269,9 @@
 	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "panel": {
 	    "marginBottom": 20,
 	    "backgroundColor": "#ffffff",
@@ -1301,7 +1319,7 @@
 	    "color": "#ffffff"
 	  },
 	  "panel-body": {}
-	}
+	})
 	})
 
 /***/ },
@@ -1318,7 +1336,8 @@
 	    }}
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": function () {return ['tip', 'tip-' + (this.type)]},
 	  "children": [
@@ -1330,8 +1349,9 @@
 	      }
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "tip": {
 	    "paddingLeft": 36,
 	    "paddingRight": 36,
@@ -1370,7 +1390,7 @@
 	  "tip-txt-danger": {
 	    "color": "#a94442"
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -1465,7 +1485,8 @@
 	    }
 	}
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "style": {
 	    "overflow": "hidden",
@@ -1480,12 +1501,13 @@
 	      "type": "content"
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "wrap": {
 	    "overflow": "hidden"
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -1550,7 +1572,8 @@
 	    }
 	}
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": [
 	    "wrap"
@@ -1573,8 +1596,9 @@
 	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "wrap": {
 	    "overflow": "hidden",
 	    "position": "relative"
@@ -1584,7 +1608,7 @@
 	    "position": "absolute",
 	    "transform": "translateY(0) translateZ(0)"
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -1638,7 +1662,8 @@
 	        }
 	    }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": [
 	    "container"
@@ -1671,7 +1696,7 @@
 	    {
 	      "type": "image",
 	      "classList": [
-	        "left-image"
+	        "right-image"
 	      ],
 	      "attr": {
 	        "naviItemPosition": "right",
@@ -1727,8 +1752,9 @@
 	      }
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "container": {
 	    "flexDirection": "row",
 	    "position": "fixed",
@@ -1765,18 +1791,18 @@
 	  "left-image": {
 	    "position": "absolute",
 	    "bottom": 20,
-	    "right": 28,
+	    "left": 28,
 	    "width": 50,
 	    "height": 50
 	  },
 	  "right-image": {
 	    "position": "absolute",
 	    "bottom": 20,
-	    "left": 28,
+	    "right": 28,
 	    "width": 50,
 	    "height": 50
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -1786,7 +1812,8 @@
 	;__weex_define__("@weex-component/wxc-navpage", [], function(__weex_require__, __weex_exports__, __weex_module__){
 	__webpack_require__(9);
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": [
 	    "wrapper"
@@ -1823,8 +1850,9 @@
 	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "wrapper": {
 	    "position": "absolute",
 	    "top": 0,
@@ -1833,7 +1861,7 @@
 	    "bottom": 0,
 	    "width": 750
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -1884,7 +1912,8 @@
 	        }
 	    }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": [
 	    "wrapper"
@@ -1924,8 +1953,9 @@
 	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "wrapper": {
 	    "width": 750,
 	    "position": "absolute",
@@ -1951,7 +1981,7 @@
 	    "right": 0,
 	    "height": 88
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -1980,7 +2010,8 @@
 	        }
 	    }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": [
 	    "container"
@@ -2023,8 +2054,9 @@
 	      }
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "container": {
 	    "flex": 1,
 	    "flexDirection": "column",
@@ -2049,7 +2081,7 @@
 	    "textAlign": "center",
 	    "fontSize": 20
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -2087,7 +2119,8 @@
 	    }
 	  };
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "image",
 	  "style": {
 	    "width": function () {return this.width},
@@ -2100,7 +2133,7 @@
 	  "events": {
 	    "click": "_clickHandler"
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -2134,7 +2167,8 @@
 	    }
 	  };
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "container",
 	  "children": [
 	    {
@@ -2193,7 +2227,7 @@
 	      ]
 	    }
 	  ]
-	}
+	})
 	})
 
 /***/ },
@@ -2218,7 +2252,8 @@
 	    }
 	  };
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "text",
 	  "classList": [
 	    "link"
@@ -2230,7 +2265,7 @@
 	  "attr": {
 	    "value": function () {return this.text}
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -2259,7 +2294,8 @@
 	    }
 	  };
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "container",
 	  "classList": [
 	    "container"
@@ -2326,8 +2362,9 @@
 	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "banner": {
 	    "width": 750,
 	    "height": 782
@@ -2376,7 +2413,7 @@
 	    "marginLeft": 5,
 	    "marginRight": 5
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -2838,7 +2875,8 @@
 	    }
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "container",
 	  "children": [
 	    {
@@ -2989,8 +3027,9 @@
 	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "title": {
 	    "width": 750,
 	    "height": 100
@@ -3031,7 +3070,7 @@
 	    "color": "#999999",
 	    "textAlign": "center"
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -3060,7 +3099,8 @@
 	    }
 	  };
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "container",
 	  "children": [
 	    {
@@ -3118,8 +3158,9 @@
 	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "title": {
 	    "width": 750,
 	    "height": 100
@@ -3160,7 +3201,7 @@
 	    "width": 750,
 	    "height": 230
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -3191,7 +3232,8 @@
 	    }
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "container",
 	  "shown": function () {return !this.ds.isHide},
 	  "children": [
@@ -3310,8 +3352,9 @@
 	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "title": {
 	    "width": 750,
 	    "height": 100
@@ -3330,7 +3373,7 @@
 	    "width": 240,
 	    "height": 588
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -3352,7 +3395,8 @@
 	    }}
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "container",
 	  "shown": function () {return !this.ds.isHide},
 	  "children": [
@@ -3384,8 +3428,9 @@
 	      }
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "title": {
 	    "width": 750,
 	    "height": 100
@@ -3393,7 +3438,7 @@
 	  "big-banner-container": {
 	    "marginBottom": 4
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -3613,7 +3658,8 @@
 	    }
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "container",
 	  "children": [
 	    {
@@ -3699,8 +3745,9 @@
 	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "title": {
 	    "width": 750,
 	    "height": 100
@@ -3753,7 +3800,7 @@
 	    "right": 0,
 	    "top": 65
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -3793,7 +3840,8 @@
 	    }
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "container",
 	  "children": [
 	    {
@@ -3866,8 +3914,9 @@
 	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "title": {
 	    "width": 750,
 	    "height": 100
@@ -3875,7 +3924,7 @@
 	  "tm-banner": {
 	    "bottom": 4
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -3918,7 +3967,8 @@
 	    }
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "container",
 	  "classList": [
 	    "container"
@@ -3954,8 +4004,9 @@
 	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "title": {
 	    "width": 750,
 	    "height": 100
@@ -3964,7 +4015,7 @@
 	    "marginBottom": 4,
 	    "backgroundColor": "#C0BABC"
 	  }
-	}
+	})
 	})
 
 /***/ }

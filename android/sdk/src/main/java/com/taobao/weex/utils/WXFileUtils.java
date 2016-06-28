@@ -220,9 +220,12 @@ public class WXFileUtils {
    * @return the Content of the file
    */
   public static String loadFileContent(String path, Context context) {
-    StringBuilder builder = new StringBuilder();
+    StringBuilder builder ;
     try {
       InputStream in = context.getAssets().open(path);
+
+      builder = new StringBuilder(in.available()+10);
+
       BufferedReader localBufferedReader = new BufferedReader(new InputStreamReader(in));
       char[] data = new char[2048];
       int len = -1;
@@ -237,9 +240,12 @@ public class WXFileUtils {
           WXLogUtils.e("WXFileUtils loadFileContent: " + WXLogUtils.getStackTrace(e));
         }
       }
+      return builder.toString();
+      
     } catch (IOException e) {
       e.printStackTrace();
     }
-    return builder.toString();
+
+    return "";
   }
 }

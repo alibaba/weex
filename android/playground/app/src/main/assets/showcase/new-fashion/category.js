@@ -45,7 +45,7 @@
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/5431263137f2dd27df2998658c228e48", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/918304b35162c0fa434158149beb7c82", [], function(__weex_require__, __weex_exports__, __weex_module__){
 	__webpack_require__(19);
 
 	;
@@ -500,7 +500,8 @@
 	    }
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "container",
 	  "children": [
 	    {
@@ -651,8 +652,9 @@
 	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "title": {
 	    "width": 750,
 	    "height": 100
@@ -693,9 +695,9 @@
 	    "color": "#999999",
 	    "textAlign": "center"
 	  }
-	}
 	})
-	;__weex_bootstrap__("@weex-component/5431263137f2dd27df2998658c228e48", {
+	})
+	;__weex_bootstrap__("@weex-component/918304b35162c0fa434158149beb7c82", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -729,7 +731,8 @@
 	    }
 	  };
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "image",
 	  "style": {
 	    "width": function () {return this.width},
@@ -742,7 +745,7 @@
 	  "events": {
 	    "click": "_clickHandler"
 	  }
-	}
+	})
 	})
 
 /***/ }

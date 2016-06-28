@@ -45,7 +45,7 @@
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/8deee4229e8e47478c967d585a917549", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/7731ee0d1017fad0adf656990885c808", [], function(__weex_require__, __weex_exports__, __weex_module__){
 	__webpack_require__(19);
 	__webpack_require__(20);
 
@@ -60,7 +60,8 @@
 	    }}
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "container",
 	  "shown": function () {return !this.ds.isHide},
 	  "children": [
@@ -92,8 +93,9 @@
 	      }
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "title": {
 	    "width": 750,
 	    "height": 100
@@ -101,9 +103,9 @@
 	  "big-banner-container": {
 	    "marginBottom": 4
 	  }
-	}
 	})
-	;__weex_bootstrap__("@weex-component/8deee4229e8e47478c967d585a917549", {
+	})
+	;__weex_bootstrap__("@weex-component/7731ee0d1017fad0adf656990885c808", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -137,7 +139,8 @@
 	    }
 	  };
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "image",
 	  "style": {
 	    "width": function () {return this.width},
@@ -150,7 +153,7 @@
 	  "events": {
 	    "click": "_clickHandler"
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -185,7 +188,8 @@
 	    }
 	  };
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "container",
 	  "children": [
 	    {
@@ -244,7 +248,7 @@
 	      ]
 	    }
 	  ]
-	}
+	})
 	})
 
 /***/ }

@@ -1,4 +1,5 @@
 # How it works
+<span class="weex-version">0.4</span>
 
 ## Overview
 

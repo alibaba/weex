@@ -1,8 +1,18 @@
 # JS Framework APIs
+<span class="weex-version">0.4</span>
+
+## Intro about JS Runtime
 
 There APIs is designed for JS Framework and Native Engine working together.
 
-## Called from native and implemented by JS Framework
+Considering the limitation of mobile phone resource, *Weex runs only one JS runtime* to handle all Weex instances. So it need a multi-instance management layer in JavaScript. These JS Framework APIs are just designed to finish the management job.
+
+* First, each Weex instance have a lifecycle, from `createInstance` to `destroyInstance`. During this period, we can import some extra data by `refreshInstance`.
+* To communicate with Native Engine, we have a couple of APIs: `callNative` and `callJS`. They are used to call each other by some commands and messages.
+* And when JS runtime start at the beginning of the app launching, we need something initialized and configured. So we supply some APIs like `registerComponents`, `registerModules`.
+* The last API is just for debugging, we supply an API named `getRoot` to return the whole virtual-DOM data for developers.
+
+## Called by native and supplied from JS Framework
 
 ### `createInstance(instanceId, code, options, data)`
 
@@ -17,6 +27,7 @@ Example:
 
 ```
 createInstance('x', 'define(...); define(...); define(...); bootstrap(...)')
+createInstance('x', '...', { bundleUrl, debug, ... }, { a: 1, b: 2 }})
 ```
 
 ### `destroyInstance(instanceId)`
@@ -37,18 +48,14 @@ refreshInstance('x', {a: 100, b: 200})
 
 Register all native components
 
-* `components`: A map that the keys are component types and the values are config of each type of component. *Currently it supports any attrubite of node by defualt. For example, the `append` which forces the appending way (`tree` or `node`) when first rendering, but will be overwritten by given the attribute on element in source code.*
+* `components`: A map of which keys are component types and values are force options part of each type of component. *Currently it supports `append` attribute which forces the appending mechanism (`tree` or `node`) when first time rendering.*
 
 Example:
 
 ```
 registerComponents({
   container: {}, 
-  text: {
-    style: {
-      color: 'red'
-    }
-  }, 
+  text: {}, 
   image: {},
   slider: {append: 'tree'},
   list: {}, 
@@ -61,9 +68,9 @@ registerComponents({
 
 Register the name, methods and args format of each module
 
-* `modules`: A map that collects all module definitions. Each module definition is a list which has several API definitions. And each API definition has a `name` string and a `args` array which contains a list of each parameter's type.
+* `modules`: A map that collects all native module definitions. Each module definition is an array which has several API definitions. Each API definition has a `name` string and an `args` array which contains a list of each parameter's type.
 
-**NOTE: if the parameter's type is `node` or `function`, then it will automatically transfer to a string of `node reference` or `function id`**
+**NOTE: the `node` type data will actually return its `ref` property. And the `function` type data will actually return a unique function id referring to it.**
 
 Example:
 
@@ -81,7 +88,7 @@ registerModules({
 Fire events or callbacks to an existed Weex instance from Native Engine
 
 * `tasks[]`: A task list. Each task has a `method="fireEvent|callback"` property and a list of `args`.
-    - In `fireEvent` method, the `args` is `ref` of the target, event `type` and event `data` in order.
+    - In `fireEvent` method, the `args` is `ref` of the target, event `type`, event `data` and `domChanges` description in order. **Note: if some event make virtual-DOM data changed (e.g. value changed in `<input>` or current index changed in `<slider>`), the changing of the target element will be passed as `domChanges`.**
     - In `callback` method, the `args` is `funcId` of a handler, `data` and `ifKeepAlive` which describes whether this callback handler should be keeping called. (Each callback handler is matched with a `funcId` when the original call happens.)
 
 Example:

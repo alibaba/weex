@@ -1,10 +1,11 @@
 # Common Style
+<span class="weex-version">0.4</span>
 
 All of weex tags share some common style rules
 
 ## Box Model
 
-![box model](http://www.codeproject.com/KB/HTML/567385/boxmodel-image.png)
+![box model](../images/css-boxmodel.png)
 
 Weex box model based on the CSS box model, all of weex elements can be considered as boxes.  The term "box model" is used when talking about design and layout. The box model is essentially a box that wraps around every HTML element. It consists of margins, borders, paddings, and the actual content.
 
@@ -68,19 +69,19 @@ Flexbox is the default and only style model in Weex, so you don't have to add `d
 
 - `flex-direction`: `row` | `column`
 
-The flex-direction property specifies the direction of the flexible items inside the flex container. Default value of flex-direction is `column` (top-to-bottom).
+The flex-direction property specifies the direction of the flexible items inside the flex container. Default value is `column` (top-to-bottom).
 
 - `justify-content`: `flex-start` | `flex-end` | `center` | `space-between`
 
-The justify-content property horizontally aligns the flexible container's items when the items do not use all available space on the main-axis. `flex-start` is the default value, meaning the flex items are positioned at the beginning of the container. `flex-end`` means the items are positioned at the end of the container. `center` means the items are positioned at the center of the container. `space-between` means the items are positioned with space between the lines.
+The justify-content property horizontally aligns the flexible container's items when the items do not use all available space on the main-axis. Default value is `flex-start` meaning the flex items are positioned at the beginning of the container. `flex-end` means the items are positioned at the end of the container. `center` means the items are positioned at the center of the container. `space-between` means the items are positioned with space between the lines.
 
-![justify-content](http://www.w3.org/TR/css3-flexbox/images/flex-pack.svg)
+![justify-content](../images/css-flexbox-justify.svg)
 
 - `align-items`: `stretch` | `flex-start` | `center` | `flex-end`
 
-The align-items property vertically aligns the flexible container's items when the items do not use all available space on the cross-axis. `stretch` is  the default value, meaning the items are stretched to fit the container. `flex-start` means the items are positioned at the top of the container; `flex-end` means the items are positioned at the bottom of the container; `center` means items are positioned at the center of the container (vertically).
+The align-items property vertically aligns the flexible container's items when the items do not use all available space on the cross-axis. Default value is `stretch` meaning the items are stretched to fit the container. `flex-start` means the items are positioned at the top of the container; `flex-end` means the items are positioned at the bottom of the container; `center` means items are positioned at the center of the container (vertically).
 
-![align-items](http://gtms02.alicdn.com/tps/i2/TB1VnHKMXXXXXcEaXXXDldN_pXX-1018-502.jpg)
+![align-items](../images/css-flexbox-align.jpg)
 
 ### Flex item
 
@@ -128,18 +129,31 @@ mixed direction alignment:
 </template>
 ```
 
+one text align left , the other float right:
+
+![one text align left , the other float right](../images/css-flexbox-sample.png)
+
+```html
+<template>
+<div style="flex-direction: row; justify-content: space-between;">
+   <text>WEEX</text>
+   <text>2016-05-08</text>
+</div>
+</template>
+```
+
 ## Position
 
 we can use properties below to control placement of weex tag
 
-- `position`: `relative` | `absolute` | `fixed` | `sticky`, `relative` is the default value
+- `position`: `relative` | `absolute` | `fixed` | `sticky`, default value is `relative`. 
 
 `relative` means the item is positioned relative to its normal position. `absolute` means the item is positioned relative to its container. `fixed` keeps the elements position fixed when the page is scrolling. `sticky` keeps elements positioned inside the viewport as "stuck" at the top or "relative" at its original place depending on whether does it about to scroll out of the view.
 
-- `top`:  &lt;number&gt;, upward offset value, default `0`
-- `bottom`: &lt;number&gt;, downward offset value, default `0`
-- `left`: &lt;number&gt;, leftward offset value, default `0`
-- `right`: &lt;number&gt;, rightward offset value, default `0`
+- `top`:  &lt;number&gt;, upward offset value, default value is  `0`
+- `bottom`: &lt;number&gt;, downward offset value, default value is  `0`
+- `left`: &lt;number&gt;, leftward offset value, default value is  `0`
+- `right`: &lt;number&gt;, rightward offset value, default value is  `0`
 
 ### Examples
 
@@ -161,8 +175,8 @@ we can use properties below to control placement of weex tag
 
 ## Other Common Style
 
-- `opacity`:  &lt;number&gt;, value within range 0 to 1. 1 is not transparent at all, 0.5 is 50% see-through, and 0 is completely transparent. 1 is the default value.
-- `background-color`: &lt;colors&gt; sets the background color of an element, `transparent` is the default value.
+- `opacity`:  &lt;number&gt;, value within range 0 to 1. 1 is not transparent at all, 0.5 is 50% see-through, and 0 is completely transparent, default value is 1.
+- `background-color`: &lt;colors&gt; sets the background color of an element, default value is `transparent`.
 
 ## Type of Style Value
 

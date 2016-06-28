@@ -45,7 +45,7 @@
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/de0c661a89abd9ebbbf4e61f69038784", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/453b2fdb10f58e5716098d6f050875fc", [], function(__weex_require__, __weex_exports__, __weex_module__){
 	__webpack_require__(21);
 	__webpack_require__(20);
 
@@ -67,7 +67,8 @@
 	    }
 	  };
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "container",
 	  "classList": [
 	    "container"
@@ -134,8 +135,9 @@
 	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "banner": {
 	    "width": 750,
 	    "height": 782
@@ -184,9 +186,9 @@
 	    "marginLeft": 5,
 	    "marginRight": 5
 	  }
-	}
 	})
-	;__weex_bootstrap__("@weex-component/de0c661a89abd9ebbbf4e61f69038784", {
+	})
+	;__weex_bootstrap__("@weex-component/453b2fdb10f58e5716098d6f050875fc", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -220,7 +222,8 @@
 	    }
 	  };
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "image",
 	  "style": {
 	    "width": function () {return this.width},
@@ -233,7 +236,7 @@
 	  "events": {
 	    "click": "_clickHandler"
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -268,7 +271,8 @@
 	    }
 	  };
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "container",
 	  "children": [
 	    {
@@ -327,7 +331,7 @@
 	      ]
 	    }
 	  ]
-	}
+	})
 	})
 
 /***/ },
@@ -353,7 +357,8 @@
 	    }
 	  };
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "text",
 	  "classList": [
 	    "link"
@@ -365,7 +370,7 @@
 	  "attr": {
 	    "value": function () {return this.text}
 	  }
-	}
+	})
 	})
 
 /***/ }

@@ -204,13 +204,9 @@
  */
 package com.taobao.weex.ui.component;
 
-import android.text.TextUtils;
-
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.ui.component.list.WXListComponent;
 import com.taobao.weex.ui.view.WXFrameLayout;
-import com.taobao.weex.ui.view.listview.BounceRecyclerView;
 
 /**
  * div component
@@ -219,13 +215,8 @@ public class WXBaseRefresh extends WXVContainer {
 
   private WXLoadingIndicator mLoadingIndicator;
 
-  public WXBaseRefresh(WXSDKInstance instance, WXDomObject node, WXVContainer parent, String instanceId, boolean lazy) {
-    super(instance, node, parent, instanceId, lazy);
-  }
-
-  @Override
-  protected void initView() {
-    mHost = new WXFrameLayout(mContext);
+  public WXBaseRefresh(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
+    super(instance, node, parent, lazy);
   }
 
   @Override
@@ -243,24 +234,6 @@ public class WXBaseRefresh extends WXVContainer {
   @Override
   public WXFrameLayout getView() {
     return (WXFrameLayout) super.getView();
-  }
-
-  @WXComponentProp(name = "display")
-  public void setDisplay(String display) {
-    if (!TextUtils.isEmpty(display)) {
-      if (display.equals("hide")) {
-        if (getParent() instanceof WXListComponent && getParent().getView() instanceof BounceRecyclerView) {
-          BounceRecyclerView brv = (BounceRecyclerView) getParent().getView();
-          brv.refreshState();
-        }
-      }
-    }
-  }
-
-  public void onPullLoadingIndicator(int progress) {
-    if (mLoadingIndicator != null) {
-      mLoadingIndicator.onPullLoadingIndicator(progress);
-    }
   }
 
   private void checkLoadingIndicator(WXComponent child) {

@@ -44,11 +44,13 @@
 /* 0 */
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/27404869ac7d04c3c768257387390d1b", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/1518171e61dbbc39d28ab3409c7cfdff", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __weex_module__.exports = {
 	    data: function () {return {
+	      refresh_display : 'hide',
+	      loading_display : 'hide',
 	      backgroundColor: 'red',
 	      composite: 'false',
 	      shopList: [
@@ -354,11 +356,23 @@
 	      ],
 	    }},
 	    methods: {
-	      loadmore: function(e) {
+	      onrefresh: function(e) {
+	        var self = this;
+	        self.refresh_display = 'show';
 	        this.$call('modal', 'toast', {
-	          'message': 'loadmore',
-	          'duration': 2.0
+	          'message': "onrefresh",
+	          'duration': 2
 	        });
+	        self.refresh_display = 'hide';
+	      },
+	      onloading: function(e) {
+	        var self = this;
+	        self.loading_display = 'show';
+	        this.$call('modal', 'toast', {
+	          'message': "onloading",
+	          'duration': 2
+	        });
+	        self.loading_display = 'hide';
 	      },
 	      oncellclick: function(e) {
 	        this.$call('modal', 'toast', {
@@ -380,18 +394,52 @@
 
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "list",
 	  "classList": [
 	    "list"
 	  ],
-	  "events": {
-	    "loadmore": "loadmore"
-	  },
 	  "attr": {
 	    "loadmoreoffset": "2000"
 	  },
 	  "children": [
+	    {
+	      "type": "refresh",
+	      "classList": [
+	        "refresh-view"
+	      ],
+	      "attr": {
+	        "display": function () {return this.refresh_display}
+	      },
+	      "events": {
+	        "refresh": "onrefresh"
+	      },
+	      "children": [
+	        {
+	          "type": "loading-indicator",
+	          "style": {
+	            "height": 60,
+	            "width": 60,
+	            "color": "rgb(238,162,54)"
+	          }
+	        },
+	        {
+	          "type": "text",
+	          "classList": [
+	            "refresh-arrow"
+	          ],
+	          "style": {
+	            "textAlign": "center",
+	            "color": "rgb(238,162,54)"
+	          },
+	          "shown": function () {return (this.refresh_display==='hide')},
+	          "attr": {
+	            "value": "Pull To Refresh"
+	          }
+	        }
+	      ]
+	    },
 	    {
 	      "type": "cell",
 	      "append": "tree",
@@ -1081,10 +1129,47 @@
 	          ]
 	        }
 	      ]
+	    },
+	    {
+	      "type": "loading",
+	      "classList": [
+	        "refresh-view"
+	      ],
+	      "attr": {
+	        "display": function () {return this.loading_display}
+	      },
+	      "events": {
+	        "loading": "onloading"
+	      },
+	      "children": [
+	        {
+	          "type": "text",
+	          "classList": [
+	            "refresh-arrow"
+	          ],
+	          "style": {
+	            "textAlign": "center",
+	            "color": "rgb(238,162,54)"
+	          },
+	          "shown": function () {return (this.refresh_display==='hide')},
+	          "attr": {
+	            "value": "Load more"
+	          }
+	        },
+	        {
+	          "type": "loading-indicator",
+	          "style": {
+	            "height": 60,
+	            "width": 60,
+	            "color": "#3192e1"
+	          }
+	        }
+	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "flexRow": {
 	    "flexDirection": "row"
 	  },
@@ -1145,10 +1230,19 @@
 	  "smallImg": {
 	    "width": 20,
 	    "height": 20
+	  },
+	  "refresh-view": {
+	    "height": 120,
+	    "width": 750,
+	    "display": "flex",
+	    "MsFlexAlign": "center",
+	    "WebkitAlignItems": "center",
+	    "WebkitBoxAlign": "center",
+	    "alignItems": "center"
 	  }
-	}
 	})
-	;__weex_bootstrap__("@weex-component/27404869ac7d04c3c768257387390d1b", {
+	})
+	;__weex_bootstrap__("@weex-component/1518171e61dbbc39d28ab3409c7cfdff", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
