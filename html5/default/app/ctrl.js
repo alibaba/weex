@@ -104,9 +104,7 @@ export function getRootElement () {
 }
 
 export function fireEvent (ref, type, e, domChanges) {
-  _.debug(`Fire a "${type}" event on an element(${ref})`,
-            `in instance(${this.id})`)
-
+  _.debug(`Fire a "${type}" event on an element(${ref}) in instance(${this.id})`)
   if (Array.isArray(ref)) {
     ref.some((ref) => {
       return this.fireEvent(ref, type, e) !== false
