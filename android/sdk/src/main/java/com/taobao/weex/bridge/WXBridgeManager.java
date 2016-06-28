@@ -308,7 +308,7 @@ public class WXBridgeManager implements Callback {
   private StringBuilder mLodBuilder = new StringBuilder(500);
 
   private WXBridgeManager() {
-    launchInspector(WXEnvironment.sDebugMode);
+    launchInspector(WXEnvironment.sRemoteDebugMode);
     if (mWXBridge == null) {
       mWXBridge = new WXBridge();
     }
@@ -364,7 +364,7 @@ public class WXBridgeManager implements Callback {
    */
   public void restart() {
     mInit = false;
-    launchInspector(WXEnvironment.sDebugMode);
+    launchInspector(WXEnvironment.sRemoteDebugMode);
     if (mWXBridge == null) {
       mWXBridge = new WXBridge();
     }

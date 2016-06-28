@@ -50,8 +50,8 @@ public class WXApplication extends Application {
    */
   private void initDebugEnvironment(boolean enable, String host) {
     if (!"DEBUG_SERVER_HOST".equals(host)) {
-      WXEnvironment.sDebugMode = enable;
-      WXEnvironment.sDebugProxyUrl = "ws://" + host + ":8088/debugProxy/native";
+      WXEnvironment.sRemoteDebugMode = enable;
+      WXEnvironment.sRemoteDebugProxyUrl = "ws://" + host + ":8088/debugProxy/native";
     }
   }
 
