@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="bg_corner">12dp</dimen>
+    <dimen name="pf_font_padding">16dp</dimen>
+    <dimen name="pf_font_size">16dp</dimen>
+</resources>

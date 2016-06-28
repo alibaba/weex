@@ -2,11 +2,13 @@ package com.alibaba.weex;
 
 import android.app.Application;
 
-import com.alibaba.weex.extend.Components.WTRichText;
-import com.alibaba.weex.extend.ImageAdapter;
-import com.alibaba.weex.extend.Modules.RenderModule;
-import com.alibaba.weex.extend.Modules.WXEventModule;
-import com.taobao.weex.WXEnvironment;
+import com.alibaba.weex.commons.adapter.FrescoImageAdapter;
+import com.alibaba.weex.extend.PlayDebugAdapter;
+import com.alibaba.weex.extend.component.WTRichText;
+import com.alibaba.weex.extend.module.RenderModule;
+import com.alibaba.weex.extend.module.WXEventModule;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.taobao.weex.InitConfig;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.common.WXException;
 
@@ -17,11 +19,15 @@ public class WXApplication extends Application {
     super.onCreate();
     WXSDKEngine.addCustomOptions("appName", "WXSample");
     WXSDKEngine.addCustomOptions("appGroup", "WXApp");
-//    WXSDKEngine.addCustomOptions("infoCollect", "false");
-    WXSDKEngine.init(this,null,null,new ImageAdapter(),null);
+    WXSDKEngine.initialize(this,
+                           new InitConfig.Builder()
+                               .setImgAdapter(new FrescoImageAdapter())
+                               .setDebugAdapter(new PlayDebugAdapter())
+                               .build()
+                          );
 
     try {
-
+      Fresco.initialize(this);
       WXSDKEngine.registerComponent("wtRichText", WTRichText.class);
       WXSDKEngine.registerModule("render", RenderModule.class);
       WXSDKEngine.registerModule("event", WXEventModule.class);

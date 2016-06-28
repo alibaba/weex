@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_menuitem"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/iv_menuicon"
+        android:layout_marginLeft="9dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"/>
+
+    <TextView
+        android:id="@+id/tv_menutext"
+        android:layout_width="56dp"
+        android:layout_height="18dp"
+        android:gravity="center"
+        android:textSize="14dp"
+        android:singleLine="true"
+        android:textColor="@color/pf_white"/>
+</LinearLayout><!-- From: file:/Users/ricky/Desktop/ricky/allgitcode/prettyfish/prettyfish_base/src/main/res/layout/prettyfish_floatmenu_item.xml -->

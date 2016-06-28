@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/tablehead"
+        layout="@layout/prettyfish_tableitem" />
+
+    <ListView
+        android:id="@+id/lv_datalist"
+        android:layout_below="@id/tablehead"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@null" />
+
+    <ScrollView
+        android:id="@+id/ll_rowdata"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:background="#FFF"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/tv_rowdata"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="#000"
+            />
+    </ScrollView>
+
+</RelativeLayout><!-- From: file:/Users/ricky/Desktop/ricky/allgitcode/prettyfish/prettyfish_base/src/main/res/layout/prettyfish_table.xml -->

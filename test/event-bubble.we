@@ -1,0 +1,45 @@
+<style>
+  .outer {
+    width: 750;
+    height: 600;
+    background-color: green;
+  }
+  .inner {
+    width: 600;
+    height: 400;
+    background-color: blue;
+  }
+  .link {
+    width: 750;
+    height: 100;
+    background-color: red;
+  }
+</style>
+
+<template>
+  <div class="outer" onclick="handleOuter">
+    <div class="inner" onclick="handleInner"></div>
+    <a onclick="test" class="link" href="https://h5.m.taobao.com">
+      <text onclick="textClick">click text</text>
+    </a>
+  </div>
+</template>
+
+<script>
+  module.exports = {
+    methods: {
+      handleOuter: function () {
+        console.log('click outer div!')
+      },
+      handleInner: function () {
+        console.log('click inner div!')
+      },
+      textClick: function () {
+        console.log('click text!')
+      },
+      test: function () {
+        console.log('click on a!')
+      }
+    }
+  }
+</script>
