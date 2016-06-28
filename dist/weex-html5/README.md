@@ -38,7 +38,7 @@ Then you can use `window.weex` in the page.
 
 ### DEMO
 
-in the root path of `node_modules/weex-html5`, you can input command `npm run serve` to run a server in localhost:12580. The index page is a simple demo whos source code is in the path `node_modules/weex-html5/demo/index.we`.
+In the root path of `node_modules/weex-html5`, the index page can show a simple demo whos source code is in the path `node_modules/weex-html5/demo/index.we`.
 
 ### Initialize
 
@@ -150,29 +150,6 @@ module.exports = {
 var weex = require('weex-html5')
 weex.install(require('./myAPIModule.js'))
 ```
-
-### Develop
-
-#### Directories
-
-**entry files**
-
-* ``index.html``
-
-**source code files**
-
-* ``api`` directory: implementation of APIs.
-* ``bridge`` directory:
-  * ``sender.js``: encapsulate the two types of callJS method (fireEvent and callback).
-  * ``receiver.js`` export the methods callNative and nativeLog to global.
-* ``components`` directory: implementation of native components (container, text, image, list, slider, tabheader etc.).
-* ``weex.js`` export weex to the global. Do the initiation.
-* ``protocol.js``
-  * registeration of components.
-  * registeration of APIs.
-* ``loader.js`` implementation of three different type of loaders (mtop/xhr/source).
-* ``FrameUpdater.js`` execute tasks throuth requestAnimationFrame.
-* ``config.js`` configuration.
 
 ### MORE
 

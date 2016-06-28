@@ -25,6 +25,3 @@ pids
 html5/test/e2e/reports
 html5/test/e2e/screenshots
 html5/test/e2e/logs
-
-# legacy
-src
