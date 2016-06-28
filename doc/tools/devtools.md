@@ -23,7 +23,7 @@ Weex devtools is a custom devtools for weex that implements [Chrome Debugging Pr
 ![inspector-console](../images/inspector-console.png "inspector-console")
 
 ##### Resource
-![inspector-resource](../images/inspector-console.png "inspector-resource")
+![inspector-resource](../images/inspector-resource.png "inspector-resource")
 
 #### Debugger
 
