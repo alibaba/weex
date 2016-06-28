@@ -428,13 +428,36 @@ public class WXListComponent extends WXVContainer implements
     @Override
     public void addChild(WXComponent child, int index) {
         super.addChild(child, index);
-        int adapterPosition = index == -1 ? getView().getAdapter().getItemCount() - 1 : index;
-        getView().getAdapter().notifyItemInserted(adapterPosition);
-        if (child.getDomObject().containsEvent(WXEventType.APPEAR) || child.getDomObject().containsEvent(WXEventType.DISAPPEAR)) {
-            mAppearComponents.put(adapterPosition, child);
-            child.registerAppearEvent = true;
-        }
+
+        int adapterPosition = index == -1 ? mChildren.size() - 1 : index;
+      BounceRecyclerView view =  getView();
+      if(view != null) {
+        view.getAdapter().notifyItemInserted(adapterPosition);
+      }
+
+      if(hasAppearAndDisAppearEvent(child)){
+        mAppearComponents.put(adapterPosition, child);
+        child.registerAppearEvent = true;
+      }
     }
+
+  private boolean hasAppearAndDisAppearEvent(WXComponent child) {
+
+    if(child.getDomObject().containsEvent(WXEventType.APPEAR) || child.getDomObject().containsEvent(WXEventType.DISAPPEAR)){
+      return true;
+    }else if(child instanceof WXVContainer){
+      WXVContainer container=(WXVContainer)child;
+      for(int i=0;i<container.childCount();i++){
+        WXComponent component=container.getChild(i);
+        if(hasAppearAndDisAppearEvent(component)){
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
 
     /**
      * RecyclerView manage its children in a way that different from {@link WXVContainer}. Therefore,
@@ -649,9 +672,9 @@ public class WXListComponent extends WXVContainer implements
       try {
         String offset = mDomObj.attr.getLoadMoreOffset();
 
-        if (TextUtils.isEmpty(offset)) {
-          return;
-        }
+            if (TextUtils.isEmpty(offset)) {
+                offset="0";
+            }
 
         if (offScreenY < Integer.parseInt(offset)) {
           String loadMoreRetry = mDomObj.attr.getLoadMoreRetry();
@@ -670,34 +693,31 @@ public class WXListComponent extends WXVContainer implements
 
     @Override
     public void notifyAppearStateChange(int firstVisible, int lastVisible,int directionX,int directionY) {
+        List<Integer> unRegisterKeys = new ArrayList<>();
+        //notify appear state
+        for (int i = 0, len = mAppearComponents.size(); i < len; i++) {
+            int key = mAppearComponents.keyAt(i);
+            WXComponent value = mAppearComponents.get(key);
+            if (!value.registerAppearEvent) {
+                unRegisterKeys.add(key);
+                continue;
+            }
+            if (key >= firstVisible && key <= lastVisible && !value.appearState) {
+              String direction=directionY>0?"up":"down";
+                value.notifyAppearStateChange(WXEventType.APPEAR,direction);
+                value.appearState = true;
 
-      List<Integer> unRegisterKeys = new ArrayList<>();
-
-      //notify appear state
-      for (int i = 0, len = mAppearComponents.size(); i < len; i++) {
-        int key = mAppearComponents.keyAt(i);
-        WXComponent value = mAppearComponents.get(key);
-        if (!value.registerAppearEvent) {
-          unRegisterKeys.add(key);
-          continue;
+            } else if ((key < firstVisible || key > lastVisible) && value.appearState) {
+              String direction=directionY>0?"up":"down";
+              value.notifyAppearStateChange(WXEventType.DISAPPEAR,direction);
+                value.appearState = false;
+            }
         }
-        if (key >= firstVisible && key <= lastVisible && !value.appearState) {
-          String direction=directionY>0?"up":"down";
-          value.notifyAppearStateChange(WXEventType.APPEAR,direction);
-          value.appearState = true;
-        } else if ((key < firstVisible || key > lastVisible) && value.appearState) {
-          String direction=directionY>0?"up":"down";
-          value.notifyAppearStateChange(WXEventType.DISAPPEAR,direction);
-          value.appearState = false;
+
+        //remove unregister Event
+        for (int i = 0, len = unRegisterKeys.size(); i < len; i++) {
+            mAppearComponents.remove(unRegisterKeys.get(i));
         }
-        WXLogUtils.d(TAG, "key:" + key + " " + "appear:" + value.appearState);
-      }
-
-      //remove unregister Event
-      for (int i = 0, len = unRegisterKeys.size(); i < len; i++) {
-        mAppearComponents.remove(unRegisterKeys.get(i));
-      }
-
     }
 
     public void unbindAppearComponents(WXComponent component) {
