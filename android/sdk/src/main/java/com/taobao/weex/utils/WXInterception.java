@@ -237,24 +237,6 @@ public class WXInterception {
   /**
    * Derive this class and override {@link #invoke(Object, Method, Object[])} to implement an
    * interception handler.
-   * <p/>
-   * A typical usage example as below:<pre>
-   * public class PackageManagerProxy extends InterceptionHandler {
-   * <p/>
-   *     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-   *         if ("getActivityInfo".equals(method.getName())) {
-   *             final ActivityInfo found = mActivities.get(((ComponentName) args[0]).getClassName());
-   *             if (found != null) {
-   *                 ...
-   *                 return found;
-   *             }
-   *         }
-   *         return super.invoke(proxy, method, args);
-   *     }
-   * <p/>
-   *     private final Map<String, ActivityInfo> mActivities;
-   *     ...
-   * }</pre>
    */
   public abstract static class InterceptionHandler<T> implements InvocationHandler {
 

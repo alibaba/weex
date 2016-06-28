@@ -360,6 +360,7 @@ class WXDomStatement {
 
 
     rootDom.calculateLayout(mLayoutContext);
+
     if(WXSDKManager.getInstance().getSDKInstance(mInstanceId)!=null) {
       WXSDKManager.getInstance().getSDKInstance(mInstanceId).cssLayoutTime(System.currentTimeMillis() - start);
     }
@@ -369,6 +370,7 @@ class WXDomStatement {
     //			WXLogUtils.d("csslayout", rootDom.toString());
     //			WXLogUtils.d("csslayout", "------------end------------");
     //		}
+
 
     layoutAfter(rootDom);
 
