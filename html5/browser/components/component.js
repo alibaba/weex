@@ -334,11 +334,11 @@ Component.prototype = {
 
   style: Object.create(flexbox), // style setters
 
-  // event setters
+  // event funcs
   //  - 1. 'updator' for updating attrs or styles with out triggering messages.
   //  - 2. 'extra' for binding extra data.
   //  - 3. 'setter' set a specified event handler.
-  // setters should be functions like this:
+  // funcs should be functions like this: (take 'change' event as a example)
   // {
   //   change: {
   //     updator () {
@@ -348,7 +348,6 @@ Component.prototype = {
   //         }
   //       }
   //     },
-
   //     extra () {
   //       return {
   //         value: this.checked
