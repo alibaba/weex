@@ -405,6 +405,7 @@ public class WXModalUIModule extends WXModule {
         public void onClick(DialogInterface dialog, int which) {
           Map<String, Object> result = new HashMap<String, Object>();
           result.put(WXConst.RESULT, cancelTitle_f);
+          result.put(WXConst.DATA, editText.getText().toString());
           WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId, result);
         }
       });
