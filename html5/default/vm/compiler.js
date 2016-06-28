@@ -273,6 +273,11 @@ export function _compileCustomComponent (component, target, dest, type, meta) {
   const subVm = new Vm(type, component, context, dest, undefined, {
     'hook:init': function () {
       context._setId(target.id, null, this)
+      // bind template earlier because of lifecycle issues
+      this._externalBinding = {
+        parent: context,
+        template: target
+      }
     },
     'hook:created': function () {
       context._bindSubVm(this, target, meta.repeat)
@@ -307,9 +312,21 @@ export function _compileNativeComponent (template, dest, type) {
     _.debug('compile to create element for', type)
     element = this._createElement(type)
   }
-  // TODO it was a root element when not in a fragment
+
   if (!this._rootEl) {
     this._rootEl = element
+    // bind event earlier because of lifecycle issues
+    const binding = this._externalBinding || {}
+    const target = binding.template
+    const vm = binding.parent
+    if (target && target.events && vm && element) {
+      for (const type in target.events) {
+        const handler = vm[target.events[type]]
+        if (handler) {
+          element.addEvent(type, _.bind(handler, vm))
+        }
+      }
+    }
   }
 
   this._bindElement(element, template)
