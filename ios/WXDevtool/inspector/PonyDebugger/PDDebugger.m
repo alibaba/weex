@@ -29,13 +29,12 @@
 #import "WXCSSDomainController.h"
 
 #import "WXAppConfiguration.h"
+#import "WXDeviceInfo.h"
 
 #import <objc/runtime.h>
 #import <objc/message.h>
 #import <sys/utsname.h>
 
-
-static NSString *const PDClientIDKey = @"com.squareup.PDDebugger.clientID";
 static NSString *const PDBonjourServiceType = @"_ponyd._tcp";
 
 
@@ -96,20 +95,12 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket;
 {
     _isConnect = YES;
-    NSString *clientID = [[NSUserDefaults standardUserDefaults] stringForKey:PDClientIDKey];
-    if (!clientID) {
-        CFUUIDRef uuid = CFUUIDCreate(NULL);
-        clientID = CFBridgingRelease(CFUUIDCreateString(NULL, uuid));
-        assert(clientID);
-        CFRelease(uuid);
-
-        [[NSUserDefaults standardUserDefaults] setObject:clientID forKey:PDClientIDKey];
-    }
-
+    
+    NSString *deviceID = [WXDeviceInfo getDeviceID];
     NSString *machine = [self _deviceName] ? : @"";
     NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"] ?: [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
     NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-        clientID, @"deviceId",
+        deviceID, @"deviceId",
         @"iOS", @"platform",
         machine, @"model",
         [WXAppConfiguration appVersion],@"weexVersion",
