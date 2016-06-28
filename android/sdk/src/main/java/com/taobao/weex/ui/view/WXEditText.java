@@ -205,6 +205,7 @@
 package com.taobao.weex.ui.view;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.MotionEvent;
 import android.widget.EditText;
 
@@ -220,7 +221,11 @@ public class WXEditText extends EditText implements WXGestureObservable {
 
   public WXEditText(Context context) {
     super(context);
-    setBackgroundDrawable(null);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+      setBackground(null);
+    } else {
+      setBackgroundDrawable(null);
+    }
   }
 
   @Override

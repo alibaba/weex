@@ -236,7 +236,7 @@ public final class WXDomManager {
   public WXDomManager(WXRenderManager renderManager) {
     mWXRenderManager = renderManager;
     mDomRegistries = new ConcurrentHashMap<>();
-    mDomThread = new WXThread("WXDomThread", new WXDomHandler(this));
+    mDomThread = new WXThread("WeeXDomThread", new WXDomHandler(this));
     mDomHandler = mDomThread.getHandler();
   }
 
@@ -515,5 +515,21 @@ public final class WXDomManager {
       return;
     }
     statement.refreshFinish();
+  }
+
+  /**
+   * Notify the update has finished.
+   * @param instanceId {@link com.taobao.weex.WXSDKInstance#mInstanceId} for the instance to
+   *                                                                    notify.
+   */
+  void updateFinish(String instanceId) {
+    if (!isDomThread()) {
+      throw new WXRuntimeException("RefreshFinish operation must be done in dom thread");
+    }
+    WXDomStatement statement = mDomRegistries.get(instanceId);
+    if (statement == null) {
+      return;
+    }
+    statement.updateFinish();
   }
 }

@@ -1,0 +1,140 @@
+<style>
+  .btn {
+    border: 1px solid red;
+    margin: 10px;
+    background-color: #eee;
+  }
+  .image {
+		width: 200;
+		height: 200;
+		margin: 10;
+  }
+  .text {
+    margin: 10;
+    padding: 10;
+  }
+</style>
+
+<template>
+  <div>
+    <text class="btn" onclick="{{fetchImage}}">FETCH IMAGE</text>
+    <image class="image" src="{{imageSrc}}"></image>
+    <text class="btn" onclick="{{fetchJson}}">FETCH JSON</text>
+    <text class="text">{{jsonText}}</text>
+    <text class="btn" onclick="{{fetchDefault}}">FETCH BY DEFAULT</text>
+    <text class="btn" onclick="{{typeError}}">TYPE ERROR</text>
+    <text class="btn" onclick="{{methodError}}">METHOD ERROR</text>
+    <text class="btn" onclick="{{urlMissed}}">URL MISSED</text>
+    <text class="btn" onclick="{{urlError}}">URL ERROR</text>
+    <text class="btn" onclick="{{sendHttp}}">SEND_HTTP</text>
+  </div>
+</template>
+
+<script>
+  module.exports = {
+  	data: {
+  		imageSrc: '',
+  		jsonText: ''
+  	},
+    methods: {
+      fetchImage: function () {
+        var stream = require('@weex-module/stream')
+        var timer = require('@weex-module/timer')
+        var vm = this
+        stream.fetch({
+        	url: 'http://gd2.alicdn.com/bao/uploaded/i2/TB1rtOnHpXXXXXLaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg',
+        	type: 'arraybuffer',
+        	method: 'get'
+        }, function (res) {
+        	var blob = new Blob([res.data], { type: 'image/jpeg' })
+        	var fileReader = new FileReader()
+        	fileReader.onload = function (e) {
+            var res = e.target.result
+        		timer.setTimeout(function () {
+              vm.imageSrc = res
+            }, 0)
+        	}
+        	fileReader.readAsDataURL(blob)
+        }, function (res) {
+        	console.log('progress:', res.length, res.total)
+        })
+      },
+
+      fetchJson: function () {
+        var stream = require('@weex-module/stream')
+        var vm = this
+        stream.fetch({
+          url: './test/stream.json',
+          type: 'json',
+          method: 'get'
+        }, function (res) {
+          vm.jsonText = '[' + typeof res.data + ']:\t' + JSON.stringify(res.data)
+          console.log('res', res)
+        })
+      },
+
+      fetchDefault: function () {
+        var stream = require('@weex-module/stream')
+        var vm = this
+        stream.fetch({
+          url: './test/stream.json'
+        }, function (res) {
+          // console.log('res', res)
+        })
+      },
+
+      typeError: function () {
+        var stream = require('@weex-module/stream')
+        stream.fetch({
+          url: 'http://gd2.alicdn.com/bao/uploaded/i2/TB1rtOnHpXXXXXLaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg',
+          type: 'file',
+          method: 'get'
+        }, function (res) {
+          // console.log(res)
+        })
+      },
+
+      methodError: function () {
+        var stream = require('@weex-module/stream')
+        stream.fetch({
+          url: 'http://gd2.alicdn.com/bao/uploaded/i2/TB1rtOnHpXXXXXLaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg',
+          type: 'text',
+          method: 'head'
+        }, function (res) {
+          // console.log(res)
+        })
+      },
+
+      urlMissed: function () {
+        var stream = require('@weex-module/stream')
+        stream.fetch({
+          type: 'text',
+          method: 'get'
+        }, function (res) {
+          // console.log(res)
+        })
+      },
+
+      urlError: function () {
+        var stream = require('@weex-module/stream')
+        stream.fetch({
+          url: 'http://www.a.error.url',
+          type: 'text',
+          method: 'get'
+        }, function (res) {
+          console.log('res---->', res)
+        })
+      },
+
+      // sendHttp API is deprecated
+      sendHttp: function () {
+        var stream = require('@weex-module/stream')
+        stream.sendHttp({
+          url: './test/stream.json'
+        }, function (res) {
+          console.log('sendHttp res---->', res)
+        })
+      }
+    }
+  }
+</script>

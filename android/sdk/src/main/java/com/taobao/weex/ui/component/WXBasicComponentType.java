@@ -217,6 +217,8 @@ public class WXBasicComponentType {
   public static final String SCROLLER = "scroller";
   public static final String SLIDER = "slider";
   public static final String LIST = "list";
+  public static final String VLIST = "vlist";
+  public static final String HLIST = "hlist";
   public static final String CELL = "cell";
   public static final String HEADER = "header";
   public static final String FOOTER = "footer";

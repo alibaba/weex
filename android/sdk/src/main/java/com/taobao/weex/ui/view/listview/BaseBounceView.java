@@ -206,6 +206,7 @@ package com.taobao.weex.ui.view.listview;
 
 import android.content.Context;
 import android.support.v4.view.GestureDetectorCompat;
+import android.support.v7.widget.OrientationHelper;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -234,18 +235,28 @@ public abstract class BaseBounceView<T extends View> extends ViewGroup {
     private GestureDetectorCompat mGestureDetector;
     private boolean mBounceable = true;
 
+
+    private int mOrientation = OrientationHelper.VERTICAL;
+    private static final int[] STATE_LAYOUT_WIDTH = {LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT};
+    private static final int[] STATE_LAYOUT_HEIGHT = {LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT};
+
     enum Mode {
-        PULL_FROM_TOP,
-        PULL_FROM_BOTTOM
+        PULL_FROM_START,
+        PULL_FROM_END
     }
 
-    public BaseBounceView(Context context) {
-        this(context, null);
+    public BaseBounceView(Context context,int orientation) {
+        this(context, null,orientation);
     }
 
-    public BaseBounceView(Context context, AttributeSet attrs) {
+    public BaseBounceView(Context context, AttributeSet attrs,int orientataion) {
         super(context, attrs);
+        mOrientation = orientataion;
         init(context);
+    }
+
+    public int getOrientation(){
+        return mOrientation;
     }
 
     private void init(Context context) {
@@ -258,16 +269,20 @@ public abstract class BaseBounceView<T extends View> extends ViewGroup {
 
         mRefreshLayout = createBounceHeaderView(context);
         if (mRefreshLayout != null) {
-            addView(mRefreshLayout.getView(), LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+            addView(mRefreshLayout.getView(), STATE_LAYOUT_WIDTH[mOrientation], STATE_LAYOUT_HEIGHT[mOrientation]);
         }
         mLoadMoreLayout = createBounceFooterView(context);
         if (mLoadMoreLayout != null) {
-            addView(mLoadMoreLayout.getView(), LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+            addView(mLoadMoreLayout.getView(), STATE_LAYOUT_WIDTH[mOrientation], STATE_LAYOUT_HEIGHT[mOrientation]);
         }
     }
 
     public final T getBounceView() {
         return mView;
+    }
+
+    boolean isVertical(){
+        return mOrientation==OrientationHelper.VERTICAL;
     }
 
     @Override
@@ -281,7 +296,7 @@ public abstract class BaseBounceView<T extends View> extends ViewGroup {
                 mLastMotionY = ev.getRawY();
                 mLastMotionX = ev.getRawX();
                 //两个listview之间切换，其中某个listview.setPadding()时，会使getPaddingTop()和scrollValue的值不统一，需要进行统一
-                mScrollValue = -getPaddingTop();
+                mScrollValue = isVertical()?-getPaddingTop():-getPaddingLeft();
                 break;
             }
             case MotionEvent.ACTION_MOVE: {
@@ -289,19 +304,20 @@ public abstract class BaseBounceView<T extends View> extends ViewGroup {
                 float y = ev.getRawY();
                 float deltaX = ev.getRawX() - mLastMotionX;
                 float deltaY = ev.getRawY() - mLastMotionY;
-                float degree = Math.abs(deltaY) / Math.abs(deltaX);
-                //Log.v(getClass().getSimpleName(), "onInterceptTouchEvent move");
-                if (Math.abs(deltaY) > mTouchSlop && degree >= 1.7f && mBounceable) {
-                    if (deltaY > 0 && isReadyForPullFromTop()) {
+                float degree = isVertical()?Math.abs(deltaY) / Math.abs(deltaX):Math.abs(deltaX) / Math.abs(deltaY);
+
+                float mainDelta = isVertical()?deltaY:deltaX;
+                if (Math.abs(mainDelta) > mTouchSlop && degree >= 1.7f && mBounceable) {
+                    if (mainDelta > 0 && isReadyForPullFromStart()) {
                         mLastMotionX = x;
                         mLastMotionY = y;
                         mIsBeingDragged = true;
-                        mMode = Mode.PULL_FROM_TOP;
-                    } else if (deltaY < 0 && isReadyForPullFromBottom()) {
+                        mMode = Mode.PULL_FROM_START;
+                    } else if (mainDelta < 0 && isReadyForPullFromEnd()) {
                         mLastMotionX = x;
                         mLastMotionY = y;
                         mIsBeingDragged = true;
-                        mMode = Mode.PULL_FROM_BOTTOM;
+                        mMode = Mode.PULL_FROM_END;
                     }
 
                 }
@@ -313,6 +329,10 @@ public abstract class BaseBounceView<T extends View> extends ViewGroup {
             }
         }
         return mIsBeingDragged;
+    }
+
+    private int getStartPadding(){
+        return isVertical()?getPaddingTop():getPaddingLeft();
     }
 
     @Override
@@ -327,13 +347,13 @@ public abstract class BaseBounceView<T extends View> extends ViewGroup {
                 }
                 mLastMotionX = ev.getRawX();
                 mLastMotionY = ev.getRawY();
-                mScrollValue = -getPaddingTop();
+                mScrollValue = isVertical()?-getPaddingTop():-getPaddingLeft();
                 return mIsBeingDragged;
             }
             case MotionEvent.ACTION_MOVE: {
                 if (mIsBeingDragged) {
-                    float y = ev.getRawY();
-                    startPull(y);
+                    float raw = isVertical()?ev.getRawY():ev.getRawX();
+                    startPull(raw);
                     return true;
                 }
                 break;
@@ -341,7 +361,7 @@ public abstract class BaseBounceView<T extends View> extends ViewGroup {
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP: {
                 if (mIsBeingDragged) {
-                    this.mScrollValue = -getPaddingTop();
+                    this.mScrollValue = isVertical()?-getPaddingTop():-getPaddingLeft();
                     mIsBeingDragged = false;
                     onTouchActionUp();
                     if (mMaxPadding > 0) {
@@ -353,12 +373,14 @@ public abstract class BaseBounceView<T extends View> extends ViewGroup {
                          * fix：
                          * listview设置不能向上弹
                          */
-                        if (getPaddingTop() > 0/*|| getPaddingTop() < -mMaxPadding*/) {
-                            mScrollValue = getPaddingTop() > 0 ? 0 : -mMaxPadding;
-                            backToInitPos(getPaddingTop(), getPaddingTop() > 0 ? -getPaddingTop() : (-mMaxPadding - getPaddingTop()));
+                        int startPadding = getStartPadding();
+                        if (startPadding > 0/*|| getPaddingTop() < -mMaxPadding*/) {
+                            mScrollValue = startPadding > 0 ? 0 : -mMaxPadding;
+                            backToInitPos(startPadding, startPadding > 0 ? -startPadding : (-mMaxPadding - startPadding));
                         }
                     } else {
-                        backToInitPos(getScrollY(), -getScrollY());
+                        int delta = isVertical()?getScrollY():getScrollX();
+                        backToInitPos(delta, -delta);
                     }
                     mMode = null;
                     return true;
@@ -377,7 +399,7 @@ public abstract class BaseBounceView<T extends View> extends ViewGroup {
             int y = mScroller.getCurrY();
             //Helper.logv("compute scroll y:" + y);
             if (mMaxPadding > 0) {
-                this.mScrollValue = -y;//根据scroll.fling() y在－PADDING －0 之间
+                this.mScrollValue = isVertical()?-y:-x;//根据scroll.fling() y在－PADDING －0 之间
                 setPadding(x, y, 0, 0);
             } else {
                 scrollTo(x, y);
@@ -392,51 +414,80 @@ public abstract class BaseBounceView<T extends View> extends ViewGroup {
         //Helper.logv("BaseBounceView onMeasure");
         View child0 = getChildAt(0);
         int w = 0;
+        int h = 0;
         if (child0 != null) {
             child0.measure(widthMeasureSpec, heightMeasureSpec);
             w = child0.getMeasuredWidth();
+            h = child0.getMeasuredHeight();
         }
-        View child1 = getChildAt(1);
-        if (child1 != null) {
-            LayoutParams lp = child1.getLayoutParams();
-            child1.measure(
-                    MeasureSpec.makeMeasureSpec(w, MeasureSpec.EXACTLY),
-                    MeasureSpec.makeMeasureSpec(lp.height, lp.height > 0 ? MeasureSpec.EXACTLY : MeasureSpec.AT_MOST));
-        }
-        View child2 = getChildAt(2);
-        if (child2 != null) {
-            LayoutParams lp = child2.getLayoutParams();
-            child2.measure(
-                    MeasureSpec.makeMeasureSpec(w, MeasureSpec.EXACTLY),
-                    MeasureSpec.makeMeasureSpec(lp.height, lp.height > 0 ? MeasureSpec.EXACTLY : MeasureSpec.AT_MOST)
-            );
+        measureChild(w,h,1);
+        measureChild(w,h,2);
+    }
+
+    private void measureChild(int w,int h,int index){
+        View child = getChildAt(index);
+        if (child != null) {
+            LayoutParams lp = child.getLayoutParams();
+            if(isVertical()) {
+                child.measure(
+                        MeasureSpec.makeMeasureSpec(w, MeasureSpec.EXACTLY),
+                        MeasureSpec.makeMeasureSpec(lp.height, lp.height > 0 ? MeasureSpec.EXACTLY : MeasureSpec.AT_MOST)
+                );
+            }else{
+                child.measure(
+                        MeasureSpec.makeMeasureSpec(lp.width, lp.width > 0 ? MeasureSpec.EXACTLY : MeasureSpec.AT_MOST),
+                        MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY)
+                );
+            }
         }
     }
+
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         View child0 = getChildAt(0);
-        int paddingLeft,paddingTop,childRight;
+        int paddingLeft,paddingTop,childRight,childBottom;
         paddingLeft=getPaddingLeft();
         paddingTop=getPaddingTop();
         childRight=r-l-getPaddingRight();
+        childBottom = b-t-getPaddingBottom();
+
         if (child0 != null) {
-            child0.layout(paddingLeft, paddingTop, childRight, b-t-paddingTop);
+            if(isVertical()){
+                child0.layout(paddingLeft, paddingTop, childRight, b-t-paddingTop);
+            }else{
+                child0.layout(paddingLeft, paddingTop, r-l-paddingLeft, childBottom);
+            }
+
         }
         View child1 = getChildAt(1);
         if (child1 != null) {
-            int h = child1.getMeasuredHeight();
-            child1.layout(paddingLeft, -h, childRight, 0);
+            if(isVertical()) {
+                int h = child1.getMeasuredHeight();
+                child1.layout(paddingLeft, -h, childRight, 0);
+            }else{
+                int w = child1.getMeasuredWidth();
+                child1.layout(-w, paddingTop, 0, childBottom);
+            }
         }
         View child2 = getChildAt(2);
         if (child2 != null) {
-            int h = child2.getMeasuredHeight();
-            child2.layout(paddingLeft, b, childRight, b + h);
+            if(isVertical()) {
+                int h = child2.getMeasuredHeight();
+                child2.layout(paddingLeft, b, childRight, b + h);
+            }else{
+                int w = child2.getMeasuredWidth();
+                child2.layout(r, paddingTop, r+w , childBottom);
+            }
         }
     }
 
     protected void smoothScroll(int value) {
-        mScroller.startScroll(0, getScrollY(), 0, value);
+        if(isVertical()) {
+            mScroller.startScroll(0, getScrollY(), 0, value);
+        }else{
+            mScroller.startScroll(getScrollX(), 0, value, 0);
+        }
         invalidate();
     }
 
@@ -451,21 +502,20 @@ public abstract class BaseBounceView<T extends View> extends ViewGroup {
         }
     }
 
-    private void startPull(float y) {
+    private void startPull(float raw) {
         int scrollValue = 0;
-        final float lastY;
-        lastY = mLastMotionY;
+        final float last;
+        last = isVertical()?mLastMotionY:mLastMotionX;
         switch (mMode) {
-            case PULL_FROM_TOP: {
-                scrollValue = Math.round(Math.min(lastY - y, 0) / FRICTION);
+            case PULL_FROM_START: {
+                scrollValue = Math.round(Math.min(last - raw, 0) / FRICTION);
                 break;
             }
-            case PULL_FROM_BOTTOM: {
-                scrollValue = Math.round(Math.max(lastY - y, 0) / FRICTION);
+            case PULL_FROM_END: {
+                scrollValue = Math.round(Math.max(last - raw, 0) / FRICTION);
                 break;
             }
         }
-        //Helper.logv("start pull scrollvalue:" + scrollValue + ", y:" + y + ", allScroll:" + (this.mScrollValue + scrollValue));
         pullScrollTo(this.mScrollValue + scrollValue);
     }
 
@@ -474,9 +524,17 @@ public abstract class BaseBounceView<T extends View> extends ViewGroup {
         scrollValue = Math.min(maxScroll, Math.max(-maxScroll, scrollValue));
         //scrollTo(0, scrollValue);
         if (mMaxPadding > 0) {
-            setPadding(0, -scrollValue <= -mMaxPadding ? -mMaxPadding : -scrollValue, 0, 0);
+            if(isVertical()) {
+                setPadding(0, -scrollValue <= -mMaxPadding ? -mMaxPadding : -scrollValue, 0, 0);
+            }else{
+                setPadding(-scrollValue <= -mMaxPadding ? -mMaxPadding : -scrollValue,0,0,0);
+            }
         } else {
-            scrollTo(0, scrollValue);
+            if(isVertical()) {
+                scrollTo(0, scrollValue);
+            }else{
+                scrollTo(scrollValue,0);
+            }
         }
 
         onPull(scrollValue);
@@ -485,15 +543,15 @@ public abstract class BaseBounceView<T extends View> extends ViewGroup {
     private void onPull(int scrollValue) {
         IRefreshLayout pullLayout = null;
         switch (mMode) {
-            case PULL_FROM_TOP:
+            case PULL_FROM_START:
                 pullLayout = mRefreshLayout;
                 break;
-            case PULL_FROM_BOTTOM:
+            case PULL_FROM_END:
                 pullLayout = mLoadMoreLayout;
                 break;
         }
-        if ((mMode == Mode.PULL_FROM_TOP || mMode == Mode.PULL_FROM_BOTTOM) && pullLayout != null) {
-            final int itemDimension = pullLayout.getView().getHeight();
+        if ((mMode == Mode.PULL_FROM_START || mMode == Mode.PULL_FROM_END) && pullLayout != null) {
+            final int itemDimension = isVertical()?pullLayout.getView().getHeight():pullLayout.getView().getWidth();
             float scaleOfLayout = Math.abs(scrollValue) / (float) itemDimension;
             float angle = scaleOfLayout * 90f;
             pullLayout.onPull(angle);
@@ -502,23 +560,28 @@ public abstract class BaseBounceView<T extends View> extends ViewGroup {
         }
     }
 
-    private void backToInitPos(int startY, int deltaY) {
+    private void backToInitPos(int start, int delta) {
         int duration = DEFAULT_DURATION;
         if (mRefreshLayout != null) {
-            int scrollLen = Math.abs(getScrollY());
-            int limit = mRefreshLayout.getView().getHeight();
+            int scrollLen = Math.abs(isVertical()?getScrollY():getScrollX());
+            int limit = isVertical()?mRefreshLayout.getView().getHeight():mRefreshLayout.getView().getWidth();
             if (scrollLen < limit) {
                 duration = DEFAULT_DURATION;
             } else {
                 duration = (scrollLen - limit)* DEFAULT_DURATION / (getMaximumPullScroll() - limit);
             }
         }
-        mScroller.startScroll(0, startY, 0, deltaY/*-getPaddingTop()*/, duration);
+        if(isVertical()){
+            mScroller.startScroll(0, start, 0, delta, duration);
+        }else{
+            mScroller.startScroll(start,0,delta,0, duration);
+        }
+
         invalidate();
     }
 
     private int getMaximumPullScroll() {
-        return Math.round(getResources().getDisplayMetrics().heightPixels / (FRICTION));
+        return Math.round(isVertical()?getResources().getDisplayMetrics().heightPixels:getResources().getDisplayMetrics().widthPixels / (FRICTION));
     }
 
     protected IRefreshLayout getBounceHeaderView() {
@@ -545,8 +608,8 @@ public abstract class BaseBounceView<T extends View> extends ViewGroup {
         }
     }
 
-    public abstract boolean isReadyForPullFromTop();
-    public abstract boolean isReadyForPullFromBottom();
+    public abstract boolean isReadyForPullFromStart();
+    public abstract boolean isReadyForPullFromEnd();
     public abstract T createBounceView(Context context);
     public abstract IRefreshLayout createBounceHeaderView(Context context);
 
@@ -561,7 +624,11 @@ public abstract class BaseBounceView<T extends View> extends ViewGroup {
     private final GestureDetector.SimpleOnGestureListener mGestureListener = new GestureDetector.SimpleOnGestureListener() {
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            mScroller.fling(getPaddingLeft(), getPaddingTop(), 0, (int)velocityY, 0, 0, -mMaxPadding, 0);
+            if(isVertical()) {
+                mScroller.fling(getPaddingLeft(), getPaddingTop(), 0, (int) velocityY, 0, 0, -mMaxPadding, 0);
+            }else{
+                mScroller.fling(getPaddingLeft(), getPaddingTop(), (int) velocityX, 0, -mMaxPadding, 0, 0,  0);
+            }
             invalidate();
             return true;
         }

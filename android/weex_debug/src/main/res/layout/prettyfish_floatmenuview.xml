@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/fl_menu"
+        android:clickable="true"
+        android:layout_width="270dp"
+        android:layout_height="270dp"
+        android:background="@drawable/prettyfish_bg_floatmenu"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:padding="5dp"
+            android:layout_width="34dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:src="@drawable/prettyfish_icon_back" />
+    </FrameLayout>
+</FrameLayout><!-- From: file:/Users/ricky/Desktop/ricky/allgitcode/prettyfish/prettyfish_base/src/main/res/layout/prettyfish_floatmenuview.xml -->

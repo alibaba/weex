@@ -16,30 +16,17 @@ For example: If you want to implement an address jumping function, you can achie
 6. Module methods will be invoked in UI thread, do not put time consuming operation there
 7. Weex params can be int, double, float, String, Map, List, self-defined class that implements WXObject interface
 
-Refer to the following example 
+Refer to the following example: 
 
 ```java
-      
-    import android.content.Intent;
-    import android.net.Uri;
-     ……………………
-
     public class WXEventModule extends WXModule{
 	
 	private static final String WEEX_CATEGORY="com.taobao.android.intent.category.WEEX";
 	
-	@WXModuleAnno
-	public void openURL(String url){
-		if (TextUtils.isEmpty(url)) {
-			return;
+		@WXModuleAnno
+		public void openURL(String url){
+			//implement your module logic here
 		}
-		StringBuilder builder=new StringBuilder("http:");
-		builder.append(url);
-		Uri uri = Uri.parse(builder.toString());
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-		intent.addCategory(WEEX_CATEGORY);
-        mWXSDKInstance.getContext().startActivity(intent);
-	   }
     }
 
 ```
@@ -47,21 +34,39 @@ Refer to the following example
 #### Register the moulde
 
 ```java
-/**
-   * Register module. This is a wrapper method for
-   * {@link WXModuleManager#registerModule(String, Class)}. 
-   * The module register here only needto
-   * be singleton in {@link WXSDKInstance} level.
-   * @param moduleName  module name
-   * @param moduleClass module to be registered.
-   * @return true for registration success, false for otherwise.
-   * @see {@link WXModuleManager#registerModule(String, Class, boolean)}
-   */
-  
+
   WXSDKEngine.registerModule("event", WXEventModule.class);
 
 ```
 
+### Use this module in weex DSL   
+Now `event` moudle is avaiable in weex, use the module like this:   
+```javascript
+
+var event = require('@weex-module/event');
+event.openURL("http://www.github.com");
+
+```
+
+### Javascript callback
+If the module need implement a callback to javascript, you just add `JSCallback` argument to the method you want expose to javascript:   
+```java
+
+	@WXModuleAnno
+	public void openURL(String url,JSCallback callback){
+		//implement your module logic here
+		Map<String,Object> resp = new HashMap();
+		resp.put("result","ok");
+		callback.invoke(resp);
+	}
+	
+```
+At the javascript side, call the module with javascript function to receive callback data:   
+```javascript
+
+event.openURL("http://www.github.com",function(resp){ console.log(resp.result); });
+
+```
 
 ### Component extend
 <font color="gray">
@@ -82,9 +87,6 @@ Refer to the following example
 
 ```java
 
-	package com.taobao.weextest;
-    ………………
-	
 	public class MyViewComponent extends WXComponent{ 
 	public MyViewComponent(WXSDKInstance instance, WXDomObject dom,
 	                   WXVContainer parent, String instanceId, boolean isLazy) 
@@ -93,7 +95,6 @@ Refer to the following example
 	   WXVContainer parent, String instanceId, boolean isLazy) {
 	  super(instance, dom, parent, instanceId, isLazy);
 	 }
-	 
 	 
 	 @Override
 	 protected void initView() {
@@ -105,21 +106,12 @@ Refer to the following example
 	 }
 	}
 
-
 ```
  
 #### Register the Component
 
 
-```java
-  /**
-   * Register component. The registration is singleton in {@link WXSDKEngine} level
-   * @param type name of component. Same as type filed in the JS.
-   * @param clazz the class of the {@link WXComponent} to be registered.
-   * @param appendTree true for appendTree flag
-   * @return true for registration success, false for otherwise.
-   * @throws WXException Throws exception if type conflicts.
-   */   
+```java 
    WXSDKEngine.registerComponent("MyView", MyViewComponent.class);
 ```
 
@@ -127,20 +119,9 @@ Refer to the following example
 
 #### ImagedownloadAdapter
 <font color="gray">
-Weex SDK has no image download capability, you need to implement IWXImgLoaderAdapter. Refer to the following examples.
+Weex SDK has no image download capability, you need to implement `IWXImgLoaderAdapter`. Refer to the following examples.
 
 ```java
-package com.alibaba.weex.extend;
-
-import android.app.Activity;
-import android.text.TextUtils;
-import android.widget.ImageView;
-
-import com.squareup.picasso.Picasso;
-import com.taobao.weex.WXEnvironment;
-import com.taobao.weex.adapter.IWXImgLoaderAdapter;
-import com.taobao.weex.common.WXImageStrategy;
-import com.taobao.weex.dom.WXImageQuality;
 
 public class ImageAdapter implements IWXImgLoaderAdapter {
 
