@@ -2,7 +2,7 @@
   "name": "weex-html5",
   "version": "0.2.23",
   "description": "Weex HTML5 Renderer",
-  "main": "src/browser/index.js",
+  "main": "dist/weex.common.js",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/alibaba/weex.git"
