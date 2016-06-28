@@ -1,0 +1,29 @@
+<template>
+  <div class="ct" style="height: {{ctHeight}}">
+    <image class="img" style="width: 400px; height: 400px;" src="{{img}}"></image>
+    <text style="font-size: 42;">Hello Weex !</text>
+  </div>
+</template>
+
+<style>
+  .ct {
+    width: 750;
+    align-items: center;
+    justify-content: center;
+  }
+  .img {
+    margin-bottom: 20px;
+  }
+</style>
+
+<script>
+  module.exports = {
+    data: {
+      ctHeight: 800,
+      img: '//gw.alicdn.com/tps/i2/TB1DpsmMpXXXXabaXXX20ySQVXX-512-512.png_400x400.jpg'
+    },
+    ready: function () {
+      this.ctHeight = this.$getConfig().env.deviceHeight
+    }
+  }
+</script>
