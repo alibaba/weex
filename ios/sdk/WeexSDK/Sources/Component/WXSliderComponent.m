@@ -8,6 +8,7 @@
 
 #import "WXSliderComponent.h"
 #import "WXIndicatorComponent.h"
+#import "WXComponent_internal.h"
 #import "NSTimer+Weex.h"
 #import "WXSDKManager.h"
 #import "WXUtility.h"
@@ -324,35 +325,48 @@
 
 - (void)insertSubview:(WXComponent *)subcomponent atIndex:(NSInteger)index
 {
-    UIView *view = subcomponent.view;
-    
-    if(index < 0) {
-        [self.childrenView addObject:view];
-    }
-    else {
-        [self.childrenView insertObject:view atIndex:index];
-    }
-    
-    WXSliderView *sliderView = (WXSliderView *)self.view;
-    if ([view isKindOfClass:[WXIndicatorView class]]) {
-        [sliderView addSubview:view];
+    if (subcomponent->_positionType == WXPositionTypeFixed) {
+        [self.weexInstance.rootView addSubview:subcomponent.view];
         return;
     }
     
-    if (index == -1) {
-        [sliderView insertItemView:view atIndex:index];
-    } else {
-        NSInteger offset = 0;
-        for (int i = 0; i < [self.childrenView count]; ++i) {
-            if (index == i) break;
-            
-            if ([self.childrenView[i] isKindOfClass:[WXIndicatorView class]]) {
-                offset++;
-            }
-        }
-        [sliderView insertItemView:view atIndex:index - offset];
+    // use _lazyCreateView to forbid component like cell's view creating
+    if(_lazyCreateView) {
+        subcomponent->_lazyCreateView = YES;
     }
-    [sliderView loadData];
+    
+    if (!subcomponent->_lazyCreateView || (self->_lazyCreateView && [self isViewLoaded])) {
+        UIView *view = subcomponent.view;
+        
+        if(index < 0) {
+            [self.childrenView addObject:view];
+        }
+        else {
+            [self.childrenView insertObject:view atIndex:index];
+        }
+        
+        WXSliderView *sliderView = (WXSliderView *)self.view;
+        if ([view isKindOfClass:[WXIndicatorView class]]) {
+            [sliderView addSubview:view];
+            return;
+        }
+        
+        if (index == -1) {
+            [sliderView insertItemView:view atIndex:index];
+        } else {
+            NSInteger offset = 0;
+            for (int i = 0; i < [self.childrenView count]; ++i) {
+                if (index == i) break;
+                
+                if ([self.childrenView[i] isKindOfClass:[WXIndicatorView class]]) {
+                    offset++;
+                }
+            }
+            [sliderView insertItemView:view atIndex:index - offset];
+        }
+        
+        [sliderView loadData];
+    }
 }
 
 - (void)updateAttributes:(NSDictionary *)attributes
@@ -385,8 +399,8 @@
 
 -(void)setIndicatorView:(WXIndicatorView *)indicatorView
 {
-    //NSAssert(_sliderView, @"");
-    [(WXSliderView *)self.view setIndicator:indicatorView];
+    NSAssert(_sliderView, @"");
+    [_sliderView setIndicator:indicatorView];
 }
 
 #pragma mark Private Methods
