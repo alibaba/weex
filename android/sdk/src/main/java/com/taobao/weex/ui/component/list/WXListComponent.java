@@ -217,6 +217,7 @@ import android.widget.ImageView;
 
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.OnWXScrollListener;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomObject;
@@ -640,6 +641,7 @@ public class WXListComponent extends WXVContainer implements
         return 0;
     }
 
+    String mLoadMoreRetry;
     @Override
     public void onLoadMore(int offScreenY) {
       try {
@@ -652,12 +654,12 @@ public class WXListComponent extends WXVContainer implements
         if (offScreenY < Integer.parseInt(offset)) {
           String loadMoreRetry = mDomObj.attr.getLoadMoreRetry();
 
-//          if (mListCellCount != mChildren.size()
-//              || mLoadMoreRetry == null || !mLoadMoreRetry.equals(loadMoreRetry)) {
-//            WXSDKManager.getInstance().fireEvent(mInstanceId, mDomObj.ref, WXEventType.LIST_LOAD_MORE);
+          if (mListCellCount != mChildren.size()
+              || mLoadMoreRetry == null || !mLoadMoreRetry.equals(loadMoreRetry)) {
+            WXSDKManager.getInstance().fireEvent(mInstanceId, mDomObj.ref, WXEventType.LIST_LOAD_MORE);
             mListCellCount = mChildren.size();
-//            mLoadMoreRetry = loadMoreRetry;
-//          }
+            mLoadMoreRetry = loadMoreRetry;
+          }
         }
       } catch (Exception e) {
         WXLogUtils.d(TAG, "onLoadMore :" + WXLogUtils.getStackTrace(e));
