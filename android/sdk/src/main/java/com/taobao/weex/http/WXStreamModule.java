@@ -275,24 +275,24 @@ public class WXStreamModule extends WXModule {
   /**
    *
    * @param optionsStr request options include:
-   *  <li>method: GET 、POST</li>
-   *  <li>headers：object，请求header</li>
-   *  <li>url:</li>
-   *  <li>body: "Any body that you want to add to your request"</li>
-   *  <li>type: json、text、jsonp（native实现时等价与json）</li>
+   *  method: GET 、POST
+   *  headers：object，请求header
+   *  url:
+   *  body: "Any body that you want to add to your request"
+   *  type: json、text、jsonp（native实现时等价与json）
    * @param callback finished callback,response object:
-   *  <li>status：status code</li>
-   *  <li>ok：boolean 是否成功，等价于status200～299</li>
-   *  <li>statusText：状态消息，用于定位具体错误原因</li>
-   *  <li>data: 响应数据，当请求option中type为json，时data为object，否则data为string类型</li>
-   *  <li>headers: object 响应头</li>
+   *  status：status code
+   *  ok：boolean 是否成功，等价于status200～299
+   *  statusText：状态消息，用于定位具体错误原因
+   *  data: 响应数据，当请求option中type为json，时data为object，否则data为string类型
+   *  headers: object 响应头
    *
    * @param progressCallback in progress callback,for download progress and request state,response object:
-   *  <li>readyState: number 请求状态，1 OPENED，开始连接；2 HEADERS_RECEIVED；3 LOADING</li>
-   *  <li>status：status code</li>
-   *  <li>length：当前获取的字节数，总长度从headers里「Content-Length」获取</li>
-   *  <li>statusText：状态消息，用于定位具体错误原因</li>
-   *  <li>headers: object 响应头</li>
+   *  readyState: number 请求状态，1 OPENED，开始连接；2 HEADERS_RECEIVED；3 LOADING
+   *  status：status code
+   *  length：当前获取的字节数，总长度从headers里「Content-Length」获取
+   *  statusText：状态消息，用于定位具体错误原因
+   *  headers: object 响应头
    */
   @WXModuleAnno
   public void fetch(String optionsStr, final JSCallback callback, JSCallback progressCallback){

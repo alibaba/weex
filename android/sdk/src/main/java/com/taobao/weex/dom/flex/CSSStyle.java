@@ -95,4 +95,29 @@ public class CSSStyle {
     maxWidth = cssStyle.maxWidth;
     maxHeight = cssStyle.maxHeight;
   }
+
+  public String toString() {
+    return "direction =" + direction + "\n"
+            + "flexDirection =" + flexDirection + "\n"
+            + "justifyContent=" + justifyContent + "\n"
+            + "alignContent =" + alignContent + "\n"
+            + "alignItems =" + alignItems + "\n"
+            + "alignSelf =" + alignSelf + "\n"
+            + "positionType =" + positionType + "\n"
+            + "flexWrap =" + flexWrap + "\n"
+            + "flex =" + flex + "\n"
+            + "margin =" + margin + "\n"
+            + "padding =" + padding + "\n"
+            + "border =" + border + "\n"
+            + "position[POSITION_TOP] =" + position[POSITION_TOP] + "\n"
+            + "position[POSITION_BOTTOM] =" + position[POSITION_BOTTOM] + "\n"
+            + "position[POSITION_LEFT] =" + position[POSITION_LEFT] + "\n"
+            + "position[POSITION_RIGHT] =" + position[POSITION_RIGHT] + "\n"
+            + "position[DIMENSION_WIDTH] =" + position[DIMENSION_WIDTH] + "\n"
+            + "position[DIMENSION_HEIGHT] =" + position[DIMENSION_HEIGHT] + "\n"
+            + "minWidth =" + minWidth + "\n"
+            + "minHeight =" + minHeight + "\n"
+            + "maxWidth =" + maxWidth + "\n"
+            + "maxHeight =" + maxHeight + "\n";
+  }
 }

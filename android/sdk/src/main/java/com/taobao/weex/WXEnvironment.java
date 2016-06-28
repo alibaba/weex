@@ -245,6 +245,8 @@ public class WXEnvironment {
    */
   public static boolean sDebugMode = false;
   public static String sDebugWsUrl = "";
+  public static boolean sRemoteDebugMode = false;
+  public static String sRemoteDebugProxyUrl = "";
   public static long sJSLibInitTime = 0;
 
   public static long sSDKInitInvokeTime = 0;//调用SDK初始化的耗时
