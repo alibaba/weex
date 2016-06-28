@@ -246,11 +246,19 @@ Component.prototype = {
 
   bindEvents: function (evts) {
     const componentManager = this.getComponentManager()
-    if (evts
-        && Object.prototype.toString.call(evts).slice(8, -1) === 'Array'
-      ) {
+    if (evts && utils.isArray(evts)) {
       for (let i = 0, l = evts.length; i < l; i++) {
-        componentManager.addEvent(this, evts[i])
+        const evt = evts[i]
+        const func = this.event[evt] || {}
+        const setter = func.setter
+        if (setter) {
+          this.node.addEventListener(evt, setter)
+          continue
+        }
+        componentManager.addEvent(this, evt, func && {
+          extra: func.extra && func.extra.bind(this),
+          updator: func.updator && func.updator.bind(this)
+        })
       }
     }
   },
@@ -325,6 +333,30 @@ Component.prototype = {
   attr: {}, // attr setters
 
   style: Object.create(flexbox), // style setters
+
+  // event setters
+  //  - 1. 'updator' for updating attrs or styles with out triggering messages.
+  //  - 2. 'extra' for binding extra data.
+  //  - 3. 'setter' set a specified event handler.
+  // setters should be functions like this:
+  // {
+  //   change: {
+  //     updator () {
+  //       return {
+  //         attrs: {
+  //           checked: this.checked
+  //         }
+  //       }
+  //     },
+
+  //     extra () {
+  //       return {
+  //         value: this.checked
+  //       }
+  //     }
+  //   }
+  // }
+  event: {},
 
   clearAttr: function () {
   },

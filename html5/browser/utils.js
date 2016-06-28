@@ -35,6 +35,11 @@ function isArray (arr) {
     : (Object.prototype.toString.call(arr) === '[object Array]')
 }
 
+function getType (obj) {
+  return Object.prototype.toString.call(obj)
+    .slice(8, -1).toLowerCase()
+}
+
 function appendStyle (css, styleId, replace) {
   let style = document.getElementById(styleId)
   if (style && replace) {
@@ -142,6 +147,7 @@ function loopArray (arr, num, direction) {
 module.exports = {
   extend: extend,
   isArray: isArray,
+  getType: getType,
   appendStyle: appendStyle,
   getUniqueFromArray: getUniqueFromArray,
   transitionize: transitionize,
