@@ -255,13 +255,14 @@ public class WXListComponent extends WXVContainer implements
     public static final String TRANSFORM = "transform";
     private String TAG = "WXListComponent";
     private int mListCellCount = 0;
+    private String mLoadMoreRetry = "";
     private ArrayList<ListBaseViewHolder> recycleViewList = new ArrayList<>();
     private static final Pattern transformPattern = Pattern.compile("([a-z]+)\\(([0-9\\.]+),?([0-9\\.]+)?\\)");
 
     private SparseArray<WXComponent> mAppearComponents = new SparseArray<>();
     private HashMap<String, Long> mRefToViewType;
 
-    private BounceRecyclerView bounceRecyclerView;
+    protected BounceRecyclerView bounceRecyclerView;
 
     public WXListComponent(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
         super(instance, node, parent, lazy);
@@ -549,10 +550,12 @@ public class WXListComponent extends WXVContainer implements
                         || getItemViewType(i) != viewType)
                     continue;
                 if (component instanceof WXRefresh) {
-                    bounceRecyclerView.setHeaderView(component.getView());
+                    if (getOrientation() == VERTICAL)
+                      bounceRecyclerView.setHeaderView(component.getView());
                     return createVHForWXRefresh(component, viewType);
                 } else if (component instanceof WXLoading) {
-                    bounceRecyclerView.setFooterView(component.getView());
+                    if (getOrientation() == VERTICAL)
+                      bounceRecyclerView.setFooterView(component.getView());
                     return createVHForWXLoading(component, viewType);
                 } else if (component.mDomObj!=null && component.mDomObj.isFixed()) {
                     return createVHForFakeComponent(viewType);
@@ -641,7 +644,6 @@ public class WXListComponent extends WXVContainer implements
         return 0;
     }
 
-    String mLoadMoreRetry;
     @Override
     public void onLoadMore(int offScreenY) {
       try {
