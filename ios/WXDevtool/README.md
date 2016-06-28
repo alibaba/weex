@@ -27,12 +27,12 @@ Remote debug for your native iOS app using Chrome Developer Tools
 0. inspect调试
 	* AppDelegate.m文件引入头文件 #import "WXDevtool.h"
 	* 程序启动时调用 
-	这是一个普通段落：
+		
+		
 	
-		- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-		{
-		  [WXDevTool launchInspectorWithSocketUrl:[NSURL  URLWithString:@"ws://localhost:8088/ debugProxy/native"]];    
-		}
+		  -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+		  {
+		  [WXDevTool launchInspectorWithSocketUrl:[NSURL  URLWithString:@"ws://localhost:8088/debugProxy/native"]];   		  }
 		
 	url为terminal显示的ws地址。
 
