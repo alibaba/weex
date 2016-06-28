@@ -31,6 +31,7 @@ Other attributes please check out the [common attributes](../references/common-a
 - support `text-decoration` style.
 - support `text-align` style.
 - support `text-overflow` style.
+- not support `flex-direction`, `justify-content`, `align-items` which is active for child nodes, and text has no child nodes.
 
 **common styles**: check out [common styles for components](../references/common-style.md)
 

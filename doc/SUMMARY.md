@@ -37,6 +37,7 @@
         * [Common Attributes](/references/common-attrs.md)
         * [Common Style](/references/common-style.md)
             * [Text Style](/references/text-style.md)
+            * [Color](/references/color-names.md)
         * [Common Event](/references/common-event.md)
         * [Special Element](/components/special-element.md)
         * [div](/components/div.md)
