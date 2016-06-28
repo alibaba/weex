@@ -70,7 +70,6 @@ dependencies {
     androidTestCompile 'junit:junit:4.12'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'com.android.support.test:runner:0.5'
-
     //compile 'com.taobao.android:weex_sdk:0.4.+'
     /*source dependency*/
     compile project(':weex_sdk_android')
@@ -89,4 +88,6 @@ dependencies {
     compile 'com.android.support:design:23.1.1'
     compile 'com.android.support:support-annotations:23.1.1'
     compile 'com.jakewharton.scalpel:scalpel:1.1.2'
+    //compile 'com.google.android.gms:play-services-appindexing:8.1.0'
+    compile project(':inspector')
 }
