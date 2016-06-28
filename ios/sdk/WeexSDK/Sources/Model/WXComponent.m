@@ -61,8 +61,8 @@
         pthread_mutexattr_settype(&_propertMutexAttr, PTHREAD_MUTEX_RECURSIVE);
         pthread_mutex_init(&_propertyMutex, &_propertMutexAttr);
         
-        _ref = ref;
-        _type = type;
+        _ref = [ref copy];
+        _type = [type copy];
         _weexInstance = weexInstance;
         _styles = styles ? [NSMutableDictionary dictionaryWithDictionary:styles] : [NSMutableDictionary dictionary];
         _attributes = attributes ? [NSMutableDictionary dictionaryWithDictionary:attributes] : [NSMutableDictionary dictionary];
@@ -110,7 +110,7 @@
     styles = _styles;
     pthread_mutex_unlock(&_propertyMutex);
     
-    return styles;
+    return [styles copy];
 }
 
 - (NSDictionary *)attributes
@@ -120,7 +120,7 @@
     attributes = _attributes;
     pthread_mutex_unlock(&_propertyMutex);
     
-    return attributes;
+    return [attributes copy];
 }
 
 - (NSArray *)events
@@ -254,7 +254,7 @@
     subcomponents = _subcomponents;
     pthread_mutex_unlock(&_propertyMutex);
     
-    return subcomponents;
+    return [subcomponents copy];
 }
 
 - (WXComponent *)supercomponent
