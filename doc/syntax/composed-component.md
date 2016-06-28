@@ -57,7 +57,7 @@ Composed component supports nesting. For example:
 ```
 
 ```html
-<!-- somepath/foo.list.we -->
+<!-- somepath/foo-list.we -->
 <template>
   <container>
     <text>{{description}}</text>
