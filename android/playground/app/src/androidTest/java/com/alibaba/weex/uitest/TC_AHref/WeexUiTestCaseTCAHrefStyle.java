@@ -59,7 +59,7 @@ public class WeexUiTestCaseTCAHrefStyle extends ActivityInstrumentationTestCase2
         setViewGroup(mViewGroup);
 
         mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, "TC_");
-        Thread.sleep(2000);
+        Thread.sleep(3000);
     }
 
 //    public void testPreConditions()
