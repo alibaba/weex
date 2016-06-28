@@ -45,14 +45,14 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	;__weex_define__("@weex-component/73a943c402110a473f70526894de4e0c", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	__webpack_require__(20);
+	__webpack_require__(21);
 	__webpack_require__(22);
 	__webpack_require__(23);
 	__webpack_require__(24);
 	__webpack_require__(25);
 	__webpack_require__(26);
 	__webpack_require__(27);
-	__webpack_require__(28);
-	__webpack_require__(29);
 
 	;
 	  __webpack_require__(1)
@@ -2089,9 +2089,7 @@
 /* 14 */,
 /* 15 */,
 /* 16 */,
-/* 17 */,
-/* 18 */,
-/* 19 */
+/* 17 */
 /***/ function(module, exports) {
 
 	;__weex_define__("@weex-component/banner", [], function(__weex_require__, __weex_exports__, __weex_module__){
@@ -2137,11 +2135,11 @@
 	})
 
 /***/ },
-/* 20 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	;__weex_define__("@weex-component/banners", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(19);
+	__webpack_require__(17);
 
 	;
 	  __weex_module__.exports = {
@@ -2231,7 +2229,7 @@
 	})
 
 /***/ },
-/* 21 */
+/* 19 */
 /***/ function(module, exports) {
 
 	;__weex_define__("@weex-component/link", [], function(__weex_require__, __weex_exports__, __weex_module__){
@@ -2269,12 +2267,12 @@
 	})
 
 /***/ },
-/* 22 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	;__weex_define__("@weex-component/headlines", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(21);
-	__webpack_require__(20);
+	__webpack_require__(19);
+	__webpack_require__(18);
 
 	;
 	  __weex_module__.exports = {
@@ -2417,11 +2415,11 @@
 	})
 
 /***/ },
-/* 23 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	;__weex_define__("@weex-component/category", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(19);
+	__webpack_require__(17);
 
 	;
 	  __weex_module__.exports = {
@@ -3074,7 +3072,7 @@
 	})
 
 /***/ },
-/* 24 */
+/* 22 */
 /***/ function(module, exports) {
 
 	;__weex_define__("@weex-component/coupon", [], function(__weex_require__, __weex_exports__, __weex_module__){
@@ -3205,11 +3203,11 @@
 	})
 
 /***/ },
-/* 25 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	;__weex_define__("@weex-component/goods", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(19);
+	__webpack_require__(17);
 
 	;
 	  __weex_module__.exports = {
@@ -3377,12 +3375,12 @@
 	})
 
 /***/ },
-/* 26 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	;__weex_define__("@weex-component/resource", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(19);
-	__webpack_require__(20);
+	__webpack_require__(17);
+	__webpack_require__(18);
 
 	;
 	  __weex_module__.exports = {
@@ -3442,11 +3440,11 @@
 	})
 
 /***/ },
-/* 27 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	;__weex_define__("@weex-component/scene", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(19);
+	__webpack_require__(17);
 
 	;
 	  __weex_module__.exports = {
@@ -3804,11 +3802,11 @@
 	})
 
 /***/ },
-/* 28 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	;__weex_define__("@weex-component/match", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(19);
+	__webpack_require__(17);
 
 	;
 	  __weex_module__.exports = {
@@ -3928,11 +3926,11 @@
 	})
 
 /***/ },
-/* 29 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	;__weex_define__("@weex-component/brand", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(20);
+	__webpack_require__(18);
 
 	;
 	  __weex_module__.exports = {

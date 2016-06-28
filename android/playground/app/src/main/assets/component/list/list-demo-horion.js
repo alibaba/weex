@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/f68b1676204b660f37096b5dc8667ee5", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/c319b2294e664178341d453415092a58", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __weex_module__.exports = {
@@ -67,10 +67,6 @@
 	            shopImgWidth: 220,
 	            shopImgHeight: 220,
 	            shopImg: 'https://gd4.alicdn.com/bao/uploaded/i4/TB15KrfFVXXXXXJXXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd2.alicdn.com/bao/uploaded/i2/TB1t5YBGVXXXXXcaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
 	          }],
 	          shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
 	          shopLikeText: '6',
@@ -97,10 +93,6 @@
 	            shopImgWidth: 220,
 	            shopImgHeight: 220,
 	            shopImg: 'https://gd3.alicdn.com/imgextra/i3/2655929383/TB2eWwZjpXXXXbHXXXXXXXXXXXX_!!2655929383.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd2.alicdn.com/imgextra/i2/2655929383/TB2tgQWjpXXXXbZXXXXXXXXXXXX_!!2655929383.jpg_220x220.jpg'
 	          }],
 	          shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
 	          shopLikeText: '6',
@@ -127,10 +119,6 @@
 	            shopImgWidth: 220,
 	            shopImgHeight: 220,
 	            shopImg: 'https://gd2.alicdn.com/imgextra/i2/2557954751/TB2is2njXXXXXatXpXXXXXXXXXX_!!2557954751.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd2.alicdn.com/imgextra/i2/2557954751/TB2PNYGjXXXXXbXXXXXXXXXXXXX_!!2557954751.jpg_220x220.jpg'
 	          }],
 	          shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
 	          shopLikeText: '6',
@@ -157,10 +145,6 @@
 	            shopImgWidth: 220,
 	            shopImgHeight: 220,
 	            shopImg: 'https://gd4.alicdn.com/imgextra/i4/69426324/TB2L7ZAfXXXXXXOXXXXXXXXXXXX_!!69426324.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd4.alicdn.com/imgextra/i4/69426324/TB2p9wufXXXXXbiXXXXXXXXXXXX_!!69426324.jpg_220x220.jpg'
 	          }],
 	          shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
 	          shopLikeText: '6',
@@ -187,10 +171,6 @@
 	            shopImgWidth: 220,
 	            shopImgHeight: 220,
 	            shopImg: 'https://gd2.alicdn.com/imgextra/i2/53218032/TB2bGSqiXXXXXXyXpXXXXXXXXXX_!!53218032.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd2.alicdn.com/bao/uploaded/i2/TB1kP2zKFXXXXbIXXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
 	          }],
 	          shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
 	          shopLikeText: '6',
@@ -217,10 +197,6 @@
 	            shopImgWidth: 220,
 	            shopImgHeight: 220,
 	            shopImg: 'https://gd4.alicdn.com/imgextra/i4/32720628/TB2CRJUcXXXXXXwXpXXXXXXXXXX_!!32720628.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd2.alicdn.com/bao/uploaded/i2/TB17LUzHXXXXXcEaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
 	          }],
 	          shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
 	          shopLikeText: '6',
@@ -247,10 +223,6 @@
 	            shopImgWidth: 220,
 	            shopImgHeight: 220,
 	            shopImg: 'https://gd4.alicdn.com/imgextra/i4/2058567235/TB2V8iygFXXXXaRXpXXXXXXXXXX_!!2058567235.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd2.alicdn.com/imgextra/i2/2058567235/TB2im1QgFXXXXX8XXXXXXXXXXXX_!!2058567235.jpg_220x220.jpg'
 	          }],
 	          shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
 	          shopLikeText: '6',
@@ -277,10 +249,6 @@
 	            shopImgWidth: 220,
 	            shopImgHeight: 220,
 	            shopImg: 'https://gd1.alicdn.com/imgextra/i1/2775383848/TB2r012jVXXXXXHXpXXXXXXXXXX_!!2775383848.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd3.alicdn.com/imgextra/i3/2775383848/TB2iI9VjVXXXXaoXpXXXXXXXXXX_!!2775383848.jpg_220x220.jpg'
 	          }],
 	          shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
 	          shopLikeText: '6',
@@ -307,10 +275,6 @@
 	            shopImgWidth: 220,
 	            shopImgHeight: 220,
 	            shopImg: 'https://gd4.alicdn.com/imgextra/i4/2702739128/TB2JdvmjVXXXXXjXXXXXXXXXXXX_!!2702739128.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd2.alicdn.com/imgextra/i2/2702739128/TB2A.e6jVXXXXXGXpXXXXXXXXXX_!!2702739128.jpg_220x220.jpg'
 	          }],
 	          shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
 	          shopLikeText: '6',
@@ -337,10 +301,6 @@
 	            shopImgWidth: 220,
 	            shopImgHeight: 220,
 	            shopImg: 'https://gd1.alicdn.com/imgextra/i1/2265445951/TB22ACTbFXXXXXBXXXXXXXXXXXX_!!2265445951.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd3.alicdn.com/imgextra/i3/2265445951/TB2oXqUbFXXXXXIXXXXXXXXXXXX_!!2265445951.jpg_220x220.jpg'
 	          }],
 	          shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
 	          shopLikeText: '6',
@@ -382,66 +342,414 @@
 
 	;__weex_module__.exports.template = __weex_module__.exports.template || {}
 	;Object.assign(__weex_module__.exports.template, {
-	  "type": "list",
-	  "classList": [
-	    "list"
-	  ],
-	  "events": {
-	    "loadmore": "loadmore"
-	  },
-	  "attr": {
-	    "loadmoreoffset": "2000"
-	  },
+	  "type": "scroller",
 	  "children": [
 	    {
-	      "type": "cell",
-	      "append": "tree",
+	      "type": "div",
 	      "classList": [
-	        "cell"
+	        "block"
 	      ],
-	      "events": {
-	        "click": "oncellclick"
-	      },
-	      "attr": {
-	        "rownumber": function () {return this.id},
-	        "scope": function () {return this.scopeValue},
-	        "composite": function () {return this.composite}
-	      },
-	      "repeat": function () {return this.shopList},
 	      "children": [
 	        {
-	          "type": "div",
+	          "type": "text",
+	          "attr": {
+	            "value": "Horizontal list"
+	          }
+	        }
+	      ]
+	    },
+	    {
+	      "type": "hlist",
+	      "classList": [
+	        "list"
+	      ],
+	      "events": {
+	        "loadmore": "loadmore"
+	      },
+	      "attr": {
+	        "loadmoreoffset": "2000",
+	        "transform": "opacity(0.8);translate(100,0);rotate(80);"
+	      },
+	      "children": [
+	        {
+	          "type": "cell",
+	          "append": "tree",
 	          "classList": [
-	            "shopDiv"
+	            "cell"
 	          ],
+	          "events": {
+	            "click": "oncellclick"
+	          },
+	          "attr": {
+	            "rownumber": function () {return this.id},
+	            "scope": function () {return this.scopeValue},
+	            "composite": function () {return this.composite}
+	          },
+	          "repeat": function () {return this.shopList},
 	          "children": [
 	            {
 	              "type": "div",
 	              "classList": [
-	                "shopHeader"
+	                "shopDiv"
 	              ],
-	              "style": {
-	                "flexDirection": "row"
-	              },
 	              "children": [
 	                {
 	                  "type": "div",
+	                  "classList": [
+	                    "shopHeader"
+	                  ],
 	                  "style": {
-	                    "flex": 2,
 	                    "flexDirection": "row"
 	                  },
 	                  "children": [
 	                    {
 	                      "type": "div",
+	                      "style": {
+	                        "flex": 2,
+	                        "flexDirection": "row"
+	                      },
 	                      "children": [
 	                        {
-	                          "type": "image",
+	                          "type": "div",
+	                          "children": [
+	                            {
+	                              "type": "image",
+	                              "style": {
+	                                "width": 60,
+	                                "height": 60
+	                              },
+	                              "attr": {
+	                                "src": function () {return this.PersonPhoto}
+	                              }
+	                            }
+	                          ]
+	                        },
+	                        {
+	                          "type": "div",
 	                          "style": {
-	                            "width": 60,
+	                            "flexDirection": "column",
+	                            "marginLeft": 5
+	                          },
+	                          "children": [
+	                            {
+	                              "type": "div",
+	                              "style": {
+	                                "marginTop": 5
+	                              },
+	                              "children": [
+	                                {
+	                                  "type": "text",
+	                                  "style": {
+	                                    "fontSize": 20
+	                                  },
+	                                  "attr": {
+	                                    "value": function () {return this.PersonName}
+	                                  }
+	                                }
+	                              ]
+	                            },
+	                            {
+	                              "type": "div",
+	                              "style": {
+	                                "marginTop": 5
+	                              },
+	                              "children": [
+	                                {
+	                                  "type": "text",
+	                                  "style": {
+	                                    "fontSize": 20,
+	                                    "color": "#cccccc"
+	                                  },
+	                                  "attr": {
+	                                    "value": function () {return this.PersonVisitTime}
+	                                  }
+	                                }
+	                              ]
+	                            }
+	                          ]
+	                        }
+	                      ]
+	                    },
+	                    {
+	                      "type": "div",
+	                      "style": {
+	                        "flex": 5,
+	                        "flexDirection": "row"
+	                      },
+	                      "children": [
+	                        {
+	                          "type": "div",
+	                          "style": {
+	                            "flexDirection": "row",
+	                            "marginLeft": 10,
+	                            "marginTop": 10
+	                          },
+	                          "children": [
+	                            {
+	                              "type": "div",
+	                              "children": [
+	                                {
+	                                  "type": "image",
+	                                  "style": {
+	                                    "width": 20,
+	                                    "height": 20
+	                                  },
+	                                  "attr": {
+	                                    "src": "https://img.alicdn.com/tps/i4/TB1zkDeIFXXXXXrXVXX07tlTXXX-200-200.png_88x88xz.jpg"
+	                                  }
+	                                }
+	                              ]
+	                            },
+	                            {
+	                              "type": "div",
+	                              "children": [
+	                                {
+	                                  "type": "text",
+	                                  "style": {
+	                                    "fontSize": 20
+	                                  },
+	                                  "attr": {
+	                                    "value": "Hope"
+	                                  }
+	                                }
+	                              ]
+	                            }
+	                          ]
+	                        },
+	                        {
+	                          "type": "div",
+	                          "style": {
+	                            "position": "absolute",
+	                            "left": 90,
+	                            "top": 10,
+	                            "flexDirection": "row"
+	                          },
+	                          "children": [
+	                            {
+	                              "type": "div",
+	                              "children": [
+	                                {
+	                                  "type": "image",
+	                                  "style": {
+	                                    "width": 20,
+	                                    "height": 20
+	                                  },
+	                                  "attr": {
+	                                    "src": "https://img.alicdn.com/tps/i2/TB1hRb1IXXXXXX3XVXXXQaP.pXX-87-87.jpeg"
+	                                  }
+	                                }
+	                              ]
+	                            },
+	                            {
+	                              "type": "div",
+	                              "children": [
+	                                {
+	                                  "type": "text",
+	                                  "style": {
+	                                    "fontSize": 20
+	                                  },
+	                                  "attr": {
+	                                    "value": "Mem"
+	                                  }
+	                                }
+	                              ]
+	                            }
+	                          ]
+	                        },
+	                        {
+	                          "type": "div",
+	                          "style": {
+	                            "position": "absolute",
+	                            "left": 170,
+	                            "top": 10,
+	                            "flexDirection": "row"
+	                          },
+	                          "children": [
+	                            {
+	                              "type": "div",
+	                              "children": [
+	                                {
+	                                  "type": "image",
+	                                  "style": {
+	                                    "width": 20,
+	                                    "height": 20
+	                                  },
+	                                  "attr": {
+	                                    "src": "https://img.alicdn.com/tps/i3/TB1DGkJJFXXXXaZXFXX07tlTXXX-200-200.png"
+	                                  }
+	                                }
+	                              ]
+	                            },
+	                            {
+	                              "type": "div",
+	                              "children": [
+	                                {
+	                                  "type": "text",
+	                                  "style": {
+	                                    "fontSize": 20
+	                                  },
+	                                  "attr": {
+	                                    "value": "auth"
+	                                  }
+	                                }
+	                              ]
+	                            }
+	                          ]
+	                        },
+	                        {
+	                          "type": "div",
+	                          "style": {
+	                            "position": "absolute",
+	                            "left": 250,
+	                            "top": 10,
+	                            "flexDirection": "row"
+	                          },
+	                          "children": [
+	                            {
+	                              "type": "div",
+	                              "children": [
+	                                {
+	                                  "type": "image",
+	                                  "style": {
+	                                    "width": 20,
+	                                    "height": 20
+	                                  },
+	                                  "attr": {
+	                                    "src": "https://img.alicdn.com/tps/i1/TB1nFvPIXXXXXbUXXXXUAkPJpXX-87-87.png"
+	                                  }
+	                                }
+	                              ]
+	                            },
+	                            {
+	                              "type": "div",
+	                              "children": [
+	                                {
+	                                  "type": "text",
+	                                  "style": {
+	                                    "fontSize": 20
+	                                  },
+	                                  "attr": {
+	                                    "value": "Friend"
+	                                  }
+	                                }
+	                              ]
+	                            }
+	                          ]
+	                        },
+	                        {
+	                          "type": "div",
+	                          "style": {
+	                            "position": "absolute",
+	                            "left": 330,
+	                            "top": 10,
+	                            "flexDirection": "row"
+	                          },
+	                          "children": [
+	                            {
+	                              "type": "div",
+	                              "children": [
+	                                {
+	                                  "type": "image",
+	                                  "style": {
+	                                    "width": 20,
+	                                    "height": 20
+	                                  },
+	                                  "attr": {
+	                                    "src": "https://img.alicdn.com/tps/i2/TB1CpD7IXXXXXbSXXXXUAkPJpXX-87-87.png"
+	                                  }
+	                                }
+	                              ]
+	                            },
+	                            {
+	                              "type": "div",
+	                              "children": [
+	                                {
+	                                  "type": "text",
+	                                  "style": {
+	                                    "fontSize": 20
+	                                  },
+	                                  "attr": {
+	                                    "value": "issue"
+	                                  }
+	                                }
+	                              ]
+	                            }
+	                          ]
+	                        },
+	                        {
+	                          "type": "div",
+	                          "style": {
+	                            "position": "absolute",
+	                            "left": 410,
+	                            "top": 10,
+	                            "flexDirection": "row"
+	                          },
+	                          "children": [
+	                            {
+	                              "type": "div",
+	                              "children": [
+	                                {
+	                                  "type": "image",
+	                                  "style": {
+	                                    "width": 20,
+	                                    "height": 20
+	                                  },
+	                                  "attr": {
+	                                    "src": "https://gtms02.alicdn.com/tps/i2/TB11ZZfIVXXXXbMXFXXEDhGGXXX-32-32.png"
+	                                  }
+	                                }
+	                              ]
+	                            },
+	                            {
+	                              "type": "div",
+	                              "children": [
+	                                {
+	                                  "type": "text",
+	                                  "style": {
+	                                    "fontSize": 20
+	                                  },
+	                                  "attr": {
+	                                    "value": "super"
+	                                  }
+	                                }
+	                              ]
+	                            }
+	                          ]
+	                        }
+	                      ]
+	                    }
+	                  ]
+	                },
+	                {
+	                  "type": "div",
+	                  "classList": [
+	                    "shopBody"
+	                  ],
+	                  "style": {
+	                    "flexDirection": "column"
+	                  },
+	                  "children": [
+	                    {
+	                      "type": "div",
+	                      "classList": [
+	                        "descDiv"
+	                      ],
+	                      "style": {
+	                        "marginTop": 10,
+	                        "marginLeft": 10
+	                      },
+	                      "children": [
+	                        {
+	                          "type": "text",
+	                          "classList": [
+	                            "shopDesc"
+	                          ],
+	                          "style": {
+	                            "fontSize": 25,
 	                            "height": 60
 	                          },
 	                          "attr": {
-	                            "src": function () {return this.PersonPhoto}
+	                            "value": function () {return this.shopDesc}
 	                          }
 	                        }
 	                      ]
@@ -449,416 +757,36 @@
 	                    {
 	                      "type": "div",
 	                      "style": {
-	                        "flexDirection": "column",
-	                        "marginLeft": 5
-	                      },
-	                      "children": [
-	                        {
-	                          "type": "div",
-	                          "style": {
-	                            "marginTop": 5
-	                          },
-	                          "children": [
-	                            {
-	                              "type": "text",
-	                              "style": {
-	                                "fontSize": 20
-	                              },
-	                              "attr": {
-	                                "value": function () {return this.PersonName}
-	                              }
-	                            }
-	                          ]
-	                        },
-	                        {
-	                          "type": "div",
-	                          "style": {
-	                            "marginTop": 5
-	                          },
-	                          "children": [
-	                            {
-	                              "type": "text",
-	                              "style": {
-	                                "fontSize": 20,
-	                                "color": "#cccccc"
-	                              },
-	                              "attr": {
-	                                "value": function () {return this.PersonVisitTime}
-	                              }
-	                            }
-	                          ]
-	                        }
-	                      ]
-	                    }
-	                  ]
-	                },
-	                {
-	                  "type": "div",
-	                  "style": {
-	                    "flex": 5,
-	                    "flexDirection": "row"
-	                  },
-	                  "children": [
-	                    {
-	                      "type": "div",
-	                      "style": {
-	                        "flexDirection": "row",
-	                        "marginLeft": 10,
-	                        "marginTop": 10
-	                      },
-	                      "children": [
-	                        {
-	                          "type": "div",
-	                          "children": [
-	                            {
-	                              "type": "image",
-	                              "style": {
-	                                "width": 20,
-	                                "height": 20
-	                              },
-	                              "attr": {
-	                                "src": "https://img.alicdn.com/tps/i4/TB1zkDeIFXXXXXrXVXX07tlTXXX-200-200.png_88x88xz.jpg"
-	                              }
-	                            }
-	                          ]
-	                        },
-	                        {
-	                          "type": "div",
-	                          "children": [
-	                            {
-	                              "type": "text",
-	                              "style": {
-	                                "fontSize": 20
-	                              },
-	                              "attr": {
-	                                "value": "Hope"
-	                              }
-	                            }
-	                          ]
-	                        }
-	                      ]
-	                    },
-	                    {
-	                      "type": "div",
-	                      "style": {
-	                        "position": "absolute",
-	                        "left": 90,
-	                        "top": 10,
 	                        "flexDirection": "row"
 	                      },
 	                      "children": [
 	                        {
 	                          "type": "div",
-	                          "children": [
-	                            {
-	                              "type": "image",
-	                              "style": {
-	                                "width": 20,
-	                                "height": 20
-	                              },
-	                              "attr": {
-	                                "src": "https://img.alicdn.com/tps/i2/TB1hRb1IXXXXXX3XVXXXQaP.pXX-87-87.jpeg"
-	                              }
-	                            }
-	                          ]
-	                        },
-	                        {
-	                          "type": "div",
-	                          "children": [
-	                            {
-	                              "type": "text",
-	                              "style": {
-	                                "fontSize": 20
-	                              },
-	                              "attr": {
-	                                "value": "Mem"
-	                              }
-	                            }
-	                          ]
-	                        }
-	                      ]
-	                    },
-	                    {
-	                      "type": "div",
-	                      "style": {
-	                        "position": "absolute",
-	                        "left": 170,
-	                        "top": 10,
-	                        "flexDirection": "row"
-	                      },
-	                      "children": [
-	                        {
-	                          "type": "div",
-	                          "children": [
-	                            {
-	                              "type": "image",
-	                              "style": {
-	                                "width": 20,
-	                                "height": 20
-	                              },
-	                              "attr": {
-	                                "src": "https://img.alicdn.com/tps/i3/TB1DGkJJFXXXXaZXFXX07tlTXXX-200-200.png"
-	                              }
-	                            }
-	                          ]
-	                        },
-	                        {
-	                          "type": "div",
-	                          "children": [
-	                            {
-	                              "type": "text",
-	                              "style": {
-	                                "fontSize": 20
-	                              },
-	                              "attr": {
-	                                "value": "auth"
-	                              }
-	                            }
-	                          ]
-	                        }
-	                      ]
-	                    },
-	                    {
-	                      "type": "div",
-	                      "style": {
-	                        "position": "absolute",
-	                        "left": 250,
-	                        "top": 10,
-	                        "flexDirection": "row"
-	                      },
-	                      "children": [
-	                        {
-	                          "type": "div",
-	                          "children": [
-	                            {
-	                              "type": "image",
-	                              "style": {
-	                                "width": 20,
-	                                "height": 20
-	                              },
-	                              "attr": {
-	                                "src": "https://img.alicdn.com/tps/i1/TB1nFvPIXXXXXbUXXXXUAkPJpXX-87-87.png"
-	                              }
-	                            }
-	                          ]
-	                        },
-	                        {
-	                          "type": "div",
-	                          "children": [
-	                            {
-	                              "type": "text",
-	                              "style": {
-	                                "fontSize": 20
-	                              },
-	                              "attr": {
-	                                "value": "Friend"
-	                              }
-	                            }
-	                          ]
-	                        }
-	                      ]
-	                    },
-	                    {
-	                      "type": "div",
-	                      "style": {
-	                        "position": "absolute",
-	                        "left": 330,
-	                        "top": 10,
-	                        "flexDirection": "row"
-	                      },
-	                      "children": [
-	                        {
-	                          "type": "div",
-	                          "children": [
-	                            {
-	                              "type": "image",
-	                              "style": {
-	                                "width": 20,
-	                                "height": 20
-	                              },
-	                              "attr": {
-	                                "src": "https://img.alicdn.com/tps/i2/TB1CpD7IXXXXXbSXXXXUAkPJpXX-87-87.png"
-	                              }
-	                            }
-	                          ]
-	                        },
-	                        {
-	                          "type": "div",
-	                          "children": [
-	                            {
-	                              "type": "text",
-	                              "style": {
-	                                "fontSize": 20
-	                              },
-	                              "attr": {
-	                                "value": "issue"
-	                              }
-	                            }
-	                          ]
-	                        }
-	                      ]
-	                    },
-	                    {
-	                      "type": "div",
-	                      "style": {
-	                        "position": "absolute",
-	                        "left": 410,
-	                        "top": 10,
-	                        "flexDirection": "row"
-	                      },
-	                      "children": [
-	                        {
-	                          "type": "div",
-	                          "children": [
-	                            {
-	                              "type": "image",
-	                              "style": {
-	                                "width": 20,
-	                                "height": 20
-	                              },
-	                              "attr": {
-	                                "src": "https://gtms02.alicdn.com/tps/i2/TB11ZZfIVXXXXbMXFXXEDhGGXXX-32-32.png"
-	                              }
-	                            }
-	                          ]
-	                        },
-	                        {
-	                          "type": "div",
-	                          "children": [
-	                            {
-	                              "type": "text",
-	                              "style": {
-	                                "fontSize": 20
-	                              },
-	                              "attr": {
-	                                "value": "super"
-	                              }
-	                            }
-	                          ]
-	                        }
-	                      ]
-	                    }
-	                  ]
-	                }
-	              ]
-	            },
-	            {
-	              "type": "div",
-	              "classList": [
-	                "shopBody"
-	              ],
-	              "style": {
-	                "flexDirection": "column"
-	              },
-	              "children": [
-	                {
-	                  "type": "div",
-	                  "classList": [
-	                    "descDiv"
-	                  ],
-	                  "style": {
-	                    "marginTop": 10,
-	                    "marginLeft": 10
-	                  },
-	                  "children": [
-	                    {
-	                      "type": "text",
-	                      "classList": [
-	                        "shopDesc"
-	                      ],
-	                      "style": {
-	                        "fontSize": 25
-	                      },
-	                      "attr": {
-	                        "value": function () {return this.shopDesc}
-	                      }
-	                    }
-	                  ]
-	                },
-	                {
-	                  "type": "div",
-	                  "style": {
-	                    "flexDirection": "row"
-	                  },
-	                  "children": [
-	                    {
-	                      "type": "div",
-	                      "classList": [
-	                        "imgDiv"
-	                      ],
-	                      "style": {
-	                        "flex": 1,
-	                        "flexDirection": "column",
-	                        "margin": 10
-	                      },
-	                      "repeat": function () {return this.shopImgList},
-	                      "children": [
-	                        {
-	                          "type": "div",
-	                          "children": [
-	                            {
-	                              "type": "image",
-	                              "classList": [
-	                                "shopImg"
-	                              ],
-	                              "style": {
-	                                "width": function () {return this.shopImgWidth},
-	                                "height": function () {return this.shopImgHeight}
-	                              },
-	                              "attr": {
-	                                "src": function () {return this.shopImg}
-	                              }
-	                            }
-	                          ]
-	                        },
-	                        {
-	                          "type": "div",
+	                          "classList": [
+	                            "imgDiv"
+	                          ],
 	                          "style": {
 	                            "flex": 1,
-	                            "marginTop": 10,
-	                            "flexDirection": "row"
+	                            "flexDirection": "column",
+	                            "margin": 10
 	                          },
+	                          "repeat": function () {return this.shopImgList},
 	                          "children": [
 	                            {
 	                              "type": "div",
-	                              "style": {
-	                                "flex": 1,
-	                                "justifyContent": "center",
-	                                "flexDirection": "row"
-	                              },
 	                              "children": [
 	                                {
-	                                  "type": "div",
-	                                  "children": [
-	                                    {
-	                                      "type": "image",
-	                                      "style": {
-	                                        "width": 20,
-	                                        "height": 20
-	                                      },
-	                                      "attr": {
-	                                        "src": "https://img.alicdn.com/tps/i1/TB1nFvPIXXXXXbUXXXXUAkPJpXX-87-87.png"
-	                                      }
-	                                    }
-	                                  ]
-	                                },
-	                                {
-	                                  "type": "div",
+	                                  "type": "image",
+	                                  "classList": [
+	                                    "shopImg"
+	                                  ],
 	                                  "style": {
-	                                    "marginLeft": 5
+	                                    "width": function () {return this.shopImgWidth},
+	                                    "height": function () {return this.shopImgHeight}
 	                                  },
-	                                  "children": [
-	                                    {
-	                                      "type": "text",
-	                                      "style": {
-	                                        "fontSize": 20,
-	                                        "textAlign": "center"
-	                                      },
-	                                      "attr": {
-	                                        "value": "Up"
-	                                      }
-	                                    }
-	                                  ]
+	                                  "attr": {
+	                                    "src": function () {return this.shopImg}
+	                                  }
 	                                }
 	                              ]
 	                            },
@@ -866,40 +794,93 @@
 	                              "type": "div",
 	                              "style": {
 	                                "flex": 1,
-	                                "justifyContent": "center",
+	                                "marginTop": 10,
 	                                "flexDirection": "row"
 	                              },
 	                              "children": [
 	                                {
 	                                  "type": "div",
+	                                  "style": {
+	                                    "flex": 1,
+	                                    "justifyContent": "center",
+	                                    "flexDirection": "row"
+	                                  },
 	                                  "children": [
 	                                    {
-	                                      "type": "image",
+	                                      "type": "div",
+	                                      "children": [
+	                                        {
+	                                          "type": "image",
+	                                          "style": {
+	                                            "width": 20,
+	                                            "height": 20
+	                                          },
+	                                          "attr": {
+	                                            "src": "https://img.alicdn.com/tps/i1/TB1nFvPIXXXXXbUXXXXUAkPJpXX-87-87.png"
+	                                          }
+	                                        }
+	                                      ]
+	                                    },
+	                                    {
+	                                      "type": "div",
 	                                      "style": {
-	                                        "width": 20,
-	                                        "height": 20
+	                                        "marginLeft": 5
 	                                      },
-	                                      "attr": {
-	                                        "src": "https://img.alicdn.com/tps/i2/TB1CpD7IXXXXXbSXXXXUAkPJpXX-87-87.png"
-	                                      }
+	                                      "children": [
+	                                        {
+	                                          "type": "text",
+	                                          "style": {
+	                                            "fontSize": 20,
+	                                            "textAlign": "center"
+	                                          },
+	                                          "attr": {
+	                                            "value": "Up"
+	                                          }
+	                                        }
+	                                      ]
 	                                    }
 	                                  ]
 	                                },
 	                                {
 	                                  "type": "div",
 	                                  "style": {
-	                                    "marginLeft": 5
+	                                    "flex": 1,
+	                                    "justifyContent": "center",
+	                                    "flexDirection": "row"
 	                                  },
 	                                  "children": [
 	                                    {
-	                                      "type": "text",
+	                                      "type": "div",
+	                                      "children": [
+	                                        {
+	                                          "type": "image",
+	                                          "style": {
+	                                            "width": 20,
+	                                            "height": 20
+	                                          },
+	                                          "attr": {
+	                                            "src": "https://img.alicdn.com/tps/i2/TB1CpD7IXXXXXbSXXXXUAkPJpXX-87-87.png"
+	                                          }
+	                                        }
+	                                      ]
+	                                    },
+	                                    {
+	                                      "type": "div",
 	                                      "style": {
-	                                        "fontSize": 20,
-	                                        "textAlign": "center"
+	                                        "marginLeft": 5
 	                                      },
-	                                      "attr": {
-	                                        "value": "down"
-	                                      }
+	                                      "children": [
+	                                        {
+	                                          "type": "text",
+	                                          "style": {
+	                                            "fontSize": 20,
+	                                            "textAlign": "center"
+	                                          },
+	                                          "attr": {
+	                                            "value": "down"
+	                                          }
+	                                        }
+	                                      ]
 	                                    }
 	                                  ]
 	                                }
@@ -910,170 +891,170 @@
 	                      ]
 	                    }
 	                  ]
-	                }
-	              ]
-	            },
-	            {
-	              "type": "div",
-	              "classList": [
-	                "shopFooter"
-	              ],
-	              "style": {
-	                "flexDirection": "row",
-	                "marginTop": 10,
-	                "marginLeft": 10,
-	                "justifyContent": "flex-end"
-	              },
-	              "children": [
-	                {
-	                  "type": "div",
-	                  "style": {
-	                    "marginRight": 5
-	                  },
-	                  "children": [
-	                    {
-	                      "type": "image",
-	                      "classList": [
-	                        "shopLikeImg",
-	                        "smallImg"
-	                      ],
-	                      "attr": {
-	                        "src": function () {return this.shopLikeImg}
-	                      }
-	                    }
-	                  ]
 	                },
 	                {
 	                  "type": "div",
+	                  "classList": [
+	                    "shopFooter"
+	                  ],
 	                  "style": {
-	                    "marginRight": 15
+	                    "flexDirection": "row",
+	                    "marginTop": 10,
+	                    "marginLeft": 10,
+	                    "justifyContent": "flex-end"
 	                  },
 	                  "children": [
 	                    {
-	                      "type": "text",
-	                      "classList": [
-	                        "shopLikeText"
-	                      ],
+	                      "type": "div",
 	                      "style": {
-	                        "fontSize": 20
+	                        "marginRight": 5
 	                      },
-	                      "attr": {
-	                        "value": function () {return this.shopLikeText}
-	                      }
-	                    }
-	                  ]
-	                },
-	                {
-	                  "type": "div",
-	                  "style": {
-	                    "marginRight": 5
-	                  },
-	                  "children": [
+	                      "children": [
+	                        {
+	                          "type": "image",
+	                          "classList": [
+	                            "shopLikeImg",
+	                            "smallImg"
+	                          ],
+	                          "attr": {
+	                            "src": function () {return this.shopLikeImg}
+	                          }
+	                        }
+	                      ]
+	                    },
 	                    {
-	                      "type": "image",
-	                      "classList": [
-	                        "shopCommentImg",
-	                        "smallImg"
-	                      ],
-	                      "attr": {
-	                        "src": function () {return this.shopCommentImg}
-	                      }
-	                    }
-	                  ]
-	                },
-	                {
-	                  "type": "div",
-	                  "style": {
-	                    "marginRight": 15
-	                  },
-	                  "children": [
-	                    {
-	                      "type": "text",
-	                      "classList": [
-	                        "shopCommentText"
-	                      ],
+	                      "type": "div",
 	                      "style": {
-	                        "fontSize": 20
+	                        "marginRight": 15
 	                      },
-	                      "attr": {
-	                        "value": function () {return this.shopCommentText}
-	                      }
-	                    }
-	                  ]
-	                },
-	                {
-	                  "type": "div",
-	                  "style": {
-	                    "marginRight": 5
-	                  },
-	                  "children": [
+	                      "children": [
+	                        {
+	                          "type": "text",
+	                          "classList": [
+	                            "shopLikeText"
+	                          ],
+	                          "style": {
+	                            "fontSize": 20
+	                          },
+	                          "attr": {
+	                            "value": function () {return this.shopLikeText}
+	                          }
+	                        }
+	                      ]
+	                    },
 	                    {
-	                      "type": "image",
-	                      "classList": [
-	                        "shopLookImg",
-	                        "smallImg"
-	                      ],
-	                      "attr": {
-	                        "src": function () {return this.shopLookImg}
-	                      }
-	                    }
-	                  ]
-	                },
-	                {
-	                  "type": "div",
-	                  "style": {
-	                    "marginRight": 15
-	                  },
-	                  "children": [
-	                    {
-	                      "type": "text",
-	                      "classList": [
-	                        "shopLookText"
-	                      ],
+	                      "type": "div",
 	                      "style": {
-	                        "fontSize": 20
+	                        "marginRight": 5
 	                      },
-	                      "attr": {
-	                        "value": function () {return this.shopLookText}
-	                      }
-	                    }
-	                  ]
-	                },
-	                {
-	                  "type": "div",
-	                  "style": {
-	                    "marginRight": 5
-	                  },
-	                  "children": [
+	                      "children": [
+	                        {
+	                          "type": "image",
+	                          "classList": [
+	                            "shopCommentImg",
+	                            "smallImg"
+	                          ],
+	                          "attr": {
+	                            "src": function () {return this.shopCommentImg}
+	                          }
+	                        }
+	                      ]
+	                    },
 	                    {
-	                      "type": "image",
-	                      "classList": [
-	                        "shareImg",
-	                        "smallImg"
-	                      ],
-	                      "attr": {
-	                        "src": function () {return this.shareImg}
-	                      }
-	                    }
-	                  ]
-	                },
-	                {
-	                  "type": "div",
-	                  "style": {
-	                    "marginRight": 20
-	                  },
-	                  "children": [
-	                    {
-	                      "type": "text",
-	                      "classList": [
-	                        "shareText"
-	                      ],
+	                      "type": "div",
 	                      "style": {
-	                        "fontSize": 20
+	                        "marginRight": 15
 	                      },
-	                      "attr": {
-	                        "value": function () {return this.shareText}
-	                      }
+	                      "children": [
+	                        {
+	                          "type": "text",
+	                          "classList": [
+	                            "shopCommentText"
+	                          ],
+	                          "style": {
+	                            "fontSize": 20
+	                          },
+	                          "attr": {
+	                            "value": function () {return this.shopCommentText}
+	                          }
+	                        }
+	                      ]
+	                    },
+	                    {
+	                      "type": "div",
+	                      "style": {
+	                        "marginRight": 5
+	                      },
+	                      "children": [
+	                        {
+	                          "type": "image",
+	                          "classList": [
+	                            "shopLookImg",
+	                            "smallImg"
+	                          ],
+	                          "attr": {
+	                            "src": function () {return this.shopLookImg}
+	                          }
+	                        }
+	                      ]
+	                    },
+	                    {
+	                      "type": "div",
+	                      "style": {
+	                        "marginRight": 15
+	                      },
+	                      "children": [
+	                        {
+	                          "type": "text",
+	                          "classList": [
+	                            "shopLookText"
+	                          ],
+	                          "style": {
+	                            "fontSize": 20
+	                          },
+	                          "attr": {
+	                            "value": function () {return this.shopLookText}
+	                          }
+	                        }
+	                      ]
+	                    },
+	                    {
+	                      "type": "div",
+	                      "style": {
+	                        "marginRight": 5
+	                      },
+	                      "children": [
+	                        {
+	                          "type": "image",
+	                          "classList": [
+	                            "shareImg",
+	                            "smallImg"
+	                          ],
+	                          "attr": {
+	                            "src": function () {return this.shareImg}
+	                          }
+	                        }
+	                      ]
+	                    },
+	                    {
+	                      "type": "div",
+	                      "style": {
+	                        "marginRight": 20
+	                      },
+	                      "children": [
+	                        {
+	                          "type": "text",
+	                          "classList": [
+	                            "shareText"
+	                          ],
+	                          "style": {
+	                            "fontSize": 20
+	                          },
+	                          "attr": {
+	                            "value": function () {return this.shareText}
+	                          }
+	                        }
+	                      ]
 	                    }
 	                  ]
 	                }
@@ -1082,11 +1063,74 @@
 	          ]
 	        }
 	      ]
+	    },
+	    {
+	      "type": "div",
+	      "classList": [
+	        "block"
+	      ],
+	      "children": [
+	        {
+	          "type": "text",
+	          "attr": {
+	            "value": "In"
+	          }
+	        }
+	      ]
+	    },
+	    {
+	      "type": "div",
+	      "classList": [
+	        "block"
+	      ],
+	      "children": [
+	        {
+	          "type": "text",
+	          "attr": {
+	            "value": "A"
+	          }
+	        }
+	      ]
+	    },
+	    {
+	      "type": "div",
+	      "classList": [
+	        "block"
+	      ],
+	      "children": [
+	        {
+	          "type": "text",
+	          "attr": {
+	            "value": "Scroller"
+	          }
+	        }
+	      ]
+	    },
+	    {
+	      "type": "div",
+	      "classList": [
+	        "block"
+	      ],
+	      "children": [
+	        {
+	          "type": "text",
+	          "attr": {
+	            "value": "4"
+	          }
+	        }
+	      ]
 	    }
 	  ]
 	})
 	;__weex_module__.exports.style = __weex_module__.exports.style || {}
 	;Object.assign(__weex_module__.exports.style, {
+	  "block": {
+	    "height": 300,
+	    "width": 750,
+	    "backgroundColor": "#cccccc",
+	    "alignItems": "center",
+	    "justifyContent": "center"
+	  },
 	  "flexRow": {
 	    "flexDirection": "row"
 	  },
@@ -1110,7 +1154,7 @@
 	    "flexDirection": "column",
 	    "overflow": "hidden",
 	    "width": 750,
-	    "height": 1200,
+	    "height": 500,
 	    "backgroundColor": "#dddddd"
 	  },
 	  "cell": {
@@ -1150,7 +1194,7 @@
 	  }
 	})
 	})
-	;__weex_bootstrap__("@weex-component/f68b1676204b660f37096b5dc8667ee5", {
+	;__weex_bootstrap__("@weex-component/c319b2294e664178341d453415092a58", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 

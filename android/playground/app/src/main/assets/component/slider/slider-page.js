@@ -46,7 +46,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	;__weex_define__("@weex-component/04ff08101087ed57bb9c0e3a77fc1809", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(16);
+	__webpack_require__(14);
 
 	;
 	  __weex_module__.exports = {
@@ -95,7 +95,7 @@
 
 /***/ },
 
-/***/ 16:
+/***/ 14:
 /***/ function(module, exports) {
 
 	;__weex_define__("@weex-component/slider-item", [], function(__weex_require__, __weex_exports__, __weex_module__){

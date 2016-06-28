@@ -47,7 +47,7 @@
 	;__weex_define__("@weex-component/0e1e16da3df6f124806760e661cfb765", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
-	  __webpack_require__(17);
+	  __webpack_require__(15);
 	  __weex_module__.exports = {
 	    data: function () {return {
 	      root: 'examples',
@@ -1244,13 +1244,11 @@
 /***/ },
 /* 13 */,
 /* 14 */,
-/* 15 */,
-/* 16 */,
-/* 17 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	;__weex_define__("@weex-component/example-list", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(18);
+	__webpack_require__(16);
 
 	;
 	  __webpack_require__(1);
@@ -1272,7 +1270,7 @@
 	      var subRoot = dirs.length > 1 ? dirs.slice(1).join('/') + '/' : '';
 
 	      var nativeBase;
-	      var isAndroidAssets = bundleUrl.indexOf('your_current_IP') >= 0;
+	      var isAndroidAssets = bundleUrl.indexOf('your_current_IP') >= 0 || bundleUrl.indexOf('file://assets/')>=0;
 	      var isiOSAssets = bundleUrl.indexOf('file:///') >= 0 && bundleUrl.indexOf('WeexDemo.app') > 0;
 	      if (isAndroidAssets) {
 	        nativeBase = 'file://assets/';
@@ -1334,7 +1332,7 @@
 	})
 
 /***/ },
-/* 18 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	;__weex_define__("@weex-component/example-list-item", [], function(__weex_require__, __weex_exports__, __weex_module__){

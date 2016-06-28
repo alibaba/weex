@@ -44,34 +44,34 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/ff4520191428d23ca391f6579a3fd590", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/b42c3e7de7d53d9e21278343556e5ec2", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
-	  __webpack_require__(17);
+	  __webpack_require__(15);
 	  __weex_module__.exports = {
 	    data: function () {return {
 	      root: 'examples/syntax',
 	      items: [
-	        {name: 'hello-world', title: 'Hello World'},
-	        {name: 'hello-world-1', title: 'Hello World 1'},
-	        {name: 'hello-world-2', title: 'Hello World 2'},
-	        {name: 'hello-world-3', title: 'Hello World 3'},
-	        {name: 'hello-world-4', title: 'Hello World 4'},
-	        {name: 'hello-world-5', title: 'Hello World 5'},
-	        {name: 'script-component', title: 'Script Component'},
-	        {name: 'script-data', title: 'Script Data'},
-	        {name: 'script-events', title: 'Script Event'},
-	        {name: 'script-instance', title: 'Script Instance'},
-	        {name: 'script-lifecycle', title: 'Script Lifecycle'},
-	        {name: 'script-module', title: 'Script Module'},
-	        {name: 'script-options', title: 'Script Option'},
-	        {name: 'template-class', title: 'Template Class'},
-	        {name: 'template-content', title: 'Template Content'},
-	        {name: 'template-event', title: 'Template Event'},
-	        {name: 'template-if', title: 'Template IF'},
-	        {name: 'template-repeat', title: 'Template Repeat'},
-	        {name: 'template-repeat-update', title: 'Template Repeat Update'},
-	        {name: 'template-style', title: 'Template Style'}
+	        {name: 'syntax/hello-world', title: 'Hello World'},
+	        {name: 'syntax/hello-world-1', title: 'Hello World 1'},
+	        {name: 'syntax/hello-world-2', title: 'Hello World 2'},
+	        {name: 'syntax/hello-world-3', title: 'Hello World 3'},
+	        {name: 'syntax/hello-world-4', title: 'Hello World 4'},
+	        {name: 'syntax/hello-world-5', title: 'Hello World 5'},
+	        {name: 'syntax/script-component', title: 'Script Component'},
+	        {name: 'syntax/script-data', title: 'Script Data'},
+	        {name: 'syntax/script-events', title: 'Script Event'},
+	        {name: 'syntax/script-instance', title: 'Script Instance'},
+	        {name: 'syntax/script-lifecycle', title: 'Script Lifecycle'},
+	        {name: 'syntax/script-module', title: 'Script Module'},
+	        {name: 'syntax/script-options', title: 'Script Option'},
+	        {name: 'syntax/template-class', title: 'Template Class'},
+	        {name: 'syntax/template-content', title: 'Template Content'},
+	        {name: 'syntax/template-event', title: 'Template Event'},
+	        {name: 'syntax/template-if', title: 'Template IF'},
+	        {name: 'syntax/template-repeat', title: 'Template Repeat'},
+	        {name: 'syntax/template-repeat-update', title: 'Template Repeat Update'},
+	        {name: 'syntax/template-style', title: 'Template Style'}
 	      ]
 	    }}
 	  }
@@ -85,7 +85,7 @@
 	  }
 	})
 	})
-	;__weex_bootstrap__("@weex-component/ff4520191428d23ca391f6579a3fd590", {
+	;__weex_bootstrap__("@weex-component/b42c3e7de7d53d9e21278343556e5ec2", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -1232,13 +1232,11 @@
 /***/ },
 /* 13 */,
 /* 14 */,
-/* 15 */,
-/* 16 */,
-/* 17 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	;__weex_define__("@weex-component/example-list", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(18);
+	__webpack_require__(16);
 
 	;
 	  __webpack_require__(1);
@@ -1260,7 +1258,7 @@
 	      var subRoot = dirs.length > 1 ? dirs.slice(1).join('/') + '/' : '';
 
 	      var nativeBase;
-	      var isAndroidAssets = bundleUrl.indexOf('your_current_IP') >= 0;
+	      var isAndroidAssets = bundleUrl.indexOf('your_current_IP') >= 0 || bundleUrl.indexOf('file://assets/')>=0;
 	      var isiOSAssets = bundleUrl.indexOf('file:///') >= 0 && bundleUrl.indexOf('WeexDemo.app') > 0;
 	      if (isAndroidAssets) {
 	        nativeBase = 'file://assets/';
@@ -1322,7 +1320,7 @@
 	})
 
 /***/ },
-/* 18 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	;__weex_define__("@weex-component/example-list-item", [], function(__weex_require__, __weex_exports__, __weex_module__){
