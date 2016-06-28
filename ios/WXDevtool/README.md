@@ -25,7 +25,7 @@ Remote debug for your native iOS app using Chrome Developer Tools
 
 ### native 调用 
 0. inspect调试
-	* AppDelegate.m文件引入头文件 #import "WXDevtool.h"
+	* AppDelegate.m文件引入头文件 #import "WXDevTool.h"
 	* 程序启动时调用 
 		
 		
