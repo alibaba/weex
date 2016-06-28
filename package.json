@@ -74,7 +74,8 @@
     "scroll-to": "0.0.2",
     "semver": "^5.1.0",
     "transitionize": "0.0.3",
-    "weex-components": "^0.1.2"
+    "weex-components": "^0.1.2",
+    "weex-rx-framework": "^0.0.6"
   },
   "devDependencies": {
     "babel-cli": "~6.4.5",
