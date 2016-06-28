@@ -274,9 +274,18 @@ public class WXEmbed extends WXDiv {
   @WXComponentProp(name = WXDomPropConstant.WX_VISIBILITY)
   public void setVisibility(String visibility) {
     super.setVisibility(visibility);
-    if (!TextUtils.isEmpty(src) && TextUtils.equals(getVisibility(), WXDomPropConstant.WX_VISIBILITY_VISIBLE)) {
+    boolean visiable = TextUtils.equals(getVisibility(), WXDomPropConstant.WX_VISIBILITY_VISIBLE);
+    if (!TextUtils.isEmpty(src) && visiable) {
       if (instance == null) {
         instance = createInstance();
+      }else{
+        instance.onViewAppear();
+      }
+    }
+
+    if(!visiable){
+      if(instance != null){
+        instance.onViewDisappear();
       }
     }
   }
