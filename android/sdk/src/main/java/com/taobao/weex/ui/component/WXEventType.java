@@ -224,8 +224,8 @@ public class WXEventType {
   public static final String WEBVIEW_RECEIVEDTITLE = "receivedtitle";
   public static final String WEBVIEW_PAGEFINISH = "pagefinish";
   public static final String WEBVIEW_PAGESTART = "pagestart";
-  public static final String RECYCLERVIEW_ONREFRESH = "refresh";
-  public static final String RECYCLERVIEW_ONLOADING = "loading";
+  public static final String ONREFRESH = "refresh";
+  public static final String ONLOADING = "loading";
 
   public static final String CHANGE = "change";
 

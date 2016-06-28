@@ -10,7 +10,7 @@
         <ul class="languages">
         {%  for lang in languages.list %}
             <li>
-                <a href="../{{ lang.id }}/">{{ lang.title }}</a>
+                <a href="{{ (lang.id + "/README.md")|contentURL }}">{{ lang.title }}</a>
             </li>
         {% endfor %}
         </ul>

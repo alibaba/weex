@@ -680,6 +680,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
 
 
     mWXPerformance.totalTime = time;
+    mWXPerformance.componentCount = WXComponent.mComponentNum;
     WXLogUtils.d(WXLogUtils.WEEX_PERF_TAG, "mComponentNum:" + WXComponent.mComponentNum);
     WXComponent.mComponentNum = 0;
     if (mRenderListener != null && mContext != null) {
@@ -752,7 +753,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
   private boolean mCreateInstance =true;
   public void firstScreenCreateInstanceTime(long time) {
     if(mCreateInstance) {
-      mWXPerformance.firstScreenCreateInstanceTime = time -mRenderStartTime;
+      mWXPerformance.firstScreenJSFExecuteTime = time -mRenderStartTime;
       mCreateInstance =false;
     }
   }
@@ -769,7 +770,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
     mEnd = true;
     mWXPerformance.screenRenderTime = System.currentTimeMillis() - mRenderStartTime;
     WXLogUtils.renderPerformanceLog("firstScreenRenderFinished", mWXPerformance.screenRenderTime);
-    WXLogUtils.renderPerformanceLog("   firstScreenCreateInstanceTime", mWXPerformance.firstScreenCreateInstanceTime);
+    WXLogUtils.renderPerformanceLog("   firstScreenJSFExecuteTime", mWXPerformance.firstScreenJSFExecuteTime);
     WXLogUtils.renderPerformanceLog("   firstScreenCallNativeTime", mWXPerformance.callNativeTime);
     WXLogUtils.renderPerformanceLog("       firstScreenJsonParseTime", mWXPerformance.parseJsonTime);
     WXLogUtils.renderPerformanceLog("   firstScreenBatchTime", mWXPerformance.batchTime);

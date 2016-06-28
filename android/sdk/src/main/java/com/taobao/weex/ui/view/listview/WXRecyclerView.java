@@ -205,14 +205,11 @@
 package com.taobao.weex.ui.view.listview;
 
 import android.content.Context;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.view.View;
-import android.view.ViewGroup;
 
 public class WXRecyclerView extends RecyclerView {
 
@@ -229,9 +226,8 @@ public class WXRecyclerView extends RecyclerView {
    * @param context
    * @param type
    * @param orientation should be {@link OrientationHelper#HORIZONTAL} or {@link OrientationHelper#VERTICAL}
-     */
+   */
   public void initView(Context context, int type,int orientation) {
-
     if (type == TYPE_GRID_LAYOUT) {
       setLayoutManager(new GridLayoutManager(context, 2,orientation,false));
     } else if (type == TYPE_STAGGERED_GRID_LAYOUT) {

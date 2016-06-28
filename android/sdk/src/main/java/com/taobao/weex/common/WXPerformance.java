@@ -269,7 +269,7 @@ public class WXPerformance {
   /**
    * Create Instance Time spent when rendering first screen
    */
-  public long firstScreenCreateInstanceTime;
+  public long firstScreenJSFExecuteTime;
 
   /**
    * Call native Time spent when rendering first screen
@@ -350,7 +350,7 @@ public class WXPerformance {
     quotas.put("templateLoadTime", (double)templateLoadTime);
     quotas.put("SDKInitInvokeTime",(double)WXEnvironment.sSDKInitInvokeTime);
     quotas.put("SDKInitExecuteTime",(double)WXEnvironment.sSDKInitExecuteTime);
-    quotas.put("firstScreenJSFExecuteTime",(double)firstScreenCreateInstanceTime);
+    quotas.put("firstScreenJSFExecuteTime",(double) firstScreenJSFExecuteTime);
     quotas.put("componentCount",(double)componentCount);
     return quotas;
   }
@@ -391,6 +391,8 @@ public class WXPerformance {
              + ",JSLibSize:" + JSLibSize + ",templateUrl" + templateUrl
              + ",JSTemplateSize:" + JSTemplateSize + ",communicateTime:" + communicateTime
              + ",screenRenderTime:" + screenRenderTime
+             + ",firstScreenJSFExecuteTime:" + firstScreenJSFExecuteTime
+             + ",componentCount:" + componentCount
              + ",initInvokeTime:"+WXEnvironment.sSDKInitInvokeTime+",initExecuteTime:"+WXEnvironment.sSDKInitExecuteTime
              + ",totalTime:" + totalTime + ",JSLibVersion:" + JSLibVersion + ",WXSDKVersion:" + WXSDKVersion
              + ",errCode:" + errCode + ",renderFailedDetail:" + renderFailedDetail

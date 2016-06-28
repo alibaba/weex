@@ -1,4 +1,9 @@
 # Syntax
+<span class="weex-version">0.4</span>
+<a href="https://github.com/weexteam/article/issues/8"  class="weex-translate">cn</a>
+
+
+*The syntax of Weex is deeply inspired from [Vue.js](http://vuejs.org/), an elegant JavaScript framework with component system and reactive data binding.*
 
 A simple Weex page sample is just a piece of `<template>` code, a piece of `<style>` code and a piece of `<script>` code. The three parts together describe a whole Weex page.
 
@@ -70,6 +75,10 @@ Both the two `text` components above have the same `font-size`, which is `64` pi
 
 * [See common styles in Weex](../references/common-style.md)
 
+
+### Notes!
+weex is basically following [HTML attribute](https://en.wikipedia.org/wiki/HTML_attribute) naming rule , so please **do not use CamelCase** in your attribute , **long-name** with “-” as delimiter is much better.
+
 ## `<script>`
 
 The syntax is JavaScript (ES5) and it describes data and behavior of a Weex page. Here we create three paragraphs:
@@ -87,7 +96,7 @@ The syntax is JavaScript (ES5) and it describes data and behavior of a Weex page
   module.exports = {
     data: {
       title: 'Alibaba',
-      date: null
+      datetime: null
     },
     methods: {
       getTitle: function () {

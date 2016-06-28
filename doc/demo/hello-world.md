@@ -6,7 +6,7 @@ Weex Hello World
 
 ## weex code
 hello_world.we
-```
+```html
 <template>
   <div>
     <text>Hello World</text>

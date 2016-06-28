@@ -1,4 +1,5 @@
 # animation
+<span class="weex-version">0.4</span>
 
 ## Summary
 

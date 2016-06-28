@@ -12,17 +12,26 @@
     {% if page.previous and page.previous.path %}
     <link rel="prev" href="{{ page.previous.path|resolveFile }}" />
     {% endif %}
-    <link rel="stylesheet" href="http://alibaba.github.io/weex/css/site.css">
-    <!-- 
-    <link rel="stylesheet" href="http://127.0.0.1/taobao/weex/docs/ali_addition/weex_doc.css">
-    -->    
-    <link rel="stylesheet"  href="http://alibaba.github.io/weex/css/weex_doc.css" >    
-    <link rel="icon" type="image/x-icon" href="http://alibaba.github.io/weex/img/favicon.ico">    
+
+    <link rel="stylesheet"  href="//g.alicdn.com/mtb/lab-zikuan/0.1.3/weex/weex_doc.css" >
+    <!--     
+    <link rel="stylesheet"  href="ali_addition/weex_doc.css" >
+    -->
     
+    <link rel="icon" type="image/x-icon" href="http://alibaba.github.io/weex/img/favicon.ico">
+
+    <script src="//g.alicdn.com/mtb/lab-zikuan/0.1.3/weex/weex_doc.js"></script>
+    <!-- 
+    <script src="ali_addition/weex_doc.js"></script>
+    -->    
+    
+    <link rel="stylesheet"  href="http://g.alicdn.com/mtb/lab-zikuan/0.1.3/weex/weex_doc.css" >    
+    <link rel="icon" type="image/x-icon" href="http://alibaba.github.io/weex/img/favicon.ico">    
 {% endblock %}
 
 {% block javascript %}
-    <script src="{{ "app.js"|resolveAsset }}"></script>
+    <script src="{{ "gitbook.js"|resolveAsset }}"></script>
+    <script src="{{ "theme.js"|resolveAsset }}"></script>
     {% for resource in plugins.resources.js %}
         {% if resource.url %}
         <script src="{{ resource.url }}"></script>
@@ -30,58 +39,25 @@
         <script src="{{ resource.path|resolveAsset }}"></script>
         {% endif %}
     {% endfor %}
-    <script>
-    require(["gitbook"], function(gitbook) {
-        gitbook.start({{ config.pluginsConfig|dump|safe }});
-    });
-    </script>
-    
-    
 {% endblock %}
 
 {% block body %}
-<div class="book"
-    data-level="{{ page.level }}"
-    data-chapter-title="{{ page.title }}"
-    data-filepath="{{ file.path }}"
-    data-basepath="{{ './'|resolveFile }}"
-    data-revision="{{ gitbook.time }}"
-    data-innerlanguage="{{ innerlanguage }}">
-
-    <div class="weex-doc-header">
-        <div class="top-bar">
-                <div class="top-bar-title"></div>
-                <div class="top-bar-left">
-                    <ul  class="menu" role="menubar" >
-                        <li role="menuitem">
-                            <a href='http://alibaba.github.io/weex/index.html'>Weex</a>                            
-                        </li>
-                        <li role="menuitem">
-                            Docs
-                        </li>
-                        <li role="menuitem">
-                            <a href='http://alibaba.github.io/weex/demo.html'>Demo</a>                            
-                        </li>
-                        <li role="menuitem">
-                        </li>
-                        <li role="menuitem" >
-                            <a href="http://alibaba.github.io/weex/community.html">Community</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="top-bar-right">
-                    <ul class="menu">
-                        <li><a href="https://github.com/alibaba/weex/">Github</a>
-                        </li>
-                    </ul>
-                </div>
-        </div>        
-    </div>
+<div class="book">
     
-    {% include "website/summary.html" %}
+    {% include "website/weex_header.html" %}
+            
+    <div class="book-summary">
+        {% block book_sidebar %}
+            {% block search_input %}{% endblock %}
+            {% block book_summary %}
+                <nav role="navigation">
+                {% include "website/summary.html" %}
+                </nav>
+            {% endblock %}
+        {% endblock %}
+    </div>
 
     <div class="book-body">
-
         {% block book_body %}
             <div class="body-inner">
                 {% block book_inner %}
@@ -89,11 +65,13 @@
 
                     <div class="page-wrapper" tabindex="-1" role="main">
                         <div class="page-inner">
-                            <section class="normal markdown-section">
-                            {% block page %}
-                            {{ page.content|safe }}
+                            {% block search_results %}
+                                <section class="normal markdown-section">
+                                {% block page %}
+                                {{ page.content|safe }}
+                                {% endblock %}
+                                </section>
                             {% endblock %}
-                            </section>
                         </div>
                     </div>
                 {% endblock %}
@@ -101,17 +79,27 @@
 
             {% block book_navigation %}
                 {% if page.previous and page.previous.path %}
-                <a href="{{ page.previous.path|resolveFile }}" class="navigation navigation-prev {% if not (page.next and page.next.path) %}navigation-unique{% endif %}" aria-label="Previous page: {{ page.previous.title }}">
+                <a href="{{ page.previous.path|resolveFile }}{{ page.previous.anchor }}" class="navigation navigation-prev {% if not (page.next and page.next.path) %}navigation-unique{% endif %}" aria-label="Previous page: {{ page.previous.title }}">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 {% endif %}
                 {% if page.next and page.next.path %}
-                <a href="{{ page.next.path|resolveFile }}" class="navigation navigation-next {% if not (page.previous and page.previous.path) %}navigation-unique{% endif %}" aria-label="Next page: {{ page.next.title }}">
+                <a href="{{ page.next.path|resolveFile }}{{ page.next.anchor }}" class="navigation navigation-next {% if not (page.previous and page.previous.path) %}navigation-unique{% endif %}" aria-label="Next page: {{ page.next.title }}">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 {% endif %}
             {% endblock %}
         {% endblock %}
     </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+        gitbook.page.hasChanged({{ template.getJSContext()|dump|safe }});
+        setTimeout(function(){
+           window._rePostionVersion()
+        },100);
+        });
+    </script>
 </div>
 {% endblock %}
