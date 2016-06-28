@@ -285,12 +285,12 @@ NSTimeInterval JSLibInitTime = 0;
 
 - (void)addObservers
 {
-    [self addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew context:nil];
+//    [self addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew context:nil];
 }
 
 - (void)removeObservers
 {
-    [self removeObserver:self forKeyPath:@"state"];
+//    [self removeObserver:self forKeyPath:@"state"];
 }
 
 - (WXComponentManager *)componentManager

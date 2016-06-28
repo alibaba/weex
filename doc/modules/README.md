@@ -1,4 +1,5 @@
 # Built-in Modules
+<span class="weex-version">0.5</span>
 
 ## How to use
 
@@ -14,7 +15,7 @@ dom.scrollTo(this.$el('someIdForElement'), {
 ## Table of Contents
 
 * [dom](./dom.md)
-* [steam](./stream.md)
+* [stream](./stream.md)
 * [modal](./modal.md)
 * [animation](./animation.md)
 * [navigator](./navigator.md)

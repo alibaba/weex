@@ -55,4 +55,22 @@ public class CSSLayout {
            "direction: " + direction +
            "}";
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if(this == o){
+      return true;
+    }
+    if(o instanceof CSSLayout){
+      CSSLayout cl = (CSSLayout)o;
+      return FloatUtil.floatsEqual(cl.position[POSITION_LEFT],this.position[POSITION_LEFT]) &&
+              FloatUtil.floatsEqual(cl.position[POSITION_TOP],this.position[POSITION_TOP])  &&
+              FloatUtil.floatsEqual(cl.position[POSITION_RIGHT],this.position[POSITION_RIGHT]) &&
+              FloatUtil.floatsEqual(cl.position[POSITION_BOTTOM],this.position[POSITION_BOTTOM]) &&
+              FloatUtil.floatsEqual(cl.dimensions[DIMENSION_HEIGHT],this.dimensions[DIMENSION_HEIGHT]) &&
+              FloatUtil.floatsEqual(cl.dimensions[DIMENSION_WIDTH],this.dimensions[DIMENSION_WIDTH]);
+
+    }
+    return false;
+  }
 }

@@ -11,14 +11,12 @@
 
 @interface WXListComponent : WXScrollerComponent
 
-- (void)cellWillRemove:(WXCellComponent *)cell;
-
 - (void)cellDidRemove:(WXCellComponent *)cell;
 
 - (void)cellDidLayout:(WXCellComponent *)cell;
 
 - (void)cellDidRendered:(WXCellComponent *)cell;
 
-- (void)cell:(WXCellComponent *)cell didMoveFromIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath;
+- (void)cell:(WXCellComponent *)cell didMoveToIndex:(NSUInteger)index;
 
 @end

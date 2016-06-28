@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">Weex_Debug</string>
+
+    <string-array name="prettyfish_loglevel">
+        <item>Verbose</item>
+        <item>Debug</item>
+        <item>Info</item>
+        <item>Warn</item>
+        <item>Error</item>
+        <item>Assert</item>
+    </string-array>
+    <string name="pf_title_extend">监控</string>
+    <string name="pf_title_perf">性能</string>
+    <string name="pf_title_tools">工具</string>
+    <string name="pf_title_ued">视觉</string>
+    <string name="prettyfish_boundary_title">边框</string>
+    <string name="prettyfish_coord_title">坐标</string>
+    <string name="prettyfish_coordh">h:</string>
+    <string name="prettyfish_coordw">w:</string>
+    <string name="prettyfish_coordx">x:</string>
+    <string name="prettyfish_coordy">y:</string>
+    <string name="prettyfish_cpu_title">CPU</string>
+    <string name="prettyfish_dataavg">平均值:</string>
+    <string name="prettyfish_datachart_title">性能数据图表</string>
+    <string name="prettyfish_datadetail">详细报表</string>
+    <string name="prettyfish_dataendtime">结束时间:</string>
+    <string name="prettyfish_datalist_title">性能数据列表</string>
+    <string name="prettyfish_datamax">最大值:</string>
+    <string name="prettyfish_datamin">最小值:</string>
+    <string name="prettyfish_datanum">样本数:</string>
+    <string name="prettyfish_datastarttime">开始时间:</string>
+    <string name="prettyfish_datatype">数据类型:</string>
+    <string name="prettyfish_fps_title">帧率</string>
+    <string name="prettyfish_grid_title">网格</string>
+    <string name="prettyfish_mem_title">内存</string>
+    <string name="prettyfish_recording">正在记录数据</string>
+    <string name="prettyfish_startrecord">记录数据</string>
+    <string name="prettyfish_statement">查看报表</string>
+    <string name="prettyfish_stoprecord">停止记录</string>
+    <string name="prettyfish_synthetic_title">综合测试</string>
+    <string name="prettyfish_traffic_title">流量</string>
+</resources>

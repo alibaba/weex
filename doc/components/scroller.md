@@ -1,4 +1,5 @@
 # &lt;scroller&gt;
+<span class="weex-version">0.4</span>
 
 ### Summary
 
@@ -11,6 +12,8 @@ A vertical scroller which can have multiple child components arranged in one col
 It supports all kinds of weex components as its child components.
 
 ### Attributes
+
+- `scrollDirection`: &lt;string&gt; define scroll direction of component, `horizontal` or `vertical`.
 
 There is no specific attribute for this component other than the [common attributes](../references/common-attrs.md).
 
@@ -34,11 +37,11 @@ There is no specific attribute for this component other than the [common attribu
 
 ```
 <template>
-  <scoller>
+  <scroller>
     <div repeat="{{list}}">
       <text>{{name}}: ${{price}}</text>
     </div>
-  </scoller>
+  </scroller>
 </template>
 
 <script>

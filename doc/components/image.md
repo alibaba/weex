@@ -1,4 +1,5 @@
 # &lt;image&gt;
+<span class="weex-version">0.4</span>
 
 ### Summary
 
@@ -22,7 +23,7 @@ Other attributes please check out the [common attributes](../references/common-a
 
 - `width`: &lt;length&gt; the width of the component. This style should be specified.
 - `height`: &lt;length&gt; the height of the component. This style should be specifed.
-- `resize`: &lt;string&gt; the 'ScaleType' of the component. The default value is ``stretch``, if this attribute is not specified. Possible values are ``cover``, ``contain``, each of which has the same meaning with w3c standard.
+- `resize`: <span class="weex-version">0.5</span> &lt;string&gt; the 'ScaleType' of the component. The default value is ``stretch``, if this attribute is not specified. Possible values are ``cover``, ``contain``, each of which has the same meaning with w3c standard.
 
 **common styles**: check out the [common styles](../references/common-attrs.md)
 

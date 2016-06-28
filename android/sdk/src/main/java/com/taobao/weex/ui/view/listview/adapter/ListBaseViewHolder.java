@@ -207,6 +207,8 @@ package com.taobao.weex.ui.view.listview.adapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.taobao.weex.ui.component.WXComponent;
+
 import java.lang.ref.WeakReference;
 
 
@@ -216,20 +218,32 @@ import java.lang.ref.WeakReference;
  * From View to ViewHolder, this is done by set {@link android.view.ViewGroup.LayoutParams} to View.
  */
 public class ListBaseViewHolder extends RecyclerView.ViewHolder {
+  private int mViewType;
+  private WXComponent mComponent;
 
-  private final WeakReference<View> viewWeakReference;
-
-  public ListBaseViewHolder(View view) {
+  public ListBaseViewHolder(WXComponent component, int viewType) {
+    super(component.getView());
+    mViewType = viewType;
+    mComponent = component;
+  }
+  public ListBaseViewHolder(View view, int viewType) {
     super(view);
-    viewWeakReference = new WeakReference<>(view);
+    mViewType = viewType;
   }
 
   public View getView() {
-    if (viewWeakReference != null) {
-      return viewWeakReference.get();
-    } else {
-      return null;
-    }
+    return itemView;
   }
 
+  public int getViewType() {
+    return mViewType;
+  }
+  public void setComponentUsing(boolean using){
+    if(mComponent!=null) {
+      mComponent.setUsing(using);
+    }
+  }
+  public WXComponent getComponent(){
+    return mComponent;
+  }
 }
