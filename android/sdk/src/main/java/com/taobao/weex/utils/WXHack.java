@@ -261,26 +261,6 @@ public class WXHack {
   /**
    * All hacks should be declared in a centralized point extending this class, typically as static
    * method, and call it in your application initialization stage to verify all the hack
-   * assertions by catching exception thrown:
-   * <pre>
-   * class MyHacks extends HackDeclaration {
-   *
-   *     static HackedField<Object, PackageManager> ContextImpl_mPackageManager;
-   *     static HackedField<Object, Map<String, IBinder>> ServiceManager_sCache;
-   *
-   *     static void defineAndVerify() {
-   *         try {
-   *             ContextImpl_mPackageManager = Hack.into("android.app.ContextImpl").field("mPackageManager").ofType(PackageManager.class);
-   *             ServiceManager_sCache = Hack.into("android.os.ServiceManager").staticField("sCache").ofGenericType(Map.class)
-   *
-   *             ...
-   *         } catch (HackAssertionException e) {
-   *             // Report the failure and activate fall-back strategy.
-   *             ...
-   *         }
-   *     }
-   * }
-   * <pre>
    * Thus we can verify them all together in an early application initialization stage. If any assertion
    * failed, a fall-back strategy is suggested.
    */
@@ -337,9 +317,7 @@ public class WXHack {
     }
   }
 
-  /**
-   * @beta
-   */
+
   public static class HackedField<C, T> {
 
     private final Field mField;
@@ -396,8 +374,7 @@ public class WXHack {
 
     /**
      * Hijack the current instance of this field.
-     * <p/>
-     * <p><b>The instance must not be null at the time of hijacking</b>, or an IllegalStateException will be thrown.
+     * The instance must not be null at the time of hijacking, or an IllegalStateException will be thrown.
      *
      * @param handler a invocation handler to implement the hijack logic.
      */
@@ -426,8 +403,7 @@ public class WXHack {
 
     /**
      * Set value of this field
-     * <p/>
-     * <p>No type enforced here since most type mismatch can be easily tested and exposed early.</p>
+     * No type enforced here since most type mismatch can be easily tested and exposed early.
      */
     public void set(final C instance, final Object value) {
       try {

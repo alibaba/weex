@@ -1,0 +1,6 @@
+[data-ctrl-name="carrousel"] {
+  position: relative;
+  -webkit-transform: translateZ(1px);
+  -ms-transform: translateZ(1px);
+  transform: translateZ(1px);
+}

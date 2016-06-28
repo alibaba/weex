@@ -1,0 +1,28 @@
+.weex-container {
+  box-sizing: border-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  flex-shrink: 0;
+  align-items: stretch;
+  box-align: stretch;
+  align-content: flex-start;
+  position: relative;
+  border: 0 solid black;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.weex-element {
+  box-sizing: border-box;
+  position: relative;
+  flex-shrink: 0;
+  border: 0 solid black;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}

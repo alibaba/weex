@@ -1,0 +1,17 @@
+{
+    "type": "container",
+    "children": [{
+        "type": "container",
+        "children": [{
+            "type": "text",
+            "attr": {
+                "value": "aa"
+            }
+        },{
+            "type": "text",
+            "attr": {
+                "value": "bb"
+            }
+        }]
+    }]
+}

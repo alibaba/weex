@@ -9,12 +9,13 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.alibaba.weex.R;
 import com.alibaba.weex.util.ScreenShot;
 import com.alibaba.weex.WXPageActivity;
 import com.alibaba.weex.constants.Constants;
+import com.alibaba.weex.util.ViewUtil;
+import com.taobao.weex.ui.view.WXTextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class WeexUiTestCaseTcDowngradeDevMTrue extends ActivityInstrumentationTe
         sleep(3000);
 
         mViewGroup = (ViewGroup) waTestPageActivity.findViewById(R.id.container);
-        mCaseListIndexView = getTestCaseListViewByText("TC");
+        mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, "TC_");
     }
 
 //    public void testPreConditions()
@@ -65,10 +66,10 @@ public class WeexUiTestCaseTcDowngradeDevMTrue extends ActivityInstrumentationTe
     public void testDowngrade(){
 
         for(final View caseView : mCaseListIndexView){
-           if (((TextView)caseView).getText().toString().equals("TC_Downgrade")){
+           if (((WXTextView)caseView).getText().toString().equals("TC_Downgrade")){
                Log.e(TAG, "TC_Downgrade find");
 
-               final TextView inputView  = (TextView)caseView;
+               final WXTextView inputView  = (WXTextView)caseView;
                 mInstrumentation.runOnMainSync(new Runnable() {
                     @Override
                     public void run() {
@@ -84,12 +85,13 @@ public class WeexUiTestCaseTcDowngradeDevMTrue extends ActivityInstrumentationTe
 
                ViewGroup myGroup = (ViewGroup)(activity2.findViewById(R.id.container));
                ArrayList<View> inputListView = new ArrayList<View>();
-               myGroup.findViewsWithText(inputListView, "TC_Downgrade_devM_True", View.FIND_VIEWS_WITH_TEXT);
+               inputListView = ViewUtil.findViewWithText(myGroup, "TC_Downgrade_devM_True");
+//               myGroup.findViewsWithText(inputListView, "TC_Downgrade_devM_True", View.FIND_VIEWS_WITH_TEXT);
 
                Log.e(TAG, "TC_Downgrade_devM_True== " + inputListView.size());
 
                if(inputListView.size()!=0){
-                  final TextView inputTypeView = (TextView)inputListView.get(0);
+                  final WXTextView inputTypeView = (WXTextView)inputListView.get(0);
 
                    mInstrumentation.runOnMainSync(new Runnable() {
                        @Override
@@ -132,7 +134,7 @@ public class WeexUiTestCaseTcDowngradeDevMTrue extends ActivityInstrumentationTe
 
         mViewGroup.findViewsWithText(outViews, byText, View.FIND_VIEWS_WITH_TEXT);
         for (View view :  outViews){
-            String viewText = ((TextView)view).getText().toString();
+            String viewText = ((WXTextView)view).getText().toString();
             Log.e(TAG, "viewText ==" + viewText);
 
 
@@ -146,10 +148,10 @@ public class WeexUiTestCaseTcDowngradeDevMTrue extends ActivityInstrumentationTe
     public View findMyCaseByText(String caseText){
         if (mCaseListIndexView.size() == 0) return null;
 
-        TextView view = null;
+        WXTextView view = null;
         for(int i=0; i<mCaseListIndexView.size();i++){
 
-            view = (TextView)mCaseListIndexView.get(i);
+            view = (WXTextView)mCaseListIndexView.get(i);
 
             if (view.getText().toString().toLowerCase().contains(caseText.toLowerCase())){
                 return view;

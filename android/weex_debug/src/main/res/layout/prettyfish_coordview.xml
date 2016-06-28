@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/pf_bg_white">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="@string/prettyfish_coordx"
+        android:id="@+id/tv_coordx"
+        android:paddingLeft="@dimen/pf_font_padding"
+        android:gravity="center_vertical"
+        android:textColor="@color/pf_font_blue"
+        android:textSize="@dimen/pf_font_size" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="@string/prettyfish_coordy"
+        android:id="@+id/tv_coordy"
+        android:gravity="center_vertical"
+        android:textColor="@color/pf_font_blue"
+        android:textSize="@dimen/pf_font_size" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="@string/prettyfish_coordw"
+        android:id="@+id/tv_coordw"
+        android:paddingRight="@dimen/pf_font_padding"
+        android:gravity="center_vertical"
+        android:textColor="@color/pf_font_blue"
+        android:textSize="@dimen/pf_font_size" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="@string/prettyfish_coordh"
+        android:id="@+id/tv_coordh"
+        android:paddingRight="@dimen/pf_font_padding"
+        android:gravity="center_vertical"
+        android:textColor="@color/pf_font_blue"
+        android:textSize="@dimen/pf_font_size" />
+</LinearLayout><!-- From: file:/Users/ricky/Desktop/ricky/allgitcode/prettyfish/prettyfish_base/src/main/res/layout/prettyfish_coordview.xml -->

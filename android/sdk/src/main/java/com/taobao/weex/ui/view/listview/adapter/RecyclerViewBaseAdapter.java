@@ -220,6 +220,7 @@ public class RecyclerViewBaseAdapter<T extends ListBaseViewHolder> extends Recyc
     this.iRecyclerAdapterListener = Listener;
   }
 
+  @Override
   public T onCreateViewHolder(ViewGroup parent, int viewType) {
     //        WXLogUtils.d(TAG, "onCreateViewHolder viewType:" + viewType);
     if (iRecyclerAdapterListener != null) {

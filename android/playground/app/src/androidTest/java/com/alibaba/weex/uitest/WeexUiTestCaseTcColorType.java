@@ -9,13 +9,14 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.alibaba.weex.R;
 import com.alibaba.weex.util.ScreenShot;
 import com.alibaba.weex.WXPageActivity;
 import com.alibaba.weex.WeappJsBaseTestCase;
 import com.alibaba.weex.constants.Constants;
+import com.alibaba.weex.util.ViewUtil;
+import com.taobao.weex.ui.view.WXTextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public class WeexUiTestCaseTcColorType extends ActivityInstrumentationTestCase2<
         mViewGroup = (ViewGroup) waTestPageActivity.findViewById(R.id.container);
         setViewGroup(mViewGroup);
 
-        mCaseListIndexView = getTestCaseListViewByText("TC_");
+        mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, "TC_");
     }
 
 //    public void testPreConditions()
@@ -70,10 +71,10 @@ public class WeexUiTestCaseTcColorType extends ActivityInstrumentationTestCase2<
     public void testColorType(){
 
         for(final View caseView : mCaseListIndexView){
-           if (((TextView)caseView).getText().toString().equals("TC_Color")){
+           if (((WXTextView)caseView).getText().toString().equals("TC_Color")){
                Log.e(TAG, "TC_Color find");
 
-               final TextView inputView  = (TextView)caseView;
+               final WXTextView inputView  = (WXTextView)caseView;
                 mInstrumentation.runOnMainSync(new Runnable() {
                     @Override
                     public void run() {
@@ -93,12 +94,14 @@ public class WeexUiTestCaseTcColorType extends ActivityInstrumentationTestCase2<
                Log.e(TAG, myGroup.toString());
 
                ArrayList<View> inputListView = new ArrayList<View>();
-               myGroup.findViewsWithText(inputListView, "TC_Color_Type", View.FIND_VIEWS_WITH_TEXT);
+               inputListView =  ViewUtil.findViewWithText(myGroup, "TC_Color_Type");
+
+//               myGroup.findViewsWithText(inputListView, "TC_Color_Type", View.FIND_VIEWS_WITH_TEXT);
 
                Log.e(TAG, "TC_Color_Type size== " + inputListView.size());
 
                if(inputListView.size()!=0){
-                  final TextView inputTypeView = (TextView)inputListView.get(0);
+                  final WXTextView inputTypeView = (WXTextView)inputListView.get(0);
 
                    mInstrumentation.runOnMainSync(new Runnable() {
                        @Override
@@ -107,17 +110,12 @@ public class WeexUiTestCaseTcColorType extends ActivityInstrumentationTestCase2<
                            inputTypeView.performClick();
                            Log.e(TAG, "TC_Color_Type clcik!");
 
-
-//                           screenShot("TC_Input_Type");
                        }
                    });
-
 
                    sleep(3000);
                    Log.e(TAG, "TC_Color_Type snap!");
                    screenShot("TC_Color_Type");
-
-
                }
            }
         }
@@ -144,7 +142,7 @@ public class WeexUiTestCaseTcColorType extends ActivityInstrumentationTestCase2<
         sleep(2000);
 
         for (View view :  outViews){
-            String viewText = ((TextView)view).getText().toString();
+            String viewText = ((WXTextView)view).getText().toString();
             Log.e(TAG, "viewText ==" + viewText);
 
 
@@ -158,10 +156,10 @@ public class WeexUiTestCaseTcColorType extends ActivityInstrumentationTestCase2<
     public View findMyCaseByText(String caseText){
         if (mCaseListIndexView.size() == 0) return null;
 
-        TextView view = null;
+        WXTextView view = null;
         for(int i=0; i<mCaseListIndexView.size();i++){
 
-            view = (TextView)mCaseListIndexView.get(i);
+            view = (WXTextView)mCaseListIndexView.get(i);
 
             if (view.getText().toString().toLowerCase().contains(caseText.toLowerCase())){
                 return view;

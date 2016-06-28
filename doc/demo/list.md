@@ -6,4 +6,4 @@ Weex List Demo
 
 ## weex code
 
-See [list example](https://github.com/alibaba/weex/tree/master/examples/listDemo.we).
+See [list example](https://github.com/alibaba/weex/tree/dev/examples/component/list/list-demo.we).

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/pf_bg_aa_black"/>
+    <corners android:radius="@dimen/bg_corner"/>
+</shape><!-- From: file:/Users/ricky/Desktop/ricky/allgitcode/prettyfish/prettyfish_base/src/main/res/drawable/prettyfish_bg_floatmenu.xml -->

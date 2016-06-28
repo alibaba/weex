@@ -9,13 +9,14 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.alibaba.weex.R;
 import com.alibaba.weex.util.ScreenShot;
 import com.alibaba.weex.WXPageActivity;
 import com.alibaba.weex.WeappJsBaseTestCase;
 import com.alibaba.weex.constants.Constants;
+import com.alibaba.weex.util.ViewUtil;
+import com.taobao.weex.ui.view.WXTextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -56,8 +57,7 @@ public class WeexUiTestCaseTcInputPlaceholder extends ActivityInstrumentationTes
         mViewGroup = (ViewGroup) waTestPageActivity.findViewById(R.id.container);
         setViewGroup(mViewGroup);
 
-        mCaseListIndexView = getTestCaseListViewByText("TC_");
-        Thread.sleep(3000);
+mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, "TC_");        Thread.sleep(3000);
     }
 
 //    public void testPreConditions()
@@ -71,10 +71,10 @@ public class WeexUiTestCaseTcInputPlaceholder extends ActivityInstrumentationTes
     public void testInputPlaceholder(){
 
         for(final View caseView : mCaseListIndexView){
-           if (((TextView)caseView).getText().toString().equals("TC_Input")){
+           if (((WXTextView)caseView).getText().toString().equals("TC_Input")){
                Log.e(TAG, "TC_Input find");
 
-               final TextView inputView  = (TextView)caseView;
+               final WXTextView inputView  = (WXTextView)caseView;
                 mInstrumentation.runOnMainSync(new Runnable() {
                     @Override
                     public void run() {
@@ -93,12 +93,14 @@ public class WeexUiTestCaseTcInputPlaceholder extends ActivityInstrumentationTes
                Log.e(TAG, myGroup.toString());
 
                ArrayList<View> inputListView = new ArrayList<View>();
-               myGroup.findViewsWithText(inputListView, "TC_Input_Placeholder", View.FIND_VIEWS_WITH_TEXT);
+               inputListView = ViewUtil.findViewWithText(myGroup, "TC_Input_Placeholder");
+
+//               myGroup.findViewsWithText(inputListView, "TC_Input_Placeholder", View.FIND_VIEWS_WITH_TEXT);
 
                Log.e(TAG, "TC_Input_Placeholder size== " + inputListView.size());
 
                if(inputListView.size()!=0){
-                  final TextView inputTypeView = (TextView)inputListView.get(0);
+                  final WXTextView inputTypeView = (WXTextView)inputListView.get(0);
 
                    mInstrumentation.runOnMainSync(new Runnable() {
                        @Override
@@ -142,7 +144,7 @@ public class WeexUiTestCaseTcInputPlaceholder extends ActivityInstrumentationTes
         mViewGroup.findViewsWithText(outViews, byText, View.FIND_VIEWS_WITH_TEXT);
 
         for (View view :  outViews){
-            String viewText = ((TextView)view).getText().toString();
+            String viewText = ((WXTextView)view).getText().toString();
             Log.e(TAG, "viewText ==" + viewText);
 
 
@@ -156,10 +158,10 @@ public class WeexUiTestCaseTcInputPlaceholder extends ActivityInstrumentationTes
     public View findMyCaseByText(String caseText){
         if (mCaseListIndexView.size() == 0) return null;
 
-        TextView view = null;
+        WXTextView view = null;
         for(int i=0; i<mCaseListIndexView.size();i++){
 
-            view = (TextView)mCaseListIndexView.get(i);
+            view = (WXTextView)mCaseListIndexView.get(i);
 
             if (view.getText().toString().toLowerCase().contains(caseText.toLowerCase())){
                 return view;

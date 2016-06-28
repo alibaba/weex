@@ -1,4 +1,5 @@
 # modal
+<span class="weex-version">0.4</span>
 
 ## Summary
 
@@ -28,7 +29,7 @@ modal.toast({'message': 'I am toast!', 'duration': 1});
 
 * `options`*(object)*: some options.
   * `message`*(string)*: the message that the alert shows.
-  * `okTitle`*(string)*: the title of alert button.
+  * `okTitle`*(string)*: the title of alert button, default is OK.
 * `callback`*(function)*: callback when complete.
 
 #### Example
@@ -40,7 +41,7 @@ var modal = require('@weex-module/modal');
 modal.alert({
   message: arg1,
   okTitle: arg2
-}, function(e) {
+}, function() {
   // TODO after the alert is complete.
 })
 ```
@@ -51,14 +52,13 @@ modal.alert({
 
 * `options`*(object)*: some options.
   * `message`*(string)*: the message that the confirm shows.
-  * `okTitle`*(string)*: the title of confirm button.
-  * `cancelTitle`*(string)*: the title of cancel button.
+  * `okTitle`*(string)*: the title of confirm button, default is 'OK'.
+  * `cancelTitle`*(string)*: the title of cancel button, default is 'Cancel'.
 * `callback`*(function)*: callback when complete.
 
 This method has a callback function whose arguments will be:
 
-* `e`*(object)*: a event object.
-  * `status`*(string)*: the title of the button that clicked by user.
+* `result`*(string)*: the title of the button that clicked by user.
   
 #### Example
 
@@ -71,8 +71,8 @@ modal.confirm({
   message: arg1,
   okTitle: arg2,
   cancelTitle: arg3
-}, function(e) {
-  nativeLog(e.status)
+}, function(result) {
+  nativeLog(result)
   // TODO after the confirm is complete.
 });
 ```
@@ -83,14 +83,14 @@ modal.confirm({
 
 * `options`*(object)*: some options.
   * `message`*(string)*: the message that the prompt shows.
-  * `okTitle`*(string)*: the title of confirm button.
-  * `cancelTitle`*(string)*: the title of cancel button.
+  * `okTitle`*(string)*: the title of confirm button, default is 'OK'.
+  * `cancelTitle`*(string)*: the title of cancel button, default is 'Cancel'.
 * `callback`*(function)*: callback when complete.
    
 This method has a callback function whose arguments will be:
 
-* `e`*(object)*: a event object.
-  * `status`*(string)*: the title of the button that clicked by user.
+* `res`*(object)*: the argument will be a object, which has attributes `result` and `data`, like `{ result: 'OK', data: 'hello world' }`
+  * `result`*(string)*: the title of the button that clicked by user.
   * `data`*(string)*: the value of the text that entered by user.
 
 #### Example
@@ -104,8 +104,8 @@ modal.prompt({
   message: arg1,
   okTitle: arg2,
   cancelTitle: arg3
-}, function(e) {
-  nativeLog(e.status + ', ' + e.data);
+}, function(res) {
+  nativeLog(res.result + ', ' + res.data);
   // TODO after the prompt is complete.
 });
 ```

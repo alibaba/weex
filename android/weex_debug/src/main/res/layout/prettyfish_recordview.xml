@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/pf_bg_white"
+    android:id="@+id/ll_bg">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="@string/prettyfish_startrecord"
+        android:id="@+id/tv_start"
+        android:paddingLeft="@dimen/pf_font_padding"
+        android:gravity="center_vertical"
+        android:textColor="@color/pf_font_blue"
+        android:textSize="@dimen/pf_font_size" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="@string/prettyfish_statement"
+        android:id="@+id/tv_statement"
+        android:paddingRight="@dimen/pf_font_padding"
+        android:gravity="center_vertical|right"
+        android:textColor="@color/pf_font_blue"
+        android:textSize="@dimen/pf_font_size" />
+</LinearLayout><!-- From: file:/Users/ricky/Desktop/ricky/allgitcode/prettyfish/prettyfish_base/src/main/res/layout/prettyfish_recordview.xml -->

@@ -1,4 +1,5 @@
 # Virtual DOM APIs
+<span class="weex-version">0.4</span>
 
 ### `Document`
 

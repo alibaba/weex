@@ -19,6 +19,7 @@
 #import "WXSDKError.h"
 #import "WXAssert.h"
 #import "WXSDKManager.h"
+#import "WXDebugTool.h"
 #import "WXModuleManager.h"
 #import "WXSDKInstance_private.h"
 
@@ -75,6 +76,7 @@
 - (id<WXBridgeProtocol>)jsBridge
 {
     WXAssertBridgeThread();
+    _debugJS = [WXDebugTool isDebug];
     
     Class bridgeClass = _debugJS ? [WXWebSocketBridge class] : [WXJSCoreBridge class];
     

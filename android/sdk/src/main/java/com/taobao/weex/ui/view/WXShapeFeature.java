@@ -379,8 +379,17 @@ public class WXShapeFeature {
         }
 
         mMatrix.reset();
-        mMatrix.setScale(scale, scale);
-        mMatrix.postTranslate(translateX + 0.5f, translateY + 0.5f);
+        if(mHost instanceof ImageView && ((ImageView)mHost).getScaleType()== ImageView.ScaleType.FIT_XY){
+          mMatrix.setScale(vWidth / (float) bmWidth, vHeight / (float) bmHeight);
+        }else if(mHost instanceof ImageView && ((ImageView)mHost).getScaleType() == ImageView.ScaleType.FIT_CENTER){
+          RectF src=new RectF(0,0,bmWidth,bmHeight);
+          RectF dist=new RectF(0,0,vWidth,vHeight);
+          mMatrix.setRectToRect(src, dist, Matrix.ScaleToFit.CENTER);
+        }else{
+          mMatrix.setScale(scale, scale);
+          mMatrix.postTranslate(translateX + 0.5f, translateY + 0.5f);
+        }
+
         bitmapShader.setLocalMatrix(mMatrix);
         wrapShapeDrawable.getPaint().setShader(bitmapShader);
       } else {

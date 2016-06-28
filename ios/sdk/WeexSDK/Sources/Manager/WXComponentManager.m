@@ -424,14 +424,16 @@ static css_node_t * rootNodeGetChild(void *context, int i)
     
     for (NSString *key in _indexDict) {
         WXComponent *component = [_indexDict objectForKey:key];;
-        [self _addUITask:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
             [component _unloadView];
-        }];
+        });
     }
     
     [_indexDict removeAllObjects];
     [_uiTaskQueue removeAllObjects];
-    _rootComponent = nil;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        _rootComponent = nil;
+    });
     
     [self _stopDisplayLink];
     
