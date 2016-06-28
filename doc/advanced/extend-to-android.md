@@ -1,5 +1,6 @@
 ##Extend to Android
 <span class="weex-version">0.4</span>
+<a href="https://github.com/weexteam/article/issues/27"  class="weex-translate">cn</a>
  
 ### Module extend
 weex sdk support Moulde extend,
