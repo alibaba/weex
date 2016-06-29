@@ -214,11 +214,13 @@ import android.widget.FrameLayout;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.WXEvent;
 import com.taobao.weex.ui.view.WXCircleIndicator;
 import com.taobao.weex.ui.view.WXCirclePageAdapter;
 import com.taobao.weex.ui.view.WXCircleViewPager;
+import com.taobao.weex.ui.view.WXEditText;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
@@ -361,6 +363,22 @@ public class WXSlider extends WXVContainer implements OnPageChangeListener {
     mRoot.addView(mIndicator.getView());
   }
 
+  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SLIDER_VALUE)
+  public void setValue(String value) {
+    if (value == null || mHost == null) {
+      return;
+    }
+    int i ;
+    try {
+      i = Integer.valueOf(value);
+    }catch (NumberFormatException e){
+      e.printStackTrace();
+      return;
+    }
+
+    mViewPager.setCurrentItem(i);
+  }
+
   @WXComponentProp(name = "autoPlay")
   public void setAutoPlay(String autoPlay) {
     if (TextUtils.isEmpty(autoPlay) || autoPlay.equals("false")) {
@@ -411,8 +429,13 @@ public class WXSlider extends WXVContainer implements OnPageChangeListener {
     String ref = getDomObject().ref;
     if (event.contains(WXEventType.SLIDER_CHANGE) && WXViewUtils.onScreenArea(mHost)) {
       params.put("index", realPosition);
+
+      Map<String, Object> domChanges = new HashMap<>();
+      Map<String, Object> attrsChanges = new HashMap<>();
+      attrsChanges.put("value",realPosition);
+      domChanges.put("attrs",attrsChanges);
       WXSDKManager.getInstance().fireEvent(mInstanceId, ref,
-                                           WXEventType.SLIDER_CHANGE, params);
+                                           WXEventType.SLIDER_CHANGE, params,domChanges);
     }
   }
 

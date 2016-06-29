@@ -78,7 +78,7 @@ static BOOL WXDebug;
 
 #pragma mark weex debug
 + (void)launchDebugWithSocketUrl:(NSString *)url {
-    [WXDebugTool setDebug:YES];
+    [WXDebugTool setDevToolDebug:YES];
     [WXSDKEngine connectDebugServer:url];
 }
 

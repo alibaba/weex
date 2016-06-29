@@ -17,6 +17,10 @@
 
 + (BOOL)isDebug;
 
++ (void)setDevToolDebug:(BOOL)isDevToolDebug;
+
++ (BOOL)isDevToolDebug;
+
 + (void)setReplacedBundleJS:(NSURL*)url;
 
 + (NSString*)getReplacedBundleJS;

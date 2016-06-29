@@ -10,6 +10,7 @@
 #import "WXBridgeProtocol.h"
 #import "WXJSCoreBridge.h"
 #import "WXWebSocketBridge.h"
+#import "WXDevToolBridge.h"
 #import "WXLog.h"
 #import "WXUtility.h"
 #import "WXBridgeMethod.h"
@@ -27,6 +28,7 @@
 
 @property (nonatomic, strong) id<WXBridgeProtocol>  jsBridge;
 @property (nonatomic, strong) WXWebSocketBridge *socketBridge;
+@property (nonatomic, strong) WXDevToolBridge *devToolSocketBrideg;
 @property (nonatomic, assign) BOOL  debugJS;
 //store the methods which will be executed from native to js
 @property (nonatomic, strong) NSMutableDictionary   *sendQueue;
@@ -76,7 +78,7 @@
 - (id<WXBridgeProtocol>)jsBridge
 {
     WXAssertBridgeThread();
-    _debugJS = [WXDebugTool isDebug];
+    _debugJS = [WXDebugTool isDevToolDebug];
     
     Class bridgeClass = _debugJS ? [WXWebSocketBridge class] : [WXJSCoreBridge class];
     
@@ -313,12 +315,15 @@
 
 - (void)connectToWebSocket:(NSURL *)url
 {
-    _socketBridge = [[WXWebSocketBridge alloc] initWithURL:url];
+    if ([WXDebugTool isDevToolDebug]) {
+        _socketBridge = [[WXWebSocketBridge alloc] initWithURL:url];
+    }
+    _devToolSocketBrideg = [[WXDevToolBridge alloc] initWithURL:url];
 }
 
 - (void)logToWebSocket:(NSString *)flag message:(NSString *)message
 {
-    [_socketBridge callJSMethod:@"__logger" args:@[flag, message]];
+    [_devToolSocketBrideg callJSMethod:@"__logger" args:@[flag, message]];
 }
 
 #pragma mark Private Mehtods
