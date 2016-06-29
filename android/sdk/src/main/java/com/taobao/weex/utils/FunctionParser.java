@@ -205,7 +205,6 @@
 package com.taobao.weex.utils;
 
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -218,6 +217,9 @@ import java.util.Map;
  * according to the {@link com.taobao.weex.utils.FunctionParser.Mapper}
  */
 public class FunctionParser<T> {
+
+  public static final char SPACE = ' ';
+  public static final char PERCENT = '%';
 
   private Mapper<T> mapper;
   private Lexer lexer;
@@ -303,6 +305,16 @@ public class FunctionParser<T> {
    */
   private static class Lexer {
 
+    private static final String LEFT_PARENT = "(";
+    private static final String RIGHT_PARENT = ")";
+    private static final String COMMA = ",";
+    private static final char A_LOWER = 'a';
+    private static final char Z_LOWER = 'z';
+    private static final char ZERO = '0';
+    private static final char NINE = '9';
+    private static final char DOT = '.';
+    private static final char MINUS = '-';
+    private static final char PLUS = '+';
     private String source;
     private Token current;
     private String value;
@@ -321,30 +333,29 @@ public class FunctionParser<T> {
     }
 
     private boolean moveOn() {
-      StringBuilder stringBuilder = new StringBuilder();
+      int start = pointer;
       char curChar;
       while (pointer < source.length()) {
         curChar = source.charAt(pointer);
-        if (Character.isWhitespace(curChar)) {
-          pointer++;
-          if (stringBuilder.length() != 0) {
+        if (curChar == SPACE) {
+          if (start == pointer++) {
+            start++;
+          } else {
             break;
           }
-        } else if (Character.isLetterOrDigit(curChar) || curChar == '.'
-                   || curChar == '%' || curChar == '-' || curChar == '+') {
-          stringBuilder.append(curChar);
+        } else if (isCharacterOrDigit(curChar) || curChar == DOT
+                   || curChar == PERCENT || curChar == MINUS || curChar == PLUS) {
           pointer++;
         } else {
-          if (stringBuilder.length() == 0) {
-            stringBuilder.append(curChar);
+          if (start == pointer) {
             pointer++;
           }
           break;
         }
       }
-      String token = stringBuilder.toString();
-      if (!TextUtils.isEmpty(token) || pointer < source.length()) {
-        moveOn(token);
+      if (start != pointer) {
+        String symbol = source.substring(start, pointer);
+        moveOn(symbol);
         return true;
       } else {
         current = null;
@@ -354,30 +365,43 @@ public class FunctionParser<T> {
     }
 
     private void moveOn(String token) {
-      if (TextUtils.equals(token, "(")) {
+      if (LEFT_PARENT.equals(token)) {
         current = Token.LEFT_PARENT;
-        value = "(";
-      } else if (TextUtils.equals(token, ")")) {
+        value = LEFT_PARENT;
+      } else if (RIGHT_PARENT.equals(token)) {
         current = Token.RIGHT_PARENT;
-        value = ")";
-      } else if (TextUtils.equals(token, ",")) {
+        value = RIGHT_PARENT;
+      } else if (COMMA.equals(token)) {
         current = Token.COMMA;
-        value = ",";
-      } else if (token.matches("(?i)[\\+-]?[0-9]+(\\.[0-9]+)?(%||deg||px)?")) {
-        current = Token.PARAM_VALUE;
-        value = token;
-      } else if (token.matches("[a-zA-Z]+")) {
+        value = COMMA;
+      } else if (isFuncName(token)) {
         current = Token.FUNC_NAME;
         value = token;
       } else {
-        throw new WXInterpretationException("Illegal Token");
+        current = Token.PARAM_VALUE;
+        value = token;
       }
+    }
+
+    private boolean isFuncName(CharSequence funcName) {
+      char letter;
+      for (int i = 0; i < funcName.length(); i++) {
+        letter = funcName.charAt(i);
+        if (!(A_LOWER <= letter && letter <= Z_LOWER)) {
+          return false;
+        }
+      }
+      return true;
     }
 
     private void reset() {
       pointer = 0;
       value = null;
       current = null;
+    }
+
+    private boolean isCharacterOrDigit(char letter) {
+      return ((ZERO <= letter && letter <= NINE) || (A_LOWER <= letter && letter <= Z_LOWER));
     }
   }
 

@@ -204,11 +204,11 @@
  */
 package com.taobao.weex.ui;
 
-import android.animation.Animator;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
@@ -218,7 +218,6 @@ import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRenderStrategy;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.flex.Spacing;
-import com.taobao.weex.ui.animation.WXAnimationBean;
 import com.taobao.weex.ui.animation.WXAnimationModule;
 import com.taobao.weex.ui.component.WXBasicComponentType;
 import com.taobao.weex.ui.component.WXComponent;
@@ -366,7 +365,6 @@ class WXRenderStatement {
     WXVContainer parent = (WXVContainer) mRegistry.get(parentRef);
     WXComponent component = generateComponentTree(dom, parent);
     parent.addChild(component, index);
-    WXAnimationModule.applyTransformStyle(dom.style, component);
   }
 
   WXComponent createComponentOnDomThread(WXDomObject dom, String parentRef, int index) {
@@ -385,7 +383,6 @@ class WXRenderStatement {
     component.applyLayoutAndEvent(component);
     component.bindData(component);
     parent.addChild(component, index);
-    WXAnimationModule.applyTransformStyle(component.mDomObj.style, component);
   }
 
   /**
@@ -485,7 +482,6 @@ class WXRenderStatement {
     }
 
     component.updateProperties(style);
-    WXAnimationModule.applyTransformStyle(style, component);
   }
 
   /**
@@ -584,32 +580,7 @@ class WXRenderStatement {
     return component;
   }
 
-  void startAnimation(String ref, String animation, String callBack) {
-    WXComponent component = mRegistry.get(ref);
-    if (component == null || component.getRealView() == null) {
-      return;
-    } else {
-      try {
-        WXAnimationBean animationBean = WXAnimationModule.parseAnimation(animation, component.getRealView().getLayoutParams());
-        if (animationBean != null) {
-          Animator animator = WXAnimationModule.createAnimator(animationBean, component.getRealView());
-          if (animator != null) {
-            Animator.AnimatorListener animatorListener = WXAnimationModule.createAnimatorListener(mWXSDKInstance, callBack);
-            Interpolator interpolator = WXAnimationModule.createTimeInterpolator(animationBean);
-            if (animatorListener != null) {
-              animator.addListener(animatorListener);
-            }
-            if (interpolator != null) {
-              animator.setInterpolator(interpolator);
-            }
-            animator.setDuration(animationBean.duration);
-            animator.start();
-          }
-        }
-      } catch (RuntimeException e) {
-        WXLogUtils.e(WXLogUtils.getStackTrace(e));
-      }
-    }
+  void startAnimation(@NonNull String ref, @Nullable String callBack) {
+    WXAnimationModule.startAnimation(mWXSDKInstance,mRegistry.get(ref),callBack);
   }
-
 }
