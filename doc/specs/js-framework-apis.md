@@ -50,20 +50,20 @@ refreshInstance('x', {a: 100, b: 200})
 
 Register all native components
 
-* `components`: A map of which keys are component types and values are force options part of each type of component. *Currently it supports `append` attribute which forces the appending mechanism (`tree` or `node`) when first time rendering.*
+* `components`: A array of whose items are component options that are force part to use. *Currently it supports `append` attribute which forces the appending mechanism (`tree` or `node`) when first time rendering.*
 
 Example:
 
 ```javascript
-registerComponents({
-  container: {}, 
-  text: {}, 
-  image: {},
-  slider: {append: 'tree'},
-  list: {}, 
-  cell: {append: 'tree'}, 
+registerComponents([
+  { type: 'container' },
+  { type: 'text' },
+  { type: 'image' },
+  { type: 'slider', append: 'tree' },
+  { type: 'list' },
+  { type: 'cell', append: 'tree' },
   ...
-})
+])
 ```
 
 ### `registerModules(modules)`
