@@ -40,7 +40,8 @@ Remote debug for your native iOS app using Chrome Developer Tools
 	* Build and running APP, this time chrome will display your device with App name, select inspector to open the inspector tab.
 	* Log print support for different levels of print.
 	
-			eg：PDLogE()/PDLogW()
+            eg: #import "WXDevTool.h"
+			    PDLogE()/PDLogW()
 
 0. run debugger
 	* Initialize debugger API when the APP launched

@@ -76,7 +76,7 @@
 - (id<WXBridgeProtocol>)jsBridge
 {
     WXAssertBridgeThread();
-    _debugJS = [WXDebugTool isDebug];
+    _debugJS = [WXDebugTool isDevToolDebug];
     
     Class bridgeClass = _debugJS ? [WXWebSocketBridge class] : [WXJSCoreBridge class];
     
