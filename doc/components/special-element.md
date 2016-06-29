@@ -1,4 +1,5 @@
 # Special Element
+<span class="weex-version">0.4</span>
 
 ## &lt;content&gt;
 

@@ -59,7 +59,16 @@
                 var $webview = require('@weex-module/webview');
                 var webElement = this.$el('webview');
                 $webview.reload(webElement.ref); 
-            } 
+            },
+            startload: function(e) {
+
+            },
+            finishload: function(e) {
+
+            },
+            failload: function(e) {
+
+            }
         }
     }
 </script>

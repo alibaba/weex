@@ -208,18 +208,21 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.Layout;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.WXStyle;
+import com.taobao.weex.dom.WXTextDomObject;
 import com.taobao.weex.ui.view.WXEditText;
 import com.taobao.weex.utils.WXResourceUtils;
 
@@ -238,8 +241,8 @@ public class WXInput extends WXComponent {
   private String mType = "text";
   private int mTextAlign = Gravity.LEFT;
 
-  public WXInput(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
-    super(instance, dom, parent, instanceId, isLazy);
+  public WXInput(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
+    super(instance, dom, parent, isLazy);
   }
 
   @Override
@@ -253,43 +256,15 @@ public class WXInput extends WXComponent {
     }
 
     inputView.setTextSize(TypedValue.COMPLEX_UNIT_PX, WXStyle.getFontSize(mDomObj.style));
-    inputView.setSingleLine();//default use single line , same to ios 
+    inputView.setSingleLine();//default use single line , same to ios
+    inputView.setMovementMethod(null);
+
     mHost = inputView;
   }
 
   @Override
   public WXEditText getView() {
     return (WXEditText) super.getView();
-  }
-
-  @Override
-  public void flushView() {
-    super.flushView();
-    if (mHost == null) {
-      return;
-    }
-    ((WXEditText) mHost).setRawInputType(getInputType(mType));
-    if (mAutoFocus) {
-      mHost.setFocusable(true);
-      mHost.requestFocus();
-      mHost.setFocusableInTouchMode(true);
-      mHost.postDelayed(new Runnable() {
-        @Override
-        public void run() {
-          showSoftKeyboard();
-        }
-      }, 16);
-    } else {
-      mHost.postDelayed(new Runnable() {
-        @Override
-        public void run() {
-          hideSoftKeyboard();
-        }
-      }, 16);
-    }
-    if (mTextAlign > 0) {
-      getView().setGravity(mTextAlign | Gravity.CENTER_VERTICAL);
-    }
   }
 
   @Override
@@ -330,6 +305,121 @@ public class WXInput extends WXComponent {
 
       }
     });
+  }
+
+  @Override
+  public void updateExtra(Object extra) {
+    if (extra instanceof Layout &&
+        getView() != null) {
+      getView().setText(((Layout) extra).getText());
+    }
+  }
+
+  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_PLACEHOLDER)
+  public void setPlaceholder(String placeholder) {
+    if (placeholder == null || mHost == null) {
+      return;
+    }
+    ((WXEditText) mHost).setHint(placeholder);
+  }
+
+  @WXComponentProp(name = WXDomPropConstant.WX_INPUT_PLACEHOLDER_COLOR)
+  public void setPlaceholderColor(String color) {
+    if (mHost != null && !TextUtils.isEmpty(color)) {
+      int colorInt = WXResourceUtils.getColor(color);
+      if (colorInt != Integer.MIN_VALUE) {
+        ((WXEditText) mHost).setHintTextColor(colorInt);
+      }
+    }
+  }
+
+  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_TYPE)
+  public void setType(String type) {
+    if (type == null || mHost == null) {
+      return;
+    }
+    mType = type;
+    ((EditText) mHost).setRawInputType(getInputType(mType));
+  }
+
+  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_AUTOFOCUS)
+  public void setAutofocus(boolean autofocus) {
+    if (mHost == null) {
+      return;
+    }
+    mAutoFocus = autofocus;
+    EditText inputView = (EditText) mHost;
+    if (mAutoFocus) {
+      inputView.setFocusable(true);
+      inputView.requestFocus();
+      inputView.setFocusableInTouchMode(true);
+      inputView.postDelayed(new Runnable() {
+        @Override
+        public void run() {
+          showSoftKeyboard();
+        }
+      }, 16);
+    } else {
+      inputView.postDelayed(new Runnable() {
+        @Override
+        public void run() {
+          hideSoftKeyboard();
+        }
+      }, 16);
+    }
+  }
+
+  @WXComponentProp(name = WXDomPropConstant.WX_COLOR)
+  public void setColor(String color) {
+    if (mHost != null && !TextUtils.isEmpty(color)) {
+      int colorInt = WXResourceUtils.getColor(color);
+      if (colorInt != Integer.MIN_VALUE) {
+        ((WXEditText) mHost).setTextColor(colorInt);
+      }
+    }
+  }
+
+  @WXComponentProp(name = WXDomPropConstant.WX_FONTSIZE)
+  public void setFontSize(String fontSize) {
+    if (mHost != null && fontSize != null && mDomObj.style != null) {
+      ((WXEditText) mHost).setTextSize(TypedValue.COMPLEX_UNIT_PX, WXStyle.getFontSize(mDomObj.style));
+    }
+  }
+
+  @WXComponentProp(name = WXDomPropConstant.WX_TEXTALIGN)
+  public void setTextAlign(String textAlign) {
+    mTextAlign = getTextAlign(textAlign);
+    if (mTextAlign > 0) {
+      ((EditText) mHost).setGravity(mTextAlign | Gravity.CENTER_VERTICAL);
+    }
+  }
+
+  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_SINGLELINE)
+  public void setSingleLine(boolean singleLine) {
+    if (mHost == null) {
+      return;
+    }
+    ((WXEditText) mHost).setSingleLine(singleLine);
+  }
+
+  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_LINES)
+  public void setLines(int lines) {
+    if (mHost == null) {
+      return;
+    }
+    ((WXEditText) mHost).setLines(lines);
+  }
+
+  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_MAXLENGTH)
+  public void setMaxLength(int maxLength) {
+    if (mHost == null) {
+    }
+    ((WXEditText) mHost).setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
+  }
+
+  @Override
+  public WXTextDomObject getDomObject() {
+    return (WXTextDomObject) super.getDomObject();
   }
 
   private int getInputType(String type) {
@@ -377,94 +467,6 @@ public class WXInput extends WXComponent {
     if (mHost != null) {
       mInputMethodManager.hideSoftInputFromWindow(mHost.getWindowToken(), 0);
     }
-  }
-
-  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_VALUE)
-  public void setValue(String value) {
-    if (value == null || mHost == null) {
-      return;
-    }
-    ((WXEditText) mHost).setText(value);
-  }
-
-  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_PLACEHOLDER)
-  public void setPlaceholder(String placeholder) {
-    if (placeholder == null || mHost == null) {
-      return;
-    }
-    ((WXEditText) mHost).setHint(placeholder);
-  }
-
-  @WXComponentProp(name = WXDomPropConstant.WX_INPUT_PLACEHOLDER_COLOR)
-  public void setPlaceholderColor(String color) {
-    if (mHost != null && !TextUtils.isEmpty(color)) {
-      int colorInt = WXResourceUtils.getColor(color);
-      if (colorInt != Integer.MIN_VALUE) {
-        ((WXEditText) mHost).setHintTextColor(colorInt);
-      }
-    }
-  }
-
-  @WXComponentProp(name = WXDomPropConstant.WX_COLOR)
-  public void setColor(String color) {
-    if (mHost != null && !TextUtils.isEmpty(color)) {
-      int colorInt = WXResourceUtils.getColor(color);
-      if (colorInt != Integer.MIN_VALUE) {
-        ((WXEditText) mHost).setTextColor(colorInt);
-      }
-    }
-  }
-
-  @WXComponentProp(name = WXDomPropConstant.WX_FONTSIZE)
-  public void setFontSize(String fontSize) {
-    if (mHost != null && fontSize != null && mDomObj.style != null) {
-      ((WXEditText) mHost).setTextSize(TypedValue.COMPLEX_UNIT_PX, WXStyle.getFontSize(mDomObj.style));
-    }
-  }
-
-  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_AUTOFOCUS)
-  public void setAutofocus(boolean autofocus) {
-    if (mHost == null) {
-      return;
-    }
-    mAutoFocus = autofocus;
-  }
-
-    @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_SINGLELINE)
-    public void setSingleLine(boolean singleLine) {
-        if (mHost == null) {
-            return;
-        }
-        ((WXEditText)mHost).setSingleLine(singleLine);
-    }
-
-    @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_LINES)
-    public void setLines(int lines) {
-        if (mHost == null) {
-            return;
-        }
-        ((WXEditText)mHost).setLines(lines);
-    }
-
-    @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_MAXLENGTH)
-    public void setMaxLength(int maxLength) {
-        if (mHost == null) {
-            return;
-        }
-        ((WXEditText)mHost).setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
-    }
-
-  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_TYPE)
-  public void setType(String type) {
-    if (type == null || mHost == null) {
-      return;
-    }
-    mType = type;
-  }
-
-  @WXComponentProp(name = WXDomPropConstant.WX_TEXTALIGN)
-  public void setTextAlign(String textAlign) {
-    mTextAlign = getTextAlign(textAlign);
   }
 
   private int getTextAlign(String textAlign) {

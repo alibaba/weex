@@ -208,6 +208,9 @@ package com.taobao.weex.adapter;
 import com.taobao.weex.common.WXRequest;
 import com.taobao.weex.common.WXResponse;
 
+import java.util.List;
+import java.util.Map;
+
 public interface IWXHttpAdapter {
 
   /**
@@ -215,7 +218,6 @@ public interface IWXHttpAdapter {
    *
    * @param request weex assemble request
    * @param listener http response notify
-   * @return
    */
   void sendRequest(WXRequest request, OnHttpListener listener);
 
@@ -227,16 +229,21 @@ public interface IWXHttpAdapter {
     void onHttpStart();
 
     /**
+     * headers received
+     */
+    void onHeadersReceived(int statusCode,Map<String,List<String>> headers);
+
+    /**
      * post progress
      * @param uploadProgress
      */
     void onHttpUploadProgress(int uploadProgress);
 
     /**
-     * response progress
-     * @param responseProgress
+     * response loaded length (bytes), full length should read from headers (content-length)
+     * @param loadedLength
      */
-    void onHttpResponseProgress(int responseProgress);
+    void onHttpResponseProgress(int loadedLength);
 
     /**
      * http response finish

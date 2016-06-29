@@ -275,8 +275,8 @@ public class WXCirclePageAdapter extends PagerAdapter {
 
   @Override
   public int getCount() {
-    // TODO Auto-generated method stub
-    if (getRealCount() > 1) {
+    // if count less than 3,the circle doesn't work as expected.
+    if (getRealCount() > 2) {
       return Integer.MAX_VALUE;
     } else {
       return getRealCount();
@@ -321,4 +321,9 @@ public class WXCirclePageAdapter extends PagerAdapter {
     return view == object;
   }
 
+  @Override
+  public int getItemPosition(Object object) {
+    int position = views.indexOf(object);
+    return position == -1 ? POSITION_NONE : position;
+  }
 }

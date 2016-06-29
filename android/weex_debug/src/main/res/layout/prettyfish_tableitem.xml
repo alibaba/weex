@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:descendantFocusability="blocksDescendants"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_index"
+        android:padding="8dp"
+        android:textColor="#000"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content" />
+
+    <com.taobao.prettyfish.ui.stickytable.StickyLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:focusable="false"
+        android:orientation="horizontal">
+
+        <com.taobao.prettyfish.ui.stickytable.StickyHScrollView
+            android:id="@+id/shsv_item"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:scrollbars="none" >
+
+            <LinearLayout
+                android:id="@+id/ll_tableitem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:orientation="horizontal" >
+
+            </LinearLayout>
+
+        </com.taobao.prettyfish.ui.stickytable.StickyHScrollView>
+
+    </com.taobao.prettyfish.ui.stickytable.StickyLinearLayout>
+
+</LinearLayout><!-- From: file:/Users/ricky/Desktop/ricky/allgitcode/prettyfish/prettyfish_base/src/main/res/layout/prettyfish_tableitem.xml -->

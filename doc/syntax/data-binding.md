@@ -1,10 +1,12 @@
 # Data-Binding
+<span class="weex-version">0.4</span>
+<a href="https://github.com/weexteam/article/issues/5"  class="weex-translate">cn</a>
 
 In Weex, we use the *mustache* syntax `{{...}}` to bind data in `<template>` which are defined in `<script>`. Once data and template is bound, the data changes will influence the corresponding template content immediately and automatically.
 
 ## Binding data path
 
-```
+```html
 <template>
   <container>
     <text style="font-size: {{size}}">{{title}}</text>
@@ -25,7 +27,7 @@ The code above will bind the `title` and `size` data field to `template`.
 
 We can also use `.` syntax to bind cascading data structure. Let's look at the following code snippet:
 
-```
+```html
 <template>
   <container>
     <text style="font-size: {{title.size}}">{{title.value}}</text>
@@ -44,81 +46,86 @@ We can also use `.` syntax to bind cascading data structure. Let's look at the f
 </script>
 ```
 
-## Binding method call or expression
+## In-template expression
 
-An JavaScript function call or expression can also get bound, e.g.
+Inside data bindings, Weex supports simply javascript expressions, e.g.
 
-```
+```html
 <template>
-  <container style="flex-direction: column;">
-    <text style="font-size: {{size}};">{{getFullName()}}</text>
+  <container style="flex-direction: row;">
+    <text>{{firstName + ' ' + lastName}}</text>
   </container>
 </template>
-
+  
 <script>
   module.exports = {
     data: {
-      size: 48,
+      firstName: 'John',
+      lastName: 'Smith'
+    }
+  }
+</script>
+```
+
+The expression will be evaluated in the data scope of current context.
+
+**NOTE: EACH BINDING CAN ONLY CONTAIN ONE SINGLE EXPRESSION**
+
+## Computed Properties 
+<span class="weex-version">0.5</span>
+
+According to simple operations, in-template expressions are very convenient. But if you want to put more logic into the template, you should use a computed property.
+
+e.g.
+```html
+<template>
+  <container style="flex-direction: row;">
+    <text>{{fullName}}</text>
+    <text onclick="changeName"></text>
+  </container>
+</template>
+  
+<script>
+  module.exports = {
+    data: {
       firstName: 'John',
       lastName: 'Smith'
     },
+    computed: {
+      fullName: {
+        get: function() {
+          return this.firstName + ' ' + this.lastName
+        },
+
+        set: function(v) {
+          var s = v.split(' ')
+          this.firstName = s[0]
+          this.lastName = s[1]
+        }
+      }
+    },
     methods: {
-      getFullName: function () {
-        // 'John SMITH'
-        return this.firstName + ' ' + this.lastName.toUpperCase()
+      changeName: function() {
+        this.fullName = 'Terry King'
       }
     }
   }
 </script>
 ```
 
-Here the return value of `getFullName()` is bound to the `<text>` content.
+Here we have declared a computed property fullName. The function we provided will be used as the getter function for concating firstName and lastName.
 
-Now we add a event, so that we can see how data change reflects to view change:
+Otherwise when you call `changeName` after click, the setter will be invoked and this.firstName and this.lastName will be updated accordingly.
 
-```
-<template>
-  <container>
-    <text onclick="changeName">Click to Change!</text>
-    <text style="font-size: {{size}}">{{getFullName()}}</text>
-  </container>
-</template>
+**NOTE: `data` and `methods` can't have duplicated fields. 'Cause in the execution context -- `this`, we can access both of them.**
 
-<script>
-  module.exports = {
-    data: {
-      size: 20,
-      firstName: 'John',
-      lastName: 'Smith'
-    },
-    methods: {
-      getFullName: function () {
-        // 'John SMITH'
-        return this.firstName + ' ' + this.lastName.toUpperCase()
-      },
-      changeName: function () {
-        this.firstName = 'Mike'
-      }
-    }
-  }
-</script>
-```
+## Usage of some special attributes in Data-Binding
 
-In this case, after we click the "Click to Change!" button, the `changeName()` method will be called, and the `firstName` field will change.Then the return value of `changeName()` get changed, Which results to the change of name displayed in the view.
-
-Once we have data-binding, the data changes will automatically trigger view changes. No more code needed :)
-
-Note: `data` and `methods` can't have duplicate fields, cause in the execution context -- `this`, we can access both of them.
-
-* [See more usage of `this` in vm APIs](../references/api.md)
-
-### Usage of some special attributes in Data-Binding
-
-#### Styles: `style` or `class`
+### Styles: `style` or `class`
 
 the style of a component can be bind using the `style` attribute:
 
-```
+```html
 <template>
   <text style="font-size: {{size}}; color: {{color}}; ...">...</text>
 </template>
@@ -126,7 +133,7 @@ the style of a component can be bind using the `style` attribute:
 
 while style can also get bound with `class` attribute, multiple classnames can be split by spaces:
 
-```
+```html
 <template>
   <container>
     <text class="{{size}}"></text>
@@ -139,11 +146,11 @@ here if `{{size}}` and `{{status}}` have empty value, then only `class="title"` 
 
 * [See more about style and class](./style-n-class.md)
 
-#### Event Handler: `on...`
+### Event Handler: `on...`
 
 The event handler is an attribute which name has a prefix `on...`. The other part of attribute name is event type and the value is event handler name. We don't need to add mustache around the method name or add parentheses to call it.
 
-```
+```html
 <template>
   <text onclick="toggle">Toggle</text>
 </template>
@@ -159,11 +166,11 @@ The event handler is an attribute which name has a prefix `on...`. The other par
 </script>
 ```
 
-#### `if` & `repeat`
+### `if` & `repeat`
 
 `if` attribute can control the display of a component by a truthy/falsy value.
 
-```
+```html
 <template>
   <container style="flex-direction: column;">
     <text onclick="toggle">Toggle</text>
@@ -186,6 +193,22 @@ The event handler is an attribute which name has a prefix `on...`. The other par
 ```
 
 We can also use `repeat` attribute to generate a list.
+
+**NOTE: When you want to mutate an array in `data`. Something limitations existing below:**
+
+When you directly set an item with the index (`vm.items[0] = {};`), it won't trigger view update. So we have a prototype methods: `$set(index, item)`.
+
+```
+// same as `example1.items[0] = ...` but triggers view update
+example1.items.$set(0, { childMsg: 'Changed!'})
+```
+
+When you modify the length of the Array (`vm.items.length = 0`), it won't trigger view update too. We recommend you just replace `items` with an empty array instead.
+
+```
+// same as `example2.items.length = 0` but triggers view update
+example2.items = []
+```
 
 * [See more about display logic control](./display-logic.md)
 

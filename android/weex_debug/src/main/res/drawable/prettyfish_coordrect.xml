@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!-- 线的宽度，颜色 -->
+    <stroke android:width="1dp" android:color="#0000FF"></stroke>
+
+    <!-- 矩形的圆角半径 -->
+    <corners android:radius="0dp" />
+
+</shape><!-- From: file:/Users/ricky/Desktop/ricky/allgitcode/prettyfish/prettyfish_base/src/main/res/drawable/prettyfish_coordrect.xml -->

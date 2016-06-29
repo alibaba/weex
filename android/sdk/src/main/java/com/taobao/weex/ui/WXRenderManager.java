@@ -276,20 +276,6 @@ public class WXRenderManager {
     });
   }
 
-  public void flushView(final String instanceId, final String ref) {
-    mWXRenderHandler.post(new Runnable() {
-
-      @Override
-      public void run() {
-        WXRenderStatement statement = mRegistries.get(instanceId);
-        if (statement == null) {
-          return;
-        }
-        statement.flushView(ref);
-      }
-    });
-  }
-
   public void createInstance(WXSDKInstance instance, String instanceId) {
     mRegistries.put(instanceId, new WXRenderStatement(instance, instanceId));
   }
@@ -432,6 +418,15 @@ public class WXRenderManager {
     }
     statement.refreshFinish(width, height);
   }
+
+  public void updateFinish(String instanceId) {
+    WXRenderStatement statement = mRegistries.get(instanceId);
+    if (statement == null) {
+      return;
+    }
+    statement.updateFinish();
+  }
+
 
   public void startAnimation(String instanceId, String ref, String animation, String callBack) {
     WXRenderStatement statement = mRegistries.get(instanceId);

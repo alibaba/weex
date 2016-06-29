@@ -2,18 +2,32 @@
   .content {
     color: #353535;
     background-color: #666;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  .refresh {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 </style>
 
 <template>
-  <wxc-navpage data-role="navbar" height={{navBarHeight}} background-color="#ff5898" title="新风尚会场"
-    title-color="white" left-item-title="更多" left-item-color="white"
-    right-item-src="http://gtms02.alicdn.com/tps/i2/TB1ED7iMpXXXXXEXXXXWA_BHXXX-48-48.png">
+  <wxc-navpage data-role="none" height={{navBarHeight}} background-color="#ff5898" title="新风尚会场"
+    title-color="white" right-item-src="http://gtms02.alicdn.com/tps/i2/TB1ED7iMpXXXXXEXXXXWA_BHXXX-48-48.png">
     <scroller class="content">
-      <refresh onRefresh="handleRefresh" display="{{displayRefresh}}"
+      <refresh class="refresh" onRefresh="handleRefresh" display="{{displayRefresh}}"
         style="flex-direction:row;">
-        <spinner></spinner>
-        <text style="margin-left:36;color:#eee;">下拉刷新...</text>
+        <loading-indicator></loading-indicator>
+        <text style="margin-left:36px;color:#eee;">下拉刷新...</text>
       </refresh>
       <headlines if="{{show0}}" ds="{{showData.header}}" append="tree"></headlines>
       <category if="{{show0}}" ds="{{showData.category}}" append="tree"></category>
@@ -23,7 +37,7 @@
       <scene if="{{show1}}" ds="{{showData.scene}}" append="tree"></scene>
       <match if="{{show2}}" ds="{{showData.match}}" append="tree"></match>
       <brand if="{{show2}}" ds="{{showData.brand}}" append="tree"></brand>
-      <loading onLoading="handleLoading" display="{{displayLoading}}">
+      <loading class="loading" onLoading="handleLoading" display="{{displayLoading}}">
         <text style="color:#eee;">加载更多...</text>
       </loading>
     </scroller>
@@ -41,8 +55,8 @@
       show0: true,
       show1: false,
       show2: false,
-      displayRefresh: true,
-      displayLoading: true,
+      displayRefresh: 'show',
+      displayLoading: 'show',
     },
     methods: {
       ready: function () {
@@ -551,42 +565,15 @@
           var self = this;
           var config = self.$getConfig(function () {
                   }) || {};
-          console.log('config', config)
-          // self._app.IS_TM = config.appname === 'TM';
           self._app.IS_H5 = typeof window === 'object';
           self._app.IS_TEST = config.bundleUrl ? config.bundleUrl.indexOf('wh_test') > -1 : false;
           self._app.OS = config.os;
           self._app.PLATFORM = config.platform;
-          // var spma = 'a222r';
-          // var spmb = '7952482';
           var title = '新风尚主会场';
-          self.$setTitle(title);
           self._app.config = {
-              // spma: spma,
-              // spmb: spmb,
               title: title,
-              pageName: '2016-xfs-main',
-              // pageSpm: [spma, spmb, 0, 0].join('.')
+              pageName: '2016-xfs-main'
           };
-
-          if (self._app.IS_H5) {
-              // self.$setSpm(spma, spmb);
-              if (window.lib && lib.mtop && lib.mtop.config) {
-                  window.lib.mtop.config.prefix = 'api';
-                  window.lib.mtop.config.subDomain = 'm';
-              }
-          } else {
-              if (self._app.PLATFORM === "android") {
-                  self.$userTrack('enter', self._app.config.pageName, "", {
-                      'spm-cnt': self._app.config.pageSpm
-                  });
-              } else {
-                  self.$call('utInfo', 'enterEvent', self._app.config.pageName, {
-                      'spm-cnt': self._app.config.pageSpm
-                  });
-              }
-          }
-
       },
       _initUtil: function () {
           var self = this;
@@ -740,20 +727,36 @@
       },
       handleRefresh: function (e) {
         var vm = this
-        vm.displayRefresh = true
-        this.$call('modal', 'alert',  {
-          message: 'refreshing.'
-        }, function () {
-          vm.displayRefresh = false
-        })
+        vm.displayRefresh = 'show'
+        var timer = require('@weex-module/timer')
+        if (timer) {
+          timer.setTimeout(function () {
+            vm.displayRefresh = 'hide'
+          }, 2000)
+        } else {
+          this.$call('modal', 'alert',  {
+            message: 'refreshing.'
+          }, function () {
+            vm.displayRefresh = 'hide'
+          })
+        }
       },
       handleLoading: function (e) {
-        this.displayLoading = true
+        var vm = this
+        vm.displayLoading = 'show'
         this.$call('modal', 'toast', {
           message: 'loading.'
         })
-        this.simLoadingData(this.cnt++)
-        this.displayLoading = false
+        var timer = require('@weex-module/timer')
+        if (timer) {
+          timer.setTimeout(function () {
+            vm.simLoadingData(vm.cnt++)
+            vm.displayLoading = 'hide'
+          }, 2000)
+        } else {
+          vm.simLoadingData(vm.cnt++)
+          vm.displayLoading = 'hide'
+        }
       },
       simLoadingData: function (num) {
         if (num >= 3) {

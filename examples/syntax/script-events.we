@@ -1,0 +1,51 @@
+<!--
+  * `events` option registers a set of component event listeners
+  * `this.$on(type, handler)`: registers a component event listener
+  * `this.$off(type, handler)`: removes a component event listener
+  * `this.$emit(type, detail)`: sends component event to itself
+  * `this.$dispatch(type, detail)`: sends component event to itself and its ancestors
+  * `this.$broadcast(type, detail)`: sends component event to itself and its descendants
+-->
+
+<template>
+  <div>
+    <text class="title" repeat="value in list">{{value}}</text>
+  </div>
+</template>
+
+<style>
+  .title {font-size: 48px;}
+</style>
+
+<script>
+  module.exports = {
+    data: {
+      list: []
+    },
+    events: {
+      custom: function (e) {
+        this.list.push('custom: ' + JSON.stringify(e.detail))
+      }
+    },
+    ready: function () {
+      function custom2(e) {
+        this.list.push('custom2: ' + JSON.stringify(e.detail))
+      }
+
+      this.$on('custom2', custom2)
+
+      this.$emit('custom', {x: 1})
+      this.$emit('custom2', {x: 1})
+
+      this.$off('custom2', custom2)
+
+      this.$emit('custom', {x: 2})
+      this.$emit('custom2', {x: 2})
+
+      this.$off('custom')
+
+      this.$emit('custom', {x: 3})
+      this.$emit('custom2', {x: 3})
+    }
+  }
+</script>

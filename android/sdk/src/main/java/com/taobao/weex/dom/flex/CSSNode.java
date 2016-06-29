@@ -38,6 +38,8 @@ public class CSSNode {
   private LayoutState mLayoutState = LayoutState.DIRTY;
   private boolean mShow = true;
 
+  private boolean mIsLayoutChanged = true;
+
   public boolean isShow() {
     return mShow;
   }
@@ -48,6 +50,27 @@ public class CSSNode {
     }
     mShow = isShow;
     dirty();
+  }
+
+  /**
+   * whether layout changed when {@link #updateLastLayout(CSSLayout)} invoked last time.
+   * @return
+     */
+  public boolean isLayoutChanged(){
+    return mIsLayoutChanged;
+  }
+
+  /**
+   * must invoke after every layout finished,even nothing changed.
+   * @param newLayout
+   * @return
+     */
+  public boolean updateLastLayout(CSSLayout newLayout){
+    mIsLayoutChanged = !lastLayout.equals(newLayout);
+    if(mIsLayoutChanged) {
+      lastLayout.copy(newLayout);
+    }
+    return mIsLayoutChanged;
   }
 
   public int getChildCount() {
@@ -183,6 +206,7 @@ public class CSSNode {
 
     result.append(indentation.toString());
     result.append(csslayout.toString());
+    result.append(cssstyle.toString());
 
     if (getChildCount() == 0) {
       return;

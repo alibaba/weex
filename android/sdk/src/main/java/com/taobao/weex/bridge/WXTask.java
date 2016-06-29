@@ -209,7 +209,7 @@ import com.taobao.weex.common.IWXObject;
 import java.util.ArrayList;
 
 /**
- * Weex JS->Native task
+ * Weex JS Native task
  */
 public class WXTask implements IWXObject {
 

@@ -215,4 +215,5 @@ public interface WXConfig {
   String appName="appName";
   String appGroup="appGroup";
   String externalUserAgent="externalUserAgent";
+  String logLevel="logLevel";
 }
