@@ -122,7 +122,7 @@ CGPoint WXPixelPointResize(CGPoint value)
                               value.y * WXScreenResizeRadio());
     return new;
 }
-
+static BOOL WXNotStat;
 @implementation WXUtility
 
 + (NSDictionary *)getEnvironment
@@ -377,7 +377,7 @@ CGPoint WXPixelPointResize(CGPoint value)
 
 + (void)addStatTrack:(NSString *)appName
 {
-    if (!appName) {
+    if (!appName || [self notStat]) {
         return;
     }
     
@@ -479,6 +479,14 @@ CGFloat WXScreenResizeRadio(void)
 + (void)delete:(NSString *)service {
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
     SecItemDelete((CFDictionaryRef)keychainQuery);
+}
+
++ (void)setNotStat:(BOOL)notStat {
+    WXNotStat = YES;
+}
+
++ (BOOL)notStat {
+    return WXNotStat;
 }
 
 @end
