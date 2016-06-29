@@ -382,7 +382,7 @@ CGPoint WXPixelPointResize(CGPoint value)
     }
     
     // App name for non-commercial use
-    NSString *urlString = [NSString stringWithFormat:@"http://gm.mmstat.com/weex.1003?appname=%@", appName];
+    NSString *urlString = [NSString stringWithFormat:@"http://gm.mmstat.com/weex.1004?appname=%@", appName];
     NSURL *URL = [NSURL URLWithString:urlString];
     NSURLRequest *request = [NSURLRequest requestWithURL:URL];
     
