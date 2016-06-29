@@ -162,11 +162,9 @@ Switch.prototype.enable = function () {
 Switch.prototype.getClickHandler = function () {
   if (!this._clickHandler) {
     this._clickHandler = function () {
-      // const parent = this.node.parentNode.tagName.toLowerCase()
-      // const labelParent = (parent === 'label') ? false : true
       this.setPosition(true)
       this.dispatchEvent('change', {
-        checked: this.checked
+        value: this.checked
       })
     }.bind(this)
   }
@@ -174,32 +172,47 @@ Switch.prototype.getClickHandler = function () {
 }
 
 Switch.prototype.style
-    = utils.extend(Object.create(Atomic.prototype.style), {
-
-      width: function (val) {
-        if (!this.options.scalable) {
-          return
-        }
-        val = parseFloat(val)
-        if (isNaN(val) || val < 0) {
-          val = this.options.width
-        }
-        this.width = val * this.data.scale
-        this.setSize()
-      },
-
-      height: function (val) {
-        if (!this.options.scalable) {
-          return
-        }
-        val = parseFloat(val)
-        if (isNaN(val) || val < 0) {
-          val = this.options.height
-        }
-        this.height = val * this.data.scale
-        this.setSize()
+  = utils.extend(Object.create(Atomic.prototype.style), {
+    width: function (val) {
+      if (!this.options.scalable) {
+        return
       }
+      val = parseFloat(val)
+      if (isNaN(val) || val < 0) {
+        val = this.options.width
+      }
+      this.width = val * this.data.scale
+      this.setSize()
+    },
 
-    })
+    height: function (val) {
+      if (!this.options.scalable) {
+        return
+      }
+      val = parseFloat(val)
+      if (isNaN(val) || val < 0) {
+        val = this.options.height
+      }
+      this.height = val * this.data.scale
+      this.setSize()
+    }
+  })
+
+Switch.prototype.event = {
+  change: {
+    updator () {
+      return {
+        attrs: {
+          checked: this.checked
+        }
+      }
+    },
+    extra () {
+      return {
+        value: this.checked
+      }
+    }
+  }
+}
 
 module.exports = Switch

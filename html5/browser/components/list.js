@@ -6,9 +6,8 @@ require('../styles/list.css')
 require('../scroll')
 
 const Component = require('./component')
-// const LazyLoad = require('../lazyLoad')
 
-// const DEFAULT_LOAD_MORE_OFFSET = 500
+const DEFAULT_LOAD_MORE_OFFSET = 0
 
 const directionMap = {
   h: ['row', 'horizontal', 'h', 'x'],
@@ -17,8 +16,8 @@ const directionMap = {
 
 // direction: 'v' or 'h', default is 'v'
 function List (data, nodeType) {
-  // this.loadmoreOffset = Number(data.attr.loadmoreoffset)
-  // this.isAvailableToFireloadmore = true
+  this.loadmoreoffset = DEFAULT_LOAD_MORE_OFFSET
+  this.isAvailableToFireloadmore = true
   this.direction = directionMap.h.indexOf(data.attr.direction) === -1
     ? 'v'
     : 'h'
@@ -86,11 +85,16 @@ List.prototype.bindEvents = function (evts) {
       bubbles: true
     })
     this.offset = offset
-  }.bind(this))
 
-  const pullendEvent = 'pull' + ({ v: 'up', h: 'left' })[this.direction] + 'end'
-  this.scroller.addEventListener(pullendEvent, function (e) {
-    this.dispatchEvent('loadmore')
+    // fire loadmore event.
+    const leftDist = Math.abs(so.maxScrollOffset) - this.offset
+    if (leftDist <= this.loadmoreoffset && this.isAvailableToFireloadmore) {
+      this.isAvailableToFireloadmore = false
+      this.dispatchEvent('loadmore')
+    }
+    else if (leftDist > this.loadmoreoffset && !this.isAvailableToFireloadmore) {
+      this.isAvailableToFireloadmore = true
+    }
   }.bind(this))
 }
 
@@ -245,6 +249,16 @@ List.prototype._refreshWhenDomRenderend = function () {
 List.prototype._removeEvents = function () {
   if (this.renderendHandler) {
     window.removeEventListener('renderend', this.renderendHandler)
+  }
+}
+
+List.prototype.attr = {
+  loadmoreoffset: function (val) {
+    val = parseFloat(val)
+    if (val < 0 || isNaN(val)) {
+      return
+    }
+    this.loadmoreoffset = val
   }
 }
 
