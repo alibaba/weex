@@ -7,6 +7,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "PDDebugger.h"
 
 @interface WXDevTool : NSObject
 
