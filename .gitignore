@@ -6,6 +6,8 @@
 examples/build
 test/build
 weex_tmp
+coverage
+dist
 
 # Node
 logs
@@ -19,6 +21,7 @@ pids
 *.pid
 *.seed
 
-# Compiled binary addons (http://nodejs.org/api/addons.html)
-build
-release
+# e2e test
+html5/test/e2e/reports
+html5/test/e2e/screenshots
+html5/test/e2e/logs

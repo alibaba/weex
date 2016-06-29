@@ -241,7 +241,7 @@
         [_inputView setEnabled:[attributes[@"disabled"] boolValue]];
     }
     if (attributes[@"maxlength"]) {
-        _maxLength = attributes[@"maxlength"];
+        _maxLength = [attributes[@"maxlength"] integerValue];
     }
     
     if (attributes[@"placeholder"]) {

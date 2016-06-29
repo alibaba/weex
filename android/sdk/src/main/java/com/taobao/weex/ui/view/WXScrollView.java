@@ -211,6 +211,9 @@ import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
+import android.support.v4.view.NestedScrollingChild;
+import android.support.v4.view.NestedScrollingChildHelper;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -234,7 +237,14 @@ import java.util.Map.Entry;
 /**
  * Custom-defined scrollView
  */
-public class WXScrollView extends ScrollView implements Callback, IWXScroller, WXGestureObservable {
+public class WXScrollView extends ScrollView implements Callback, IWXScroller,
+                                                        WXGestureObservable,NestedScrollingChild {
+
+  private NestedScrollingChildHelper childHelper;
+  private float ox;
+  private float oy;
+  private int[] consumed = new int[2];
+  private int[] offsetInWindow = new int[2];
 
   int mScrollX;
   int mScrollY;
@@ -261,9 +271,8 @@ public class WXScrollView extends ScrollView implements Callback, IWXScroller, W
   private int[] stickyScrollerP = new int[2];
   private int[] stickyViewP = new int[2];
 
-  public WXScrollView(Context context, WXScroller waScroller) {
+  public WXScrollView(Context context) {
     super(context);
-    mWAScroller = waScroller;
     mScrollViewListeners = new ArrayList<>();
     init();
     try {
@@ -277,6 +286,8 @@ public class WXScrollView extends ScrollView implements Callback, IWXScroller, W
     setWillNotDraw(false);
     startScrollerTask();
     setOverScrollMode(View.OVER_SCROLL_NEVER);
+    childHelper = new NestedScrollingChildHelper(this);
+    childHelper.setNestedScrollingEnabled(true);
   }
 
   public void startScrollerTask() {
@@ -371,18 +382,98 @@ public class WXScrollView extends ScrollView implements Callback, IWXScroller, W
     if (mHasNotDoneActionDown) {
       MotionEvent down = MotionEvent.obtain(ev);
       down.setAction(MotionEvent.ACTION_DOWN);
-      super.onTouchEvent(down);
       mHasNotDoneActionDown = false;
+    }
+
+    if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+      ox = ev.getX();
+      oy = ev.getY();
+      // Dispatch touch event to parent view
+      startNestedScroll(ViewCompat.SCROLL_AXIS_HORIZONTAL | ViewCompat.SCROLL_AXIS_VERTICAL);
     }
 
     if (ev.getAction() == MotionEvent.ACTION_UP || ev.getAction() == MotionEvent.ACTION_CANCEL) {
       mHasNotDoneActionDown = true;
+      // stop nested scrolling dispatch
+      stopNestedScroll();
     }
+
+    if (ev.getAction() == MotionEvent.ACTION_MOVE) {
+      float clampedX = ev.getX();
+      float clampedY = ev.getY();
+      int dx = (int) (ox - clampedX);
+      int dy = (int) (oy - clampedY);
+
+      if (dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow)) {
+        // sub dx/dy was consumed by parent view!!!
+        ev.setLocation(clampedX+consumed[0],clampedY+consumed[1]);
+      }
+      ox = ev.getX();
+      oy = ev.getY();
+    }
+
     boolean result = super.onTouchEvent(ev);
     if (wxGesture != null) {
       result |= wxGesture.onTouch(this, ev);
     }
     return result;
+  }
+
+  @Override
+  public void setNestedScrollingEnabled(boolean enabled) {
+    childHelper.setNestedScrollingEnabled(enabled);
+  }
+
+  @Override
+  public boolean isNestedScrollingEnabled() {
+    return childHelper.isNestedScrollingEnabled();
+  }
+
+  @Override
+  public boolean startNestedScroll(int axes) {
+    return childHelper.startNestedScroll(axes);
+  }
+
+  @Override
+  public void stopNestedScroll() {
+    childHelper.stopNestedScroll();
+  }
+
+  @Override
+  public boolean hasNestedScrollingParent() {
+    return childHelper.hasNestedScrollingParent();
+  }
+
+  @Override
+  public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow) {
+    return childHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow);
+  }
+
+  @Override
+  public boolean dispatchNestedPreScroll(int dx, int dy, int[] consumed, int[] offsetInWindow) {
+    return childHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow);
+  }
+
+  @Override
+  public boolean dispatchNestedFling(float velocityX, float velocityY, boolean consumed) {
+    return childHelper.dispatchNestedFling(velocityX, velocityY, consumed);
+  }
+
+  @Override
+  public boolean dispatchNestedPreFling(float velocityX, float velocityY) {
+    return childHelper.dispatchNestedPreFling(velocityX, velocityY);
+  }
+
+  @Override
+  public boolean onNestedPreFling(View target, float velocityX,
+                                  float velocityY) {
+    return dispatchNestedPreFling(velocityX, velocityY);
+  }
+
+  @Override
+  public boolean onNestedFling(View target, float velocityX, float velocityY,
+                               boolean consumed) {
+    return dispatchNestedFling(velocityX, velocityY, consumed);
   }
 
   @Override
@@ -522,5 +613,9 @@ public class WXScrollView extends ScrollView implements Callback, IWXScroller, W
     void onScrollStopped(WXScrollView scrollView, int x, int y);
 
     void onScroll(WXScrollView scrollView, int x, int y);
+  }
+
+  public void setWAScroller(WXScroller mWAScroller) {
+    this.mWAScroller = mWAScroller;
   }
 }

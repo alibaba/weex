@@ -204,25 +204,48 @@
  */
 package com.taobao.weex.ui.component;
 
+import android.text.TextUtils;
+
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.ui.view.listview.OnRefreshListener;
+import com.taobao.weex.ui.component.list.WXListComponent;
+import com.taobao.weex.ui.view.WXBaseRefreshLayout;
+import com.taobao.weex.ui.view.refresh.core.WXSwipeLayout;
+import com.taobao.weex.ui.view.refresh.wrapper.BaseBounceView;
 
 /**
  * div component
  */
-public class WXRefresh extends WXBaseRefresh implements OnRefreshListener {
+public class WXRefresh extends WXBaseRefresh implements WXSwipeLayout.WXOnRefreshListener{
 
-  public WXRefresh(WXSDKInstance instance, WXDomObject node, WXVContainer parent, String instanceId, boolean lazy) {
-    super(instance, node, parent, instanceId, lazy);
+  public WXRefresh(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
+    super(instance, node, parent, lazy);
+  }
+
+  @Override
+  protected void initView() {
+    mHost = new WXBaseRefreshLayout(mContext);
   }
 
   @Override
   public void onRefresh() {
-    if (mDomObj.event != null && mDomObj.event.contains(WXEventType.RECYCLERVIEW_ONREFRESH)) {
-      WXSDKManager.getInstance().fireEvent(mInstanceId, getRef(), WXEventType.RECYCLERVIEW_ONREFRESH);
+    if (mDomObj.event != null && mDomObj.event.contains(WXEventType.ONREFRESH)) {
+      WXSDKManager.getInstance().fireEvent(mInstanceId, getRef(), WXEventType.ONREFRESH);
     }
   }
 
+  @WXComponentProp(name = "display")
+  public void setDisplay(String display) {
+    if (!TextUtils.isEmpty(display)) {
+      if (display.equals("hide")) {
+        if (getParent() instanceof WXListComponent || getParent() instanceof WXScroller) {
+          if (((BaseBounceView)getParent().getView()).getSwipeLayout().isRefreshing()) {
+            ((BaseBounceView) getParent().getView()).finishPullRefresh();
+            ((BaseBounceView) getParent().getView()).onRefreshingComplete();
+          }
+        }
+      }
+    }
+  }
 }

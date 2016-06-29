@@ -6,5 +6,5 @@ Animation Demo
 
 ## weex code
 
-See [animation example](https://github.com/alibaba/weex/tree/master/examples/animation.we).
+See [animation example](https://github.com/alibaba/weex/tree/dev/examples/animation.we).
 

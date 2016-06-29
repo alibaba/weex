@@ -1,0 +1,10 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.taobao.prettyfish_base">
+    <uses-sdk
+            android:minSdkVersion="14"
+            tools:overrideLibrary="com.taobao.android.dexposed,com.taobao.prettyfish_base"
+            android:targetSdkVersion="21"/>
+    <application>
+    </application>
+</manifest>

@@ -35,9 +35,11 @@ static NSString* WXDebugrepJSFramework;
 
 + (BOOL)isDebug
 {
+    /*
 #ifdef DEBUG
     return YES;
 #endif
+     */
     return WXIsDebug;
 }
 

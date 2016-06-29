@@ -24,6 +24,7 @@
 		84361D581CA10F8E00F43825 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 775BEE8C1C1E8ECC008D1629 /* LaunchScreen.storyboard */; };
 		84361D5B1CA10F8E00F43825 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 775BEE8A1C1E8ECC008D1629 /* Assets.xcassets */; };
 		84D7CAC71CE3266C00D48D46 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7475ACA01CD8444A0044E96C /* libsqlite3.0.tbd */; };
+		8A0B5EFFF75BF82EA481983D /* libPods-WeexUITestDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E48C20F443AA337D1FE97622 /* libPods-WeexUITestDemo.a */; };
 		DC5E503E1D0D97130059F0EB /* weex.png in Resources */ = {isa = PBXBuildFile; fileRef = DC5E503C1D0D97130059F0EB /* weex.png */; };
 		DC5E503F1D0D97130059F0EB /* weex@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DC5E503D1D0D97130059F0EB /* weex@2x.png */; };
 		DC65C4FA1CEB032F00B2F84F /* bundlejs in Resources */ = {isa = PBXBuildFile; fileRef = DC65C4F91CEB032F00B2F84F /* bundlejs */; };
@@ -50,6 +51,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1888E2C5769382461DEDC97D /* Pods-WeexUITestDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeexUITestDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-WeexUITestDemo/Pods-WeexUITestDemo.release.xcconfig"; sourceTree = "<group>"; };
+		2278B1B1FCE894EDAF9F0171 /* Pods-WeexUITestDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeexUITestDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WeexUITestDemo/Pods-WeexUITestDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		22E4D2883CC56188A2CA9C13 /* Pods-WeexDemo.uitest.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeexDemo.uitest.xcconfig"; path = "Pods/Target Support Files/Pods-WeexDemo/Pods-WeexDemo.uitest.xcconfig"; sourceTree = "<group>"; };
 		2AE88A2A1C8544E6003329DE /* WXScannerVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WXScannerVC.h; path = Scanner/WXScannerVC.h; sourceTree = "<group>"; };
 		2AE88A2B1C8544E6003329DE /* WXScannerVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WXScannerVC.m; path = Scanner/WXScannerVC.m; sourceTree = "<group>"; };
@@ -88,6 +91,7 @@
 		DCABAFFF1D02975E001C8592 /* WXEventModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WXEventModule.h; path = extend/module/WXEventModule.h; sourceTree = "<group>"; };
 		DCABB0001D02975E001C8592 /* WXEventModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WXEventModule.m; path = extend/module/WXEventModule.m; sourceTree = "<group>"; };
 		DCD286DF1CF491AC00C601CA /* weex-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "weex-icon.png"; path = "WeexDemo/weex-icon.png"; sourceTree = "<group>"; };
+		E48C20F443AA337D1FE97622 /* libPods-WeexUITestDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WeexUITestDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +117,7 @@
 			files = (
 				84D7CAC71CE3266C00D48D46 /* libsqlite3.0.tbd in Frameworks */,
 				84361D421CA10F8E00F43825 /* libPods-WeexDemo.a in Frameworks */,
+				8A0B5EFFF75BF82EA481983D /* libPods-WeexUITestDemo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,6 +138,7 @@
 			children = (
 				7475ACA01CD8444A0044E96C /* libsqlite3.0.tbd */,
 				7601607D735D7F8D88971230 /* libPods-WeexDemo.a */,
+				E48C20F443AA337D1FE97622 /* libPods-WeexUITestDemo.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -204,6 +210,8 @@
 				5AF8846546DAC65CAC038806 /* Pods-WeexDemo.debug.xcconfig */,
 				9420131417A731ED089B0814 /* Pods-WeexDemo.release.xcconfig */,
 				22E4D2883CC56188A2CA9C13 /* Pods-WeexDemo.uitest.xcconfig */,
+				2278B1B1FCE894EDAF9F0171 /* Pods-WeexUITestDemo.debug.xcconfig */,
+				1888E2C5769382461DEDC97D /* Pods-WeexUITestDemo.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -518,7 +526,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WeexDemo/Pods-WeexDemo-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WeexUITestDemo/Pods-WeexUITestDemo-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		84361D701CA10F8E00F43825 /* Embed Pods Frameworks */ = {
@@ -533,8 +541,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "
-";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WeexUITestDemo/Pods-WeexUITestDemo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -687,6 +694,7 @@
 		};
 		775BEEA91C1E8ECC008D1629 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5AF8846546DAC65CAC038806 /* Pods-WeexDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
@@ -715,6 +723,7 @@
 		};
 		775BEEAA1C1E8ECC008D1629 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9420131417A731ED089B0814 /* Pods-WeexDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
@@ -769,6 +778,7 @@
 		};
 		84361D721CA10F8E00F43825 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2278B1B1FCE894EDAF9F0171 /* Pods-WeexUITestDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
@@ -804,6 +814,7 @@
 		};
 		84361D741CA10F8E00F43825 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1888E2C5769382461DEDC97D /* Pods-WeexUITestDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";

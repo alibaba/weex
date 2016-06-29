@@ -1,0 +1,16 @@
+.weex-refresh {
+  // -webkit-box-align: center;
+  // -webkit-align-items: center;
+  // align-items: center;
+  // -webkit-box-pack: center;
+  // -webkit-justify-content: center;
+  // justify-content: center;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  z-index: 999999;
+  background-color: #666;
+}

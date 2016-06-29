@@ -20,8 +20,6 @@
 @property (nonatomic, strong) AVCaptureVideoPreviewLayer *captureLayer;
 @property (nonatomic, strong) UIView *sanFrameView;
 
-@property (nonatomic) BOOL opened;
-
 @end
 
 @implementation WXScannerVC

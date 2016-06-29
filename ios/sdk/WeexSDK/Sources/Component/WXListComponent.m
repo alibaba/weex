@@ -41,9 +41,11 @@
 @implementation WXListComponent
 {
     __weak UITableView * _tableView;
+
     // Only accessed on main thread
     NSMutableArray *     _cellComponents;
     NSMutableArray *     _completedCells;
+    
     NSUInteger           _previousLoadMoreRowNumber;
 }
 
@@ -117,8 +119,6 @@
     if (![subcomponent isKindOfClass:[WXCellComponent class]]) {
         [super insertSubview:subcomponent atIndex:index];
     } else {
-        WXCellComponent *cellComponent = (WXCellComponent *)subcomponent;
-        
         NSInteger insertIndex = index;
         for (int j = 0; j <= index && j < self.subcomponents.count; j++) {
             WXComponent *child = self.subcomponents[j];
@@ -126,10 +126,11 @@
                 insertIndex--;
             }
         }
-        
+
         [_cellComponents insertObject:subcomponent atIndex:insertIndex];
     }
 }
+
 
 - (void)cellDidRemove:(WXCellComponent *)cell
 {
@@ -137,6 +138,8 @@
     
     NSUInteger row = [_cellComponents indexOfObject:cell];
     WXAssert(row != NSNotFound, @"Removing cell:%@ has not been inserted to cell list before", cell);
+    row = [self adjustRowForCompletedCell:row];
+
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
     
     [_cellComponents removeObject:cell];
@@ -169,15 +172,17 @@
     
     [cell _fillAbsolutePositions];
     
-    
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
     if (![_completedCells containsObject:cell]) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
         [_completedCells addObject:cell];
         WXLogVerbose(@"Insert cell:%@ at row:%ld", cell.ref, (long)indexPath.row);
         [UIView performWithoutAnimation:^{
             [_tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
         }];
     } else {
+        row = [self adjustRowForCompletedCell:row];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+    
         WXLogInfo(@"Reload cell:%@ at row:%ld", cell.ref, (long)indexPath.row);
         [UIView performWithoutAnimation:^{
             [_tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
@@ -190,9 +195,20 @@
     WXAssertMainThread();
     
     NSUInteger row = [_cellComponents indexOfObject:cell];
-    WXAssert(row != NSNotFound, @"Rendered cell:%@ has not been inserted to cell list before", cell);
-
+    if (row == NSNotFound) {
+        WXLogWarning(@"Rendered cell:%@ has been deleted", cell);
+        return;
+    }
+    
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+    
+    NSInteger currentRowNumber = [_tableView numberOfRowsInSection:0];
+    if (!indexPath || indexPath.row >= currentRowNumber) {
+        WXLogError(@"Incorrect row:%ld in cellDidRendered, currentRowNumber:%ld", (long)indexPath.row, (long)currentRowNumber);
+        return;
+    }
+    row = [self adjustRowForCompletedCell:row];
+    
     CGRect cellRect = [_tableView rectForRowAtIndexPath:indexPath];
     if (cellRect.origin.y + cellRect.size.height >= _tableView.frame.size.height) {
         if (self.weexInstance.screenRenderTime == 0) {
@@ -214,6 +230,7 @@
 {
     NSUInteger fromRow = [_cellComponents indexOfObject:cell];
     WXAssert(fromRow != NSNotFound, @"Moving cell:%@ has not been inserted to cell list before", cell);
+    fromRow = [self adjustRowForCompletedCell:fromRow];
     NSIndexPath *fromIndexPath = [NSIndexPath indexPathForRow:fromRow inSection:0];
     
     [_cellComponents removeObject:cell];
@@ -222,6 +239,7 @@
     
     NSUInteger toRow = [_cellComponents indexOfObject:cell];
     WXAssert(toRow != NSNotFound, @"Moving cell:%@ failed", cell);
+    toRow = [self adjustRowForCompletedCell:toRow];
     NSIndexPath *toIndexPath = [NSIndexPath indexPathForRow:toRow inSection:0];
 
     [UIView performWithoutAnimation:^{
@@ -277,7 +295,8 @@
     } else {
     }
     
-    WXCellComponent *cell = [_cellComponents wx_safeObjectAtIndex:indexPath.row];
+    NSUInteger row = [self adjustRowForUnCompletedCell:indexPath.row];
+    WXCellComponent *cell = [_cellComponents wx_safeObjectAtIndex:row];
     
     if (!cell) {
         return cellView;
@@ -324,6 +343,31 @@
 {
     BOOL superNeedLoadMore = [super isNeedLoadMore];
     return superNeedLoadMore && _previousLoadMoreRowNumber != [self tableView:_tableView numberOfRowsInSection:0];
+}
+
+- (NSUInteger)adjustRowForCompletedCell:(NSUInteger)row
+{
+    NSUInteger newRow = row;
+    for (int i = 0; i <= row; i++) {
+        WXCellComponent *cellComponent = _cellComponents[i];
+        if (![_completedCells containsObject:cellComponent]) {
+            newRow --;
+        }
+    }
+    
+    return newRow;
+}
+
+- (NSUInteger)adjustRowForUnCompletedCell:(NSUInteger)row
+{
+    for (int i = 0; i <= row && i < _cellComponents.count; i++) {
+        WXCellComponent *cellComponent = _cellComponents[i];
+        if (![_completedCells containsObject:cellComponent]) {
+            row ++;
+        }
+    }
+    
+    return row;
 }
 
 - (void)fixFlicker

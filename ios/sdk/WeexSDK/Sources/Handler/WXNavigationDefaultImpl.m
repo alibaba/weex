@@ -319,7 +319,7 @@
     if (button.instanceId) {
         if (button.nodeRef)
         {
-            [[WXSDKManager bridgeMgr] fireEvent:button.instanceId ref:button.nodeRef type:@"click" params:nil];
+            [[WXSDKManager bridgeMgr] fireEvent:button.instanceId ref:button.nodeRef type:@"click" params:nil domChanges:nil] ;
         }
         else
         {
@@ -338,7 +338,7 @@
                     break;
             }
             
-           [[WXSDKManager bridgeMgr] fireEvent:button.instanceId ref:WX_SDK_ROOT_REF type:eventType params:nil];
+           [[WXSDKManager bridgeMgr] fireEvent:button.instanceId ref:WX_SDK_ROOT_REF type:eventType params:nil domChanges:nil];
         }
     }
 }

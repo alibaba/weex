@@ -226,13 +226,12 @@ public class WXVideo extends WXComponent {
   private WXVideoView mVideoView;
   private boolean mAutoPlay;
   private String mSrc;
-  private boolean mSrcChanged;
   private boolean mPrepared;
   private boolean mError;
   private ProgressBar mProgressBar;
 
-  public WXVideo(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
-    super(instance, dom, parent, instanceId, isLazy);
+  public WXVideo(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
+    super(instance, dom, parent, isLazy);
   }
 
   @Override
@@ -344,17 +343,6 @@ public class WXVideo extends WXComponent {
   }
 
   @Override
-  public void flushView() {
-    super.flushView();
-
-    if (!TextUtils.isEmpty(mSrc) && mSrcChanged) {
-      mSrcChanged = false;
-      mVideoView.setVideoURI(Uri.parse(mSrc));
-      mProgressBar.setVisibility(View.VISIBLE);
-    }
-  }
-
-  @Override
   public void destroy() {
     super.destroy();
   }
@@ -364,8 +352,12 @@ public class WXVideo extends WXComponent {
     if (TextUtils.isEmpty(src) || mHost == null) {
       return;
     }
-    mSrc = src;
-    mSrcChanged = true;
+
+    if (!TextUtils.isEmpty(src)) {
+      mVideoView.setVideoURI(Uri.parse(src));
+      mProgressBar.setVisibility(View.VISIBLE);
+      mSrc = src;
+    }
   }
 
   @WXComponentProp(name = "autoPlay")

@@ -39,22 +39,22 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  @abstract The component's identifier string.
  */
-@property (nonatomic, readonly, strong) NSString *ref;
+@property (nonatomic, readonly, copy) NSString *ref;
 
 /**
  *  @abstract The component's styles.
  */
-@property (nonatomic, readonly, strong) NSDictionary *styles;
+@property (nonatomic, readonly, copy) NSDictionary *styles;
 
 /**
  *  @abstract The component's attributes.
  */
-@property (nonatomic, readonly, strong) NSDictionary *attributes;
+@property (nonatomic, readonly, copy) NSDictionary *attributes;
 
 /**
  *  @abstract The component's events.
  */
-@property (nonatomic, readonly, strong) NSArray *events;
+@property (nonatomic, readonly, copy) NSArray *events;
 
 /**
  *  @abstract The reference to
@@ -64,7 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * @abstract The component's subcomponents.
  */
-@property (nonatomic, readonly, strong, nullable) NSArray<WXComponent *> *subcomponents;
+@property (nonatomic, readonly, copy, nullable) NSArray<WXComponent *> *subcomponents;
 
 /**
  * @abstract The component's supercomponent.

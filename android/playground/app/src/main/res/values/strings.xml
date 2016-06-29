@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WeexApps_Android</string>
+    <string name="app_name">WEEX</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -12,6 +12,8 @@
     <string name="title_activity_splash">SplashActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">WEEX\nPLAYGROUND</string>
+
+    <string name="cpu_not_support_tip">Sorry, your current device is x86 architecture.\n We only support arm architecture devices!</string>
 
     <string name="index_tip">Network Error!\n1.Make sure you use the command "npm run serve" launched local service\n2.Make sure you modify "your_current_ip" to your local IP in "WXMainActivity" </string>
 </resources>

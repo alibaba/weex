@@ -205,12 +205,43 @@
 package com.taobao.weex.utils;
 
 import android.text.TextUtils;
+import com.alibaba.fastjson.JSON;
+import com.taobao.weex.common.IWXObject;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 
 public class WXReflectionUtils {
+
+  public static Object parseArgument(Type paramClazz, Object value){
+    String originValue;
+    if (value instanceof String) {
+      originValue = (String) value;
+    } else {
+      originValue = JSON.toJSONString(value);
+    }
+
+    if (paramClazz == int.class) {
+      return WXUtils.getInt(originValue);
+    } else if (paramClazz == String.class) {
+      return originValue;
+    } else if (paramClazz == long.class) {
+      return  WXUtils.getLong(originValue);
+    } else if (paramClazz == double.class) {
+      return WXUtils.getDouble(originValue);
+    } else if (paramClazz == float.class) {
+      return WXUtils.getFloat(originValue);
+    } else if (ParameterizedType.class.isAssignableFrom(paramClazz.getClass())) {
+      return JSON.parseObject(originValue, paramClazz);
+    } else if (IWXObject.class.isAssignableFrom(paramClazz.getClass())) {
+      return JSON.parseObject(originValue, paramClazz);
+    } else {
+      return JSON.parseObject(originValue, paramClazz);
+    }
+  }
 
   public static void setValue(Object obj, String fieldName, Object value) {
     if (obj == null || TextUtils.isEmpty(fieldName)) {

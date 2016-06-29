@@ -101,6 +101,8 @@ extern _Nonnull SEL WXSwizzledSelectorForSelector(_Nonnull SEL selector);
  */
 + (NSDictionary *_Nonnull)getEnvironment;
 
++ (NSDictionary *_Nonnull)getDebugEnvironment;
+
 /**
  * @abstract UserAgent Generation
  *
@@ -245,11 +247,6 @@ CGRect WXPixelFrameResize(CGRect value);
  *
  */
 CGPoint WXPixelPointResize(CGPoint value);
-
-/**
- *  @abstract detect if a frame is valid, not having NaN value.
- */
-+ (BOOL)isFrameValid:(CGRect)frame;
 
 /**
  *  @abstract Returns the document directory path.

@@ -431,7 +431,7 @@ static css_node_t * rootNodeGetChild(void *context, int i)
     
     [_indexDict removeAllObjects];
     [_uiTaskQueue removeAllObjects];
-    
+
     dispatch_async(dispatch_get_main_queue(), ^{
          _rootComponent = nil;
     });

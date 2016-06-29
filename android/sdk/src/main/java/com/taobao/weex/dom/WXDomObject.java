@@ -242,9 +242,16 @@ public class WXDomObject extends CSSNode implements Cloneable {
   private boolean mYoung = false;
 
   /**
-   * Do pre staff before layout. Subclass may provide different implementation.
+   * Do pre-staff before layout. Subclass may provide different implementation.
    */
   public void layoutBefore() {
+
+  }
+
+  /**
+   * Do post-staff before layout. Subclass may provide different implementation.
+   */
+  public void layoutAfter(){
 
   }
 
@@ -522,5 +529,9 @@ public class WXDomObject extends CSSNode implements Cloneable {
       fixedStyleRefs = new ArrayList<>();
     }
     fixedStyleRefs.add(ref);
+  }
+
+  public String dumpDomTree() {
+    return ref + ": " + toString();
   }
 }

@@ -219,10 +219,9 @@ public class WXWeb extends WXComponent {
 
     protected IWebView mWebView;
     private String mUrl;
-    private boolean mUrlChanged;
 
-    public WXWeb(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
-        super(instance, dom, parent, instanceId, isLazy);
+    public WXWeb(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
+        super(instance, dom, parent, isLazy);
         createView();
     }
 
@@ -273,15 +272,6 @@ public class WXWeb extends WXComponent {
     }
 
     @Override
-    public void flushView() {
-        super.flushView();
-        if (!TextUtils.isEmpty(mUrl) && mUrlChanged) {
-            mUrlChanged = false;
-            loadUrl(mUrl);
-        }
-    }
-
-    @Override
     public void destroy() {
         super.destroy();
         getWebView().destroy();
@@ -298,7 +288,9 @@ public class WXWeb extends WXComponent {
             return;
         }
         mUrl = url;
-        mUrlChanged = true;
+        if (!TextUtils.isEmpty(url)) {
+            loadUrl(url);
+        }
     }
 
     public void setAction(String action) {

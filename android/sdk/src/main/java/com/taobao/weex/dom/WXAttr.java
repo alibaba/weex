@@ -344,6 +344,13 @@ public class WXAttr extends ConcurrentHashMap<String, Object> {
     }
     return src.toString();
   }
+  public String getLoadMoreRetry() {
+    Object src = get(WXDomPropConstant.WX_ATTR_LOAD_MORE_RETRY);
+    if (src == null) {
+      return null;
+    }
+    return src.toString();
+  }
 
   public String getLoadMoreOffset() {
     Object src = get(WXDomPropConstant.WX_ATTR_LOAD_MORE_OFFSET);

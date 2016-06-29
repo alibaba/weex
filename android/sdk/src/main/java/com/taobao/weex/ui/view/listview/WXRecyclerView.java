@@ -221,14 +221,19 @@ public class WXRecyclerView extends RecyclerView {
     super(context);
   }
 
-  public void initView(Context context, int type) {
-
+  /**
+   *
+   * @param context
+   * @param type
+   * @param orientation should be {@link OrientationHelper#HORIZONTAL} or {@link OrientationHelper#VERTICAL}
+   */
+  public void initView(Context context, int type,int orientation) {
     if (type == TYPE_GRID_LAYOUT) {
-      setLayoutManager(new GridLayoutManager(context, 2));
+      setLayoutManager(new GridLayoutManager(context, 2,orientation,false));
     } else if (type == TYPE_STAGGERED_GRID_LAYOUT) {
-      setLayoutManager(new StaggeredGridLayoutManager(2, OrientationHelper.VERTICAL));
+      setLayoutManager(new StaggeredGridLayoutManager(2, orientation));
     } else if (type == TYPE_LINEAR_LAYOUT) {
-      setLayoutManager(new LinearLayoutManager(context));
+      setLayoutManager(new LinearLayoutManager(context,orientation,false));
     }
   }
 

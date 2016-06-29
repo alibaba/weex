@@ -272,6 +272,9 @@ class WXDomHandler implements Handler.Callback {
       case MsgType.WX_DOM_REFRESH_FINISH:
         mWXDomManager.refreshFinish(task.instanceId);
         break;
+      case MsgType.WX_DOM_UPDATE_FINISH:
+        mWXDomManager.updateFinish(task.instanceId);
+        break;
       case MsgType.WX_DOM_BATCH:
         mWXDomManager.batch();
         mHasBatch = false;
@@ -300,6 +303,7 @@ class WXDomHandler implements Handler.Callback {
     public static final int WX_DOM_SCROLLTO = 0x08;
     public static final int WX_DOM_CREATE_FINISH = 0x09;
     public static final int WX_DOM_REFRESH_FINISH = 0x0a;
+    public static final int WX_DOM_UPDATE_FINISH = 0x0b;
 
     public static final int WX_DOM_BATCH = 0xff;
   }
