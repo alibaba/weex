@@ -214,9 +214,11 @@ import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import android.widget.TextView;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.WXDomPropConstant;
@@ -273,7 +275,22 @@ public class WXInput extends WXComponent {
     if (mHost == null || TextUtils.isEmpty(type)) {
       return;
     }
-    ((WXEditText) mHost).addTextChangedListener(new TextWatcher() {
+    final TextView text = (WXEditText) mHost;
+    text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+      CharSequence mLastValue = text.getText();
+      @Override
+      public void onFocusChange(View v, boolean hasFocus) {
+        CharSequence newValue = text.getText();
+        newValue = newValue== null?"":newValue;
+        if(!hasFocus && !newValue.equals(mLastValue)){
+          mLastValue = newValue;
+
+          String event = mDomObj.event.contains(WXEventType.INPUT_CHANGE)?WXEventType.INPUT_CHANGE:null;
+          fireEvent(event,newValue.toString());
+        }
+      }
+    });
+    text.addTextChangedListener(new TextWatcher() {
       @Override
       public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -285,25 +302,8 @@ public class WXInput extends WXComponent {
           return;
         }
 
-        String[] events = {
-          mDomObj.event.contains(WXEventType.INPUT)?WXEventType.INPUT:null,
-          mDomObj.event.contains(WXEventType.INPUT_CHANGE)?WXEventType.INPUT_CHANGE:null};
-
-        for(String event:events) {
-          if(event== null){
-            continue;
-          }
-          Map<String, Object> params = new HashMap<>(2);
-          params.put("value", s.toString());
-          params.put("timeStamp", System.currentTimeMillis());
-
-          Map<String, Object> domChanges = new HashMap<>();
-          Map<String, Object> attrsChanges = new HashMap<>();
-          attrsChanges.put("value",s.toString());
-          domChanges.put("attrs",attrsChanges);
-
-          WXSDKManager.getInstance().fireEvent(mInstanceId, mDomObj.ref, event, params,domChanges);
-        }
+        String event = mDomObj.event.contains(WXEventType.INPUT)?WXEventType.INPUT:null;
+        fireEvent(event,s.toString());
 
         mBeforeText = s.toString();
       }
@@ -314,6 +314,22 @@ public class WXInput extends WXComponent {
       }
     });
   }
+
+  private void fireEvent(String event,String value){
+    if(event != null){
+      Map<String, Object> params = new HashMap<>(2);
+      params.put("value", value);
+      params.put("timeStamp", System.currentTimeMillis());
+
+      Map<String, Object> domChanges = new HashMap<>();
+      Map<String, Object> attrsChanges = new HashMap<>();
+      attrsChanges.put("value",value);
+      domChanges.put("attrs",attrsChanges);
+
+      WXSDKManager.getInstance().fireEvent(mInstanceId, mDomObj.ref, event, params,domChanges);
+    }
+  }
+
 
   @Override
   public void updateExtra(Object extra) {
