@@ -44,10 +44,10 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/5967f205d011fc83a8277f74388ee8ff", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/cd9eb0167d185526e733486bc32417d2", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
-	  __webpack_require__(16);
+	  __webpack_require__(15);
 	  __weex_module__.exports = {
 	    data: function () {return {
 	      items: [
@@ -62,6 +62,7 @@
 	        {name: 'component/scroller-demo', title: 'Scroller'},
 	        {name: 'component/list/list-basic', title: 'List (Basic)'},
 	        {name: 'component/list/list-demo', title: 'List (Advanced)'},
+	        {name: 'component/list/list-demo-horizon', title: 'List (Horizontal)'},
 	        {name: 'component/slider/index', title: 'Slider'},
 	        {name: 'component/a-demo',title:'A'},
 	        {name: 'component/video-demo', title: 'Video'},
@@ -93,7 +94,7 @@
 	  }
 	})
 	})
-	;__weex_bootstrap__("@weex-component/5967f205d011fc83a8277f74388ee8ff", {
+	;__weex_bootstrap__("@weex-component/cd9eb0167d185526e733486bc32417d2", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -849,7 +850,7 @@
 	    {
 	      "type": "image",
 	      "classList": [
-	        "left-image"
+	        "right-image"
 	      ],
 	      "attr": {
 	        "naviItemPosition": "right",
@@ -944,14 +945,14 @@
 	  "left-image": {
 	    "position": "absolute",
 	    "bottom": 20,
-	    "right": 28,
+	    "left": 28,
 	    "width": 50,
 	    "height": 50
 	  },
 	  "right-image": {
 	    "position": "absolute",
 	    "bottom": 20,
-	    "left": 28,
+	    "right": 28,
 	    "width": 50,
 	    "height": 50
 	  }
@@ -1243,55 +1244,8 @@
 /* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/example-list-item", [], function(__weex_require__, __weex_exports__, __weex_module__){
-
-	;
-	  __webpack_require__(1);
-	  __weex_module__.exports = {
-	    data: function () {return {
-	      title: '',
-	      url: ''
-	    }},
-	    methods: {
-	      redirect: function() {
-	        this.$openURL(this.url);
-	      }
-	    }
-	  }
-
-	;__weex_module__.exports.template = __weex_module__.exports.template || {}
-	;Object.assign(__weex_module__.exports.template, {
-	  "type": "wxc-list-item",
-	  "events": {
-	    "click": "redirect"
-	  },
-	  "children": [
-	    {
-	      "type": "text",
-	      "classList": [
-	        "item-txt"
-	      ],
-	      "attr": {
-	        "value": function () {return this.title}
-	      }
-	    }
-	  ]
-	})
-	;__weex_module__.exports.style = __weex_module__.exports.style || {}
-	;Object.assign(__weex_module__.exports.style, {
-	  "item-txt": {
-	    "fontSize": 48,
-	    "color": "#555555"
-	  }
-	})
-	})
-
-/***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
-
 	;__weex_define__("@weex-component/example-list", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(15);
+	__webpack_require__(16);
 
 	;
 	  __webpack_require__(1);
@@ -1365,6 +1319,53 @@
 	})
 	;__weex_module__.exports.style = __weex_module__.exports.style || {}
 	;Object.assign(__weex_module__.exports.style, {})
+	})
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	;__weex_define__("@weex-component/example-list-item", [], function(__weex_require__, __weex_exports__, __weex_module__){
+
+	;
+	  __webpack_require__(1);
+	  __weex_module__.exports = {
+	    data: function () {return {
+	      title: '',
+	      url: ''
+	    }},
+	    methods: {
+	      redirect: function() {
+	        this.$openURL(this.url);
+	      }
+	    }
+	  }
+
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
+	  "type": "wxc-list-item",
+	  "events": {
+	    "click": "redirect"
+	  },
+	  "children": [
+	    {
+	      "type": "text",
+	      "classList": [
+	        "item-txt"
+	      ],
+	      "attr": {
+	        "value": function () {return this.title}
+	      }
+	    }
+	  ]
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
+	  "item-txt": {
+	    "fontSize": 48,
+	    "color": "#555555"
+	  }
+	})
 	})
 
 /***/ }

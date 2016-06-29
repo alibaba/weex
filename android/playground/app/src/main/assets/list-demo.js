@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/27404869ac7d04c3c768257387390d1b", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/f68b1676204b660f37096b5dc8667ee5", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __weex_module__.exports = {
@@ -380,7 +380,8 @@
 
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "list",
 	  "classList": [
 	    "list"
@@ -1083,8 +1084,9 @@
 	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "flexRow": {
 	    "flexDirection": "row"
 	  },
@@ -1146,9 +1148,9 @@
 	    "width": 20,
 	    "height": 20
 	  }
-	}
 	})
-	;__weex_bootstrap__("@weex-component/27404869ac7d04c3c768257387390d1b", {
+	})
+	;__weex_bootstrap__("@weex-component/f68b1676204b660f37096b5dc8667ee5", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
