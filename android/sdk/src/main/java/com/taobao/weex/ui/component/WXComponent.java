@@ -275,17 +275,17 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
       return;
     }
 
-    if (this instanceof WXRefresh && mParent instanceof WXScroller) {
+    if (this instanceof WXRefresh && mParent instanceof WXRefreshableContainer &&
+        isOuterRefreshableContainer(mParent)) {
       refreshMargin = mDomObj.csslayout.dimensions[CSSLayout.DIMENSION_HEIGHT];
     }
-
-    if ((this instanceof WXBaseRefresh && mParent instanceof WXScroller)) {
+    if ((this instanceof WXBaseRefresh && mParent instanceof WXRefreshableContainer)) {
       return;
     }
 
     mDomObj = domObject;
 
-    if (mParent instanceof WXScroller) {
+    if (mParent instanceof WXRefreshableContainer && isOuterRefreshableContainer(mParent)) {
       if (!(this instanceof WXBaseRefresh)) {
           CSSLayout newLayout = new CSSLayout();
           newLayout.copy(mDomObj.csslayout);
@@ -371,9 +371,9 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
       params.setMargins(realLeft, realTop, realRight, realBottom);
       mHost.setLayoutParams(params);
     } else if (mParent.getRealView() instanceof ScrollView) {
-      ScrollView.LayoutParams params = new ScrollView.LayoutParams(realWidth, realHeight);
-      params.setMargins(realLeft, realTop, realRight, realBottom);
-      mHost.setLayoutParams(params);
+//      ScrollView.LayoutParams params = new ScrollView.LayoutParams(realWidth, realHeight);
+//      params.setMargins(realLeft, realTop, realRight, realBottom);
+//      mHost.setLayoutParams(params);
     }
 
     mPreRealWidth = realWidth;
@@ -889,6 +889,7 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     if (mDomObj != null) {
       mDomObj.destroy();
     }
+    refreshMargin = 0;
   }
 
   /**
@@ -950,5 +951,15 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
 
     public int width;
     public int height;
+  }
+
+  public boolean isOuterRefreshableContainer(WXComponent component) {
+    if (component.getParent() == null) {
+      return true;
+    } else if (component.getParent() instanceof WXRefreshableContainer) {
+      return false;
+    } else {
+      return isOuterRefreshableContainer(component.getParent());
+    }
   }
 }
