@@ -1,65 +1,66 @@
 # WXDevtool
 Remote debug for your native iOS app using Chrome Developer Tools
 
-## weex-devtool启动：
+## weex-devtool launch：
 
-0. 启动weex-devtool
+0. install and run weex-devtool
 
-	0. $:npm install -g weex-debugger
+		$:npm install -g weex-devtool
 
-	0. $:weex-devtool  
+		$:weex-devtool  
 
-		执行完会显示native需要链接的ws地址,之后自动打开chrome 。
-		
-		如果提示weex-devtool报错,建议升到6.0以上,可用如下命令升级：
-		
-		$:npm install -g n
-		
-		$:n latest
+	it will launch chrome browser, showing wss ip address in chrome address bar.
 		
 		
-## playground安装WXDevtool
-0. $:pod install
-    
-    更新pod依赖库
+## playground install WXDevtool
 
-### native 调用 
-0. inspect调试
-	* AppDelegate.m文件引入头文件 #import "WXDevTool.h"
-	* 程序启动时调用 
+1. Install dependencies.
+   
+       $:pod install
+
+### Usage
+0. run inspect 
+	* AppDelegate.m header file
+
+			#import "WXDevTool.h"
 		
-		
+	* Initialize inspector when the APP launched
 	
-		  -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-		  {
-		  [WXDevTool launchInspectorWithSocketUrl:[NSURL  URLWithString:@"ws://localhost:8088/debugProxy/native"]];   		  }
+	    **Note: The inspector API must be called before weex is initialized**
 		
-	url为terminal显示的ws地址。
+			  +(void)launchInspectorWithSocketUrl:(NSString *)url;		
+	   wssip was the wss address showing in the chrome address bar.
 
 	 		eg：- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 			{
-			[WXDevTool launchInspectorWithSocketUrl:[NSURL URLWithString:@"ws://localhost:8088/debugProxy/native"]];
+			[WXDevTool launchInspectorWithSocketUrl:[NSURL URLWithString:@"ws://wssip/debugProxy/native"]];
 			}
 
 	 
-	* 启动app，此时chrome页会显示你的设备与app name，选择启动inspector开启调试模式
-	* 日志实时打印支持不同级别打印。
+	* Build and running APP, this time chrome will display your device with App name, select inspector to open the inspector tab.
+	* Log print support for different levels of print.
 	
 			eg：PDLogE()/PDLogW()
 
-0. debugger调试
-	* 程序启动时调用
+0. run debugger
+	* Initialize debugger API when the APP launched
 	
-		  (void)launchDebugWithSocketUrl:(NSString *)url;
+	  **Note:The Debugger API must be called before weex is initialized**
+	
+		  +(void)launchDebugWithSocketUrl:(NSString *)url;
+
+	   wssip was the wss address showing in the chrome address bar.
 	 
 	 	  eg：-(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 			{
-    		[WXDevTool launchDebugWithSocketUrl:@"ws://localhost:8088/debugProxy/native"];
+    		[WXDevTool launchDebugWithSocketUrl:@"ws://wssip/debugProxy/native"];
 			}
 
-	* 启动app，此时chrome页会显示你的设备与app name，选择启动debugger开启调试模式
+	* Build and running APP, this time chrome will display your device with name app, select debugger to open the debug tab.
 	
 ### WXDevtool Dependencies
+
+Your app must be linked against the following frameworks/dylibs
 
 * libicucore.dylib
 * CFNetwork.framework
@@ -67,7 +68,7 @@ Remote debug for your native iOS app using Chrome Developer Tools
 * Security.framework
 * Foundation.framework
 
-**注：当前版本inspect与debug要分开调试(用inspect时要关闭debug，用debug时也要关闭inspect)，下个版本实现同时调试**
+**Note: in current devtool version, inspector and debugger can only be used separately(build and run), in next version (very soon) they could be used at the same time **
 
 
 
