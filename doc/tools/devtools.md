@@ -1,8 +1,8 @@
 ### Weex devtools
 
-Weex devtools is a custom devtools for weex that implements [Chrome Debugging Protocol](https://developer.chrome.com/devtools/docs/debugger-protocol), it is designed to help you quickly inspect your app and debug your JS bundle source in a chrome web page, both Android and IOS platform are supported.At present The devtools consist of two part : `Inspector` and `Debugger`. If you want it work well, you must install a `weex-devtool` as debug server.
+Weex devtools is a custom devtools for weex that implements [Chrome Debugging Protocol](https://developer.chrome.com/devtools/docs/debugger-protocol), it is designed to help you quickly inspect your app and debug your JS bundle source in a chrome web page, both Android and IOS platform are supported.
 
-![devtools-main](../images/devtools-main.png "devtools-main")
+![devtools-main](../images/devtools-main.png "connecting (multiple) devices")
 
 #### Inspector
  Inspector can be used to show your `Element` \ `NetWork` \ `Console log` \ `ScreenCast` \ `BoxModel` \ `Native View` and so on.
@@ -16,6 +16,7 @@ Weex devtools is a custom devtools for weex that implements [Chrome Debugging Pr
 
 ###### show the total time and latency
 ![inspector-network](../images/inspector-network0.png "inspector-network")
+
 ###### show the header and response
 ![inspector-network](../images/inspector-network1.png "inspector-network")
 
@@ -55,7 +56,11 @@ $npm install -g weex-devtool
 
 ##### Android
 
-See the doc [Weex devtools](../../android/inspector/README.md), it will lead you to config and use it step by step.
+See the doc [Weex devtools (Android)](../../android/inspector/README.md), it will lead you to config and use it step by step.
+
+##### IOS
+
+See the doc [Weex devtools (IOS)](../../ios/WXDevtool/README.md), it will lead you to config and use it step by step.
 
 
 
