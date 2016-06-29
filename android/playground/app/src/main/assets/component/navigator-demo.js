@@ -826,7 +826,7 @@
 	                } else {
 	                    this.$emit('alarm', Object.assign({}, this.time));
 	                }
-	                this._app.updateActions();
+	                this._app.updateActions(); 
 	            }
 	        },
 	        format: function(str) {
@@ -912,7 +912,7 @@
 	        if (this.interval > 0
 	                && this.step > 0
 	                && this.duration > 0) {
-	            this.nextTick();
+	            this.nextTick();    
 	        }
 	    },
 	    methods: {
@@ -1010,7 +1010,7 @@
 	          //导航条高度
 	          height: 88,
 
-	          //导航条标题
+	          //导航条标题 
 	          title: "",
 
 	          //导航条标题颜色
@@ -1078,7 +1078,7 @@
 	    {
 	      "type": "image",
 	      "classList": [
-	        "left-image"
+	        "right-image"
 	      ],
 	      "attr": {
 	        "naviItemPosition": "right",
@@ -1173,14 +1173,14 @@
 	  "left-image": {
 	    "position": "absolute",
 	    "bottom": 20,
-	    "right": 28,
+	    "left": 28,
 	    "width": 50,
 	    "height": 50
 	  },
 	  "right-image": {
 	    "position": "absolute",
 	    "bottom": 20,
-	    "left": 28,
+	    "right": 28,
 	    "width": 50,
 	    "height": 50
 	  }
@@ -1290,7 +1290,7 @@
 	                  tabItem.visibility = 'hidden';
 	                }
 	              }
-	            },
+	            },  
 	        }
 	    }
 
