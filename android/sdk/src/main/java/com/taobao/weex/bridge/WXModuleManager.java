@@ -207,7 +207,9 @@ package com.taobao.weex.bridge;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXSDKManager;
-import com.taobao.weex.common.*;
+import com.taobao.weex.common.Destroyable;
+import com.taobao.weex.common.WXException;
+import com.taobao.weex.common.WXModule;
 import com.taobao.weex.dom.WXDomModule;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXReflectionUtils;
@@ -217,6 +219,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * Manager class for weex module. There are two types of modules in weex, one is instance-level module,
@@ -398,6 +401,15 @@ public class WXModuleManager {
         ((Destroyable)module).destroy();
       }
 
+    }
+  }
+
+  public static void reload(){
+    if(sModuleFactoryMap!=null){
+      Set<String> keys=sModuleFactoryMap.keySet();
+      for(String key:keys){
+        registerJSModule(key,sModuleFactoryMap.get(key));
+      }
     }
   }
 

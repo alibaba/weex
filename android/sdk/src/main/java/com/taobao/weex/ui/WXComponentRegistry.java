@@ -209,6 +209,7 @@ import android.text.TextUtils;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.common.WXException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -219,6 +220,7 @@ import java.util.Map;
 public class WXComponentRegistry {
 
   private static Map<String, IFComponentHolder> sTypeComponentMap = new HashMap<>();
+  private static ArrayList<Map<String, String>> sComponentInfos=new ArrayList<>();
 
   public static boolean registerComponent(final String type, final IFComponentHolder holder, final Map<String, String> componentInfo) throws WXException {
     if (holder == null || TextUtils.isEmpty(type)) {
@@ -233,6 +235,7 @@ public class WXComponentRegistry {
         try {
           registerNativeComponent(type, holder);
           registerJSComponent(componentInfo);
+          sComponentInfos.add(componentInfo);
         } catch (WXException e) {
           e.printStackTrace();
         }
@@ -256,6 +259,21 @@ public class WXComponentRegistry {
 
   public static IFComponentHolder getComponent(String type) {
     return sTypeComponentMap.get(type);
+  }
+
+  public static void reload(){
+    WXBridgeManager.getInstance().getJSHandler().post(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          for(Map<String,String> com:sComponentInfos){
+            registerJSComponent(com);
+          }
+        } catch (WXException e) {
+          e.printStackTrace();
+        }
+      }
+    });
   }
 
 }
