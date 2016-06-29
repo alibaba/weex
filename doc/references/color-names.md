@@ -1,4 +1,5 @@
 # List of the names of colors
+<a href="https://github.com/weexteam/article/issues/38"  class="weex-translate">cn</a>
 
 ### Basic color keywords:
 
