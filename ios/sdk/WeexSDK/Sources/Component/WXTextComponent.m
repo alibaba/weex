@@ -139,7 +139,13 @@ do {\
     WX_STYLE_FILL_TEXT(textDecoration, textDecoration, WXTextDecoration, YES)
     WX_STYLE_FILL_TEXT(textOverflow, textOverflow, NSString, NO)
     
-    UIEdgeInsets padding = UIEdgeInsetsMake(self.cssNode->style.padding[CSS_TOP] + self.cssNode->style.border[CSS_TOP], self.cssNode->style.padding[CSS_LEFT] + self.cssNode->style.border[CSS_LEFT], self.cssNode->style.padding[CSS_BOTTOM] + self.cssNode->style.border[CSS_BOTTOM], self.cssNode->style.padding[CSS_RIGHT] + self.cssNode->style.border[CSS_RIGHT]);
+    UIEdgeInsets padding = {
+        WXFloorPixelValue(self.cssNode->style.padding[CSS_TOP] + self.cssNode->style.border[CSS_TOP]),
+        WXFloorPixelValue(self.cssNode->style.padding[CSS_LEFT] + self.cssNode->style.border[CSS_LEFT]),
+        WXFloorPixelValue(self.cssNode->style.padding[CSS_BOTTOM] + self.cssNode->style.border[CSS_BOTTOM]),
+        WXFloorPixelValue(self.cssNode->style.padding[CSS_RIGHT] + self.cssNode->style.border[CSS_RIGHT])
+    };
+    
     if (!UIEdgeInsetsEqualToEdgeInsets(padding, _padding)) {
         _padding = padding;
         [self setNeedsRepaint];
@@ -267,7 +273,9 @@ do {\
     
     // set font
     UIFont *font = [WXUtility fontWithSize:_fontSize textWeight:_fontWeight textStyle:_fontStyle fontFamily:_fontFamily];
-    [attributedString addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, string.length)];
+    if (font) {
+        [attributedString addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, string.length)];
+    }
     
     if(_textDecoration == WXTextDecorationUnderline){
         [attributedString addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(0, string.length)];
@@ -312,7 +320,7 @@ do {\
     
     textContainer.maximumNumberOfLines = _lines > 0 ? _lines : 0;
     textContainer.size = (CGSize){isnan(width) ? CGFLOAT_MAX : width, CGFLOAT_MAX};
-    
+
     [layoutManager addTextContainer:textContainer];
     [layoutManager ensureLayoutForTextContainer:textContainer];
     
@@ -322,10 +330,8 @@ do {\
     return textStorage;
 }
 
-- (void)_calculatedFrameDidChange
+- (void)_frameDidCalculated
 {
-    [super _calculatedFrameDidChange];
-    
     CGFloat width = self.calculatedFrame.size.width - (_padding.left + _padding.right);
     _textStorage = [self textStorageWithWidth:width];
 }

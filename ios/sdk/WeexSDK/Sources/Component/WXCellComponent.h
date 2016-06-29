@@ -11,7 +11,6 @@
 
 @interface WXCellComponent : WXComponent
 
-@property (nonatomic, strong) NSIndexPath *indexPath;
 @property (nonatomic, strong) NSString *scope;
 @property (nonatomic, weak) WXListComponent *list;
 
