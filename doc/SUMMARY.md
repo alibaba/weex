@@ -26,8 +26,10 @@
         * [How Data Binding Works](/advanced/how-data-binding-works.md)
         * [Integrate to Android](/advanced/integrate-to-android.md)
         * [Integrate to iOS](/advanced/integrate-to-ios.md)
+        * [Integrate to HTML5](/advanced/integrate-to-html5.md)        
         * [Extend to Android](/advanced/extend-to-android.md)
         * [Extend to iOS](/advanced/extend-to-ios.md)
+        * [Extend to HTML5](/advanced/extend-to-html5.md)        
 * [References](/references/main.md)
 
     * [Bootstrap](/references/bootstrap.md)
