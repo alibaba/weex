@@ -218,7 +218,6 @@ public interface IWXHttpAdapter {
    *
    * @param request weex assemble request
    * @param listener http response notify
-   * @return
    */
   void sendRequest(WXRequest request, OnHttpListener listener);
 
