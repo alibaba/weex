@@ -30,6 +30,7 @@
 
 #import "WXAppConfiguration.h"
 #import "WXDeviceInfo.h"
+#import <WeexSDK/WXSDKEngine.h>
 
 #import <objc/runtime.h>
 #import <objc/message.h>
@@ -103,7 +104,7 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
         deviceID, @"deviceId",
         @"iOS", @"platform",
         machine, @"model",
-        [WXAppConfiguration appVersion],@"weexVersion",
+        [WXSDKEngine SDKEngineVersion],@"weexVersion",
         /*[[NSBundle mainBundle] bundleIdentifier], @"app_id",*/
         appName, @"name",
         /*[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"], @"app_version",

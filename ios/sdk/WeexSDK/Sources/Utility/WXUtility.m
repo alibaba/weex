@@ -155,7 +155,7 @@ CGPoint WXPixelPointResize(CGPoint value)
 
 + (NSDictionary *)getDebugEnvironment {
     NSString *platform = @"iOS";
-    NSString *weexVersion = [WXAppConfiguration appVersion];
+    NSString *weexVersion = [WXSDKEngine SDKEngineVersion];
     NSString *machine = [self registeredDeviceName] ? : @"";
     NSString *appName = [WXAppConfiguration appName] ? : @"";
     NSString *deviceID = [self getDeviceID];
