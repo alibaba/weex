@@ -33,7 +33,7 @@ Remote debug for your native iOS app using Chrome Developer Tools
 
 	 		eg：- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 			{
-			[WXDevTool launchInspectorWithSocketUrl:[NSURL URLWithString:@"ws://wssip/debugProxy/native"]];
+			[WXDevTool launchInspectorWithSocketUrl:@"ws://wssip/debugProxy/native"];
 			}
 
 	 
