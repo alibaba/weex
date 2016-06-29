@@ -24,7 +24,7 @@ static BOOL WXDebug;
 }
 
 #pragma mark weex inspector
-+ (void)launchInspectorWithSocketUrl:(NSURL *)url {
++ (void)launchInspectorWithSocketUrl:(NSString *)url; {
     
     PDDebugger *debugger = [PDDebugger defaultInstance];
     //    [debugger serverStartWithHost:@"localhost" port:9009];
@@ -53,16 +53,22 @@ static BOOL WXDebug;
     
     [debugger enableCSSStyle];
     
+    NSURL *linkUrl = nil;
     // Connect to a specific host
     if ([url isKindOfClass:NSString.class]) {
-        url = [NSURL URLWithString:(NSString *)url];
+        linkUrl = [NSURL URLWithString:url];
+    }else if ([url isKindOfClass:NSURL.class]) {
+        [debugger connectToURL:(NSURL *)url];
+    }else {
+        [debugger connectToURL:nil];
     }
     
     // Prevents app crashing on argument type error like sending NSNull instead of NSURL
-    if (![url isKindOfClass:NSURL.class]) {
-        url = nil;
-    }
-    [debugger connectToURL:url];
+//    if (![url isKindOfClass:NSURL.class]) {
+//        linkUrl = nil;
+//    }
+    
+    [debugger connectToURL:linkUrl];
     // Or auto connect via bonjour discovery
     //[debugger autoConnect];
     // Or to a specific ponyd bonjour service
