@@ -44,27 +44,30 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/cd9eb0167d185526e733486bc32417d2", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/0e1e16da3df6f124806760e661cfb765", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(15);
 	  __weex_module__.exports = {
 	    data: function () {return {
+	      root: 'examples',
 	      items: [
 	        // `name` key is the example filename without '.we'
 	        // Support sub directory, e.g. 'new-fashion/index'
 	        {name: 'hello', title: 'Hello World'},
+	        {name: 'syntax/index', title: 'More Syntax'},
 	        {name: 'style/index', title: 'Common Style'},
 	        {name: 'animation', title: 'Animation'},
 	        // component
 	        {name: 'component/text-demo', title: 'Text'},
 	        {name: 'component/image-demo', title: 'Image'},
+	        {name: 'component/input-demo', title: 'Input'},
 	        {name: 'component/scroller-demo', title: 'Scroller'},
 	        {name: 'component/list/list-basic', title: 'List (Basic)'},
 	        {name: 'component/list/list-demo', title: 'List (Advanced)'},
 	        {name: 'component/list/list-demo-horizon', title: 'List (Horizontal)'},
 	        {name: 'component/slider/index', title: 'Slider'},
-	        {name: 'component/a-demo',title:'A'},
+	        {name: 'component/a-demo', title: 'A'},
 	        {name: 'component/video-demo', title: 'Video'},
 	        {name: 'component/countdown-demo', title: 'Countdown'},
 	        {name: 'component/marquee-demo', title: 'Marquee'},
@@ -90,11 +93,11 @@
 	  "type": "example-list",
 	  "attr": {
 	    "items": function () {return this.items},
-	    "dir": "examples"
+	    "root": function () {return this.root}
 	  }
 	})
 	})
-	;__weex_bootstrap__("@weex-component/cd9eb0167d185526e733486bc32417d2", {
+	;__weex_bootstrap__("@weex-component/0e1e16da3df6f124806760e661cfb765", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -1251,7 +1254,7 @@
 	  __webpack_require__(1);
 	  __weex_module__.exports = {
 	    data: function () {return {
-	      dir: 'examples', // examples, test ...
+	      root: '', // examples, examples/syntax, test ...
 	      items: [
 	        {name: 'hello', title: 'Hello World', url: ''}
 	      ]
@@ -1259,8 +1262,15 @@
 	    created: function() {
 	      var bundleUrl = this.$getConfig().bundleUrl;
 	      console.log('hit', bundleUrl);
+	      var dirs = this.root.split('/');
+	      dirs.forEach(function(dir, index) {
+	        if (!dir) dirs.splice(index, 1);
+	      });
+	      var root = dirs.length > 0 ? dirs[0] : '';
+	      var subRoot = dirs.length > 1 ? dirs.slice(1).join('/') + '/' : '';
+
 	      var nativeBase;
-	      var isAndroidAssets = bundleUrl.indexOf('your_current_IP') >= 0;
+	      var isAndroidAssets = bundleUrl.indexOf('your_current_IP') >= 0 || bundleUrl.indexOf('file://assets/')>=0;
 	      var isiOSAssets = bundleUrl.indexOf('file:///') >= 0 && bundleUrl.indexOf('WeexDemo.app') > 0;
 	      if (isAndroidAssets) {
 	        nativeBase = 'file://assets/';
@@ -1276,9 +1286,9 @@
 	        if (matches && matches.length >= 2) {
 	          host = matches[1];
 	        }
-	        nativeBase = '//' + host + '/' + this.dir + '/build/';
+	        nativeBase = '//' + host + '/' + root + '/build/' + subRoot;
 	      }
-	      var h5Base = './index.html?page=./' + this.dir + '/build/';
+	      var h5Base = './index.html?page=./' + root + '/build/' + subRoot;
 	      // in Native
 	      var base = nativeBase;
 	      if (typeof window === 'object') {

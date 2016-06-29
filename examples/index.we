@@ -1,26 +1,29 @@
 <template>
-  <example-list items="{{items}}" dir="examples"></example-list>
+  <example-list items="{{items}}" root="{{root}}"></example-list>
 </template>
 
 <script>
   require('./include/example-list.we');
   module.exports = {
     data: {
+      root: 'examples',
       items: [
         // `name` key is the example filename without '.we'
         // Support sub directory, e.g. 'new-fashion/index'
         {name: 'hello', title: 'Hello World'},
+        {name: 'syntax/index', title: 'More Syntax'},
         {name: 'style/index', title: 'Common Style'},
         {name: 'animation', title: 'Animation'},
         // component
         {name: 'component/text-demo', title: 'Text'},
         {name: 'component/image-demo', title: 'Image'},
+        {name: 'component/input-demo', title: 'Input'},
         {name: 'component/scroller-demo', title: 'Scroller'},
         {name: 'component/list/list-basic', title: 'List (Basic)'},
         {name: 'component/list/list-demo', title: 'List (Advanced)'},
         {name: 'component/list/list-demo-horizon', title: 'List (Horizontal)'},
         {name: 'component/slider/index', title: 'Slider'},
-        {name: 'component/a-demo',title:'A'},
+        {name: 'component/a-demo', title: 'A'},
         {name: 'component/video-demo', title: 'Video'},
         {name: 'component/countdown-demo', title: 'Countdown'},
         {name: 'component/marquee-demo', title: 'Marquee'},

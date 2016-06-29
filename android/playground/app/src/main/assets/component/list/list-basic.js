@@ -803,7 +803,7 @@
 	                } else {
 	                    this.$emit('alarm', Object.assign({}, this.time));
 	                }
-	                this._app.updateActions();
+	                this._app.updateActions(); 
 	            }
 	        },
 	        format: function(str) {
@@ -889,7 +889,7 @@
 	        if (this.interval > 0
 	                && this.step > 0
 	                && this.duration > 0) {
-	            this.nextTick();
+	            this.nextTick();    
 	        }
 	    },
 	    methods: {
@@ -987,7 +987,7 @@
 	          //导航条高度
 	          height: 88,
 
-	          //导航条标题
+	          //导航条标题 
 	          title: "",
 
 	          //导航条标题颜色
@@ -1267,7 +1267,7 @@
 	                  tabItem.visibility = 'hidden';
 	                }
 	              }
-	            },
+	            },  
 	        }
 	    }
 

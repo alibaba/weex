@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/63baa0cee3119722d44f8fa3568d962e", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/8c52e29db533f7648b56d547ec8c14f3", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(1);
@@ -57,56 +57,49 @@
 	        }
 
 	        duration = duration || 2;
-	        var modal = __weex_require__('@weex-module/modal');
-	        modal.toast({
+	        this.$call('modal', 'toast', {
 	          'message': msg,
 	          'duration': duration
 	        });
-
 	      },
 	      alert: function(msg, okTitle, cancelTitle) {
 	        var self = this;
 	        if (!msg || typeof msg !== 'string') {
 	          msg = "I am Alert!";
 	        }
-	         var modal = __weex_require__('@weex-module/modal');
-	         modal.alert({
+	        this.$call('modal', 'alert', {
 	          'message': msg,
 	          'okTitle': okTitle,
 	          'cancelTitle': cancelTitle
 	        }, function() {
 	          self.toast("Click Alert OK Bnt!!");
 	        });
-
 	      },
 	      confirm: function(msg, okTitle, cancelTitle) {
 	        var self = this
 	        if (!msg || typeof msg !== 'string') {
 	          msg = "I am Confirm!";
 	        }
-	       var modal = __weex_require__('@weex-module/modal');
+
 	        okTitle = okTitle || "OK";
 	        cancelTitle = cancelTitle || "Cancel";
-	        modal.confirm({
+	        this.$call('modal', 'confirm', {
 	          'message': msg,
 	          'okTitle': okTitle,
 	          'cancelTitle': cancelTitle
 	        }, function(result) {
 	          self.toast("Click Confirm  " + result);
 	        });
-
 	      },
 	      prompt: function() {
 	        var self = this;
-	        var modal = __weex_require__('@weex-module/modal');
-	        modal.prompt( {
+	        this.$call('modal', 'prompt', {
 	          'message': 'I am Prompt!',
 	          'okTitle': 'ok',
 	          'cancelTitle': 'cancel'
 	        }, function(result) {
 	          self.toast("Click Prompt  " + result);
 	        });
-	       
 	      }
 	    }
 	  }
@@ -184,7 +177,7 @@
 	;__weex_module__.exports.style = __weex_module__.exports.style || {}
 	;Object.assign(__weex_module__.exports.style, {})
 	})
-	;__weex_bootstrap__("@weex-component/63baa0cee3119722d44f8fa3568d962e", {
+	;__weex_bootstrap__("@weex-component/8c52e29db533f7648b56d547ec8c14f3", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
