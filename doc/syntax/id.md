@@ -4,7 +4,7 @@
 
 In Weex, we may set the `id` property for a particular element, just as unique identification of a particular element.
 
-`id` can be used by `this.$(id)` to find an element with a certain id. Take the API [`scrollToElement()`](../modules/dom.md#scrolltoelementnode-options) For example:
+`id` can be used by `this.$el(id)` to find an element with a certain id. Take the API [`scrollToElement()`](../modules/dom.md#scrolltoelementnode-options) For example:
 
 ```
   <template>
