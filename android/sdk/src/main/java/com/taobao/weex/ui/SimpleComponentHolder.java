@@ -219,20 +219,19 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by sospartan on 6/12/16.
  */
-public class ComponentHolder {
-  public static final String TAG = "ComponentHolder";
+public class SimpleComponentHolder implements IFComponentHolder{
+  public static final String TAG = "SimpleComponentHolder";
   private final Class<? extends WXComponent> mClz;
   private Map<String, Invoker> mMethods;
   private Constructor<? extends WXComponent> mConstructor;
 
-  public ComponentHolder(Class<? extends WXComponent> clz) {
+  public SimpleComponentHolder(Class<? extends WXComponent> clz) {
     this.mClz = clz;
     Annotation[] annotations = clz.getDeclaredAnnotations();
     for (Annotation annotation :
@@ -282,8 +281,9 @@ public class ComponentHolder {
 
 
 
-  public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-    if(mConstructor == null){
+  @Override
+  public synchronized WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+    if (mConstructor == null) {
       generate();
     }
     int parameters = mConstructor.getParameterTypes().length;
@@ -295,14 +295,15 @@ public class ComponentHolder {
       component =  mConstructor.newInstance(instance,node,parent,instance.getInstanceId(),lazy);
     }
 
-    component.setHolder(this);
+    component.bindHolder(this);
     return component;
   }
 
-  public Invoker getMethod(String name){
-    if(mMethods == null){
-      generate();
-    }
+  @Override
+  public synchronized Invoker getMethod(String name){
+      if (mMethods == null) {
+        generate();
+      }
 
     return mMethods.get(name);
   }

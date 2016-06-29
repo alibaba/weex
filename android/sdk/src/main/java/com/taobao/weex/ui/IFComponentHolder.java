@@ -202,58 +202,20 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.ui.component;
+package com.taobao.weex.ui;
 
-import android.text.TextUtils;
-
-import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.common.WXRuntimeException;
+import com.taobao.weex.bridge.Invoker;
 import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.ui.IFComponentHolder;
-import com.taobao.weex.ui.WXComponentRegistry;
-import com.taobao.weex.utils.WXLogUtils;
+import com.taobao.weex.ui.component.WXComponent;
+import com.taobao.weex.ui.component.WXVContainer;
+
+import java.lang.reflect.InvocationTargetException;
 
 /**
- * Component factory
+ * Created by sospartan on 6/23/16.
  */
-public class WXComponentFactory {
-
-  public static WXComponent newInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent) {
-    return newInstance(instance, node, parent, false);
-  }
-
-  public static WXComponent newInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
-    if (instance == null || node == null || TextUtils.isEmpty(node.type) ) {
-      return null;
-    }
-
-    IFComponentHolder holder = WXComponentRegistry.getComponent(node.type);
-    if (holder == null) {
-      if (WXEnvironment.isApkDebugable()) {
-        StringBuilder tag = new StringBuilder();
-        tag.append("WXComponentFactory error type:[");
-        tag.append(node.type).append("]").append(" class not found");
-        WXLogUtils.e(tag.toString());
-      }
-      //For compatible reason of JS framework, unregistered type will be treated as container.
-      holder = WXComponentRegistry.getComponent(WXBasicComponentType.CONTAINER);
-      if(holder == null){
-        throw new WXRuntimeException("Container component not found.");
-      }
-    }
-
-    try {
-      return holder.createInstance(instance, node, parent, lazy);
-    } catch (Exception e) {
-      if (WXEnvironment.isApkDebugable()) {
-        StringBuilder builder = new StringBuilder("WXComponentFactory Exception type:[");
-        builder.append(node.type).append("] ");
-        builder.append(WXLogUtils.getStackTrace(e));
-        WXLogUtils.e(builder.toString());
-      }
-    }
-
-    return null;
-  }
+public interface IFComponentHolder {
+  Invoker getMethod(String name);
+  WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException;
 }

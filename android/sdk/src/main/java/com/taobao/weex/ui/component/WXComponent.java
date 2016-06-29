@@ -150,7 +150,7 @@ import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.flex.CSSLayout;
 import com.taobao.weex.dom.flex.Spacing;
-import com.taobao.weex.ui.ComponentHolder;
+import com.taobao.weex.ui.IFComponentHolder;
 import com.taobao.weex.ui.component.list.WXListComponent;
 import com.taobao.weex.ui.view.WXBackgroundDrawable;
 import com.taobao.weex.ui.view.WXCircleIndicator;
@@ -198,7 +198,7 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
   private int mPreRealLeft = 0;
   private int mPreRealTop = 0;
   private WXGesture wxGesture;
-  private ComponentHolder mHolder;
+  private IFComponentHolder mHolder;
   private static float refreshMargin = 0;
 
   private boolean isUsing = false;
@@ -219,7 +219,7 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     ++mComponentNum;
   }
 
-  public void setHolder(ComponentHolder holder){
+  public void bindHolder(IFComponentHolder holder){
     mHolder = holder;
   }
 

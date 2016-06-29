@@ -111,6 +111,7 @@
 package com.taobao.weex;
 
 import android.app.Application;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.taobao.weex.adapter.IWXHttpAdapter;
@@ -129,6 +130,7 @@ import com.taobao.weex.dom.WXSwitchDomObject;
 import com.taobao.weex.dom.WXTextDomObject;
 import com.taobao.weex.dom.module.WXModalUIModule;
 import com.taobao.weex.http.WXStreamModule;
+import com.taobao.weex.ui.SimpleComponentHolder;
 import com.taobao.weex.ui.WXComponentRegistry;
 import com.taobao.weex.ui.animation.WXAnimationModule;
 import com.taobao.weex.ui.component.WXA;
@@ -156,6 +158,7 @@ import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXSoInstallMgrSdk;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 
 public class WXSDKEngine {
@@ -264,10 +267,8 @@ public class WXSDKEngine {
   private static void register() {
     try {
       registerComponent(WXBasicComponentType.TEXT, WXText.class, false);
-      registerComponent(WXBasicComponentType.IMG, WXImage.class, false);
-      registerComponent(WXBasicComponentType.DIV, WXDiv.class, false);
-      registerComponent(WXBasicComponentType.IMAGE, WXImage.class, false);
-      registerComponent(WXBasicComponentType.CONTAINER, WXDiv.class, false);
+      registerComponent(WXDiv.class, false,WXBasicComponentType.CONTAINER,WXBasicComponentType.DIV,WXBasicComponentType.HEADER,WXBasicComponentType.FOOTER);
+      registerComponent(WXImage.class, false,WXBasicComponentType.IMAGE,WXBasicComponentType.IMG);
       registerComponent(WXBasicComponentType.SCROLLER, WXScroller.class, false);
       registerComponent(WXBasicComponentType.SLIDER, WXSlider.class, true);
 
@@ -325,8 +326,13 @@ public class WXSDKEngine {
    */
   public static boolean registerComponent(Class<? extends WXComponent> clazz, boolean appendTree,String ... names) throws WXException {
     boolean result =  true;
+    SimpleComponentHolder holder = new SimpleComponentHolder(clazz);
+    Map<String, String> componentInfo = new HashMap<>();
+    if (appendTree) {
+      componentInfo.put("append", "tree");
+    }
     for(String name:names) {
-      result  = result && WXComponentRegistry.registerComponent(name, clazz, appendTree);
+      result  = result && WXComponentRegistry.registerComponent(name, holder, componentInfo);
     }
     return result;
   }
@@ -394,11 +400,18 @@ public class WXSDKEngine {
   }
 
   public static boolean registerComponent(String type, Class<? extends WXComponent> clazz) throws WXException {
-    return WXComponentRegistry.registerComponent(type, clazz, true);
+    return WXComponentRegistry.registerComponent(type, new SimpleComponentHolder(clazz),new HashMap<String, String>());
   }
 
   public static boolean registerComponent(Map<String, String> componentInfo, Class<? extends WXComponent> clazz) throws WXException {
-    return WXComponentRegistry.registerComponent(componentInfo, clazz);
+    if(componentInfo == null){
+      return false;
+    }
+    String type = componentInfo.get("type");
+    if(TextUtils.isEmpty(type)){
+      return false;
+    }
+    return WXComponentRegistry.registerComponent(type,new SimpleComponentHolder(clazz), componentInfo);
   }
 
   public static void addCustomOptions(String key, String value) {
