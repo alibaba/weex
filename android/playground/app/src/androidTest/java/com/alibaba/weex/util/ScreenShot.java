@@ -98,6 +98,10 @@ public  class ScreenShot {
             Matrix matrix = new Matrix();
             matrix.postScale(widthScale, widthScale);
 
+            Log.e("weex_test", "widthScale=="+widthScale+ "|"+
+                    "Real sanpWidth==" + sanpWidth*widthScale +"|" +
+            "Real snapHeight==" + sanpWidth*snapHeight);
+
             b = Bitmap.createBitmap(bitmap, 0, 0, sanpWidth, snapHeight, matrix, true);
 //            b = Bitmap.createBitmap(bitmap, 0, 0, scrollerWidth,
 //                    scrollerHeight, matrix, true);
