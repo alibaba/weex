@@ -57,7 +57,9 @@ public class WeexUiTestCaseTcColorUpdate extends ActivityInstrumentationTestCase
         mViewGroup = (ViewGroup) waTestPageActivity.findViewById(R.id.container);
         setViewGroup(mViewGroup);
 
-        mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, "TC_");    }
+        mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, "TC_");
+        Thread.sleep(3000);
+    }
 
 //    public void testPreConditions()
 //    {
@@ -96,6 +98,7 @@ public class WeexUiTestCaseTcColorUpdate extends ActivityInstrumentationTestCase
                inputListView =  ViewUtil.findViewWithText(myGroup, "TC_Color_Update");
 
                Log.e(TAG, "TC_Color_Update size== " + inputListView.size());
+               sleep(2000);
 
                if(inputListView.size()!=0){
                   final WXTextView inputTypeView = (WXTextView)inputListView.get(0);

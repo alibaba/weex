@@ -56,6 +56,8 @@ public class WeexUiTestCaseTcDowngradeAppVFalse extends ActivityInstrumentationT
 
         mViewGroup = (ViewGroup) waTestPageActivity.findViewById(R.id.container);
         mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, "TC_");
+        Thread.sleep(3000);
+
     }
 
     public void testDowngrade(){
@@ -86,6 +88,7 @@ public class WeexUiTestCaseTcDowngradeAppVFalse extends ActivityInstrumentationT
                inputListView =  ViewUtil.findViewWithText(myGroup, "TC_Downgrade_appV_False");
 
                Log.e(TAG, "TC_Downgrade_appV_False== " + inputListView.size());
+               sleep(2000);
 
                if(inputListView.size()!=0){
                   final WXTextView inputTypeView = (WXTextView)inputListView.get(0);

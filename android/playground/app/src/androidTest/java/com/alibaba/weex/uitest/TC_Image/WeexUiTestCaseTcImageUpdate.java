@@ -53,6 +53,8 @@ public class WeexUiTestCaseTcImageUpdate extends ActivityInstrumentationTestCase
 
         mViewGroup = (ViewGroup) waTestPageActivity.findViewById(R.id.container);
         mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, "TC_");
+        Thread.sleep(3000);
+
     }
 
 //    public void testPreConditions()
@@ -87,7 +89,7 @@ public class WeexUiTestCaseTcImageUpdate extends ActivityInstrumentationTestCase
                ArrayList<View> inputListView = new ArrayList<View>();
                inputListView = ViewUtil.findViewWithText(myGroup, "TC_Image_Update");
 //               myGroup.findViewsWithText(inputListView, "TC_Image_Update", View.FIND_VIEWS_WITH_TEXT);
-
+               sleep(3000);
                Log.e(TAG, "TC_Image_Update== " + inputListView.size());
 
                if(inputListView.size()!=0){
@@ -118,6 +120,8 @@ public class WeexUiTestCaseTcImageUpdate extends ActivityInstrumentationTestCase
                inputListView = new ArrayList<View>();
                inputListView = ViewUtil.findViewWithText(myGroup, "点击我，图片无法显示");
 //               myGroup.findViewsWithText(inputListView, "点击我，图片无法显示", View.FIND_VIEWS_WITH_TEXT);
+               sleep(2000);
+
                if(inputListView.size()!=0){
                    final WXTextView inputTypeView = (WXTextView)inputListView.get(0);
                    Log.e(TAG, "inputTypeView text == " +inputTypeView.getText().toString());

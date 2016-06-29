@@ -97,6 +97,7 @@ public class WeexUiTestCaseTCAHrefStyle extends ActivityInstrumentationTestCase2
                ArrayList<View> inputListView = new ArrayList<View>();
                inputListView = ViewUtil.findViewWithText(myGroup, "TC_AHref_Style");
                Log.e(TAG, "TC_AHref_Style size== " + inputListView.size());
+               sleep(2000);
 
                if(inputListView.size()!=0){
                    final WXTextView inputTypeView = (WXTextView)inputListView.get(0);
