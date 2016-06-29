@@ -95,7 +95,7 @@ public class WeexUiTestCaseTcInputPlaceholder extends ActivityInstrumentationTes
 
                ArrayList<View> inputListView = new ArrayList<View>();
                inputListView = ViewUtil.findViewWithText(myGroup, "TC_Input_Placeholder");
-
+               sleep(2000);
 //               myGroup.findViewsWithText(inputListView, "TC_Input_Placeholder", View.FIND_VIEWS_WITH_TEXT);
 
                Log.e(TAG, "TC_Input_Placeholder size== " + inputListView.size());
