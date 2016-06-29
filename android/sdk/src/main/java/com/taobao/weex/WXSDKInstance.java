@@ -259,6 +259,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
   private WXComponent mGodCom;
   private boolean mRendered;
   private WXRefreshData mLastRefreshData;
+  private float refreshMargin = 0;
 
   /**
    * Render strategy.
@@ -904,6 +905,14 @@ public class WXSDKInstance implements IWXActivityStateListener {
       mWXScrollListeners=new ArrayList<>();
     }
     mWXScrollListeners.add(wxScrollListener);
+  }
+
+  public float getRefreshMargin() {
+    return refreshMargin;
+  }
+
+  public void setRefreshMargin(float refreshMargin) {
+    this.refreshMargin = refreshMargin;
   }
 
   /**

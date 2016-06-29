@@ -162,6 +162,7 @@ import com.taobao.weex.utils.WXReflectionUtils;
 import com.taobao.weex.utils.WXResourceUtils;
 import com.taobao.weex.utils.WXUtils;
 import com.taobao.weex.utils.WXViewUtils;
+
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -199,8 +200,6 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
   private int mPreRealTop = 0;
   private WXGesture wxGesture;
   private IFComponentHolder mHolder;
-  private static float refreshMargin = 0;
-
   private boolean isUsing = false;
 
   @Deprecated
@@ -277,7 +276,7 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
 
     if (this instanceof WXRefresh && mParent instanceof WXRefreshableContainer &&
         isOuterRefreshableContainer(mParent)) {
-      refreshMargin = mDomObj.csslayout.dimensions[CSSLayout.DIMENSION_HEIGHT];
+      mInstance.setRefreshMargin(mDomObj.csslayout.dimensions[CSSLayout.DIMENSION_HEIGHT]);
     }
     if ((this instanceof WXBaseRefresh && mParent instanceof WXRefreshableContainer)) {
       return;
@@ -290,7 +289,7 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
           CSSLayout newLayout = new CSSLayout();
           newLayout.copy(mDomObj.csslayout);
           newLayout.position[CSSLayout.POSITION_TOP] = mDomObj.csslayout.position[CSSLayout
-              .POSITION_TOP] - refreshMargin;
+              .POSITION_TOP] - mInstance.getRefreshMargin();
           mDomObj.csslayout.copy(newLayout);
       }
     }
@@ -889,7 +888,6 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     if (mDomObj != null) {
       mDomObj.destroy();
     }
-    refreshMargin = 0;
   }
 
   /**
