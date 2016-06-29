@@ -1,15 +1,8 @@
 # Weex
 
-[![CircleCI](https://circleci.com/gh/alibaba/weex/tree/dev.svg?style=svg&circle-token=b83b047a3a01f6ec26458a455530a5ddc261925f)](https://circleci.com/gh/alibaba/weex/tree/dev) [![Gitter](https://img.shields.io/gitter/room/weexteam/cn.svg?maxAge=2592000)](https://gitter.im/weexteam) <sub>(English Gitter)</sub> [![Gitter](https://img.shields.io/gitter/room/weexteam/cn.svg?maxAge=2592000)](https://gitter.im/weexteam/cn) <sub>(Chinese 中文聊天室)</sub>
-
-## Pre-release Notes
-
-Weex is currently in Pre-release Stage.
-
-We agree that you may discuss technical information about Weex, except that you may not fork Weex to public repository , write public reviews or post screen shots using information from current repository(https://github.com/alibaba/weex) , redistribute weex within any form.
-
- 
 > A framework for building Mobile cross-platform UI.
+
+[![CircleCI](https://circleci.com/gh/alibaba/weex/tree/dev.svg?style=svg&circle-token=b83b047a3a01f6ec26458a455530a5ddc261925f)](https://circleci.com/gh/alibaba/weex/tree/dev) [![Gitter](https://img.shields.io/gitter/room/weexteam/cn.svg?maxAge=2592000)](https://gitter.im/weexteam) <sub>(English Gitter)</sub> [![Gitter](https://img.shields.io/gitter/room/weexteam/cn.svg?maxAge=2592000)](https://gitter.im/weexteam/cn) <sub>(Chinese 中文聊天室)</sub>
 
 Support Android 4.1 (API 16) and iOS 7.0+. See [Weex website](http://alibaba.github.io/weex/) for more information. 
 
