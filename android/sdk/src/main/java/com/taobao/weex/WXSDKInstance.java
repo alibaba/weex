@@ -609,14 +609,14 @@ public class WXSDKInstance implements IWXActivityStateListener {
   public void onViewDisappear(){
     WXComponent comp = getRootCom();
     if(comp != null) {
-      WXBridgeManager.getInstance().fireEvent(this.mInstanceId, comp.getRef(), WXEventType.VIEWDISAPPEAR, null);
+      WXBridgeManager.getInstance().fireEvent(this.mInstanceId, comp.getRef(), WXEventType.VIEWDISAPPEAR, null,null);
     }
   }
 
   public void onViewAppear(){
     WXComponent comp = getRootCom();
     if(comp != null) {
-      WXBridgeManager.getInstance().fireEvent(this.mInstanceId, comp.getRef(), WXEventType.VIEWAPPEAR, null);
+      WXBridgeManager.getInstance().fireEvent(this.mInstanceId, comp.getRef(), WXEventType.VIEWAPPEAR,null, null);
     }
   }
 

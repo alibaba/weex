@@ -934,7 +934,7 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     if(getDomObject().containsEvent(WXEventType.APPEAR) || getDomObject().containsEvent(WXEventType.DISAPPEAR)) {
       Map<String, Object> params = new HashMap<>();
       params.put("direction", direction);
-      WXBridgeManager.getInstance().fireEvent(mInstanceId, getRef(), wxEventType, params);
+      WXBridgeManager.getInstance().fireEvent(mInstanceId, getRef(), wxEventType, params,null);
     }
   }
 
