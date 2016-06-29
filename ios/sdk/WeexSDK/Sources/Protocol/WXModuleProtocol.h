@@ -26,6 +26,8 @@ typedef void (^WXModuleCallback)(id result);
     return NSStringFromSelector(method); \
 }
 
+#define WX_EXPORT_MODULE(module) 
+
 @optional
 
 /**

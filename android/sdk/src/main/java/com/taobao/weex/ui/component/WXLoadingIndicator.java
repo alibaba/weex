@@ -204,17 +204,17 @@
  */
 package com.taobao.weex.ui.component;
 
-import android.view.Gravity;
-import android.widget.FrameLayout;
+import android.graphics.Color;
 
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.ui.view.WXLoadingIndicatorView;
-import com.taobao.weex.utils.WXViewUtils;
+import com.taobao.weex.ui.view.refresh.circlebar.CircleProgressBar;
+import com.taobao.weex.utils.WXResourceUtils;
 
 public class WXLoadingIndicator extends WXComponent {
 
-    private WXLoadingIndicatorView mIndicatorView;
+    private CircleProgressBar circleProgressBar;
 
     public WXLoadingIndicator(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
         super(instance, dom, parent, isLazy);
@@ -222,30 +222,16 @@ public class WXLoadingIndicator extends WXComponent {
 
     @Override
     protected void initView() {
-        FrameLayout root = new FrameLayout(mContext);
-        WXLoadingIndicatorView pb = new WXLoadingIndicatorView(mContext);
-        mIndicatorView = pb;
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-                WXViewUtils.dip2px(60),
-                WXViewUtils.dip2px(60)
-        );
-        lp.gravity = Gravity.CENTER_HORIZONTAL;
-        root.addView(pb, lp);
-        mHost = root;
+        super.initView();
+        circleProgressBar = new CircleProgressBar(mContext);
+        mHost = circleProgressBar;
     }
 
-    public void onPullLoadingIndicator(int progress) {
-        if (mIndicatorView != null) {
-            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mIndicatorView.getLayoutParams();
-            if (lp != null) {
-                if (getView().getHeight() != lp.height) {
-                    lp.width = getView().getHeight();
-                    lp.height = getView().getHeight();
-                    mIndicatorView.setLayoutParams(lp);
-                }
-            }
-            mIndicatorView.setProgress(progress);
+    @WXComponentProp(name = WXDomPropConstant.WX_COLOR)
+    public void setColor(String color) {
+        if (color != null && !color.equals("")) {
+            int parseColor = WXResourceUtils.getColor(color, Color.RED);
+            circleProgressBar.setColorSchemeColors(parseColor);
         }
     }
-
 }

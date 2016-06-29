@@ -44,26 +44,30 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/5967f205d011fc83a8277f74388ee8ff", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/0e1e16da3df6f124806760e661cfb765", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
-	  __webpack_require__(16);
+	  __webpack_require__(15);
 	  __weex_module__.exports = {
 	    data: function () {return {
+	      root: 'examples',
 	      items: [
 	        // `name` key is the example filename without '.we'
 	        // Support sub directory, e.g. 'new-fashion/index'
 	        {name: 'hello', title: 'Hello World'},
+	        {name: 'syntax/index', title: 'More Syntax'},
 	        {name: 'style/index', title: 'Common Style'},
 	        {name: 'animation', title: 'Animation'},
 	        // component
 	        {name: 'component/text-demo', title: 'Text'},
 	        {name: 'component/image-demo', title: 'Image'},
+	        {name: 'component/input-demo', title: 'Input'},
 	        {name: 'component/scroller-demo', title: 'Scroller'},
 	        {name: 'component/list/list-basic', title: 'List (Basic)'},
 	        {name: 'component/list/list-demo', title: 'List (Advanced)'},
+	        {name: 'component/list/list-demo-horizon', title: 'List (Horizontal)'},
 	        {name: 'component/slider/index', title: 'Slider'},
-	        {name: 'component/a-demo',title:'A'},
+	        {name: 'component/a-demo', title: 'A'},
 	        {name: 'component/video-demo', title: 'Video'},
 	        {name: 'component/countdown-demo', title: 'Countdown'},
 	        {name: 'component/marquee-demo', title: 'Marquee'},
@@ -89,11 +93,11 @@
 	  "type": "example-list",
 	  "attr": {
 	    "items": function () {return this.items},
-	    "dir": "examples"
+	    "root": function () {return this.root}
 	  }
 	})
 	})
-	;__weex_bootstrap__("@weex-component/5967f205d011fc83a8277f74388ee8ff", {
+	;__weex_bootstrap__("@weex-component/0e1e16da3df6f124806760e661cfb765", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -849,7 +853,7 @@
 	    {
 	      "type": "image",
 	      "classList": [
-	        "left-image"
+	        "right-image"
 	      ],
 	      "attr": {
 	        "naviItemPosition": "right",
@@ -944,14 +948,14 @@
 	  "left-image": {
 	    "position": "absolute",
 	    "bottom": 20,
-	    "right": 28,
+	    "left": 28,
 	    "width": 50,
 	    "height": 50
 	  },
 	  "right-image": {
 	    "position": "absolute",
 	    "bottom": 20,
-	    "left": 28,
+	    "right": 28,
 	    "width": 50,
 	    "height": 50
 	  }
@@ -1243,6 +1247,94 @@
 /* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
+	;__weex_define__("@weex-component/example-list", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	__webpack_require__(16);
+
+	;
+	  __webpack_require__(1);
+	  __weex_module__.exports = {
+	    data: function () {return {
+	      root: '', // examples, examples/syntax, test ...
+	      items: [
+	        {name: 'hello', title: 'Hello World', url: ''}
+	      ]
+	    }},
+	    created: function() {
+	      var bundleUrl = this.$getConfig().bundleUrl;
+	      console.log('hit', bundleUrl);
+	      var dirs = this.root.split('/');
+	      dirs.forEach(function(dir, index) {
+	        if (!dir) dirs.splice(index, 1);
+	      });
+	      var root = dirs.length > 0 ? dirs[0] : '';
+	      var subRoot = dirs.length > 1 ? dirs.slice(1).join('/') + '/' : '';
+
+	      var nativeBase;
+	      var isAndroidAssets = bundleUrl.indexOf('your_current_IP') >= 0 || bundleUrl.indexOf('file://assets/')>=0;
+	      var isiOSAssets = bundleUrl.indexOf('file:///') >= 0 && bundleUrl.indexOf('WeexDemo.app') > 0;
+	      if (isAndroidAssets) {
+	        nativeBase = 'file://assets/';
+	      }
+	      else if (isiOSAssets) {
+	        // file:///var/mobile/Containers/Bundle/Application/{id}/WeexDemo.app/
+	        // file:///Users/{user}/Library/Developer/CoreSimulator/Devices/{id}/data/Containers/Bundle/Application/{id}/WeexDemo.app/
+	        nativeBase = bundleUrl.substring(0, bundleUrl.lastIndexOf('/') + 1);
+	      }
+	      else {
+	        var host = 'localhost:12580';
+	        var matches = /\/\/([^\/]+?)\//.exec(this.$getConfig().bundleUrl);
+	        if (matches && matches.length >= 2) {
+	          host = matches[1];
+	        }
+	        nativeBase = '//' + host + '/' + root + '/build/' + subRoot;
+	      }
+	      var h5Base = './index.html?page=./' + root + '/build/' + subRoot;
+	      // in Native
+	      var base = nativeBase;
+	      if (typeof window === 'object') {
+	        // in Browser or WebView
+	        base = h5Base;
+	      }
+
+	      for (var i in this.items) {
+	        var item = this.items[i];
+	        if (!item.url) {
+	          item.url = base + item.name + '.js';
+	        }
+	      }
+	      // see log in Android Logcat
+	      if (this.items.length) console.log('hit', this.items[0].url);
+	    }
+	  }
+
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
+	  "type": "list",
+	  "children": [
+	    {
+	      "type": "cell",
+	      "append": "tree",
+	      "repeat": function () {return this.items},
+	      "children": [
+	        {
+	          "type": "example-list-item",
+	          "attr": {
+	            "title": function () {return this.title},
+	            "url": function () {return this.url}
+	          }
+	        }
+	      ]
+	    }
+	  ]
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {})
+	})
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
 	;__weex_define__("@weex-component/example-list-item", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
@@ -1284,87 +1376,6 @@
 	    "color": "#555555"
 	  }
 	})
-	})
-
-/***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
-
-	;__weex_define__("@weex-component/example-list", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(15);
-
-	;
-	  __webpack_require__(1);
-	  __weex_module__.exports = {
-	    data: function () {return {
-	      dir: 'examples', // examples, test ...
-	      items: [
-	        {name: 'hello', title: 'Hello World', url: ''}
-	      ]
-	    }},
-	    created: function() {
-	      var bundleUrl = this.$getConfig().bundleUrl;
-	      console.log('hit', bundleUrl);
-	      var nativeBase;
-	      var isAndroidAssets = bundleUrl.indexOf('your_current_IP') >= 0;
-	      var isiOSAssets = bundleUrl.indexOf('file:///') >= 0 && bundleUrl.indexOf('WeexDemo.app') > 0;
-	      if (isAndroidAssets) {
-	        nativeBase = 'file://assets/';
-	      }
-	      else if (isiOSAssets) {
-	        // file:///var/mobile/Containers/Bundle/Application/{id}/WeexDemo.app/
-	        // file:///Users/{user}/Library/Developer/CoreSimulator/Devices/{id}/data/Containers/Bundle/Application/{id}/WeexDemo.app/
-	        nativeBase = bundleUrl.substring(0, bundleUrl.lastIndexOf('/') + 1);
-	      }
-	      else {
-	        var host = 'localhost:12580';
-	        var matches = /\/\/([^\/]+?)\//.exec(this.$getConfig().bundleUrl);
-	        if (matches && matches.length >= 2) {
-	          host = matches[1];
-	        }
-	        nativeBase = '//' + host + '/' + this.dir + '/build/';
-	      }
-	      var h5Base = './index.html?page=./' + this.dir + '/build/';
-	      // in Native
-	      var base = nativeBase;
-	      if (typeof window === 'object') {
-	        // in Browser or WebView
-	        base = h5Base;
-	      }
-
-	      for (var i in this.items) {
-	        var item = this.items[i];
-	        if (!item.url) {
-	          item.url = base + item.name + '.js';
-	        }
-	      }
-	      // see log in Android Logcat
-	      if (this.items.length) console.log('hit', this.items[0].url);
-	    }
-	  }
-
-	;__weex_module__.exports.template = __weex_module__.exports.template || {}
-	;Object.assign(__weex_module__.exports.template, {
-	  "type": "list",
-	  "children": [
-	    {
-	      "type": "cell",
-	      "append": "tree",
-	      "repeat": function () {return this.items},
-	      "children": [
-	        {
-	          "type": "example-list-item",
-	          "attr": {
-	            "title": function () {return this.title},
-	            "url": function () {return this.url}
-	          }
-	        }
-	      ]
-	    }
-	  ]
-	})
-	;__weex_module__.exports.style = __weex_module__.exports.style || {}
-	;Object.assign(__weex_module__.exports.style, {})
 	})
 
 /***/ }

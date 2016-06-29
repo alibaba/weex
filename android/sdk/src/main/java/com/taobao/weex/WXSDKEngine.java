@@ -338,7 +338,7 @@ public class WXSDKEngine {
    * @param moduleName  module name
    * @param moduleClass module to be registered.
    * @return true for registration success, false for otherwise.
-   * @see {@link WXModuleManager#registerModule(String, ModuleFactory, boolean)}
+   * {@link WXModuleManager#registerModule(String, ModuleFactory, boolean)}
    */
   public static <T extends WXModule> boolean registerModule(String moduleName, Class<T> moduleClass,boolean global) throws WXException {
     return registerModule(moduleName, new TypeModuleFactory(moduleClass),global);
@@ -351,7 +351,7 @@ public class WXSDKEngine {
    * @param moduleName  module name
    * @param factory module factory to be registered. You can override {@link DestroyableModuleFactory#buildInstance()} to customize module creation.
    * @return true for registration success, false for otherwise.
-   * @see {@link WXModuleManager#registerModule(String, ModuleFactory, boolean)}
+   * {@link WXModuleManager#registerModule(String, ModuleFactory, boolean)}
    */
   public static <T extends WXModule> boolean registerModuleWithFactory(String moduleName, DestroyableModuleFactory factory, boolean global) throws WXException {
     return registerModule(moduleName, factory,global);

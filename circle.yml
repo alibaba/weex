@@ -13,3 +13,8 @@ test:
 dependencies: 
   cache_directories:
     - "node_modules"
+
+notify:
+  webhooks:
+    # gitter
+    - url: https://webhooks.gitter.im/e/f1030e2836f6c2beb41c

@@ -34,7 +34,7 @@ Sender.prototype = {
     })
   },
 
-  fireEvent: function (ref, type, event) {
+  fireEvent: function (ref, type, func, event) {
     if (event._alreadyFired) {
       // stop bubbling up in virtual dom tree.
       return
@@ -42,14 +42,10 @@ Sender.prototype = {
     // do not prevent default, otherwise the touchstart
     // event will no longer trigger a click event
     event._alreadyFired = true
-    const evt = utils.extend({}, event)
-    // The event.target must be the standard event's currentTarget.
-    evt.target = evt.currentTarget
-    evt.value = event.target.value
-    evt.timestamp = Date.now()
+    func.extra && utils.extend(event, func.extra())
     _send(this.instanceId, {
       method: 'fireEvent',
-      args: [ref, type, evt]
+      args: [ref, type, event, func.updator && func.updator()]
     })
   }
 

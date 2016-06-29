@@ -1,0 +1,27 @@
+<template>
+  <div>
+    <text>{{checked}}</text>
+    <switch checked="{{checked}}" onchange="handleChange"></switch>
+    <input type="text" value="{{text}}" oninput="handleInput"></input>
+    <text>{{text}}</text>
+  </div>
+</template>
+
+<script>
+  module.exports = {
+    data: {
+      checked: false,
+      text: 'test'
+    },
+    methods: {
+      handleChange: function (e) {
+        console.log('change:', e, e.value)
+        this.checked = e.value
+      },
+      handleInput: function (e) {
+        console.log('input:', e, e.value)
+        this.text = e.value
+      }
+    }
+  }
+</script>

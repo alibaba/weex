@@ -98,12 +98,8 @@ static dispatch_queue_t WXImageUpdateQueue;
     imageView.clipsToBounds = YES;
     imageView.exclusiveTouch = YES;
     
-    if (_image) {
-        imageView.image = _image;
-        _image = nil;
-    } else {
-        [self updateImage];
-    }
+    [self updateImage];
+    
 }
 
 - (WXDisplayBlock)displayBlock
@@ -183,12 +179,9 @@ static dispatch_queue_t WXImageUpdateQueue;
                     if (![imageSrc isEqualToString:strongSelf.imageSrc]) {
                         return ;
                     }
+                    
                     if ([strongSelf isViewLoaded]) {
                         ((UIImageView *)strongSelf.view).image = image;
-                    } else {
-                        //TODO: Need this?
-                        strongSelf.image = image;
-                        [strongSelf setNeedsDisplay];
                     }
                 });
             }];

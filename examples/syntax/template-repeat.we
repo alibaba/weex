@@ -1,0 +1,51 @@
+<!--
+  * mustache delimiters can be ignored
+  * repeat="item in list": assign item and $index to this
+  * repeat="(index, item) in list" assign index and item to this
+-->
+
+<template>
+  <div>
+    <text class="title">Basic</text>
+    <text class="subtitle" repeat="list2">{{$index}}-{{text}}-{{normal}}</text>
+    <text class="title">Basic</text>
+    <text class="subtitle" repeat="{{list2}}">{{$index}}-{{text}}-{{normal}}</text>
+    <text class="title">Custom item</text>
+    <text class="subtitle" repeat="item in list">{{$index}}-{{item}}-{{normal}}</text>
+    <text class="title">Custom item</text>
+    <text class="subtitle" repeat="{{item in list}}">{{$index}}-{{item}}-{{normal}}</text>
+    <text class="title">Custom key and item</text>
+    <text class="subtitle" repeat="(i,v) in list">{{i}}-{{v}}-{{normal}}</text>
+    <text class="title">Custom key and item</text>
+    <text class="subtitle" repeat="{{(i,v) in list}}">{{i}}-{{v}}-{{normal}}</text>
+    <text class="title">Array of Object</text>
+    <text class="subtitle" repeat="{{item in list2}}">{{$index}}-{{item.text}}-{{normal}}</text>
+  </div>
+</template>
+
+<style>
+  .title {font-size: 48px;}
+  .subtitle {font-size: 36px;}
+</style>
+
+<script>
+  module.exports = {
+    data: {
+      normal: 'x',
+      list: [
+        'a',
+        'b',
+        'c',
+        'd',
+        'e'
+      ],
+      list2: [
+        {text: 'a'},
+        {text: 'b'},
+        {text: 'c'},
+        {text: 'd'},
+        {text: 'e'}
+      ]
+    }
+  }
+</script>
