@@ -20,7 +20,7 @@ In Weex, we may set the `id` property for a particular element, just as unique i
     module.exports = {
       methods: {
         back2Top: function () {
-          var top = this.$('top')
+          var top = this.$el('top')
           dom.scrollToElement(top)
         }
       }
