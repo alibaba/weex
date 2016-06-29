@@ -310,13 +310,13 @@ public class WXScroller extends WXRefreshableContainer implements WXScrollViewLi
       if (mOrientation == VERTICAL) {
         ((BounceScrollerView)mHost).getInnerView().setVerticalScrollBarEnabled(true);
       } else {
-        ((BounceScrollerView)mHost).getInnerView().setHorizontalScrollBarEnabled(true);
+        mHost.setHorizontalScrollBarEnabled(true);
       }
     } else {
       if (mOrientation == VERTICAL) {
         ((BounceScrollerView)mHost).getInnerView().setVerticalScrollBarEnabled(false);
       } else {
-        ((BounceScrollerView)mHost).getInnerView().setHorizontalScrollBarEnabled(false);
+        mHost.setHorizontalScrollBarEnabled(false);
       }
     }
   }

@@ -206,7 +206,6 @@ package com.taobao.weex.ui;
 
 import android.animation.Animator;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Interpolator;
@@ -226,7 +225,6 @@ import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXComponentFactory;
 import com.taobao.weex.ui.component.WXScroller;
 import com.taobao.weex.ui.component.WXVContainer;
-import com.taobao.weex.ui.view.WXHorizontalScrollView;
 import com.taobao.weex.ui.view.WXScrollView;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXViewUtils;
@@ -518,9 +516,9 @@ class WXRenderStatement {
       return;
     }
 
-    if(scrollerP[0] == component.getAbsoluteX() && scroller.getView() instanceof WXHorizontalScrollView){
-      return;
-    }
+//    if(scrollerP[0] == component.getAbsoluteX() && scroller.getView() instanceof WXHorizontalScrollView){
+//      return;
+//    }
 
     int viewYInScroller=component.getAbsoluteY();
     int viewXInScroller=component.getAbsoluteX();
