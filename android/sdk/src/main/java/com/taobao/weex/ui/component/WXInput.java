@@ -261,6 +261,8 @@ public class WXInput extends WXComponent {
     inputView.setSingleLine();//default use single line , same to ios
     inputView.setMovementMethod(null);
 
+    inputView.setText((String) mDomObj.attr.get("value"));
+
     mHost = inputView;
   }
 
@@ -276,43 +278,48 @@ public class WXInput extends WXComponent {
       return;
     }
     final TextView text = (WXEditText) mHost;
-    text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-      CharSequence mLastValue = text.getText();
-      @Override
-      public void onFocusChange(View v, boolean hasFocus) {
-        CharSequence newValue = text.getText();
-        newValue = newValue== null?"":newValue;
-        if(!hasFocus && !newValue.equals(mLastValue)){
-          mLastValue = newValue;
 
-          String event = mDomObj.event.contains(WXEventType.INPUT_CHANGE)?WXEventType.INPUT_CHANGE:null;
-          fireEvent(event,newValue.toString());
+    if(type.equals(WXEventType.INPUT_CHANGE)) {
+      text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        CharSequence mLastValue = text.getText();
+
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+          CharSequence newValue = text.getText();
+          newValue = newValue == null ? "" : newValue;
+          if (!hasFocus && !newValue.equals(mLastValue)) {
+            mLastValue = newValue;
+
+            String event = mDomObj.event.contains(WXEventType.INPUT_CHANGE) ? WXEventType.INPUT_CHANGE : null;
+            fireEvent(event, newValue.toString());
+          }
         }
-      }
-    });
-    text.addTextChangedListener(new TextWatcher() {
-      @Override
-      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+      });
+    }else if(type.equals(WXEventType.INPUT)) {
+      text.addTextChangedListener(new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-      }
-
-      @Override
-      public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (mBeforeText.equals(s.toString())) {
-          return;
         }
 
-        String event = mDomObj.event.contains(WXEventType.INPUT)?WXEventType.INPUT:null;
-        fireEvent(event,s.toString());
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+          if (mBeforeText.equals(s.toString())) {
+            return;
+          }
 
-        mBeforeText = s.toString();
-      }
+          String event = mDomObj.event.contains(WXEventType.INPUT) ? WXEventType.INPUT : null;
+          fireEvent(event, s.toString());
 
-      @Override
-      public void afterTextChanged(Editable s) {
+          mBeforeText = s.toString();
+        }
 
-      }
-    });
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+      });
+    }
   }
 
   private void fireEvent(String event,String value){
@@ -330,14 +337,6 @@ public class WXInput extends WXComponent {
     }
   }
 
-
-  @Override
-  public void updateExtra(Object extra) {
-    if (extra instanceof Layout &&
-        getView() != null) {
-      getView().setText(((Layout) extra).getText());
-    }
-  }
 
   @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_PLACEHOLDER)
   public void setPlaceholder(String placeholder) {
