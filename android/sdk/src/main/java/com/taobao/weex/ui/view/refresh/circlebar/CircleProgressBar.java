@@ -206,7 +206,6 @@ package com.taobao.weex.ui.view.refresh.circlebar;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -218,8 +217,6 @@ import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.animation.Animation;
 import android.widget.ImageView;
-
-import com.taobao.weappplus_sdk.R;
 
 /**
  * Modify of android.support.v4
@@ -273,33 +270,19 @@ public class CircleProgressBar extends ImageView {
   }
 
   private void init(Context context, AttributeSet attrs, int defStyleAttr) {
-    final TypedArray a = context.obtainStyledAttributes(
-        attrs, R.styleable.CircleProgressBar, defStyleAttr, 0);
 
     final float density = getContext().getResources().getDisplayMetrics().density;
-
-    mBackGroundColor = a.getColor(
-        R.styleable.CircleProgressBar_background_color, DEFAULT_CIRCLE_BG_LIGHT);
-
-    mProgressColor = a.getColor(
-        R.styleable.CircleProgressBar_progress_color, DEFAULT_CIRCLE_COLOR);
+    mBackGroundColor = DEFAULT_CIRCLE_BG_LIGHT;
+    mProgressColor = DEFAULT_CIRCLE_COLOR;
     mColors = new int[]{mProgressColor};
-
-    mInnerRadius = a.getDimensionPixelOffset(
-        R.styleable.CircleProgressBar_inner_radius, -1);
-
-    mProgressStokeWidth = a.getDimensionPixelOffset(
-        R.styleable.CircleProgressBar_progress_stoke_width, (int) (STROKE_WIDTH_LARGE * density));
-    mArrowWidth = a.getDimensionPixelOffset(
-        R.styleable.CircleProgressBar_arrow_width, -1);
-    mArrowHeight = a.getDimensionPixelOffset(
-        R.styleable.CircleProgressBar_arrow_height, -1);
-    mShowArrow = a.getBoolean(R.styleable.CircleProgressBar_show_arrow, true);
-    mCircleBackgroundEnabled = a.getBoolean(R.styleable.CircleProgressBar_enable_circle_background, true);
-
-    mProgress = a.getInt(R.styleable.CircleProgressBar_progress, 0);
-    mMax = a.getInt(R.styleable.CircleProgressBar_max, 100);
-    a.recycle();
+    mInnerRadius = -1;
+    mProgressStokeWidth = (int) (STROKE_WIDTH_LARGE * density);
+    mArrowWidth =  -1;
+    mArrowHeight = -1;
+    mShowArrow = true;
+    mCircleBackgroundEnabled = true;
+    mProgress = 0;
+    mMax = 100;
     mProgressDrawable = new MaterialProgressDrawable(getContext(), this);
     super.setImageDrawable(mProgressDrawable);
   }
