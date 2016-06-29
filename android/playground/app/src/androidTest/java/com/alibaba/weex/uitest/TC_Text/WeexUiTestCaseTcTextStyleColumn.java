@@ -60,7 +60,7 @@ public class WeexUiTestCaseTcTextStyleColumn extends ActivityInstrumentationTest
 
         TouchUtils.scrollToBottom(this, waTestPageActivity, mViewGroup);
         mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, "TC_");
-        Thread.sleep(1000);
+        Thread.sleep(3000);
     }
 
 //    public void testPreConditions()

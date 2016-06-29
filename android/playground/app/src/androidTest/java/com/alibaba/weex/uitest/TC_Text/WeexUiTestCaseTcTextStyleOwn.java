@@ -59,7 +59,8 @@ public class WeexUiTestCaseTcTextStyleOwn extends ActivityInstrumentationTestCas
         TouchUtils.scrollToBottom(this, waTestPageActivity, mViewGroup);
 
 
-        mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, "TC_");        Thread.sleep(3000);
+        mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, "TC_");
+        Thread.sleep(3000);
     }
 
 //    public void testPreConditions()
