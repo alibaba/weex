@@ -2,6 +2,7 @@
 
 Weex devtools is a custom devtools for weex that implements [Chrome Debugging Protocol](https://developer.chrome.com/devtools/docs/debugger-protocol), it is designed to help you quickly inspect your app and debug your JS bundle source in a chrome web page, both Android and IOS platform are supported.
 
+#### Connect devices
 ![devtools-main](../images/devtools-main.png "connecting (multiple) devices")
 
 #### Inspector
