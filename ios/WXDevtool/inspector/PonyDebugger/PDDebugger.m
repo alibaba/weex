@@ -448,14 +448,15 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
 
 #pragma mark - WXBridgeProtocol
 - (void)executeJSFramework:(NSString *)frameworkScript {
-    NSDictionary *args = @{@"source":frameworkScript/*, @"env":[WXUtility getEnvironment]*/};
+    NSDictionary *WXEnvironment = @{@"WXEnvironment":[WXUtility getEnvironment]};
+    NSDictionary *args = @{@"source":frameworkScript, @"env":WXEnvironment};
     [self callJSMethod:@"WxDebug.initJSRuntime" params:args];
 }
 
 - (void)callJSMethod:(NSString *)method params:(NSDictionary*)params {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     [dict setObject:method forKey:@"method"];
-    [dict setObject:params forKey:@"arguments"];
+    [dict setObject:params forKey:@"params"];
     [_msgAry addObject:[WXUtility JSONString:dict]];
     [self _executionMsgAry];
 }
