@@ -2,7 +2,7 @@
   <scroller class="list" append＝"tree">
 
     <refresh class="refresh-view" display="{{refresh_display}}" onrefresh="onrefresh">
-      <loading-indicator style="height:60;width:60" ></loading-indicator>
+      <loading-indicator style="height:60;width:60;color:blue" ></loading-indicator>
       <text class="refresh-arrow" style="text-align: center; color:rgb(238, 162, 54)" if="{{(refresh_display==='hide')}}">Pull To Refresh</text>
     </refresh>
 
@@ -16,7 +16,7 @@
     </div>
 
     <loading class="loading-view" display="{{loading_display}}" onloading="onloading">
-      <loading-indicator style="height:60;width:60" ></loading-indicator>
+      <loading-indicator style="height:60;width:60;color:blue" ></loading-indicator>
     </loading>
 
   </scroller>
@@ -85,13 +85,36 @@
       onrefresh: function(e) {
         var self = this;
         self.refresh_display = 'show';
-        self.refresh_display = 'hide';
+        require('@weex-module/modal').toast({
+          'message': "onrefresh",
+          'duration': 3
+        });
+
+        if (this.$getConfig().env.platform == 'iOS') {
+          // timer module will be available soon in Android
+          require('@weex-module/timer').setTimeout(function(){
+            self.refresh_display = 'hide';
+          },3000);
+        }else {
+          self.refresh_display = 'hide';
+        }
       },
       onloading: function(e) {
         var self = this;
         self.loading_display = 'show';
-        self.loading_display = 'hide';
-      }
+        this.$call('modal', 'toast', {
+          'message': "onloading",
+          'duration': 3
+        });
+        if (this.$getConfig().env.platform == 'iOS') {
+          // timer module will be available soon in Android
+          require('@weex-module/timer').setTimeout(function(){
+            self.loading_display = 'hide';
+          },3000);
+        }else {
+          self.loading_display = 'hide';
+        }
+      },
     },
     data: {
       refresh_display: 'hide',
