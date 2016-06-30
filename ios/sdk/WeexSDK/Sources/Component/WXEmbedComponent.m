@@ -156,7 +156,7 @@
         weakSelf.errorView = errorView;
     };
     
-    _embedInstance.refreshFinish = ^(UIView *view) {
+    _embedInstance.renderFinish = ^(UIView *view) {
         [weakSelf _updateState:WeexInstanceAppear];
     };
 }

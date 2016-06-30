@@ -154,7 +154,7 @@
         
     };
     
-    _instance.refreshFinish = ^(UIView *view) {
+    _instance.renderFinish = ^(UIView *view) {
         [weakSelf _updateInstanceState:WeexInstanceAppear];
     };
 }
