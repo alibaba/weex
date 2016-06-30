@@ -3,9 +3,13 @@
   "title": "Weex",
   "description": "Weex Document Site",
   "plugins": [
-    "header"
+      "header",
+      "disqus"
   ],
   "pluginsConfig": {
+    "disqus": {
+            "shortName": "weex-doc"
+    },        
     "layout": {
       "headerPath" : "_layouts/header.html"
     }
