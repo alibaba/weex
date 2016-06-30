@@ -44,13 +44,13 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/b42c3e7de7d53d9e21278343556e5ec2", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/0e2d80636e1f03192dba1062ab65f181", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(15);
 	  __weex_module__.exports = {
 	    data: function () {return {
-	      root: 'examples/syntax',
+	      root: 'examples',
 	      items: [
 	        {name: 'syntax/hello-world', title: 'Hello World'},
 	        {name: 'syntax/hello-world-1', title: 'Hello World 1'},
@@ -85,7 +85,7 @@
 	  }
 	})
 	})
-	;__weex_bootstrap__("@weex-component/b42c3e7de7d53d9e21278343556e5ec2", {
+	;__weex_bootstrap__("@weex-component/0e2d80636e1f03192dba1062ab65f181", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
