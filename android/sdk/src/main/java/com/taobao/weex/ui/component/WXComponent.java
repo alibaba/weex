@@ -274,6 +274,8 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
       return;
     }
 
+    mDomObj = domObject;
+
     if (this instanceof WXRefresh && mParent instanceof WXRefreshableContainer &&
         isOuterRefreshableContainer(mParent)) {
       mInstance.setRefreshMargin(mDomObj.csslayout.dimensions[CSSLayout.DIMENSION_HEIGHT]);
@@ -281,8 +283,6 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     if ((this instanceof WXBaseRefresh && mParent instanceof WXRefreshableContainer)) {
       return;
     }
-
-    mDomObj = domObject;
 
     if (mParent instanceof WXRefreshableContainer && isOuterRefreshableContainer(mParent)) {
       if (!(this instanceof WXBaseRefresh)) {
