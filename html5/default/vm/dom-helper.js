@@ -98,7 +98,7 @@ export function _attachTarget (target, dest) {
       dest.element.insertBefore(target.end, before)
     }
     else {
-      dest.element.insertBefore(target, before)
+      return dest.element.insertBefore(target, before)
     }
   }
   else {
@@ -107,7 +107,7 @@ export function _attachTarget (target, dest) {
       dest.appendChild(target.end)
     }
     else {
-      dest.appendChild(target)
+      return dest.appendChild(target)
     }
   }
 }

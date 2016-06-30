@@ -79,7 +79,7 @@ Listener.prototype.removeEvent = function (ref, type) {
 }
 
 Listener.prototype.handler = function (actions, cb) {
-  cb && cb()
+  return cb && cb()
 }
 
 Listener.prototype.addActions = function (actions) {
@@ -94,7 +94,7 @@ Listener.prototype.addActions = function (actions) {
     updates.push.apply(updates, actions)
   }
   else {
-    handler(actions)
+    return handler(actions)
   }
 }
 

@@ -341,15 +341,20 @@ export function _compileNativeComponent (template, dest, type) {
   }
 
   const treeMode = template.append === 'tree'
+  let lastSignal
   if (!treeMode) {
     _.debug('compile to append single node for', element)
-    this._attachTarget(element, dest)
+    lastSignal = this._attachTarget(element, dest)
   }
-  this._compileChildren(template, element)
-  if (treeMode) {
+  if (lastSignal !== -1) {
+    lastSignal = this._compileChildren(template, element)
+  }
+  if (lastSignal !== -1 && treeMode) {
     _.debug('compile to append whole tree for', element)
-    this._attachTarget(element, dest)
+    lastSignal = this._attachTarget(element, dest)
   }
+
+  return lastSignal
 }
 
 /**
@@ -361,9 +366,12 @@ export function _compileNativeComponent (template, dest, type) {
 export function _compileChildren (template, dest) {
   const children = template.children
   if (children && children.length) {
-    children.forEach((child) => {
-      this._compile(child, dest)
+    let lastSignal
+    children.every((child) => {
+      lastSignal = this._compile(child, dest) !== -1
+      return lastSignal
     })
+    return lastSignal
   }
 }
 
