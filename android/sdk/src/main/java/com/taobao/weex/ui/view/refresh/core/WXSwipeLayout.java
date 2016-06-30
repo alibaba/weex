@@ -225,7 +225,6 @@ import android.widget.FrameLayout;
 public class WXSwipeLayout extends FrameLayout implements NestedScrollingParent {
 
   private NestedScrollingParentHelper parentHelper;
-
   private WXOnRefreshListener onRefreshListener;
   private WXOnLoadingListener onLoadingListener;
 
@@ -277,7 +276,7 @@ public class WXSwipeLayout extends FrameLayout implements NestedScrollingParent 
   private boolean mPullLoadEnable = false;
 
   // Is Refreshing
-  private boolean mRefreshing = false;
+  volatile private boolean mRefreshing = false;
 
   // RefreshView Height
   private float loadingViewHeight = 0;
@@ -367,12 +366,14 @@ public class WXSwipeLayout extends FrameLayout implements NestedScrollingParent 
   }
 
   @Override
-  public boolean onTouchEvent(MotionEvent event) {
-    if ((!mPullRefreshEnable && !mPullLoadEnable) || mRefreshing) {
+  public boolean onInterceptTouchEvent(MotionEvent ev) {
+    if ((!mPullRefreshEnable && !mPullLoadEnable)) {
       return false;
     }
-
-    return super.onTouchEvent(event);
+    if (mRefreshing) {
+      return true;
+    }
+    return super.onInterceptTouchEvent(ev);
   }
 
   /*********************************** NestedScrollParent *************************************/
