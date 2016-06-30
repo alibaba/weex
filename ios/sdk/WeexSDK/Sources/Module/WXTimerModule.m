@@ -67,6 +67,10 @@ WX_EXPORT_METHOD(@selector(clearInterval:))
 {
     WXAssert(callbackID, @"callbackID for timer must not be nil.");
     
+    if (milliseconds == 0 && !shouldRepeat) {
+        [[WXSDKManager bridgeMgr] callBack:self.weexInstance.instanceId funcId:callbackID params:nil keepAlive:NO];
+    }
+    
     WXTimerTarget *target = [[WXTimerTarget alloc] initWithCallback:callbackID shouldRepeat:shouldRepeat weexInstance:self.weexInstance];
     NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:milliseconds/1000.0 target:target selector:@selector(trigger) userInfo:nil repeats:shouldRepeat];
     if (!_timers[callbackID]) {
