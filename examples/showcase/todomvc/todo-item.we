@@ -1,0 +1,136 @@
+<template>
+    <div class="todo-item">
+        <div class="todo-status-done" onclick="changeStatus" todoidx="{{dataIdx}}">
+            <image class="todo-item-icon" src="{{dataItem.status==='item-doing'?'https://gw.alicdn.com/tfs/TB1Xr3GJFXXXXbmXVXXXXXXXXXX-153-153.jpg':'https://gw.alicdn.com/tfs/TB1pAg1JFXXXXX8XpXXXXXXXXXX-153-153.jpg'}}"></image>
+        </div>
+        <div class="todo-input-wrap">
+            <input style="visibility: {{status=='edit'?'visible':'hidden'}}" class="todo-input" onchange="syncValue" id="item-input" type="text" value="{{dataItem.content}}" />
+            <div style="visibility: {{status=='normal'?'visible':'hidden'}}" class="todo-content">
+                <text class="todo-txt" style="text-decoration: {{dataItem.status==='item-done'?'line-through':''}};color: {{dataItem.status==='item-done'?'#999':'#333'}}">{{dataItem.content}}</text>
+            </div>
+        </div>
+        <div class="item-control">
+            <image class="item-control-btn" todoidx="{{dataIdx}}" onclick="editItem" src="{{status=='normal'?'https://gw.alicdn.com/tfs/TB1gME_JFXXXXcmXpXXXXXXXXXX-48-48.jpg':'https://gw.alicdn.com/tfs/TB1SrDSKFXXXXclXpXXXXXXXXXX-48-48.png'}}"></image>
+            <image class="item-control-btn" todoidx="{{dataIdx}}" onclick="delItem" src="https://gw.alicdn.com/tfs/TB1txI5JFXXXXagXFXXXXXXXXXX-48-48.jpg"></image>
+        </div>
+    </div>
+</template>
+
+<script>
+    module.exports = {
+        data:{
+            dataIdx:'',
+            dataItem:{},
+            status:'normal' // edit
+        },
+        methods:{
+            syncValue: function(e) {
+                var txt = e.value;
+                this.dataItem.content = txt;
+            },
+            changeStatus: function(e) {
+                var todoidx= e.target.attr['todoidx'];
+                if (this.dataItem.status === 'item-done') {
+                    var newStatus = 'item-doing';
+                } else {
+                    newStatus = 'item-done';
+                }
+                this.dataItem.status = newStatus;
+            },
+            editItem: function() {
+                if (this.status === 'normal') {
+                    this.status = 'edit';
+                } else {
+                    this.status = 'normal';
+                }
+            },
+            delItem: function(e) {
+                var todoidx= e.target.attr['todoidx'];
+                this.$dispatch('item-deleted', {
+                    idx:todoidx
+                });
+            }
+        }
+    }
+</script>
+
+<style>
+
+    .todo-item {
+        display: flex;
+        flex-direction: row;
+        height:120px;
+        width:750px;
+        overflow: hidden;
+        border-bottom-width: 1px;
+        border-style:solid;
+        border-color:#ccc;
+        background-color:#fff;
+    }
+    .todo-status-done {
+        flex:2;
+        line-height:120px;
+        height:120px;
+        color:green;
+        text-align: center;
+        font-size:40px;
+        flex-direction: row;
+        justify-content:center;
+        align-items:center;
+    }
+    .todo-item-icon {
+        position:absolute;
+        top:25px;
+        left:25px;
+        width:70px;
+        height:70px;
+    }
+
+    .item-control {
+        flex:2;
+        /*padding-right:50px;*/
+        flex-direction: row;
+        align-items:center;
+    }
+    .todo-input-wrap {
+        position:relative;
+        flex:7;
+    }
+    .todo-input {
+        position: absolute;
+        top:0;
+        left:0;
+        z-index:1;
+        height:120px;
+        flex:7;
+        font-weight:100;/* not support */
+        font-size:40px;
+        margin-left:20px;
+        border-width:0;
+        font-style:italic;/* not support */
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;/* this feature is not supported on Android */
+    }
+    .todo-content {
+        position: absolute;
+        top:0;
+        left:0;
+        z-index:2;
+        flex:7;
+        height:120px;
+        margin-left:20px;
+        justify-content: center;
+    }
+    .todo-txt {
+        color:#333;
+        font-size:40px;
+        font-style:normal;
+    }
+    .todo-done {
+        text-decoration: line-through;
+    }
+    .item-control-btn {
+        width:48px;
+        height:48px;
+        margin-right:20px;
+    }
+</style>
