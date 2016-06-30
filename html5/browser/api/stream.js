@@ -122,7 +122,6 @@ const stream = {
    * @deprecated
    * Note: This API is deprecated. Please use stream.fetch instead.
    * send a http request through XHR.
-   * @deprecated
    * @param  {obj} params
    *  - method: 'GET' | 'POST',
    *  - url: url requested
