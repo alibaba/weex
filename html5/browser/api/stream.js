@@ -245,8 +245,10 @@ const stream = {
         try {
           config.body = JSON.stringify(body)
           config.headers['Content-Type'] = TYPE_JSON
-        } catch (e) {}
-      } else if (utils.getType(body) === 'string' && body.match(REG_FORM)) {
+        }
+        catch (e) {}
+      }
+      else if (utils.getType(body) === 'string' && body.match(REG_FORM)) {
         // is form-data
         config.body = encodeURI(body)
         config.headers['Content-Type'] = TYPE_FORM
