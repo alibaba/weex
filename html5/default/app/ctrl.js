@@ -20,7 +20,7 @@ export function updateActions () {
     this.doc.listener.updates = []
   }
   if (tasks.length) {
-    this.callTasks(tasks)
+    return this.callTasks(tasks)
   }
 }
 

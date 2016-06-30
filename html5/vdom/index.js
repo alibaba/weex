@@ -26,7 +26,7 @@ function genCallTasks (id) {
     if (!Array.isArray(tasks)) {
       tasks = [tasks]
     }
-    callNative(id, tasks, '-1')
+    return callNative(id, tasks, '-1')
   }
 }
 
