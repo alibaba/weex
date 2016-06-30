@@ -1,5 +1,6 @@
 # How it works
 <span class="weex-version">0.4</span>
+<a href="https://github.com/weexteam/article/issues/32"  class="weex-translate">cn</a>
 
 ## Overview
 
@@ -76,6 +77,9 @@ bootstrap('@weex-component/main')
 ```
 
 Additionally, the transformer could also do more things: combo the bundles, bootstrap with config and external data. For more information, please see the syntax specs.
+
+## NOTICE
+Most of Weex utility output JS Bundle after  [Webpack](https://webpack.github.io/) re-bundle. So the eventual format of Weex JSBundle is webpack packed .
 
 ## JS Framework
 

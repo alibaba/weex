@@ -6,8 +6,8 @@
     top: 70px;
 }
 
-.book .book-search , a[aria-label="Search"] , a[aria-label="Share"] ,  i.fa-facebook , i.fa-twitter{
-    display: none  !important;
+a[aria-label="Share"] ,  i.fa-facebook , i.fa-twitter{
+   display: none  !important;
 }
 
 .top-bar, .top-bar ul{

@@ -43,14 +43,14 @@ NewComponent.prototype = Object.create(Component.prototype)
 // Override the "create" method to build elements for the component.
 NewComponent.prototype.create = function () {
   var node = document.createElement('div')
-  node.setAttribute('data-someAttr', this.someAttr)
+  node.setAttribute('data-some-attr', this.someAttr)
   return node
 }
 
 // Setup setters for updatable attributes.
 NewComponent.prototype.attr = {
   updatableAttr: function (value) {
-    this.node.setAttribute('data-updatableAttr', value)
+    this.node.setAttribute('data-updatable-attr', value)
   }
 }
 
@@ -96,7 +96,7 @@ First create a file named `user.js` for a new module, then define `login/logout`
 var user = {
   login: function (callbackId) {
     var self = this
-    // your logic code, ex.
+    // your logic code.
     login.then(function (res) {
       self.sender.performCallback(callbackId, res)
     }).catch(function (err) {
@@ -106,7 +106,7 @@ var user = {
 
   logout: function (callbackId) {
     var self = this
-    // your logic code, ex.
+    // your logic code.
     logout.then(function (res) {
       self.sender.performCallback(callbackId, res)
     }).catch(function (err) {
