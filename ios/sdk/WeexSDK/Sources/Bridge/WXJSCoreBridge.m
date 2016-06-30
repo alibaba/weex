@@ -35,13 +35,7 @@
         
         NSDictionary *data = [WXUtility getEnvironment];
         _jsContext[@"WXEnvironment"] = data;
-        
-        _jsContext[@"setTimeout"] = ^(JSValue* function, JSValue* timeout) {
-            [weakSelf performSelector: @selector(triggerTimeout:) withObject:^() {
-                [function callWithArguments:@[]];
-            } afterDelay:[timeout toDouble] / 1000];
-        };
-
+    
         _jsContext[@"nativeLog"] = ^() {
             static NSDictionary *levelMap;
             static dispatch_once_t onceToken;
@@ -122,13 +116,6 @@
 {
     NSDictionary *data = [WXUtility getEnvironment];
     _jsContext[@"WXEnvironment"] = data;
-}
-
-#pragma mark - Private
-
-- (void)triggerTimeout:(void(^)())block
-{
-    block();
 }
 
 @end
