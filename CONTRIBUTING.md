@@ -88,5 +88,5 @@ for example:
 
 ### Java & Android 
 
-* We should use [Google Java Style](https://google.github.io/styleguide/javaguide.html) as basic guidelines of java code.
+* Use [Google Java Style](https://google.github.io/styleguide/javaguide.html) as basic guidelines of java code.
 * Follow [AOSP Code Style](https://source.android.com/source/code-style.html) for rest of android related code style.
