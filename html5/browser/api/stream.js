@@ -10,6 +10,11 @@ require('httpurl')
 let jsonpCnt = 0
 const ERROR_STATE = -1
 
+const TYPE_JSON = 'application/json;charset=UTF-8'
+const TYPE_FORM = 'application/x-www-form-urlencoded'
+
+const REG_FORM = /^(?:[^&=]+=[^&=]+)(?:&[^&=]+=[^&=]+)*$/
+
 function _jsonp (config, callback, progressCallback) {
   const cbName = 'jsonp_' + (++jsonpCnt)
   let url
@@ -53,6 +58,11 @@ function _xhr (config, callback, progressCallback) {
   const xhr = new XMLHttpRequest()
   xhr.responseType = config.type
   xhr.open(config.method, config.url, true)
+
+  const headers = config.headers || {}
+  for (const k in headers) {
+    xhr.setRequestHeader(k, headers[k])
+  }
 
   xhr.onload = function (res) {
     callback({
@@ -109,6 +119,7 @@ const stream = {
 
   /**
    * sendHttp
+   * @deprecated
    * Note: This API is deprecated. Please use stream.fetch instead.
    * send a http request through XHR.
    * @deprecated
@@ -218,6 +229,28 @@ const stream = {
           + config.type
           + '\' for \'fetch\' API should be one of '
           + typeOptions + '.')
+    }
+
+    // validate options.headers
+    config.headers = config.headers || {}
+    if (!utils.isPlainObject(config.headers)) {
+      return logger.error('options.headers should be a plain object')
+    }
+
+    // validate options.body
+    const body = config.body
+    if (!config.headers['Content-Type'] && body) {
+      if (utils.isPlainObject(body)) {
+        // is a json data
+        try {
+          config.body = JSON.stringify(body)
+          config.headers['Content-Type'] = TYPE_JSON
+        } catch (e) {}
+      } else if (utils.getType(body) === 'string' && body.match(REG_FORM)) {
+        // is form-data
+        config.body = encodeURI(body)
+        config.headers['Content-Type'] = TYPE_FORM
+      }
     }
 
     const _callArgs = [config, function (res) {
