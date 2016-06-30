@@ -11,7 +11,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-
+#import "WXBridgeProtocol.h"
 
 #pragma mark - Preprocessor
 
@@ -34,14 +34,16 @@
 @class PDDomainController;
 @protocol PDPrettyStringPrinting;
 
+
 extern void _PDLogObjectsImpl(NSString *severity, NSArray *arguments);
 
 
 #pragma mark - Public Interface
 
-@interface PDDebugger : NSObject
+@interface PDDebugger : NSObject <WXBridgeProtocol>
 
 + (PDDebugger *)defaultInstance;
++ (id) allocWithZone:(struct _NSZone *)zone;
 
 - (id)domainForName:(NSString *)name;
 - (void)sendEventWithName:(NSString *)string parameters:(id)params;

@@ -27,10 +27,12 @@
 #import "WXDebuggerDomainController.h"
 #import "WXTimelineDomainController.h"
 #import "WXCSSDomainController.h"
+#import "WXDevTool.h"
 
 #import "WXAppConfiguration.h"
 #import "WXDeviceInfo.h"
 #import <WeexSDK/WXSDKEngine.h>
+#import "WXUtility.h"
 
 #import <objc/runtime.h>
 #import <objc/message.h>
@@ -65,6 +67,8 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
     __strong SRWebSocket *_socket;
     NSMutableArray  *_msgAry;
     BOOL _isConnect;
+    WXJSCallNative  _nativeCallBlock;
+    NSThread    *_curThread;
 }
 
 + (PDDebugger *)defaultInstance;
@@ -72,10 +76,14 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
     static dispatch_once_t onceToken;
     static PDDebugger *defaultInstance = nil;
     dispatch_once(&onceToken, ^{
-        defaultInstance = [[[self class] alloc] init];
+        defaultInstance = [[super allocWithZone:NULL] init];
     });
     
     return defaultInstance;
+}
+
++ (id) allocWithZone:(struct _NSZone *)zone {
+    return [self defaultInstance];
 }
 
 - (id)init;
@@ -105,42 +113,24 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
         @"iOS", @"platform",
         machine, @"model",
         [WXSDKEngine SDKEngineVersion],@"weexVersion",
-        /*[[NSBundle mainBundle] bundleIdentifier], @"app_id",*/
         appName, @"name",
-        /*[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"], @"app_version",
-        [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"], @"app_build",*/
         nil];
     
-    /*
-    NSString *appIconFile = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIconFile"];
-    if (!appIconFile) {
-        NSArray *files = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIconFiles"];
-        if (files.count) {
-            appIconFile = [files objectAtIndex:0];
-        }
-    }
-    
-    if (appIconFile) {
-        UIImage *appIcon = [UIImage imageNamed:appIconFile];
-        if (appIcon) {
-#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 70000
-            NSString *base64IconString = [UIImagePNGRepresentation(appIcon) base64EncodedStringWithOptions:0];
-#else
-            NSString *base64IconString = [UIImagePNGRepresentation(appIcon) base64Encoding];
-#endif
-            [parameters setObject:base64IconString forKey:@"app_icon_base64"];
-        }
-    }*/
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-//        [self sendEventWithName:@"Gateway.registerDevice" parameters:parameters];
-        [self _registerDeviceWithParams:parameters];
-        
-    });
+    __weak typeof(self) weakSelf = self;
+    [self _executeBridgeThead:^() {
+        [weakSelf _registerDeviceWithParams:parameters];
+    }];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(NSString *)message;
 {
+    if ([WXDevTool isDebug]) {
+        __weak typeof(self) weakSelf = self;
+        [self _executeBridgeThead:^() {
+            [weakSelf _evaluateNative:message];
+        }];
+    }
+    
     NSDictionary *obj = [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
 
     NSString *fullMethodName = [obj objectForKey:@"method"];
@@ -166,7 +156,9 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
 
         NSData *data = [NSJSONSerialization dataWithJSONObject:response options:0 error:nil];
         NSString *encodedData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        [webSocket send:encodedData];
+        [self _executeBridgeThead:^() {
+            [webSocket send:encodedData];
+        }];
     };
 
     PDDynamicDebuggerDomain *domain = [self domainForName:domainName];
@@ -270,10 +262,11 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
 
     NSData *data = [NSJSONSerialization dataWithJSONObject:obj options:0 error:nil];
     NSString *encodedData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    dispatch_async(dispatch_get_main_queue(), ^{
+    __weak typeof(self) weakSelf = self;
+    [self _executeBridgeThead:^() {
         [_msgAry addObject:encodedData];
-        [self _executionMsgAry];
-    });
+        [weakSelf _executionMsgAry];
+    }];
 }
 
 #pragma mark Connect / Disconnect
@@ -312,6 +305,7 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
 - (void)connectToURL:(NSURL *)url;
 {
     NSLog(@"Connecting to %@", url);
+    _curThread = [NSThread currentThread];
     _msgAry = nil;
     _msgAry = [NSMutableArray array];
     
@@ -330,6 +324,7 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
 
 - (void)disconnect;
 {
+    _nativeCallBlock = nil;
     _msgAry = nil;
     [_bonjourBrowser stop];
     _bonjourBrowser.delegate = nil;
@@ -451,7 +446,85 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
     [self _addController:[WXCSSDomainController defaultInstance]];
 }
 
+#pragma mark - WXBridgeProtocol
+- (void)executeJSFramework:(NSString *)frameworkScript {
+    NSDictionary *args = @{@"source":frameworkScript/*, @"env":[WXUtility getEnvironment]*/};
+    [self callJSMethod:@"WxDebug.initJSRuntime" params:args];
+}
+
+- (void)callJSMethod:(NSString *)method params:(NSDictionary*)params {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [dict setObject:method forKey:@"method"];
+    [dict setObject:params forKey:@"arguments"];
+    [_msgAry addObject:[WXUtility JSONString:dict]];
+    [self _executionMsgAry];
+}
+
+- (void)callJSMethod:(NSString *)method args:(NSArray *)args {
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+    [params setObject:method forKey:@"method"];
+    [params setObject:args forKey:@"args"];
+    
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [dict setObject:@"WxDebug.callJS" forKey:@"method"];
+    [dict setObject:params forKey:@"params"];
+    
+    [_msgAry addObject:[WXUtility JSONString:dict]];
+    [self _executionMsgAry];
+}
+
+- (void)registerCallNative:(WXJSCallNative)callNative
+{
+    _nativeCallBlock = callNative;
+}
+
+- (JSValue*) exception
+{
+    return nil;
+}
+
+- (void)resetEnvironment
+{
+    [self _initEnvironment];
+}
+
+
+
 #pragma mark - Private Methods
+- (void)_executeBridgeThead:(dispatch_block_t)block
+{
+    if([NSThread currentThread] == _curThread){
+        block();
+    } else {
+        [self performSelector:@selector(_executeBridgeThead:)
+                     onThread:_curThread
+                   withObject:[block copy]
+                waitUntilDone:NO];
+    }
+}
+
+-(void)_evaluateNative:(NSString *)data
+{
+    NSDictionary *dict = [WXUtility objectFromJSON:data];
+    NSString *method = [[dict objectForKey:@"method"] substringFromIndex:8];
+    NSDictionary *args = [dict objectForKey:@"params"];
+    
+    if ([method isEqualToString:@"callNative"]) {
+        // call native
+        NSString *instanceId = args[@"instance"];
+        NSArray *methods = args[@"tasks"];
+        NSString *callbackId = args[@"callback"];
+        
+        // params parse
+        if(!methods || methods.count <= 0){
+            return;
+        }
+        //call native
+        WXLogVerbose(@"Calling native... instancdId:%@, methods:%@, callbackId:%@", instanceId, [WXUtility JSONString:methods], callbackId);
+        _nativeCallBlock(instanceId, methods, callbackId);
+    }
+}
+
 - (void)_executionMsgAry {
     if (!_isConnect) return;
     
@@ -506,6 +579,11 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
     _currentService = service;
     _currentService.delegate = self;
     [_currentService resolveWithTimeout:10.f];
+}
+
+- (void)_initEnvironment
+{
+    [self callJSMethod:@"setEnvironment" args:@[[WXUtility getEnvironment]]];
 }
 
 - (NSString *)_domainNameForController:(PDDomainController *)controller;
