@@ -9,8 +9,7 @@
 #import "WXBridgeContext.h"
 #import "WXBridgeProtocol.h"
 #import "WXJSCoreBridge.h"
-#import "WXWebSocketBridge.h"
-#import "WXDevToolBridge.h"
+#import "WXDebugLoggerBridge.h"
 #import "WXLog.h"
 #import "WXUtility.h"
 #import "WXBridgeMethod.h"
@@ -24,11 +23,12 @@
 #import "WXModuleManager.h"
 #import "WXSDKInstance_private.h"
 
+#import "PDDebugger.h"
+
 @interface WXBridgeContext ()
 
 @property (nonatomic, strong) id<WXBridgeProtocol>  jsBridge;
-@property (nonatomic, strong) WXWebSocketBridge *socketBridge;
-@property (nonatomic, strong) WXDevToolBridge *devToolSocketBrideg;
+@property (nonatomic, strong) WXDebugLoggerBridge *devToolSocketBridge;
 @property (nonatomic, assign) BOOL  debugJS;
 //store the methods which will be executed from native to js
 @property (nonatomic, strong) NSMutableDictionary   *sendQueue;
@@ -80,7 +80,7 @@
     WXAssertBridgeThread();
     _debugJS = [WXDebugTool isDevToolDebug];
     
-    Class bridgeClass = _debugJS ? [WXWebSocketBridge class] : [WXJSCoreBridge class];
+    Class bridgeClass = _debugJS ? NSClassFromString(@"PDDebugger") : [WXJSCoreBridge class];
     
     if (_jsBridge && [_jsBridge isKindOfClass:bridgeClass]) {
         return _jsBridge;
@@ -91,7 +91,7 @@
         _frameworkLoadFinished = NO;
     }
     
-    _jsBridge = _debugJS ? self.socketBridge : [[WXJSCoreBridge alloc] init];
+    _jsBridge = _debugJS ? [NSClassFromString(@"PDDebugger") alloc] : [[WXJSCoreBridge alloc] init];
      __weak typeof(self) weakSelf = self;
     [_jsBridge registerCallNative:^(NSString *instance, NSArray *tasks, NSString *callback) {
         [weakSelf invokeNative:instance tasks:tasks callback:callback];
@@ -312,18 +312,24 @@
 }
 
 #pragma mark JS Debug Management
+- (void) connectToDevToolWithUrl:(NSURL *)url {
+    id webSocketBridge = [NSClassFromString(@"PDDebugger") alloc];
+    if(!webSocketBridge || ![webSocketBridge respondsToSelector:@selector(connectToURL:)]) {
+        return;
+    } else {
+        [webSocketBridge performSelector:@selector(connectToURL:) withObject:url];
+    }
+}
+
 
 - (void)connectToWebSocket:(NSURL *)url
 {
-    if ([WXDebugTool isDevToolDebug]) {
-        _socketBridge = [[WXWebSocketBridge alloc] initWithURL:url];
-    }
-    _devToolSocketBrideg = [[WXDevToolBridge alloc] initWithURL:url];
+    _devToolSocketBridge = [[WXDebugLoggerBridge alloc] initWithURL:url];
 }
 
 - (void)logToWebSocket:(NSString *)flag message:(NSString *)message
 {
-    [_devToolSocketBrideg callJSMethod:@"__logger" args:@[flag, message]];
+    [_devToolSocketBridge callJSMethod:@"__logger" args:@[flag, message]];
 }
 
 #pragma mark Private Mehtods

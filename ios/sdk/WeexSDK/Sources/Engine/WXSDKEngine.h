@@ -79,11 +79,19 @@
 + (NSString*)SDKEngineVersion;
 
 /**
- * @abstract Connects to websocket for debugging
+ * @abstract Connects to websocket for collecting log
  *
  * @param URL The URL of websocket to connect
  *
  */
 + (void)connectDebugServer:(NSString*)URL;
+
+/**
+ * @abstract Connects to websocket for devtool debug
+ *
+ * @param URL The URL of websocket to connect
+ *
+ */
++ (void)connectDevToolServer:(NSString *)URL;
 
 @end

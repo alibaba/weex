@@ -85,19 +85,18 @@
     [WXSDKEngine registerComponent:@"select" withClass:NSClassFromString(@"WXSelectComponent")];
     [WXSDKEngine registerModule:@"event" withClass:[WXEventModule class]];
     [self atAddPlugin];
-    /*
+    
 #ifdef DEBUG
     [WXDebugTool setDebug:YES];
     [WXLog setLogLevel:WXLogLevelInfo];
 #else
     [WXDebugTool setDebug:NO];
 #endif
- */
 #ifndef UITEST
     [[ATManager shareInstance] show];
-//#else
-//    [WXDebugTool setDebug:NO];
-//    [WXLog setLogLevel:WXLogLevelError];
+#else
+    [WXDebugTool setDebug:NO];
+    [WXLog setLogLevel:WXLogLevelError];
 #endif
 }
 
