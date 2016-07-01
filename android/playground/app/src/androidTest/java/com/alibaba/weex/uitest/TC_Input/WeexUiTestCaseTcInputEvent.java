@@ -101,7 +101,7 @@ public class WeexUiTestCaseTcInputEvent extends ActivityInstrumentationTestCase2
 
                Log.e(TAG, "TC_Input_Event size== " + inputListView.size());
                sleep(2000);
-               EditText inputTypeViewLoseFocus = new EditText(getActivity()) ;
+               EditText inputTypeViewLoseFocus =null  ;
                sleep(2000);
 
                if(inputListView.size()!=0){
