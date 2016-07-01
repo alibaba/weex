@@ -44,13 +44,11 @@
 /* 0 */
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/1518171e61dbbc39d28ab3409c7cfdff", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/8f278f2fdec3ec1d8da4c816e364effe", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __weex_module__.exports = {
 	    data: function () {return {
-	      refresh_display : 'hide',
-	      loading_display : 'hide',
 	      backgroundColor: 'red',
 	      composite: 'false',
 	      shopList: [
@@ -356,24 +354,6 @@
 	      ],
 	    }},
 	    methods: {
-	      onrefresh: function(e) {
-	        var self = this;
-	        self.refresh_display = 'show';
-	        this.$call('modal', 'toast', {
-	          'message': "onrefresh",
-	          'duration': 2
-	        });
-	        self.refresh_display = 'hide';
-	      },
-	      onloading: function(e) {
-	        var self = this;
-	        self.loading_display = 'show';
-	        this.$call('modal', 'toast', {
-	          'message': "onloading",
-	          'duration': 2
-	        });
-	        self.loading_display = 'hide';
-	      },
 	      oncellclick: function(e) {
 	        this.$call('modal', 'toast', {
 	          'message': 'row ' + e.target.attr.rownumber + ' clicked',
@@ -404,42 +384,6 @@
 	    "loadmoreoffset": "2000"
 	  },
 	  "children": [
-	    {
-	      "type": "refresh",
-	      "classList": [
-	        "refresh-view"
-	      ],
-	      "attr": {
-	        "display": function () {return this.refresh_display}
-	      },
-	      "events": {
-	        "refresh": "onrefresh"
-	      },
-	      "children": [
-	        {
-	          "type": "loading-indicator",
-	          "style": {
-	            "height": 60,
-	            "width": 60,
-	            "color": "rgb(238,162,54)"
-	          }
-	        },
-	        {
-	          "type": "text",
-	          "classList": [
-	            "refresh-arrow"
-	          ],
-	          "style": {
-	            "textAlign": "center",
-	            "color": "rgb(238,162,54)"
-	          },
-	          "shown": function () {return (this.refresh_display==='hide')},
-	          "attr": {
-	            "value": "Pull To Refresh"
-	          }
-	        }
-	      ]
-	    },
 	    {
 	      "type": "cell",
 	      "append": "tree",
@@ -1129,42 +1073,6 @@
 	          ]
 	        }
 	      ]
-	    },
-	    {
-	      "type": "loading",
-	      "classList": [
-	        "refresh-view"
-	      ],
-	      "attr": {
-	        "display": function () {return this.loading_display}
-	      },
-	      "events": {
-	        "loading": "onloading"
-	      },
-	      "children": [
-	        {
-	          "type": "text",
-	          "classList": [
-	            "refresh-arrow"
-	          ],
-	          "style": {
-	            "textAlign": "center",
-	            "color": "rgb(238,162,54)"
-	          },
-	          "shown": function () {return (this.refresh_display==='hide')},
-	          "attr": {
-	            "value": "Load more"
-	          }
-	        },
-	        {
-	          "type": "loading-indicator",
-	          "style": {
-	            "height": 60,
-	            "width": 60,
-	            "color": "#3192e1"
-	          }
-	        }
-	      ]
 	    }
 	  ]
 	})
@@ -1230,19 +1138,10 @@
 	  "smallImg": {
 	    "width": 20,
 	    "height": 20
-	  },
-	  "refresh-view": {
-	    "height": 120,
-	    "width": 750,
-	    "display": "flex",
-	    "MsFlexAlign": "center",
-	    "WebkitAlignItems": "center",
-	    "WebkitBoxAlign": "center",
-	    "alignItems": "center"
 	  }
 	})
 	})
-	;__weex_bootstrap__("@weex-component/1518171e61dbbc39d28ab3409c7cfdff", {
+	;__weex_bootstrap__("@weex-component/8f278f2fdec3ec1d8da4c816e364effe", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
