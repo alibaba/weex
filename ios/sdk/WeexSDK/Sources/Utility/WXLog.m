@@ -88,7 +88,7 @@ static id<WXLogProtocol> _externalLog;
       @(WXLogLevelAll) : @"all",
       @(WXLogLevelError) : @"error",
       @(WXLogLevelWarning) : @"warn",
-      @(WXLogLevelInfo) : @"info",
+      @(WXLogLevelInfo) : @"log",
       @(WXLogLevelDebug) : @"debug",
       @(WXLogLevelVerbose) : @"verbose",
       @(WXLogLevelOff) : @"off"
