@@ -65,7 +65,14 @@ function rePostionTranslate(){
     titleJObj.append(translateMark);
 }
 
-window._rePostionVersion =   function () {
+window._rePostionAll =   function () {
     rePostionVersion();
     rePostionTranslate();
 }
+
+contentLoaded(window,function(){
+    setTimeout(function(){
+        window._rePostionAll();
+    },100);
+})
+
