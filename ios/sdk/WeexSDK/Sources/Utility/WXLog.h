@@ -13,7 +13,8 @@ typedef NS_ENUM(NSInteger, WXLogFlag) {
     WXLogFlagWarning    = 1 << 1,
     WXLogFlagInfo       = 1 << 2,
     WXLogFlagDebug      = 1 << 3,
-    WXLogFlagVerbose    = 1 << 4
+    WXLogFlagVerbose    = 1 << 4,
+    WXLogObject         = 1 << 5
 };
 
 /**
@@ -84,6 +85,8 @@ typedef NS_ENUM(NSUInteger, WXLogLevel){
 
 + (void)log:(WXLogFlag)flag file:(const char *)fileName line:(NSUInteger)line format:(NSString *)format, ... NS_FORMAT_FUNCTION(4,5);
 
++ (void)devLog:(NSString *)flag file:(const char *)fileName line:(NSUInteger)line format:(NSString *)format, ... NS_FORMAT_FUNCTION(4,5);
+
 + (void)registerExternalLog:(id<WXLogProtocol>)externalLog;
 
 @end
@@ -98,8 +101,27 @@ do {                                    \
         format:(fmt), ## __VA_ARGS__];  \
 } while(0)
 
-#define WXLogVerbose(format, ...)       WX_LOG(WXLogFlagVerbose, format, ##__VA_ARGS__)
-#define WXLogDebug(format, ...)         WX_LOG(WXLogFlagDebug, format, ##__VA_ARGS__)
-#define WXLogInfo(format, ...)          WX_LOG(WXLogFlagInfo, format, ##__VA_ARGS__)
-#define WXLogWarning(format, ...)       WX_LOG(WXLogFlagWarning, format, ##__VA_ARGS__)
-#define WXLogError(format, ...)         WX_LOG(WXLogFlagError, format, ##__VA_ARGS__)
+#define WXLOG(flag, fmt, ...)          \
+do {                                    \
+    [WXLog devLog:flag                     \
+             file:WX_FILENAME              \
+             line:__LINE__                 \
+           format:(fmt), ## __VA_ARGS__];  \
+} while(0)
+
+//#define WXLogs(format,...)              WX_LOG(WXLogObject, format, ##__VA_ARGS__)
+//#define WXLogVerbose(format, ...)       WX_LOG(WXLogFlagVerbose, format, ##__VA_ARGS__)
+//#define WXLogDebug(format, ...)         WX_LOG(WXLogFlagDebug, format, ##__VA_ARGS__)
+//#define WXLogInfo(format, ...)          WX_LOG(WXLogFlagInfo, format, ##__VA_ARGS__)
+//#define WXLogWarning(format, ...)       WX_LOG(WXLogFlagWarning, format, ##__VA_ARGS__)
+//#define WXLogError(format, ...)         WX_LOG(WXLogFlagError, format, ##__VA_ARGS__)
+
+
+
+
+extern void _PDLogObjectsImpl(NSString *severity, NSArray *arguments);
+#define WXLogVerbose(format,...)        WXLOG(@"log", format, ##__VA_ARGS__)
+#define WXLogDebug(format, ...)         WXLOG(@"debug", format, ##__VA_ARGS__)
+#define WXLogInfo(format, ...)          WXLOG(@"info", format, ##__VA_ARGS__)
+#define WXLogWarning(format, ...)       WXLOG(@"warning", format ,##__VA_ARGS__)
+#define WXLogError(format, ...)         WXLOG(@"error", format, ##__VA_ARGS__)

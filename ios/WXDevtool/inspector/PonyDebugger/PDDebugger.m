@@ -99,6 +99,11 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
     return self;
 }
 
+- (void) coutLogWithLevel:(NSString *)level arguments:(NSArray *)arguments {
+    
+    [[PDConsoleDomainController defaultInstance] logWithArguments:arguments severity:level];
+}
+
 #pragma mark - SRWebSocketDelegate
 
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket;

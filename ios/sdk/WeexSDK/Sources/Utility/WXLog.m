@@ -126,9 +126,10 @@ static id<WXLogProtocol> _externalLog;
         NSString *flagString;
         NSString *flagColor;
         switch (flag) {
-            case WXLogFlagError:
+            case WXLogFlagError: {
                 flagString = @"error";
                 flagColor = @"fg255,0,0;";
+            }
                 break;
             case WXLogFlagWarning:
                 flagString = @"warn";
@@ -150,6 +151,7 @@ static id<WXLogProtocol> _externalLog;
         
         NSString *logMessage = [NSString stringWithFormat:@"%s%@ <Weex>[%@]%s:%ld, %@ %s", XCODE_COLORS_ESCAPE_SEQ, flagColor, flagString, fileName, (unsigned long)line, message, XCODE_COLORS_RESET];
         
+        
         if ([_externalLog logLevel] & flag) {
             [_externalLog log:flag message:logMessage];
         }
@@ -160,6 +162,42 @@ static id<WXLogProtocol> _externalLog;
             NSLog(@"%@", logMessage);
         }
     }
+}
+
++ (void)devLog:(NSString *)flag file:(const char *)fileName line:(NSUInteger)line format:(NSString *)format, ... {
+    va_list args;
+    va_start(args, format);
+    NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
+    NSArray *messageAry = @[message];
+    Class PDLogClass = NSClassFromString(@"PDDebugger");
+    if (PDLogClass) {
+         SEL selector = @selector(coutLogWithLevel: arguments:);
+        NSMethodSignature *methodSignature = [PDLogClass instanceMethodSignatureForSelector:selector];
+        if (methodSignature == nil) {
+            NSString *info = [NSString stringWithFormat:@"%@ not found", NSStringFromSelector(selector)];
+            [NSException raise:@"Method invocation appears abnormal" format:info, nil];
+        }
+        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
+        [invocation setTarget:[PDLogClass alloc]];
+        [invocation setSelector:selector];
+        [invocation setArgument:&flag atIndex:2];
+        [invocation setArgument:&messageAry atIndex:3];
+        [invocation invoke];
+    }
+    
+    WXLogFlag logFlay = WXLogFlagVerbose;
+    if ([flag isEqualToString:@"log"]) {
+        logFlay = WXLogFlagVerbose;
+    }else if ([flag isEqualToString:@"debug"]) {
+        logFlay = WXLogFlagDebug;
+    }else if ([flag isEqualToString:@"info"]) {
+        logFlay = WXLogFlagInfo;
+    }else if ([flag isEqualToString:@"error"]) {
+        logFlay = WXLogFlagError;
+    }else if ([flag isEqualToString:@"warning"]) {
+        logFlay = WXLogFlagWarning;
+    }
+    [self log:logFlay file:fileName line:line format:@"%@",format];
 }
 
 #pragma mark - External Log
