@@ -11,6 +11,7 @@
 #import "WXSDKManager.h"
 #import "WXUtility.h"
 #import "WXLog.h"
+#import "WXDebugTool.h"
 
 /**
  * call format:
@@ -35,6 +36,7 @@
     BOOL    _isConnect;
     SRWebSocket *_webSocket;
     NSMutableArray  *_msgAry;
+    NSMutableArray *_msgLogerAry;
     WXJSCallNative  _nativeCallBlock;
     NSThread    *_curThread;
 }
@@ -57,9 +59,13 @@
     return self;
 }
 
-- (void)_initEnvironment
-{
-    [self callJSMethod:@"setEnvironment" args:@[[WXUtility getEnvironment]]];
+- (void)registerDevice {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [dict setObject:@"WxDebug.registerDevice" forKey:@"method"];
+    [dict setObject:[WXUtility getDebugEnvironment] forKey:@"params"];
+    [dict setObject:[NSNumber numberWithInt:0] forKey:@"id"];
+    [_msgAry insertObject:[WXUtility JSONString:dict] atIndex:0];
+    [self _executionMsgAry];
 }
 
 - (void)_disconnect
@@ -97,14 +103,14 @@
 -(void)_evaluateNative:(NSString *)data
 {
     NSDictionary *dict = [WXUtility objectFromJSON:data];
-    NSString *method = [dict objectForKey:@"method"];
-    NSArray *args = [dict objectForKey:@"arguments"];
+    NSString *method = [[dict objectForKey:@"method"] substringFromIndex:8];
+    NSDictionary *args = [dict objectForKey:@"params"];
     
     if ([method isEqualToString:@"callNative"]) {
         // call native
-        NSString *instanceId = args[0];
-        NSArray *methods = args[1];
-        NSString *callbackId = args[2];
+        NSString *instanceId = args[@"instance"];
+        NSArray *methods = args[@"tasks"];
+        NSString *callbackId = args[@"callback"];
         
         // params parse
         if(!methods || methods.count <= 0){
@@ -113,9 +119,6 @@
         //call native
         WXLogVerbose(@"Calling native... instancdId:%@, methods:%@, callbackId:%@", instanceId, [WXUtility JSONString:methods], callbackId);
         _nativeCallBlock(instanceId, methods, callbackId);
-    } else if ([method isEqualToString:@"setLogLevel"]) {
-        NSString *levelString = [args firstObject];
-        [WXLog setLogLevelString:levelString];
     }
 }
 
@@ -123,19 +126,28 @@
 
 - (void)executeJSFramework:(NSString *)frameworkScript
 {
-    [self callJSMethod:@"evalFramework" args:@[frameworkScript]];
+    NSDictionary *args = @{@"source":frameworkScript};
+    [self callJSMethod:@"WxDebug.initJSRuntime" params:args];
+}
+
+- (void)callJSMethod:(NSString *)method params:(NSDictionary*)params {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [dict setObject:method forKey:@"method"];
+    [dict setObject:params forKey:@"arguments"];
+    
+    [_msgAry addObject:[WXUtility JSONString:dict]];
+    [self _executionMsgAry];
 }
 
 - (void)callJSMethod:(NSString *)method args:(NSArray *)args
 {
-    if (![method isEqualToString:@"__logger"]) {
-        // prevent recursion
-        WXLogVerbose(@"Calling JS... method:%@, args:%@", method, [WXUtility JSONString:args]);
-    }
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+    [params setObject:method forKey:@"method"];
+    [params setObject:args forKey:@"args"];
     
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setObject:method forKey:@"method"];
-    [dict setObject:args forKey:@"arguments"];
+    [dict setObject:@"WxDebug.callJS" forKey:@"method"];
+    [dict setObject:params forKey:@"params"];
     
     [_msgAry addObject:[WXUtility JSONString:dict]];
     [self _executionMsgAry];
@@ -149,11 +161,6 @@
 - (JSValue*) exception
 {
     return nil;
-}
-
-- (void)resetEnvironment
-{
-    [self _initEnvironment];
 }
 
 - (void)executeBridgeThead:(dispatch_block_t)block
@@ -174,7 +181,7 @@
 {
     WXLogWarning(@"Websocket Connected:%@", webSocket.url);
     _isConnect = YES;
-    [self _initEnvironment];
+    [self registerDevice];
     __weak typeof(self) weakSelf = self;
     [self executeBridgeThead:^() {
         [weakSelf _executionMsgAry];
@@ -199,5 +206,16 @@
     WXLogInfo(@"Websocket closed with code: %ld, reason:%@, wasClean: %d", (long)code, reason, wasClean);
     _isConnect = NO;
 }
+
+- (void)_initEnvironment
+{
+    [self callJSMethod:@"setEnvironment" args:@[[WXUtility getEnvironment]]];
+}
+
+- (void)resetEnvironment
+{
+    [self _initEnvironment];
+}
+
 
 @end

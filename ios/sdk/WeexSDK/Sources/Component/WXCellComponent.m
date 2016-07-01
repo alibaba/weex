@@ -24,6 +24,7 @@
     if (self) {
         _async = YES;
         _lazyCreateView = YES;
+        _isNeedJoinLayoutSystem = NO;
     }
     
     return self;
@@ -44,31 +45,19 @@
     return ^(CALayer *layer, BOOL finished) {
         if ([super displayCompeletionBlock]) {
             [super displayCompeletionBlock](layer, finished);
-            [self.list cellDidRendered:self];
         }
+        
+        [self.list cellDidRendered:self];
     };
-}
-
-- (void)_moveToSupercomponent:(WXComponent *)newSupercomponent atIndex:(NSUInteger)index
-{
-    _indexPathBeforeMove = self.indexPath;
-    [super _moveToSupercomponent:newSupercomponent atIndex:index];
 }
 
 - (void)moveToSuperview:(WXComponent *)newSupercomponent atIndex:(NSUInteger)index
 {
     if (newSupercomponent == self.list) {
-        [self.list cell:self didMoveFromIndexPath:_indexPathBeforeMove toIndexPath:_indexPath];
+        [self.list cell:self didMoveToIndex:index];
     } else {
         [super moveToSuperview:newSupercomponent atIndex:index];
     }
-}
-
-- (void)_removeFromSupercomponent
-{
-    [super _removeFromSupercomponent];
-    
-    [self.list cellWillRemove:self];
 }
 
 - (void)removeFromSuperview

@@ -36,9 +36,9 @@ dependencies {
 
 - set your remote bundle server ip.
 
-    For example, in the playground it is in the `IndexActivity.java`, you need to change the value of `DEFAULT_IP` in IndexActivity.java from `"your_current_IP"` to a server ip like `"30.30.30.150"`:
+    For example, in the playground it is in the `IndexActivity.java`, you need to change the value of `CURRENT_IP` in IndexActivity.java from `DEFAULT_IP` to a server ip like `"30.30.30.150"`:
 ````
-    private static final String DEFAULT_IP = "30.30.30.150"; // "your_current_IP";
+    private static String CURRENT_IP = "30.30.30.150"; // "your_current_IP";
 ````
 
 - enable network inspection.
