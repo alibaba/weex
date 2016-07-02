@@ -418,6 +418,12 @@ public class WXPerformance {
              + ",screenRenderTime:" + screenRenderTime
              + ",firstScreenJSFExecuteTime:" + firstScreenJSFExecuteTime
              + ",componentCount:" + componentCount
+             + ",syncTaskTime:" + syncTaskTime
+             + ",pureNetworkTime:" + pureNetworkTime
+             + ",actualNetworkTime:" + actualNetworkTime
+             + ",packageSpendTime:" + packageSpendTime
+             + ",connectionType:" + connectionType
+             + ",requestType:" + requestType
              + ",initInvokeTime:"+WXEnvironment.sSDKInitInvokeTime+",initExecuteTime:"+WXEnvironment.sSDKInitExecuteTime
              + ",totalTime:" + totalTime + ",JSLibVersion:" + JSLibVersion + ",WXSDKVersion:" + WXSDKVersion
              + ",errCode:" + errCode + ",renderFailedDetail:" + renderFailedDetail
