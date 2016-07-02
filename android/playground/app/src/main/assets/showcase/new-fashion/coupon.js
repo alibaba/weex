@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/12e3fae9066debee37a22f0980a88637", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/1151e58e00fa9346a3c44325588833a5", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  var IS_WEB = typeof window !== 'undefined';
@@ -66,7 +66,8 @@
 	    }
 	  };
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "container",
 	  "children": [
 	    {
@@ -124,8 +125,9 @@
 	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "title": {
 	    "width": 750,
 	    "height": 100
@@ -166,9 +168,9 @@
 	    "width": 750,
 	    "height": 230
 	  }
-	}
 	})
-	;__weex_bootstrap__("@weex-component/12e3fae9066debee37a22f0980a88637", {
+	})
+	;__weex_bootstrap__("@weex-component/1151e58e00fa9346a3c44325588833a5", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 

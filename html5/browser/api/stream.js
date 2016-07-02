@@ -10,6 +10,10 @@ require('httpurl')
 let jsonpCnt = 0
 const ERROR_STATE = -1
 
+const TYPE_JSON = 'application/json;charset=UTF-8'
+const TYPE_FORM = 'application/x-www-form-urlencoded'
+const REG_FORM = /^(?:[^%=]+=[^&=]+)(?:&[^&=]+=[^&=]+)*$/
+
 function _jsonp (config, callback, progressCallback) {
   const cbName = 'jsonp_' + (++jsonpCnt)
   let url
@@ -113,7 +117,7 @@ const stream = {
    * send a http request through XHR.
    * @deprecated
    * @param  {obj} params
-   *  - method: 'GET' | 'POST',
+   *  - method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'HEAD' | 'PATCH',
    *  - url: url requested
    * @param  {string} callbackId
    */
@@ -154,7 +158,7 @@ const stream = {
    * a arraybuffer for a file stream. (You can use Blob and FileReader
    * API implemented by most modern browsers to read a arraybuffer.)
    * @param  {object} options config options
-   *   - method {string} 'GET' | 'POST'
+   *   - method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'HEAD' | 'PATCH'
    *   - headers {obj}
    *   - url {string}
    *   - mode {string} 'cors' | 'no-cors' | 'same-origin' | 'navigate'
@@ -168,7 +172,7 @@ const stream = {
     const DEFAULT_MODE = 'cors'
     const DEFAULT_TYPE = 'text'
 
-    const methodOptions = ['GET', 'POST']
+    const methodOptions = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'PATCH']
     const modeOptions = ['cors', 'no-cors', 'same-origin', 'navigate']
     const typeOptions = ['text', 'json', 'jsonp', 'arraybuffer']
 
@@ -219,6 +223,33 @@ const stream = {
           + '\' for \'fetch\' API should be one of '
           + typeOptions + '.')
     }
+
+    // validate options.headers
+    config.headers = config.headers || {}
+    if (!utils.isPlainObject(config.headers)) {
+      return logger.error('options.headers should be a plain object')
+    }
+
+    // validate options.body
+    const body = config.body
+    if (!config.headers['Content-Type'] && body) {
+      if (utils.isPlainObject(body)) {
+        // is a json data
+        try {
+          config.body = JSON.stringify(body)
+          config.headers['Content-Type'] = TYPE_JSON
+        }
+        catch (e) {}
+      }
+      else if (utils.getType(body) === 'string' && body.match(REG_FORM)) {
+        // is form-data
+        config.body = encodeURI(body)
+        config.headers['Content-Type'] = TYPE_FORM
+      }
+    }
+
+    // validate options.timeout
+    config.timeout = parseInt(config.timeout, 10) || 2500
 
     const _callArgs = [config, function (res) {
       sender.performCallback(callbackId, res)
