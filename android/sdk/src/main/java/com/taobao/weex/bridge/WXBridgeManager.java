@@ -277,7 +277,13 @@ public class WXBridgeManager implements Callback {
   public static final String METHOD_REFRESH_INSTANCE = "refreshInstance";
   private static final String UNDEFINED = "-1";
   private static final int INIT_FRAMEWORK_OK = 1;
+
+  public static final int DESTROY_INSTANCE = -1;
+  public static final int INSTANCE_RENDERING = 1;
+  public static final int INSTANCE_RENDERING_ERROR = 0;
+
   private static WXBridgeManager mBridgeManager;
+
   /**
    * next tick tasks, can set priority
    */
@@ -411,12 +417,16 @@ public class WXBridgeManager implements Callback {
    * @param tasks tasks to be executed
    * @param callback next tick id
    */
-  public void callNative(String instanceId, String tasks, String callback) {
+  public int callNative(String instanceId, String tasks, String callback) {
     if (TextUtils.isEmpty(tasks)) {
       if (WXEnvironment.isApkDebugable()) {
         WXLogUtils.e("[WXBridgeManager] callNative: call Native tasks is null");
       }
-      return;
+      return INSTANCE_RENDERING_ERROR;
+    }
+
+    if(mDestroyedInstanceId.equals(instanceId)){
+      return DESTROY_INSTANCE;
     }
 
     if (WXEnvironment.isApkDebugable()) {
@@ -448,12 +458,12 @@ public class WXBridgeManager implements Callback {
       }
     }
 
-    if (UNDEFINED.equals(callback)
-        || mDestroyedInstanceId.equals(instanceId)) {
-      return;
+    if (UNDEFINED.equals(callback)) {
+      return INSTANCE_RENDERING_ERROR;
     }
     // get next tick
     getNextTick(instanceId, callback);
+    return INSTANCE_RENDERING;
   }
 
   private void getNextTick(final String instanceId, final String callback) {

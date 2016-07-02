@@ -204,15 +204,15 @@
  */
 package com.taobao.weex.bridge;
 
+import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.IWXBridge;
+import com.taobao.weex.utils.WXLogUtils;
 
 /**
  * Communication interface for Java code and JavaScript code.
  */
 class WXBridge implements IWXBridge {
-
-  private static final String TAG = "WXBridge";
 
   /**
    * Init JSFrameWork
@@ -238,16 +238,22 @@ class WXBridge implements IWXBridge {
    * @param tasks
    * @param callback
    */
-  public void callNative(String instanceId, String tasks, String callback) {
+  public int callNative(String instanceId, String tasks, String callback) {
     long start = System.currentTimeMillis();
     if(WXSDKManager.getInstance().getSDKInstance(instanceId)!=null) {
       WXSDKManager.getInstance().getSDKInstance(instanceId).firstScreenCreateInstanceTime(start);
     }
-    WXBridgeManager.getInstance().callNative(instanceId, tasks, callback);
+    int errorCode = WXBridgeManager.getInstance().callNative(instanceId, tasks, callback);
 
     if(WXSDKManager.getInstance().getSDKInstance(instanceId)!=null) {
       WXSDKManager.getInstance().getSDKInstance(instanceId).callNativeTime(System.currentTimeMillis() - start);
     }
+    if(WXEnvironment.isApkDebugable()){
+      if(errorCode == WXBridgeManager.DESTROY_INSTANCE){
+        WXLogUtils.w("destroyInstance :"+instanceId+" JSF must stop callNative");
+      }
+    }
+    return errorCode;
   }
 
   /**

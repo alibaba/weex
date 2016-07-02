@@ -120,9 +120,11 @@ public class DebugBridge implements IWXBridge {
     }
 
     @Override
-    public void callNative(String instanceId, String tasks, String callback) {
+    public int callNative(String instanceId, String tasks, String callback) {
         if (mJsManager != null) {
-            mJsManager.callNative(instanceId, tasks, callback);
+            return  mJsManager.callNative(instanceId, tasks, callback);
+        }else{
+            return WXBridgeManager.INSTANCE_RENDERING_ERROR;
         }
     }
 
