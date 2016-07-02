@@ -2,8 +2,9 @@
 THIS_DIR=$(dirname "$0")
 pushd "$THIS_DIR"
 
-npm run build
+npm run build:native
+npm run build:browser
 npm run serve &
-npm run watch
+npm run dev:examples
 
 popd

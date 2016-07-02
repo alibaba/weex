@@ -111,6 +111,9 @@
 package com.taobao.weex;
 
 import android.app.Application;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.taobao.weex.adapter.IWXHttpAdapter;
@@ -121,7 +124,11 @@ import com.taobao.weex.appfram.navigator.WXNavigatorModule;
 import com.taobao.weex.bridge.ModuleFactory;
 import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.bridge.WXModuleManager;
-import com.taobao.weex.common.*;
+import com.taobao.weex.common.Destroyable;
+import com.taobao.weex.common.TypeModuleFactory;
+import com.taobao.weex.common.WXException;
+import com.taobao.weex.common.WXInstanceWrap;
+import com.taobao.weex.common.WXModule;
 import com.taobao.weex.dom.WXDomModule;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.WXDomRegistry;
@@ -129,6 +136,7 @@ import com.taobao.weex.dom.WXSwitchDomObject;
 import com.taobao.weex.dom.WXTextDomObject;
 import com.taobao.weex.dom.module.WXModalUIModule;
 import com.taobao.weex.http.WXStreamModule;
+import com.taobao.weex.ui.SimpleComponentHolder;
 import com.taobao.weex.ui.WXComponentRegistry;
 import com.taobao.weex.ui.animation.WXAnimationModule;
 import com.taobao.weex.ui.component.WXA;
@@ -156,9 +164,12 @@ import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXSoInstallMgrSdk;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 
 public class WXSDKEngine {
+
+  public static final String JS_FRAMEWORK_RELOAD="js_framework_reload";
 
   private static final String V8_SO_NAME = "weexcore";
   private volatile static boolean init;
@@ -264,10 +275,8 @@ public class WXSDKEngine {
   private static void register() {
     try {
       registerComponent(WXBasicComponentType.TEXT, WXText.class, false);
-      registerComponent(WXBasicComponentType.IMG, WXImage.class, false);
-      registerComponent(WXBasicComponentType.DIV, WXDiv.class, false);
-      registerComponent(WXBasicComponentType.IMAGE, WXImage.class, false);
-      registerComponent(WXBasicComponentType.CONTAINER, WXDiv.class, false);
+      registerComponent(WXDiv.class, false,WXBasicComponentType.CONTAINER,WXBasicComponentType.DIV,WXBasicComponentType.HEADER,WXBasicComponentType.FOOTER);
+      registerComponent(WXImage.class, false,WXBasicComponentType.IMAGE,WXBasicComponentType.IMG);
       registerComponent(WXBasicComponentType.SCROLLER, WXScroller.class, false);
       registerComponent(WXBasicComponentType.SLIDER, WXSlider.class, true);
 
@@ -325,8 +334,13 @@ public class WXSDKEngine {
    */
   public static boolean registerComponent(Class<? extends WXComponent> clazz, boolean appendTree,String ... names) throws WXException {
     boolean result =  true;
+    SimpleComponentHolder holder = new SimpleComponentHolder(clazz);
+    Map<String, String> componentInfo = new HashMap<>();
+    if (appendTree) {
+      componentInfo.put("append", "tree");
+    }
     for(String name:names) {
-      result  = result && WXComponentRegistry.registerComponent(name, clazz, appendTree);
+      result  = result && WXComponentRegistry.registerComponent(name, holder, componentInfo);
     }
     return result;
   }
@@ -338,7 +352,7 @@ public class WXSDKEngine {
    * @param moduleName  module name
    * @param moduleClass module to be registered.
    * @return true for registration success, false for otherwise.
-   * @see {@link WXModuleManager#registerModule(String, ModuleFactory, boolean)}
+   * {@link WXModuleManager#registerModule(String, ModuleFactory, boolean)}
    */
   public static <T extends WXModule> boolean registerModule(String moduleName, Class<T> moduleClass,boolean global) throws WXException {
     return registerModule(moduleName, new TypeModuleFactory(moduleClass),global);
@@ -351,7 +365,7 @@ public class WXSDKEngine {
    * @param moduleName  module name
    * @param factory module factory to be registered. You can override {@link DestroyableModuleFactory#buildInstance()} to customize module creation.
    * @return true for registration success, false for otherwise.
-   * @see {@link WXModuleManager#registerModule(String, ModuleFactory, boolean)}
+   * {@link WXModuleManager#registerModule(String, ModuleFactory, boolean)}
    */
   public static <T extends WXModule> boolean registerModuleWithFactory(String moduleName, DestroyableModuleFactory factory, boolean global) throws WXException {
     return registerModule(moduleName, factory,global);
@@ -394,11 +408,18 @@ public class WXSDKEngine {
   }
 
   public static boolean registerComponent(String type, Class<? extends WXComponent> clazz) throws WXException {
-    return WXComponentRegistry.registerComponent(type, clazz, true);
+    return WXComponentRegistry.registerComponent(type, new SimpleComponentHolder(clazz),new HashMap<String, String>());
   }
 
   public static boolean registerComponent(Map<String, String> componentInfo, Class<? extends WXComponent> clazz) throws WXException {
-    return WXComponentRegistry.registerComponent(componentInfo, clazz);
+    if(componentInfo == null){
+      return false;
+    }
+    String type = componentInfo.get("type");
+    if(TextUtils.isEmpty(type)){
+      return false;
+    }
+    return WXComponentRegistry.registerComponent(type,new SimpleComponentHolder(clazz), componentInfo);
   }
 
   public static void addCustomOptions(String key, String value) {
@@ -471,6 +492,21 @@ public class WXSDKEngine {
       } catch (Exception e) {
         Log.d("weex","WXDebugTool not found!");
       }
+    }
+  }
+  public static void reload(final Application application,boolean remoteDebug){
+    if(remoteDebug){
+      WXEnvironment.sRemoteDebugMode=true;
+      WXBridgeManager.getInstance().restart();
+      WXBridgeManager.getInstance().initScriptsFramework(null);
+      WXModuleManager.reload();
+      WXComponentRegistry.reload();
+      WXSDKManager.getInstance().postOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          LocalBroadcastManager.getInstance(application).sendBroadcast(new Intent(JS_FRAMEWORK_RELOAD));
+        }
+      }, 1000);
     }
   }
 }

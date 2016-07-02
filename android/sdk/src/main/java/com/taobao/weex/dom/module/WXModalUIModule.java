@@ -403,7 +403,10 @@ public class WXModalUIModule extends WXModule {
       builder.setNegativeButton(cancelTitle_f, new OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-          WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId, cancelTitle_f);
+          Map<String, Object> result = new HashMap<String, Object>();
+          result.put(WXConst.RESULT, cancelTitle_f);
+          result.put(WXConst.DATA, editText.getText().toString());
+          WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId, result);
         }
       });
       AlertDialog alertDialog = builder.create();

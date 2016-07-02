@@ -215,6 +215,7 @@ import com.taobao.weex.adapter.DefaultWXHttpAdapter;
 import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
 import com.taobao.weex.adapter.IWXUserTrackAdapter;
+import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.common.OnWXScrollListener;
 import com.taobao.weex.common.WXErrorCode;
 import com.taobao.weex.common.WXPerformance;
@@ -225,6 +226,9 @@ import com.taobao.weex.common.WXResponse;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.http.WXHttpUtil;
 import com.taobao.weex.ui.component.WXComponent;
+
+import com.taobao.weex.ui.component.WXEventType;
+
 import com.taobao.weex.ui.view.WXScrollView;
 import com.taobao.weex.ui.view.WXScrollView.WXScrollViewListener;
 import com.taobao.weex.utils.WXConst;
@@ -261,6 +265,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
   private WXComponent mRootCom;
   private boolean mRendered;
   private WXRefreshData mLastRefreshData;
+  private float refreshMargin = 0;
 
   /**
    * Render strategy.
@@ -616,6 +621,21 @@ public class WXSDKInstance implements IWXActivityStateListener {
     for (IWXActivityStateListener listener : mActivityStateListeners) {
       listener.onActivityPause();
     }
+    onViewDisappear();
+  }
+
+  public void onViewDisappear(){
+    WXComponent comp = getRootCom();
+    if(comp != null) {
+      WXBridgeManager.getInstance().fireEvent(this.mInstanceId, comp.getRef(), WXEventType.VIEWDISAPPEAR, null,null);
+    }
+  }
+
+  public void onViewAppear(){
+    WXComponent comp = getRootCom();
+    if(comp != null) {
+      WXBridgeManager.getInstance().fireEvent(this.mInstanceId, comp.getRef(), WXEventType.VIEWAPPEAR,null, null);
+    }
   }
 
   @Override
@@ -623,6 +643,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
     for (IWXActivityStateListener listener : mActivityStateListeners) {
       listener.onActivityResume();
     }
+    onViewAppear();
   }
 
   @Override
@@ -901,6 +922,14 @@ public class WXSDKInstance implements IWXActivityStateListener {
       mWXScrollListeners=new ArrayList<>();
     }
     mWXScrollListeners.add(wxScrollListener);
+  }
+
+  public float getRefreshMargin() {
+    return refreshMargin;
+  }
+
+  public void setRefreshMargin(float refreshMargin) {
+    this.refreshMargin = refreshMargin;
   }
 
   /**

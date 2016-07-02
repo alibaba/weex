@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/55b9e56234c387b67204e6247ae91378", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/d1aeed9201fa6a0e8db1497773413eb2", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(1);
@@ -53,10 +53,20 @@
 	      onrefresh: function(e) {
 	        var self = this;
 	        self.refresh_display = 'show';
-	        // self.$call('timer', 'setTimeout', function() {
-	        //   self.refresh_display = 'hide';
-	        // },3000);
-	          self.refresh_display = 'hide';
+	        this.$call('modal', 'toast', {
+	          'message': "onrefresh",
+	          'duration': 2
+	        });
+	        self.refresh_display = 'hide';
+	      },
+	      onloading: function(e) {
+	        var self = this;
+	        self.loading_display = 'show';
+	        this.$call('modal', 'toast', {
+	          'message': "onloading",
+	          'duration': 2
+	        });
+	        self.loading_display = 'hide';
 	      },
 	      onappear: function (e) {
 	        var appearId = this.rows[e.target.attr.index].id;
@@ -147,17 +157,26 @@
 	          },
 	          "children": [
 	            {
+	              "type": "loading-indicator",
+	              "style": {
+	                "height": 60,
+	                "width": 60,
+	                "color": "rgb(238,162,54)"
+	              }
+	            },
+	            {
 	              "type": "text",
 	              "classList": [
 	                "refresh-arrow"
 	              ],
+	              "style": {
+	                "textAlign": "center",
+	                "color": "rgb(238,162,54)"
+	              },
 	              "shown": function () {return (this.refresh_display==='hide')},
 	              "attr": {
-	                "value": "↓ Pull To Refresh"
+	                "value": "Pull To Refresh"
 	              }
-	            },
-	            {
-	              "type": "loading-indicator"
 	            }
 	          ]
 	        },
@@ -194,6 +213,42 @@
 	              ]
 	            }
 	          ]
+	        },
+	        {
+	          "type": "loading",
+	          "classList": [
+	            "refresh-view"
+	          ],
+	          "attr": {
+	            "display": function () {return this.loading_display}
+	          },
+	          "events": {
+	            "loading": "onloading"
+	          },
+	          "children": [
+	            {
+	              "type": "text",
+	              "classList": [
+	                "refresh-arrow"
+	              ],
+	              "style": {
+	                "textAlign": "center",
+	                "color": "rgb(238,162,54)"
+	              },
+	              "shown": function () {return (this.refresh_display==='hide')},
+	              "attr": {
+	                "value": "Load more"
+	              }
+	            },
+	            {
+	              "type": "loading-indicator",
+	              "style": {
+	                "height": 60,
+	                "width": 60,
+	                "color": "#3192e1"
+	              }
+	            }
+	          ]
 	        }
 	      ]
 	    },
@@ -211,18 +266,19 @@
 	;__weex_module__.exports.style = __weex_module__.exports.style || {}
 	;Object.assign(__weex_module__.exports.style, {
 	  "list": {
-	    "height": 810,
-	    "borderWidth": 10,
-	    "borderColor": "#FFA500"
+	    "height": 850
 	  },
 	  "count": {
 	    "fontSize": 48,
 	    "margin": 10
 	  },
 	  "refresh-view": {
-	    "height": 80,
+	    "height": 120,
 	    "width": 750,
-	    "justifyContent": "center",
+	    "display": "flex",
+	    "MsFlexAlign": "center",
+	    "WebkitAlignItems": "center",
+	    "WebkitBoxAlign": "center",
 	    "alignItems": "center"
 	  },
 	  "refresh-arrow": {
@@ -246,7 +302,7 @@
 	  }
 	})
 	})
-	;__weex_bootstrap__("@weex-component/55b9e56234c387b67204e6247ae91378", {
+	;__weex_bootstrap__("@weex-component/d1aeed9201fa6a0e8db1497773413eb2", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -1002,7 +1058,7 @@
 	    {
 	      "type": "image",
 	      "classList": [
-	        "right-image"
+	        "left-image"
 	      ],
 	      "attr": {
 	        "naviItemPosition": "right",
@@ -1097,14 +1153,14 @@
 	  "left-image": {
 	    "position": "absolute",
 	    "bottom": 20,
-	    "left": 28,
+	    "right": 28,
 	    "width": 50,
 	    "height": 50
 	  },
 	  "right-image": {
 	    "position": "absolute",
 	    "bottom": 20,
-	    "right": 28,
+	    "left": 28,
 	    "width": 50,
 	    "height": 50
 	  }

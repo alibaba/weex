@@ -6,4 +6,4 @@ Weex Modal Demo
 
 ## weex code
 
-See [modal example](https://github.com/alibaba/weex/tree/master/examples/modal.we).
+See [modal example](https://github.com/alibaba/weex/tree/dev/examples/module/modal.we).

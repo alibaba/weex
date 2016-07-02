@@ -138,7 +138,6 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
-import com.alibaba.fastjson.JSON;
 import com.taobao.weex.IWXActivityStateListener;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
@@ -149,20 +148,21 @@ import com.taobao.weex.common.IWXObject;
 import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.dom.flex.CSSLayout;
 import com.taobao.weex.dom.flex.Spacing;
-import com.taobao.weex.ui.ComponentHolder;
-import com.taobao.weex.ui.WXComponentRegistry;
+import com.taobao.weex.ui.IFComponentHolder;
 import com.taobao.weex.ui.component.list.WXListComponent;
 import com.taobao.weex.ui.view.WXBackgroundDrawable;
 import com.taobao.weex.ui.view.WXCircleIndicator;
 import com.taobao.weex.ui.view.gesture.WXGesture;
 import com.taobao.weex.ui.view.gesture.WXGestureObservable;
 import com.taobao.weex.ui.view.gesture.WXGestureType;
-import com.taobao.weex.ui.view.listview.BounceRecyclerView;
-import com.taobao.weex.utils.*;
+import com.taobao.weex.utils.WXLogUtils;
+import com.taobao.weex.utils.WXReflectionUtils;
+import com.taobao.weex.utils.WXResourceUtils;
+import com.taobao.weex.utils.WXUtils;
+import com.taobao.weex.utils.WXViewUtils;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -199,8 +199,7 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
   private int mPreRealLeft = 0;
   private int mPreRealTop = 0;
   private WXGesture wxGesture;
-  private ComponentHolder mHolder;
-
+  private IFComponentHolder mHolder;
   private boolean isUsing = false;
 
   @Deprecated
@@ -219,7 +218,7 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     ++mComponentNum;
   }
 
-  public void setHolder(ComponentHolder holder){
+  public void bindHolder(IFComponentHolder holder){
     mHolder = holder;
   }
 
@@ -276,6 +275,25 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     }
 
     mDomObj = domObject;
+
+    if (this instanceof WXRefresh && mParent instanceof WXRefreshableContainer &&
+        isOuterRefreshableContainer(mParent)) {
+      mInstance.setRefreshMargin(mDomObj.csslayout.dimensions[CSSLayout.DIMENSION_HEIGHT]);
+    }
+    if ((this instanceof WXBaseRefresh && mParent instanceof WXRefreshableContainer)) {
+      return;
+    }
+
+    if (mParent instanceof WXRefreshableContainer && isOuterRefreshableContainer(mParent)) {
+      if (!(this instanceof WXBaseRefresh)) {
+          CSSLayout newLayout = new CSSLayout();
+          newLayout.copy(mDomObj.csslayout);
+          newLayout.position[CSSLayout.POSITION_TOP] = mDomObj.csslayout.position[CSSLayout
+              .POSITION_TOP] - mInstance.getRefreshMargin();
+          mDomObj.csslayout.copy(newLayout);
+      }
+    }
+
     Spacing parentPadding = mParent.getDomObject().getPadding();
     Spacing parentBorder = mParent.getDomObject().getBorder();
     Spacing margin = mDomObj.getMargin();
@@ -352,12 +370,9 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
       params.setMargins(realLeft, realTop, realRight, realBottom);
       mHost.setLayoutParams(params);
     } else if (mParent.getRealView() instanceof ScrollView) {
-      ScrollView.LayoutParams params = new ScrollView.LayoutParams(realWidth, realHeight);
-      params.setMargins(realLeft, realTop, realRight, realBottom);
-      mHost.setLayoutParams(params);
-    } else if (mParent.getRealView() instanceof BounceRecyclerView) {
-//      mHost.setLayoutParams(new ViewGroup.LayoutParams(realWidth, realHeight));
-      //todo Nothing
+//      ScrollView.LayoutParams params = new ScrollView.LayoutParams(realWidth, realHeight);
+//      params.setMargins(realLeft, realTop, realRight, realBottom);
+//      mHost.setLayoutParams(params);
     }
 
     mPreRealWidth = realWidth;
@@ -915,9 +930,11 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
   }
 
   public void notifyAppearStateChange(String wxEventType,String direction){
-    Map<String, Object> params = new HashMap<>();
-    params.put("direction", direction);
-    WXBridgeManager.getInstance().fireEvent(mInstanceId,getRef(),wxEventType,params);
+    if(getDomObject().containsEvent(WXEventType.APPEAR) || getDomObject().containsEvent(WXEventType.DISAPPEAR)) {
+      Map<String, Object> params = new HashMap<>();
+      params.put("direction", direction);
+      WXBridgeManager.getInstance().fireEvent(mInstanceId, getRef(), wxEventType, params,null);
+    }
   }
 
   public boolean isUsing() {
@@ -932,5 +949,15 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
 
     public int width;
     public int height;
+  }
+
+  public boolean isOuterRefreshableContainer(WXComponent component) {
+    if (component.getParent() == null) {
+      return true;
+    } else if (component.getParent() instanceof WXRefreshableContainer) {
+      return false;
+    } else {
+      return isOuterRefreshableContainer(component.getParent());
+    }
   }
 }

@@ -212,6 +212,7 @@ import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.common.*;
+import com.taobao.weex.utils.WXJsonUtils;
 import com.taobao.weex.utils.WXLogUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -275,24 +276,24 @@ public class WXStreamModule extends WXModule {
   /**
    *
    * @param optionsStr request options include:
-   *  <li>method: GET 、POST</li>
-   *  <li>headers：object，请求header</li>
-   *  <li>url:</li>
-   *  <li>body: "Any body that you want to add to your request"</li>
-   *  <li>type: json、text、jsonp（native实现时等价与json）</li>
+   *  method: GET 、POST
+   *  headers：object，请求header
+   *  url:
+   *  body: "Any body that you want to add to your request"
+   *  type: json、text、jsonp（native实现时等价与json）
    * @param callback finished callback,response object:
-   *  <li>status：status code</li>
-   *  <li>ok：boolean 是否成功，等价于status200～299</li>
-   *  <li>statusText：状态消息，用于定位具体错误原因</li>
-   *  <li>data: 响应数据，当请求option中type为json，时data为object，否则data为string类型</li>
-   *  <li>headers: object 响应头</li>
+   *  status：status code
+   *  ok：boolean 是否成功，等价于status200～299
+   *  statusText：状态消息，用于定位具体错误原因
+   *  data: 响应数据，当请求option中type为json，时data为object，否则data为string类型
+   *  headers: object 响应头
    *
    * @param progressCallback in progress callback,for download progress and request state,response object:
-   *  <li>readyState: number 请求状态，1 OPENED，开始连接；2 HEADERS_RECEIVED；3 LOADING</li>
-   *  <li>status：status code</li>
-   *  <li>length：当前获取的字节数，总长度从headers里「Content-Length」获取</li>
-   *  <li>statusText：状态消息，用于定位具体错误原因</li>
-   *  <li>headers: object 响应头</li>
+   *  readyState: number 请求状态，1 OPENED，开始连接；2 HEADERS_RECEIVED；3 LOADING
+   *  status：status code
+   *  length：当前获取的字节数，总长度从headers里「Content-Length」获取
+   *  statusText：状态消息，用于定位具体错误原因
+   *  headers: object 响应头
    */
   @WXModuleAnno
   public void fetch(String optionsStr, final JSCallback callback, JSCallback progressCallback){
@@ -327,7 +328,8 @@ public class WXStreamModule extends WXModule {
             .setType(type);
 
     extractHeaders(headers,builder);
-    sendRequest(builder.createOptions(), new ResponseCallback() {
+    final Options options = builder.createOptions();
+    sendRequest(options, new ResponseCallback() {
       @Override
       public void onResponse(WXResponse response, Map<String, String> headers) {
         if(callback != null) {
@@ -342,10 +344,10 @@ public class WXStreamModule extends WXModule {
             if (response.originalData == null) {
               resp.put("data", null);
             } else {
-              resp.put("data",
-                readAsString(response.originalData,
-                  headers!=null?headers.get("Content-Type"):""
-                ));
+              String respData = readAsString(response.originalData,
+                headers!=null?headers.get("Content-Type"):""
+              );
+              resp.put("data",options.getType() != Options.Type.text? JSONObject.parse(respData):respData);
             }
             resp.put(STATUS_TEXT, Status.getStatusText(response.statusCode));
           }

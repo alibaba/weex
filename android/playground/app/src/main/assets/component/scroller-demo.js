@@ -44,14 +44,26 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/a204cde00bc50b492f77c720b70c7420", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/ba54782e95d6a294a75a9df39824e036", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(1);
 	  __weex_module__.exports = {
 	    methods: {
+	      onrefresh: function(e) {
+	        var self = this;
+	        self.refresh_display = 'show';
+	        self.refresh_display = 'hide';
+	      },
+	      onloading: function(e) {
+	        var self = this;
+	        self.loading_display = 'show';
+	        self.loading_display = 'hide';
+	      }
 	    },
 	    data: function () {return {
+	      refresh_display: 'hide',
+	      loading_display: 'hide',
 	      sections: [
 	        {
 	          title: 'Header 1',
@@ -73,7 +85,9 @@
 	            {id: 10},
 	            {id: 11}
 	          ]
-	        },
+	        }
+	      ],
+	      moreSections: [
 	        {
 	          title: 'Header 3',
 	          items: [
@@ -114,9 +128,9 @@
 	            {id: 31},
 	            {id: 32}
 	          ]
-	        }
+	        },
 	      ]
-	    }}
+	    }},
 	  }
 
 	;__weex_module__.exports.template = __weex_module__.exports.template || {}
@@ -125,7 +139,45 @@
 	  "classList": [
 	    "list"
 	  ],
+	  "attr": {
+	    "append＝\"tree\"": ""
+	  },
 	  "children": [
+	    {
+	      "type": "refresh",
+	      "classList": [
+	        "refresh-view"
+	      ],
+	      "attr": {
+	        "display": function () {return this.refresh_display}
+	      },
+	      "events": {
+	        "refresh": "onrefresh"
+	      },
+	      "children": [
+	        {
+	          "type": "loading-indicator",
+	          "style": {
+	            "height": 60,
+	            "width": 60
+	          }
+	        },
+	        {
+	          "type": "text",
+	          "classList": [
+	            "refresh-arrow"
+	          ],
+	          "style": {
+	            "textAlign": "center",
+	            "color": "rgb(238,162,54)"
+	          },
+	          "shown": function () {return (this.refresh_display==='hide')},
+	          "attr": {
+	            "value": "Pull To Refresh"
+	          }
+	        }
+	      ]
+	    },
 	    {
 	      "type": "div",
 	      "classList": [
@@ -169,11 +221,56 @@
 	          ]
 	        }
 	      ]
+	    },
+	    {
+	      "type": "loading",
+	      "classList": [
+	        "loading-view"
+	      ],
+	      "attr": {
+	        "display": function () {return this.loading_display}
+	      },
+	      "events": {
+	        "loading": "onloading"
+	      },
+	      "children": [
+	        {
+	          "type": "loading-indicator",
+	          "style": {
+	            "height": 60,
+	            "width": 60
+	          }
+	        }
+	      ]
 	    }
 	  ]
 	})
 	;__weex_module__.exports.style = __weex_module__.exports.style || {}
 	;Object.assign(__weex_module__.exports.style, {
+	  "refresh-view": {
+	    "height": 120,
+	    "width": 750,
+	    "display": "flex",
+	    "MsFlexAlign": "center",
+	    "WebkitAlignItems": "center",
+	    "WebkitBoxAlign": "center",
+	    "alignItems": "center"
+	  },
+	  "refresh-arrow": {
+	    "fontSize": 30,
+	    "color": "#45b5f0"
+	  },
+	  "loading-view": {
+	    "height": 80,
+	    "width": 750,
+	    "justifyContent": "center",
+	    "alignItems": "center"
+	  },
+	  "indicator": {
+	    "height": 40,
+	    "width": 40,
+	    "color": "#45b5f0"
+	  },
 	  "header": {
 	    "backgroundColor": "#45b5f0",
 	    "padding": 20,
@@ -193,7 +290,7 @@
 	  }
 	})
 	})
-	;__weex_bootstrap__("@weex-component/a204cde00bc50b492f77c720b70c7420", {
+	;__weex_bootstrap__("@weex-component/ba54782e95d6a294a75a9df39824e036", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 

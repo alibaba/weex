@@ -1,6 +1,6 @@
-# import Weex Android to your project
+# Integrate to Android
 
-You will need to build Weex from source if you want to work on a new feature/bug fix, try out the latest features which are not released yet, or maintain your own fork with patches that cannot be merged to the core.
+When you need to use the new features or to customize specific features, you can rely on the Source SDK for development。
 
 ## Prerequisites
 
@@ -13,7 +13,7 @@ Make sure you have the following installed:
 3. Android Support Repository >= 17 (for Android Support Library)
 4. Android NDK (download & extraction instructions [here](http://developer.android.com/ndk/downloads/index.html))
 
-Point Gradle to your Android SDK: either have `$ANDROID_SDK` and `$ANDROID_NDK ` defined, or create a local.properties file in the root of your react-native checkout with the following contents:
+Point Gradle to your Android SDK: either have `$ANDROID_SDK` and `$ANDROID_NDK ` defined, or create a local.properties file in the root of your weex checkout with the following contents:
 
 ```
 sdk.dir=absolute_path_to_android_sdk
@@ -23,8 +23,8 @@ ndk.dir=absolute_path_to_android_ndk
 Example:
 
 ```
-sdk.dir=/Users/your_unix_name/android-sdk-macosx
-ndk.dir=/Users/your_unix_name/android-ndk/android-ndk-r10e
+sdk.dir=/Users/your_name/android-sdk-macosx
+ndk.dir=/Users/your_name/android-ndk-r10e
 ```
 
 
@@ -49,7 +49,7 @@ project(':weex_sdk_android').projectDir = new File(
     rootProject.projectDir, '../weex_sdk_android')
 ```
 
-Modify your `android/app/build.gradle` to use the `:weex_sdk_android` project instead of the pre-compiled library, e.g. - replace `compile 'com.taobao.android:weex_sdk:1.3.+'` with `compile project(':weex_sdk_android')`:
+Modify your `android/app/build.gradle` to use the `:weex_sdk_android` project instead of the pre-compiled library, e.g. - replace `compile 'com.taobao.android:weex_sdk:0.4.1` with `compile project(':weex_sdk_android')`:
 
 ```gradle
 dependencies {
@@ -62,7 +62,7 @@ dependencies {
 }
 ```
 
-#### 3. Making 3rd-party modules use your fork
+#### 3. Making 3rd-party modules use your project
 
 If you use 3rd-party weex modules, you need to override their dependencies so that they don't build the pre-compiled library. Otherwise you'll get an error while compiling - `Error: more than one library with package name 'com.taobao.weex'`.
 
@@ -74,19 +74,27 @@ compile(project(':weex-custom-module')) {
 }
 ```
 
+#### 4、How to load local Your Js bundle in the directory of Android assets
+Besides load a Js Bundle online, you also can load the js bundle from the directory of Android assets.
+
+For Example:
+  
+   ```   
+   String yourbundleStr =  WXFileUtils.loadFileContent("yourBundle.js", context);
+   WXSDKInstance.render(TAG, yourbundleStr, options, null, width, Height, WXRenderStrategy.APPEND_ASYNC);
+  ```
+
+
 ## Building from Android Studio
 
-From the Welcome screen of Android Studio choose "Import project" and select the `android` folder of your app.
+From the Welcome screen of Android Studio choose "Import project" and select the `playground` folder of your app.
 
 You should be able to use the _Run_ button to run your app on a device. 
-## Additional notes
 
-Since the packet size limit is currently only compiled arm , X86 does not support.
+## Tip
+1. Since the packet size limit is currently only compiled arm , X86 does not support.
 
-
-## Troubleshooting
-
-Gradle build fails in `ndk-build`. See the section about `local.properties` file above.
+2. Gradle build fails in `ndk-build`. See the section about `local.properties` file above.
 
 #Quick access
  
@@ -96,15 +104,14 @@ Gradle build fails in `ndk-build`. See the section about `local.properties` file
 
 ## Prepare your app
 
-In your app's `build.gradle` file add the React Native dependency:
+In your app's `build.gradle` file add the WEEX dependency:
 
-    compile 'com.taobao.weex:weex_sdk:1.3.+'
+    compile 'com.taobao.android:weex_sdk:0.4.1'
 
-You can find the latest version of the react-native library on [Maven Central](). Next, make sure you have the Internet permission in your `AndroidManifest.xml`:
+You can find the latest version of the WEEX library on [jcenter](https://bintray.com/search?query=weex_sdk&forceAgnostic=true). Next, make sure you have the Internet permission in your `AndroidManifest.xml`:
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-This is only really used in dev mode when reloading JavaScript from the development server, so you can strip this in release builds if you need to.
 
 ## Add native code
 

@@ -1,4 +1,5 @@
-##Extend to Android 
+##Extend to Android
+<span class="weex-version">0.4</span>
  
 ### Module extend
 weex sdk support Moulde extend,

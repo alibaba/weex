@@ -2,14 +2,18 @@
   <div>
     <list class="list">
       <refresh class="refresh-view" display="{{refresh_display}}" onrefresh="onrefresh">
-        <text class="refresh-arrow" if="{{(refresh_display==='hide')}}">↓ Pull To Refresh</text>
-        <loading-indicator></loading-indicator>
+        <loading-indicator style="height:60;width:60;color:rgb(238, 162, 54)"></loading-indicator>
+        <text class="refresh-arrow" style="text-align: center; color:rgb(238, 162, 54)" if="{{(refresh_display==='hide')}}">Pull To Refresh</text>
       </refresh>
       <cell onappear="onappear" ondisappear="ondisappear" class="row" repeat="{{rows}}" index="{{$index}}">
         <div class="item">
           <text class="item-title">row {{id}}</text>
         </div>
       </cell>
+      <loading class="refresh-view" display="{{loading_display}}" onloading="onloading">
+        <text class="refresh-arrow" style="text-align: center; color:rgb(238, 162, 54)" if="{{(refresh_display==='hide')}}">Load more</text>
+        <loading-indicator style="height:60;width:60;color:#3192e1"></loading-indicator>
+      </loading>
     </list>
     <text class="count" value="Appear items:{{appearMin}} - {{appearMax}}"></text>
   </div>
@@ -17,18 +21,21 @@
 
 <style>
   .list {
-    height: 810px;
-    border-width: 10px;
-    border-color: orange;
+    height:850px
   }
   .count {
     font-size: 48px;
     margin:10px;
   }
   .refresh-view {
-    height: 80px;
+    height: 120px;
     width: 750px;
-    justify-content: center;
+    display: -ms-flex;
+    display: -webkit-flex;
+    display: flex;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
     align-items: center;
   }
   .refresh-arrow {
@@ -52,7 +59,6 @@
   }
   .item-title {
   }
-
 </style>
 
 <script>
@@ -62,10 +68,20 @@
       onrefresh: function(e) {
         var self = this;
         self.refresh_display = 'show';
-        // self.$call('timer', 'setTimeout', function() {
-        //   self.refresh_display = 'hide';
-        // },3000);
-          self.refresh_display = 'hide';
+        this.$call('modal', 'toast', {
+          'message': "onrefresh",
+          'duration': 2
+        });
+        self.refresh_display = 'hide';
+      },
+      onloading: function(e) {
+        var self = this;
+        self.loading_display = 'show';
+        this.$call('modal', 'toast', {
+          'message': "onloading",
+          'duration': 2
+        });
+        self.loading_display = 'hide';
       },
       onappear: function (e) {
         var appearId = this.rows[e.target.attr.index].id;
