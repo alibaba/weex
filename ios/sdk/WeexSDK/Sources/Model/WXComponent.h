@@ -273,7 +273,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @param eventName The removed event's name
  * @discussion It can be overrided to handle specific event removing. The method is called on the main thread.
  **/
-- (void)removeEvent:(NSString *)evetName;
+- (void)removeEvent:(NSString *)eventName;
 
 ///--------------------------------------
 /// @name Display
