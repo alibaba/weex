@@ -62,6 +62,12 @@ export function _build () {
  * @param {object}       meta
  */
 export function _compile (target, dest, meta) {
+  const app = this._app || {}
+
+  if (app.lastSignal === -1) {
+    return
+  }
+
   const context = this
   if (context._targetIsFragment(target)) {
     context._compileFragment(target, dest, meta)
@@ -341,20 +347,18 @@ export function _compileNativeComponent (template, dest, type) {
   }
 
   const treeMode = template.append === 'tree'
-  let lastSignal
-  if (!treeMode) {
+  const app = this._app || {}
+  if (app.lastSignal !== -1 && !treeMode) {
     _.debug('compile to append single node for', element)
-    lastSignal = this._attachTarget(element, dest)
+    app.lastSignal = this._attachTarget(element, dest)
   }
-  if (lastSignal !== -1) {
-    lastSignal = this._compileChildren(template, element)
+  if (app.lastSignal !== -1) {
+    this._compileChildren(template, element)
   }
-  if (lastSignal !== -1 && treeMode) {
+  if (app.lastSignal !== -1 && treeMode) {
     _.debug('compile to append whole tree for', element)
-    lastSignal = this._attachTarget(element, dest)
+    app.lastSignal = this._attachTarget(element, dest)
   }
-
-  return lastSignal
 }
 
 /**
@@ -364,14 +368,13 @@ export function _compileNativeComponent (template, dest, type) {
  * @param {object} dest
  */
 export function _compileChildren (template, dest) {
+  const app = this._app || {}
   const children = template.children
   if (children && children.length) {
-    let lastSignal
     children.every((child) => {
-      lastSignal = this._compile(child, dest) !== -1
-      return lastSignal
+      this._compile(child, dest)
+      return app.lastSignal !== -1
     })
-    return lastSignal
   }
 }
 
