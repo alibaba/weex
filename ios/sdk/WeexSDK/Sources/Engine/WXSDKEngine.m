@@ -183,4 +183,8 @@
     [[WXSDKManager bridgeMgr] connectToWebSocket:[NSURL URLWithString:URL]];
 }
 
++ (void)connectDevToolServer:(NSString *)URL {
+    [[WXSDKManager bridgeMgr] connectToDevToolWithUrl:[NSURL URLWithString:URL]];
+}
+
 @end

@@ -210,6 +210,13 @@ do{\
     [self callBack:instanceId funcId:funcId params:params keepAlive:NO];
 }
 
+- (void)connectToDevToolWithUrl:(NSURL *)url {
+    __weak typeof(self) weakSelf = self;
+    WXPerformBlockOnBridgeThread(^(){
+        [weakSelf.bridgeCtx connectToDevToolWithUrl:url];
+    });
+}
+
 - (void)connectToWebSocket:(NSURL *)url
 {
     __weak typeof(self) weakSelf = self;
