@@ -209,6 +209,7 @@ package com.taobao.weex.common;
  */
 public interface IWXDebugProxy {
     void start();
+    void stop();
     IWXBridge getWXBridge();
 
 }

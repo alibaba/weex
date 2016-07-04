@@ -1,9 +1,6 @@
 package com.taobao.weex.devtools.inspector.protocol.module;
 
-import android.util.Log;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
+import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.devtools.debug.DebugBridge;
 import com.taobao.weex.devtools.inspector.jsonrpc.JsonRpcPeer;
 import com.taobao.weex.devtools.inspector.protocol.ChromeDevtoolsDomain;
@@ -13,7 +10,6 @@ import com.taobao.weex.devtools.json.annotation.JsonProperty;
 
 import org.json.JSONObject;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
@@ -49,6 +45,11 @@ public class WxDebug implements ChromeDevtoolsDomain {
 //                e.printStackTrace();
 //            }
 //        }
+    }
+
+    @ChromeDevtoolsMethod
+    public void reload(JsonRpcPeer peer, JSONObject params) {
+        WXSDKEngine.reload();
     }
 
     public static class CallNative {
