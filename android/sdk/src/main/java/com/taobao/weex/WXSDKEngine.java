@@ -159,6 +159,7 @@ import com.taobao.weex.ui.component.WXWeb;
 import com.taobao.weex.ui.component.list.HorizontalListComponent;
 import com.taobao.weex.ui.component.list.WXCell;
 import com.taobao.weex.ui.component.list.WXListComponent;
+import com.taobao.weex.ui.module.WXTimerModule;
 import com.taobao.weex.ui.module.WXWebViewModule;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXSoInstallMgrSdk;
@@ -301,6 +302,7 @@ public class WXSDKEngine {
       registerModule("webview", WXWebViewModule.class, true);
       registerModule("navigator", WXNavigatorModule.class);
       registerModule("stream", WXStreamModule.class);
+      registerModule("timer", WXTimerModule.class, true);
 
       registerDomObject(WXBasicComponentType.TEXT, WXTextDomObject.class);
       registerDomObject(WXBasicComponentType.INPUT, WXTextDomObject.class);

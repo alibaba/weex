@@ -157,6 +157,7 @@ import com.taobao.weex.ui.view.WXCircleIndicator;
 import com.taobao.weex.ui.view.gesture.WXGesture;
 import com.taobao.weex.ui.view.gesture.WXGestureObservable;
 import com.taobao.weex.ui.view.gesture.WXGestureType;
+import com.taobao.weex.ui.view.refresh.wrapper.BounceRecyclerView;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXReflectionUtils;
 import com.taobao.weex.utils.WXResourceUtils;
@@ -370,8 +371,12 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
       params.setMargins(realLeft, realTop, realRight, realBottom);
       mHost.setLayoutParams(params);
     } else if (mParent.getRealView() instanceof ScrollView) {
-//      ScrollView.LayoutParams params = new ScrollView.LayoutParams(realWidth, realHeight);
-//      params.setMargins(realLeft, realTop, realRight, realBottom);
+      ScrollView.LayoutParams params = new ScrollView.LayoutParams(realWidth, realHeight);
+      params.setMargins(realLeft, realTop, realRight, realBottom);
+      mHost.setLayoutParams(params);
+    } else if (mParent.getRealView() instanceof BounceRecyclerView) {
+//      RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(realWidth, realHeight);
+//      params.setMargins(realLeft, 0, realRight, 0);
 //      mHost.setLayoutParams(params);
     }
 
