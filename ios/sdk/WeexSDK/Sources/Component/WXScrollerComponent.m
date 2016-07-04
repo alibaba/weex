@@ -76,9 +76,11 @@
 
         _scrollerCSSNode = new_css_node();
         
-        if ((isUndefined(self.cssNode->style.dimensions[CSS_WIDTH])
-             || isUndefined(self.cssNode->style.dimensions[CSS_HEIGHT]))
-            && self.cssNode->style.flex <= 0.0) {
+        if ((_scrollDirection == WXScrollDirectionVertical &&
+            isUndefined(self.cssNode->style.dimensions[CSS_HEIGHT])) ||
+            (_scrollDirection == WXScrollDirectionHorizontal &&
+            isUndefined(self.cssNode->style.dimensions[CSS_WIDTH])) &&
+            self.cssNode->style.flex <= 0.0) {
             self.cssNode->style.flex = 1.0;
         }
     }
