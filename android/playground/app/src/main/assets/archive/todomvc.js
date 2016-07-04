@@ -44,88 +44,375 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/68879256ba42111f367fee429a2900a8", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/65e49644e57427997c3aac05836557dd", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
-	  __webpack_require__(1);
+	    // 引入button
+	    __webpack_require__(1);
 
-	  __weex_module__.exports = {
-	    data: function () {return {
-	      marquee: {
-	        height: 30,
-	        duration: 1500,
-	        interval: 2000,
-	        list: [
-	          {text: 'Introducing Bots on Messenger'},
-	          {text: 'Capturing 3D 360-Stereo VR Video'},
-	          {text: 'The Future of Video on Facebook'},
-	          {text: 'Announcing Vue.js 2.0'},
-	          {text: 'Not Your Average Virtual-DOM'},
-	          {text: 'Templates, JSX, or Hyperscript?'}
-	        ]
-	      }
-	    }},
-	    ready: function() {
-	      this.initMarquee('marquee');
-	    },
-	    methods: {
-	      initMarquee: function(id) {
-	        var self = this;
+	    // 用来在循环中生成index值
+	    var uid = 0;
 
-	        var $marquee = this.$vm(id);
-	        $marquee.$on('change', function() {
-	          console.log('marquee change');
-	        });
-	      }
+	    __weex_module__.exports = {
+	        "data":{
+	            itemsStatus:0,
+	            todos:[
+	                {
+	                    "todoUid":uid++,
+	                    "status":"item-done",
+	                    "content":"xxxxxx",
+	                    "disableStatus":true
+	                },
+	                {
+	                    "todoUid":uid++,
+	                    "status":"item-doing",
+	                    "content":"yyyyyy",
+	                    "disableStatus":true
+	                }
+	            ]
+	        },
+	        methods:{
+	            showAll: function() {
+
+	            },
+	            showOpened: function() {
+
+	            },
+	            showComplete: function() {
+
+	            },
+	            cleanCompletedTodos: function() {
+
+	            },
+	            finishInput: function(e) {
+	//                this.$call('modal', 'alert', {
+	//                    'message': "this is an debug tip",
+	//                    'okTitle': "OK",
+	//                    'cancelTitle': "cancel"
+	//                    }, function() {
+	//                });
+	//                return;
+	                var txt = e.value;
+
+	                if (txt.trim().length>0) {
+	                    this.todos.push({
+	                        "todoUid":uid++,
+	                        "status":"item-doing",
+	                        "content":txt.trim(),
+	                        "disableStatus":true
+	                    });
+	                    e.target.attr['value'] = '';
+	                }
+	            },
+	            editItem: function(e) {
+	                var todoUid= e.target.attr['todouid'];
+	                this.__enableItemByUid(todoUid);
+	                // 无法主动的focus到input上面
+	            },
+	            delItem: function(e) {
+	                var todoUid= parseInt(e.target.attr['todouid'],10);
+	                this.__removeItemByUid(todoUid);
+	            },
+	            __enableItemByUid: function(uid) {
+	                var idxInTodos = this.__findTodoIndexByUid(uid);
+	                this.todos[idxInTodos].disableStatus = false;
+	            },
+	            __findTodoIndexByUid: function(uid) {
+	                var result = -1;
+	                for (var i = 0;i < this.todos.length;i++) {
+	                    if (uid === this.todos[i].todoUid) {
+	                        result = i;
+	                        break;
+	                    }
+	                }
+	                return result;
+	            },
+	            __removeItemByUid:function(uid) {
+	                var idxInTodos = this.__findTodoIndexByUid(uid);
+	                this.todos.splice(idxInTodos,1);
+	            }
+	        },
+	        created: function() {
+	            this.itemsStatus = 1;
+	        }
 	    }
-	  }
 
-	;__weex_module__.exports.template={
-	  "type": "scroller",
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
+	  "type": "list",
+	  "classList": [
+	    "todo-list"
+	  ],
 	  "children": [
 	    {
-	      "type": "wxc-panel",
-	      "attr": {
-	        "title": "Marquee"
-	      },
+	      "type": "cell",
+	      "append": "tree",
 	      "children": [
 	        {
-	          "type": "wxc-marquee",
-	          "id": "marquee",
-	          "style": {
-	            "width": 700,
-	            "height": function () {return this.marquee.height*2},
-	            "backgroundColor": "rgb(223,240,216)",
-	            "borderRadius": 8,
-	            "paddingLeft": 10,
-	            "paddingRight": 10
-	          },
-	          "attr": {
-	            "step": function () {return this.marquee.height*2},
-	            "count": function () {return this.marquee.list.length},
-	            "interval": function () {return this.marquee.interval},
-	            "duration": function () {return this.marquee.duration}
-	          },
+	          "type": "div",
+	          "classList": [
+	            "app-title-wrap"
+	          ],
+	          "children": [
+	            {
+	              "type": "text",
+	              "classList": [
+	                "app-title"
+	              ],
+	              "attr": {
+	                "value": "todos"
+	              }
+	            }
+	          ]
+	        }
+	      ]
+	    },
+	    {
+	      "type": "cell",
+	      "append": "tree",
+	      "children": [
+	        {
+	          "type": "div",
+	          "classList": [
+	            "todo-area"
+	          ],
 	          "children": [
 	            {
 	              "type": "div",
-	              "repeat": function () {return this.marquee.list},
-	              "style": {
-	                "height": function () {return this.marquee.height*this.marquee.length},
-	                "paddingTop": function () {return this.marquee.height*0.5},
-	                "paddingBottom": function () {return this.marquee.height*0.5},
-	                "overflow": "hidden"
-	              },
+	              "classList": [
+	                "todo-input-wrap"
+	              ],
+	              "children": [
+	                {
+	                  "type": "div",
+	                  "classList": [
+	                    "finish-toggle"
+	                  ],
+	                  "children": [
+	                    {
+	                      "type": "image",
+	                      "shown": function () {return this.itemsStatus===1},
+	                      "style": {
+	                        "width": 45,
+	                        "height": 30
+	                      },
+	                      "attr": {
+	                        "src": "https://gw.alicdn.com/tfs/TB1CnoDJFXXXXb6XVXXXXXXXXXX-77-51.jpg"
+	                      }
+	                    },
+	                    {
+	                      "type": "image",
+	                      "shown": function () {return this.itemsStatus===2},
+	                      "style": {
+	                        "width": 45,
+	                        "height": 30
+	                      },
+	                      "attr": {
+	                        "src": "https://gw.alicdn.com/tfs/TB1CnoDJFXXXXb6XVXXXXXXXXXX-77-51.jpg"
+	                      }
+	                    }
+	                  ]
+	                },
+	                {
+	                  "type": "input",
+	                  "classList": [
+	                    "todo-input"
+	                  ],
+	                  "attr": {
+	                    "type": "text",
+	                    "placeholder": "What needs to be done?"
+	                  },
+	                  "events": {
+	                    "change": "finishInput"
+	                  }
+	                },
+	                {
+	                  "type": "div",
+	                  "classList": [
+	                    "blank"
+	                  ]
+	                }
+	              ]
+	            }
+	          ]
+	        }
+	      ]
+	    },
+	    {
+	      "type": "cell",
+	      "append": "tree",
+	      "children": [
+	        {
+	          "type": "div",
+	          "classList": [
+	            "todo-item"
+	          ],
+	          "repeat": function () {return this.todos},
+	          "children": [
+	            {
+	              "type": "div",
+	              "classList": [
+	                "todo-status-done"
+	              ],
+	              "children": [
+	                {
+	                  "type": "image",
+	                  "shown": function () {return this.status==='item-doing'},
+	                  "style": {
+	                    "width": 70,
+	                    "height": 70
+	                  },
+	                  "attr": {
+	                    "src": "https://gw.alicdn.com/tfs/TB1Xr3GJFXXXXbmXVXXXXXXXXXX-153-153.jpg"
+	                  }
+	                },
+	                {
+	                  "type": "image",
+	                  "shown": function () {return this.status==='item-done'},
+	                  "style": {
+	                    "width": 70,
+	                    "height": 70
+	                  },
+	                  "attr": {
+	                    "src": "https://gw.alicdn.com/tfs/TB1pAg1JFXXXXX8XpXXXXXXXXXX-153-153.jpg"
+	                  }
+	                }
+	              ]
+	            },
+	            {
+	              "type": "input",
+	              "classList": function () {return ['todo-input', 'todo-content', this.status]},
+	              "attr": {
+	                "disabled": function () {return this.disableStatus},
+	                "type": "text",
+	                "value": function () {return this.content}
+	              }
+	            },
+	            {
+	              "type": "div",
+	              "classList": [
+	                "item-control"
+	              ],
+	              "children": [
+	                {
+	                  "type": "image",
+	                  "classList": [
+	                    "item-control-btn"
+	                  ],
+	                  "attr": {
+	                    "todouid": function () {return this.todoUid},
+	                    "src": "https://gw.alicdn.com/tfs/TB1gME_JFXXXXcmXpXXXXXXXXXX-48-48.jpg"
+	                  },
+	                  "events": {
+	                    "click": "editItem"
+	                  }
+	                },
+	                {
+	                  "type": "image",
+	                  "classList": [
+	                    "item-control-btn"
+	                  ],
+	                  "attr": {
+	                    "todouid": function () {return this.todoUid},
+	                    "src": "https://gw.alicdn.com/tfs/TB1txI5JFXXXXagXFXXXXXXXXXX-48-48.jpg"
+	                  },
+	                  "events": {
+	                    "click": "delItem"
+	                  }
+	                }
+	              ]
+	            }
+	          ]
+	        }
+	      ]
+	    },
+	    {
+	      "type": "cell",
+	      "append": "tree",
+	      "shown": function () {return this.todos.length>0},
+	      "children": [
+	        {
+	          "type": "div",
+	          "classList": [
+	            "info-text-wrap"
+	          ],
+	          "children": [
+	            {
+	              "type": "text",
+	              "classList": [
+	                "info-text"
+	              ],
+	              "attr": {
+	                "value": function () {return (this.todos.length) + ' item left'}
+	              }
+	            }
+	          ]
+	        }
+	      ]
+	    },
+	    {
+	      "type": "cell",
+	      "append": "tree",
+	      "shown": function () {return this.todos.length>0},
+	      "children": [
+	        {
+	          "type": "div",
+	          "classList": [
+	            "sorting-wrap"
+	          ],
+	          "children": [
+	            {
+	              "type": "div",
+	              "classList": [
+	                "sorting"
+	              ],
 	              "children": [
 	                {
 	                  "type": "text",
-	                  "style": {
-	                    "height": function () {return this.marquee.height},
-	                    "color": "rgb(60,118,61)",
-	                    "fontSize": 28
-	                  },
+	                  "classList": [
+	                    "btn"
+	                  ],
 	                  "attr": {
-	                    "value": function () {return this.text}
+	                    "value": "all"
+	                  },
+	                  "events": {
+	                    "click": "showAll"
+	                  }
+	                },
+	                {
+	                  "type": "text",
+	                  "classList": [
+	                    "btn"
+	                  ],
+	                  "attr": {
+	                    "value": "opened"
+	                  },
+	                  "events": {
+	                    "click": "showOpened"
+	                  }
+	                },
+	                {
+	                  "type": "text",
+	                  "classList": [
+	                    "btn"
+	                  ],
+	                  "attr": {
+	                    "value": "completed"
+	                  },
+	                  "events": {
+	                    "click": "showComplete"
+	                  }
+	                },
+	                {
+	                  "type": "text",
+	                  "classList": [
+	                    "btn"
+	                  ],
+	                  "attr": {
+	                    "value": "clean"
+	                  },
+	                  "events": {
+	                    "click": "cleanCompletedTodos"
 	                  }
 	                }
 	              ]
@@ -135,9 +422,139 @@
 	      ]
 	    }
 	  ]
-	}
 	})
-	;__weex_bootstrap__("@weex-component/68879256ba42111f367fee429a2900a8", {
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
+	  "todo-list": {
+	    "flexDirection": "column",
+	    "width": 750,
+	    "backgroundColor": "#f5f5f5"
+	  },
+	  "app-title": {
+	    "marginTop": 50,
+	    "marginBottom": 50,
+	    "fontSize": 120,
+	    "textAlign": "center",
+	    "color": "rgba(175,47,47,0.15)",
+	    "fontFamily": "'Helvetica Neue', Helvetica, Arial, sans-serif"
+	  },
+	  "todo-input-wrap": {
+	    "display": "flex",
+	    "flexDirection": "row",
+	    "backgroundColor": "#ffffff",
+	    "borderTopWidth": 1,
+	    "borderBottomWidth": 1,
+	    "borderStyle": "solid",
+	    "borderColor": "#cccccc"
+	  },
+	  "finish-toggle": {
+	    "flex": 2,
+	    "height": 120,
+	    "lineHeight": 120,
+	    "overflow": "hidden",
+	    "fontSize": 60,
+	    "textAlign": "center",
+	    "fontWeight": "bold",
+	    "color": "#e6e6e6",
+	    "flexDirection": "row",
+	    "justifyContent": "center",
+	    "alignItems": "center"
+	  },
+	  "todo-input": {
+	    "height": 120,
+	    "flex": 7,
+	    "fontSize": 40,
+	    "marginLeft": 20,
+	    "borderWidth": 0,
+	    "fontStyle": "italic",
+	    "fontFamily": "'Helvetica Neue', Helvetica, Arial, sans-serif"
+	  },
+	  "blank": {
+	    "flex": 1
+	  },
+	  "todo-item": {
+	    "display": "flex",
+	    "flexDirection": "row",
+	    "height": 120,
+	    "width": 750,
+	    "overflow": "hidden",
+	    "borderBottomWidth": 1,
+	    "borderStyle": "solid",
+	    "borderColor": "#cccccc",
+	    "backgroundColor": "#ffffff"
+	  },
+	  "todo-status-done": {
+	    "flex": 2,
+	    "lineHeight": 120,
+	    "height": 120,
+	    "color": "#008000",
+	    "textAlign": "center",
+	    "fontSize": 40,
+	    "flexDirection": "row",
+	    "justifyContent": "center",
+	    "alignItems": "center"
+	  },
+	  "todo-content": {
+	    "color": "#333333",
+	    "fontStyle": "normal"
+	  },
+	  "item-control": {
+	    "flex": 2,
+	    "flexDirection": "row",
+	    "alignItems": "center"
+	  },
+	  "item-control-btn": {
+	    "width": 48,
+	    "height": 48,
+	    "marginRight": 20
+	  },
+	  "info-text-wrap": {
+	    "flexDirection": "column",
+	    "justifyContent": "center",
+	    "width": 750,
+	    "height": 80,
+	    "backgroundColor": "#ffffff"
+	  },
+	  "info-text": {
+	    "width": 700,
+	    "height": 40,
+	    "lineHeight": 40,
+	    "fontSize": 30,
+	    "paddingLeft": 50,
+	    "color": "#cccccc"
+	  },
+	  "sorting-wrap": {
+	    "width": 750,
+	    "height": 80,
+	    "backgroundColor": "#ffffff"
+	  },
+	  "sorting": {
+	    "display": "flex",
+	    "flexDirection": "row",
+	    "justifyContent": "space-between",
+	    "width": 550,
+	    "marginLeft": 100,
+	    "marginRight": 100,
+	    "height": 80
+	  },
+	  "btn": {
+	    "borderRadius": 3,
+	    "alignItems": "center",
+	    "marginLeft": 1,
+	    "marginTop": 15,
+	    "height": 50,
+	    "paddingTop": 5,
+	    "paddingLeft": 10,
+	    "paddingRight": 10,
+	    "fontSize": 30,
+	    "borderColor": "#cccccc",
+	    "borderWidth": 1,
+	    "borderStyle": "solid",
+	    "color": "#999999"
+	  }
+	})
+	})
+	;__weex_bootstrap__("@weex-component/65e49644e57427997c3aac05836557dd", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -179,7 +596,8 @@
 	    }
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": function () {return ['btn', 'btn-' + (this.type), 'btn-sz-' + (this.size)]},
 	  "children": [
@@ -191,8 +609,9 @@
 	      }
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "btn": {
 	    "marginBottom": 0,
 	    "alignItems": "center",
@@ -285,7 +704,7 @@
 	  "btn-txt-sz-small": {
 	    "fontSize": 30
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -303,7 +722,8 @@
 	    methods: {}
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": function () {return ['h' + (this.level)]},
 	  "style": {
@@ -318,8 +738,9 @@
 	      }
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "h1": {
 	    "height": 110,
 	    "paddingTop": 20,
@@ -344,7 +765,7 @@
 	  "txt-h3": {
 	    "fontSize": 42
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -371,7 +792,8 @@
 	    }
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": [
 	    "item"
@@ -388,8 +810,9 @@
 	      "type": "content"
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "item": {
 	    "paddingTop": 25,
 	    "paddingBottom": 25,
@@ -400,7 +823,7 @@
 	    "borderBottomWidth": 1,
 	    "borderColor": "#dddddd"
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -423,7 +846,8 @@
 	    }
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": function () {return ['panel', 'panel-' + (this.type)]},
 	  "style": {
@@ -459,8 +883,9 @@
 	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "panel": {
 	    "marginBottom": 20,
 	    "backgroundColor": "#ffffff",
@@ -508,7 +933,7 @@
 	    "color": "#ffffff"
 	  },
 	  "panel-body": {}
-	}
+	})
 	})
 
 /***/ },
@@ -525,7 +950,8 @@
 	    }}
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": function () {return ['tip', 'tip-' + (this.type)]},
 	  "children": [
@@ -537,8 +963,9 @@
 	      }
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "tip": {
 	    "paddingLeft": 36,
 	    "paddingRight": 36,
@@ -577,7 +1004,7 @@
 	  "tip-txt-danger": {
 	    "color": "#a94442"
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -672,7 +1099,8 @@
 	    }
 	}
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "style": {
 	    "overflow": "hidden",
@@ -687,12 +1115,13 @@
 	      "type": "content"
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "wrap": {
 	    "overflow": "hidden"
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -757,7 +1186,8 @@
 	    }
 	}
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": [
 	    "wrap"
@@ -780,8 +1210,9 @@
 	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "wrap": {
 	    "overflow": "hidden",
 	    "position": "relative"
@@ -791,7 +1222,7 @@
 	    "position": "absolute",
 	    "transform": "translateY(0) translateZ(0)"
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -845,7 +1276,8 @@
 	        }
 	    }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": [
 	    "container"
@@ -878,7 +1310,7 @@
 	    {
 	      "type": "image",
 	      "classList": [
-	        "left-image"
+	        "right-image"
 	      ],
 	      "attr": {
 	        "naviItemPosition": "right",
@@ -934,8 +1366,9 @@
 	      }
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "container": {
 	    "flexDirection": "row",
 	    "position": "fixed",
@@ -972,18 +1405,18 @@
 	  "left-image": {
 	    "position": "absolute",
 	    "bottom": 20,
-	    "right": 28,
+	    "left": 28,
 	    "width": 50,
 	    "height": 50
 	  },
 	  "right-image": {
 	    "position": "absolute",
 	    "bottom": 20,
-	    "left": 28,
+	    "right": 28,
 	    "width": 50,
 	    "height": 50
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -993,7 +1426,8 @@
 	;__weex_define__("@weex-component/wxc-navpage", [], function(__weex_require__, __weex_exports__, __weex_module__){
 	__webpack_require__(9);
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": [
 	    "wrapper"
@@ -1030,8 +1464,9 @@
 	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "wrapper": {
 	    "position": "absolute",
 	    "top": 0,
@@ -1040,7 +1475,7 @@
 	    "bottom": 0,
 	    "width": 750
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -1091,7 +1526,8 @@
 	        }
 	    }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": [
 	    "wrapper"
@@ -1131,8 +1567,9 @@
 	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "wrapper": {
 	    "width": 750,
 	    "position": "absolute",
@@ -1158,7 +1595,7 @@
 	    "right": 0,
 	    "height": 88
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -1187,7 +1624,8 @@
 	        }
 	    }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": [
 	    "container"
@@ -1230,8 +1668,9 @@
 	      }
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "container": {
 	    "flex": 1,
 	    "flexDirection": "column",
@@ -1256,7 +1695,7 @@
 	    "textAlign": "center",
 	    "fontSize": 20
 	  }
-	}
+	})
 	})
 
 /***/ }

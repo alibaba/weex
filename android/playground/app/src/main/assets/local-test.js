@@ -44,21 +44,40 @@
 /* 0 */
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/32cf12d9ab61a354757287ad95ca966c", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/31a87aef0d2d0dc46d402c2a5fe7c563", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
-	;__weex_module__.exports.template={
+	;
+	  __weex_module__.exports = {
+	    data: function () {return {
+	      txt: ''
+	    }},
+	    ready: function() {
+	      this.$setTitle('title');
+	      var me = this;
+	      setTimeout(function() {
+	        me.txt = 'hit';
+	      }, 1000);
+	    },
+	    methods: {}
+	  };
+
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
+	  "classList": [
+	    "container"
+	  ],
 	  "children": [
 	    {
-	      "type": "text",
+	      "type": "image",
 	      "attr": {
-	        "value": "Form"
+	        "src": ""
 	      }
 	    }
 	  ]
-	}
 	})
-	;__weex_bootstrap__("@weex-component/32cf12d9ab61a354757287ad95ca966c", {
+	})
+	;__weex_bootstrap__("@weex-component/31a87aef0d2d0dc46d402c2a5fe7c563", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 

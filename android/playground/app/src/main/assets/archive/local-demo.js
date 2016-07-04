@@ -44,21 +44,60 @@
 /* 0 */
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/32cf12d9ab61a354757287ad95ca966c", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/bbff3fc9a3357c6919cf93317c2eef52", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
-	;__weex_module__.exports.template={
+	;
+	  __weex_module__.exports = {
+	    data: function () {return {
+	      items: [{
+	        id: 1
+	      }, {
+	        id: 2
+	      }, {
+	        id: 3
+	      }]
+	    }}
+	  }
+
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "children": [
 	    {
 	      "type": "text",
+	      "repeat": function () {return this.items},
+	      "style": {
+	        "fontSize": 100,
+	        "color": "#FF0000"
+	      },
 	      "attr": {
-	        "value": "Form"
+	        "value": function () {return 'Hello ' + (this.id)}
+	      }
+	    },
+	    {
+	      "type": "text",
+	      "style": {
+	        "fontSize": 100,
+	        "color": "#FF0000"
+	      },
+	      "attr": {
+	        "value": "Hello Weex!"
+	      }
+	    },
+	    {
+	      "type": "image",
+	      "attr": {
+	        "src": "http://gw.alicdn.com/tps/i2/TB1DpsmMpXXXXabaXXX20ySQVXX-512-512.png_400x400.jpg"
+	      },
+	      "style": {
+	        "width": 200,
+	        "height": 200
 	      }
 	    }
 	  ]
-	}
 	})
-	;__weex_bootstrap__("@weex-component/32cf12d9ab61a354757287ad95ca966c", {
+	})
+	;__weex_bootstrap__("@weex-component/bbff3fc9a3357c6919cf93317c2eef52", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 

@@ -44,21 +44,57 @@
 /* 0 */
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/32cf12d9ab61a354757287ad95ca966c", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/acdf53172f8fc8cc68088ada1980f92a", [], function(__weex_require__, __weex_exports__, __weex_module__){
+
+	;
+	  __weex_module__.exports = {
+	    data: function () {return {
+	      keys: [{
+	        key: 1
+	      }, {
+	        key: 2
+	      }]
+	    }},
+
+	    methods: {
+	      ready() {
+
+	      },
+	      click: function() {
+	        console.log('hit');
+	        this.keys[0] = {key: 'a'};
+	        this.keys[1] = {key: 'b'};
+	      }
+	    }
+	  };
 
 	;__weex_module__.exports.template={
-	  "type": "div",
+	  "type": "container",
+	  "style": {
+	    "backgroundColor": "#ffffff"
+	  },
+	  "events": {
+	    "click": function ($event) {this.click($event)}
+	  },
 	  "children": [
 	    {
 	      "type": "text",
 	      "attr": {
-	        "value": "Form"
+	        "value": "test"
+	      }
+	    },
+	    {
+	      "type": "text",
+	      "repeat": function () {return this.keys},
+	      "attr": {
+	        "value": function () {return this.key}
 	      }
 	    }
 	  ]
 	}
+	;__weex_module__.exports.style={}
 	})
-	;__weex_bootstrap__("@weex-component/32cf12d9ab61a354757287ad95ca966c", {
+	;__weex_bootstrap__("@weex-component/acdf53172f8fc8cc68088ada1980f92a", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 

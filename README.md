@@ -42,7 +42,7 @@ Please ***INSTALL [Git for Windows](https://git-scm.com/download/win)*** and run
         0. `./start`
     0. Install [iOS Environment](https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/AppStoreDistributionTutorial/Setup/Setup.html)
     0. Install [CocoaPods](https://guides.cocoapods.org/using/getting-started.html)
- 0. Run playground
+0. Run playground
     0. `cd ios/playground`
     0. `pod install`
     0. Open `WeexDemo.xcworkspace` in Xcode
