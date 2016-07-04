@@ -1,4 +1,4 @@
 import './objectAssign'
-import './setTimeout'
+// import './setTimeout'
 import './promise'
 import './console'
