@@ -23,7 +23,15 @@
 #import "WXModuleManager.h"
 #import "WXSDKInstance_private.h"
 
-#import "PDDebugger.h"
+//#import "PDDebugger.h"
+
+#define SuppressPerformSelectorLeakWarning(Stuff) \
+do { \
+_Pragma("clang diagnostic push") \
+_Pragma("clang diagnostic ignored \"-Warc-performSelector-leaks\"") \
+Stuff; \
+_Pragma("clang diagnostic pop") \
+} while (0)
 
 @interface WXBridgeContext ()
 
@@ -312,15 +320,18 @@
 }
 
 #pragma mark JS Debug Management
-- (void) connectToDevToolWithUrl:(NSURL *)url {
+
+- (void)connectToDevToolWithUrl:(NSURL *)url
+{
     id webSocketBridge = [NSClassFromString(@"PDDebugger") alloc];
-    if(!webSocketBridge || ![webSocketBridge respondsToSelector:@selector(connectToURL:)]) {
+    if(!webSocketBridge || ![webSocketBridge respondsToSelector:NSSelectorFromString(@"connectToURL:")]) {
         return;
     } else {
-        [webSocketBridge performSelector:@selector(connectToURL:) withObject:url];
+        SuppressPerformSelectorLeakWarning(
+           [webSocketBridge performSelector:NSSelectorFromString(@"connectToURL:") withObject:url]
+        );
     }
 }
-
 
 - (void)connectToWebSocket:(NSURL *)url
 {
