@@ -103,12 +103,12 @@
 
 - (void)registerCallNative:(WXJSCallNative)callNative
 {
-    void (^callNativeBlock)(JSValue *, JSValue *, JSValue *) = ^(JSValue *instance, JSValue *tasks, JSValue *callback){
+    NSInteger (^callNativeBlock)(JSValue *, JSValue *, JSValue *) = ^(JSValue *instance, JSValue *tasks, JSValue *callback){
         NSString *instanceId = [instance toString];
         NSArray *tasksArray = [tasks toArray];
         NSString *callbackId = [callback toString];
         WXLogVerbose(@"Calling native... instance:%@, tasks:%@, callback:%@", instanceId, tasksArray, callbackId);
-        callNative(instanceId, tasksArray, callbackId);
+        return callNative(instanceId, tasksArray, callbackId);
     };
     
     _jsContext[@"callNative"] = callNativeBlock;

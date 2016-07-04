@@ -8,7 +8,7 @@
 
 #import <JavaScriptCore/JavaScriptCore.h>
 
-typedef void (^WXJSCallNative)(NSString *instance, NSArray *tasks, NSString *callback);
+typedef NSInteger (^WXJSCallNative)(NSString *instance, NSArray *tasks, NSString *callback);
 
 @protocol WXBridgeProtocol <NSObject>
 

@@ -101,8 +101,8 @@ _Pragma("clang diagnostic pop") \
     
     _jsBridge = _debugJS ? [NSClassFromString(@"PDDebugger") alloc] : [[WXJSCoreBridge alloc] init];
      __weak typeof(self) weakSelf = self;
-    [_jsBridge registerCallNative:^(NSString *instance, NSArray *tasks, NSString *callback) {
-        [weakSelf invokeNative:instance tasks:tasks callback:callback];
+    [_jsBridge registerCallNative:^NSInteger(NSString *instance, NSArray *tasks, NSString *callback) {
+        return [weakSelf invokeNative:instance tasks:tasks callback:callback];
     }];
     
     return _jsBridge;
@@ -132,15 +132,19 @@ _Pragma("clang diagnostic pop") \
 
 #pragma mark JS Bridge Management
 
-- (void)invokeNative:(NSString *)instance tasks:(NSArray *)tasks callback:(NSString *)callback
+- (NSInteger)invokeNative:(NSString *)instance tasks:(NSArray *)tasks callback:(NSString *)callback
 {
     WXAssertBridgeThread();
     
     if (!instance || !tasks) {
         [WXSDKError monitorAlarm:NO errorCode:WX_ERR_JSFUNC_PARAM msg:@"JS call Native params error !"];
-        return;
+        return 0;
     }
-    [WXSDKError monitorAlarm:YES errorCode:WX_ERR_JSFUNC_PARAM msg:@""];
+
+    if (![WXSDKManager instanceForID:instance]) {
+        WXLogInfo(@"instance already destroyed");
+        return -1;
+    }
     
     for (NSDictionary *task in tasks) {
         WXBridgeMethod *method = [[WXBridgeMethod alloc] initWihData:task];
@@ -151,7 +155,7 @@ _Pragma("clang diagnostic pop") \
     NSMutableArray *sendQueue = [self.sendQueue valueForKey:instance];
     if (!sendQueue) {
         WXLogError(@"No send queue for instance:%@", instance);
-        return;
+        return -1;
     }
     
     if (callback && ![callback isEqualToString:@"-1"]) {
@@ -161,6 +165,8 @@ _Pragma("clang diagnostic pop") \
     }
     
     [self performSelector:@selector(_sendQueueLoop) withObject:nil];
+    
+    return 1;
 }
 
 - (void)createInstance:(NSString *)instance
