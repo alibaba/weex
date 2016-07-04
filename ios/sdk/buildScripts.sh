@@ -33,7 +33,7 @@ function generateFileFooter() {
 function findHeaders() {
 	projectFilePath=$1
 	searchPattern=$2
-	grep -o "[0-9A-F]\{23\}.*[0-9a-zA-Z+_-]*\.h.*PBXBuildFile.*ATTRIBUTES.*=.*(${searchPattern}" "$projectFilePath/project.pbxproj" | grep -o '[0-9A-Za-z+_-]*\.h' | grep -v 'WindVane-.*\.h' | uniq | sort
+	grep -o "[0-9A-F]\{23\}.*[0-9a-zA-Z+_-]*\.h.*PBXBuildFile.*ATTRIBUTES.*=.*(${searchPattern}" "$projectFilePath/project.pbxproj" | grep -o '[0-9A-Za-z+_-]*\.h' | grep -v 'Weex-.*\.h' | uniq | sort -r
 	return 0;
 }
 
@@ -47,7 +47,7 @@ function generateImport() {
 	searchPattern=$2
 	headerFilePath=$3
 	externalHeader=$4
-	
+
 	if [[ $externalHeader ]]; then
 		if [ "$searchPattern" = 'Private' ]; then
 			echo "#import <${PRODUCT_NAME}/$externalHeader>" >> $headerFilePath
@@ -91,9 +91,9 @@ function generateSDKHeader() {
 	supportPrivate=$2
 	headerFilePath="${PROJECT_DIR}/${sdkName}/Sources"
 	publicHeaderFilePath="${headerFilePath}/${sdkName}.h"
-	
+
 	if [ -f "$publicHeaderFilePath" ]; then
 		rm $publicHeaderFilePath
-	fi 
+	fi
 	generateHeader "${PROJECT_DIR}/${PROJECT_NAME}.xcodeproj" "${publicHeaderFilePath}" 'Public'
 }
