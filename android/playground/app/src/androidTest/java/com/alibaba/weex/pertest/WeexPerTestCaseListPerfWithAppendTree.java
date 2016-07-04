@@ -59,7 +59,7 @@ public class WeexPerTestCaseListPerfWithAppendTree extends ActivityInstrumentati
         setViewGroup(mViewGroup);
 
         mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, "TC_");
-        sleep(1000);
+        sleep(3000);
     }
 
 //    public void testPreConditions()
