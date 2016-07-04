@@ -76,6 +76,7 @@
 
         _scrollerCSSNode = new_css_node();
         
+        // let scroller fill the rest space if it is a child component and has no fixed height & width
         if ((_scrollDirection == WXScrollDirectionVertical &&
             isUndefined(self.cssNode->style.dimensions[CSS_HEIGHT])) ||
             (_scrollDirection == WXScrollDirectionHorizontal &&
