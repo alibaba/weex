@@ -157,7 +157,9 @@
             return YES;
         } else if ([[elts firstObject] isEqualToString:@"_wx_devtool"]) {
             NSString *devToolURL = [[elts lastObject]  stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            [WXDevTool setDebug:YES];
             [WXDevTool launchDevToolDebugWithUrl:devToolURL];
+
             [WXSDKEngine restart];
             
             [WXSDKEngine registerComponent:@"select" withClass:NSClassFromString(@"WXSelectComponent")];

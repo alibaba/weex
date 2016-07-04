@@ -71,6 +71,12 @@
 - (void)registerComponents:(NSArray *)components;
 
 /**
+ *  Connect To WebSocket for devtool debug
+ *  @param url       :   url to connect
+ **/
+- (void) connectToDevToolWithUrl:(NSURL *)url;
+
+/**
  *  Connect To WebSocket for collecting log
  *  @param url       :   url to connect
  **/

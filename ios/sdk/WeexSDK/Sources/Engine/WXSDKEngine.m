@@ -185,15 +185,10 @@
     [[WXSDKManager bridgeMgr] connectToWebSocket:[NSURL URLWithString:URL]];
 }
 
-+ (void)connectDevToolServer:(NSString *)url
++ (void)connectDevToolServer:(NSString *)URL
 {
-    id webSocketBridge = [NSClassFromString(@"PDDebugger") alloc];
-    if(!webSocketBridge || ![webSocketBridge respondsToSelector:@selector(connectToURL:)]) {
-        return;
-    } else {
-        NSURL *URL = [NSURL URLWithString:url];
-        [webSocketBridge performSelector:@selector(connectToURL:) withObject:URL];
-    }
+    [[WXSDKManager bridgeMgr] connectToDevToolWithUrl:[NSURL URLWithString:URL]];
+
 }
 
 @end
