@@ -25,6 +25,11 @@
 + (void)registerComponents:(NSArray *)components;
 
 /**
+ * @abstract Unregister all the components
+ */
++ (void)unregisterAllComponents;
+
+/**
  * @abstract Returns the class with a given component name.
  * @param name The component's name
  * @return The component's class

@@ -45,9 +45,12 @@ static NSThread *WXBridgeThread;
 
 - (void)unload
 {
-    if (_bridgeCtx) {
-        _bridgeCtx = [[WXBridgeContext alloc] init];
-    }
+    _stopRunning = YES;
+}
+
+- (void)dealloc
+{
+   
 }
 
 #pragma mark Thread Management
@@ -208,13 +211,6 @@ do{\
 - (void)callBack:(NSString *)instanceId funcId:(NSString *)funcId params:(NSString *)params
 {
     [self callBack:instanceId funcId:funcId params:params keepAlive:NO];
-}
-
-- (void)connectToDevToolWithUrl:(NSURL *)url {
-    __weak typeof(self) weakSelf = self;
-    WXPerformBlockOnBridgeThread(^(){
-        [weakSelf.bridgeCtx connectToDevToolWithUrl:url];
-    });
 }
 
 - (void)connectToWebSocket:(NSURL *)url
