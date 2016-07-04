@@ -63,7 +63,7 @@
                 if (idx == args.count - 1) {
                     NSNumber *flag = levelMap[[jsVal toString]];
                     if (flag) {
-                        WX_LOG([flag unsignedIntegerValue], @"%@", string);
+                        WXLOG([flag unsignedIntegerValue], @"%@", string);
                     } else {
                         [string appendFormat:@"%@ ", jsVal];
                         WXLogInfo(@"%@", string);

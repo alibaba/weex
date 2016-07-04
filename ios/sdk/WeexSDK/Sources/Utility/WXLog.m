@@ -164,7 +164,27 @@ static id<WXLogProtocol> _externalLog;
     }
 }
 
-+ (void)devLog:(NSString *)flag file:(const char *)fileName line:(NSUInteger)line format:(NSString *)format, ... {
++ (void)devLog:(WXLogFlag)flag file:(const char *)fileName line:(NSUInteger)line format:(NSString *)format, ... {
+    
+    NSString *flagString = @"log";
+    switch (flag) {
+        case WXLogFlagError:
+            flagString = @"error";
+            break;
+        case WXLogFlagWarning:
+            flagString = @"warn";
+            break;
+        case WXLogFlagDebug:
+            flagString = @"debug";
+            break;
+        case WXLogFlagVerbose:
+            flagString = @"verbose";
+            break;
+        default:
+            flagString = @"info";
+            break;
+    }
+    
     va_list args;
     va_start(args, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
@@ -180,24 +200,12 @@ static id<WXLogProtocol> _externalLog;
         NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
         [invocation setTarget:[PDLogClass alloc]];
         [invocation setSelector:selector];
-        [invocation setArgument:&flag atIndex:2];
+        [invocation setArgument:&flagString atIndex:2];
         [invocation setArgument:&messageAry atIndex:3];
         [invocation invoke];
     }
     
-    WXLogFlag logFlay = WXLogFlagVerbose;
-    if ([flag isEqualToString:@"log"]) {
-        logFlay = WXLogFlagVerbose;
-    }else if ([flag isEqualToString:@"debug"]) {
-        logFlay = WXLogFlagDebug;
-    }else if ([flag isEqualToString:@"info"]) {
-        logFlay = WXLogFlagInfo;
-    }else if ([flag isEqualToString:@"error"]) {
-        logFlay = WXLogFlagError;
-    }else if ([flag isEqualToString:@"warning"]) {
-        logFlay = WXLogFlagWarning;
-    }
-    [self log:logFlay file:fileName line:line format:@"%@",format];
+    [self log:flag file:fileName line:line format:@"%@",format];
 }
 
 #pragma mark - External Log

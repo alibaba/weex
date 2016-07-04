@@ -85,7 +85,7 @@ typedef NS_ENUM(NSUInteger, WXLogLevel){
 
 + (void)log:(WXLogFlag)flag file:(const char *)fileName line:(NSUInteger)line format:(NSString *)format, ... NS_FORMAT_FUNCTION(4,5);
 
-+ (void)devLog:(NSString *)flag file:(const char *)fileName line:(NSUInteger)line format:(NSString *)format, ... NS_FORMAT_FUNCTION(4,5);
++ (void)devLog:(WXLogFlag)flag file:(const char *)fileName line:(NSUInteger)line format:(NSString *)format, ... NS_FORMAT_FUNCTION(4,5);
 
 + (void)registerExternalLog:(id<WXLogProtocol>)externalLog;
 
@@ -120,8 +120,8 @@ do {                                    \
 
 
 extern void _PDLogObjectsImpl(NSString *severity, NSArray *arguments);
-#define WXLogVerbose(format,...)        WXLOG(@"log", format, ##__VA_ARGS__)
-#define WXLogDebug(format, ...)         WXLOG(@"debug", format, ##__VA_ARGS__)
-#define WXLogInfo(format, ...)          WXLOG(@"info", format, ##__VA_ARGS__)
-#define WXLogWarning(format, ...)       WXLOG(@"warning", format ,##__VA_ARGS__)
-#define WXLogError(format, ...)         WXLOG(@"error", format, ##__VA_ARGS__)
+#define WXLogVerbose(format,...)        WXLOG(WXLogFlagVerbose, format, ##__VA_ARGS__)
+#define WXLogDebug(format, ...)         WXLOG(WXLogFlagDebug, format, ##__VA_ARGS__)
+#define WXLogInfo(format, ...)          WXLOG(WXLogFlagInfo, format, ##__VA_ARGS__)
+#define WXLogWarning(format, ...)       WXLOG(WXLogFlagWarning, format ,##__VA_ARGS__)
+#define WXLogError(format, ...)         WXLOG(WXLogFlagError, format, ##__VA_ARGS__)
