@@ -226,6 +226,7 @@ import com.taobao.weex.common.WXJSBridgeMsgType;
 import com.taobao.weex.common.WXRefreshData;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.common.WXThread;
+import com.taobao.weex.ui.module.WXTimerModule;
 import com.taobao.weex.utils.WXConst;
 import com.taobao.weex.utils.WXFileUtils;
 import com.taobao.weex.utils.WXHack;
@@ -236,6 +237,7 @@ import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -409,6 +411,22 @@ public class WXBridgeManager implements Callback {
     message.obj = timerInfo;
 
     mJSHandler.sendMessageDelayed(message, timerInfo.time);
+  }
+
+  public void sendMessageDelayed(Message message, long delayMillis){
+    if (message == null || mJSHandler == null || mJSThread == null
+        || !mJSThread.isWXThreadAlive() || mJSThread.getLooper() == null) {
+      return;
+    }
+    mJSHandler.sendMessageDelayed(message,delayMillis);
+  }
+
+  public void removeMessage(int what,Object obj){
+    if (mJSHandler == null || mJSThread == null
+        || !mJSThread.isWXThreadAlive() || mJSThread.getLooper() == null) {
+      return;
+    }
+    mJSHandler.removeMessages(what,obj);
   }
 
   /**
@@ -795,10 +813,34 @@ public class WXBridgeManager implements Callback {
         WXJSObject[] args = {obj};
         mWXBridge.execJS("", null, METHOD_SET_TIMEOUT, args);
         break;
+      case WXJSBridgeMsgType.MODULE_TIMEOUT:
+        args = createTimerArgs(msg.arg1, (Integer) msg.obj, false);
+        mWXBridge.execJS(String.valueOf(msg.arg1), null, METHOD_CALL_JS, args);
+        break;
+      case WXJSBridgeMsgType.MODULE_INTERVAL:
+        WXTimerModule.setInterval((Integer) msg.obj, msg.arg2, msg.arg1);
+        args = createTimerArgs(msg.arg1, (Integer) msg.obj, true);
+        mWXBridge.execJS(String.valueOf(msg.arg1), null, METHOD_CALL_JS, args);
+        break;
       default:
         break;
     }
     return false;
+  }
+
+  private WXJSObject[] createTimerArgs(int instanceId, int funcId, boolean keepAlive) {
+    ArrayList<Object> argsList = new ArrayList<>();
+    argsList.add(funcId);
+    argsList.add(new HashMap<>());
+    argsList.add(keepAlive);
+    WXHashMap<String, Object> task = new WXHashMap<>();
+    task.put(WXConst.KEY_METHOD, METHOD_CALLBACK);
+    task.put(WXConst.KEY_ARGS, argsList);
+    Object[] tasks={task};
+    return new WXJSObject[]{
+        new WXJSObject(WXJSObject.String, String.valueOf(instanceId)),
+        new WXJSObject(WXJSObject.JSON,
+                       WXJsonUtils.fromObjectToJSONString(tasks))};
   }
 
   private void invokeInitFramework(Message msg) {

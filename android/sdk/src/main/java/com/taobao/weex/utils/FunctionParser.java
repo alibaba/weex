@@ -310,6 +310,8 @@ public class FunctionParser<T> {
     private static final String COMMA = ",";
     private static final char A_LOWER = 'a';
     private static final char Z_LOWER = 'z';
+    private static final char A_UPPER = 'A';
+    private static final char Z_UPPER = 'Z';
     private static final char ZERO = '0';
     private static final char NINE = '9';
     private static final char DOT = '.';
@@ -387,7 +389,7 @@ public class FunctionParser<T> {
       char letter;
       for (int i = 0; i < funcName.length(); i++) {
         letter = funcName.charAt(i);
-        if (!(A_LOWER <= letter && letter <= Z_LOWER)) {
+        if (!((A_LOWER <= letter && letter <= Z_LOWER) || (A_UPPER <= letter && letter <= Z_UPPER))) {
           return false;
         }
       }
@@ -401,7 +403,8 @@ public class FunctionParser<T> {
     }
 
     private boolean isCharacterOrDigit(char letter) {
-      return ((ZERO <= letter && letter <= NINE) || (A_LOWER <= letter && letter <= Z_LOWER));
+      return (ZERO <= letter && letter <= NINE) || (A_LOWER <= letter && letter <= Z_LOWER) ||
+              (A_UPPER <= letter && letter <= Z_UPPER);
     }
   }
 
