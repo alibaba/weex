@@ -202,20 +202,47 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.common;
+package com.taobao.weex.ui.module;
 
-public class WXJSBridgeMsgType {
+import android.os.Message;
 
-  public static final int SET_TIMEOUT = 0x01;
-  public static final int NATIVE_CALL = 0x02;
-  public static final int FIRE_EVENT = 0x03;
-  public static final int CALLBACK = 0x04;
-  public static final int CALL_JS = 0x05;
-  public static final int CALL_JS_BATCH = 0x06;
-  public static final int INIT_FRAMEWORK = 0x07;
-  public static final int REGISTER_COMPONENTS = 0x08;
-  public static final int REGISTER_MODULES = 0x09;
-  public static final int REFRESH_INSTANCE = 0x0a;
-  public static final int MODULE_TIMEOUT = 0x0b;
-  public static final int MODULE_INTERVAL = 0x0c;
+import com.taobao.weex.bridge.WXBridgeManager;
+import com.taobao.weex.common.WXJSBridgeMsgType;
+import com.taobao.weex.common.WXModule;
+import com.taobao.weex.common.WXModuleAnno;
+
+public class WXTimerModule extends WXModule {
+
+  @WXModuleAnno(runOnUIThread = false)
+  public void setTimeout(int funcId, int delay) {
+    Message message = Message.obtain();
+    message.what = WXJSBridgeMsgType.MODULE_TIMEOUT;
+    message.arg1 = Integer.parseInt(mWXSDKInstance.getInstanceId());
+    message.obj = funcId;
+    WXBridgeManager.getInstance().sendMessageDelayed(message, delay);
+  }
+
+  @WXModuleAnno(runOnUIThread = false)
+  public void setInterval(int funcId, int interval) {
+    setInterval(funcId, interval, Integer.parseInt(mWXSDKInstance.getInstanceId()));
+  }
+
+  @WXModuleAnno(runOnUIThread = false)
+  public void clearTimeout(int funcId) {
+    WXBridgeManager.getInstance().removeMessage(WXJSBridgeMsgType.MODULE_TIMEOUT, funcId);
+  }
+
+  @WXModuleAnno(runOnUIThread = false)
+  public void clearInterval(int funcId) {
+    WXBridgeManager.getInstance().removeMessage(WXJSBridgeMsgType.MODULE_INTERVAL, funcId);
+  }
+
+  public static void setInterval(int funcId, int interval, int instanceId) {
+    Message message = Message.obtain();
+    message.what = WXJSBridgeMsgType.MODULE_INTERVAL;
+    message.arg1 = instanceId;
+    message.arg2 = interval;
+    message.obj = funcId;
+    WXBridgeManager.getInstance().sendMessageDelayed(message, interval);
+  }
 }
