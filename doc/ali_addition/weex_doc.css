@@ -128,6 +128,10 @@ a.weex-translate{
     background-color: #de2810;
 }
 
+a.weex-translate.incomplete{
+  background-color: #777;                    
+}
+
 .wx-v{
     padding: 3px 7px;
     font-size: 12px;
