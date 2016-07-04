@@ -10,6 +10,7 @@
 #import "WXBridgeContext.h"
 #import "WXLog.h"
 #import "WXAssert.h"
+#import "WXBridgeMethod.h"
 
 @interface WXBridgeManager ()
 

@@ -7,7 +7,8 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "WXBridgeMethod.h"
+
+@class WXBridgeMethod;
 
 @interface WXBridgeManager : NSObject
 
