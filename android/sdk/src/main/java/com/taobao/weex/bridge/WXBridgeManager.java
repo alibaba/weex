@@ -891,7 +891,7 @@ public class WXBridgeManager implements Callback {
       mWXBridge.execJS(String.valueOf(instanceId), null, METHOD_CALL_JS,
                        args);
       // If task is not empty, loop until it is empty
-      if (!mNextTickTasks.isEmpty() && !mUITasks.isEmpty()) {
+      if (!mNextTickTasks.isEmpty() || !mUITasks.isEmpty()) {
         mJSHandler.sendEmptyMessage(WXJSBridgeMsgType.CALL_JS_BATCH);
       }
     } catch (Throwable e) {
