@@ -496,4 +496,8 @@ public class WXSDKEngine {
       }, 1000);
     }
   }
+
+  public static void reload() {
+    reload(WXEnvironment.getApplication(), WXEnvironment.sRemoteDebugMode);
+  }
 }
