@@ -45,9 +45,12 @@ static NSThread *WXBridgeThread;
 
 - (void)unload
 {
-    if (_bridgeCtx) {
-        _bridgeCtx = [[WXBridgeContext alloc] init];
-    }
+    _stopRunning = YES;
+}
+
+- (void)dealloc
+{
+   
 }
 
 #pragma mark Thread Management

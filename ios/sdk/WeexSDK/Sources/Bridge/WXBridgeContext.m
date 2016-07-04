@@ -310,7 +310,9 @@
 }
 
 #pragma mark JS Debug Management
-- (void) connectToDevToolWithUrl:(NSURL *)url {
+
+- (void) connectToDevToolWithUrl:(NSURL *)url
+{
     id webSocketBridge = [NSClassFromString(@"PDDebugger") alloc];
     if(!webSocketBridge || ![webSocketBridge respondsToSelector:@selector(connectToURL:)]) {
         return;
@@ -318,7 +320,6 @@
         [webSocketBridge performSelector:@selector(connectToURL:) withObject:url];
     }
 }
-
 
 - (void)connectToWebSocket:(NSURL *)url
 {

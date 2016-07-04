@@ -76,6 +76,11 @@
     [[self sharedInstance] registerComponents:components];
 }
 
++ (void)unregisterAllComponents
+{
+    [[self sharedInstance] unregisterAllComponents];
+}
+
 #pragma mark Private
 
 - (Class)classWithComponentName:(NSString *)name
@@ -133,6 +138,13 @@
             [_componentConfigs setValue:config forKey:name];
         }
     }
+    [_configLock unlock];
+}
+
+- (void)unregisterAllComponents
+{
+    [_configLock lock];
+    [_componentConfigs removeAllObjects];
     [_configLock unlock];
 }
 

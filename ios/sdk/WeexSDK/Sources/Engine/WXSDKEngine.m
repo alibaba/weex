@@ -173,9 +173,11 @@
 
 # pragma mark Debug
 
-+ (void)unload
++ (void)restart
 {
-    [[WXSDKManager bridgeMgr] unload];
+    [WXSDKManager unload];
+    [WXComponentFactory unregisterAllComponents];
+    [self initSDKEnviroment];
 }
 
 + (void)connectDebugServer:(NSString*)URL
@@ -183,8 +185,10 @@
     [[WXSDKManager bridgeMgr] connectToWebSocket:[NSURL URLWithString:URL]];
 }
 
-+ (void)connectDevToolServer:(NSString *)URL {
++ (void)connectDevToolServer:(NSString *)URL
+{
     [[WXSDKManager bridgeMgr] connectToDevToolWithUrl:[NSURL URLWithString:URL]];
+
 }
 
 @end

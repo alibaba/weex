@@ -11,6 +11,7 @@
 #import "UIViewController+WXDemoNaviBar.h"
 #import "WXDemoViewController.h"
 #import "WXDebugTool.h"
+#import "WXDevTool.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import <WeexSDK/WXSDKEngine.h>
 
@@ -80,7 +81,9 @@
 - (void)openURL:(NSString*)URL
 {
     NSURL *url = [NSURL URLWithString:URL];
-    [self remoteDebug:url];
+    if ([self remoteDebug:url]) {
+        return;
+    }
     [self jsReplace:url];
     WXDemoViewController * controller = [[WXDemoViewController alloc] init];
     controller.url = url;
@@ -130,11 +133,13 @@
 #pragma mark Remote debug
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-- (void)remoteDebug:(NSURL *)url
+- (BOOL)remoteDebug:(NSURL *)url
 {
     if ([url.scheme isEqualToString:@"ws"]) {
         [WXSDKEngine connectDebugServer:url.absoluteString];
         [WXSDKEngine initSDKEnviroment];
+        
+        return YES;
     }
     
     NSString *query = url.query;
@@ -149,9 +154,22 @@
                 [vc performSelector:NSSelectorFromString(@"loadRefreshCtl")];
                 [self.navigationController popToViewController:vc animated:NO];
             }
-            return;
+            return YES;
+        } else if ([[elts firstObject] isEqualToString:@"_wx_devtool"]) {
+            NSString *devToolURL = [[elts lastObject]  stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            [WXDevTool setDebug:YES];
+            [WXDevTool launchDevToolDebugWithUrl:devToolURL];
+
+            [WXSDKEngine restart];
+            
+            [WXSDKEngine registerComponent:@"select" withClass:NSClassFromString(@"WXSelectComponent")];
+            [WXSDKEngine registerModule:@"event" withClass:NSClassFromString(@"WXEventModule")];
+            
+            return YES;
         }
     }
+    
+    return NO;
 }
 #pragma clang diagnostic pop
 
