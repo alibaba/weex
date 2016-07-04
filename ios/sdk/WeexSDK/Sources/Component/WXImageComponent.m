@@ -164,7 +164,7 @@ static dispatch_queue_t WXImageUpdateQueue;
         if (weakSelf.imageSrc) {
             NSString *imageSrc = weakSelf.imageSrc;
             NSDictionary *userInfo = @{@"imageQuality":@(weakSelf.imageQuality), @"imageSharp":@(weakSelf.imageSharp)};
-            WXLogVerbose(@"Updating image, component:%@, image source:%@, userInfo:%@", self.ref, imageSrc, userInfo);
+            WXLogLog(@"Updating image, component:%@, image source:%@, userInfo:%@", self.ref, imageSrc, userInfo);
             weakSelf.imageOperation = [[weakSelf imageLoader] downloadImageWithURL:imageSrc imageFrame:weakSelf.calculatedFrame userInfo:userInfo completed:^(UIImage *image, NSError *error, BOOL finished) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     __strong typeof(self) strongSelf = weakSelf;

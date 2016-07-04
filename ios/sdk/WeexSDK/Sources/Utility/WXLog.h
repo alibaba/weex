@@ -13,8 +13,7 @@ typedef NS_ENUM(NSInteger, WXLogFlag) {
     WXLogFlagWarning    = 1 << 1,
     WXLogFlagInfo       = 1 << 2,
     WXLogFlagDebug      = 1 << 3,
-    WXLogFlagVerbose    = 1 << 4,
-    WXLogObject         = 1 << 5
+    WXLogFlayLog        = 1 << 4
 };
 
 /**
@@ -47,9 +46,9 @@ typedef NS_ENUM(NSUInteger, WXLogLevel){
     WXLogLevelDebug     = WXLogLevelInfo | WXLogFlagDebug,
     
     /**
-     *  Error, warning, info, debug and verbose
+     *  Log, warning info
      */
-    WXLogLevelVerbose   = WXLogLevelDebug | WXLogFlagVerbose,
+    WXLogLevelLog       = WXLogLevelWarning | WXLogLevelInfo,
     
     /**
      *  All
@@ -95,6 +94,7 @@ typedef NS_ENUM(NSUInteger, WXLogLevel){
 
 #define WX_FILENAME (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 
+/*
 #define WX_LOG(flag, fmt, ...)          \
 do {                                    \
     [WXLog log:flag                     \
@@ -102,7 +102,8 @@ do {                                    \
           line:__LINE__                 \
         format:(fmt), ## __VA_ARGS__];  \
 } while(0)
-
+*/
+ 
 #define WXLOG(flag, fmt, ...)          \
 do {                                    \
     [WXLog devLog:flag                     \
@@ -122,7 +123,7 @@ do {                                    \
 
 
 extern void _PDLogObjectsImpl(NSString *severity, NSArray *arguments);
-#define WXLogVerbose(format,...)        WXLOG(WXLogFlagVerbose, format, ##__VA_ARGS__)
+#define WXLogLog(format,...)            WXLOG(WXLogFlayLog, format, ##__VA_ARGS__)
 #define WXLogDebug(format, ...)         WXLOG(WXLogFlagDebug, format, ##__VA_ARGS__)
 #define WXLogInfo(format, ...)          WXLOG(WXLogFlagInfo, format, ##__VA_ARGS__)
 #define WXLogWarning(format, ...)       WXLOG(WXLogFlagWarning, format ,##__VA_ARGS__)

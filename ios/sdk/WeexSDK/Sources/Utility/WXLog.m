@@ -90,7 +90,7 @@ static id<WXLogProtocol> _externalLog;
       @(WXLogLevelWarning) : @"warn",
       @(WXLogLevelInfo) : @"info",
       @(WXLogLevelDebug) : @"debug",
-      @(WXLogLevelVerbose) : @"verbose",
+      @(WXLogLevelLog) : @"log",
       @(WXLogLevelOff) : @"off"
       };
     return [logLevelEnumToString objectForKey:@([self logLevel])];
@@ -105,7 +105,7 @@ static id<WXLogProtocol> _externalLog;
       @"warn" : @(WXLogLevelWarning),
       @"info" : @(WXLogLevelInfo),
       @"debug" : @(WXLogLevelDebug),
-      @"verbose" : @(WXLogLevelVerbose)
+      @"log" : @(WXLogLevelLog)
     };
     
     [self setLogLevel:[logLevelStringToEnum[levelString] unsignedIntegerValue]];
@@ -129,8 +129,8 @@ static id<WXLogProtocol> _externalLog;
             flagString = @"debug";
             flagColor = @"fg0,128,0;";
             break;
-        case WXLogFlagVerbose:
-            flagString = @"verbose";
+        case WXLogFlayLog:
+            flagString = @"log";
             flagColor = @"fg128,128,128;";
             break;
         default:
@@ -166,8 +166,8 @@ static id<WXLogProtocol> _externalLog;
         case WXLogFlagDebug:
             flagString = @"debug";
             break;
-        case WXLogFlagVerbose:
-            flagString = @"verbose";
+        case WXLogFlayLog:
+            flagString = @"log";
             break;
         default:
             flagString = @"info";

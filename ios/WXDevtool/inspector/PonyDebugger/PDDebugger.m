@@ -573,7 +573,7 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
             return;
         }
         //call native
-        WXLogVerbose(@"Calling native... instancdId:%@, methods:%@, callbackId:%@", instanceId, [WXUtility JSONString:methods], callbackId);
+        WXLogLog(@"Calling native... instancdId:%@, methods:%@, callbackId:%@", instanceId, [WXUtility JSONString:methods], callbackId);
         _nativeCallBlock(instanceId, methods, callbackId);
     }
     
