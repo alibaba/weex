@@ -215,6 +215,9 @@ public class WXTimerModule extends WXModule {
 
   @WXModuleAnno(runOnUIThread = false)
   public void setTimeout(int funcId, int delay) {
+    if(delay<0){
+      delay = 0;
+    }
     Message message = Message.obtain();
     message.what = WXJSBridgeMsgType.MODULE_TIMEOUT;
     message.arg1 = Integer.parseInt(mWXSDKInstance.getInstanceId());
@@ -238,6 +241,9 @@ public class WXTimerModule extends WXModule {
   }
 
   public static void setInterval(int funcId, int interval, int instanceId) {
+    if(interval<0){
+      interval = 0;
+    }
     Message message = Message.obtain();
     message.what = WXJSBridgeMsgType.MODULE_INTERVAL;
     message.arg1 = instanceId;
