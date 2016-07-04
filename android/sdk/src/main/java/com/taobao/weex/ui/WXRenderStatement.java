@@ -225,6 +225,7 @@ import com.taobao.weex.ui.component.WXComponentFactory;
 import com.taobao.weex.ui.component.WXScroller;
 import com.taobao.weex.ui.component.WXVContainer;
 import com.taobao.weex.ui.view.WXScrollView;
+import com.taobao.weex.ui.view.refresh.wrapper.BounceScrollerView;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
@@ -525,8 +526,14 @@ class WXRenderStatement {
         viewXInScroller-=ancestor.getAbsoluteX();
       }
     }
-    scroller.scrollBy(scroller.getView().getScrollX()-viewXInScroller-offsetIntF,
-                      scroller.getView().getScrollY() - viewYInScroller - offsetIntF);
+
+    int offset=scroller.getView().getScrollY();
+    if(scroller.getView() instanceof BounceScrollerView){
+      if(((BounceScrollerView)scroller.getView()).getInnerView()!=null){
+        offset=((BounceScrollerView)scroller.getView()).getInnerView().getScrollY();
+      }
+    }
+    scroller.scrollBy(scroller.getView().getScrollX()-viewXInScroller-offsetIntF, offset - viewYInScroller - offsetIntF);
   }
 
   /**
