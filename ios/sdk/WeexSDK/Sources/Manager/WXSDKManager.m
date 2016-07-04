@@ -79,7 +79,6 @@ static WXSDKManager *_sharedInstance = nil;
         [instance destroyInstance];
     }
     
-    [[self sharedInstance].bridgeMgr unload];
     [self sharedInstance].bridgeMgr = nil;
     [self sharedInstance].moduleMgr = nil;
 }

@@ -34,9 +34,11 @@
  *  @param instance  :   instance id
  *  @param data      :   external data
  **/
-- (void)refreshInstance:(NSString *)instance
-                   data:(id)data;
+- (void)refreshInstance:(NSString *)instance data:(id)data;
 
+/**
+ *  Unload
+ **/
 - (void)unload;
 
 /**
