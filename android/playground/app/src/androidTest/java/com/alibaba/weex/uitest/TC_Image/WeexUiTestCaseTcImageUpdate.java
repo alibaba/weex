@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.alibaba.weex.R;
+import com.alibaba.weex.WeappJsBaseTestCase;
 import com.alibaba.weex.util.ScreenShot;
 import com.alibaba.weex.WXPageActivity;
 import com.alibaba.weex.constants.Constants;
@@ -26,6 +27,8 @@ import java.util.ArrayList;
 public class WeexUiTestCaseTcImageUpdate extends ActivityInstrumentationTestCase2<WXPageActivity> {
     public final  String TAG = "TestScript_Guide==";
     public WXPageActivity waTestPageActivity;
+    public WeappJsBaseTestCase weappApplication;
+
 
     public ViewGroup mViewGroup;
     public Application mApplication;
@@ -40,6 +43,7 @@ public class WeexUiTestCaseTcImageUpdate extends ActivityInstrumentationTestCase
 
         Log.e("TestScript_Guide", "setUp  into!!");
         setActivityInitialTouchMode(false);
+        weappApplication = new WeappJsBaseTestCase();
         mInstrumentation = getInstrumentation();
 
         Intent intent = new Intent();
@@ -52,6 +56,8 @@ public class WeexUiTestCaseTcImageUpdate extends ActivityInstrumentationTestCase
         sleep(3000);
 
         mViewGroup = (ViewGroup) waTestPageActivity.findViewById(R.id.container);
+        setViewGroup(mViewGroup);
+
         mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, "TC_");
         Thread.sleep(3000);
 
@@ -118,7 +124,7 @@ public class WeexUiTestCaseTcImageUpdate extends ActivityInstrumentationTestCase
 
                myGroup = (ViewGroup)(activity2.findViewById(R.id.container));
                inputListView = new ArrayList<View>();
-               inputListView = ViewUtil.findViewWithText(myGroup, "点击我，图片无法显示");
+               inputListView = ViewUtil.findViewWithText(myGroup, "error src");
 //               myGroup.findViewsWithText(inputListView, "点击我，图片无法显示", View.FIND_VIEWS_WITH_TEXT);
                sleep(2000);
 
@@ -146,7 +152,7 @@ public class WeexUiTestCaseTcImageUpdate extends ActivityInstrumentationTestCase
                }
 
                inputListView = new ArrayList<View>();
-               myGroup.findViewsWithText(inputListView, "点击我，换张图片", View.FIND_VIEWS_WITH_TEXT);
+               inputListView = ViewUtil.findViewWithText(myGroup, "change src");
                if(inputListView.size()!=0){
                    final WXTextView inputTypeView = (WXTextView)inputListView.get(0);
                    Log.e(TAG, "inputTypeView text == " +inputTypeView.getText().toString());
@@ -171,7 +177,7 @@ public class WeexUiTestCaseTcImageUpdate extends ActivityInstrumentationTestCase
                }
 
                inputListView = new ArrayList<View>();
-               inputListView = ViewUtil.findViewWithText(myGroup, "点击我，图片正常显示");
+               inputListView = ViewUtil.findViewWithText(myGroup, "origin src");
 //               myGroup.findViewsWithText(inputListView, "点击我，图片正常显示", View.FIND_VIEWS_WITH_TEXT);
                if(inputListView.size()!=0){
                    final WXTextView inputTypeView = (WXTextView)inputListView.get(0);
@@ -196,7 +202,7 @@ public class WeexUiTestCaseTcImageUpdate extends ActivityInstrumentationTestCase
                }
 
                inputListView = new ArrayList<View>();
-               inputListView = ViewUtil.findViewWithText(myGroup, "点击我，图片设置不透明");
+               inputListView = ViewUtil.findViewWithText(myGroup, "pic opacity");
 
 //               myGroup.findViewsWithText(inputListView, "点击我，图片设置不透明", View.FIND_VIEWS_WITH_TEXT);
                if(inputListView.size()!=0){
@@ -222,7 +228,7 @@ public class WeexUiTestCaseTcImageUpdate extends ActivityInstrumentationTestCase
                }
 
                inputListView = new ArrayList<View>();
-               inputListView = ViewUtil.findViewWithText(myGroup, "点击我，图片设置透明");
+               inputListView = ViewUtil.findViewWithText(myGroup, "pic transparency");
 
 //               myGroup.findViewsWithText(inputListView, "点击我，图片设置透明", View.FIND_VIEWS_WITH_TEXT);
                if(inputListView.size()!=0){
@@ -248,7 +254,7 @@ public class WeexUiTestCaseTcImageUpdate extends ActivityInstrumentationTestCase
                }
 
                inputListView = new ArrayList<View>();
-               inputListView = ViewUtil.findViewWithText(myGroup, "点击我，图片宽度变大");
+               inputListView = ViewUtil.findViewWithText(myGroup, "width large");
 
 //               myGroup.findViewsWithText(inputListView, "点击我，图片宽度变大", View.FIND_VIEWS_WITH_TEXT);
                if(inputListView.size()!=0){
@@ -274,7 +280,7 @@ public class WeexUiTestCaseTcImageUpdate extends ActivityInstrumentationTestCase
                }
 
                inputListView = new ArrayList<View>();
-               inputListView = ViewUtil.findViewWithText(myGroup, "点击我，图片宽度变小");
+               inputListView = ViewUtil.findViewWithText(myGroup, "width less");
 
 //               myGroup.findViewsWithText(inputListView, "点击我，图片宽度变小", View.FIND_VIEWS_WITH_TEXT);
                if(inputListView.size()!=0){
@@ -300,7 +306,7 @@ public class WeexUiTestCaseTcImageUpdate extends ActivityInstrumentationTestCase
                }
 
                inputListView = new ArrayList<View>();
-               inputListView = ViewUtil.findViewWithText(myGroup, "点击我，图片高度变大");
+               inputListView = ViewUtil.findViewWithText(myGroup, "height large");
 
 //               myGroup.findViewsWithText(inputListView, "点击我，图片高度变大", View.FIND_VIEWS_WITH_TEXT);
                if(inputListView.size()!=0){
@@ -326,7 +332,7 @@ public class WeexUiTestCaseTcImageUpdate extends ActivityInstrumentationTestCase
                }
 
                inputListView = new ArrayList<View>();
-               inputListView = ViewUtil.findViewWithText(myGroup, "点击我，图片高度变小");
+               inputListView = ViewUtil.findViewWithText(myGroup, "height less");
 
 //               myGroup.findViewsWithText(inputListView, "点击我，图片高度变小", View.FIND_VIEWS_WITH_TEXT);
                if(inputListView.size()!=0){
@@ -352,7 +358,7 @@ public class WeexUiTestCaseTcImageUpdate extends ActivityInstrumentationTestCase
                }
 
                inputListView = new ArrayList<View>();
-               inputListView = ViewUtil.findViewWithText(myGroup, "点击我，图片等比例放大");
+               inputListView = ViewUtil.findViewWithText(myGroup, "scale large");
 
 //               myGroup.findViewsWithText(inputListView, "点击我，图片等比例放大", View.FIND_VIEWS_WITH_TEXT);
                if(inputListView.size()!=0){
@@ -378,7 +384,7 @@ public class WeexUiTestCaseTcImageUpdate extends ActivityInstrumentationTestCase
                }
 
                inputListView = new ArrayList<View>();
-               inputListView = ViewUtil.findViewWithText(myGroup, "点击我，图片等比例缩小");
+               inputListView = ViewUtil.findViewWithText(myGroup, "scale smaller");
 
 //               myGroup.findViewsWithText(inputListView, "点击我，图片等比例缩小", View.FIND_VIEWS_WITH_TEXT);
                if(inputListView.size()!=0){
@@ -404,7 +410,7 @@ public class WeexUiTestCaseTcImageUpdate extends ActivityInstrumentationTestCase
                }
 
                inputListView = new ArrayList<View>();
-               inputListView = ViewUtil.findViewWithText(myGroup, "点击我，恢复默认");
+               inputListView = ViewUtil.findViewWithText(myGroup, "resize cover");
 
 //               myGroup.findViewsWithText(inputListView, "点击我，恢复默认", View.FIND_VIEWS_WITH_TEXT);
                if(inputListView.size()!=0){
@@ -423,6 +429,32 @@ public class WeexUiTestCaseTcImageUpdate extends ActivityInstrumentationTestCase
                    sleep(2000);
                    Log.e(TAG, "TC_Image_Update_13_recover snap!");
                    screenShot("TC_Image_Update_13_recover");
+//                   ScreenShot.takeScreenShotIncludeDialog(getActivity(), "TC_Downgrade_osV_False");
+
+                   sleep(2000);
+
+               }
+
+               inputListView = new ArrayList<View>();
+               inputListView = ViewUtil.findViewWithText(myGroup, "resize contain");
+
+//               myGroup.findViewsWithText(inputListView, "点击我，恢复默认", View.FIND_VIEWS_WITH_TEXT);
+               if(inputListView.size()!=0){
+                   final WXTextView inputTypeView = (WXTextView)inputListView.get(0);
+
+                   mInstrumentation.runOnMainSync(new Runnable() {
+                       @Override
+                       public void run() {
+                           inputTypeView.requestFocus();
+                           inputTypeView.performClick();
+                           Log.e(TAG, "TC_Image_Update_14_contain clcik!");
+
+                       }
+                   });
+
+                   sleep(2000);
+                   Log.e(TAG, "TC_Image_Update_14_contain snap!");
+                   screenShot("TC_Image_Update_14_contain");
 //                   ScreenShot.takeScreenShotIncludeDialog(getActivity(), "TC_Downgrade_osV_False");
 
                    sleep(2000);
