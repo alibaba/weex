@@ -69,22 +69,45 @@ public class DebugBridge implements IWXBridge {
         unregisterBroadcastReceiver();
 
         if (mSession != null && mSession.isOpen()) {
-            mSession.sendText(getInitFrameworkMessage(framework));
+            mSession.sendText(getInitFrameworkMessage(framework, params));
             return 1;
         }
 
         return 0;
     }
 
-    private String getInitFrameworkMessage(String framework) {
+    private String getInitFrameworkMessage(String framework, WXParams params) {
         Map<String, Object> func = new HashMap<>();
-        func.put("source", framework);
+        func.put(WXDebugConstants.PARAM_JS_SOURCE, framework);
+        if (params != null) {
+            Map<String, Object> environmentMap = getEnvironmentMap(params);
+            if (environmentMap != null && environmentMap.size() > 0) {
+                Map<String, Object> wxEnvironment = new HashMap<>();
+                wxEnvironment.put(WXDebugConstants.ENV_WX_ENVIRONMENT, environmentMap);
+                func.put(WXDebugConstants.PARAM_INIT_ENV, wxEnvironment);
+            }
+        }
 
         Map<String, Object> map = new HashMap<>();
-        map.put("method", "WxDebug.initJSRuntime");
-        map.put("params", func);
+        map.put(WXDebugConstants.METHOD, WXDebugConstants.METHOD_INIT_RUNTIME);
+        map.put(WXDebugConstants.PARAMS, func);
 
         return JSON.toJSONString(map);
+    }
+
+    private Map<String, Object> getEnvironmentMap(WXParams params) {
+        Map<String, Object> environment = new HashMap<>();
+        environment.put(WXDebugConstants.ENV_APP_NAME, params.getAppName());
+        environment.put(WXDebugConstants.ENV_APP_VERSION, params.getAppVersion());
+        environment.put(WXDebugConstants.ENV_PLATFORM, params.getPlatform());
+        environment.put(WXDebugConstants.ENV_OS_VERSION, params.getOsVersion());
+        environment.put(WXDebugConstants.ENV_LOG_LEVEL, params.getLogLevel());
+        environment.put(WXDebugConstants.ENV_WEEX_VERSION, params.getWeexVersion());
+        environment.put(WXDebugConstants.ENV_DEVICE_MODEL, params.getDeviceModel());
+        environment.put(WXDebugConstants.ENV_INFO_COLLECT, params.getShouldInfoCollect());
+        environment.put(WXDebugConstants.ENV_DEVICE_WIDTH, params.getDeviceWidth());
+        environment.put(WXDebugConstants.ENV_DEVICE_HEIGHT, params.getDeviceHeight());
+        return environment;
     }
 
     @Override
@@ -105,13 +128,13 @@ public class DebugBridge implements IWXBridge {
         }
 
         Map<String, Object> func = new HashMap<>();
-        func.put("method", function);
-        func.put("args", array);
+        func.put(WXDebugConstants.METHOD, function);
+        func.put(WXDebugConstants.ARGS, array);
 
         Log.v(TAG, "callJS: function is " + function + ", args " + array);
         Map<String, Object> map = new HashMap<>();
-        map.put("method", "WxDebug.callJS");
-        map.put("params", func);
+        map.put(WXDebugConstants.METHOD, WXDebugConstants.METHOD_CALL_JS);
+        map.put(WXDebugConstants.PARAMS, func);
         if (mSession != null && mSession.isOpen()) {
             mSession.sendText(JSON.toJSONString(map));
         }
