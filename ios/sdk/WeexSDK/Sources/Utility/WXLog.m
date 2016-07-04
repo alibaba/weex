@@ -111,56 +111,45 @@ static id<WXLogProtocol> _externalLog;
     [self setLogLevel:[logLevelStringToEnum[levelString] unsignedIntegerValue]];
 }
 
-+ (void)log:(WXLogFlag)flag file:(const char *)fileName line:(NSUInteger)line format:(NSString *)format, ...
++ (void)log:(WXLogFlag)flag file:(const char *)fileName line:(NSUInteger)line message:(NSString *)message
 {
-    if ([WXLog logLevel] & flag || [_externalLog logLevel] & flag) {
-        if (!format) {
-            return;
+    NSString *flagString;
+    NSString *flagColor;
+    switch (flag) {
+        case WXLogFlagError: {
+            flagString = @"error";
+            flagColor = @"fg255,0,0;";
         }
-        
-        va_list args;
-        va_start(args, format);
-        NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
-        va_end(args);
-        
-        NSString *flagString;
-        NSString *flagColor;
-        switch (flag) {
-            case WXLogFlagError: {
-                flagString = @"error";
-                flagColor = @"fg255,0,0;";
-            }
-                break;
-            case WXLogFlagWarning:
-                flagString = @"warn";
-                flagColor = @"fg255,165,0;";
-                break;
-            case WXLogFlagDebug:
-                flagString = @"debug";
-                flagColor = @"fg0,128,0;";
-                break;
-            case WXLogFlagVerbose:
-                flagString = @"verbose";
-                flagColor = @"fg128,128,128;";
-                break;
-            default:
-                flagString = @"info";
-                flagColor = @"fg100,149,237;";
-                break;
-        }
-        
-        NSString *logMessage = [NSString stringWithFormat:@"%s%@ <Weex>[%@]%s:%ld, %@ %s", XCODE_COLORS_ESCAPE_SEQ, flagColor, flagString, fileName, (unsigned long)line, message, XCODE_COLORS_RESET];
-        
-        
-        if ([_externalLog logLevel] & flag) {
-            [_externalLog log:flag message:logMessage];
-        }
-        
-        [[WXSDKManager bridgeMgr] logToWebSocket:flagString message:message];
-        
-        if ([WXLog logLevel] & flag) {
-            NSLog(@"%@", logMessage);
-        }
+            break;
+        case WXLogFlagWarning:
+            flagString = @"warn";
+            flagColor = @"fg255,165,0;";
+            break;
+        case WXLogFlagDebug:
+            flagString = @"debug";
+            flagColor = @"fg0,128,0;";
+            break;
+        case WXLogFlagVerbose:
+            flagString = @"verbose";
+            flagColor = @"fg128,128,128;";
+            break;
+        default:
+            flagString = @"info";
+            flagColor = @"fg100,149,237;";
+            break;
+    }
+    
+    NSString *logMessage = [NSString stringWithFormat:@"%s%@ <Weex>[%@]%s:%ld, %@ %s", XCODE_COLORS_ESCAPE_SEQ, flagColor, flagString, fileName, (unsigned long)line, message, XCODE_COLORS_RESET];
+    
+    
+    if ([_externalLog logLevel] & flag) {
+        [_externalLog log:flag message:logMessage];
+    }
+    
+    [[WXSDKManager bridgeMgr] logToWebSocket:flagString message:message];
+    
+    if ([WXLog logLevel] & flag) {
+        NSLog(@"%@", logMessage);
     }
 }
 
@@ -205,7 +194,7 @@ static id<WXLogProtocol> _externalLog;
         [invocation invoke];
     }
     
-    [self log:flag file:fileName line:line format:@"%@",format];
+    [self log:flag file:fileName line:line message:message];
 }
 
 #pragma mark - External Log

@@ -211,10 +211,7 @@ do{\
 }
 
 - (void)connectToDevToolWithUrl:(NSURL *)url {
-    __weak typeof(self) weakSelf = self;
-    WXPerformBlockOnBridgeThread(^(){
-        [weakSelf.bridgeCtx connectToDevToolWithUrl:url];
-    });
+    [self.bridgeCtx connectToDevToolWithUrl:url];
 }
 
 - (void)connectToWebSocket:(NSURL *)url
