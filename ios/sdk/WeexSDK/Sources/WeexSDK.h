@@ -10,6 +10,7 @@
 
 #import "WXUtility.h"
 #import "WXType.h"
+#import "WXSDKManager.h"
 #import "WXSDKInstance.h"
 #import "WXSDKEngine.h"
 #import "WXRootViewController.h"

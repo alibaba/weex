@@ -131,7 +131,7 @@
 		77D161211C02DDB40010B15B /* WXSDKEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 77D1611F1C02DDB40010B15B /* WXSDKEngine.m */; };
 		77D161241C02DDD10010B15B /* WXSDKInstance.h in Headers */ = {isa = PBXBuildFile; fileRef = 77D161221C02DDD10010B15B /* WXSDKInstance.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77D161251C02DDD10010B15B /* WXSDKInstance.m in Sources */ = {isa = PBXBuildFile; fileRef = 77D161231C02DDD10010B15B /* WXSDKInstance.m */; };
-		77D161281C02DE1A0010B15B /* WXSDKManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 77D161261C02DE1A0010B15B /* WXSDKManager.h */; };
+		77D161281C02DE1A0010B15B /* WXSDKManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 77D161261C02DE1A0010B15B /* WXSDKManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77D161291C02DE1A0010B15B /* WXSDKManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 77D161271C02DE1A0010B15B /* WXSDKManager.m */; };
 		77D161301C02DE4E0010B15B /* WXComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 77D1612E1C02DE4E0010B15B /* WXComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77D161311C02DE4E0010B15B /* WXComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 77D1612F1C02DE4E0010B15B /* WXComponent.m */; };
