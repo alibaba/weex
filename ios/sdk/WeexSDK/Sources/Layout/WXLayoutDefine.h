@@ -35,6 +35,7 @@
     #define print_css_node                 WX_LAYOUT_PREFIX(print_css_node)
     #define layoutNode                     WX_LAYOUT_PREFIX(layoutNode)
     #define isUndefined                    WX_LAYOUT_PREFIX(isUndefined)
+    #define resetNodeLayout                WX_LAYOUT_PREFIX(resetNodeLayout)
 
 #endif
 

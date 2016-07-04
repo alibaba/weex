@@ -74,8 +74,13 @@
         _loadmoreretry = attributes[@"loadmoreretry"] ? [WXConvert NSUInteger:attributes[@"loadmoreretry"]] : 0;
         _listenLoadMore = [events containsObject:@"loadmore"];
 
-        
         _scrollerCSSNode = new_css_node();
+        
+        if ((isUndefined(self.cssNode->style.dimensions[CSS_WIDTH])
+             || isUndefined(self.cssNode->style.dimensions[CSS_HEIGHT]))
+            && self.cssNode->style.flex <= 0.0) {
+            self.cssNode->style.flex = 1.0;
+        }
     }
     
     return self;
