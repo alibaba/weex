@@ -427,7 +427,7 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     return measureOutput;
   }
 
-  public final void updateProperties(Map<String, Object> props) {
+  public void updateProperties(Map<String, Object> props) {
     if (props == null||props.isEmpty() || mHost == null) {
       return;
     }

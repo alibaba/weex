@@ -231,7 +231,4 @@ public class WXEventType {
   public static final String ONLOADING = "loading";
 
   public static final String CHANGE = "change";
-
-  public static String  CLICK_LEFT_ITEM= "clickleftitem";
-  public static String  CLICK_RIGHT_ITEM= "clickrightitem";
 }
