@@ -23,8 +23,6 @@
 #import "WXModuleManager.h"
 #import "WXSDKInstance_private.h"
 
-#import "PDDebugger.h"
-
 @interface WXBridgeContext ()
 
 @property (nonatomic, strong) id<WXBridgeProtocol>  jsBridge;
