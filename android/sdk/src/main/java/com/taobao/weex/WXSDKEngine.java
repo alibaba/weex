@@ -111,6 +111,8 @@
 package com.taobao.weex;
 
 import android.app.Application;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.taobao.weex.adapter.IWXHttpAdapter;
@@ -121,7 +123,11 @@ import com.taobao.weex.appfram.navigator.WXNavigatorModule;
 import com.taobao.weex.bridge.ModuleFactory;
 import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.bridge.WXModuleManager;
-import com.taobao.weex.common.*;
+import com.taobao.weex.common.Destroyable;
+import com.taobao.weex.common.TypeModuleFactory;
+import com.taobao.weex.common.WXException;
+import com.taobao.weex.common.WXInstanceWrap;
+import com.taobao.weex.common.WXModule;
 import com.taobao.weex.dom.WXDomModule;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.WXDomRegistry;
@@ -159,6 +165,8 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 public class WXSDKEngine {
+
+  public static final String JS_FRAMEWORK_RELOAD="js_framework_reload";
 
   private static final String V8_SO_NAME = "weexcore";
   private volatile static boolean init;
@@ -471,6 +479,21 @@ public class WXSDKEngine {
       } catch (Exception e) {
         Log.d("weex","WXDebugTool not found!");
       }
+    }
+  }
+  public static void reload(final Application application,boolean remoteDebug){
+    if(remoteDebug){
+      WXEnvironment.sRemoteDebugMode=true;
+      WXBridgeManager.getInstance().restart();
+      WXBridgeManager.getInstance().initScriptsFramework(null);
+      WXModuleManager.reload();
+      WXComponentRegistry.reload();
+      WXSDKManager.getInstance().postOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          LocalBroadcastManager.getInstance(application).sendBroadcast(new Intent(JS_FRAMEWORK_RELOAD));
+        }
+      }, 1000);
     }
   }
 }
