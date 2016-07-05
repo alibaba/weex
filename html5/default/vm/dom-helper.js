@@ -90,8 +90,9 @@ export function _attachTarget (target, dest) {
     }
     // for check repeat case
     if (after) {
-      this._moveTarget(target, after)
+      const signal = this._moveTarget(target, after)
       dest.updateMark = target.element ? target.end : target
+      return signal
     }
     else if (target.element) {
       dest.element.insertBefore(target.start, before)
@@ -120,11 +121,9 @@ export function _attachTarget (target, dest) {
  */
 export function _moveTarget (target, after) {
   if (target.element) {
-    this._moveBlock(target, after)
+    return this._moveBlock(target, after)
   }
-  else {
-    this._moveElement(target, after)
-  }
+  return this._moveElement(target, after)
 }
 
 /**
@@ -136,7 +135,7 @@ export function _moveTarget (target, after) {
 export function _moveElement (element, after) {
   const parent = after.parentNode
   if (parent) {
-    parent.insertAfter(element, after)
+    return parent.insertAfter(element, after)
   }
 }
 
@@ -151,6 +150,7 @@ export function _moveBlock (fragBlock, after) {
 
   if (parent) {
     let el = fragBlock.start
+    let signal
     const group = [el]
 
     while (el && el !== fragBlock.end) {
@@ -159,10 +159,13 @@ export function _moveBlock (fragBlock, after) {
     }
 
     let temp = after
-    group.forEach((el) => {
-      parent.insertAfter(el, temp)
+    group.every((el) => {
+      signal = parent.insertAfter(el, temp)
       temp = el
+      return signal !== -1
     })
+
+    return signal
   }
 }
 

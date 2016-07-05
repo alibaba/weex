@@ -833,4 +833,23 @@ describe('test callNative signals', () => {
       run(i)
     }
   })
+
+  it('long signals control', function () {
+    this.timeout(50000)
+
+    const name = 'signals-long'
+    const inputCode = readInput(name)
+
+    function run (calls) {
+      callNativeSpy.reset()
+      global.callNative = genCallNativeWrapper(calls)
+      framework.createInstance(name + calls, inputCode)
+      framework.destroyInstance(name + calls)
+      expect(callNativeSpy.args.length).eql(calls + 2)
+    }
+
+    run(10)
+    run(30)
+    run(90)
+  })
 })
