@@ -395,7 +395,6 @@ public class WXListComponent extends WXVContainer implements
       mHost = bounceRecyclerView;
     }
 
-<<<<<<< HEAD
   @Override
   public void bindStickStyle(WXComponent component) {
     //TODO
@@ -425,11 +424,6 @@ public class WXListComponent extends WXVContainer implements
   public void unbindDisappearEvent(WXComponent component) {
 //TODO
   }
-
-  @Override
-  public BounceRecyclerView getView() {
-        return (BounceRecyclerView) super.getView();
-    }
 
   @Override
   public void scrollTo(WXComponent component,int offset) {
@@ -466,7 +460,6 @@ public class WXListComponent extends WXVContainer implements
     /**
         * @return BounceRecyclerView
         */
-    @Override
     public BounceRecyclerView getView() {
         return (BounceRecyclerView) super.getView();
     }
