@@ -397,14 +397,27 @@ public class WXListComponent extends WXVContainer implements
       mHost = bounceRecyclerView;
     }
 
+    /**
+     * @return BounceRecyclerView
+     */
     @Override
     public BounceRecyclerView getView() {
         return (BounceRecyclerView) super.getView();
     }
 
+    /**
+     * @return BounceRecyclerView
+     */
     @Override
     public BounceRecyclerView getRealView() {
         return (BounceRecyclerView) super.getView();
+    }
+
+    /**
+     * @return RecyclerView
+     */
+    public RecyclerView getInnerView() {
+      return bounceRecyclerView.getInnerView();
     }
 
     /**
