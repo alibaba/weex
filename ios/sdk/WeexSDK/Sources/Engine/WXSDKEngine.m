@@ -74,6 +74,7 @@
     [self registerComponent:@"loading" withClass:NSClassFromString(@"WXLoadingComponent")];
     [self registerComponent:@"loading-indicator" withClass:NSClassFromString(@"WXLoadingIndicator")];
     [self registerComponent:@"refresh" withClass:NSClassFromString(@"WXRefreshComponent")];
+    [self registerComponent:@"textarea" withClass:NSClassFromString(@"WXTextViewComponent")];
 }
 
 + (void)registerComponent:(NSString *)name withClass:(Class)clazz

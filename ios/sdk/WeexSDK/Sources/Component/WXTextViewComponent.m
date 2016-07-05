@@ -1,21 +1,23 @@
-/**
- * Created by Weex.
- * Copyright (c) 2016, Alibaba, Inc. All rights reserved.
- *
- * This source code is licensed under the Apache Licence 2.0.
- * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
- */
+//
+//  WXTextViewComponent.m
+//  WeexSDK
+//
+//  Created by zifan.zx on 7/4/16.
+//  Copyright © 2016 taobao. All rights reserved.
+//
 
-#import "WXTextInputComponent.h"
-#import "WXConvert.h"
+#import "WXTextViewComponent.h"
 #import "WXUtility.h"
+#import "WXConvert.h"
+#import "WXComponent_internal.h"
+#import "WXView.h"
 
-@interface WXTextInputView : UITextField
+@interface WXTextView : UITextView
 @property (nonatomic, assign) UIEdgeInsets border;
 @property (nonatomic, assign) UIEdgeInsets padding;
 @end
 
-@implementation WXTextInputView
+@implementation WXTextView
 
 - (instancetype)init
 {
@@ -46,20 +48,28 @@
 {
     return [self textRectForBounds:bounds];
 }
+
 @end
 
-@interface WXTextInputComponent()
+@interface WXTextViewComponent()
+@property (nonatomic, strong) WXTextView *textView;
+@property (nonatomic, strong) UILabel *placeholder;
 
-@property (nonatomic, strong) WXTextInputView *inputView;
 //attribute
 @property (nonatomic, strong) UIColor *placeholderColor;
-@property (nonatomic, strong) NSString *placeholder;
-@property (nonatomic) NSUInteger maxLength;
+@property (nonatomic, strong) NSString *placeholderString;
+@property (nonatomic, strong) UILabel *placeHolderLabel;
+@property (nonatomic) BOOL autofocus;
+@property (nonatomic) BOOL disabled;
+@property (nonatomic, strong)NSString *textValue;
+@property (nonatomic) NSUInteger rows;
 //style
 @property (nonatomic) WXPixelType fontSize;
 @property (nonatomic) WXTextStyle fontStyle;
 @property (nonatomic) WXTextWeight fontWeight;
 @property (nonatomic, strong) NSString *fontFamily;
+@property (nonatomic, strong) UIColor *color;
+@property (nonatomic) NSTextAlignment textAlign;
 //event
 @property (nonatomic) BOOL inputEvent;
 @property (nonatomic) BOOL focusEvent;
@@ -70,16 +80,11 @@
 
 @end
 
-@implementation WXTextInputComponent
-{
+@implementation WXTextViewComponent {
     UIEdgeInsets _border;
     UIEdgeInsets _padding;
     NSTextStorage* _textStorage;
 }
-
-@synthesize border = _border;
-@synthesize padding = _padding;
-@synthesize textStorage = _textStorage;
 
 - (instancetype)initWithRef:(NSString *)ref type:(NSString *)type styles:(NSDictionary *)styles attributes:(NSDictionary *)attributes events:(NSArray *)events weexInstance:(WXSDKInstance *)weexInstance
 {
@@ -91,34 +96,34 @@
         _changeEvent = NO;
         _clickEvent = NO;
         
-        _inputView = [[WXTextInputView alloc] init];
-        if (attributes[@"type"]) {
-            [self setType: attributes[@"type"]];
-        }
-        
         if (attributes[@"autofocus"]) {
-            [self setAutofocus:[attributes[@"autofocus"] boolValue]];
+            _autofocus = [attributes[@"autofocus"] boolValue];
+        }
+        if (attributes[@"rows"]) {
+            _rows = [attributes[@"rows"] integerValue];
+        } else {
+            _rows = 1;
         }
         if (attributes[@"disabled"]) {
-            [_inputView setEnabled:[attributes[@"disabled"] boolValue]];
+            _disabled = [attributes[@"disabled"] boolValue];
         }
         if (attributes[@"placeholder"]) {
-            _placeholder = attributes[@"placeholder"];
-            _inputView.placeholder = _placeholder;
+            _placeholderString = attributes[@"placeholder"];
         } else {
-            _placeholder = @"";
+            _placeholderString = @"";
         }
+        if (styles[@"placeholderColor"]) {
+            _placeholderColor = [WXConvert UIColor:styles[@"placeholderColor"]];
+        }else {
+            _placeholderColor = [UIColor colorWithRed:0x99/255.0 green:0x99/255.0 blue:0x99/255.0 alpha:1.0];
+        }
+        
         if (attributes[@"value"]) {
-            _inputView.text = attributes[@"value"];
-        }
-        if (attributes[@"maxlength"]) {
-            _maxLength = [attributes[@"maxlength"] integerValue];
-        } else {
-            _maxLength = 0;
+            _textValue = attributes[@"value"];
         }
         
         if (styles[@"color"]) {
-            [_inputView setTextColor:[WXConvert UIColor:styles[@"color"]]];
+           _color = [WXConvert UIColor:styles[@"color"]];
         }
         if (styles[@"fontSize"]) {
             _fontSize = [WXConvert WXPixelType:styles[@"fontSize"]];
@@ -133,59 +138,76 @@
             _fontFamily = styles[@"fontFamily"];
         }
         if (styles[@"textAlign"]) {
-            [_inputView setTextAlignment:[WXConvert NSTextAlignment:styles[@"textAlign"]]] ;
+            _textAlign = [WXConvert NSTextAlignment:styles[@"textAlign"]] ;
         }
         
-        if (styles[@"placeholderColor"]) {
-            _placeholderColor = [WXConvert UIColor:styles[@"placeholderColor"]];
-        }else {
-            _placeholderColor = [UIColor colorWithRed:0x99/255.0 green:0x99/255.0 blue:0x99/255.0 alpha:1.0];
-        }
-        [self setPlaceholderAttributedString];
-        [self setTextFont];
-        
+        _padding = UIEdgeInsetsZero;
+        _border = UIEdgeInsetsZero;
         UIEdgeInsets padding = UIEdgeInsetsMake(self.cssNode->style.padding[CSS_TOP], self.cssNode->style.padding[CSS_LEFT], self.cssNode->style.padding[CSS_BOTTOM], self.cssNode->style.padding[CSS_RIGHT]);
         if (!UIEdgeInsetsEqualToEdgeInsets(padding, _padding)) {
-            [self setPadding:padding];
+            _padding = padding;
         }
         UIEdgeInsets border = UIEdgeInsetsMake(self.cssNode->style.border[CSS_TOP], self.cssNode->style.border[CSS_LEFT], self.cssNode->style.border[CSS_BOTTOM], self.cssNode->style.border[CSS_RIGHT]);
         if (!UIEdgeInsetsEqualToEdgeInsets(border, _border)) {
-            [self setBorder:border];
+            _border = border;
         }
     }
     
     return self;
 }
 
--(UIView *)loadView
+- (void)viewWillUnload
 {
-    return _inputView;
+    _textView = nil;
 }
-
-#pragma mark - lifeCircle
-
+- (UIView *)loadView
+{
+    return [[WXTextView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+}
 - (void)viewDidLoad
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFiledEditChanged:)
-                                                 name:UITextFieldTextDidChangeNotification
-                                               object:_inputView];
-    _padding = UIEdgeInsetsZero;
-    _border = UIEdgeInsetsZero;
-    _inputView.delegate = self;
-    
+    _textView = self.view;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textViewEditChanged:)
+                                                 name:UITextViewTextDidChangeNotification
+                                               object:_textView];
+    [self setEnabled];
+    [self setAutofocus];
+    [self setPlaceholderAttributedString];
+    if (_placeholderString) {
+        _placeHolderLabel = [[UILabel alloc] init];
+        [self setPlaceholderAttributedString];
+        [_placeHolderLabel setFrame:(CGRect){
+            .origin.x = CGRectGetMinX(_textView.bounds),
+            .origin.y = CGRectGetMinY(_textView.bounds)+5,
+            .size.width = _textView.frame.size.width,
+            .size.height = [_placeholderString sizeWithAttributes:nil].height
+        }];
+        
+        [_textView addSubview:_placeHolderLabel];
+    }
+   
     UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(closeKeyboard)];
     UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 0, 44)];
     toolbar.items = [NSArray arrayWithObjects:space, barButton, nil];
     
-    _inputView.inputAccessoryView = toolbar;
+    _textView.inputAccessoryView = toolbar;
+    
+    if (_textValue) {
+        _textView.text = _textValue;
+    }else {
+        _textView.text = @"";
+    }
+    
+    _textView.layer.borderWidth = 1.0f;
+    if (_color) {
+        [_textView setTextColor:_color];
+    }
+    [_textView setTextAlignment:_textAlign];
+    [self setTextFont];
+    [_textView setNeedsDisplay];
+    
 }
-
-- (void)viewWillUnload
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:_inputView];
-}
-
 #pragma mark - Add Event
 - (void)addEvent:(NSString *)eventName
 {
@@ -231,28 +253,19 @@
 
 - (void)updateAttributes:(NSDictionary *)attributes
 {
-    if (attributes[@"type"]) {
-        [self setType: attributes[@"type"]];
-    }
     if (attributes[@"autofocus"]) {
         [self setAutofocus:[attributes[@"autofocus"] boolValue]];
     }
     if (attributes[@"disabled"]) {
-        [_inputView setEnabled:[attributes[@"disabled"] boolValue]];
+        _disabled = [attributes[@"disabled"] boolValue];
     }
-    if (attributes[@"maxlength"]) {
-        _maxLength = [attributes[@"maxlength"] integerValue];
-    }
-    
     if (attributes[@"placeholder"]) {
-        _placeholder = attributes[@"placeholder"];
-        _inputView.placeholder = _placeholder;
+        _placeholderString = attributes[@"placeholder"];
+
     }
     if (attributes[@"value"]) {
-        _inputView.text = attributes[@"value"];
+        _textValue = attributes[@"value"];
     }
-    
-    [self setPlaceholderAttributedString];
 }
 
 #pragma mark - upate styles
@@ -260,7 +273,7 @@
 - (void)updateStyles:(NSDictionary *)styles
 {
     if (styles[@"color"]) {
-        [_inputView setTextColor:[WXConvert UIColor:styles[@"color"]]];
+        [_textView setTextColor:[WXConvert UIColor:styles[@"color"]]];
     }
     if (styles[@"fontSize"]) {
         _fontSize = [WXConvert WXPixelType:styles[@"fontSize"]];
@@ -275,23 +288,22 @@
         _fontFamily = styles[@"fontFamily"];
     }
     if (styles[@"textAlign"]) {
-        [_inputView setTextAlignment:[WXConvert NSTextAlignment:styles[@"textAlign"]]] ;
+        _textAlign = [WXConvert NSTextAlignment:styles[@"textAlign"]] ;
     }
     if (styles[@"placeholderColor"]) {
         _placeholderColor = [WXConvert UIColor:styles[@"placeholderColor"]];
     }else {
         _placeholderColor = [UIColor colorWithRed:0x99/255.0 green:0x99/255.0 blue:0x99/255.0 alpha:1.0];
     }
-    [self setPlaceholderAttributedString];
     
     UIEdgeInsets padding = UIEdgeInsetsMake(self.cssNode->style.padding[CSS_TOP], self.cssNode->style.padding[CSS_LEFT], self.cssNode->style.padding[CSS_BOTTOM], self.cssNode->style.padding[CSS_RIGHT]);
     if (!UIEdgeInsetsEqualToEdgeInsets(padding, _padding)) {
-        [self setPadding:padding];
+        _padding = padding;
     }
     
     UIEdgeInsets border = UIEdgeInsetsMake(self.cssNode->style.border[CSS_TOP], self.cssNode->style.border[CSS_LEFT], self.cssNode->style.border[CSS_BOTTOM], self.cssNode->style.border[CSS_RIGHT]);
     if (!UIEdgeInsetsEqualToEdgeInsets(border, _border)) {
-        [self setBorder:border];
+        _border = border;
     }
 }
 
@@ -301,6 +313,7 @@
     return ^CGSize (CGSize constrainedSize) {
         
         CGSize computedSize = [[[NSString alloc] init]sizeWithAttributes:nil];
+        computedSize.height = computedSize.height * _rows;
         //TODO:more elegant way to use max and min constrained size
         if (!isnan(weakSelf.cssNode->style.minDimensions[CSS_WIDTH])) {
             computedSize.width = MAX(computedSize.width, weakSelf.cssNode->style.minDimensions[CSS_WIDTH]);
@@ -325,13 +338,10 @@
     };
 }
 
-
-#pragma mark -
-#pragma mark UITextFieldDelegate
-
-- (void)textFieldDidBeginEditing:(UITextField *)textField
+#pragma textview Delegate
+- (void)textViewDidBeginEditing:(UITextView *)textView
 {
-    _changeEventString = [textField text];
+    _changeEventString = [textView text];
     if (_focusEvent) {
         [self fireEvent:@"focus" params:nil];
     }
@@ -340,25 +350,11 @@
     }
 }
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
-{
-    if (_maxLength) {
-        NSUInteger oldLength = [textField.text length];
-        NSUInteger replacementLength = [string length];
-        NSUInteger rangeLength = range.length;
-        
-        NSUInteger newLength = oldLength - rangeLength + replacementLength;
-        
-        return newLength <= _maxLength ;
-    }
-    return YES;
-}
-
-- (void)textFieldDidEndEditing:(UITextField *)textField
+- (void)textViewDidEndEditing:(UITextView *)textView
 {
     if (_changeEvent) {
-        if (![[textField text] isEqualToString:_changeEventString]) {
-            [self fireEvent:@"change" params:@{@"value":[textField text]} domChanges:@{@"value":[textField text]}];
+        if (![[textView text] isEqualToString:_changeEventString]) {
+            [self fireEvent:@"change" params:@{@"value":[textView text]}];
         }
     }
     if (_blurEvent) {
@@ -366,85 +362,59 @@
     }
 }
 
-- (void)textFiledEditChanged:(NSNotification *)notifi{
+- (void)textViewEditChanged:(NSNotification*)notifi
+{
     if (_inputEvent) {
-        UITextField *textField = (UITextField *)notifi.object;
-        [self fireEvent:@"input" params:@{@"value":textField.text}];
+        UITextView *textView = (UITextView *)notifi.object;
+        [self fireEvent:@"input" params:@{@"value":textView.text}];
     }
 }
 
-#pragma mark
-
 - (void)setPlaceholderAttributedString
 {
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:_placeholderString];
     if (_placeholderColor) {
-        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:_placeholder];
-        [attributedString addAttribute:NSForegroundColorAttributeName value:_placeholderColor range:NSMakeRange(0, _placeholder.length)];
-        [_inputView setAttributedPlaceholder:attributedString];
+        [attributedString addAttribute:NSForegroundColorAttributeName value:_placeholderColor range:NSMakeRange(0, _placeholderString.length)];
+    }
+    _placeHolderLabel.backgroundColor = [UIColor clearColor];
+    _placeHolderLabel.attributedText = attributedString;
+    
+}
+
+- (void)setAutofocus
+{
+    if (_autofocus) {
+        [_textView becomeFirstResponder];
+    } else {
+        [_textView resignFirstResponder];
     }
 }
 
 - (void)setTextFont
 {
     UIFont *font = [WXUtility fontWithSize:_fontSize textWeight:_fontWeight textStyle:_fontStyle fontFamily:_fontFamily];
-    [_inputView setFont:font];
-}
-
-- (void)setAutofocus:(BOOL)b
-{
-    if (b) {
-        [_inputView becomeFirstResponder];
-    } else {
-        [_inputView resignFirstResponder];
-    }
-}
-
-- (void)setType:(NSString*)type
-{
-    [_inputView setKeyboardType:UIKeyboardTypeDefault];
-    [_inputView setSecureTextEntry:NO];
-    
-    if ([type isEqualToString:@"text"]) {
-        [_inputView setKeyboardType:UIKeyboardTypeDefault];
-    }
-    else if ([type isEqualToString:@"password"]) {
-        [_inputView setSecureTextEntry:YES];
-    }
-    else if ([type isEqualToString:@"tel"]) {
-        [_inputView setKeyboardType:UIKeyboardTypePhonePad];
-    }
-    else if ([type isEqualToString:@"email"]) {
-        [_inputView setKeyboardType:UIKeyboardTypeEmailAddress];
-    }
-    else if ([type isEqualToString:@"url"]) {
-        [_inputView setKeyboardType:UIKeyboardTypeURL];
-    }
-    else if ([type isEqualToString:@"date"]) {
-        [_inputView setKeyboardType:UIKeyboardTypeNumberPad];
-    }
-    else if ([type isEqualToString:@"time"]) {
-        [_inputView setKeyboardType:UIKeyboardTypeNumberPad];
-    }
-    else if ([type isEqualToString:@"datetime"]) {
-        [_inputView setKeyboardType:UIKeyboardTypeNumberPad];
-    }
+    [_textView setFont:font];
 }
 
 - (void)setPadding:(UIEdgeInsets)padding
 {
     _padding = padding;
-    [_inputView setPadding:padding];
+    [_textView setPadding:padding];
 }
 
 - (void)setBorder:(UIEdgeInsets)border
 {
     _border = border;
-    [_inputView setBorder:border];
+    [_textView setBorder:border];
 }
-
+- (void)setEnabled
+{
+    _textView.editable = !(_disabled);
+    _textView.selectable = !(_disabled);
+}
 - (void)closeKeyboard
 {
-    [_inputView resignFirstResponder];
+    [_textView resignFirstResponder];
 }
 
 @end
