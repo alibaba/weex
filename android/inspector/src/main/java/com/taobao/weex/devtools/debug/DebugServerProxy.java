@@ -104,7 +104,7 @@ public class DebugServerProxy implements IWXDebugProxy {
                             public void run() {
                                 Toast.makeText(
                                         WXEnvironment.sApplication,
-                                        "WeexInspector Started", Toast.LENGTH_SHORT)
+                                        "debug server connected", Toast.LENGTH_SHORT)
                                         .show();
                             }
                         }, 0);
