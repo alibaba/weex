@@ -470,8 +470,6 @@ public class WXListComponent extends WXVContainer implements
       if(view == null){
         return;
       }
-
-      int pos = index == -1 ?view.getAdapter().getItemCount()-1:index;
     }
 
     /**
@@ -528,7 +526,6 @@ public class WXListComponent extends WXVContainer implements
      */
     @Override
     public void onBindViewHolder(ListBaseViewHolder holder, int position) {
-        long begin=System.currentTimeMillis();
         if (holder == null) return;
         holder.setComponentUsing(true);
         WXComponent component = getChild(position);
@@ -545,10 +542,8 @@ public class WXListComponent extends WXVContainer implements
         if (component != null
             && holder.getComponent() != null
                 && holder.getComponent() instanceof WXCell) {
-            holder.getComponent().applyLayoutAndEvent(component);
             holder.getComponent().bindData(component);
         }
-        WXLogUtils.d(TAG, "Bind holder "+(System.currentTimeMillis()-begin)+"  Thread:"+Thread.currentThread().getName());
 
     }
 
@@ -563,7 +558,6 @@ public class WXListComponent extends WXVContainer implements
      */
     @Override
     public ListBaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        WXLogUtils.d(TAG, "onCreateViewHolder");
         if (mChildren != null) {
             for (int i = 0; i < childCount(); i++) {
                 WXComponent component = getChild(i);
@@ -586,12 +580,10 @@ public class WXListComponent extends WXVContainer implements
                     if (component.getRealView() != null) {
                         return new ListBaseViewHolder(component, viewType);
                     } else {
-                        long begin=System.currentTimeMillis();
                          component.lazy(false);
                          component.createView(this, -1);
-
-                        WXLogUtils.d(TAG,"onCreateViewHolder lazy create:"+(System.currentTimeMillis()-begin)+"  Thread:"+Thread.currentThread().getName());
-                        return new ListBaseViewHolder(component, viewType);
+                         component.applyLayoutAndEvent(component);
+                         return new ListBaseViewHolder(component, viewType);
                     }
 
                 }
