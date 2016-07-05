@@ -74,7 +74,6 @@ describe('the api of app', () => {
         bootstrap('main')
       `)
 
-      expect(app.doc.listener.batched).to.be.true
       expect(app.define.calledOnce).to.be.true
       expect(app.bootstrap.calledOnce).to.be.true
 
