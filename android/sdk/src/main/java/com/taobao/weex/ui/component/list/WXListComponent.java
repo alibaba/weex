@@ -219,6 +219,7 @@ import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.OnWXScrollListener;
+import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.component.WXComponent;
@@ -264,8 +265,6 @@ public class WXListComponent extends WXVContainer implements
     private HashMap<String, Long> mRefToViewType;
 
     protected BounceRecyclerView bounceRecyclerView;
-
-    private boolean headerAppear = true;
 
     public WXListComponent(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
         super(instance, node, parent, lazy);
@@ -701,15 +700,18 @@ public class WXListComponent extends WXVContainer implements
         //notify header appear state
         for (int i = 0, len = childCount(); i < len; i++) {
           WXComponent value = getChild(i);
-          if ((i == firstVisible+1 && directionY < 0) && !headerAppear) {
-            if (value instanceof WXHeader) {
-              headerAppear = true;
-              bounceRecyclerView.onHeaderAppear((WXHeader) value, i);
+          if ((i == firstVisible+1 && directionY <= 0)) {
+            if ((value.getDomObject().style.get(WXDomPropConstant.WX_POSITION) != null && value.getDomObject
+                ().style
+                .get(WXDomPropConstant.WX_POSITION).equals(WXDomPropConstant.WX_POSITION_STICKY)) ||
+                value instanceof WXHeader) {
+              bounceRecyclerView.onStickyAppear((WXCell) value, i);
             }
-          } else if ((i == firstVisible && directionY > 0)  && headerAppear) {
-            if (value instanceof WXHeader) {
-              headerAppear = false;
-              bounceRecyclerView.onHeaderDisappear((WXHeader) value, i);
+          } else if ((i == firstVisible && directionY >= 0)) {
+            if ((value.getDomObject().style.get(WXDomPropConstant.WX_POSITION) != null && value.getDomObject().style
+                .get
+                (WXDomPropConstant.WX_POSITION).equals(WXDomPropConstant.WX_POSITION_STICKY)) || value instanceof WXHeader) {
+              bounceRecyclerView.onStickyDisappear((WXCell) value, i);
             }
           }
         }

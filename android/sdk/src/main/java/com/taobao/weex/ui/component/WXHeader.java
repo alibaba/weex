@@ -209,13 +209,14 @@ import android.view.ViewGroup;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.Component;
 import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.component.list.WXCell;
 import com.taobao.weex.ui.view.WXFrameLayout;
 
 /**
- * div component
+ * The same as sticky cell
  */
 @Component(lazyload = false)
-public class WXHeader extends WXDiv {
+public class WXHeader extends WXCell {
 
   public WXHeader(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
     super(instance, node, parent, lazy);
@@ -231,6 +232,8 @@ public class WXHeader extends WXDiv {
 
   @Override
   public ViewGroup getRealView() {
+    if (mHost == null)
+      return null;
     return (ViewGroup) ((ViewGroup)mHost).getChildAt(0);
   }
 }
