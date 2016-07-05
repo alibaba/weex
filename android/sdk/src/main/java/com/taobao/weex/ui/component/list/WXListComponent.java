@@ -220,6 +220,7 @@ import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.Component;
 import com.taobao.weex.common.OnWXScrollListener;
+import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.component.*;
@@ -529,8 +530,6 @@ public class WXListComponent extends WXVContainer implements
       if(view == null){
         return;
       }
-
-      int pos = index == -1 ?view.getAdapter().getItemCount()-1:index;
     }
 
     /**
@@ -587,7 +586,6 @@ public class WXListComponent extends WXVContainer implements
      */
     @Override
     public void onBindViewHolder(ListBaseViewHolder holder, int position) {
-        long begin=System.currentTimeMillis();
         if (holder == null) return;
         holder.setComponentUsing(true);
         WXComponent component = getChild(position);
@@ -604,10 +602,8 @@ public class WXListComponent extends WXVContainer implements
         if (component != null
             && holder.getComponent() != null
                 && holder.getComponent() instanceof WXCell) {
-            holder.getComponent().applyLayoutAndEvent(component);
             holder.getComponent().bindData(component);
         }
-        WXLogUtils.d(TAG, "Bind holder "+(System.currentTimeMillis()-begin)+"  Thread:"+Thread.currentThread().getName());
 
     }
 
@@ -622,7 +618,6 @@ public class WXListComponent extends WXVContainer implements
      */
     @Override
     public ListBaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        WXLogUtils.d(TAG, "onCreateViewHolder");
         if (mChildren != null) {
             for (int i = 0; i < childCount(); i++) {
                 WXComponent component = getChild(i);
@@ -645,12 +640,10 @@ public class WXListComponent extends WXVContainer implements
                     if (component.getRealView() != null) {
                         return new ListBaseViewHolder(component, viewType);
                     } else {
-                        long begin=System.currentTimeMillis();
                          component.lazy(false);
                          component.createView(this, -1);
-
-                        WXLogUtils.d(TAG,"onCreateViewHolder lazy create:"+(System.currentTimeMillis()-begin)+"  Thread:"+Thread.currentThread().getName());
-                        return new ListBaseViewHolder(component, viewType);
+                         component.applyLayoutAndEvent(component);
+                         return new ListBaseViewHolder(component, viewType);
                     }
 
                 }
@@ -753,6 +746,26 @@ public class WXListComponent extends WXVContainer implements
     @Override
     public void notifyAppearStateChange(int firstVisible, int lastVisible,int directionX,int directionY) {
         List<Integer> unRegisterKeys = new ArrayList<>();
+
+        //notify header appear state
+        for (int i = 0, len = childCount(); i < len; i++) {
+          WXComponent value = getChild(i);
+          if ((i == firstVisible+1 && directionY <= 0)) {
+            if ((value.getDomObject().style.get(WXDomPropConstant.WX_POSITION) != null && value.getDomObject
+                ().style
+                .get(WXDomPropConstant.WX_POSITION).equals(WXDomPropConstant.WX_POSITION_STICKY)) ||
+                value instanceof WXHeader) {
+              bounceRecyclerView.onStickyAppear((WXCell) value, i);
+            }
+          } else if ((i == firstVisible && directionY >= 0)) {
+            if ((value.getDomObject().style.get(WXDomPropConstant.WX_POSITION) != null && value.getDomObject().style
+                .get
+                (WXDomPropConstant.WX_POSITION).equals(WXDomPropConstant.WX_POSITION_STICKY)) || value instanceof WXHeader) {
+              bounceRecyclerView.onStickyDisappear((WXCell) value, i);
+            }
+          }
+        }
+
         //notify appear state
         for (int i = 0, len = mAppearComponents.size(); i < len; i++) {
             int key = mAppearComponents.keyAt(i);
@@ -765,11 +778,10 @@ public class WXListComponent extends WXVContainer implements
               String direction=directionY>0?"up":"down";
                 value.notifyAppearStateChange(WXEventType.APPEAR,direction);
                 value.appearState = true;
-
             } else if ((key < firstVisible || key > lastVisible) && value.appearState) {
               String direction=directionY>0?"up":"down";
               value.notifyAppearStateChange(WXEventType.DISAPPEAR,direction);
-                value.appearState = false;
+              value.appearState = false;
             }
         }
 

@@ -204,69 +204,36 @@
  */
 package com.taobao.weex.ui.component;
 
-import android.text.Layout;
 import android.view.ViewGroup;
 
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.Component;
 import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.ui.view.WXTextView;
+import com.taobao.weex.ui.component.list.WXCell;
+import com.taobao.weex.ui.view.WXFrameLayout;
 
 /**
- * Text component
+ * The same as sticky cell
  */
 @Component(lazyload = false)
-public class WXText extends WXComponent{
+public class WXHeader extends WXCell {
 
-  /**
-   * The default text size
-   **/
-  public static final int sDEFAULT_SIZE = 32;
-
-  public WXText(WXSDKInstance instance, WXDomObject node,
-                WXVContainer parent, boolean lazy) {
+  public WXHeader(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
     super(instance, node, parent, lazy);
   }
 
   @Override
   protected void initView() {
-    mHost = new WXTextView(mContext);
-  }
-
-  @Override
-  public WXTextView getView() {
-    return (WXTextView) super.getView();
-  }
-
-  @Override
-  public void updateExtra(Object extra) {
-    if(extra instanceof Layout &&
-       getView()!=null && !extra.equals(getView().getTextLayout())) {
-      final Layout layout = (Layout) extra;
-      getView().setTextLayout(layout);
-      getView().invalidate();
+    if(mContext!=null) {
+      mHost = new WXFrameLayout(mContext);
+      ((ViewGroup)mHost).addView(new WXFrameLayout(mContext));
     }
   }
 
-  /**
-   * Flush view no matter what height and width the {@link WXDomObject} specifies.
-   * @param object must be a {@link Layout} object, otherwise, nothing will happen.
-   */
-  private void flushView(Object extra){
-    if(extra instanceof Layout &&
-       getView()!=null && !extra.equals(getView().getTextLayout())){
-      final Layout layout = (Layout) extra;
-      /**The following if block change the height of the width of the textView.
-       * other part of the code is the same to updateExtra
-       */
-      ViewGroup.LayoutParams layoutParams=getView().getLayoutParams();
-      if(layoutParams!=null){
-        layoutParams.height=layout.getHeight();
-        layoutParams.width=layout.getWidth();
-        getView().setLayoutParams(layoutParams);
-      }
-      getView().setTextLayout(layout);
-      getView().invalidate();
-    }
+  @Override
+  public ViewGroup getRealView() {
+    if (mHost == null)
+      return null;
+    return (ViewGroup) ((ViewGroup)mHost).getChildAt(0);
   }
 }
