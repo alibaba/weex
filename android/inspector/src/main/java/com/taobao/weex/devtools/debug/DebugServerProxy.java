@@ -40,8 +40,6 @@ import okio.BufferedSource;
 
 public class DebugServerProxy implements IWXDebugProxy {
     private static final String TAG = "DebugServerProxy";
-    public static final String ACTION_DEBUG_SERVER_CONNECTED = "DEBUG_SERVER_CONNECTED";
-    public static final String ACTION_DEBUG_SERVER_CONNECT_FAILED = "DEBUG_SERVER_CONNECT_FAILED";
     private DebugSocketClient mWebSocketClient;
     private ObjectMapper mObjectMapper = new ObjectMapper();
     private MethodDispatcher mMethodDispatcher;
@@ -225,5 +223,4 @@ public class DebugServerProxy implements IWXDebugProxy {
             pendingRequest.callback.onResponse(peer, response);
         }
     }
-
 }

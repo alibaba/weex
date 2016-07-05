@@ -12,6 +12,7 @@ import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.bridge.WXJSObject;
 import com.taobao.weex.bridge.WXParams;
 import com.taobao.weex.common.IWXBridge;
+import com.taobao.weex.common.IWXDebugProxy;
 import com.taobao.weex.devtools.websocket.SimpleSession;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class DebugBridge implements IWXBridge {
     private Object mLock = new Object();
     private WXBridgeManager mJsManager;
     private SimpleSession mSession;
-    private MyBroadcastReceiver mReceiver;
+    private ConnectionBroadcastReceiver mReceiver;
 
     private DebugBridge() {
 
@@ -156,15 +157,15 @@ public class DebugBridge implements IWXBridge {
         }
     }
 
-    public class MyBroadcastReceiver extends BroadcastReceiver {
+    public class ConnectionBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (DebugServerProxy.ACTION_DEBUG_SERVER_CONNECTED.equals(intent.getAction())) {
+            if (IWXDebugProxy.ACTION_DEBUG_SERVER_CONNECTED.equals(intent.getAction())) {
                 Log.v(TAG, "connect to debug server success");
                 synchronized (mLock) {
                     mLock.notify();
                 }
-            } else if (DebugServerProxy.ACTION_DEBUG_SERVER_CONNECT_FAILED.equals(intent.getAction())) {
+            } else if (IWXDebugProxy.ACTION_DEBUG_SERVER_CONNECT_FAILED.equals(intent.getAction())) {
                 Log.v(TAG, "connect to debug server failed");
                 synchronized (mLock) {
                     mLock.notify();
@@ -174,10 +175,10 @@ public class DebugBridge implements IWXBridge {
     }
 
     private void registerBroadcastReceiver() {
-        mReceiver = new MyBroadcastReceiver();
+        mReceiver = new ConnectionBroadcastReceiver();
         IntentFilter filter = new IntentFilter();
-        filter.addAction(DebugServerProxy.ACTION_DEBUG_SERVER_CONNECTED);
-        filter.addAction(DebugServerProxy.ACTION_DEBUG_SERVER_CONNECT_FAILED);
+        filter.addAction(IWXDebugProxy.ACTION_DEBUG_SERVER_CONNECTED);
+        filter.addAction(IWXDebugProxy.ACTION_DEBUG_SERVER_CONNECT_FAILED);
         WXEnvironment.getApplication().registerReceiver(mReceiver, filter);
     }
 
