@@ -198,15 +198,17 @@
     }else {
         _textView.text = @"";
     }
+    _textView.delegate = self;
     
-    _textView.layer.borderWidth = 1.0f;
     if (_color) {
         [_textView setTextColor:_color];
     }
     [_textView setTextAlignment:_textAlign];
     [self setTextFont];
-    [_textView setNeedsDisplay];
+    [_textView setBorder:_border];
+    [_textView setPadding:_padding];
     
+    [_textView setNeedsDisplay];
 }
 #pragma mark - Add Event
 - (void)addEvent:(NSString *)eventName
@@ -254,7 +256,7 @@
 - (void)updateAttributes:(NSDictionary *)attributes
 {
     if (attributes[@"autofocus"]) {
-        [self setAutofocus:[attributes[@"autofocus"] boolValue]];
+        _autofocus = [attributes[@"autofocus"] boolValue];
     }
     if (attributes[@"disabled"]) {
         _disabled = [attributes[@"disabled"] boolValue];
@@ -267,14 +269,35 @@
         _textValue = attributes[@"value"];
     }
 }
+- (void)_updateAttributesOnMainThread:(NSDictionary *)attributes
+{
+    if (attributes[@"autofocus"]) {
+        _autofocus = [attributes[@"autofocus"] boolValue];
+        [self setAutofocus];
+    }
+    if (attributes[@"disabled"]) {
+        _disabled = [attributes[@"disabled"] boolValue];
+        [self setEnabled];
+    }
+    if (attributes[@"placeholder"]) {
+        _placeholderString = attributes[@"placeholder"];
+        [self setPlaceholderAttributedString];
+    }
+    if (attributes[@"value"]) {
+        _textValue = attributes[@"value"];
+        _textView.text = _textValue;
+    }
+}
 
 #pragma mark - upate styles
 
-- (void)updateStyles:(NSDictionary *)styles
+- (void)_updateStylesOnMainThread:(NSDictionary *)styles
 {
     if (styles[@"color"]) {
-        [_textView setTextColor:[WXConvert UIColor:styles[@"color"]]];
+        _color = [WXConvert UIColor:styles[@"color"]];
+        [_textView setTextColor:_color];
     }
+    
     if (styles[@"fontSize"]) {
         _fontSize = [WXConvert WXPixelType:styles[@"fontSize"]];
     }
@@ -287,14 +310,19 @@
     if (styles[@"fontFamily"]) {
         _fontFamily = styles[@"fontFamily"];
     }
+    
+    [self setTextFont];
+    
     if (styles[@"textAlign"]) {
         _textAlign = [WXConvert NSTextAlignment:styles[@"textAlign"]] ;
+        [_textView setTextAlignment:_textAlign];
     }
     if (styles[@"placeholderColor"]) {
         _placeholderColor = [WXConvert UIColor:styles[@"placeholderColor"]];
     }else {
         _placeholderColor = [UIColor colorWithRed:0x99/255.0 green:0x99/255.0 blue:0x99/255.0 alpha:1.0];
     }
+    [self setPlaceholderAttributedString];
     
     UIEdgeInsets padding = UIEdgeInsetsMake(self.cssNode->style.padding[CSS_TOP], self.cssNode->style.padding[CSS_LEFT], self.cssNode->style.padding[CSS_BOTTOM], self.cssNode->style.padding[CSS_RIGHT]);
     if (!UIEdgeInsetsEqualToEdgeInsets(padding, _padding)) {
@@ -304,9 +332,12 @@
     UIEdgeInsets border = UIEdgeInsetsMake(self.cssNode->style.border[CSS_TOP], self.cssNode->style.border[CSS_LEFT], self.cssNode->style.border[CSS_BOTTOM], self.cssNode->style.border[CSS_RIGHT]);
     if (!UIEdgeInsetsEqualToEdgeInsets(border, _border)) {
         _border = border;
+        [_textView setBorder:_border];
     }
+    
 }
 
+#pragma mark measure frame
 - (CGSize (^)(CGSize))measureBlock
 {
     __weak typeof(self) weakSelf = self;
@@ -338,9 +369,10 @@
     };
 }
 
-#pragma textview Delegate
+#pragma mark textview Delegate
 - (void)textViewDidBeginEditing:(UITextView *)textView
 {
+    _placeHolderLabel.text = @"";
     _changeEventString = [textView text];
     if (_focusEvent) {
         [self fireEvent:@"focus" params:nil];
@@ -348,10 +380,14 @@
     if (_clickEvent) {
         [self fireEvent:@"click" params:nil];
     }
+    [textView becomeFirstResponder];
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
+    if (![textView.text length]) {
+        [self setPlaceholderAttributedString];
+    }
     if (_changeEvent) {
         if (![[textView text] isEqualToString:_changeEventString]) {
             [self fireEvent:@"change" params:@{@"value":[textView text]}];
@@ -378,7 +414,6 @@
     }
     _placeHolderLabel.backgroundColor = [UIColor clearColor];
     _placeHolderLabel.attributedText = attributedString;
-    
 }
 
 - (void)setAutofocus
@@ -396,17 +431,6 @@
     [_textView setFont:font];
 }
 
-- (void)setPadding:(UIEdgeInsets)padding
-{
-    _padding = padding;
-    [_textView setPadding:padding];
-}
-
-- (void)setBorder:(UIEdgeInsets)border
-{
-    _border = border;
-    [_textView setBorder:border];
-}
 - (void)setEnabled
 {
     _textView.editable = !(_disabled);
