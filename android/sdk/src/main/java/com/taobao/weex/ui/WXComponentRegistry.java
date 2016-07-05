@@ -223,6 +223,8 @@ public class WXComponentRegistry {
 
   private static Map<String, ComponentHolder> sTypeComponentMap = new HashMap<>();
   private static Map<String, String> sClassTypeMap = new HashMap<>();
+  private static ArrayList<Map<String, String>> sComponentInfos=new ArrayList<>();
+
 
   public static boolean registerComponent(String type, Class<? extends WXComponent> clazz, boolean appendTree) throws WXException {
     if (clazz == null || TextUtils.isEmpty(type)) {
@@ -245,6 +247,8 @@ public class WXComponentRegistry {
         try {
           registerNativeComponent(type, clazz);
           registerJSComponent(componentInfo);
+          sComponentInfos.add(componentInfo);
+
         } catch (WXException e) {
           e.printStackTrace();
         }
@@ -299,6 +303,21 @@ public class WXComponentRegistry {
 
   public static ComponentHolder getComponent(String type) {
     return sTypeComponentMap.get(type);
+  }
+
+  public static void reload(){
+    WXBridgeManager.getInstance().getJSHandler().post(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          for(Map<String,String> com:sComponentInfos){
+            registerJSComponent(com);
+          }
+        } catch (WXException e) {
+          e.printStackTrace();
+        }
+      }
+    });
   }
 
 }
