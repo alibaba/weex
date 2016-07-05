@@ -221,11 +221,7 @@ import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.OnWXScrollListener;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.ui.component.WXComponent;
-import com.taobao.weex.ui.component.WXEventType;
-import com.taobao.weex.ui.component.WXLoading;
-import com.taobao.weex.ui.component.WXRefresh;
-import com.taobao.weex.ui.component.WXVContainer;
+import com.taobao.weex.ui.component.*;
 import com.taobao.weex.ui.view.listview.adapter.IOnLoadMoreListener;
 import com.taobao.weex.ui.view.listview.adapter.IRecyclerAdapterListener;
 import com.taobao.weex.ui.view.listview.adapter.ListBaseViewHolder;
@@ -250,7 +246,7 @@ import java.util.regex.Pattern;
  * or not even exist.
  */
 public class WXListComponent extends WXVContainer implements
-        IRecyclerAdapterListener<ListBaseViewHolder>,IOnLoadMoreListener {
+        IRecyclerAdapterListener<ListBaseViewHolder>,IOnLoadMoreListener,Scrollable {
 
     public static final String TRANSFORM = "transform";
     private String TAG = "WXListComponent";
@@ -397,12 +393,73 @@ public class WXListComponent extends WXVContainer implements
       mHost = bounceRecyclerView;
     }
 
-    @Override
-    public BounceRecyclerView getView() {
+  @Override
+  public void bindStickStyle(WXComponent component) {
+    //TODO
+  }
+
+  @Override
+  public void unbindStickStyle(WXComponent component) {
+//TODO
+  }
+
+  @Override
+  public void bindAppearEvent(WXComponent component) {
+//TODO
+  }
+
+  @Override
+  public void bindDisappearEvent(WXComponent component) {
+//TODO
+  }
+
+  @Override
+  public void unbindAppearEvent(WXComponent component) {
+//TODO
+  }
+
+  @Override
+  public void unbindDisappearEvent(WXComponent component) {
+//TODO
+  }
+
+  @Override
+  public BounceRecyclerView getView() {
         return (BounceRecyclerView) super.getView();
     }
 
-    @Override
+  @Override
+  public void scrollBy(final int x, final int y) {
+    if (bounceRecyclerView == null) {
+      return;
+    }
+    final View view = bounceRecyclerView.getInnerView();
+
+    view.postDelayed(new Runnable() {
+
+      @Override
+      public void run() {
+        if(mOrientation==VERTICAL){
+          view.scrollBy(0,-y);
+        }else{
+          view.scrollBy(-x,0);
+        }
+        view.invalidate();
+      }
+    }, 16);
+  }
+
+  @Override
+  public int getScrollY() {
+    return bounceRecyclerView == null?0:bounceRecyclerView.getInnerView().getScrollY();
+  }
+
+  @Override
+  public int getScrollX() {
+    return bounceRecyclerView == null?0:bounceRecyclerView.getInnerView().getScrollX();
+  }
+
+  @Override
     public BounceRecyclerView getRealView() {
         return (BounceRecyclerView) super.getView();
     }

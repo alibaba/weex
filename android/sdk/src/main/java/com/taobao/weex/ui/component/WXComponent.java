@@ -501,7 +501,7 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
                      "WXGestureObservable, so no gesture is supported.");
       }
     } else {
-      WXScroller scroller = getParentScroller();
+      Scrollable scroller = getParentScroller();
       if (type.equals(WXEventType.APPEAR) && scroller != null) {
         scroller.bindAppearEvent(this);
       }
@@ -549,17 +549,17 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
   /**
    * get Scroller components
    */
-  public WXScroller getParentScroller() {
+  public Scrollable getParentScroller() {
     WXComponent component = this;
     WXVContainer container;
-    WXScroller scroller;
+    Scrollable scroller;
     for (; ; ) {
       container = component.getParent();
       if (container == null) {
         return null;
       }
-      if (container instanceof WXScroller) {
-        scroller = (WXScroller) container;
+      if (container instanceof Scrollable) {
+        scroller = (Scrollable) container;
         return scroller;
       }
       if (container.getRef().equals(WXDomObject.ROOT)) {
@@ -638,7 +638,7 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     if (type.equals(WXEventType.CLICK) && getRealView() != null) {
       getRealView().setOnClickListener(null);
     }
-    WXScroller scroller = getParentScroller();
+    Scrollable scroller = getParentScroller();
     if (type.equals(WXEventType.APPEAR) && scroller != null) {
       scroller.unbindAppearEvent(this);
     }
@@ -678,7 +678,7 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     }
 
     if (mDomObj.isSticky()) {
-      WXScroller scroller = getParentScroller();
+      Scrollable scroller = getParentScroller();
       if (scroller != null) {
         scroller.unbindStickStyle(this);
       }
@@ -696,7 +696,7 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
   @WXComponentProp(name = WXDomPropConstant.WX_POSITION)
   public void setSticky(String sticky) {
     if (!TextUtils.isEmpty(sticky) && sticky.equals(WXDomPropConstant.WX_POSITION_STICKY)) {
-      WXScroller waScroller = getParentScroller();
+      Scrollable waScroller = getParentScroller();
       if (waScroller != null) {
         waScroller.bindStickStyle(this);
       }
