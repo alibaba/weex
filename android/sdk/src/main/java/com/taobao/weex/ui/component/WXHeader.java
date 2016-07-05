@@ -202,92 +202,35 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.ui.view.refresh.wrapper;
+package com.taobao.weex.ui.component;
 
-import android.content.Context;
-import android.support.v7.widget.OrientationHelper;
-import android.util.AttributeSet;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
-import com.taobao.weex.ui.component.WXHeader;
-import com.taobao.weex.ui.view.listview.WXRecyclerView;
-import com.taobao.weex.ui.view.listview.adapter.RecyclerViewBaseAdapter;
+import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.common.Component;
+import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.view.WXFrameLayout;
 
-public class BounceRecyclerView extends BaseBounceView<WXRecyclerView> {
+/**
+ * div component
+ */
+@Component(lazyload = false)
+public class WXHeader extends WXDiv {
 
-    private RecyclerViewBaseAdapter adapter = null;
-    private FrameLayout headerView;
-    private FrameLayout tempView;
-    private WXHeader headComponent;
+  public WXHeader(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
+    super(instance, node, parent, lazy);
+  }
 
-    public BounceRecyclerView(Context context,int orientation) {
-        super(context,orientation);
+  @Override
+  protected void initView() {
+    if(mContext!=null) {
+      mHost = new WXFrameLayout(mContext);
+      ((ViewGroup)mHost).addView(new WXFrameLayout(mContext));
     }
+  }
 
-    public BounceRecyclerView(Context context, AttributeSet attrs) {
-        super(context, attrs, OrientationHelper.VERTICAL);
-    }
-
-    public void setAdapter(RecyclerViewBaseAdapter adapter) {
-        this.adapter = adapter;
-        if (getInnerView() != null)
-            getInnerView().setAdapter(adapter);
-    }
-
-    public RecyclerViewBaseAdapter getAdapter() {
-        return adapter;
-    }
-
-    @Override
-    public WXRecyclerView setInnerView(Context context) {
-        WXRecyclerView wxRecyclerView = new WXRecyclerView(context);
-        wxRecyclerView.initView(context, WXRecyclerView.TYPE_LINEAR_LAYOUT, getOrientation());
-        return wxRecyclerView;
-    }
-
-    @Override
-    public void onRefreshingComplete() {
-        if (adapter != null)
-            adapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onLoadmoreComplete() {
-        if (adapter != null)
-            adapter.notifyDataSetChanged();
-    }
-
-    public void onHeaderDisappear(WXHeader component, int index) {
-        if (headerView != null)
-            return;
-
-        headComponent = component;
-        headerView = (FrameLayout) component.getView().getChildAt(0);
-        int headerViewOffsetX = getLeft();
-        int headerViewOffsetY = getTop();
-        component.getView().removeView(headerView);
-        tempView = new FrameLayout(getContext());
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(headerView.getMeasuredWidth(),
-                                                                   headerView.getMeasuredHeight());
-        component.getView().addView(tempView,lp);
-        ((ViewGroup)getParent()).addView(headerView);
-        headerView.setTranslationX(headerViewOffsetX);
-        headerView.setTranslationY(headerViewOffsetY);
-    }
-
-    public void onHeaderAppear(WXHeader component,int index) {
-        if (headerView != null && tempView != null && headComponent != null) {
-            if (headComponent.getRef() == component.getRef()) {
-                component.getView().removeView(tempView);
-                ((ViewGroup)getParent()).removeView(headerView);
-                component.getView().addView(headerView);
-                headerView.setTranslationX(0);
-                headerView.setTranslationY(0);
-                headerView = null;
-                headComponent = null;
-                tempView = null;
-            }
-        }
-    }
+  @Override
+  public ViewGroup getRealView() {
+    return (ViewGroup) ((ViewGroup)mHost).getChildAt(0);
+  }
 }

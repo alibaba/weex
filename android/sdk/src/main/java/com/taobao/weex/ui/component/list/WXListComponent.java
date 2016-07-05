@@ -223,6 +223,7 @@ import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXEventType;
+import com.taobao.weex.ui.component.WXHeader;
 import com.taobao.weex.ui.component.WXLoading;
 import com.taobao.weex.ui.component.WXRefresh;
 import com.taobao.weex.ui.component.WXVContainer;
@@ -263,6 +264,8 @@ public class WXListComponent extends WXVContainer implements
     private HashMap<String, Long> mRefToViewType;
 
     protected BounceRecyclerView bounceRecyclerView;
+
+    private boolean headerAppear = true;
 
     public WXListComponent(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
         super(instance, node, parent, lazy);
@@ -694,6 +697,23 @@ public class WXListComponent extends WXVContainer implements
     @Override
     public void notifyAppearStateChange(int firstVisible, int lastVisible,int directionX,int directionY) {
         List<Integer> unRegisterKeys = new ArrayList<>();
+
+        //notify header appear state
+        for (int i = 0, len = childCount(); i < len; i++) {
+          WXComponent value = getChild(i);
+          if ((i == firstVisible+1 && directionY < 0) && !headerAppear) {
+            if (value instanceof WXHeader) {
+              headerAppear = true;
+              bounceRecyclerView.onHeaderAppear((WXHeader) value, i);
+            }
+          } else if ((i == firstVisible && directionY > 0)  && headerAppear) {
+            if (value instanceof WXHeader) {
+              headerAppear = false;
+              bounceRecyclerView.onHeaderDisappear((WXHeader) value, i);
+            }
+          }
+        }
+
         //notify appear state
         for (int i = 0, len = mAppearComponents.size(); i < len; i++) {
             int key = mAppearComponents.keyAt(i);
@@ -706,11 +726,10 @@ public class WXListComponent extends WXVContainer implements
               String direction=directionY>0?"up":"down";
                 value.notifyAppearStateChange(WXEventType.APPEAR,direction);
                 value.appearState = true;
-
             } else if ((key < firstVisible || key > lastVisible) && value.appearState) {
               String direction=directionY>0?"up":"down";
               value.notifyAppearStateChange(WXEventType.DISAPPEAR,direction);
-                value.appearState = false;
+              value.appearState = false;
             }
         }
 
