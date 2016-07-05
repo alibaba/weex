@@ -129,7 +129,7 @@ static id<WXLogProtocol> _externalLog;
             flagString = @"debug";
             flagColor = @"fg0,128,0;";
             break;
-        case WXLogFlayLog:
+        case WXLogFlagLog:
             flagString = @"log";
             flagColor = @"fg128,128,128;";
             break;
@@ -166,7 +166,7 @@ static id<WXLogProtocol> _externalLog;
         case WXLogFlagDebug:
             flagString = @"debug";
             break;
-        case WXLogFlayLog:
+        case WXLogFlagLog:
             flagString = @"log";
             break;
         default:

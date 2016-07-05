@@ -51,7 +51,7 @@
                              @"__WARN": @(WXLogFlagWarning),
                              @"__INFO": @(WXLogFlagInfo),
                              @"__DEBUG": @(WXLogFlagDebug),
-                             @"__LOG": @(WXLogFlayLog)
+                             @"__LOG": @(WXLogFlagLog)
                              };
             });
             

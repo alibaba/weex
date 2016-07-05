@@ -12,8 +12,8 @@ typedef NS_ENUM(NSInteger, WXLogFlag) {
     WXLogFlagError      = 1 << 0,
     WXLogFlagWarning    = 1 << 1,
     WXLogFlagInfo       = 1 << 2,
-    WXLogFlagDebug      = 1 << 3,
-    WXLogFlayLog        = 1 << 4
+    WXLogFlagLog        = 1 << 3,
+    WXLogFlagDebug      = 1 << 4
 };
 
 /**
@@ -43,7 +43,7 @@ typedef NS_ENUM(NSUInteger, WXLogLevel){
     /**
      *  Log, warning info
      */
-    WXLogLevelLog       = WXLogFlayLog | WXLogLevelInfo,
+    WXLogLevelLog       = WXLogFlagLog | WXLogLevelInfo,
     
     /**
      *  Error, warning, info and debug logs
@@ -105,7 +105,7 @@ do {                                    \
 
 
 extern void _PDLogObjectsImpl(NSString *severity, NSArray *arguments);
-#define WXLog(format,...)            WX_LOG(WXLogFlayLog, format, ##__VA_ARGS__)
+#define WXLog(format,...)               WX_LOG(WXLogFlagLog, format, ##__VA_ARGS__)
 #define WXLogDebug(format, ...)         WX_LOG(WXLogFlagDebug, format, ##__VA_ARGS__)
 #define WXLogInfo(format, ...)          WX_LOG(WXLogFlagInfo, format, ##__VA_ARGS__)
 #define WXLogWarning(format, ...)       WX_LOG(WXLogFlagWarning, format ,##__VA_ARGS__)
