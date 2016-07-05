@@ -49,6 +49,8 @@
     
     _weexHeight = self.view.frame.size.height - 64;
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationRefreshInstance:) name:@"RefreshInstance" object:nil];
+    
     [self render];
 }
 
@@ -77,6 +79,7 @@
 - (void)dealloc
 {
     [_instance destroyInstance];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)render
@@ -115,7 +118,7 @@
     };
     
     _instance.updateFinish = ^(UIView *view) {
-        WXLogVerbose(@"%@", @"Update Finish...");
+        WXLogDebug(@"%@", @"Update Finish...");
     };
     if (!self.url) {
         WXLogError(@"error: render url is nil");
@@ -207,6 +210,11 @@
         url = [tmp substringWithRange:subRange];
     }
     return [NSURL URLWithString:url];
+}
+
+#pragma mark - notification
+- (void)notificationRefreshInstance:(NSNotification *)notification {
+    [self refreshWeex];
 }
 
 @end

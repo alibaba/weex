@@ -73,6 +73,11 @@
 + (void)unload;
 
 /**
+ * @abstract restart Weex Engine.
+ **/
++ (void)restart;
+
+/**
  * @abstract Returns the version of SDK
  *
  **/

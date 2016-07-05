@@ -66,9 +66,12 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
     NSMutableDictionary *_controllers;
     __strong SRWebSocket *_socket;
     NSMutableArray  *_msgAry;
+    NSMutableArray  *_debugAry;
     BOOL _isConnect;
     WXJSCallNative  _nativeCallBlock;
-    NSThread    *_curThread;
+    NSThread    *_bridgeThread;
+    NSThread    *_inspectThread;
+    NSString    *_registerData;
 }
 
 + (PDDebugger *)defaultInstance;
@@ -99,12 +102,16 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
     return self;
 }
 
+- (void) coutLogWithLevel:(NSString *)level arguments:(NSArray *)arguments {
+    
+    [[PDConsoleDomainController defaultInstance] logWithArguments:arguments severity:level];
+}
+
 #pragma mark - SRWebSocketDelegate
 
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket;
 {
     _isConnect = YES;
-    
     NSString *deviceID = [WXDeviceInfo getDeviceID];
     NSString *machine = [self _deviceName] ? : @"";
     NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"] ?: [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
@@ -115,11 +122,12 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
         [WXSDKEngine SDKEngineVersion],@"weexVersion",
         appName, @"name",
         nil];
+//    __weak __typeof__(self) weakSelf = self;
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        [weakSelf _registerDeviceWithParams:parameters];
+//    });
     
-    __weak typeof(self) weakSelf = self;
-    [self _executeBridgeThead:^() {
-        [weakSelf _registerDeviceWithParams:parameters];
-    }];
+    [self _registerDeviceWithParams:parameters];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(NSString *)message;
@@ -262,11 +270,12 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
 
     NSData *data = [NSJSONSerialization dataWithJSONObject:obj options:0 error:nil];
     NSString *encodedData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    
     __weak typeof(self) weakSelf = self;
-    [self _executeBridgeThead:^() {
+    dispatch_async(dispatch_get_main_queue(), ^{
         [_msgAry addObject:encodedData];
         [weakSelf _executionMsgAry];
-    }];
+    });
 }
 
 #pragma mark Connect / Disconnect
@@ -305,9 +314,13 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
 - (void)connectToURL:(NSURL *)url;
 {
     NSLog(@"Connecting to %@", url);
-    _curThread = [NSThread currentThread];
     _msgAry = nil;
     _msgAry = [NSMutableArray array];
+    _debugAry = nil;
+    _debugAry = [NSMutableArray array];
+    _bridgeThread = nil;
+    _registerData = nil;
+    _isConnect = NO;
     
     [_socket close];
     _socket.delegate = nil;
@@ -326,6 +339,7 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
 {
     _nativeCallBlock = nil;
     _msgAry = nil;
+    _debugAry = nil;
     [_bonjourBrowser stop];
     _bonjourBrowser.delegate = nil;
     _bonjourBrowser = nil;
@@ -448,20 +462,25 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
 
 #pragma mark - WXBridgeProtocol
 - (void)executeJSFramework:(NSString *)frameworkScript {
+    //WXLogInfo(@"======yangshengtao 0:jsThread:%@,currentThread:%@",_bridgeThread,[NSThread currentThread]);
+//    [self _initBridgeThread];
     NSDictionary *WXEnvironment = @{@"WXEnvironment":[WXUtility getEnvironment]};
     NSDictionary *args = @{@"source":frameworkScript, @"env":WXEnvironment};
     [self callJSMethod:@"WxDebug.initJSRuntime" params:args];
 }
 
 - (void)callJSMethod:(NSString *)method params:(NSDictionary*)params {
+//    [self _initBridgeThread];
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     [dict setObject:method forKey:@"method"];
     [dict setObject:params forKey:@"params"];
-    [_msgAry addObject:[WXUtility JSONString:dict]];
-    [self _executionMsgAry];
+    [_debugAry addObject:[WXUtility JSONString:dict]];
+    [self _executionDebugAry];
 }
 
 - (void)callJSMethod:(NSString *)method args:(NSArray *)args {
+//    WXLogInfo(@"======yangshengtao 0:jsThread:%@,currentThread:%@",_bridgeThread,[NSThread currentThread]);
+//    [self _initBridgeThread];
     NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
     [params setObject:method forKey:@"method"];
     [params setObject:args forKey:@"args"];
@@ -470,12 +489,14 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
     [dict setObject:@"WxDebug.callJS" forKey:@"method"];
     [dict setObject:params forKey:@"params"];
     
-    [_msgAry addObject:[WXUtility JSONString:dict]];
-    [self _executionMsgAry];
+    [_debugAry addObject:[WXUtility JSONString:dict]];
+    [self _executionDebugAry];
 }
 
 - (void)registerCallNative:(WXJSCallNative)callNative
 {
+    WXLogInfo(@"======yangshengtao 0:jsThread:%@,currentThread:%@",_bridgeThread,[NSThread currentThread]);
+    [self _initBridgeThread];
     _nativeCallBlock = callNative;
 }
 
@@ -492,9 +513,39 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
 
 
 #pragma mark - Private Methods
+- (void)_initBridgeThread {
+    _bridgeThread = [NSThread currentThread];
+    if (_debugAry.count > 0 && _registerData) {
+        if (![_registerData isEqualToString:_debugAry[0]]) {
+            [_debugAry insertObject:_registerData atIndex:0];
+        }
+    }
+}
+
 - (void)_executeBridgeThead:(dispatch_block_t)block
 {
-    if([NSThread currentThread] == _curThread){
+    if ([WXDevTool isDebug]) {
+        if([NSThread currentThread] == _bridgeThread) {
+            block();
+        } else if (_bridgeThread){
+            [self performSelector:@selector(_executeBridgeThead:)
+                         onThread:_bridgeThread
+                       withObject:[block copy]
+                    waitUntilDone:NO];
+        }
+    } else {
+        if([NSThread currentThread] == [NSThread mainThread]) {
+            block();
+        } else {
+            [self performSelector:@selector(_executeBridgeThead:)
+                         onThread:[NSThread mainThread]
+                       withObject:[block copy]
+                    waitUntilDone:NO];
+        }
+    }
+    
+    /*
+    if([NSThread currentThread] == _bridgeThread){
         block();
     } else {
         [self performSelector:@selector(_executeBridgeThead:)
@@ -502,6 +553,7 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
                    withObject:[block copy]
                 waitUntilDone:NO];
     }
+     */
 }
 
 -(void)_evaluateNative:(NSString *)data
@@ -521,9 +573,25 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
             return;
         }
         //call native
-        WXLogVerbose(@"Calling native... instancdId:%@, methods:%@, callbackId:%@", instanceId, [WXUtility JSONString:methods], callbackId);
+        WXLogDebug(@"Calling native... instancdId:%@, methods:%@, callbackId:%@", instanceId, [WXUtility JSONString:methods], callbackId);
         _nativeCallBlock(instanceId, methods, callbackId);
     }
+    
+    if ([method isEqualToString:@"reload"]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [WXSDKEngine restart];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshInstance" object:nil];
+        });
+    }
+}
+
+- (void)_executionDebugAry {
+    if (!_isConnect) return;
+    
+    for (NSString *msg in _debugAry) {
+        [_socket send:msg];
+    }
+    [_debugAry removeAllObjects];
 }
 
 - (void)_executionMsgAry {
@@ -570,8 +638,14 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
     
     NSData *data = [NSJSONSerialization dataWithJSONObject:obj options:0 error:nil];
     NSString *encodedData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    [_msgAry insertObject:encodedData atIndex:0];
-    [self _executionMsgAry];
+    //WXLogInfo(@"======yangshengtao 1:jsThread:%@,currentThread:%@",_bridgeThread,[NSThread currentThread]);
+    if (_bridgeThread) {
+        [self _executeBridgeThead:^{
+            _registerData = encodedData;
+            [_debugAry insertObject:encodedData atIndex:0];
+            [self _executionDebugAry];
+        }];
+    }
 }
 
 - (void)_resolveService:(NSNetService*)service;

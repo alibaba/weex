@@ -38,4 +38,9 @@
  **/
 + (void)removeInstanceforID:(NSString *)identifier;
 
+/**
+ * @abstract unload
+ **/
++ (void)unload;
+
 @end

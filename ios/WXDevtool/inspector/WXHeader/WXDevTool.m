@@ -85,7 +85,7 @@ static BOOL WXDebug;
     if (WXDebug) {
         [WXDebugTool setDevToolDebug:YES];
     }
-    PDDebugger *debugger = [PDDebugger defaultInstance];
+    PDDebugger *debugger = [[PDDebugger alloc] init];
     //    [debugger serverStartWithHost:@"localhost" port:9009];
     
     // Enable Network debugging, and automatically track network traffic that comes through any classes that implement either NSURLConnectionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate or NSURLSessionDataDelegate methods.

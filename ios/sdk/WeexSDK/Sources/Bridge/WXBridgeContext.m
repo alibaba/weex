@@ -23,8 +23,6 @@
 #import "WXModuleManager.h"
 #import "WXSDKInstance_private.h"
 
-#import "PDDebugger.h"
-
 @interface WXBridgeContext ()
 
 @property (nonatomic, strong) id<WXBridgeProtocol>  jsBridge;
@@ -234,9 +232,9 @@
     
     __weak __typeof__(self) weakSelf = self;
     [WXBridgeContext _timeSince:^() {
-        WXLogVerbose(@"JSFramework starts executing...");
+        WXLogDebug(@"JSFramework starts executing...");
         [self.jsBridge executeJSFramework:script];
-        WXLogVerbose(@"JSFramework ends executing...");
+        WXLogDebug(@"JSFramework ends executing...");
         if ([self.jsBridge exception]) {
             [WXSDKError monitorAlarm:NO errorCode:WX_ERR_LOAD_JSLIB msg:@"JSFramework executes error !"];
         }
@@ -312,7 +310,9 @@
 }
 
 #pragma mark JS Debug Management
-- (void) connectToDevToolWithUrl:(NSURL *)url {
+
+- (void) connectToDevToolWithUrl:(NSURL *)url
+{
     id webSocketBridge = [NSClassFromString(@"PDDebugger") alloc];
     if(!webSocketBridge || ![webSocketBridge respondsToSelector:@selector(connectToURL:)]) {
         return;
@@ -320,7 +320,6 @@
         [webSocketBridge performSelector:@selector(connectToURL:) withObject:url];
     }
 }
-
 
 - (void)connectToWebSocket:(NSURL *)url
 {
