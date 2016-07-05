@@ -532,12 +532,21 @@ public class WXScroller extends WXRefreshableContainer implements WXScrollViewLi
     }
   }
 
+  @Override
+  public void scrollTo(WXComponent component,int offset) {
+    int offsetIntF = (int) WXViewUtils.getRealPxByWidth(offset);
+
+    int viewYInScroller=component.getAbsoluteY() - getAbsoluteY();
+    int viewXInScroller=component.getAbsoluteX() - getAbsoluteX();
+
+    scrollBy(viewXInScroller - getScrollX()+offsetIntF,viewYInScroller - getScrollY() + offsetIntF);
+  }
+
   /**
    * Scroll by specified distance. Horizontal scroll is not supported now.
    * @param x horizontal distance, not support
    * @param y vertical distance. Negative for scroll to top
    */
-  @Override
   public void scrollBy(final int x, final int y) {
     if (getInnerView() == null) {
       return;
@@ -548,9 +557,9 @@ public class WXScroller extends WXRefreshableContainer implements WXScrollViewLi
       @Override
       public void run() {
         if(mOrientation==VERTICAL){
-          ((WXScrollView) getInnerView()).smoothScrollBy(0, -y);
+          ((WXScrollView) getInnerView()).smoothScrollBy(0, y);
         }else{
-          ((WXHorizontalScrollView)getInnerView()).smoothScrollBy(-x,0);
+          ((WXHorizontalScrollView)getInnerView()).smoothScrollBy(x,0);
         }
         getInnerView().invalidate();
       }

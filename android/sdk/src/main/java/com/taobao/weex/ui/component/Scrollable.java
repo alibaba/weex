@@ -206,6 +206,7 @@ package com.taobao.weex.ui.component;
 
 import android.view.ViewGroup;
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.common.Component;
 import com.taobao.weex.dom.WXDomObject;
 
 /**
@@ -220,12 +221,7 @@ public interface Scrollable {
   public void unbindAppearEvent(WXComponent component);
   public void unbindDisappearEvent(WXComponent component);
   public ViewGroup getView();
-  /**
-   * Scroll by specified distance. Horizontal scroll is not supported now.
-   * @param x horizontal distance, not support
-   * @param y vertical distance. Negative for scroll to top
-   */
-  public void scrollBy(final int x, final int y);
+  public void scrollTo(WXComponent component,int offset);
   public String getRef();
 
   public int getScrollY();

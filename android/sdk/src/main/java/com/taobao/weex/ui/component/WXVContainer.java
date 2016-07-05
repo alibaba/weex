@@ -218,7 +218,7 @@ import java.util.ArrayList;
 public abstract class WXVContainer extends WXComponent {
 
   private static final String TAG="WXVContainer";
-  protected ArrayList<WXComponent> mChildren;
+  protected ArrayList<WXComponent> mChildren = new ArrayList<>();
 
   public WXVContainer(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
     super(instance, node, parent, lazy);
@@ -326,9 +326,6 @@ public abstract class WXVContainer extends WXComponent {
   public void addChild(WXComponent child, int index) {
     if (child == null || index < -1) {
       return;
-    }
-    if (mChildren == null) {
-      mChildren = new ArrayList<>();
     }
     int count = mChildren.size();
     index = index >= count ? -1 : index;

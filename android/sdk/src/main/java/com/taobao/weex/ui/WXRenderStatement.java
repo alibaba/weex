@@ -500,19 +500,8 @@ class WXRenderStatement {
     if (scroller == null) {
       return;
     }
-    int offsetIntF = (int) WXViewUtils.getRealPxByWidth(offsetInt);
 
-    int viewYInScroller=component.getAbsoluteY();
-    int viewXInScroller=component.getAbsoluteX();
-    WXComponent ancestor=component;
-    while((ancestor=ancestor.getParent())!=null){
-      if(ancestor instanceof WXScroller){
-        viewYInScroller-=ancestor.getAbsoluteY();
-        viewXInScroller-=ancestor.getAbsoluteX();
-      }
-    }
-
-    scroller.scrollBy(scroller.getScrollX()-viewXInScroller-offsetIntF, scroller.getScrollY() - viewYInScroller - offsetIntF);
+    scroller.scrollTo(component,offsetInt);
   }
 
   /**
