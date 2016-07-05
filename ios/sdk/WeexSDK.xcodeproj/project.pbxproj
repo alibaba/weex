@@ -1276,7 +1276,6 @@
 		};
 		77D161121C02DBE70010B15B /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 887889C6DF75CD0525C74F87 /* Pods-WeexSDK.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1319,7 +1318,6 @@
 		};
 		77D161131C02DBE70010B15B /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 775381078098E52B9E1D5612 /* Pods-WeexSDK.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
