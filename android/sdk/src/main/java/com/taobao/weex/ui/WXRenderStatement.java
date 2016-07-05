@@ -219,13 +219,7 @@ import com.taobao.weex.common.WXRenderStrategy;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.flex.Spacing;
 import com.taobao.weex.ui.animation.WXAnimationModule;
-import com.taobao.weex.ui.component.WXBasicComponentType;
-import com.taobao.weex.ui.component.WXComponent;
-import com.taobao.weex.ui.component.WXComponentFactory;
-import com.taobao.weex.ui.component.WXScroller;
-import com.taobao.weex.ui.component.WXVContainer;
-import com.taobao.weex.ui.view.WXScrollView;
-import com.taobao.weex.ui.view.refresh.wrapper.BounceScrollerView;
+import com.taobao.weex.ui.component.*;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
@@ -502,38 +496,11 @@ class WXRenderStatement {
       }
     }
 
-    WXScroller scroller = component.getParentScroller();
+    Scrollable scroller = component.getParentScroller();
     if (scroller == null) {
       return;
     }
-    int offsetIntF = (int) WXViewUtils.getRealPxByWidth(offsetInt);
-    int[] scrollerP = new int[2];
-    scroller.getView().getLocationOnScreen(scrollerP);
-    if (scrollerP[1] == component.getAbsoluteY() && scroller.getInnerView() instanceof WXScrollView) {
-      return;
-    }
-
-//    if(scrollerP[0] == component.getAbsoluteX() && scroller.getInnerView() instanceof WXHorizontalScrollView){
-//      return;
-//    }
-
-    int viewYInScroller=component.getAbsoluteY();
-    int viewXInScroller=component.getAbsoluteX();
-    WXComponent ancestor=component;
-    while((ancestor=ancestor.getParent())!=null){
-      if(ancestor instanceof WXScroller){
-        viewYInScroller-=ancestor.getAbsoluteY();
-        viewXInScroller-=ancestor.getAbsoluteX();
-      }
-    }
-
-    int offset=scroller.getView().getScrollY();
-    if(scroller.getView() instanceof BounceScrollerView){
-      if(((BounceScrollerView)scroller.getView()).getInnerView()!=null){
-        offset=((BounceScrollerView)scroller.getView()).getInnerView().getScrollY();
-      }
-    }
-    scroller.scrollBy(scroller.getView().getScrollX()-viewXInScroller-offsetIntF, offset - viewYInScroller - offsetIntF);
+    scroller.scrollTo(component,offsetInt);
   }
 
   /**

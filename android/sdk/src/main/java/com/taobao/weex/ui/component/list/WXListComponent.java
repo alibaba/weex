@@ -218,14 +218,12 @@ import android.widget.ImageView;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.common.Component;
 import com.taobao.weex.common.OnWXScrollListener;
+import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.ui.component.WXComponent;
-import com.taobao.weex.ui.component.WXEventType;
-import com.taobao.weex.ui.component.WXLoading;
-import com.taobao.weex.ui.component.WXRefresh;
-import com.taobao.weex.ui.component.WXVContainer;
+import com.taobao.weex.ui.component.*;
 import com.taobao.weex.ui.view.listview.adapter.IOnLoadMoreListener;
 import com.taobao.weex.ui.view.listview.adapter.IRecyclerAdapterListener;
 import com.taobao.weex.ui.view.listview.adapter.ListBaseViewHolder;
@@ -250,7 +248,7 @@ import java.util.regex.Pattern;
  * or not even exist.
  */
 public class WXListComponent extends WXVContainer implements
-        IRecyclerAdapterListener<ListBaseViewHolder>,IOnLoadMoreListener {
+        IRecyclerAdapterListener<ListBaseViewHolder>,IOnLoadMoreListener,Scrollable {
 
     public static final String TRANSFORM = "transform";
     private String TAG = "WXListComponent";
@@ -397,61 +395,122 @@ public class WXListComponent extends WXVContainer implements
       mHost = bounceRecyclerView;
     }
 
+  @Override
+  public void bindStickStyle(WXComponent component) {
+    //TODO
+  }
+
+  @Override
+  public void unbindStickStyle(WXComponent component) {
+//TODO
+  }
+
+  @Override
+  public void bindAppearEvent(WXComponent component) {
+//TODO
+  }
+
+  @Override
+  public void bindDisappearEvent(WXComponent component) {
+//TODO
+  }
+
+  @Override
+  public void unbindAppearEvent(WXComponent component) {
+//TODO
+  }
+
+  @Override
+  public void unbindDisappearEvent(WXComponent component) {
+//TODO
+  }
+
+  @Override
+  public void scrollTo(WXComponent component,int offset) {
+    if(bounceRecyclerView == null){
+      return;
+    }
+
+    WXComponent parent = component;
+    WXCell cell = null;
+    while(parent != null){
+      if(parent instanceof WXCell){
+        cell = (WXCell) parent;
+        break;
+      }
+      parent = parent.getParent();
+    }
+    if(cell !=null){
+      int pos = mChildren.indexOf(cell);
+      bounceRecyclerView.getInnerView().smoothScrollToPosition(pos);
+    }
+
+  }
+
+  @Override
+  public int getScrollY() {
+    return bounceRecyclerView == null?0:bounceRecyclerView.getInnerView().getScrollY();
+  }
+
+  @Override
+  public int getScrollX() {
+    return bounceRecyclerView == null?0:bounceRecyclerView.getInnerView().getScrollX();
+  }
+
     /**
-     * @return BounceRecyclerView
-     */
-    @Override
+        * @return BounceRecyclerView
+        */
     public BounceRecyclerView getView() {
         return (BounceRecyclerView) super.getView();
     }
 
     /**
-     * @return BounceRecyclerView
-     */
+        * @return BounceRecyclerView
+        */
     @Override
     public BounceRecyclerView getRealView() {
         return (BounceRecyclerView) super.getView();
     }
 
     /**
-     * @return RecyclerView
-     */
+        * @return RecyclerView
+        */
     public RecyclerView getInnerView() {
-      return bounceRecyclerView.getInnerView();
+        return bounceRecyclerView.getInnerView();
     }
 
     /**
-     * Append a child component to the end of WXListComponent. This will not refresh the underlying
-     * view immediately. The message of index of the inserted child is given to the adapter, and the
-     * adapter will determine when to refresh. The default implementation of adapter will push the
-     * message into a message and refresh the view in a period of time.
-     *
-     * @param child the inserted child
-     */
+        * Append a child component to the end of WXListComponent. This will not refresh the underlying
+        * view immediately. The message of index of the inserted child is given to the adapter, and the
+        * adapter will determine when to refresh. The default implementation of adapter will push the
+        * message into a message and refresh the view in a period of time.
+        *
+        * @param child the inserted child
+        */
     @Override
     public void addChild(WXComponent child) {
         addChild(child, -1);
     }
 
     /**
-     * @param child the inserted child
-     * @param index the index of the child to be inserted.
-     * @see #addChild(WXComponent)
-     */
+        * @param child the inserted child
+        * @param index the index of the child to be inserted.
+        * @see #addChild(WXComponent)
+        */
     @Override
     public void addChild(WXComponent child, int index) {
         super.addChild(child, index);
 
         int adapterPosition = index == -1 ? mChildren.size() - 1 : index;
-      BounceRecyclerView view =  getView();
-      if(view != null) {
+        BounceRecyclerView view =  getView();
+        if(view != null) {
         view.getAdapter().notifyItemInserted(adapterPosition);
-      }
+        }
 
-      if(hasAppearAndDisAppearEvent(child)){
+        if(hasAppearAndDisAppearEvent(child)){
         mAppearComponents.put(adapterPosition, child);
         child.registerAppearEvent = true;
-      }
+        }
     }
 
   private boolean hasAppearAndDisAppearEvent(WXComponent child) {
@@ -699,6 +758,26 @@ public class WXListComponent extends WXVContainer implements
     @Override
     public void notifyAppearStateChange(int firstVisible, int lastVisible,int directionX,int directionY) {
         List<Integer> unRegisterKeys = new ArrayList<>();
+
+        //notify header appear state
+        for (int i = 0, len = childCount(); i < len; i++) {
+          WXComponent value = getChild(i);
+          if ((i == firstVisible+1 && directionY <= 0)) {
+            if ((value.getDomObject().style.get(WXDomPropConstant.WX_POSITION) != null && value.getDomObject
+                ().style
+                .get(WXDomPropConstant.WX_POSITION).equals(WXDomPropConstant.WX_POSITION_STICKY)) ||
+                value instanceof WXHeader) {
+              bounceRecyclerView.onStickyAppear((WXCell) value, i);
+            }
+          } else if ((i == firstVisible && directionY >= 0)) {
+            if ((value.getDomObject().style.get(WXDomPropConstant.WX_POSITION) != null && value.getDomObject().style
+                .get
+                (WXDomPropConstant.WX_POSITION).equals(WXDomPropConstant.WX_POSITION_STICKY)) || value instanceof WXHeader) {
+              bounceRecyclerView.onStickyDisappear((WXCell) value, i);
+            }
+          }
+        }
+
         //notify appear state
         for (int i = 0, len = mAppearComponents.size(); i < len; i++) {
             int key = mAppearComponents.keyAt(i);
@@ -711,11 +790,10 @@ public class WXListComponent extends WXVContainer implements
               String direction=directionY>0?"up":"down";
                 value.notifyAppearStateChange(WXEventType.APPEAR,direction);
                 value.appearState = true;
-
             } else if ((key < firstVisible || key > lastVisible) && value.appearState) {
               String direction=directionY>0?"up":"down";
               value.notifyAppearStateChange(WXEventType.DISAPPEAR,direction);
-                value.appearState = false;
+              value.appearState = false;
             }
         }
 

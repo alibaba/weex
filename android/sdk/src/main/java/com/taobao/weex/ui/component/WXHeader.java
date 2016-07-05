@@ -204,185 +204,36 @@
  */
 package com.taobao.weex.ui.component;
 
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.common.Component;
 import com.taobao.weex.dom.WXDomObject;
-
-import java.util.ArrayList;
+import com.taobao.weex.ui.component.list.WXCell;
+import com.taobao.weex.ui.view.WXFrameLayout;
 
 /**
- * All container components must implement this class
+ * The same as sticky cell
  */
-public abstract class WXVContainer extends WXComponent {
+@Component(lazyload = false)
+public class WXHeader extends WXCell {
 
-  private static final String TAG="WXVContainer";
-  protected ArrayList<WXComponent> mChildren = new ArrayList<>();
-
-  public WXVContainer(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
+  public WXHeader(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
     super(instance, node, parent, lazy);
   }
 
   @Override
-  public void applyLayoutAndEvent(WXComponent component) {
-    if(!isLazy()) {
-      if (component == null) {
-        component = this;
-      }
-      super.applyLayoutAndEvent(component);
-      int count = childCount();
-      for (int i = 0; i < count; i++) {
-        getChild(i).applyLayoutAndEvent(((WXVContainer)component).getChild(i));
-      }
+  protected void initView() {
+    if(mContext!=null) {
+      mHost = new WXFrameLayout(mContext);
+      ((ViewGroup)mHost).addView(new WXFrameLayout(mContext));
     }
   }
 
-  @Override
-  public void lazy(boolean lazy) {
-    super.lazy(lazy);
-    int count = childCount();
-    for (int i = 0; i < count; i++) {
-      getChild(i).lazy(lazy);
-    }
-  }
-
-  @Override
-  public void bindData(WXComponent component) {
-    if(!isLazy()) {
-      if (component == null) {
-        component = this;
-      }
-      super.bindData(component);
-      int count = childCount();
-      for (int i = 0; i < count; i++) {
-        getChild(i).bindData(((WXVContainer)component).getChild(i));
-      }
-    }
-  }
-
-  /**
-   * return real View
-   */
   @Override
   public ViewGroup getRealView() {
-    return (ViewGroup) super.getRealView();
-  }
-
-  @Override
-  public void createViewImpl(WXVContainer parent, int index) {
-    super.createViewImpl(parent, index);
-    getOrCreateBorder().attachView(mHost);
-    int count = childCount();
-    for (int i = 0; i < count; ++i) {
-      getChild(i).createViewImpl(this, i);
-    }
-    if(getView()!=null){
-       getView().setClipToPadding(false);
-    }
-  }
-
-  @Override
-  public ViewGroup getView() {
-    return (ViewGroup) super.getView();
-  }
-
-  @Override
-  public void destroy() {
-    super.destroy();
-    if (mChildren != null) {
-      int count = mChildren.size();
-      for (int i = 0; i < count; ++i) {
-        mChildren.get(i).destroy();
-      }
-      mChildren.clear();
-    }
-  }
-
-  @Override
-  public View detachViewAndClearPreInfo(){
-    View original = super.detachViewAndClearPreInfo();
-    if (mChildren != null) {
-      int count = childCount();
-      for (int i = 0; i < count; ++i) {
-        mChildren.get(i).detachViewAndClearPreInfo();
-      }
-    }
-    return original;
-  }
-
-  public int childCount() {
-    return mChildren == null ? 0 : mChildren.size();
-  }
-
-  public WXComponent getChild(int index) {
-    return mChildren.get(index);
-  }
-
-  public void addChild(WXComponent child) {
-    addChild(child, -1);
-  }
-
-  public void addChild(WXComponent child, int index) {
-    if (child == null || index < -1) {
-      return;
-    }
-    int count = mChildren.size();
-    index = index >= count ? -1 : index;
-    if (index == -1) {
-      mChildren.add(child);
-    } else {
-      mChildren.add(index, child);
-    }
-  }
-
-  protected void addSubView(View child, int index) {
-    if (child == null || getRealView() == null) {
-      return;
-    }
-
-    int count = getRealView().getChildCount();
-    index = index >= count ? -1 : index;
-    if (index == -1) {
-      getRealView().addView(child);
-    } else {
-      getRealView().addView(child, index);
-    }
-  }
-
-  public void remove(WXComponent child) {
-    remove(child,true);
-  }
-
-  public void remove(WXComponent child, boolean destroy){
-    if (child == null || mChildren == null || mChildren.size() == 0) {
-      return;
-    }
-
-    mChildren.remove(child);
-    if(mInstance!=null
-            &&mInstance.getRootView()!=null
-            && child.mDomObj.isFixed()){
-      mInstance.getRootView().removeView(child.getView());
-    }else if(getRealView() != null) {
-      getRealView().removeView(child.getView());
-    }
-    if(destroy) {
-      child.destroy();
-    }
-  }
-
-  @Override
-  public void notifyAppearStateChange(String wxEventType, String direction) {
-    super.notifyAppearStateChange(wxEventType, direction);
-    if(getView()==null || mChildren==null){
-      return;
-    }
-    for(WXComponent component:mChildren){
-      if(component.getView()!=null && !(component.getView().getVisibility()==View.VISIBLE)){
-        wxEventType=WXEventType.DISAPPEAR;
-      }
-      component.notifyAppearStateChange(wxEventType,direction);
-    }
+    if (mHost == null)
+      return null;
+    return (ViewGroup) ((ViewGroup)mHost).getChildAt(0);
   }
 }

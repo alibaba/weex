@@ -144,6 +144,7 @@ import com.taobao.weex.ui.component.WXBasicComponentType;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXDiv;
 import com.taobao.weex.ui.component.WXEmbed;
+import com.taobao.weex.ui.component.WXHeader;
 import com.taobao.weex.ui.component.WXImage;
 import com.taobao.weex.ui.component.WXIndicator;
 import com.taobao.weex.ui.component.WXInput;
@@ -294,6 +295,7 @@ public class WXSDKEngine {
       registerComponent(WXBasicComponentType.REFRESH, WXRefresh.class);
       registerComponent(WXBasicComponentType.LOADING, WXLoading.class);
       registerComponent(WXBasicComponentType.LOADING_INDICATOR, WXLoadingIndicator.class);
+      registerComponent(WXBasicComponentType.HEADER, WXHeader.class);
 
       registerModule("dom", WXDomModule.class, true);
       registerModule("modal", WXModalUIModule.class, false);

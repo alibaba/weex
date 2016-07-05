@@ -238,7 +238,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Component for scroller. It also support features like
  * "appear", "disappear" and "sticky"
  */
-public class WXScroller extends WXRefreshableContainer implements WXScrollViewListener {
+public class WXScroller extends WXRefreshableContainer implements WXScrollViewListener,Scrollable {
 
   /**
    * Map for storing appear information
@@ -395,10 +395,12 @@ public class WXScroller extends WXRefreshableContainer implements WXScrollViewLi
 
   }
 
+  @Override
   public int getScrollY() {
     return getInnerView() == null ? 0 : getInnerView().getScrollY();
   }
 
+  @Override
   public int getScrollX() {
     return getInnerView() == null ? 0 : getInnerView().getScrollX();
   }
@@ -425,8 +427,9 @@ public class WXScroller extends WXRefreshableContainer implements WXScrollViewLi
   }
 
   // TODO Need constrain, each container can only have one sticky child
+  @Override
   public void bindStickStyle(WXComponent component) {
-    WXScroller scroller = component.getParentScroller();
+    Scrollable scroller = component.getParentScroller();
     if (scroller == null) {
       return;
     }
@@ -442,8 +445,9 @@ public class WXScroller extends WXRefreshableContainer implements WXScrollViewLi
     mStickyMap.put(scroller.getRef(), stickyMap);
   }
 
+  @Override
   public void unbindStickStyle(WXComponent component) {
-    WXScroller scroller = component.getParentScroller();
+    Scrollable scroller = component.getParentScroller();
     if (scroller == null) {
       return;
     }
@@ -458,6 +462,7 @@ public class WXScroller extends WXRefreshableContainer implements WXScrollViewLi
   /**
    * Bind appear event
    */
+  @Override
   public void bindAppearEvent(WXComponent component) {
     ConcurrentHashMap<String, AppearData> appearMap = mAppearMap
         .get(getRef());
@@ -478,6 +483,7 @@ public class WXScroller extends WXRefreshableContainer implements WXScrollViewLi
   /**
    * Bind disappear event
    */
+  @Override
   public void bindDisappearEvent(WXComponent component) {
     ConcurrentHashMap<String, AppearData> appearMap = mAppearMap
         .get(getRef());
@@ -498,6 +504,7 @@ public class WXScroller extends WXRefreshableContainer implements WXScrollViewLi
   /**
    * Remove appear event
    */
+  @Override
   public void unbindAppearEvent(WXComponent component) {
     ConcurrentHashMap<String, AppearData> appearMap = mAppearMap
         .get(getInnerView());
@@ -517,6 +524,7 @@ public class WXScroller extends WXRefreshableContainer implements WXScrollViewLi
   /**
    * Remove disappear event
    */
+  @Override
   public void unbindDisappearEvent(WXComponent component) {
     ConcurrentHashMap<String, AppearData> appearMap = mAppearMap
         .get(getInnerView());
@@ -531,6 +539,16 @@ public class WXScroller extends WXRefreshableContainer implements WXScrollViewLi
     if (!appearData.hasAppear) {
       appearMap.remove(component.getRef());
     }
+  }
+
+  @Override
+  public void scrollTo(WXComponent component,int offset) {
+    int offsetIntF = (int) WXViewUtils.getRealPxByWidth(offset);
+
+    int viewYInScroller=component.getAbsoluteY() - getAbsoluteY();
+    int viewXInScroller=component.getAbsoluteX() - getAbsoluteX();
+
+    scrollBy(viewXInScroller - getScrollX()+offsetIntF,viewYInScroller - getScrollY() + offsetIntF);
   }
 
   /**
@@ -548,29 +566,13 @@ public class WXScroller extends WXRefreshableContainer implements WXScrollViewLi
       @Override
       public void run() {
         if(mOrientation==VERTICAL){
-          ((WXScrollView) getInnerView()).smoothScrollBy(0, -y);
+          ((WXScrollView) getInnerView()).smoothScrollBy(0, y);
         }else{
-          ((WXHorizontalScrollView)getInnerView()).smoothScrollBy(-x,0);
+          ((WXHorizontalScrollView)getInnerView()).smoothScrollBy(x,0);
         }
         getInnerView().invalidate();
       }
     }, 16);
-
-//    final WXRecycleImageManager recycleImageManager = mInstance
-//        .getRecycleImageManager();
-//
-//    if (recycleImageManager != null && recycleImageManager.isRecycleImage()) {
-//      getView().postDelayed(new Runnable() {
-//
-//        @Override
-//        public void run() {
-//          if (recycleImageManager != null && recycleImageManager.isRecycleImage()) {
-//            recycleImageManager.loadImage();
-//          }
-//        }
-//      }, 250);
-//
-//    }
   }
 
   @Override
