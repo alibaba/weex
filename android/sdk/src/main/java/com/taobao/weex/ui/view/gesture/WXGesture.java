@@ -226,9 +226,7 @@ import com.taobao.weex.ui.view.gesture.WXGestureType.LowLevelGesture;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class WXGesture implements OnTouchListener {
@@ -294,48 +292,13 @@ public class WXGesture implements OnTouchListener {
    */
   private boolean handleMotionEvent(WXGestureType WXGestureType, MotionEvent motionEvent) {
     if (component.containsGesture(WXGestureType)) {
-      List<Map<String, Object>> list = createFireEventParam(motionEvent);
-      for (Map<String, Object> map : list) {
-        WXSDKManager.getInstance().fireEvent(component.mInstanceId, component.mDomObj.ref,
+      Map<String, Object> map = createFireEventParam(motionEvent, CUR_EVENT);
+      WXSDKManager.getInstance().fireEvent(component.mInstanceId, component.mDomObj.ref,
                                              WXGestureType.toString(), map);
-      }
       return true;
     } else {
       return false;
     }
-  }
-
-  /**
-   * Create a list of event for {@link WXSDKManager#fireEvent(String, String, String, Map)}.
-   * As there is a batch mechanism in MotionEvent, so this method returns a list.
-   * @param motionEvent motionEvent, which contains all pointers event in a period of time
-   * @return List of Map, which contains touch object.
-   */
-  private List<Map<String, Object>> createFireEventParam(MotionEvent motionEvent) {
-    List<Map<String, Object>> list = new ArrayList<>(motionEvent.getHistorySize() + 1);
-    list.addAll(getHistoricalEvents(motionEvent));
-    list.add(createFireEventParam(motionEvent, CUR_EVENT));
-    return list;
-  }
-
-  /**
-   * Get historical event. This is only applied to {@link MotionEvent#ACTION_MOVE}.
-   * For other types of motionEvent, historical event is meaningless.
-   * @param motionEvent motionEvent, which contains all pointers event in a period of time
-   * @return If motionEvent.getActionMasked()!=MotionEvent.ACTION_MOVE,
-   * this method will return an empty list.
-   * Otherwise this method will return the historical motionEvent, which may also be empty.
-   */
-  private List<Map<String, Object>> getHistoricalEvents(MotionEvent motionEvent) {
-    List<Map<String, Object>> list = new ArrayList<>(motionEvent.getHistorySize());
-    if (motionEvent.getActionMasked() == MotionEvent.ACTION_MOVE) {
-      Map<String, Object> param;
-      for (int i = 0; i < motionEvent.getHistorySize(); i++) {
-        param = createFireEventParam(motionEvent, i);
-        list.add(param);
-      }
-    }
-    return list;
   }
 
   /**
@@ -530,11 +493,11 @@ public class WXGesture implements OnTouchListener {
     @Override
     public void onLongPress(MotionEvent e) {
       if (component.containsGesture(HighLevelGesture.LONG_PRESS)) {
-        List<Map<String, Object>> list = createFireEventParam(e);
+        Map<String, Object> map = createFireEventParam(e, CUR_EVENT);
         WXSDKManager.getInstance().fireEvent(component.mInstanceId,
                                              component.mDomObj.ref,
                                              HighLevelGesture.LONG_PRESS.toString(),
-                                             list.get(list.size() - 1));
+                                             map);
       }
     }
 
@@ -559,8 +522,7 @@ public class WXGesture implements OnTouchListener {
       if (component.containsGesture(HighLevelGesture.SWIPE)) {
         if (swipeDownTime != e1.getEventTime()) {
           swipeDownTime = e1.getEventTime();
-          List<Map<String, Object>> list = createFireEventParam(e2);
-          Map<String, Object> param = list.get(list.size() - 1);
+          Map<String, Object> param = createFireEventParam(e2, CUR_EVENT);
           if (Math.abs(distanceX) > Math.abs(distanceY)) {
             param.put(GestureInfo.DIRECTION, distanceX > 0 ? "left" : "right");
           } else {
