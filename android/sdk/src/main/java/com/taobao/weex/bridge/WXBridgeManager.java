@@ -334,8 +334,8 @@ public class WXBridgeManager implements Callback {
         if (mWxDebugProxy != null) {
           mWxDebugProxy.stop();
         }
-        HackedClass<Object> waBridge = WXHack.into("com.taobao.weex.devtools.debug.DebugServerProxy");
-        mWxDebugProxy = (IWXDebugProxy) waBridge.constructor(Context.class, WXBridgeManager.class)
+        HackedClass<Object> debugProxyClass = WXHack.into("com.taobao.weex.devtools.debug.DebugServerProxy");
+        mWxDebugProxy = (IWXDebugProxy) debugProxyClass.constructor(Context.class, WXBridgeManager.class)
                 .getInstance(WXEnvironment.getApplication(), WXBridgeManager.this);
         if (mWxDebugProxy != null) {
           mWxDebugProxy.start();
@@ -348,6 +348,7 @@ public class WXBridgeManager implements Callback {
       }
     }
   }
+
   public boolean callModuleMethod(String instanceId, String moduleStr, String methodStr, JSONArray args) {
     return WXModuleManager.callModuleMethod(instanceId, moduleStr, methodStr, args);
   }
