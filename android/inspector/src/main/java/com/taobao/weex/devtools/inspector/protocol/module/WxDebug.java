@@ -1,6 +1,11 @@
 package com.taobao.weex.devtools.inspector.protocol.module;
 
+import android.content.Context;
+import android.content.Intent;
+
+import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKEngine;
+import com.taobao.weex.common.IWXDebugProxy;
 import com.taobao.weex.devtools.debug.DebugBridge;
 import com.taobao.weex.devtools.inspector.jsonrpc.JsonRpcPeer;
 import com.taobao.weex.devtools.inspector.protocol.ChromeDevtoolsDomain;
@@ -50,6 +55,10 @@ public class WxDebug implements ChromeDevtoolsDomain {
     @ChromeDevtoolsMethod
     public void reload(JsonRpcPeer peer, JSONObject params) {
         WXSDKEngine.reload();
+        Context context = WXEnvironment.getApplication();
+        if (context != null) {
+            context.sendBroadcast(new Intent(IWXDebugProxy.ACTION_DEBUG_INSTANCE_REFRESH));
+        }
     }
 
     public static class CallNative {
