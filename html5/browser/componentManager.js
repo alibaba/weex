@@ -318,7 +318,7 @@ ComponentManager.prototype = {
       const listener = function (e) {
         const evt = utils.extend({}, e)
         evt.target = component.data
-        sender.fireEvent(ref, type, func, evt)
+        sender.fireEvent(ref, type, func || {}, evt)
       }
       component.node.addEventListener(type, listener, false, false)
       let listeners = component._listeners
