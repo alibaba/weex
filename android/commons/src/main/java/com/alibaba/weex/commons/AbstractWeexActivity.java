@@ -344,6 +344,7 @@ public abstract class AbstractWeexActivity extends AppCompatActivity implements 
   @Override
   public void onViewCreated(WXSDKInstance wxsdkInstance, View view) {
     if (mContainer != null) {
+      mContainer.removeAllViews();
       mContainer.addView(view);
     }
   }
