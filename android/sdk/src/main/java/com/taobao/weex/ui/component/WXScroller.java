@@ -261,17 +261,26 @@ public class WXScroller extends WXRefreshableContainer implements WXScrollViewLi
     super(instance, node, parent, lazy);
   }
 
+  /**
+   * @return FrameLayout inner ScrollView
+   */
   @Override
   public ViewGroup getRealView() {
     return mRealView;
   }
 
+  /**
+   * @return BounceScrollView
+   */
   @Override
   public ViewGroup getView() {
     return super.getView();
   }
 
-  private ViewGroup getInnerView() {
+  /**
+   * @return ScrollView
+   */
+  public ViewGroup getInnerView() {
     if (mHost instanceof BounceScrollerView) {
       return ((BounceScrollerView) mHost).getInnerView();
     } else {

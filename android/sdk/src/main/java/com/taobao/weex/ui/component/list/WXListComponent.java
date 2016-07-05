@@ -395,6 +395,7 @@ public class WXListComponent extends WXVContainer implements
       mHost = bounceRecyclerView;
     }
 
+<<<<<<< HEAD
   @Override
   public void bindStickStyle(WXComponent component) {
     //TODO
@@ -462,43 +463,61 @@ public class WXListComponent extends WXVContainer implements
     return bounceRecyclerView == null?0:bounceRecyclerView.getInnerView().getScrollX();
   }
 
-  @Override
+    /**
+        * @return BounceRecyclerView
+        */
+    @Override
+    public BounceRecyclerView getView() {
+        return (BounceRecyclerView) super.getView();
+    }
+
+    /**
+        * @return BounceRecyclerView
+        */
+    @Override
     public BounceRecyclerView getRealView() {
         return (BounceRecyclerView) super.getView();
     }
 
     /**
-     * Append a child component to the end of WXListComponent. This will not refresh the underlying
-     * view immediately. The message of index of the inserted child is given to the adapter, and the
-     * adapter will determine when to refresh. The default implementation of adapter will push the
-     * message into a message and refresh the view in a period of time.
-     *
-     * @param child the inserted child
-     */
+        * @return RecyclerView
+        */
+    public RecyclerView getInnerView() {
+        return bounceRecyclerView.getInnerView();
+    }
+
+    /**
+        * Append a child component to the end of WXListComponent. This will not refresh the underlying
+        * view immediately. The message of index of the inserted child is given to the adapter, and the
+        * adapter will determine when to refresh. The default implementation of adapter will push the
+        * message into a message and refresh the view in a period of time.
+        *
+        * @param child the inserted child
+        */
     @Override
     public void addChild(WXComponent child) {
         addChild(child, -1);
     }
 
     /**
-     * @param child the inserted child
-     * @param index the index of the child to be inserted.
-     * @see #addChild(WXComponent)
-     */
+        * @param child the inserted child
+        * @param index the index of the child to be inserted.
+        * @see #addChild(WXComponent)
+        */
     @Override
     public void addChild(WXComponent child, int index) {
         super.addChild(child, index);
 
         int adapterPosition = index == -1 ? mChildren.size() - 1 : index;
-      BounceRecyclerView view =  getView();
-      if(view != null) {
+        BounceRecyclerView view =  getView();
+        if(view != null) {
         view.getAdapter().notifyItemInserted(adapterPosition);
-      }
+        }
 
-      if(hasAppearAndDisAppearEvent(child)){
+        if(hasAppearAndDisAppearEvent(child)){
         mAppearComponents.put(adapterPosition, child);
         child.registerAppearEvent = true;
-      }
+        }
     }
 
   private boolean hasAppearAndDisAppearEvent(WXComponent child) {

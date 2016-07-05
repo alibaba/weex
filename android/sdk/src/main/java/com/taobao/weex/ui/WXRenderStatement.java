@@ -283,8 +283,8 @@ class WXRenderStatement {
 
     if (component instanceof WXScroller) {
       WXScroller scroller = (WXScroller) component;
-      if (scroller.getView() instanceof ScrollView) {
-        mWXSDKInstance.setRootScrollView((ScrollView) scroller.getView());
+      if (scroller.getInnerView() instanceof ScrollView) {
+        mWXSDKInstance.setRootScrollView((ScrollView) scroller.getInnerView());
       }
     }
     mWXSDKInstance.setRootView(mGodComponent.getRealView());
@@ -500,7 +500,6 @@ class WXRenderStatement {
     if (scroller == null) {
       return;
     }
-
     scroller.scrollTo(component,offsetInt);
   }
 
