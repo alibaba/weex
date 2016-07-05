@@ -2,7 +2,7 @@
 
 ## Add an example
 
-* Add a file `newExample.we` copied from [template](./template.we) with [UI Gallery](#ui-gallery) (recommend).
+* Add a file `newExample.we` copied from [template](./template.we) with [UI Gallery](#ui-gallery) (recommended).
 * In [index.we](./index.we), add an item `{name: 'newExample', title: 'New Example'}` for array `data.cases`
 
 ## Rule
