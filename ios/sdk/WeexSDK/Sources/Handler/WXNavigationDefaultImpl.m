@@ -54,7 +54,7 @@
     }
     
     BOOL animated = YES;
-    NSString *obj = [[param objectForKey:@"animated"] uppercaseString];
+    NSString *obj = [[param objectForKey:@"animated"] lowercaseString];
     if (obj && [obj isEqualToString:@"false"]) {
         animated = NO;
     }
@@ -69,7 +69,7 @@
                      withContainer:(UIViewController *)container
 {
     BOOL animated = YES;
-    NSString *obj = [[param objectForKey:@"animated"] uppercaseString];
+    NSString *obj = [[param objectForKey:@"animated"] lowercaseString];
     if (obj && [obj isEqualToString:@"false"]) {
         animated = NO;
     }
@@ -83,7 +83,7 @@
                            withContainer:(UIViewController *)container
 {
     BOOL animated = YES;
-    NSString *obj = [[param objectForKey:@"animated"] uppercaseString];
+    NSString *obj = [[param objectForKey:@"animated"] lowercaseString];
     if (obj && [obj isEqualToString:@"false"]) {
         animated = NO;
     }
