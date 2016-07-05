@@ -31,9 +31,7 @@
 
 - (void)dealloc
 {
-    if (self.weexInstance) {
-        [self.weexInstance removeObserver:self forKeyPath:@"state"];
-    }
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     if (self.embedInstance) {
         [self.embedInstance destroyInstance];
@@ -45,7 +43,8 @@
     if (self = [super initWithRef:ref type:type styles:styles attributes:attributes events:events weexInstance:weexInstance]) {
         _sourceURL = [NSURL URLWithString: attributes[@"src"]];
         _visible =  [WXConvert WXVisibility:styles[@"visibility"]];
-        [self.weexInstance addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew context:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(observeInstanceState:) name:WX_INSTANCE_NOTIFICATION_UPDATE_STATE object:nil];
     }
     
     return self;
@@ -186,11 +185,14 @@
     [self _renderWithURL:self.sourceURL];
 }
 
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+- (void)observeInstanceState:(NSNotification *)notification
 {
-    if ([keyPath isEqualToString:@"state"]) {
-        WXState state = [change[@"new"] longValue];
-        if (_visible == WXVisibilityHidden) {  
+    WXSDKInstance *instance = notification.object;
+    
+    if (instance == self.weexInstance) {
+        NSDictionary *userInfo = notification.userInfo;
+        WXState state = [userInfo[@"state"] integerValue];
+        if (_visible == WXVisibilityHidden) {
             switch (state) {
                 case WeexInstanceBackground:
                     [self _updateState:WeexInstanceBackground];

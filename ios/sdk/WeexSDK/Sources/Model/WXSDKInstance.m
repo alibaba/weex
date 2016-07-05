@@ -227,8 +227,10 @@ NSTimeInterval JSLibInitTime = 0;
     }
     
     NSMutableDictionary *data = [NSMutableDictionary dictionary];
-    [data setObject:[NSNumber numberWithLong:state] forKey:@"state"];
-    [[WXSDKManager bridgeMgr] updateState:self.instanceId data:data];
+    [data setObject:[NSString stringWithFormat:@"%ld",(long)state] forKey:@"state"];
+    //[[WXSDKManager bridgeMgr] updateState:self.instanceId data:data];
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:WX_INSTANCE_NOTIFICATION_UPDATE_STATE object:self userInfo:data];
 }
 
 - (id)moduleForClass:(Class)moduleClass
