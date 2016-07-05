@@ -15,8 +15,9 @@
  *
  * @param name The component name to register;
  * @param clazz The WXComponent subclass to register
+ * @param pros The component properties to register
  */
-+ (void)registerComponent:(NSString *)name withClass:(Class)clazz;
++ (void)registerComponent:(NSString *)name withClass:(Class)clazz withPros:(NSDictionary *)pros;
 
 /**
  * @abstract Register a list of components
@@ -35,6 +36,11 @@
  * @return The component's class
  */
 + (Class)classWithComponentName:(NSString *)name;
+
+/**
+ * @abstract Returns the registered components.
+ */
++ (NSDictionary *)componentConfigs;
 
 
 @end

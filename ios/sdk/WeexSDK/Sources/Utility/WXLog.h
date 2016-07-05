@@ -41,14 +41,14 @@ typedef NS_ENUM(NSUInteger, WXLogLevel){
     WXLogLevelInfo      = WXLogLevelWarning | WXLogFlagInfo,
     
     /**
-     *  Error, warning, info and debug logs
-     */
-    WXLogLevelDebug     = WXLogLevelInfo | WXLogFlagDebug,
-    
-    /**
      *  Log, warning info
      */
-    WXLogLevelLog       = WXLogLevelWarning | WXLogLevelInfo,
+    WXLogLevelLog       = WXLogFlayLog | WXLogLevelInfo,
+    
+    /**
+     *  Error, warning, info and debug logs
+     */
+    WXLogLevelDebug     = WXLogLevelLog | WXLogFlagDebug,
     
     /**
      *  All
@@ -94,17 +94,8 @@ typedef NS_ENUM(NSUInteger, WXLogLevel){
 
 #define WX_FILENAME (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 
-/*
-#define WX_LOG(flag, fmt, ...)          \
-do {                                    \
-    [WXLog log:flag                     \
-          file:WX_FILENAME              \
-          line:__LINE__                 \
-        format:(fmt), ## __VA_ARGS__];  \
-} while(0)
-*/
  
-#define WXLOG(flag, fmt, ...)          \
+#define WX_LOG(flag, fmt, ...)          \
 do {                                    \
     [WXLog devLog:flag                     \
              file:WX_FILENAME              \
@@ -112,19 +103,10 @@ do {                                    \
            format:(fmt), ## __VA_ARGS__];  \
 } while(0)
 
-//#define WXLogs(format,...)              WX_LOG(WXLogObject, format, ##__VA_ARGS__)
-//#define WXLogVerbose(format, ...)       WX_LOG(WXLogFlagVerbose, format, ##__VA_ARGS__)
-//#define WXLogDebug(format, ...)         WX_LOG(WXLogFlagDebug, format, ##__VA_ARGS__)
-//#define WXLogInfo(format, ...)          WX_LOG(WXLogFlagInfo, format, ##__VA_ARGS__)
-//#define WXLogWarning(format, ...)       WX_LOG(WXLogFlagWarning, format, ##__VA_ARGS__)
-//#define WXLogError(format, ...)         WX_LOG(WXLogFlagError, format, ##__VA_ARGS__)
-
-
-
 
 extern void _PDLogObjectsImpl(NSString *severity, NSArray *arguments);
-#define WXLogLog(format,...)            WXLOG(WXLogFlayLog, format, ##__VA_ARGS__)
-#define WXLogDebug(format, ...)         WXLOG(WXLogFlagDebug, format, ##__VA_ARGS__)
-#define WXLogInfo(format, ...)          WXLOG(WXLogFlagInfo, format, ##__VA_ARGS__)
-#define WXLogWarning(format, ...)       WXLOG(WXLogFlagWarning, format ,##__VA_ARGS__)
-#define WXLogError(format, ...)         WXLOG(WXLogFlagError, format, ##__VA_ARGS__)
+#define WXLog(format,...)            WX_LOG(WXLogFlayLog, format, ##__VA_ARGS__)
+#define WXLogDebug(format, ...)         WX_LOG(WXLogFlagDebug, format, ##__VA_ARGS__)
+#define WXLogInfo(format, ...)          WX_LOG(WXLogFlagInfo, format, ##__VA_ARGS__)
+#define WXLogWarning(format, ...)       WX_LOG(WXLogFlagWarning, format ,##__VA_ARGS__)
+#define WXLogError(format, ...)         WX_LOG(WXLogFlagError, format, ##__VA_ARGS__)

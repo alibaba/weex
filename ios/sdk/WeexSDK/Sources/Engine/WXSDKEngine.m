@@ -89,7 +89,7 @@
     
     WXAssert(name && clazz, @"Fail to register the component, please check if the parameters are correct ！");
     
-    [WXComponentFactory registerComponent:name withClass:clazz];
+    [WXComponentFactory registerComponent:name withClass:clazz withPros:properties];
     
     if (properties) {
         NSMutableDictionary *props = [properties mutableCopy];
@@ -175,9 +175,24 @@
 
 + (void)restart
 {
+    NSDictionary *components = [WXComponentFactory componentConfigs];
+    NSDictionary *modules = [WXModuleFactory moduleConfigs];
+    NSDictionary *handlers = [WXHandlerFactory handlerConfs];
     [WXSDKManager unload];
     [WXComponentFactory unregisterAllComponents];
-    [self initSDKEnviroment];
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"main" ofType:@"js"];
+    NSString *script = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+    if (!script || script.length <= 0) {
+        [WXSDKError monitorAlarm:NO errorCode:WX_ERR_LOAD_JSLIB msg:@"framework loading is failure!"];
+        return;
+    }
+    
+    [self _originalRegisterComponents:components];
+    [self _originalRegisterModules:modules];
+    [self _originalRegisterHandlers:handlers];
+    
+    [[WXSDKManager bridgeMgr] executeJsFramework:script];
+    [WXUtility addStatTrack:[WXAppConfiguration appName]];
 }
 
 + (void)connectDebugServer:(NSString*)URL
@@ -189,6 +204,36 @@
 {
     [[WXSDKManager bridgeMgr] connectToDevToolWithUrl:[NSURL URLWithString:URL]];
 
+}
+
++ (void)_originalRegisterComponents:(NSDictionary *)components {
+    void (^componentBlock)(id, id, BOOL *) = ^(id mKey, id mObj, BOOL * mStop) {
+        
+        NSString *name = mObj[@"name"];
+        NSString *componentClass = mObj[@"clazz"];
+        NSDictionary *pros = nil;
+        if (mObj[@"pros"]) {
+            pros = mObj[@""];
+        }
+        [self registerComponent:name withClass:NSClassFromString(componentClass) withProperties:pros];
+    };
+    [components enumerateKeysAndObjectsUsingBlock:componentBlock];
+    
+}
+
++ (void)_originalRegisterModules:(NSDictionary *)modules {
+    void (^moduleBlock)(id, id, BOOL *) = ^(id mKey, id mObj, BOOL * mStop) {
+        
+        [self registerModule:mKey withClass:NSClassFromString(mObj)];
+    };
+    [modules enumerateKeysAndObjectsUsingBlock:moduleBlock];
+}
+
++ (void)_originalRegisterHandlers:(NSDictionary *)handlers {
+    void (^handlerBlock)(id, id, BOOL *) = ^(id mKey, id mObj, BOOL * mStop) {
+        [self registerHandler:mObj withProtocol:NSProtocolFromString(mKey)];
+    };
+    [handlers enumerateKeysAndObjectsUsingBlock:handlerBlock];
 }
 
 @end

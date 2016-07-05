@@ -63,7 +63,7 @@
                 if (idx == args.count - 1) {
                     NSNumber *flag = levelMap[[jsVal toString]];
                     if (flag) {
-                        WXLOG([flag unsignedIntegerValue], @"%@", string);
+                        WX_LOG([flag unsignedIntegerValue], @"%@", string);
                     } else {
                         [string appendFormat:@"%@ ", jsVal];
                         WXLogInfo(@"%@", string);
@@ -94,7 +94,7 @@
 
 - (void)callJSMethod:(NSString *)method args:(NSArray *)args
 {
-    WXLogLog(@"Calling JS... method:%@, args:%@", method, args);
+    WXLogDebug(@"Calling JS... method:%@, args:%@", method, args);
     [[_jsContext globalObject] invokeMethod:method withArguments:args];
 }
 
@@ -104,7 +104,7 @@
         NSString *instanceId = [instance toString];
         NSArray *tasksArray = [tasks toArray];
         NSString *callbackId = [callback toString];
-        WXLogLog(@"Calling native... instance:%@, tasks:%@, callback:%@", instanceId, tasksArray, callbackId);
+        WXLogDebug(@"Calling native... instance:%@, tasks:%@, callback:%@", instanceId, tasksArray, callbackId);
         callNative(instanceId, tasksArray, callbackId);
     };
     

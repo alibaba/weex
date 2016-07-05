@@ -147,7 +147,7 @@
     [_cellComponents removeObject:cell];
     [_completedCells removeObject:cell];
     
-    WXLogLog(@"Delete cell:%@ at row:%ld", cell.ref, (long)indexPath.row);
+    WXLogDebug(@"Delete cell:%@ at row:%ld", cell.ref, (long)indexPath.row);
     [UIView performWithoutAnimation:^{
         [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
     }];
@@ -178,7 +178,7 @@
     if (![_completedCells containsObject:cell]) {
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
         [_completedCells addObject:cell];
-        WXLogLog(@"Insert cell:%@ at row:%ld", cell.ref, (long)indexPath.row);
+        WXLogDebug(@"Insert cell:%@ at row:%ld", cell.ref, (long)indexPath.row);
         [UIView performWithoutAnimation:^{
             [_tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
         }];
@@ -288,7 +288,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    WXLogLog(@"Getting cell at row:%ld", (long)indexPath.row);
+    WXLogDebug(@"Getting cell at row:%ld", (long)indexPath.row);
     static NSString *reuseIdentifier = @"WXTableViewCell";
     
     UITableViewCell *cellView = [_tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
@@ -320,7 +320,7 @@
     
     [cellView.contentView addSubview:cell.view];
     
-    WXLogLog(@"Created cell:%@ view:%@ cellView:%@ at row:%ld", cell.ref, cell.view, cellView, (long)indexPath.row);
+    WXLogDebug(@"Created cell:%@ view:%@ cellView:%@ at row:%ld", cell.ref, cell.view, cellView, (long)indexPath.row);
     return cellView;
 }
 

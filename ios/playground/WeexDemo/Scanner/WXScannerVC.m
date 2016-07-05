@@ -50,6 +50,7 @@
     _captureLayer = [AVCaptureVideoPreviewLayer layerWithSession:_session];
     _captureLayer.videoGravity=AVLayerVideoGravityResizeAspectFill;
     _captureLayer.frame=self.view.layer.bounds;
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -162,8 +163,11 @@
 
             [WXSDKEngine restart];
             
-            [WXSDKEngine registerComponent:@"select" withClass:NSClassFromString(@"WXSelectComponent")];
-            [WXSDKEngine registerModule:@"event" withClass:NSClassFromString(@"WXEventModule")];
+            if ([[[self.navigationController viewControllers] objectAtIndex:0] isKindOfClass:NSClassFromString(@"WXDemoViewController")]) {
+                WXDemoViewController * vc = (WXDemoViewController*)[[self.navigationController viewControllers] objectAtIndex:0];
+                [self.navigationController popToViewController:vc animated:NO];
+            }
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshInstance" object:nil];
             
             return YES;
         }
@@ -172,5 +176,6 @@
     return NO;
 }
 #pragma clang diagnostic pop
+
 
 @end

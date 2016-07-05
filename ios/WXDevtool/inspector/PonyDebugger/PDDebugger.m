@@ -573,13 +573,14 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
             return;
         }
         //call native
-        WXLogLog(@"Calling native... instancdId:%@, methods:%@, callbackId:%@", instanceId, [WXUtility JSONString:methods], callbackId);
+        WXLogDebug(@"Calling native... instancdId:%@, methods:%@, callbackId:%@", instanceId, [WXUtility JSONString:methods], callbackId);
         _nativeCallBlock(instanceId, methods, callbackId);
     }
     
     if ([method isEqualToString:@"reload"]) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [WXSDKEngine restart];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshInstance" object:nil];
         });
     }
 }

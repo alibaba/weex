@@ -97,7 +97,7 @@
             return;
         }
         //call native
-        WXLogLog(@"Calling native... instancdId:%@, methods:%@, callbackId:%@", instanceId, [WXUtility JSONString:methods], callbackId);
+        WXLogDebug(@"Calling native... instancdId:%@, methods:%@, callbackId:%@", instanceId, [WXUtility JSONString:methods], callbackId);
         _nativeCallBlock(instanceId, methods, callbackId);
     } else if ([method isEqualToString:@"setLogLevel"]) {
         NSString *levelString = [args firstObject];
@@ -116,7 +116,7 @@
 {
     if (![method isEqualToString:@"__logger"]) {
         // prevent recursion
-        WXLogLog(@"Calling JS... method:%@, args:%@", method, [WXUtility JSONString:args]);
+        WXLogDebug(@"Calling JS... method:%@, args:%@", method, [WXUtility JSONString:args]);
     }
     
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];

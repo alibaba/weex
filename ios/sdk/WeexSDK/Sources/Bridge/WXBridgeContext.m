@@ -232,9 +232,9 @@
     
     __weak __typeof__(self) weakSelf = self;
     [WXBridgeContext _timeSince:^() {
-        WXLogLog(@"JSFramework starts executing...");
+        WXLogDebug(@"JSFramework starts executing...");
         [self.jsBridge executeJSFramework:script];
-        WXLogLog(@"JSFramework ends executing...");
+        WXLogDebug(@"JSFramework ends executing...");
         if ([self.jsBridge exception]) {
             [WXSDKError monitorAlarm:NO errorCode:WX_ERR_LOAD_JSLIB msg:@"JSFramework executes error !"];
         }

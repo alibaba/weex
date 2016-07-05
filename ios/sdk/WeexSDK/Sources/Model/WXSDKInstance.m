@@ -147,7 +147,7 @@ NSTimeInterval JSLibInitTime = 0;
 
 - (void)renderView:(NSString *)source options:(NSDictionary *)options data:(id)data
 {
-    WXLogLog(@"Render view: %@, data:%@", self, [WXUtility JSONString:data]);
+    WXLogDebug(@"Render view: %@, data:%@", self, [WXUtility JSONString:data]);
     
     if (!self.instanceId) {
         WXLogError(@"Fail to find instance！");
@@ -191,7 +191,7 @@ NSTimeInterval JSLibInitTime = 0;
 
 - (void)refreshInstance:(id)data
 {
-    WXLogLog(@"refresh instance: %@, data:%@", self, [WXUtility JSONString:data]);
+    WXLogDebug(@"refresh instance: %@, data:%@", self, [WXUtility JSONString:data]);
     
     if (!self.instanceId) {
         WXLogError(@"Fail to find instance！");
