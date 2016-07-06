@@ -218,12 +218,16 @@ import android.widget.ImageView;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
-import com.taobao.weex.common.Component;
 import com.taobao.weex.common.OnWXScrollListener;
-import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.ui.component.*;
+import com.taobao.weex.ui.component.Scrollable;
+import com.taobao.weex.ui.component.WXComponent;
+import com.taobao.weex.ui.component.WXEventType;
+import com.taobao.weex.ui.component.WXHeader;
+import com.taobao.weex.ui.component.WXLoading;
+import com.taobao.weex.ui.component.WXRefresh;
+import com.taobao.weex.ui.component.WXVContainer;
 import com.taobao.weex.ui.view.listview.adapter.IOnLoadMoreListener;
 import com.taobao.weex.ui.view.listview.adapter.IRecyclerAdapterListener;
 import com.taobao.weex.ui.view.listview.adapter.ListBaseViewHolder;
@@ -449,8 +453,31 @@ public class WXListComponent extends WXVContainer implements
 
   }
 
+  /**
+   * Call after onPostScrollToPosition
+   * @param pos
+   */
   private void onPostScrollToPosition(int pos){
+    if (pos < 0)
+      return;
+    checkLastSticky(pos);
+  }
 
+  /**
+   * Check last Sticky after scrollTo
+   * @param position scroll to position
+   */
+  public void checkLastSticky(int position) {
+    bounceRecyclerView.clearSticky();
+    for (int i = 0; i <= position; i++) {
+      WXComponent component = getChild(i);
+      if (component.getDomObject() != null && (component.getDomObject().isSticky() && component instanceof WXCell) || component instanceof WXHeader) {
+        if (component.getView() == null) {
+          return;
+        }
+        bounceRecyclerView.notifyStickyShow((WXCell) component, i);
+      }
+    }
   }
 
   @Override
@@ -765,25 +792,6 @@ public class WXListComponent extends WXVContainer implements
     public void notifyAppearStateChange(int firstVisible, int lastVisible,int directionX,int directionY) {
         List<Integer> unRegisterKeys = new ArrayList<>();
 
-        //notify header appear state
-        for (int i = 0, len = childCount(); i < len; i++) {
-          WXComponent value = getChild(i);
-          if ((i == firstVisible+1 && directionY <= 0)) {
-            if ((value.getDomObject() != null && value.getDomObject().isSticky() && value
-                instanceof WXCell) ||
-                value
-                instanceof WXHeader) {
-              bounceRecyclerView.onStickyAppear((WXCell) value, i);
-            }
-          } else if ((i == firstVisible && directionY >= 0)) {
-            if ((value.getDomObject() != null && value.getDomObject().isSticky() && value
-                instanceof WXCell) ||
-                value instanceof WXHeader) {
-              bounceRecyclerView.onStickyDisappear((WXCell) value, i);
-            }
-          }
-        }
-
         //notify appear state
         for (int i = 0, len = mAppearComponents.size(); i < len; i++) {
             int key = mAppearComponents.keyAt(i);
@@ -809,7 +817,28 @@ public class WXListComponent extends WXVContainer implements
         }
     }
 
-    public void unbindAppearComponents(WXComponent component) {
+  @Override
+  public void onBeforeScroll(int dx, int dy) {
+    for (int i = 0, len = childCount(); i < len; i++) {
+      WXComponent value = getChild(i);
+      if (value.getDomObject() != null && (value.getDomObject().isSticky() && value
+          instanceof WXCell) ||
+          value instanceof WXHeader) {
+        if (value.getView() == null)
+          return;
+        int top = value.getView().getTop();
+
+        if (((WXCell)value).lastLocationY >= 0 && top < 0  && dy > 0) {
+          bounceRecyclerView.notifyStickyShow((WXCell) value, i);
+        } else if (((WXCell)value).lastLocationY <= 0 && top > 0  && dy < 0) {
+          bounceRecyclerView.notifyStickyRemove((WXCell) value, i);
+        }
+        ((WXCell)value).lastLocationY = top;
+      }
+    }
+  }
+
+  public void unbindAppearComponents(WXComponent component) {
         mAppearComponents.remove(mAppearComponents.indexOfValue(component));
     }
 
