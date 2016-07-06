@@ -26,7 +26,7 @@ Other attributes please check out the [common attributes](../references/common-a
 
 ### Events
 
-- `change`: triggerd when the slide's index is changed. The event object contains the attribute of `index`, which is the index number of the currently shown slide.
+- `change`: triggered when the slide's index is changed. The event object contains the attribute of `index`, which is the index number of the currently shown slide.
 
 **common events**: check out the [common events](../references/common-event.md)
 

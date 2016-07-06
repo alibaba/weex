@@ -21,7 +21,7 @@ Attribute `append` do not have data-binding. It won't change the final rendering
 </template>
 ```
 
-In the code snippet above, the element with id 'world' will wait for all its children to be rendered then it will be rendered entiely, while the element with id 'weex' will only render itself to the page, then its child elements will be rendered to page one by one.
+In the code snippet above, the element with id 'world' will wait for all its children to be rendered then it will be rendered entirely, while the element with id 'weex' will only render itself to the page, then its child elements will be rendered to page one by one.
 
 The rendering result is obvious, The latter statement will render the element a bit faster on the first-paint, but the total time might be longger than `append="tree"` case.
 

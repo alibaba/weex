@@ -9,7 +9,7 @@ A fixed height container which has multiple child components (cells) arranged in
 **Notes:** height of `list` must be specified (list's styles must contain `height` or pair of `top`, `bottom` or flex value if outter container's `flex-direction` value is `column`).
 
 ### Orientation
-The `list` is alias of `vlist` which display component in vertical oritentation, and `hlist` for the horizontal scroll component.   
+The `list` is alias of `vlist` which display component in vertical orientation, and `hlist` for the horizontal scroll component.   
 
 ### Child Components
 

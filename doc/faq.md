@@ -17,4 +17,4 @@ Weex's native runtime support load image file from device's disk, all you have t
 This's is caused by weex-toolkit's dependency 'http-server', whose old version is not working well in chinese windows environment. We have fixed that, you should upgrade weex-toolkit before use that.
 
 ## Playground app display nothing (white screen) after scan    
-Best way to find out what's happening is read debug log, you can follow [this document](https://github.com/alibaba/weex/blob/doc/doc/tools/how-to-debug.md) to firgure out how to do that.
+Best way to find out what's happening is read debug log, you can follow [this document](https://github.com/alibaba/weex/blob/doc/doc/tools/how-to-debug.md) to figure out how to do that.

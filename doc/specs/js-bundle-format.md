@@ -68,7 +68,7 @@ Every level JSON-like object has these members below:
 * `classList`: an optional array of strings which contains class names for styleing.
 * `events`: an optional k-v pairs whose keys are event type and values are corresponding method names
 * `children`: an optional array of child components info
-* `append`: an optional string which determines a compiling workflow strategy: append node-by-node singly or a whole node tree just one time. the defualt value is `node` and another supported value is `tree`.
+* `append`: an optional string which determines a compiling workflow strategy: append node-by-node singly or a whole node tree just one time. the default value is `node` and another supported value is `tree`.
 * `shown`: a optional function which returns a boolean value to determins whether this component should be displayed
 * `repeat`: a optional function which returns a list data to displays components with each
 
