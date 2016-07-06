@@ -216,12 +216,12 @@ import java.util.Map;
  * This class will translate the raw string presentation of a group of function(s) to give type
  * according to the {@link com.taobao.weex.utils.FunctionParser.Mapper}
  */
-public class FunctionParser<T> {
+public class FunctionParser<K, V> {
 
   public static final char SPACE = ' ';
   public static final char PERCENT = '%';
 
-  private Mapper<T> mapper;
+  private Mapper<K, V> mapper;
   private Lexer lexer;
 
   /**
@@ -229,7 +229,7 @@ public class FunctionParser<T> {
    * @param source the raw string representation of a group of function(s)
    * @param mapper the mapping rule between string and corresponding type of object.
    */
-  public FunctionParser(@NonNull String source, @NonNull Mapper<T> mapper) {
+  public FunctionParser(@NonNull String source, @NonNull Mapper<K, V> mapper) {
     this.lexer = new Lexer(source);
     this.mapper = mapper;
   }
@@ -239,20 +239,20 @@ public class FunctionParser<T> {
    * is defined by the function order in the raw string.
    * @return
    */
-  public LinkedHashMap<String, T> parse() {
+  public LinkedHashMap<K, V> parse() {
     lexer.moveOn();
     return definition();
   }
 
-  private LinkedHashMap<String, T> definition() {
-    LinkedHashMap<String, T> result = new LinkedHashMap<>();
+  private LinkedHashMap<K, V> definition() {
+    LinkedHashMap<K, V> result = new LinkedHashMap<>();
     do {
       result.putAll(function());
     } while (lexer.getCurrentToken() == Token.FUNC_NAME);
     return result;
   }
 
-  private Map<String, T> function() {
+  private Map<K, V> function() {
     List<String> list = new LinkedList<>();
     String functionName = match(Token.FUNC_NAME);
     match(Token.LEFT_PARENT);
@@ -278,7 +278,7 @@ public class FunctionParser<T> {
     FUNC_NAME, PARAM_VALUE, LEFT_PARENT, RIGHT_PARENT, COMMA
   }
 
-  public interface Mapper<T> {
+  public interface Mapper<K, V> {
 
     /**
      * Map one function to a specified type of object
@@ -287,7 +287,7 @@ public class FunctionParser<T> {
      * @return the expected mapping relationship, where the key in the map is the same as the
      * functionName, and the value in the map is the type of object that expected by user.
      */
-    Map<String, T> map(String functionName, List<String> raw);
+    Map<K, V> map(String functionName, List<String> raw);
   }
 
   private static class WXInterpretationException extends RuntimeException {

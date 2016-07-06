@@ -427,6 +427,7 @@ public class WXListComponent extends WXVContainer implements
 
   @Override
   public void scrollTo(WXComponent component,int offset) {
+    //TODO: offset is unused.
     if(bounceRecyclerView == null){
       return;
     }
@@ -442,8 +443,13 @@ public class WXListComponent extends WXVContainer implements
     }
     if(cell !=null){
       int pos = mChildren.indexOf(cell);
-      bounceRecyclerView.getInnerView().smoothScrollToPosition(pos);
+      bounceRecyclerView.getInnerView().scrollToPosition(pos);
+      onPostScrollToPosition(pos);
     }
+
+  }
+
+  private void onPostScrollToPosition(int pos){
 
   }
 
@@ -763,16 +769,16 @@ public class WXListComponent extends WXVContainer implements
         for (int i = 0, len = childCount(); i < len; i++) {
           WXComponent value = getChild(i);
           if ((i == firstVisible+1 && directionY <= 0)) {
-            if ((value.getDomObject().style.get(WXDomPropConstant.WX_POSITION) != null && value.getDomObject
-                ().style
-                .get(WXDomPropConstant.WX_POSITION).equals(WXDomPropConstant.WX_POSITION_STICKY)) ||
-                value instanceof WXHeader) {
+            if ((value.getDomObject() != null && value.getDomObject().isSticky() && value
+                instanceof WXCell) ||
+                value
+                instanceof WXHeader) {
               bounceRecyclerView.onStickyAppear((WXCell) value, i);
             }
           } else if ((i == firstVisible && directionY >= 0)) {
-            if ((value.getDomObject().style.get(WXDomPropConstant.WX_POSITION) != null && value.getDomObject().style
-                .get
-                (WXDomPropConstant.WX_POSITION).equals(WXDomPropConstant.WX_POSITION_STICKY)) || value instanceof WXHeader) {
+            if ((value.getDomObject() != null && value.getDomObject().isSticky() && value
+                instanceof WXCell) ||
+                value instanceof WXHeader) {
               bounceRecyclerView.onStickyDisappear((WXCell) value, i);
             }
           }
