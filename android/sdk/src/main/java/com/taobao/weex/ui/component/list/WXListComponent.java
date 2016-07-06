@@ -218,9 +218,12 @@ import android.widget.ImageView;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.common.Component;
 import com.taobao.weex.common.OnWXScrollListener;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.component.*;
+import com.taobao.weex.ui.view.listview.WXRecyclerView;
 import com.taobao.weex.ui.component.Scrollable;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXEventType;
@@ -430,8 +433,7 @@ public class WXListComponent extends WXVContainer implements
   }
 
   @Override
-  public void scrollTo(WXComponent component,int offset) {
-    //TODO: offset is unused.
+  public void scrollTo(WXComponent component,final int offset) {
     if(bounceRecyclerView == null){
       return;
     }
@@ -447,7 +449,23 @@ public class WXListComponent extends WXVContainer implements
     }
     if(cell !=null){
       int pos = mChildren.indexOf(cell);
-      bounceRecyclerView.getInnerView().scrollToPosition(pos);
+      final WXRecyclerView view = bounceRecyclerView.getInnerView();
+      view.scrollToPosition(pos);
+      final WXComponent cellComp = cell;
+      //scroll cell to top
+      view.postDelayed(new Runnable() {
+        @Override
+        public void run() {
+          if(mOrientation == VERTICAL){
+            int scrollY = cellComp.getView().getTop()+offset;
+            view.smoothScrollBy(0,scrollY );
+          }else{
+            int  scrollX = cellComp.getView().getLeft()+offset;
+            view.smoothScrollBy(scrollX,0);
+          }
+        }
+      },50);
+
       onPostScrollToPosition(pos);
     }
 
