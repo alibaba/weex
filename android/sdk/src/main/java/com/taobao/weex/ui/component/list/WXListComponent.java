@@ -209,7 +209,6 @@ import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -222,6 +221,7 @@ import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.OnWXScrollListener;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.dom.flex.CSSLayout;
 import com.taobao.weex.ui.component.Scrollable;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXEventType;
@@ -765,26 +765,6 @@ public class WXListComponent extends WXVContainer implements
     public void notifyAppearStateChange(int firstVisible, int lastVisible,int directionX,int directionY) {
         List<Integer> unRegisterKeys = new ArrayList<>();
 
-      Log.i("miomin","notifyAppearStateChange");
-        //notify header appear state
-        for (int i = 0, len = childCount(); i < len; i++) {
-          WXComponent value = getChild(i);
-          if ((i == firstVisible+1 && directionY <= 0)) {
-            if ((value.getDomObject() != null && value.getDomObject().isSticky() && value
-                instanceof WXCell) ||
-                value
-                instanceof WXHeader) {
-              bounceRecyclerView.onStickyAppear((WXCell) value, i);
-            }
-          } else if ((i == firstVisible && directionY >= 0)) {
-            if ((value.getDomObject() != null && value.getDomObject().isSticky() && value
-                instanceof WXCell) ||
-                value instanceof WXHeader) {
-              bounceRecyclerView.onStickyDisappear((WXCell) value, i);
-            }
-          }
-        }
-
         //notify appear state
         for (int i = 0, len = mAppearComponents.size(); i < len; i++) {
             int key = mAppearComponents.keyAt(i);
@@ -810,7 +790,29 @@ public class WXListComponent extends WXVContainer implements
         }
     }
 
-    public void unbindAppearComponents(WXComponent component) {
+  @Override
+  public void onBeforeScroll(int dx, int dy) {
+    for (int i = 0, len = childCount(); i < len; i++) {
+      WXComponent value = getChild(i);
+      if ((value.getDomObject() != null && value.getDomObject().isSticky() && value
+          instanceof WXCell) ||
+          value instanceof WXHeader) {
+        if (value.getView() == null)
+          return;
+        int top = value.getView().getTop();
+        float cellHeight = value.getDomObject().csslayout.dimensions[CSSLayout.DIMENSION_HEIGHT];
+
+        if (((WXCell)value).lastLocationY > 0 && top < 0  && dy > 0) {
+          bounceRecyclerView.onStickyDisappear((WXCell) value, i);
+        } else if (((WXCell)value).lastLocationY < 0 && top > 0  && dy < 0) {
+          bounceRecyclerView.onStickyAppear((WXCell) value, i);
+        }
+        ((WXCell)value).lastLocationY = top;
+      }
+    }
+  }
+
+  public void unbindAppearComponents(WXComponent component) {
         mAppearComponents.remove(mAppearComponents.indexOfValue(component));
     }
 
