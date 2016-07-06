@@ -1,0 +1,57 @@
+<!--
+  * in root component `data` is an plain object
+  * in sub component `data` is a function which returns an plain object
+  * `computed` support a single getter or a getter/setter object
+-->
+
+<template>
+  <div onclick="update">
+    <text class="title">{{firstName}}</text>
+    <text class="title">{{lastName}}</text>
+    <text class="title">{{fullName}}</text>
+    <text class="title">{{today}}</text>
+  </div>
+</template>
+
+<style>
+  .title {font-size: 48px;}
+</style>
+
+<script>
+  // // if this is a sub component and the parent component could set `firstName` and `lastName` by:
+  // // `<subcomponent first-name="John" last-name="Smith"></subcomponent>`
+  // module.exports = {
+  //   data: function () {
+  //     return {
+  //       firstName: '',
+  //       lastName: ''
+  //     }
+  //   }
+  // }
+
+  module.exports = {
+    data: {
+      firstName: 'John',
+      lastName: 'Smith',
+      date: Date.now()
+    },
+    methods: {
+      update: function () {
+        this.today = '2016-01-01'
+      }
+    },
+    computed: {
+      fullName: function () {
+        return this.firstName + ' ' + this.lastName
+      },
+      today: {
+        get: function () {
+          return new Date(this.date).toDateString()
+        },
+        set: function (v) {
+          this.date = Date.parse(v)
+        }
+      }
+    }
+  }
+</script>

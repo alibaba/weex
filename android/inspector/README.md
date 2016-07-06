@@ -51,7 +51,7 @@ client.networkInterceptors().add(new OkHttpInterceptor());
   The network inspection only support OKHttpClient right now!!! If you want to use the network inspection to catch your bundle request, you must change your bundle server ip to the real server ip.
  
 - ship it
-  1.you must launch your bundle server firstly. in your weex dir, run command "./start";
-  2.then launch your remote debug server. run command `weex-devtool`, chrome will open a web page show a simply guidance;
-  3.if your app launched, you will see a device list in the chrome web page opened by last step, each device item have two button, `open debugger` and `open inspector`;
-  4.once you click the button "open inspector" chrome will open a page show the inspector view, on the other side, click the button `open debugger` chrome will open a new page to show the debug view;
+  1. you must launch your bundle server firstly. in your weex dir, run command "./start";
+  2. then launch your remote debug server. run command `weex-devtool`, chrome will open a web page show a simply guidance;
+  3. if your app launched, you will see a device list in the chrome web page opened by last step, each device item have two button, `open debugger` and `open inspector`;
+  4. once you click the button "open inspector" chrome will open a page show the inspector view, on the other side, click the button `open debugger` chrome will open a new page to show the debug view;

@@ -1,6 +1,7 @@
 'use strict'
 
 const config = require('../config')
+const utils = require('../utils')
 const protocol = require('../protocol')
 const FrameUpdater = require('../frameUpdater')
 const Sender = require('./sender')
@@ -30,7 +31,7 @@ function callNative (instanceId, tasks, callbackId) {
       console.error('invalid tasks:', tasks)
     }
   }
-  else if (Object.prototype.toString.call(tasks).slice(8, -1) === 'Array') {
+  else if (utils.isArray(tasks)) {
     calls = tasks
   }
   const len = calls.length

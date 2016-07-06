@@ -64,6 +64,7 @@
 @property (nonatomic) BOOL focusEvent;
 @property (nonatomic) BOOL blurEvent;
 @property (nonatomic) BOOL changeEvent;
+@property (nonatomic) BOOL clickEvent;
 @property (nonatomic, strong) NSString *changeEventString;
 
 @end
@@ -87,6 +88,7 @@
         _focusEvent = NO;
         _blurEvent = NO;
         _changeEvent = NO;
+        _clickEvent = NO;
         
         _inputView = [[WXTextInputView alloc] init];
         if (attributes[@"type"]) {
@@ -193,6 +195,9 @@
     if ([eventName isEqualToString:@"change"]) {
         _changeEvent = YES;
     }
+    if ([eventName isEqualToString:@"click"]) {
+        _clickEvent = YES;
+    }
 }
 
 #pragma Remove Event
@@ -210,6 +215,9 @@
     }
     if ([eventName isEqualToString:@"change"]) {
         _changeEvent = NO;
+    }
+    if ([eventName isEqualToString:@"click"]) {
+        _clickEvent = NO;
     }
 }
 
@@ -277,6 +285,37 @@
     }
 }
 
+- (CGSize (^)(CGSize))measureBlock
+{
+    __weak typeof(self) weakSelf = self;
+    return ^CGSize (CGSize constrainedSize) {
+        
+        CGSize computedSize = [[[NSString alloc] init]sizeWithAttributes:nil];
+        //TODO:more elegant way to use max and min constrained size
+        if (!isnan(weakSelf.cssNode->style.minDimensions[CSS_WIDTH])) {
+            computedSize.width = MAX(computedSize.width, weakSelf.cssNode->style.minDimensions[CSS_WIDTH]);
+        }
+        
+        if (!isnan(weakSelf.cssNode->style.maxDimensions[CSS_WIDTH])) {
+            computedSize.width = MIN(computedSize.width, weakSelf.cssNode->style.maxDimensions[CSS_WIDTH]);
+        }
+        
+        if (!isnan(weakSelf.cssNode->style.minDimensions[CSS_HEIGHT])) {
+            computedSize.width = MAX(computedSize.height, weakSelf.cssNode->style.minDimensions[CSS_HEIGHT]);
+        }
+        
+        if (!isnan(weakSelf.cssNode->style.maxDimensions[CSS_HEIGHT])) {
+            computedSize.width = MIN(computedSize.height, weakSelf.cssNode->style.maxDimensions[CSS_HEIGHT]);
+        }
+        
+        return (CGSize) {
+            WXCeilPixelValue(computedSize.width),
+            WXCeilPixelValue(computedSize.height)
+        };
+    };
+}
+
+
 #pragma mark -
 #pragma mark UITextFieldDelegate
 
@@ -285,6 +324,9 @@
     _changeEventString = [textField text];
     if (_focusEvent) {
         [self fireEvent:@"focus" params:nil];
+    }
+    if (_clickEvent) {
+        [self fireEvent:@"click" params:nil];
     }
 }
 

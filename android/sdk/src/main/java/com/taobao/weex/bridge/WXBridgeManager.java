@@ -513,7 +513,7 @@ public class WXBridgeManager implements Callback {
    * Notify the JavaScript about the event happened on Android
    */
   public void fireEvent(final String instanceId, final String ref,
-                        final String type, final Map<String, Object> data) {
+                        final String type, final Map<String, Object> data,final Map<String, Object> domChanges) {
     if (TextUtils.isEmpty(instanceId) || TextUtils.isEmpty(ref)
         || TextUtils.isEmpty(type) || mJSHandler == null) {
       return;
@@ -522,7 +522,7 @@ public class WXBridgeManager implements Callback {
       throw new WXRuntimeException(
           "fireEvent must be called by main thread");
     }
-    addUITask(METHOD_FIRE_EVENT, instanceId, ref, type, data);
+    addUITask(METHOD_FIRE_EVENT, instanceId, ref, type, data,domChanges);
     sendMessage(instanceId, WXJSBridgeMsgType.CALL_JS_BATCH);
   }
 

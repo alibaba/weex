@@ -20,8 +20,10 @@
 #import "WXAssert.h"
 #import "WXThreadSafeMutableDictionary.h"
 #import "WXThreadSafeMutableArray.h"
+#import <pthread/pthread.h>
 
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
+#pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
 
 @interface WXComponent () <UIGestureRecognizerDelegate>
 
@@ -31,11 +33,15 @@
 {
 @private
     NSString *_ref;
-    WXThreadSafeMutableDictionary *_styles;
-    WXThreadSafeMutableDictionary *_attributes;
-    WXThreadSafeMutableArray *_events;
+    NSMutableDictionary *_styles;
+    NSMutableDictionary *_attributes;
+    NSMutableArray *_events;
     
-    WXThreadSafeMutableArray *_subcomponents;
+    // Protects properties styles/attributes/events/subcomponents which will be accessed from multiple threads.
+    pthread_mutex_t _propertyMutex;
+    pthread_mutexattr_t _propertMutexAttr;
+    
+    NSMutableArray *_subcomponents;
     __weak WXComponent *_supercomponent;
     __weak id<WXScrollerProtocol> _ancestorScroller;
     __weak WXSDKInstance *_weexInstance;
@@ -51,14 +57,18 @@
                weexInstance:(WXSDKInstance *)weexInstance
 {
     if (self = [super init]) {
-        _ref = ref;
-        _type = type;
-        _weexInstance = weexInstance;
-        _styles = styles ? [WXThreadSafeMutableDictionary dictionaryWithDictionary:styles] : [WXThreadSafeMutableDictionary dictionary];
-        _attributes = attributes ? [WXThreadSafeMutableDictionary dictionaryWithDictionary:attributes] : [WXThreadSafeMutableDictionary dictionary];
-        _events = events ? [WXThreadSafeMutableArray arrayWithArray:events] : [WXThreadSafeMutableArray array];
+        pthread_mutexattr_init(&_propertMutexAttr);
+        pthread_mutexattr_settype(&_propertMutexAttr, PTHREAD_MUTEX_RECURSIVE);
+        pthread_mutex_init(&_propertyMutex, &_propertMutexAttr);
         
-        _subcomponents = [WXThreadSafeMutableArray array];
+        _ref = [ref copy];
+        _type = [type copy];
+        _weexInstance = weexInstance;
+        _styles = styles ? [NSMutableDictionary dictionaryWithDictionary:styles] : [NSMutableDictionary dictionary];
+        _attributes = attributes ? [NSMutableDictionary dictionaryWithDictionary:attributes] : [NSMutableDictionary dictionary];
+        _events = events ? [NSMutableArray arrayWithArray:events] : [NSMutableArray array];
+        
+        _subcomponents = [NSMutableArray array];
         
         _isNeedJoinLayoutSystem = YES;
         _isLayoutDirty = YES;
@@ -88,16 +98,39 @@
 - (void)dealloc
 {
     free_css_node(_cssNode);
+
+    pthread_mutex_destroy(&_propertyMutex);
+    pthread_mutexattr_destroy(&_propertMutexAttr);
 }
 
 - (NSDictionary *)styles
 {
-    return _styles;
+    NSDictionary *styles;
+    pthread_mutex_lock(&_propertyMutex);
+    styles = _styles;
+    pthread_mutex_unlock(&_propertyMutex);
+    
+    return [styles copy];
 }
 
 - (NSDictionary *)attributes
 {
-    return _attributes;
+    NSDictionary *attributes;
+    pthread_mutex_lock(&_propertyMutex);
+    attributes = _attributes;
+    pthread_mutex_unlock(&_propertyMutex);
+    
+    return [attributes copy];
+}
+
+- (NSArray *)events
+{
+    NSArray *events;
+    pthread_mutex_lock(&_propertyMutex);
+    events = _events;
+    pthread_mutex_unlock(&_propertyMutex);
+    
+    return events;
 }
 
 - (WXSDKInstance *)weexInstance
@@ -110,11 +143,118 @@
     return [NSString stringWithFormat:@"<%@ ref=%@> %@", _type, _ref, _view];
 }
 
+#pragma mark Property
+
+- (UIView *)view
+{
+    if ([self isViewLoaded]) {
+        return _view;
+    } else {
+        WXAssertMainThread();
+        
+        // compositing child will be drew by its composited ancestor
+        if (_compositingChild) {
+            return nil;
+        }
+        
+        [self viewWillLoad];
+        
+        _view = [self loadView];
+        
+        _layer = _view.layer;
+        _view.frame = _calculatedFrame;
+        
+        _view.hidden = _visibility == WXVisibilityShow ? NO : YES;
+        _view.clipsToBounds = _clipToBounds;
+        
+        if (![self _needsDrawBorder]) {
+            _layer.borderColor = _borderTopColor.CGColor;
+            _layer.borderWidth = _borderTopWidth;
+            _layer.cornerRadius = _borderTopLeftRadius;
+            _layer.opacity = _opacity;
+            _view.backgroundColor = _backgroundColor;
+        }
+        
+        _view.wx_component = self;
+        _layer.wx_component = self;
+        
+        [self _initEvents:self.events];
+        
+        if (_positionType == WXPositionTypeSticky) {
+            [self.ancestorScroller addStickyComponent:self];
+        }
+        
+        if (self.supercomponent && self.supercomponent->_async) {
+            self->_async = YES;
+        }
+        
+        [self setNeedsDisplay];
+        [self viewDidLoad];
+        
+        if (_lazyCreateView) {
+            if (self.supercomponent && !((WXComponent *)self.supercomponent)->_lazyCreateView) {
+                NSArray *subcomponents = ((WXComponent *)self.supercomponent).subcomponents;
+                
+                NSInteger index;
+                pthread_mutex_lock(&_propertyMutex);
+                index = [subcomponents indexOfObject:self];
+                pthread_mutex_unlock(&_propertyMutex);
+                
+                if (index != NSNotFound) {
+                    [((WXComponent *)self.supercomponent).view insertSubview:_view atIndex:index];
+                }
+            }
+            for (int i = 0; i < self.subcomponents.count; i++) {
+                WXComponent *subcomponent = self.subcomponents[i];
+                [self insertSubview:subcomponent atIndex:i];
+            }
+        }
+        
+        [self handleFirstScreenTime];
+        
+        return _view;
+    }
+}
+
+- (void)handleFirstScreenTime
+{
+    if (self.absolutePosition.y > self.weexInstance.rootView.frame.size.height) {
+        if (self.weexInstance.screenRenderTime == 0) {
+            self.weexInstance.screenRenderTime = [[NSDate new] timeIntervalSinceDate:self.weexInstance.renderStartDate];
+        }
+    }
+}
+
+- (CALayer *)layer
+{
+    return _layer;
+}
+
+- (CGRect)calculatedFrame
+{
+    return _calculatedFrame;
+}
+
+- (CGPoint)absolutePosition
+{
+    return _absolutePosition;
+}
+
+- (css_node_t *)cssNode
+{
+    return _cssNode;
+}
+
 #pragma mark Component Hierarchy 
 
 - (NSArray<WXComponent *> *)subcomponents
 {
-    return _subcomponents;
+    NSArray<WXComponent *> *subcomponents;
+    pthread_mutex_lock(&_propertyMutex);
+    subcomponents = _subcomponents;
+    pthread_mutex_unlock(&_propertyMutex);
+    
+    return [subcomponents copy];
 }
 
 - (WXComponent *)supercomponent
@@ -128,7 +268,9 @@
     
     subcomponent->_supercomponent = self;
     
+    pthread_mutex_lock(&_propertyMutex);
     [_subcomponents insertObject:subcomponent atIndex:index];
+    pthread_mutex_unlock(&_propertyMutex);
     
     if (subcomponent->_positionType == WXPositionTypeFixed) {
         [self.weexInstance.componentManager addFixedComponent:subcomponent];
@@ -137,11 +279,15 @@
     
     [self _recomputeCSSNodeChildren];
     [self setNeedsLayout];
+    
 }
 
 - (void)_removeFromSupercomponent
 {
+    pthread_mutex_lock(&_propertyMutex);
     [self.supercomponent->_subcomponents removeObject:self];
+    pthread_mutex_unlock(&_propertyMutex);
+    
     [self.supercomponent _recomputeCSSNodeChildren];
     [self.supercomponent setNeedsLayout];
     
@@ -177,23 +323,31 @@
 
 - (void)_updateStylesOnComponentThread:(NSDictionary *)styles
 {
+    pthread_mutex_lock(&_propertyMutex);
     [_styles addEntriesFromDictionary:styles];
+    pthread_mutex_unlock(&_propertyMutex);
     [self _updateCSSNodeStyles:styles];
 }
 
 - (void)_updateAttributesOnComponentThread:(NSDictionary *)attributes
 {
+    pthread_mutex_lock(&_propertyMutex);
     [_attributes addEntriesFromDictionary:attributes];
+    pthread_mutex_unlock(&_propertyMutex);
 }
 
 - (void)_addEventOnComponentThread:(NSString *)eventName
 {
+    pthread_mutex_lock(&_propertyMutex);
     [_events addObject:eventName];
+    pthread_mutex_unlock(&_propertyMutex);
 }
 
 - (void)_removeEventOnComponentThread:(NSString *)eventName
 {
+    pthread_mutex_lock(&_propertyMutex);
     [_events removeObject:eventName];
+    pthread_mutex_unlock(&_propertyMutex);
 }
 
 - (void)_updateStylesOnMainThread:(NSDictionary *)styles
@@ -209,8 +363,6 @@
 - (void)_updateAttributesOnMainThread:(NSDictionary *)attributes
 {
     WXAssertMainThread();
-    
-    [[_attributes mutableCopy] addEntriesFromDictionary:attributes];
     
     [self _updateNavBarAttributes:attributes];
     
@@ -230,25 +382,25 @@
 #pragma mark Layout
 
 /**
- *  @see WXComponents+Layout.m
+ *  @see WXComponent+Layout.m
  */
 
 #pragma mark View Management
 
 /**
- *  @see WXComponents+ViewManagement.m
+ *  @see WXComponent+ViewManagement.m
  */
 
 #pragma mark Events
 
 /**
- *  @see WXComponents+Events.m
+ *  @see WXComponent+Events.m
  */
 
 #pragma mark Display
 
 /**
- *  @see WXComponents+Display.m
+ *  @see WXComponent+Display.m
  */
 
 @end

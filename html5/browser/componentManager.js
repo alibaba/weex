@@ -2,10 +2,9 @@
 
 'use strict'
 
-// const config = require('./config')
 const FrameUpdater = require('./frameUpdater')
 const AppearWatcher = require('./appearWatcher')
-// const utils = require('./utils')
+const utils = require('./utils')
 const LazyLoad = require('./lazyLoad')
 const animation = require('./animation')
 
@@ -305,20 +304,24 @@ ComponentManager.prototype = {
     }
   },
 
-  addEvent: function (ref, type) {
+  addEvent: function (ref, type, func) {
     let component
     if (typeof ref === 'string' || typeof ref === 'number') {
       component = this.componentMap[ref]
     }
-    else if (Object.prototype.toString.call(ref).slice(8, -1) === 'Object') {
+    else if (utils.getType(ref) === 'object') {
       component = ref
       ref = component.data.ref
     }
     if (component && component.node) {
       const sender = this.weexInstance.sender
-      const listener = sender.fireEvent.bind(sender, ref, type)
-      let listeners = component._listeners
+      const listener = function (e) {
+        const evt = utils.extend({}, e)
+        evt.target = component.data
+        sender.fireEvent(ref, type, func || {}, evt)
+      }
       component.node.addEventListener(type, listener, false, false)
+      let listeners = component._listeners
       if (!listeners) {
         listeners = component._listeners = {}
         component.node._listeners = {}

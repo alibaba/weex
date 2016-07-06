@@ -17,21 +17,6 @@
 
 #pragma mark Public
 
-- (CGRect)calculatedFrame
-{
-    return _calculatedFrame;
-}
-
-- (CGPoint)absolutePosition
-{
-    return _absolutePosition;
-}
-
-- (css_node_t *)cssNode
-{
-    return _cssNode;
-}
-
 - (void)setNeedsLayout
 {
     _isLayoutDirty = YES;
@@ -102,7 +87,7 @@
     return (int)(count);
 }
 
-- (void)_calculatedFrameDidChange
+- (void)_frameDidCalculated
 {
     WXAssertComponentThread();
 }
@@ -126,7 +111,6 @@
     if (!CGRectEqualToRect(newFrame, _calculatedFrame)) {
         _calculatedFrame = newFrame;
         [self _recomputeBorderRadius];
-        [self _calculatedFrameDidChange];
         [dirtyComponents addObject:self];
     }
     
@@ -141,6 +125,8 @@
     _cssNode->layout.dimensions[CSS_HEIGHT] = CSS_UNDEFINED;
     _cssNode->layout.position[CSS_LEFT] = 0;
     _cssNode->layout.position[CSS_TOP] = 0;
+    
+    [self _frameDidCalculated];
     
     for (WXComponent *subcomponent in self.subcomponents) {
         [subcomponent _calculateFrameWithSuperAbsolutePosition:newAboslutePosition gatherDirtyComponents:dirtyComponents];
@@ -233,9 +219,9 @@ do {\
 
 - (void)_fillAbsolutePositions
 {
-    CGPoint absolutePostion = self.absolutePosition;
+    CGPoint absolutePosition = self.absolutePosition;
     for (WXComponent *subcomponent in self.subcomponents) {
-        subcomponent.absolutePosition = CGPointMake(absolutePostion.x + subcomponent.calculatedFrame.origin.x, absolutePostion.y + subcomponent.calculatedFrame.origin.y);
+        subcomponent.absolutePosition = CGPointMake(absolutePosition.x + subcomponent.calculatedFrame.origin.x, absolutePosition.y + subcomponent.calculatedFrame.origin.y);
         [subcomponent _fillAbsolutePositions];
     }
 }

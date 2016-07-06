@@ -2,6 +2,7 @@
 
 const Atomic = require('./component')
 const sender = require('../bridge/sender')
+const utils = require('../utils')
 
 // attrs:
 //   - options: the options to be listed, as a array of strings.
@@ -33,7 +34,7 @@ Select.prototype.attr = {
     this.node.disabled = val && val !== 'false'
   },
   options: function (val) {
-    if (Object.prototype.toString.call(val) !== '[object Array]') {
+    if (!utils.isArray(val)) {
       return
     }
     this.options = val

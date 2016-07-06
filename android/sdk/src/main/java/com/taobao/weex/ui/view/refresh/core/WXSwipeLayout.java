@@ -741,14 +741,7 @@ public class WXSwipeLayout extends FrameLayout implements NestedScrollingParent 
    */
   public void finishPullRefresh() {
     if (mCurrentAction == PULL_REFRESH) {
-      if (headerView != null) {
-        headerView.postDelayed(new Runnable() {
-          @Override
-          public void run() {
-            resetHeaderView(headerView == null ? 0 : headerView.getMeasuredHeight());
-          }
-        },500);
-      }
+      resetHeaderView(headerView == null ? 0 : headerView.getMeasuredHeight());
     }
   }
 
@@ -757,14 +750,7 @@ public class WXSwipeLayout extends FrameLayout implements NestedScrollingParent 
    */
   public void finishPullLoad() {
     if (mCurrentAction == LOAD_MORE) {
-      if (footerView != null) {
-        footerView.postDelayed(new Runnable() {
-          @Override
-          public void run() {
-            resetFootView(footerView == null ? 0 : footerView.getMeasuredHeight());
-          }
-        },500);
-      }
+      resetFootView(footerView == null ? 0 : footerView.getMeasuredHeight());
     }
   }
 
