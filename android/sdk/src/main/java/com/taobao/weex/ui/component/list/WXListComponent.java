@@ -209,6 +209,7 @@ import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -763,15 +764,21 @@ public class WXListComponent extends WXVContainer implements
     public void notifyAppearStateChange(int firstVisible, int lastVisible,int directionX,int directionY) {
         List<Integer> unRegisterKeys = new ArrayList<>();
 
+      Log.i("miomin","notifyAppearStateChange");
         //notify header appear state
         for (int i = 0, len = childCount(); i < len; i++) {
           WXComponent value = getChild(i);
           if ((i == firstVisible+1 && directionY <= 0)) {
-            if ((value.getDomObject() != null && value.getDomObject().isSticky()) || value instanceof WXHeader) {
+            if ((value.getDomObject() != null && value.getDomObject().isSticky() && value
+                instanceof WXCell) ||
+                value
+                instanceof WXHeader) {
               bounceRecyclerView.onStickyAppear((WXCell) value, i);
             }
           } else if ((i == firstVisible && directionY >= 0)) {
-            if ((value.getDomObject() != null && value.getDomObject().isSticky()) || value instanceof WXHeader) {
+            if ((value.getDomObject() != null && value.getDomObject().isSticky() && value
+                instanceof WXCell) ||
+                value instanceof WXHeader) {
               bounceRecyclerView.onStickyDisappear((WXCell) value, i);
             }
           }
