@@ -209,6 +209,7 @@ import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -218,12 +219,16 @@ import android.widget.ImageView;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
-import com.taobao.weex.common.Component;
 import com.taobao.weex.common.OnWXScrollListener;
-import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.ui.component.*;
+import com.taobao.weex.ui.component.Scrollable;
+import com.taobao.weex.ui.component.WXComponent;
+import com.taobao.weex.ui.component.WXEventType;
+import com.taobao.weex.ui.component.WXHeader;
+import com.taobao.weex.ui.component.WXLoading;
+import com.taobao.weex.ui.component.WXRefresh;
+import com.taobao.weex.ui.component.WXVContainer;
 import com.taobao.weex.ui.view.listview.adapter.IOnLoadMoreListener;
 import com.taobao.weex.ui.view.listview.adapter.IRecyclerAdapterListener;
 import com.taobao.weex.ui.view.listview.adapter.ListBaseViewHolder;
@@ -760,20 +765,21 @@ public class WXListComponent extends WXVContainer implements
     public void notifyAppearStateChange(int firstVisible, int lastVisible,int directionX,int directionY) {
         List<Integer> unRegisterKeys = new ArrayList<>();
 
+      Log.i("miomin","notifyAppearStateChange");
         //notify header appear state
         for (int i = 0, len = childCount(); i < len; i++) {
           WXComponent value = getChild(i);
           if ((i == firstVisible+1 && directionY <= 0)) {
-            if ((value.getDomObject().style.get(WXDomPropConstant.WX_POSITION) != null && value.getDomObject
-                ().style
-                .get(WXDomPropConstant.WX_POSITION).equals(WXDomPropConstant.WX_POSITION_STICKY)) ||
-                value instanceof WXHeader) {
+            if ((value.getDomObject() != null && value.getDomObject().isSticky() && value
+                instanceof WXCell) ||
+                value
+                instanceof WXHeader) {
               bounceRecyclerView.onStickyAppear((WXCell) value, i);
             }
           } else if ((i == firstVisible && directionY >= 0)) {
-            if ((value.getDomObject().style.get(WXDomPropConstant.WX_POSITION) != null && value.getDomObject().style
-                .get
-                (WXDomPropConstant.WX_POSITION).equals(WXDomPropConstant.WX_POSITION_STICKY)) || value instanceof WXHeader) {
+            if ((value.getDomObject() != null && value.getDomObject().isSticky() && value
+                instanceof WXCell) ||
+                value instanceof WXHeader) {
               bounceRecyclerView.onStickyDisappear((WXCell) value, i);
             }
           }
