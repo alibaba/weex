@@ -216,14 +216,16 @@ import com.taobao.weex.ui.view.WXFrameLayout;
  */
 public class WXCell extends WXVContainer {
 
+    public int lastLocationY = -1;
+
     public WXCell(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
         super(instance, dom, parent,true );
     }
 
-  /**
-   * If Cell is Sticky, need wraped FrameLayout
-   */
-  @Override
+    /**
+     * If Cell is Sticky, need wraped FrameLayout
+     */
+    @Override
     protected void initView() {
         if(mContext!=null) {
             if (mDomObj != null && mDomObj.isSticky()) {

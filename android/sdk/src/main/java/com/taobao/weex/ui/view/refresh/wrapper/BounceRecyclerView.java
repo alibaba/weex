@@ -266,7 +266,7 @@ public class BounceRecyclerView extends BaseBounceView<WXRecyclerView> {
    * @param component
    * @param index
    */
-    public void onStickyDisappear(WXCell component, int index) {
+    public void notifyStickyShow(WXCell component, int index) {
         if (!headComponentStack.isEmpty()) {
             WXCell oldCom = headComponentStack.pop();
             if (!oldCom.getRef().equals(component.getRef())) {
@@ -288,7 +288,7 @@ public class BounceRecyclerView extends BaseBounceView<WXRecyclerView> {
      * @param component
      * @param index
      */
-    public void onStickyAppear(WXCell component,int index) {
+    public void notifyStickyRemove(WXCell component,int index) {
         if (!headComponentStack.isEmpty() && !headerViewStack.isEmpty() && !tempViewStack.isEmpty())
             removeSticky(component);
     }
@@ -324,5 +324,19 @@ public class BounceRecyclerView extends BaseBounceView<WXRecyclerView> {
         headComponent.getView().addView(headerView);
         headerView.setTranslationX(0);
         headerView.setTranslationY(0);
+    }
+
+    public void clearSticky() {
+        int size = headComponentStack.size();
+        while (size > 0 && tempViewStack.size() == size && headerViewStack.size() == size) {
+            WXCell headComponent = headComponentStack.pop();
+            FrameLayout tempView = tempViewStack.pop();
+            FrameLayout headerView = headerViewStack.pop();
+            headComponent.getView().removeView(tempView);
+            ((ViewGroup) getParent()).removeView(headerView);
+            headComponent.getView().addView(headerView);
+            headerView.setTranslationX(0);
+            headerView.setTranslationY(0);
+        }
     }
 }
