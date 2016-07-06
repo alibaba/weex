@@ -232,7 +232,7 @@
         [_tableView endUpdates];
         
         __block BOOL needCompute;
-        [_sections enumerateObjectsUsingBlock:^(WXSection * _Nonnull section, NSUInteger sectionIndex, BOOL * _Nonnull stop) {
+        [_completedSections enumerateObjectsUsingBlock:^(WXSection * _Nonnull section, NSUInteger sectionIndex, BOOL * _Nonnull stop) {
             if (header == section.header) {
                 needCompute = YES ;
             } else if (!needCompute) {
