@@ -62,7 +62,7 @@ Get the current global environment variables and configuration information.
  * `config`*(object)*: the object of config.
  * `bundleUrl`*(string)*: the url of bundle.
  * `debug`*(boolean)*: if is debug mode. 
- * `env`*(object)*: a object of envrioment.
+ * `env`*(object)*: a object of environment.
     * `weexVersion`*(string)*: a version of weex sdk.
     * `appName`*(string)*: a name of app.
     * `appVersion`*(string)*: a version of app.

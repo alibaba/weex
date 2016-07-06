@@ -79,7 +79,7 @@ Additionally, the transformer could also do more things: combo the bundles, boot
 
 ## JS Framework
 
-JS Framework will run in native JavaScript engine at the beginning preparation phase. It has `define()` and `bootstrap()` functions for each the bunlde code. Once a JS bundle requested from server, the code will be executed. `define()` will register all modules first, then `bootstrap()` will start compiling main component into virtual DOM and send rendering calls to native.
+JS Framework will run in native JavaScript engine at the beginning preparation phase. It has `define()` and `bootstrap()` functions for each the bundle code. Once a JS bundle requested from server, the code will be executed. `define()` will register all modules first, then `bootstrap()` will start compiling main component into virtual DOM and send rendering calls to native.
 
 There are two key methods for the bridge between JS and native:
 

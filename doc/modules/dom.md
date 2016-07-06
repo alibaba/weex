@@ -82,7 +82,7 @@ Remove event listeners on the specified node for the specified event type.
 
 ### updateAttrs(node, attr)
 
-Update attrbutes of the specified node.
+Update attributes of the specified node.
 
 #### Arguments
 

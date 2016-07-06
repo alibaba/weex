@@ -23,7 +23,7 @@ Other attributes please check out the [common attributes](../references/common-a
 
 - support `color` style.
 - support `font-size` style.
-	+ iOS: default vlaue `32`
+	+ iOS: default value `32`
   + Android: platform specify
   + HTML5: default value `32`
 - support `font-style` style.
