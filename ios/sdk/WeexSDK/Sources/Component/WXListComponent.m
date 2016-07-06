@@ -120,8 +120,7 @@
     if (![subcomponent isKindOfClass:[WXCellComponent class]]) {
         [super insertSubview:subcomponent atIndex:index];
     } else {
-        WXCellComponent *cellComponent = (WXCellComponent *)subcomponent;
-
+        
         NSInteger insertIndex = index;
         for (int j = 0; j <= index && j < self.subcomponents.count; j++) {
             WXComponent *child = self.subcomponents[j];
