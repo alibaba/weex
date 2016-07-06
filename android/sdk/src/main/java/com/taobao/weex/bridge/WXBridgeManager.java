@@ -293,6 +293,7 @@ public class WXBridgeManager implements Callback {
   private WXThread mJSThread;
   private Handler mJSHandler;
   private IWXBridge mWXBridge;
+  private IWXDebugProxy mWxDebugProxy;
 
   private boolean mMock = false;
   /**
@@ -330,14 +331,16 @@ public class WXBridgeManager implements Callback {
   private void launchInspector(boolean remoteDebug) {
     if (WXEnvironment.isApkDebugable()) {
       try {
-        HackedClass<Object> waBridge = WXHack.into("com.taobao.weex.devtools.debug.DebugServerProxy");
-
-        IWXDebugProxy debugProxy = (IWXDebugProxy) waBridge.constructor(Context.class, WXBridgeManager.class)
+        if (mWxDebugProxy != null) {
+          mWxDebugProxy.stop();
+        }
+        HackedClass<Object> debugProxyClass = WXHack.into("com.taobao.weex.devtools.debug.DebugServerProxy");
+        mWxDebugProxy = (IWXDebugProxy) debugProxyClass.constructor(Context.class, WXBridgeManager.class)
                 .getInstance(WXEnvironment.getApplication(), WXBridgeManager.this);
-        if (debugProxy != null) {
-          debugProxy.start();
+        if (mWxDebugProxy != null) {
+          mWxDebugProxy.start();
           if (remoteDebug) {
-            mWXBridge = debugProxy.getWXBridge();
+            mWXBridge = mWxDebugProxy.getWXBridge();
           }
         }
       } catch (HackAssertionException e) {
@@ -345,6 +348,7 @@ public class WXBridgeManager implements Callback {
       }
     }
   }
+
   public boolean callModuleMethod(String instanceId, String moduleStr, String methodStr, JSONArray args) {
     return WXModuleManager.callModuleMethod(instanceId, moduleStr, methodStr, args);
   }
