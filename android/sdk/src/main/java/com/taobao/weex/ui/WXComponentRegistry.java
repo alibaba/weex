@@ -276,4 +276,19 @@ public class WXComponentRegistry {
     });
   }
 
+  public static void reload(){
+    WXBridgeManager.getInstance().getJSHandler().post(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          for(Map<String,String> com:sComponentInfos){
+            registerJSComponent(com);
+          }
+        } catch (WXException e) {
+          e.printStackTrace();
+        }
+      }
+    });
+  }
+
 }

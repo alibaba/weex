@@ -128,7 +128,7 @@
 
 - (void)_drawBorderWithContext:(CGContextRef)context size:(CGSize)size;
 
-- (void)_calculatedFrameDidChange;
+- (void)_frameDidCalculated;
 
 - (NSUInteger)_childrenCountForLayout;
 
