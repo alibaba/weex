@@ -209,6 +209,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Pair;
+import android.util.Property;
+import android.view.View;
 
 import com.taobao.weex.utils.FunctionParser;
 import com.taobao.weex.utils.WXDataStructureUtil;
@@ -237,11 +239,6 @@ public class WXAnimationBean {
 
   public static class Style {
 
-    public final static String ANDROID_TRANSLATION_X = "translationX";
-    public final static String ANDROID_TRANSLATION_Y = "translationY";
-    public final static String ANDROID_ROTATION = "rotation";
-    public final static String ANDROID_SCALE_X = "scaleX";
-    public final static String ANDROID_SCALE_Y = "scaleY";
     public final static String WX_TRANSLATE = "translate";
     public final static String WX_TRANSLATE_X = "translateX";
     public final static String WX_TRANSLATE_Y = "translateY";
@@ -261,17 +258,17 @@ public class WXAnimationBean {
     private static final String ZERO = "0%";
     private static final String PX = "px";
     private static final String DEG = "deg";
-    public static Map<String, List<String>> wxToAndroidMap = new HashMap<>();
+    public static Map<String, List<Property<View,Float>>> wxToAndroidMap = new HashMap<>();
 
     static {
       wxToAndroidMap.put(WX_TRANSLATE, Arrays.asList
-          (ANDROID_TRANSLATION_X, ANDROID_TRANSLATION_Y));
-      wxToAndroidMap.put(WX_TRANSLATE_X, Collections.singletonList(ANDROID_TRANSLATION_X));
-      wxToAndroidMap.put(WX_TRANSLATE_Y, Collections.singletonList(ANDROID_TRANSLATION_Y));
-      wxToAndroidMap.put(WX_ROTATE, Collections.singletonList(ANDROID_ROTATION));
-      wxToAndroidMap.put(WX_SCALE, Arrays.asList(ANDROID_SCALE_X, ANDROID_SCALE_Y));
-      wxToAndroidMap.put(WX_SCALE_X, Collections.singletonList(ANDROID_SCALE_X));
-      wxToAndroidMap.put(WX_SCALE_Y, Collections.singletonList(ANDROID_SCALE_Y));
+          (View.TRANSLATION_X, View.TRANSLATION_Y));
+      wxToAndroidMap.put(WX_TRANSLATE_X, Collections.singletonList(View.TRANSLATION_X));
+      wxToAndroidMap.put(WX_TRANSLATE_Y, Collections.singletonList(View.TRANSLATION_Y));
+      wxToAndroidMap.put(WX_ROTATE, Collections.singletonList(View.ROTATION));
+      wxToAndroidMap.put(WX_SCALE, Arrays.asList(View.SCALE_X, View.SCALE_Y));
+      wxToAndroidMap.put(WX_SCALE_X, Collections.singletonList(View.SCALE_X));
+      wxToAndroidMap.put(WX_SCALE_Y, Collections.singletonList(View.SCALE_Y));
       wxToAndroidMap = Collections.unmodifiableMap(wxToAndroidMap);
     }
 
@@ -279,17 +276,17 @@ public class WXAnimationBean {
     public String backgroundColor;
     public String transform;
     public String transformOrigin;
-    private Map<String, Float> transformMap = new HashMap<>();
+    private Map<Property<View, Float>, Float> transformMap = new HashMap<>();
     private Pair<Float, Float> pivot;
     private List<PropertyValuesHolder> holders=new LinkedList<>();
 
-    private static Map<String, Float> parseTransForm(@Nullable String rawTransform, final int width,
+    private static Map<Property<View,Float>, Float> parseTransForm(@Nullable String rawTransform, final int width,
                                                 final int height) {
       if (!TextUtils.isEmpty(rawTransform)) {
-        FunctionParser<Float> parser = new FunctionParser<>
-            (rawTransform, new FunctionParser.Mapper<Float>() {
+        FunctionParser<Property<View,Float>, Float> parser = new FunctionParser<>
+            (rawTransform, new FunctionParser.Mapper<Property<View,Float>, Float>() {
               @Override
-              public Map<String, Float> map(String functionName, List<String> raw) {
+              public Map<Property<View,Float>, Float> map(String functionName, List<String> raw) {
                 if (raw != null && !raw.isEmpty()) {
                   if (WXAnimationBean.Style.wxToAndroidMap.containsKey(functionName)) {
                     return convertParam(width, height,
@@ -299,18 +296,18 @@ public class WXAnimationBean {
                 return new HashMap<>();
               }
 
-              private Map<String, Float> convertParam(int width, int height,
-                                                      @NonNull List<String> nameSet,
+              private Map<Property<View,Float>, Float> convertParam(int width, int height,
+                                                      @NonNull List<Property<View,Float>> nameSet,
                                                       @NonNull List<String> rawValue) {
-                Map<String, Float> result = WXDataStructureUtil.newHashMapWithExpectedSize(nameSet.size());
+                Map<Property<View,Float>, Float> result = WXDataStructureUtil.newHashMapWithExpectedSize(nameSet.size());
                 List<Float> convertedList = new ArrayList<>(nameSet.size());
-                if (nameSet.contains(WXAnimationBean.Style.ANDROID_ROTATION)) {
+                if (nameSet.contains(View.ROTATION)) {
                   convertedList.addAll(parseRotation(rawValue));
-                } else if (nameSet.contains(WXAnimationBean.Style.ANDROID_TRANSLATION_X) ||
-                           nameSet.contains(WXAnimationBean.Style.ANDROID_TRANSLATION_Y)) {
+                } else if (nameSet.contains(View.TRANSLATION_X) ||
+                           nameSet.contains(View.TRANSLATION_Y)) {
                   convertedList.addAll(parseTranslation(nameSet, width, height, rawValue));
-                } else if (nameSet.contains(WXAnimationBean.Style.ANDROID_SCALE_X) ||
-                           nameSet.contains(WXAnimationBean.Style.ANDROID_SCALE_Y)) {
+                } else if (nameSet.contains(View.SCALE_X) ||
+                           nameSet.contains(View.SCALE_Y)) {
                   convertedList.addAll(parseScale(nameSet.size(), rawValue));
                 }
                 if (nameSet.size() == convertedList.size()) {
@@ -348,7 +345,7 @@ public class WXAnimationBean {
               }
 
 
-              private List<Float> parseTranslation(List<String> nameSet,
+              private List<Float> parseTranslation(List<Property<View,Float>> nameSet,
                                                    int width, int height,
                                                    @NonNull List<String> rawValue) {
                 List<Float> convertedList = new ArrayList<>(2);
@@ -361,11 +358,11 @@ public class WXAnimationBean {
                 return convertedList;
               }
 
-              private void parseSingleTranslation(List<String> nameSet, int width, int height,
+              private void parseSingleTranslation(List<Property<View,Float>> nameSet, int width, int height,
                                                   List<Float> convertedList, String first) {
-                if (nameSet.contains(WXAnimationBean.Style.ANDROID_TRANSLATION_X)) {
+                if (nameSet.contains(View.TRANSLATION_X)) {
                   convertedList.add(parsePercentOrPx(first, width));
-                } else if (nameSet.contains(WXAnimationBean.Style.ANDROID_TRANSLATION_Y)) {
+                } else if (nameSet.contains(View.TRANSLATION_Y)) {
                   convertedList.add(parsePercentOrPx(first, height));
                 }
               }
@@ -457,11 +454,11 @@ public class WXAnimationBean {
 
     private static List<PropertyValuesHolder> moveBackToOrigin() {
       List<PropertyValuesHolder> holders = new ArrayList<>(5);
-      holders.add(PropertyValuesHolder.ofFloat(WXAnimationBean.Style.ANDROID_TRANSLATION_X, 0));
-      holders.add(PropertyValuesHolder.ofFloat(WXAnimationBean.Style.ANDROID_TRANSLATION_Y, 0));
-      holders.add(PropertyValuesHolder.ofFloat(WXAnimationBean.Style.ANDROID_SCALE_X, 1));
-      holders.add(PropertyValuesHolder.ofFloat(WXAnimationBean.Style.ANDROID_SCALE_Y, 1));
-      holders.add(PropertyValuesHolder.ofFloat(WXAnimationBean.Style.ANDROID_ROTATION, 0));
+      holders.add(PropertyValuesHolder.ofFloat(View.TRANSLATION_X, 0));
+      holders.add(PropertyValuesHolder.ofFloat(View.TRANSLATION_Y, 0));
+      holders.add(PropertyValuesHolder.ofFloat(View.SCALE_X, 1));
+      holders.add(PropertyValuesHolder.ofFloat(View.SCALE_Y, 1));
+      holders.add(PropertyValuesHolder.ofFloat(View.ROTATION, 0));
       return holders;
     }
 
@@ -481,7 +478,7 @@ public class WXAnimationBean {
         if (transformMap.isEmpty()) {
           holders.addAll(moveBackToOrigin());
         } else {
-          for (Map.Entry<String, Float> entry : transformMap.entrySet()) {
+          for (Map.Entry<Property<View, Float>, Float> entry : transformMap.entrySet()) {
             holders.add(PropertyValuesHolder.ofFloat(entry.getKey(), entry.getValue()));
           }
         }
