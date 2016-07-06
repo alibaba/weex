@@ -1,4 +1,6 @@
 # Integrate to Android
+<a href="https://github.com/weexteam/article/issues/25"  class="weex-translate">cn</a>
+
 
 When you need to use the new features or to customize specific features, you can rely on the Source SDK for development。
 
@@ -37,8 +39,24 @@ First, you need to git clone `weex` from github:
 ```shell
 git clone https://github.com/alibaba/weex.git
 ```
-
-#### 2. Adding the `:weex_sdk_android` project
+##### 2. Build APK
+  ***   1) Android stuido build APK ***
+ 
+ ```
+     Step 1: run android stuido 
+     Step 2: open the file of ~/weex/android/playground/build.gradle 
+     Step 3: Run the Project and the Apk will auto install in your android device
+ ```
+ ***   2) Gradle build APK ***
+ 
+ ```
+     Step 1: enter the direction of "/weex/android/playground"
+     Step 2: run the build command: ./gradlew clean assemble
+     Step 3: obtain the payground APK from the direction of weex/android/playground/app/build/outputs/apk/
+     Step 3: then adb install -r weex/android/playground/app/build/outputs/apk/playgroud.apk
+ ```
+#### 3. Adding the `:weex_sdk_android` project
+  
 
 Add the `:weex_sdk_android` project in `android/settings.gradle`:
 

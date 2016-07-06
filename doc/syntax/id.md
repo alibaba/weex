@@ -4,7 +4,7 @@
 
 In Weex, we may set the `id` property for a particular element, just as unique identification of a particular element.
 
-`id` can be used by `this.$(id)` to find an element with a certain id. Take `$scrollTo()` For example:
+`id` can be used by `this.$el(id)` to find an element with a certain id. Take the API [`scrollToElement()`](../modules/dom.md#scrolltoelementnode-options) For example:
 
 ```
   <template>
@@ -16,12 +16,12 @@ In Weex, we may set the `id` property for a particular element, just as unique i
     </container>
   </template>
   <script>
+    var dom = require('@weex-module/dom')
     module.exports = {
       methods: {
         back2Top: function () {
-          var top = this.$('top')
-          this.$scrollTo(top)   // both work
-          this.$scrollTo('top') // both work
+          var top = this.$el('top')
+          dom.scrollToElement(top)
         }
       }
     }
