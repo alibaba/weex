@@ -221,7 +221,6 @@ import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.OnWXScrollListener;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.dom.flex.CSSLayout;
 import com.taobao.weex.ui.component.Scrollable;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXEventType;
@@ -449,8 +448,36 @@ public class WXListComponent extends WXVContainer implements
     if(cell !=null){
       int pos = mChildren.indexOf(cell);
       bounceRecyclerView.getInnerView().scrollToPosition(pos);
+      onPostScrollToPosition(pos);
     }
 
+  }
+
+  /**
+   * Call after onPostScrollToPosition
+   * @param pos
+   */
+  private void onPostScrollToPosition(int pos){
+    if (pos < 0)
+      return;
+    checkLastSticky(pos);
+  }
+
+  /**
+   * Check last Sticky after scrollTo
+   * @param position scroll to position
+   */
+  public void checkLastSticky(int position) {
+    bounceRecyclerView.clearSticky();
+    for (int i = 0; i <= position; i++) {
+      WXComponent component = getChild(i);
+      if (component.getDomObject() != null && (component.getDomObject().isSticky() && component instanceof WXCell) || component instanceof WXHeader) {
+        if (component.getView() == null) {
+          return;
+        }
+        bounceRecyclerView.notifyStickyShow((WXCell) component, i);
+      }
+    }
   }
 
   @Override
@@ -794,18 +821,17 @@ public class WXListComponent extends WXVContainer implements
   public void onBeforeScroll(int dx, int dy) {
     for (int i = 0, len = childCount(); i < len; i++) {
       WXComponent value = getChild(i);
-      if ((value.getDomObject() != null && value.getDomObject().isSticky() && value
+      if (value.getDomObject() != null && (value.getDomObject().isSticky() && value
           instanceof WXCell) ||
           value instanceof WXHeader) {
         if (value.getView() == null)
           return;
         int top = value.getView().getTop();
-        float cellHeight = value.getDomObject().csslayout.dimensions[CSSLayout.DIMENSION_HEIGHT];
 
-        if (((WXCell)value).lastLocationY > 0 && top < 0  && dy > 0) {
-          bounceRecyclerView.onStickyDisappear((WXCell) value, i);
-        } else if (((WXCell)value).lastLocationY < 0 && top > 0  && dy < 0) {
-          bounceRecyclerView.onStickyAppear((WXCell) value, i);
+        if (((WXCell)value).lastLocationY >= 0 && top < 0  && dy > 0) {
+          bounceRecyclerView.notifyStickyShow((WXCell) value, i);
+        } else if (((WXCell)value).lastLocationY <= 0 && top > 0  && dy < 0) {
+          bounceRecyclerView.notifyStickyRemove((WXCell) value, i);
         }
         ((WXCell)value).lastLocationY = top;
       }
