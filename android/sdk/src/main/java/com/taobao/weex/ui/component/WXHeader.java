@@ -207,6 +207,7 @@ package com.taobao.weex.ui.component;
 import android.view.ViewGroup;
 
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.common.Component;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.component.list.WXCell;
 import com.taobao.weex.ui.view.WXFrameLayout;
@@ -214,10 +215,11 @@ import com.taobao.weex.ui.view.WXFrameLayout;
 /**
  * The same as sticky cell
  */
+@Component(lazyload = false)
 public class WXHeader extends WXCell {
 
   public WXHeader(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
-    super(instance, node, parent, lazy);
+    super(instance, node, parent, false);
   }
 
   @Override
