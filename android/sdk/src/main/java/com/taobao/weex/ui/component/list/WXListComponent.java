@@ -224,6 +224,7 @@ import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.component.*;
+import com.taobao.weex.ui.view.listview.WXRecyclerView;
 import com.taobao.weex.ui.view.listview.adapter.IOnLoadMoreListener;
 import com.taobao.weex.ui.view.listview.adapter.IRecyclerAdapterListener;
 import com.taobao.weex.ui.view.listview.adapter.ListBaseViewHolder;
@@ -426,7 +427,7 @@ public class WXListComponent extends WXVContainer implements
   }
 
   @Override
-  public void scrollTo(WXComponent component,int offset) {
+  public void scrollTo(WXComponent component,final int offset) {
     //TODO: offset is unused.
     if(bounceRecyclerView == null){
       return;
@@ -443,7 +444,21 @@ public class WXListComponent extends WXVContainer implements
     }
     if(cell !=null){
       int pos = mChildren.indexOf(cell);
-      bounceRecyclerView.getInnerView().scrollToPosition(pos);
+      final WXRecyclerView view = bounceRecyclerView.getInnerView();
+      view.scrollToPosition(pos);
+
+      //scroll cell to top
+      view.postDelayed(new Runnable() {
+        @Override
+        public void run() {
+          if(mOrientation == VERTICAL){
+            view.smoothScrollBy(0,view.getHeight()+offset);
+          }else{
+            view.smoothScrollBy(view.getWidth()+offset,0);
+          }
+        }
+      },50);
+
       onPostScrollToPosition(pos);
     }
 
