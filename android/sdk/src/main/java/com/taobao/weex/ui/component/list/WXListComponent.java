@@ -427,6 +427,7 @@ public class WXListComponent extends WXVContainer implements
 
   @Override
   public void scrollTo(WXComponent component,int offset) {
+    //TODO: offset is unused.
     if(bounceRecyclerView == null){
       return;
     }
@@ -442,7 +443,7 @@ public class WXListComponent extends WXVContainer implements
     }
     if(cell !=null){
       int pos = mChildren.indexOf(cell);
-      bounceRecyclerView.getInnerView().smoothScrollToPosition(pos);
+      bounceRecyclerView.getInnerView().scrollToPosition(pos);
     }
 
   }
