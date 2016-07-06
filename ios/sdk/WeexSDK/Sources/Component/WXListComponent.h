@@ -9,11 +9,14 @@
 #import "WXCellComponent.h"
 #import "WXScrollerComponent.h"
 
+@class WXHeaderComponent;
 @interface WXListComponent : WXScrollerComponent
 
 - (void)cellDidRemove:(WXCellComponent *)cell;
 
 - (void)cellDidLayout:(WXCellComponent *)cell;
+
+- (void)headerDidLayout:(WXHeaderComponent *)header;
 
 - (void)cellDidRendered:(WXCellComponent *)cell;
 

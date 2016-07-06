@@ -368,7 +368,8 @@ static BOOL WXNotStat;
     return machine;
 }
 
-+ (NSString *)registeredDeviceName {
++ (NSString *)registeredDeviceName
+{
     NSString *machine = [[UIDevice currentDevice] model];
     NSString *systemVer = [[UIDevice currentDevice] systemVersion] ? : @"";
     NSString *model = [NSString stringWithFormat:@"%@:%@",machine,systemVer];
