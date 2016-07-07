@@ -22,8 +22,4 @@ typedef NSInteger (^WXJSCallNative)(NSString *instance, NSArray *tasks, NSString
 
 - (void)resetEnvironment;
 
-@optional
-
-- (void)callJSMethod:(NSString *)method params:(NSDictionary*)params;
-
 @end

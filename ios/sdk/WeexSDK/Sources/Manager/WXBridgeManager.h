@@ -35,9 +35,11 @@
  *  @param instance  :   instance id
  *  @param data      :   external data
  **/
-- (void)refreshInstance:(NSString *)instance
-                   data:(id)data;
+- (void)refreshInstance:(NSString *)instance data:(id)data;
 
+/**
+ *  Unload
+ **/
 - (void)unload;
 
 /**
@@ -95,18 +97,18 @@
 - (void)callBack:(NSString *)instanceId funcId:(NSString *)funcId params:(NSString *)params keepAlive:(BOOL)keepAlive;
 
 /**
+ *  Connect To WebSocket for devtool debug
+ *  @param url       :   url to connect
+ **/
+- (void)connectToDevToolWithUrl:(NSURL *)url;
+
+/**
  *  CallBack
  *  @param instanceId:   instance id
  *  @param funcId    :   callback id
  *  @param params    :   parameters
  **/
 - (void)callBack:(NSString *)instanceId funcId:(NSString *)funcId params:(NSString *)params;
-
-/**
- *  Connect To WebSocket for devtool debug
- *  @param url       :   url to connect
- **/
-- (void)connectToDevToolWithUrl:(NSURL *)url;
 
 /**
  *  Connect To WebSocket for collecting log

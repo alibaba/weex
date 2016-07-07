@@ -212,6 +212,7 @@ import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.common.*;
+import com.taobao.weex.utils.WXJsonUtils;
 import com.taobao.weex.utils.WXLogUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -327,7 +328,8 @@ public class WXStreamModule extends WXModule {
             .setType(type);
 
     extractHeaders(headers,builder);
-    sendRequest(builder.createOptions(), new ResponseCallback() {
+    final Options options = builder.createOptions();
+    sendRequest(options, new ResponseCallback() {
       @Override
       public void onResponse(WXResponse response, Map<String, String> headers) {
         if(callback != null) {
@@ -342,10 +344,10 @@ public class WXStreamModule extends WXModule {
             if (response.originalData == null) {
               resp.put("data", null);
             } else {
-              resp.put("data",
-                readAsString(response.originalData,
-                  headers!=null?headers.get("Content-Type"):""
-                ));
+              String respData = readAsString(response.originalData,
+                headers!=null?headers.get("Content-Type"):""
+              );
+              resp.put("data",options.getType() != Options.Type.text? JSONObject.parse(respData):respData);
             }
             resp.put(STATUS_TEXT, Status.getStatusText(response.statusCode));
           }

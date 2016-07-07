@@ -15,7 +15,6 @@
 @interface WXBridgeManager ()
 
 @property (nonatomic, strong) WXBridgeContext   *bridgeCtx;
-@property (nonatomic, strong) NSThread  *jsThread;
 @property (nonatomic, assign) BOOL  stopRunning;
 
 @end
@@ -24,31 +23,34 @@ static NSThread *WXBridgeThread;
 
 @implementation WXBridgeManager
 
++ (instancetype)sharedManager
+{
+    static id _sharedInstance = nil;
+    static dispatch_once_t oncePredicate;
+    dispatch_once(&oncePredicate, ^{
+        _sharedInstance = [[self alloc] init];
+    });
+    return _sharedInstance;
+}
+
+
 - (instancetype)init
 {
     self = [super init];
     if (self) {
         _bridgeCtx = [[WXBridgeContext alloc] init];
-        
-        _jsThread = [[NSThread alloc] initWithTarget:self selector:@selector(_runLoopThread) object:nil];
-        [_jsThread setName: WX_BRIDGE_THREAD_NAME];
-        
-        if (WX_SYS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-            [_jsThread setQualityOfService:[[NSThread mainThread] qualityOfService]];
-        } else {
-            [_jsThread setThreadPriority:[[NSThread mainThread] threadPriority]];
-        }
-
-        [_jsThread start];
     }
     return self;
 }
 
 - (void)unload
 {
-    if (_bridgeCtx) {
-        _bridgeCtx = [[WXBridgeContext alloc] init];
-    }
+    _bridgeCtx = nil;
+}
+
+- (void)dealloc
+{
+   
 }
 
 #pragma mark Thread Management
@@ -62,19 +64,37 @@ static NSThread *WXBridgeThread;
     }
 }
 
-#define WXPerformBlockOnBridgeThread(block) \
-do{\
-    dispatch_block_t pBlock = block; \
-    [self _performBlockOnBridgeThread:pBlock];\
-}while(0)
-
-- (void)_performBlockOnBridgeThread:(void (^)())block
++ (NSThread *)jsThread
 {
-    if ([NSThread currentThread] == _jsThread) {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        WXBridgeThread = [[NSThread alloc] initWithTarget:[[self class]sharedManager] selector:@selector(_runLoopThread) object:nil];
+        [WXBridgeThread setName:WX_BRIDGE_THREAD_NAME];
+        if(WX_SYS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+            [WXBridgeThread setQualityOfService:[[NSThread mainThread] qualityOfService]];
+        } else {
+            [WXBridgeThread setThreadPriority:[[NSThread mainThread] threadPriority]];
+        }
+        
+        [WXBridgeThread start];
+    });
+    
+    return WXBridgeThread;
+}
+
+
+void WXPerformBlockOnBridgeThread(void (^block)())
+{
+    [WXBridgeManager _performBlockOnBridgeThread:block];
+}
+
++ (void)_performBlockOnBridgeThread:(void (^)())block
+{
+    if ([NSThread currentThread] == [self jsThread]) {
         block();
     } else {
         [self performSelector:@selector(_performBlockOnBridgeThread:)
-                     onThread:_jsThread
+                     onThread:[self jsThread]
                    withObject:[block copy]
                 waitUntilDone:NO];
     }
@@ -212,10 +232,7 @@ do{\
 }
 
 - (void)connectToDevToolWithUrl:(NSURL *)url {
-    __weak typeof(self) weakSelf = self;
-    WXPerformBlockOnBridgeThread(^(){
-        [weakSelf.bridgeCtx connectToDevToolWithUrl:url];
-    });
+    [self.bridgeCtx connectToDevToolWithUrl:url];
 }
 
 - (void)connectToWebSocket:(NSURL *)url

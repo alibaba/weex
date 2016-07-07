@@ -126,171 +126,167 @@ import org.json.JSONObject;
 
 public class WXNavigatorModule extends WXModule {
 
-    private final static String INSTANCE_ID = "instanceId";
-    private final static String TAG = "Navigator";
-    private final static String WEEX = "com.taobao.android.intent.category.WEEX";
-    private final static String URL = "url";
+  private final static String INSTANCE_ID = "instanceId";
+  private final static String TAG = "Navigator";
+  private final static String WEEX="com.taobao.android.intent.category.WEEX";
+  private final static String URL = "url";
 
-    @WXModuleAnno
-    public void push(String param, final String callbackId) {
+  @WXModuleAnno
+  public void push(String param, final String callbackId) {
 
-        if (!TextUtils.isEmpty(param)) {
-            if (WXSDKEngine.getActivityNavBarSetter() != null) {
-                if (WXSDKEngine.getActivityNavBarSetter().push(param)) {
-                    WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
-                            WXConst.MSG_SUCCESS);
-                    return;
-                }
-            }
-
-            try {
-                JSONObject jsonObject = new JSONObject(param);
-                String url = jsonObject.optString(URL, "");
-                if (!TextUtils.isEmpty(url)) {
-                    Uri rawUri = Uri.parse(url);
-                    String scheme = rawUri.getScheme();
-                    Uri.Builder builder = rawUri.buildUpon();
-                    if (TextUtils.isEmpty(scheme)) {
-                        builder.scheme("http");
-                    }
-                    Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-                    intent.addCategory(WEEX);
-                    intent.putExtra(INSTANCE_ID, mWXSDKInstance.getInstanceId());
-                    mWXSDKInstance.getContext().startActivity(intent);
-                    WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
-                            WXConst.MSG_SUCCESS);
-                }
-            } catch (Exception e) {
-                WXLogUtils.e(TAG, WXLogUtils.getStackTrace(e));
-                WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
-                        WXConst.MSG_FAILED);
-            }
-        }
-
+    if (WXSDKEngine.getActivityNavBarSetter() != null) {
+      if (WXSDKEngine.getActivityNavBarSetter().push(param)) {
         WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
-                WXConst.MSG_FAILED);
+                                               WXConst.MSG_SUCCESS);
+        return;
+      }
     }
 
-    @WXModuleAnno
-    public void pop(String param, final String callbackId) {
-
-        if (WXSDKEngine.getActivityNavBarSetter() != null) {
-            if (WXSDKEngine.getActivityNavBarSetter().pop(param)) {
-                WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
-                        WXConst.MSG_SUCCESS);
-                return;
-            }
+    try {
+      JSONObject jsonObject = new JSONObject(param);
+      String url = jsonObject.optString(URL,"");
+      if (!TextUtils.isEmpty(url)) {
+        Uri rawUri = Uri.parse(url);
+        String scheme = rawUri.getScheme();
+        Uri.Builder builder = rawUri.buildUpon();
+        if (TextUtils.isEmpty(scheme)) {
+          builder.scheme("http");
         }
-
-        if (mWXSDKInstance.getContext() instanceof Activity) {
-            ((Activity) mWXSDKInstance.getContext()).finish();
-        }
-    }
-
-    @WXModuleAnno
-    public void setNavBarRightItem(String param, final String callbackId) {
-        if (!TextUtils.isEmpty(param)) {
-            if (WXSDKEngine.getActivityNavBarSetter() != null) {
-                if (WXSDKEngine.getActivityNavBarSetter().setNavBarRightItem(param)) {
-                    WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
-                            WXConst.MSG_SUCCESS);
-                    return;
-                }
-            }
-        }
-
+        Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
+        intent.addCategory(WEEX);
+        intent.putExtra(INSTANCE_ID, mWXSDKInstance.getInstanceId());
+        mWXSDKInstance.getContext().startActivity(intent);
         WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
-                WXConst.MSG_FAILED);
+                                               WXConst.MSG_SUCCESS);
+      }
+    } catch (Exception e) {
+      WXLogUtils.e(TAG, WXLogUtils.getStackTrace(e));
+      WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
+                                             WXConst.MSG_FAILED);
     }
+  }
 
-    @WXModuleAnno
-    public void clearNavBarRightItem(String param, final String callbackId) {
-        if (WXSDKEngine.getActivityNavBarSetter() != null) {
-            if (WXSDKEngine.getActivityNavBarSetter().clearNavBarRightItem(param)) {
-                WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
-                        WXConst.MSG_SUCCESS);
-                return;
-            }
-        }
+  @WXModuleAnno
+  public void pop(String param, final String callbackId) {
 
+    if (WXSDKEngine.getActivityNavBarSetter() != null) {
+      if (WXSDKEngine.getActivityNavBarSetter().pop(param)) {
         WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
-                WXConst.MSG_FAILED);
+                                               WXConst.MSG_SUCCESS);
+        return;
+      }
     }
+    if (mWXSDKInstance.getContext() instanceof Activity) {
+      ((Activity) mWXSDKInstance.getContext()).finish();
+    }
+  }
 
-    @WXModuleAnno
-    public void setNavBarLeftItem(String param, final String callbackId) {
-        if (!TextUtils.isEmpty(param)) {
-            if (WXSDKEngine.getActivityNavBarSetter() != null) {
-                if (WXSDKEngine.getActivityNavBarSetter().setNavBarLeftItem(param)) {
-                    WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
-                            WXConst.MSG_SUCCESS);
-                    return;
-                }
-            }
+  @WXModuleAnno
+  public void setNavBarRightItem(String param, final String callbackId) {
+    if (!TextUtils.isEmpty(param)) {
+      if (WXSDKEngine.getActivityNavBarSetter() != null) {
+        if (WXSDKEngine.getActivityNavBarSetter().setNavBarRightItem(param)) {
+          WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
+                                                 WXConst.MSG_SUCCESS);
+          return;
         }
-
-        WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
-                WXConst.MSG_FAILED);
-
+      }
     }
 
-    @WXModuleAnno
-    public void clearNavBarLeftItem(String param, final String callbackId) {
-        if (WXSDKEngine.getActivityNavBarSetter() != null) {
-            if (WXSDKEngine.getActivityNavBarSetter().clearNavBarLeftItem(param)) {
-                WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
-                        WXConst.MSG_SUCCESS);
-                return;
-            }
+    WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
+                                           WXConst.MSG_FAILED);
+  }
+
+  @WXModuleAnno
+  public void clearNavBarRightItem(String param, final String callbackId) {
+      if (WXSDKEngine.getActivityNavBarSetter() != null) {
+        if (WXSDKEngine.getActivityNavBarSetter().clearNavBarRightItem(param)) {
+          WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
+                                                 WXConst.MSG_SUCCESS);
+          return;
         }
-
-        WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
-                WXConst.MSG_FAILED);
     }
 
-    @WXModuleAnno
-    public void setNavBarMoreItem(String param, final String callbackId) {
-        if (!TextUtils.isEmpty(param)) {
-            if (WXSDKEngine.getActivityNavBarSetter() != null) {
-                if (WXSDKEngine.getActivityNavBarSetter().setNavBarMoreItem(param)) {
-                    WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
-                            WXConst.MSG_SUCCESS);
-                    return;
-                }
-            }
+    WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
+                                           WXConst.MSG_FAILED);
+  }
+
+  @WXModuleAnno
+  public void setNavBarLeftItem(String param, final String callbackId) {
+    if (!TextUtils.isEmpty(param)) {
+      if (WXSDKEngine.getActivityNavBarSetter() != null) {
+        if (WXSDKEngine.getActivityNavBarSetter().setNavBarLeftItem(param)) {
+          WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
+                                                 WXConst.MSG_SUCCESS);
+          return;
         }
-
-        WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
-                WXConst.MSG_FAILED);
+      }
     }
 
-    @WXModuleAnno
-    public void clearNavBarMoreItem(String param, final String callbackId) {
-        if (WXSDKEngine.getActivityNavBarSetter() != null) {
-            if (WXSDKEngine.getActivityNavBarSetter().clearNavBarMoreItem(param)) {
-                WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
-                        WXConst.MSG_SUCCESS);
-                return;
-            }
+    WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
+                                           WXConst.MSG_FAILED);
+
+  }
+
+  @WXModuleAnno
+  public void clearNavBarLeftItem(String param, final String callbackId) {
+      if (WXSDKEngine.getActivityNavBarSetter()!= null) {
+        if (WXSDKEngine.getActivityNavBarSetter().clearNavBarLeftItem(param)) {
+          WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
+                                                 WXConst.MSG_SUCCESS);
+          return;
+      }
+    }
+
+    WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
+                                           WXConst.MSG_FAILED);
+  }
+
+  @WXModuleAnno
+  public void setNavBarMoreItem(String param, final String callbackId) {
+    if (!TextUtils.isEmpty(param)) {
+      if (WXSDKEngine.getActivityNavBarSetter() != null) {
+        if (WXSDKEngine.getActivityNavBarSetter().setNavBarMoreItem(param)) {
+          WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
+                                                 WXConst.MSG_SUCCESS);
+          return;
         }
-
-        WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
-                WXConst.MSG_FAILED);
+      }
     }
 
-    @WXModuleAnno
-    public void setNavBarTitle(String param, final String callbackId) {
-        if (!TextUtils.isEmpty(param)) {
-            if (WXSDKEngine.getActivityNavBarSetter() != null) {
-                if (WXSDKEngine.getActivityNavBarSetter().setNavBarTitle(param)) {
-                    WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
-                            WXConst.MSG_SUCCESS);
-                    return;
-                }
-            }
+    WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
+                                           WXConst.MSG_FAILED);
+
+  }
+
+  @WXModuleAnno
+  public void clearNavBarMoreItem(String param, final String callbackId) {
+      if (WXSDKEngine.getActivityNavBarSetter() != null) {
+        if (WXSDKEngine.getActivityNavBarSetter().clearNavBarMoreItem(param)) {
+          WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
+                                                 WXConst.MSG_SUCCESS);
+          return;
         }
-
-        WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
-                WXConst.MSG_FAILED);
     }
+
+    WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
+                                           WXConst.MSG_FAILED);
+  }
+
+  @WXModuleAnno
+  public void setNavBarTitle(String param, final String callbackId) {
+    if (!TextUtils.isEmpty(param)) {
+      if (WXSDKEngine.getActivityNavBarSetter() != null) {
+        if (WXSDKEngine.getActivityNavBarSetter().setNavBarTitle(param)) {
+          WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
+                                                 WXConst.MSG_SUCCESS);
+          return;
+        }
+      }
+    }
+
+    WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
+                                           WXConst.MSG_FAILED);
+  }
+
 }

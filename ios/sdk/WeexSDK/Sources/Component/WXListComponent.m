@@ -207,7 +207,7 @@
         
         [self.weexInstance.componentManager _addUITask:^{
             [_completedSections addObject:completedSection];
-            WXLogVerbose(@"Insert section:%ld",  [_completedSections indexOfObject:completedSection]);
+            WXLogDebug(@"Insert section:%ld",  [_completedSections indexOfObject:completedSection]);
             [UIView performWithoutAnimation:^{
                 [_tableView insertSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
             }];
@@ -259,7 +259,7 @@
     [self.weexInstance.componentManager _addUITask:^{
         [self removeCellForIndexPath:indexPath withSections:_completedSections];
         
-        WXLogVerbose(@"Delete cell:%@ at indexPath:%@", cell.ref, indexPath);
+        WXLogDebug(@"Delete cell:%@ at indexPath:%@", cell.ref, indexPath);
         [UIView performWithoutAnimation:^{
             [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
         }];
@@ -288,7 +288,7 @@
     
     [self.weexInstance.componentManager _addUITask:^{
         if (!isReload) {
-            WXLogVerbose(@"Insert cell:%@ at indexPath:%@", cell.ref, indexPath);
+            WXLogDebug(@"Insert cell:%@ at indexPath:%@", cell.ref, indexPath);
             _completedSections = completedSections;
             [UIView performWithoutAnimation:^{
                 [_tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
@@ -421,7 +421,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    WXLogVerbose(@"Getting cell at indexPath:%@", indexPath);
+    WXLogDebug(@"Getting cell at indexPath:%@", indexPath);
     static NSString *reuseIdentifier = @"WXTableViewCell";
     
     UITableViewCell *cellView = [_tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
@@ -447,8 +447,7 @@
     
     [cellView.contentView addSubview:cell.view];
     
-    WXLogVerbose(@"Created cell:%@ view:%@ cellView:%@ at indexPath:%@", cell.ref, cell.view, cellView, indexPath);
-    
+    WXLogDebug(@"Created cell:%@ view:%@ cellView:%@ at indexPath:%@", cell.ref, cell.view, cellView, indexPath);
     return cellView;
 }
 

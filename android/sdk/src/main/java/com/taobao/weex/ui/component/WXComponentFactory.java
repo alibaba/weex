@@ -210,7 +210,7 @@ import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.ui.ComponentHolder;
+import com.taobao.weex.ui.IFComponentHolder;
 import com.taobao.weex.ui.WXComponentRegistry;
 import com.taobao.weex.utils.WXLogUtils;
 
@@ -228,7 +228,7 @@ public class WXComponentFactory {
       return null;
     }
 
-    ComponentHolder holder = WXComponentRegistry.getComponent(node.type);
+    IFComponentHolder holder = WXComponentRegistry.getComponent(node.type);
     if (holder == null) {
       if (WXEnvironment.isApkDebugable()) {
         StringBuilder tag = new StringBuilder();

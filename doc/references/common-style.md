@@ -1,5 +1,6 @@
 # Common Style
 <span class="weex-version">0.4</span>
+<a href="https://github.com/weexteam/article/issues/23"  class="weex-translate">cn</a>
 
 All of weex tags share some common style rules
 

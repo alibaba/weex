@@ -33,7 +33,6 @@ public  class ScreenShot {
     public static View firstScrollView = null;
     public static View firstListView = null;
 
-
     public static View findFirstScrollerByRootView(View  rootView){
 
         View firstScrollView = null;
@@ -42,7 +41,7 @@ public  class ScreenShot {
             allViews = ViewUtil.getAllChildViews(rootView);
             for (View view:allViews
                  ) {
-                if(view instanceof ScrollView){
+                if(view instanceof android.widget.ScrollView){
                     firstScrollView = view;
                     break;
                 }
@@ -52,14 +51,12 @@ public  class ScreenShot {
     }
 
     public static View findFirstListByRootView(View  rootView){
-
         View firstListView = null;
-
         if(null != rootView){
             allViews = ViewUtil.getAllChildViews(rootView);
             for (View view:allViews
                     ) {
-                if(view instanceof RecyclerView){
+                if(view instanceof WXRecyclerView){
                     firstListView = view;
                     break;
                 }
@@ -74,15 +71,33 @@ public  class ScreenShot {
 
         if(sanpView!=null){
 
+            int[] location = new int[2];
+            sanpView.getLocationInWindow(location);
+            int x = location[0];
+            int y = location[1];
+
+            sanpView = rootView;
             sanpView.setDrawingCacheEnabled(true);
             sanpView.buildDrawingCache();
+//            sanpView = ((View)sanpView.getParent().getParent());
             Bitmap bitmap = sanpView.getDrawingCache();
+
+//            sanpView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+//                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+//            sanpView.layout(0, 0, sanpView.getMeasuredWidth(), sanpView.getMeasuredHeight());
+//            sanpView.buildDrawingCache();
+//            Bitmap bitmap = sanpView.getDrawingCache();
+//            b = bitmap;
+
+
             int sanpWidth = sanpView.getWidth();
+
             Log.e("weex_test", "sanpView.getWidth=="+ sanpWidth);
 
             int snapHeight = sanpView.getHeight();
             Log.e("weex_test", "sanpView.getHeight==" + snapHeight);
 
+//            bitmap = Bitmap.createBitmap(sanpWidth+x, snapHeight+x,Bitmap.Config.ARGB_8888);
 
 //            int width = activity.getWindowManager().getDefaultDisplay().getWidth();
 //            int height = activity.getWindowManager().getDefaultDisplay().getHeight();
@@ -98,7 +113,21 @@ public  class ScreenShot {
             Matrix matrix = new Matrix();
             matrix.postScale(widthScale, widthScale);
 
-            b = Bitmap.createBitmap(bitmap, 0, 0, sanpWidth, snapHeight, matrix, true);
+            Log.e("weex_test", "widthScale=="+widthScale+ "|"+
+                    "Real sanpWidth==" + sanpWidth*widthScale +"|" +
+            "Real snapHeight==" + widthScale*snapHeight +
+            "|" + "sanpView.x=" + x +
+            "|" + "sanpView.y= " + y);
+            b = Bitmap.createBitmap(bitmap, 0, 0, sanpWidth, snapHeight);
+//            b = Bitmap.createBitmap(bitmap, 0, 0, rootView.getWidth(), rootView.getHeight());
+
+            // 缩放
+
+//            Bitmap returnBmp = Bitmap.createBitmap((int) dw, (int) dh,
+//                    Bitmap.Config.ARGB_4444);
+
+            b = Bitmap.createBitmap(bitmap,0, 0,
+                    sanpWidth, snapHeight, matrix, true);
 //            b = Bitmap.createBitmap(bitmap, 0, 0, scrollerWidth,
 //                    scrollerHeight, matrix, true);
 //            b = Bitmap.createBitmap(bitmap, 0, statusBarHeight + actionBarHeight, width,
@@ -141,6 +170,16 @@ public  class ScreenShot {
 
         return  snapBitmap;
 
+    }
+
+    public static Bitmap convertViewToBitmap(View view){
+        view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+        view.buildDrawingCache();
+        Bitmap bitmap = view.getDrawingCache();
+
+        return bitmap;
     }
 
     private static void savePic(Bitmap b, String strFileName) {
