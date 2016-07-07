@@ -62,6 +62,12 @@ export function _build () {
  * @param {object}       meta
  */
 export function _compile (target, dest, meta) {
+  const app = this._app || {}
+
+  if (app.lastSignal === -1) {
+    return
+  }
+
   const context = this
   if (context._targetIsFragment(target)) {
     context._compileFragment(target, dest, meta)
@@ -203,7 +209,7 @@ export function _compileRepeat (target, dest) {
   const key = repeat.key || '$index'
   const value = repeat.value || '$value'
   const trackBy = repeat.trackBy || target.trackBy ||
-    (target.attr && target.attr.trackBy) || key
+    (target.attr && target.attr.trackBy)
 
   const fragBlock = this._createBlock(dest)
   fragBlock.children = []
@@ -341,14 +347,17 @@ export function _compileNativeComponent (template, dest, type) {
   }
 
   const treeMode = template.append === 'tree'
-  if (!treeMode) {
+  const app = this._app || {}
+  if (app.lastSignal !== -1 && !treeMode) {
     _.debug('compile to append single node for', element)
-    this._attachTarget(element, dest)
+    app.lastSignal = this._attachTarget(element, dest)
   }
-  this._compileChildren(template, element)
-  if (treeMode) {
+  if (app.lastSignal !== -1) {
+    this._compileChildren(template, element)
+  }
+  if (app.lastSignal !== -1 && treeMode) {
     _.debug('compile to append whole tree for', element)
-    this._attachTarget(element, dest)
+    app.lastSignal = this._attachTarget(element, dest)
   }
 }
 
@@ -359,10 +368,12 @@ export function _compileNativeComponent (template, dest, type) {
  * @param {object} dest
  */
 export function _compileChildren (template, dest) {
+  const app = this._app || {}
   const children = template.children
   if (children && children.length) {
-    children.forEach((child) => {
+    children.every((child) => {
       this._compile(child, dest)
+      return app.lastSignal !== -1
     })
   }
 }
@@ -410,7 +421,6 @@ export function _bindRepeat (target, fragBlock, info) {
   const list = this._watchBlock(fragBlock, getter, 'repeat',
     (data) => {
       _.debug('the "repeat" item has changed', data)
-
       if (!fragBlock) {
         return
       }
@@ -422,7 +432,7 @@ export function _bindRepeat (target, fragBlock, info) {
       const trackMap = {}
       const reusedMap = {}
       data.forEach((item, index) => {
-        const key = trackBy ? item[trackBy] : index
+        const key = trackBy ? item[trackBy] : (oldStyle ? item[keyName] : index)
         /* istanbul ignore if */
         if (key == null || key === '') {
           return
@@ -433,7 +443,7 @@ export function _bindRepeat (target, fragBlock, info) {
       // 2. remove unused element foreach old item
       const reusedList = []
       oldData.forEach((item, index) => {
-        const key = trackBy ? item[trackBy] : index
+        const key = trackBy ? item[trackBy] : (oldStyle ? item[keyName] : index)
         if (trackMap.hasOwnProperty(key)) {
           reusedMap[key] = {
             item, index, key,
@@ -454,7 +464,7 @@ export function _bindRepeat (target, fragBlock, info) {
       fragBlock.updateMark = fragBlock.start
 
       data.forEach((item, index) => {
-        const key = trackBy ? item[trackBy] : index
+        const key = trackBy ? item[trackBy] : (oldStyle ? item[keyName] : index)
         const reused = reusedMap[key]
         if (reused) {
           if (reused.item === reusedList[0]) {
