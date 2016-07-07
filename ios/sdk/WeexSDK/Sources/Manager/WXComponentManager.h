@@ -135,5 +135,7 @@ extern void WXPerformBlockOnComponentThread(void (^block)());
  */
 - (void)removeFixedComponent:(WXComponent *)fixComponent;
 
+- (void)_addUITask:(void (^)())block;
+
 
 @end

@@ -26,7 +26,7 @@ function genCallTasks (id) {
     if (!Array.isArray(tasks)) {
       tasks = [tasks]
     }
-    callNative(id, tasks, '-1')
+    return callNative(id, tasks, '-1')
   }
 }
 
@@ -211,7 +211,7 @@ Element.prototype.appendChild = function (node) {
       insertIndex(node, this.pureChildren, this.pureChildren.length)
       if (this.docId) {
         const listener = instanceMap[this.docId].listener
-        listener.addElement(node, this.ref, -1)
+        return listener.addElement(node, this.ref, -1)
       }
     }
   }
@@ -221,7 +221,7 @@ Element.prototype.appendChild = function (node) {
       const index = moveIndex(node, this.pureChildren, this.pureChildren.length)
       if (this.docId && index >= 0) {
         const listener = instanceMap[this.docId].listener
-        listener.moveElement(node.ref, this.ref, index)
+        return listener.moveElement(node.ref, this.ref, index)
       }
     }
   }
@@ -251,7 +251,7 @@ Element.prototype.insertBefore = function (node, before) {
       )
       if (this.docId) {
         const listener = instanceMap[this.docId].listener
-        listener.addElement(node, this.ref, index)
+        return listener.addElement(node, this.ref, index)
       }
     }
   }
@@ -268,7 +268,7 @@ Element.prototype.insertBefore = function (node, before) {
       )
       if (this.docId && index >= 0) {
         const listener = instanceMap[this.docId].listener
-        listener.moveElement(node.ref, this.ref, index)
+        return listener.moveElement(node.ref, this.ref, index)
       }
     }
   }
@@ -295,7 +295,7 @@ Element.prototype.insertAfter = function (node, after) {
       )
       if (this.docId) {
         const listener = instanceMap[this.docId].listener
-        listener.addElement(node, this.ref, index)
+        return listener.addElement(node, this.ref, index)
       }
     }
   }
@@ -309,7 +309,7 @@ Element.prototype.insertAfter = function (node, after) {
       )
       if (this.docId && index >= 0) {
         const listener = instanceMap[this.docId].listener
-        listener.moveElement(node.ref, this.ref, index)
+        return listener.moveElement(node.ref, this.ref, index)
       }
     }
   }

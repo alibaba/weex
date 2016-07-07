@@ -14,18 +14,20 @@
 
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *clazz;
+@property (nonatomic, strong) NSDictionary *properties;
 
-- (instancetype)initWithName:(NSString *)name class:(NSString *)clazz;
+- (instancetype)initWithName:(NSString *)name class:(NSString *)clazz pros:(NSDictionary *)pros;
 
 @end
 
 @implementation WXComponentConfig
 
-- (instancetype)initWithName:(NSString *)name class:(NSString *)clazz
+- (instancetype)initWithName:(NSString *)name class:(NSString *)clazz pros:(NSDictionary *)pros
 {
     if (self = [super init]) {
         _name = name;
         _clazz = clazz;
+        _properties = pros;
     }
     
     return self;
@@ -66,9 +68,9 @@
     return [[self sharedInstance] classWithComponentName:name];
 }
 
-+ (void)registerComponent:(NSString *)name withClass:(Class)clazz
++ (void)registerComponent:(NSString *)name withClass:(Class)clazz withPros:(NSDictionary *)pros
 {
-    [[self sharedInstance] registerComponent:name withClass:clazz];
+    [[self sharedInstance] registerComponent:name withClass:clazz withPros:pros];
 }
 
 + (void)registerComponents:(NSArray *)components
@@ -76,7 +78,32 @@
     [[self sharedInstance] registerComponents:components];
 }
 
++ (void)unregisterAllComponents
+{
+    [[self sharedInstance] unregisterAllComponents];
+}
+
++ (NSDictionary *)componentConfigs {
+    return [[self sharedInstance] getComponentConfigs];
+}
+
 #pragma mark Private
+
+- (NSDictionary *)getComponentConfigs {
+    NSMutableDictionary *componentDic = [[NSMutableDictionary alloc] init];
+    void (^componentBlock)(id, id, BOOL *) = ^(id mKey, id mObj, BOOL * mStop) {
+        WXComponentConfig *componentConfig = (WXComponentConfig *)mObj;
+        NSMutableDictionary *configDic = [[NSMutableDictionary alloc] init];
+        [configDic setObject:componentConfig.name forKey:@"name"];
+        [configDic setObject:componentConfig.clazz forKey:@"clazz"];
+        if (componentConfig.properties) {
+            [configDic setObject:componentConfig.properties forKey:@"pros"];
+        }
+        [componentDic setObject:configDic forKey:componentConfig.name];
+    };
+    [_componentConfigs enumerateKeysAndObjectsUsingBlock:componentBlock];
+    return componentDic;
+}
 
 - (Class)classWithComponentName:(NSString *)name
 {
@@ -99,7 +126,7 @@
     return NSClassFromString(config.clazz);
 }
 
-- (void)registerComponent:(NSString *)name withClass:(Class)clazz
+- (void)registerComponent:(NSString *)name withClass:(Class)clazz withPros:(NSDictionary *)pros
 {
     WXAssert(name && clazz, @"name or clazz must not be nil for registering component.");
     
@@ -112,7 +139,7 @@
                   config.name, config.class, name, clazz);
     }
     
-    config = [[WXComponentConfig alloc] initWithName:name class:NSStringFromClass(clazz)];
+    config = [[WXComponentConfig alloc] initWithName:name class:NSStringFromClass(clazz) pros:pros];
     [_componentConfigs setValue:config forKey:name];
     [_configLock unlock];
 }
@@ -128,11 +155,18 @@
         NSString *clazz = dict[@"class"];
         WXAssert(name && clazz, @"name or clazz must not be nil for registering components.");
         
-        WXComponentConfig *config = [[WXComponentConfig alloc] initWithName:name class:clazz];
+        WXComponentConfig *config = [[WXComponentConfig alloc] initWithName:name class:clazz pros:nil];
         if(config){
             [_componentConfigs setValue:config forKey:name];
         }
     }
+    [_configLock unlock];
+}
+
+- (void)unregisterAllComponents
+{
+    [_configLock lock];
+    [_componentConfigs removeAllObjects];
     [_configLock unlock];
 }
 
