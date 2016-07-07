@@ -183,11 +183,11 @@ public class WXSDKManager {
     return sManager;
   }
 
-  public IActivityNavBarSetter getActivityNavBarSetter() {
+  IActivityNavBarSetter getActivityNavBarSetter() {
     return mActivityNavBarSetter;
   }
 
-  public void setActivityNavBarSetter(IActivityNavBarSetter mActivityNavBarSetter) {
+  void setActivityNavBarSetter(IActivityNavBarSetter mActivityNavBarSetter) {
     this.mActivityNavBarSetter = mActivityNavBarSetter;
   }
 
@@ -244,11 +244,15 @@ public class WXSDKManager {
   /**
    * FireEvent back to JS
    */
-  public void fireEvent(final String instanceId, String ref, String type, Map<String, Object> params) {
+  public void fireEvent(final String instanceId, String ref, String type, Map<String, Object> params){
+    fireEvent(instanceId,ref,type,params,null);
+  }
+
+  public void fireEvent(final String instanceId, String ref, String type, Map<String, Object> params,Map<String,Object> domChanges) {
     if (WXEnvironment.isApkDebugable() && Looper.getMainLooper().getThread().getId() != Thread.currentThread().getId()) {
       throw new WXRuntimeException("[WXSDKManager]  fireEvent error");
     }
-    mBridgeManager.fireEvent(instanceId, ref, type, params);
+    mBridgeManager.fireEvent(instanceId, ref, type, params,domChanges);
   }
 
   void createInstance(WXSDKInstance instance, String code, Map<String, Object> options, String jsonInitData) {

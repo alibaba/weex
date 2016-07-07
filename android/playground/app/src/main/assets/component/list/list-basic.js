@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/4a0169486f84ce938fd025f02d493b76", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/d1aeed9201fa6a0e8db1497773413eb2", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(1);
@@ -265,6 +265,9 @@
 	})
 	;__weex_module__.exports.style = __weex_module__.exports.style || {}
 	;Object.assign(__weex_module__.exports.style, {
+	  "list": {
+	    "height": 850
+	  },
 	  "count": {
 	    "fontSize": 48,
 	    "margin": 10
@@ -299,7 +302,7 @@
 	  }
 	})
 	})
-	;__weex_bootstrap__("@weex-component/4a0169486f84ce938fd025f02d493b76", {
+	;__weex_bootstrap__("@weex-component/d1aeed9201fa6a0e8db1497773413eb2", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -803,7 +806,7 @@
 	                } else {
 	                    this.$emit('alarm', Object.assign({}, this.time));
 	                }
-	                this._app.updateActions();
+	                this._app.updateActions(); 
 	            }
 	        },
 	        format: function(str) {
@@ -889,7 +892,7 @@
 	        if (this.interval > 0
 	                && this.step > 0
 	                && this.duration > 0) {
-	            this.nextTick();
+	            this.nextTick();    
 	        }
 	    },
 	    methods: {
@@ -987,7 +990,7 @@
 	          //导航条高度
 	          height: 88,
 
-	          //导航条标题
+	          //导航条标题 
 	          title: "",
 
 	          //导航条标题颜色
@@ -1267,7 +1270,7 @@
 	                  tabItem.visibility = 'hidden';
 	                }
 	              }
-	            },
+	            },  
 	        }
 	    }
 

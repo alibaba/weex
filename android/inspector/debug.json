@@ -22,5 +22,16 @@
       { "name": "callback", "type":"string"},
       { "name": "tasks", "type": "array", "items": { "$ref":"task"}}
     ]
+  },{
+    "name":"reload"
+  },{
+    "name":"registerDevice",
+    "parameters":[
+      { "name": "name", "type":"string"},
+      { "name": "model", "type":"string"},
+      { "name": "weexVersion", "type": "string"},
+      { "name": "platform", "type":"string"},
+      { "name": "deviceId", "type":"string"}
+    ]
   }]
 }

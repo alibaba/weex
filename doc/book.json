@@ -1,6 +1,18 @@
 {
-"gitbook":"3.1.1", 
-"plugins": [
-        "theme-default"
-    ]
+  "gitbook":"3.1.1",     
+  "title": "Weex",
+  "description": "Weex Document Site",
+  "plugins": [
+      "header",
+      "disqus"
+  ],
+  "pluginsConfig": {
+    "disqus": {
+            "shortName": "weex-doc"
+    },        
+    "layout": {
+      "headerPath" : "_layouts/header.html"
+    }
+  }
 }
+

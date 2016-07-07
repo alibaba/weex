@@ -10,6 +10,7 @@
 #import "WXBridgeProtocol.h"
 #import "WXJSCoreBridge.h"
 #import "WXWebSocketBridge.h"
+#import "WXDevToolBridge.h"
 #import "WXLog.h"
 #import "WXUtility.h"
 #import "WXBridgeMethod.h"
@@ -19,11 +20,15 @@
 #import "WXSDKError.h"
 #import "WXAssert.h"
 #import "WXSDKManager.h"
+#import "WXDebugTool.h"
+#import "WXModuleManager.h"
+#import "WXSDKInstance_private.h"
 
 @interface WXBridgeContext ()
 
 @property (nonatomic, strong) id<WXBridgeProtocol>  jsBridge;
 @property (nonatomic, strong) WXWebSocketBridge *socketBridge;
+@property (nonatomic, strong) WXDevToolBridge *devToolSocketBrideg;
 @property (nonatomic, assign) BOOL  debugJS;
 //store the methods which will be executed from native to js
 @property (nonatomic, strong) NSMutableDictionary   *sendQueue;
@@ -73,6 +78,7 @@
 - (id<WXBridgeProtocol>)jsBridge
 {
     WXAssertBridgeThread();
+    _debugJS = [WXDebugTool isDevToolDebug];
     
     Class bridgeClass = _debugJS ? [WXWebSocketBridge class] : [WXJSCoreBridge class];
     
@@ -171,9 +177,9 @@
     
     NSArray *args = nil;
     if (data){
-        args = @[instance, temp, options, data];
+        args = @[instance, temp, options ?: @{}, data];
     } else {
-        args = @[instance, temp, options];
+        args = @[instance, temp, options ?: @{}];
     }
     
     WXSDKInstance *sdkInstance = [WXSDKManager instanceForID:instance] ;
@@ -309,12 +315,15 @@
 
 - (void)connectToWebSocket:(NSURL *)url
 {
-    _socketBridge = [[WXWebSocketBridge alloc] initWithURL:url];
+    if ([WXDebugTool isDevToolDebug]) {
+        _socketBridge = [[WXWebSocketBridge alloc] initWithURL:url];
+    }
+    _devToolSocketBrideg = [[WXDevToolBridge alloc] initWithURL:url];
 }
 
 - (void)logToWebSocket:(NSString *)flag message:(NSString *)message
 {
-    [_socketBridge callJSMethod:@"__logger" args:@[flag, message]];
+    [_devToolSocketBrideg callJSMethod:@"__logger" args:@[flag, message]];
 }
 
 #pragma mark Private Mehtods

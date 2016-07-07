@@ -15,6 +15,7 @@
 #import "WXSDKEngine.h"
 
 static BOOL WXIsDebug;
+static BOOL WXIsDevToolDebug;
 static NSString* WXDebugrepBundleJS;
 static NSString* WXDebugrepJSFramework;
 
@@ -38,7 +39,14 @@ static NSString* WXDebugrepJSFramework;
 #ifdef DEBUG
     return YES;
 #endif
-    return WXIsDebug;
+}
+
++ (void)setDevToolDebug:(BOOL)isDevToolDebug {
+    WXIsDevToolDebug = isDevToolDebug;
+}
+
++ (BOOL)isDevToolDebug {
+    return WXIsDevToolDebug;
 }
 
 + (void)setReplacedBundleJS:(NSURL*)url{

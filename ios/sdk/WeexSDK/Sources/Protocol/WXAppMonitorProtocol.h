@@ -11,16 +11,19 @@
 #define BIZTYPE             @"bizType"
 #define PAGENAME            @"pageName"
 #define WXSDKVERSION        @"WXSDKVersion"
+#define JSLIBVERSION        @"JSLibVersion"
 #define JSLIBINITTIME       @"JSLibInitTime"
+#define JSTEMPLATESIZE      @"JSTemplateSize"
 #define NETWORKTIME         @"networkTime"
 #define COMMUNICATETIME     @"communicateTime"
 #define SCREENRENDERTIME    @"screenRenderTime"
 #define TOTALTIME           @"totalTime"
 
+
 @protocol WXAppMonitorProtocol <WXModuleProtocol>
 
 - (void)commitAppMonitorArgs:(NSDictionary *)args;
 
-+ (void)commitAppMonitorAlarm:(NSString *)pageName monitorPoint:(NSString *)monitorPoint success:(BOOL)success errorCode:(NSString *)errorCode errorMsg:(NSString *)errorMsg arg:(NSString *)arg;
+- (void)commitAppMonitorAlarm:(NSString *)pageName monitorPoint:(NSString *)monitorPoint success:(BOOL)success errorCode:(NSString *)errorCode errorMsg:(NSString *)errorMsg arg:(NSString *)arg;
 
 @end

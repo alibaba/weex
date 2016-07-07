@@ -120,11 +120,11 @@
 
 @interface WXIndicatorComponent()
 
-@property (nonatomic, strong)   WXIndicatorView   *indicatorView;
+@property (nonatomic, strong) WXIndicatorView *indicatorView;
 
-@property (nonatomic, strong)   UIColor   *itemColor;
-@property (nonatomic, strong)   UIColor   *itemSelectedColor;
-@property (nonatomic)   CGFloat   itemSize;
+@property (nonatomic, strong) UIColor *itemColor;
+@property (nonatomic, strong) UIColor *itemSelectedColor;
+@property (nonatomic) CGFloat itemSize;
 
 @end
 
@@ -135,7 +135,7 @@
     if (self = [super initWithRef:ref type:type styles:styles attributes:attributes events:events weexInstance:weexInstance]) {
         _itemColor = styles[@"itemColor"] ? [WXConvert UIColor:styles[@"itemColor"]]:[UIColor colorWithRed:0xff/255.0f green:0xff/255.0f blue:0xff/255.0f alpha:0.5f];
         _itemSelectedColor = styles[@"itemSelectedColor"] ? [WXConvert UIColor:styles[@"itemSelectedColor"]]:[UIColor colorWithRed:0xff/255.0f green:0xd5/255.0f blue:0x45/255.0f alpha:1.0f];
-        _itemSize = styles[@"itemSize"] ? [WXConvert CGFloat:styles[@"itemSize"]]: 5.0f;
+        _itemSize = styles[@"itemSize"] ? [WXConvert WXPixelType:styles[@"itemSize"]] : 5.0f;
     }
     return self;
 }
@@ -168,17 +168,24 @@
 
 - (void)updateStyles:(NSDictionary *)styles
 {
+    BOOL styleChange = NO;
     if (styles[@"itemColor"]) {
+        styleChange = YES;
         _itemColor = [WXConvert UIColor:styles[@"itemColor"]];
         [_indicatorView setPointColor:_itemColor];
     }
     else if (styles[@"itemSelectedColor"]) {
+        styleChange = YES;
         _itemSelectedColor = [WXConvert UIColor:styles[@"itemSelectedColor"]];
         [_indicatorView setLightColor:_itemSelectedColor];
     }
     else if (styles[@"itemSize"]) {
-        _itemSize = [WXConvert WXPixelType:styles[@"itemSelectedColor"]];
+        styleChange = YES;
+        _itemSize = [WXConvert WXPixelType:styles[@"itemSize"]];
         [_indicatorView setPointSize:_itemSize];
+    }
+    if (styleChange) {
+        [self setNeedsDisplay];
     }
 }
 

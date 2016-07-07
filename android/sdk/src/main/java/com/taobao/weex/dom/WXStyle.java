@@ -213,6 +213,7 @@ import com.taobao.weex.dom.flex.CSSFlexDirection;
 import com.taobao.weex.dom.flex.CSSJustify;
 import com.taobao.weex.dom.flex.CSSPositionType;
 import com.taobao.weex.dom.flex.CSSWrap;
+import com.taobao.weex.ui.animation.WXAnimationBean;
 import com.taobao.weex.ui.component.WXText;
 import com.taobao.weex.ui.component.WXTextDecoration;
 import com.taobao.weex.utils.WXUtils;
@@ -227,8 +228,11 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class WXStyle extends ConcurrentHashMap<String, Object> {
 
+  public static final String TRANSFORM = "transform";
+  public static final String TRANSFORM_ORIGIN = "transformOrigin";
   private static final long serialVersionUID = 611132641365274134L;
   static final int UNSET = -1;
+  private WXAnimationBean animationBean;
   /*
    * text-decoration
    **/
@@ -618,5 +622,13 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
   public String getOverflow() {
     Object obj = get(WXDomPropConstant.WX_OVERFLOW);
     return obj == null ? WXDomPropConstant.WX_OVERFLOW_VISIBLE : obj.toString();
+  }
+
+  public WXAnimationBean getAnimationBean() {
+    return animationBean;
+  }
+
+  public void setAnimationBean(WXAnimationBean animationBean) {
+    this.animationBean = animationBean;
   }
 }

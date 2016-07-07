@@ -1,0 +1,16 @@
+<!--
+  * `<content>` or `<slot>` will let the sub component contains the parent's children
+  * see `./include/btn.we` source code for more details
+-->
+
+<template>
+  <div>
+    <btn>
+      <text>Click!</text>
+    </btn>
+  </div>
+</template>
+
+<script>
+  require('./include/btn.we')
+</script>
