@@ -643,7 +643,6 @@ public class WXSDKInstance implements IWXActivityStateListener {
     for (IWXActivityStateListener listener : mActivityStateListeners) {
       listener.onActivityResume();
     }
-    onViewAppear();
   }
 
   @Override
@@ -673,6 +672,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
   }
 
   public void onViewCreated(final WXComponent component) {
+    onViewAppear();
     if (mRenderListener != null && mContext != null) {
       runOnUiThread(new Runnable() {
 
