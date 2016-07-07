@@ -403,7 +403,7 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     WXHeaderComponent *header = ((WXSection *)_completedSections[section]).header;
-    WXLogVerbose(@"header view for section %ld:%@", section, header.view);
+    WXLogDebug(@"header view for section %ld:%@", section, header.view);
     return header.view;
 }
 
