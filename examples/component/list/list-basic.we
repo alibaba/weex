@@ -1,10 +1,6 @@
 <template>
   <div>
     <list class="list">
-      <refresh class="refresh-view" display="{{refresh_display}}" onrefresh="onrefresh">
-        <loading-indicator style="height:60;width:60;color:rgb(238, 162, 54)"></loading-indicator>
-        <text class="refresh-arrow" style="text-align: center; color:rgb(238, 162, 54)" if="{{(refresh_display==='hide')}}">Pull To Refresh</text>
-      </refresh>
       <cell onappear="onappear" ondisappear="ondisappear" class="row" repeat="{{rows}}" index="{{$index}}">
         <div class="item">
           <text class="item-title">row {{id}}</text>
@@ -21,26 +17,11 @@
 
 <style>
   .list {
-
+    height:850px
   }
   .count {
     font-size: 48px;
     margin:10px;
-  }
-  .refresh-view {
-    height: 120px;
-    width: 750px;
-    display: -ms-flex;
-    display: -webkit-flex;
-    display: flex;
-    -ms-flex-align: center;
-    -webkit-align-items: center;
-    -webkit-box-align: center;
-    align-items: center;
-  }
-  .refresh-arrow {
-    font-size: 30px;
-    color: #45b5f0;
   }
   .indicator {
     height: 40px;
@@ -65,24 +46,6 @@
   require('weex-components');
   module.exports = {
     methods: {
-      onrefresh: function(e) {
-        var self = this;
-        self.refresh_display = 'show';
-        this.$call('modal', 'toast', {
-          'message': "onrefresh",
-          'duration': 2
-        });
-        self.refresh_display = 'hide';
-      },
-      onloading: function(e) {
-        var self = this;
-        self.loading_display = 'show';
-        this.$call('modal', 'toast', {
-          'message': "onloading",
-          'duration': 2
-        });
-        self.loading_display = 'hide';
-      },
       onappear: function (e) {
         var appearId = this.rows[e.target.attr.index].id;
         nativeLog('+++++', appearId);
@@ -110,8 +73,6 @@
       }
     },
     data: {
-      refresh_display : 'hide',
-      loading_display : 'hide',
       appearMin:1,
       appearMax:1,
       appearIds:[],

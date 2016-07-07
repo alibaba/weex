@@ -206,6 +206,7 @@ package com.taobao.weex.utils;
 
 import android.content.res.Configuration;
 import android.os.Looper;
+import android.text.TextUtils;
 
 import com.taobao.weex.WXEnvironment;
 
@@ -237,6 +238,61 @@ public class WXUtils {
     } catch (NumberFormatException e) {
     }
     return result;
+  }
+
+  public static float fastGetFloat(String raw, int precision){
+    if(!TextUtils.isEmpty(raw)){
+      boolean positive=true;
+      int loc=0;
+      if(raw.charAt(0)=='-'){
+        positive=false;
+        loc++;
+      }
+      else if(raw.charAt(0)=='+'){
+        loc++;
+      }
+
+      char digit;
+      float result=0;
+      while (loc<raw.length() && (digit=raw.charAt(loc))>='0'&&digit<='9'){
+        result=result*10+digit-'0';
+        loc++;
+      }
+
+      if(loc<raw.length()){
+        if(raw.charAt(loc)=='.'){
+          loc++;
+          int remainderLength=10;
+          int counter=0;
+          while(loc<raw.length() &&
+                counter<precision &&
+                ((digit=raw.charAt(loc))>='0'&& digit<='9')){
+            result+=(digit-'0')/(float)remainderLength;
+            remainderLength*=10;
+            loc++;
+            counter++;
+          }
+        }
+        else{
+          throw new NumberFormatException("Illegal separator");
+        }
+      }
+
+      if(!positive)
+        result*=-1;
+      return result;
+    }
+    throw new NumberFormatException("NullNumber");
+  }
+
+  /**
+   * Parse string representation of float. This method intend to be faster than
+   * {@link Float#parseFloat(String)}, but less accuracy.
+   * @param raw
+   * @return
+   */
+  public static float fastGetFloat(String raw){
+    return fastGetFloat(raw, Integer.MAX_VALUE);
   }
 
   public static int getInt(Object value) {

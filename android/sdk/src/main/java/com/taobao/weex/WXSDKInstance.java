@@ -215,6 +215,7 @@ import com.taobao.weex.adapter.DefaultWXHttpAdapter;
 import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
 import com.taobao.weex.adapter.IWXUserTrackAdapter;
+import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.common.OnWXScrollListener;
 import com.taobao.weex.common.WXErrorCode;
 import com.taobao.weex.common.WXPerformance;
@@ -225,7 +226,9 @@ import com.taobao.weex.common.WXResponse;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.http.WXHttpUtil;
 import com.taobao.weex.ui.component.WXComponent;
-import com.taobao.weex.ui.component.WXVContainer;
+
+import com.taobao.weex.ui.component.WXEventType;
+
 import com.taobao.weex.ui.view.WXScrollView;
 import com.taobao.weex.ui.view.WXScrollView.WXScrollViewListener;
 import com.taobao.weex.utils.WXConst;
@@ -254,9 +257,15 @@ public class WXSDKInstance implements IWXActivityStateListener {
   private IWXRenderListener mRenderListener;
   private Context mContext;
   private volatile String mInstanceId;
-  private WXComponent mGodCom;
+
+  public WXComponent getRootCom() {
+    return mRootCom;
+  }
+
+  private WXComponent mRootCom;
   private boolean mRendered;
   private WXRefreshData mLastRefreshData;
+  private float refreshMargin = 0;
 
   /**
    * Render strategy.
@@ -291,16 +300,6 @@ public class WXSDKInstance implements IWXActivityStateListener {
     init(context);
   }
 
-  public WXComponent getGodCom() {
-    return mGodCom;
-  }
-
-  public WXComponent getRootCom() {
-    if (getGodCom() == null)
-      return null;
-    else
-      return ((WXVContainer) (this.getGodCom())).getChild(0);
-  }
 
   public void init(Context context) {
     mContext = context;
@@ -445,7 +444,10 @@ public class WXSDKInstance implements IWXActivityStateListener {
     render(WXPerformance.DEFAULT, template, null, null, width, height, mRenderStrategy);
   }
 
-  public void renderByUrl(final String pageName, final String url, Map<String, Object> options, final String jsonInitData, final int width, final int height, final WXRenderStrategy flag) {
+  public void renderByUrl(String pageName, final String url, Map<String, Object> options, final String jsonInitData, final int width, final int height, final WXRenderStrategy flag) {
+
+    pageName = wrapPageName(pageName, url);
+
     if (options == null) {
       options = new HashMap<String, Object>();
     }
@@ -472,6 +474,24 @@ public class WXSDKInstance implements IWXActivityStateListener {
     wxRequest.paramMap.put("user-agent", WXHttpUtil.assembleUserAgent(mContext,WXEnvironment.getConfig()));
     adapter.sendRequest(wxRequest, new WXHttpListener(pageName, options, jsonInitData, width, height, flag, System.currentTimeMillis()));
     mWXHttpAdapter = adapter;
+  }
+
+  private String wrapPageName(String pageName, String url) {
+    if(TextUtils.equals(pageName, WXPerformance.DEFAULT)){
+      pageName=url;
+      try {
+        Uri uri=Uri.parse(url);
+        if(uri!=null){
+          Uri.Builder builder=new Uri.Builder();
+          builder.scheme(uri.getScheme());
+          builder.authority(uri.getAuthority());
+          builder.path(uri.getPath());
+          pageName=builder.toString();
+        }
+      } catch (Exception e) {
+      }
+    }
+    return pageName;
   }
 
   private String assembleFilePath(Uri uri) {
@@ -601,6 +621,21 @@ public class WXSDKInstance implements IWXActivityStateListener {
     for (IWXActivityStateListener listener : mActivityStateListeners) {
       listener.onActivityPause();
     }
+    onViewDisappear();
+  }
+
+  public void onViewDisappear(){
+    WXComponent comp = getRootCom();
+    if(comp != null) {
+      WXBridgeManager.getInstance().fireEvent(this.mInstanceId, comp.getRef(), WXEventType.VIEWDISAPPEAR, null,null);
+    }
+  }
+
+  public void onViewAppear(){
+    WXComponent comp = getRootCom();
+    if(comp != null) {
+      WXBridgeManager.getInstance().fireEvent(this.mInstanceId, comp.getRef(), WXEventType.VIEWAPPEAR,null, null);
+    }
   }
 
   @Override
@@ -608,6 +643,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
     for (IWXActivityStateListener listener : mActivityStateListeners) {
       listener.onActivityResume();
     }
+    onViewAppear();
   }
 
   @Override
@@ -643,7 +679,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
         @Override
         public void run() {
           if (mRenderListener != null && mContext != null) {
-            mGodCom = component;
+            mRootCom = component;
             View wxView=component.getView();
             if(WXEnvironment.isApkDebugable() && WXSDKManager.getInstance().getIWXDebugAdapter()!=null){
               wxView=WXSDKManager.getInstance().getIWXDebugAdapter().wrapContainer(WXSDKInstance.this,wxView);
@@ -854,10 +890,10 @@ public class WXSDKInstance implements IWXActivityStateListener {
   public void destroy() {
     WXSDKManager.getInstance().destroyInstance(mInstanceId);
 
-    if (mGodCom != null && mGodCom.getView() != null) {
-      mGodCom.destroy();
-      destroyView(mGodCom.getView());
-      mGodCom = null;
+    if (mRootCom != null && mRootCom.getView() != null) {
+      mRootCom.destroy();
+      destroyView(mRootCom.getView());
+      mRootCom = null;
     }
 
     if (mActivityStateListeners != null) {
@@ -886,6 +922,14 @@ public class WXSDKInstance implements IWXActivityStateListener {
       mWXScrollListeners=new ArrayList<>();
     }
     mWXScrollListeners.add(wxScrollListener);
+  }
+
+  public float getRefreshMargin() {
+    return refreshMargin;
+  }
+
+  public void setRefreshMargin(float refreshMargin) {
+    this.refreshMargin = refreshMargin;
   }
 
   /**
@@ -936,6 +980,27 @@ public class WXSDKInstance implements IWXActivityStateListener {
     public void onHttpFinish(WXResponse response) {
 
       mWXPerformance.networkTime = System.currentTimeMillis() - startRequestTime;
+      if(response.extendParams!=null){
+        Object actualNetworkTime=response.extendParams.get("actualNetworkTime");
+        mWXPerformance.actualNetworkTime=actualNetworkTime instanceof Long?(long)actualNetworkTime:0;
+        WXLogUtils.renderPerformanceLog("actualNetworkTime", mWXPerformance.actualNetworkTime);
+
+        Object pureNetworkTime=response.extendParams.get("pureNetworkTime");
+        mWXPerformance.pureNetworkTime=pureNetworkTime instanceof Long?(long)pureNetworkTime:0;
+        WXLogUtils.renderPerformanceLog("pureNetworkTime", mWXPerformance.pureNetworkTime);
+
+        Object connectionType=response.extendParams.get("connectionType");
+        mWXPerformance.connectionType=connectionType instanceof String?(String)connectionType:"";
+
+        Object packageSpendTime=response.extendParams.get("packageSpendTime");
+        mWXPerformance.packageSpendTime=packageSpendTime instanceof Long ?(long)packageSpendTime:0;
+
+        Object syncTaskTime=response.extendParams.get("syncTaskTime");
+        mWXPerformance.syncTaskTime=syncTaskTime instanceof Long ?(long)syncTaskTime:0;
+
+        Object requestType=response.extendParams.get("requestType");
+        mWXPerformance.requestType=requestType instanceof String?(String)requestType:"";
+      }
       WXLogUtils.renderPerformanceLog("networkTime", mWXPerformance.networkTime);
       if (response!=null && response.originalData!=null && TextUtils.equals("200", response.statusCode)) {
         String template = new String(response.originalData);

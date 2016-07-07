@@ -183,11 +183,11 @@ public class WXSDKManager {
     return sManager;
   }
 
-  public IActivityNavBarSetter getActivityNavBarSetter() {
+  IActivityNavBarSetter getActivityNavBarSetter() {
     return mActivityNavBarSetter;
   }
 
-  public void setActivityNavBarSetter(IActivityNavBarSetter mActivityNavBarSetter) {
+  void setActivityNavBarSetter(IActivityNavBarSetter mActivityNavBarSetter) {
     this.mActivityNavBarSetter = mActivityNavBarSetter;
   }
 
