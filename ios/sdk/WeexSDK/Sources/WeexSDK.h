@@ -26,6 +26,7 @@
 #import "WXDebugTool.h"
 #import "WXConvert.h"
 #import "WXComponent.h"
+#import "WXBridgeProtocol.h"
 #import "WXBridgeManager.h"
 #import "WXBaseViewController.h"
 #import "WXAppMonitorProtocol.h"
