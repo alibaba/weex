@@ -11,6 +11,7 @@
 #import <WeexSDK/WXSDKEngine.h>
 #import <WeexSDK/WXUtility.h>
 #import <WeexSDK/WXDebugTool.h>
+#import <WeexSDK/WXSDKManager.h>
 #import "UIViewController+WXDemoNaviBar.h"
 #import "DemoDefine.h"
 
@@ -57,6 +58,13 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [self updateInstanceState:WeexInstanceAppear];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self updateInstanceState:WeexInstanceDisappear];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -115,6 +123,7 @@
     
     _instance.renderFinish = ^(UIView *view) {
         NSLog(@"render finish");
+        [weakSelf updateInstanceState:WeexInstanceAppear];
     };
     
     _instance.updateFinish = ^(UIView *view) {
@@ -127,6 +136,20 @@
     NSURL *URL = [self testURL: [self.url absoluteString]];
     NSString *randomURL = [NSString stringWithFormat:@"%@?random=%d",URL.absoluteString,arc4random()];
     [_instance renderWithURL:[NSURL URLWithString:randomURL] options:@{@"bundleUrl":URL.absoluteString} data:nil];
+}
+
+- (void)updateInstanceState:(WXState)state
+{
+    if (_instance && _instance.state != state) {
+        _instance.state = state;
+        
+        if (state == WeexInstanceAppear) {
+            [[WXSDKManager bridgeMgr] fireEvent:_instance.instanceId ref:WX_SDK_ROOT_REF type:@"viewappear" params:nil domChanges:nil];
+        }
+        else if (state == WeexInstanceDisappear) {
+            [[WXSDKManager bridgeMgr] fireEvent:_instance.instanceId ref:WX_SDK_ROOT_REF type:@"viewdisappear" params:nil domChanges:nil];
+        }
+    }
 }
 
 #pragma mark - refresh

@@ -82,6 +82,11 @@
 
 - (void)fireEvent:(NSString *)eventName params:(NSDictionary *)params
 {
+    [self fireEvent:eventName params:params domChanges:nil];
+}
+
+- (void)fireEvent:(NSString *)eventName params:(NSDictionary *)params domChanges:(NSDictionary *)domChanges
+{
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     NSTimeInterval timeSp = [[NSDate date] timeIntervalSince1970] * 1000;
     [dict setObject:@(timeSp) forKey:@"timestamp"];
@@ -89,7 +94,7 @@
         [dict addEntriesFromDictionary:params];
     }
     
-    [[WXSDKManager bridgeMgr] fireEvent:self.weexInstance.instanceId ref:self.ref type:eventName params:dict];
+    [[WXSDKManager bridgeMgr] fireEvent:self.weexInstance.instanceId ref:self.ref type:eventName params:dict domChanges:domChanges];
 }
 
 - (void)addEvent:(NSString *)addEventName
@@ -505,7 +510,11 @@ if ([removeEventName isEqualToString:@#eventName]) {\
     if ([gestureRecognizer isKindOfClass:[WXTouchGestureRecognizer class]]) {
         return YES;
     }
-
+    // swipe and scroll
+    if ([gestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:NSClassFromString(@"UIScrollViewPanGestureRecognizer")]) {
+        return YES;
+    }
+    
 //#ifdef DEBUG
 //    if ([gestureRecognizer isKindOfClass:[WXDebugLongPressGestureRecognizer class]]
 //        || [otherGestureRecognizer isKindOfClass:[WXDebugLongPressGestureRecognizer class]]) {

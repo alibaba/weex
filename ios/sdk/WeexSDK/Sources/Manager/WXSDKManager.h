@@ -7,9 +7,10 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "WXBridgeManager.h"
-#import "WXModuleManager.h"
 #import "WXSDKInstance.h"
+#import "WXBridgeManager.h"
+
+@class WXModuleManager;
 
 @interface WXSDKManager : NSObject
 

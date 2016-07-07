@@ -122,7 +122,7 @@ CGPoint WXPixelPointResize(CGPoint value)
                               value.y * WXScreenResizeRadio());
     return new;
 }
-
+static BOOL WXNotStat;
 @implementation WXUtility
 
 + (NSDictionary *)getEnvironment
@@ -368,7 +368,8 @@ CGPoint WXPixelPointResize(CGPoint value)
     return machine;
 }
 
-+ (NSString *)registeredDeviceName {
++ (NSString *)registeredDeviceName
+{
     NSString *machine = [[UIDevice currentDevice] model];
     NSString *systemVer = [[UIDevice currentDevice] systemVersion] ? : @"";
     NSString *model = [NSString stringWithFormat:@"%@:%@",machine,systemVer];
@@ -377,12 +378,12 @@ CGPoint WXPixelPointResize(CGPoint value)
 
 + (void)addStatTrack:(NSString *)appName
 {
-    if (!appName) {
+    if (!appName || [self notStat]) {
         return;
     }
     
     // App name for non-commercial use
-    NSString *urlString = [NSString stringWithFormat:@"http://gm.mmstat.com/weex.1003?appname=%@", appName];
+    NSString *urlString = [NSString stringWithFormat:@"http://gm.mmstat.com/weex.1004?appname=%@", appName];
     NSURL *URL = [NSURL URLWithString:urlString];
     NSURLRequest *request = [NSURLRequest requestWithURL:URL];
     
@@ -479,6 +480,22 @@ CGFloat WXScreenResizeRadio(void)
 + (void)delete:(NSString *)service {
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
     SecItemDelete((CFDictionaryRef)keychainQuery);
+}
+
++ (void)setNotStat:(BOOL)notStat {
+    WXNotStat = YES;
+}
+
++ (BOOL)notStat {
+    return WXNotStat;
+}
+
++ (NSURL *)urlByDeletingParameters:(NSURL *)url
+{
+    NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:YES];
+    components.query = nil;     // remove the query
+    components.fragment = nil;
+    return [components URL];
 }
 
 @end

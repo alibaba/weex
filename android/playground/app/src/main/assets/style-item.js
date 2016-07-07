@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/0be27bf6e08b2c7bc846cf2eeccb41af", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/eeb63808fea97e1906e47365ccb7476b", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __weex_module__.exports = {
@@ -59,8 +59,7 @@
 	    }
 	  }
 
-	;__weex_module__.exports.template = __weex_module__.exports.template || {}
-	;Object.assign(__weex_module__.exports.template, {
+	;__weex_module__.exports.template={
 	  "type": "text",
 	  "classList": [
 	    "item",
@@ -72,9 +71,8 @@
 	  "style": {
 	    "backgroundColor": function () {return this.bgColor()}
 	  }
-	})
-	;__weex_module__.exports.style = __weex_module__.exports.style || {}
-	;Object.assign(__weex_module__.exports.style, {
+	}
+	;__weex_module__.exports.style={
 	  "item": {
 	    "marginRight": 10,
 	    "width": 160,
@@ -87,9 +85,9 @@
 	  "txt": {
 	    "color": "#eeeeee"
 	  }
+	}
 	})
-	})
-	;__weex_bootstrap__("@weex-component/0be27bf6e08b2c7bc846cf2eeccb41af", {
+	;__weex_bootstrap__("@weex-component/eeb63808fea97e1906e47365ccb7476b", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 

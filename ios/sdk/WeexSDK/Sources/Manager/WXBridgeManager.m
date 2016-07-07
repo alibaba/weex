@@ -10,6 +10,7 @@
 #import "WXBridgeContext.h"
 #import "WXLog.h"
 #import "WXAssert.h"
+#import "WXBridgeMethod.h"
 
 @interface WXBridgeManager ()
 
@@ -190,17 +191,17 @@ void WXPerformBlockOnBridgeThread(void (^block)())
 
 - (void)fireEvent:(NSString *)instanceId ref:(NSString *)ref type:(NSString *)type params:(NSDictionary *)params
 {
+    [self fireEvent:instanceId ref:ref type:type params:params domChanges:nil];
+}
+
+- (void)fireEvent:(NSString *)instanceId ref:(NSString *)ref type:(NSString *)type params:(NSDictionary *)params domChanges:(NSDictionary *)domChanges
+{
     if (!type || !ref) {
         WXLogError(@"Event type and component ref should not be nil");
         return;
     }
     
-    NSArray *args = nil;
-    if (params) {
-       args = @[ref, type, params];
-    } else {
-        args = @[ref, type];
-    }
+    NSArray *args = @[ref, type, params?:@{}, domChanges?:@{}];
     NSMutableDictionary *methodDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                        @"fireEvent", @"method",
                                        args, @"args", nil];

@@ -60,6 +60,7 @@
     [self registerComponent:@"scroller" withClass:NSClassFromString(@"WXScrollerComponent") withProperties:nil];
     [self registerComponent:@"list" withClass:NSClassFromString(@"WXListComponent") withProperties:nil];
     
+    [self registerComponent:@"header" withClass:NSClassFromString(@"WXHeaderComponent")];
     [self registerComponent:@"cell" withClass:NSClassFromString(@"WXCellComponent")];
     [self registerComponent:@"embed" withClass:NSClassFromString(@"WXEmbedComponent")];
     [self registerComponent:@"a" withClass:NSClassFromString(@"WXAComponent")];
@@ -172,6 +173,12 @@
 }
 
 # pragma mark Debug
+
++ (void)unload
+{
+    [WXSDKManager unload];
+    [WXComponentFactory unregisterAllComponents];
+}
 
 + (void)restart
 {

@@ -82,7 +82,7 @@
 - (void)checkChanged
 {
     if (_changeEvent) {
-        [self fireEvent:@"change" params:@{@"value":@([_switchView isOn])}];
+        [self fireEvent:@"change" params:@{@"value":@([_switchView isOn])} domChanges:@{@"checked": @([_switchView isOn])}];
     }
 }
 

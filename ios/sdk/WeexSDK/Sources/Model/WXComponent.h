@@ -6,7 +6,8 @@
  * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
  */
 
-#import "Layout.h"
+#import "WXLayoutDefine.h"
+
 @class WXSDKInstance;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -229,6 +230,16 @@ NS_ASSUME_NONNULL_BEGIN
  **/
 - (void)fireEvent:(NSString *)eventName params:(nullable NSDictionary *)params;
 
+/**
+ * @abstract Fire an event to the component and tell Javascript which value has been changed. 
+ * Used for two-way data binding.
+ *
+ * @param eventName The name of the event to fire
+ * @param params The parameters to fire with
+ * @param domChanges The values has been changed, used for two-way data binding.
+ **/
+- (void)fireEvent:(NSString *)eventName params:(nullable NSDictionary *)params domChanges:(nullable NSDictionary *)domChanges;
+
 ///--------------------------------------
 /// @name Updating
 ///--------------------------------------
@@ -263,7 +274,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @param eventName The removed event's name
  * @discussion It can be overrided to handle specific event removing. The method is called on the main thread.
  **/
-- (void)removeEvent:(NSString *)evetName;
+- (void)removeEvent:(NSString *)eventName;
 
 ///--------------------------------------
 /// @name Display
