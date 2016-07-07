@@ -1,6 +1,6 @@
 'use strict'
 
-const Component = require('./component')
+import Component from './component'
 const utils = require('../utils')
 const logger = require('../logger')
 

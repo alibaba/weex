@@ -5,7 +5,7 @@
 require('../styles/list.css')
 require('../scroll')
 
-const Component = require('./component')
+import Component from './component'
 
 const DEFAULT_LOAD_MORE_OFFSET = 0
 
@@ -182,6 +182,9 @@ List.prototype.insertBefore = function (child, before) {
     else if (before.fixedPlaceholder) {
       this.listElement.insertBefore(child.node, before.fixedPlaceholder)
     }
+    else if (before.stickyPlaceholder) {
+      this.listElement.insertBefore(child.node, before.stickyPlaceholder)
+    }
     else {
       this.listElement.insertBefore(child.node, before.node)
     }
@@ -214,11 +217,9 @@ List.prototype.removeChild = function (child) {
   componentManager.removeElementByRef(child.data.ref)
   const refreshLoadingPlaceholder = child.refreshPlaceholder
     || child.loadingPlaceholder
+  child.unsetPosition()
   if (child.refreshPlaceholder) {
     this.listElement.removeChild(refreshLoadingPlaceholder)
-  }
-  if (child.fixedPlaceholder) {
-    this.listElement.removeChild(child.fixedPlaceholder)
   }
   child.node.parentNode.removeChild(child.node)
 

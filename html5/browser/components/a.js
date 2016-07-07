@@ -1,7 +1,7 @@
 'use strict'
 
 const logger = require('../logger')
-const Component = require('./component')
+import Component from './component'
 
 // attrs:
 //   - href

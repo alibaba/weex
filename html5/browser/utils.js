@@ -4,6 +4,8 @@
 
 // const WEAPP_STYLE_ID = 'weapp-style'
 
+export const vendors = ['ms', 'moz', 'webkit', 'o']
+
 let _isWebpSupported = false
 
 ; (function isSupportWebp () {
@@ -22,30 +24,43 @@ let _isWebpSupported = false
   }
 })()
 
-function extend (to, from) {
+let _isStickySupported = false
+
+; (function isSupportSticky () {
+  const element = document.createElement('div')
+  const elementStyle = element.style
+  elementStyle.cssText = vendors.concat(['']).map(function (vendor) {
+    return 'position:'
+      + (vendor ? '-' + vendor + '-' : '')
+      + 'sticky'
+  }).join(';') + ';'
+  _isStickySupported = elementStyle.position.indexOf('sticky') !== -1
+})()
+
+export function extend (to, from) {
   for (const key in from) {
     to[key] = from[key]
   }
   return to
 }
 
-function isArray (arr) {
+export function isArray (arr) {
   return Array.isArray
     ? Array.isArray(arr)
     : (Object.prototype.toString.call(arr) === '[object Array]')
 }
 
-function isPlainObject (obj) {
+export function isPlainObject (obj) {
   return Object.prototype.toString.call(obj)
     .slice(8, -1).toLowerCase() === 'object'
 }
 
-function getType (obj) {
+export function getType (obj) {
   return Object.prototype.toString.call(obj)
     .slice(8, -1).toLowerCase()
 }
 
-function appendStyle (css, styleId, replace) {
+export function appendStyle (css, styleId, replace) {
   let style = document.getElementById(styleId)
   if (style && replace) {
     style.parentNode.removeChild(style)
@@ -60,7 +75,7 @@ function appendStyle (css, styleId, replace) {
   style.appendChild(document.createTextNode(css))
 }
 
-function getUniqueFromArray (arr) {
+export function getUniqueFromArray (arr) {
   if (!isArray(arr)) {
     return []
   }
@@ -78,7 +93,7 @@ function getUniqueFromArray (arr) {
   return res
 }
 
-function transitionize (element, props) {
+export function transitionize (element, props) {
   const transitions = []
   for (const key in props) {
     transitions.push(key + ' ' + props[key])
@@ -87,11 +102,15 @@ function transitionize (element, props) {
   element.style.webkitTransition = transitions.join(', ')
 }
 
-function detectWebp () {
+export function detectWebp () {
   return _isWebpSupported
 }
 
-function getRandom (num) {
+export function detectSticky () {
+  return _isStickySupported
+}
+
+export function getRandom (num) {
   const _defaultNum = 10
   if (typeof num !== 'number' || num <= 0) {
     num = _defaultNum
@@ -100,7 +119,7 @@ function getRandom (num) {
   return Math.floor(Date.now() + Math.random() * _max) % _max
 }
 
-function getRgb (color) {
+export function getRgb (color) {
   let match
   color = color + ''
   match = color.match(/#(\d{2})(\d{2})(\d{2})/)
@@ -123,7 +142,7 @@ function getRgb (color) {
 
 // direction: 'l' | 'r', default is 'r'
 // num: how many times to loop, should be a positive integer
-function loopArray (arr, num, direction) {
+export function loopArray (arr, num, direction) {
   if (!isArray(arr)) {
     return
   }
@@ -149,16 +168,31 @@ function loopArray (arr, num, direction) {
   return rp.concat(lp)
 }
 
-module.exports = {
-  extend: extend,
-  isArray: isArray,
-  isPlainObject: isPlainObject,
-  getType: getType,
-  appendStyle: appendStyle,
-  getUniqueFromArray: getUniqueFromArray,
-  transitionize: transitionize,
-  detectWebp: detectWebp,
-  getRandom: getRandom,
-  getRgb: getRgb,
-  loopArray: loopArray
+export function throttle (func, wait) {
+  let result
+  let timerId = null
+  let previous = 0
+  let context
+  let args
+  const later = function () {
+    previous = Date.now()
+    timerId = null
+    result = func.apply(context, args)
+  }
+  return function () {
+    const now = Date.now()
+    const remaining = wait - (now - previous)
+    context = this
+    args = Array.prototype.slice.call(arguments)
+    if (remaining <= 0) {
+      clearTimeout(timerId)
+      timerId = null
+      previous = now
+      result = func.apply(context, args)
+    }
+    else if (!timerId) {
+      timerId = setTimeout(later, remaining)
+    }
+    return result
+  }
 }

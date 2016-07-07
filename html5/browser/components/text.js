@@ -1,6 +1,6 @@
 'use strict'
 
-const Atomic = require('./component')
+const Atomic = require('./atomic')
 const utils = require('../utils')
 
 const DEFAULT_FONT_SIZE = 32
