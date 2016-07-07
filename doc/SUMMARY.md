@@ -79,6 +79,8 @@
 * Service & Tools
     * [CLI](/tools/cli.md)
     * [Devtools](/tools/devtools.md)
+        * [Weex devtools (Android)](/tools/devtools-android.md)
+        * [Weex devtools (IOS)](/tools/devtools-ios.md)
     * [Transformer](/tools/transformer.md)
     * [Playground App](/tools/playground-app.md)
 

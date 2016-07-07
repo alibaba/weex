@@ -50,7 +50,7 @@ Weex devtools is a custom devtools for weex that implements [Chrome Debugging Pr
 ## Integrate devtools
 
 * Android
-    * See the doc [Weex devtools (Android)](https://github.com/alibaba/weex/blob/doc/android/inspector/README.md), it will lead you to config and use it step by step.
+    * See the doc [Weex devtools (Android)](/tools/devtools-android.md), it will lead you to config and use it step by step.
 * IOS
-    * See the doc [Weex devtools (IOS)](https://github.com/alibaba/weex/blob/doc/ios/WXDevtool/README.md), it will lead you to config and use it step by step.
+    * See the doc [Weex devtools (IOS)](/tools/devtools-ios.md), it will lead you to config and use it step by step.
 
