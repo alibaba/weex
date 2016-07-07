@@ -508,7 +508,7 @@
     return cell;
 }
 
-- (void)insertCell:(WXComponent *)cell forIndexPath:(NSIndexPath *)indexPath withSections:(NSMutableArray *)sections
+- (void)insertCell:(WXCellComponent *)cell forIndexPath:(NSIndexPath *)indexPath withSections:(NSMutableArray *)sections
 {
     WXSection *section = [sections wx_safeObjectAtIndex:indexPath.section];
     WXAssert(section, @"inserting cell at indexPath:%@ section has not been inserted to list before, sections:%@", indexPath, sections);

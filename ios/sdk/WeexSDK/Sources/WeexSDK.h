@@ -18,6 +18,7 @@
 #import "WXNavigationProtocol.h"
 #import "WXModuleProtocol.h"
 #import "WXLog.h"
+#import "WXListComponent.h"
 #import "WXLayoutDefine.h"
 #import "WXImgLoaderProtocol.h"
 #import "WXEventModuleProtocol.h"

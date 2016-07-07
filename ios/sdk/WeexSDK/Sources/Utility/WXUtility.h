@@ -284,6 +284,6 @@ CGPoint WXPixelPointResize(CGPoint value);
 
 + (void)addStatTrack:(NSString *_Nonnull)appName;
 
-+ (NSURL *)urlByDeletingParameters:(NSURL *)url;
++ (NSURL *_Nonnull)urlByDeletingParameters:(NSURL *_Nonnull)url;
 
 @end
