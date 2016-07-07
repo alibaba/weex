@@ -277,15 +277,15 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
 
     mDomObj = domObject;
 
-    if (this instanceof WXRefresh && mParent instanceof WXRefreshableContainer &&
-        isOuterRefreshableContainer(mParent)) {
+    if (this instanceof WXRefresh && mParent instanceof WXScroller &&
+            hasScrollParent(mParent)) {
       mInstance.setRefreshMargin(mDomObj.csslayout.dimensions[CSSLayout.DIMENSION_HEIGHT]);
     }
-    if ((this instanceof WXBaseRefresh && mParent instanceof WXRefreshableContainer)) {
+    if ((this instanceof WXBaseRefresh && mParent instanceof WXScroller)) {
       return;
     }
 
-    if (mParent instanceof WXRefreshableContainer && isOuterRefreshableContainer(mParent)) {
+    if (mParent instanceof WXScroller && hasScrollParent(mParent)) {
       if (!(this instanceof WXBaseRefresh)) {
           CSSLayout newLayout = new CSSLayout();
           newLayout.copy(mDomObj.csslayout);
@@ -956,13 +956,13 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     public int height;
   }
 
-  public boolean isOuterRefreshableContainer(WXComponent component) {
+  public boolean hasScrollParent(WXComponent component) {
     if (component.getParent() == null) {
       return true;
-    } else if (component.getParent() instanceof WXRefreshableContainer) {
+    } else if (component.getParent() instanceof WXScroller) {
       return false;
     } else {
-      return isOuterRefreshableContainer(component.getParent());
+      return hasScrollParent(component.getParent());
     }
   }
 }
