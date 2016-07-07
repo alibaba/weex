@@ -44,30 +44,12 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/d1aeed9201fa6a0e8db1497773413eb2", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/a35f04a45d2f4aba2362fe51748ba920", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(1);
 	  __weex_module__.exports = {
 	    methods: {
-	      onrefresh: function(e) {
-	        var self = this;
-	        self.refresh_display = 'show';
-	        this.$call('modal', 'toast', {
-	          'message': "onrefresh",
-	          'duration': 2
-	        });
-	        self.refresh_display = 'hide';
-	      },
-	      onloading: function(e) {
-	        var self = this;
-	        self.loading_display = 'show';
-	        this.$call('modal', 'toast', {
-	          'message': "onloading",
-	          'duration': 2
-	        });
-	        self.loading_display = 'hide';
-	      },
 	      onappear: function (e) {
 	        var appearId = this.rows[e.target.attr.index].id;
 	        nativeLog('+++++', appearId);
@@ -95,8 +77,6 @@
 	      }
 	    },
 	    data: function () {return {
-	      refresh_display : 'hide',
-	      loading_display : 'hide',
 	      appearMin:1,
 	      appearMax:1,
 	      appearIds:[],
@@ -145,42 +125,6 @@
 	      ],
 	      "children": [
 	        {
-	          "type": "refresh",
-	          "classList": [
-	            "refresh-view"
-	          ],
-	          "attr": {
-	            "display": function () {return this.refresh_display}
-	          },
-	          "events": {
-	            "refresh": "onrefresh"
-	          },
-	          "children": [
-	            {
-	              "type": "loading-indicator",
-	              "style": {
-	                "height": 60,
-	                "width": 60,
-	                "color": "rgb(238,162,54)"
-	              }
-	            },
-	            {
-	              "type": "text",
-	              "classList": [
-	                "refresh-arrow"
-	              ],
-	              "style": {
-	                "textAlign": "center",
-	                "color": "rgb(238,162,54)"
-	              },
-	              "shown": function () {return (this.refresh_display==='hide')},
-	              "attr": {
-	                "value": "Pull To Refresh"
-	              }
-	            }
-	          ]
-	        },
-	        {
 	          "type": "cell",
 	          "append": "tree",
 	          "events": {
@@ -213,42 +157,6 @@
 	              ]
 	            }
 	          ]
-	        },
-	        {
-	          "type": "loading",
-	          "classList": [
-	            "refresh-view"
-	          ],
-	          "attr": {
-	            "display": function () {return this.loading_display}
-	          },
-	          "events": {
-	            "loading": "onloading"
-	          },
-	          "children": [
-	            {
-	              "type": "text",
-	              "classList": [
-	                "refresh-arrow"
-	              ],
-	              "style": {
-	                "textAlign": "center",
-	                "color": "rgb(238,162,54)"
-	              },
-	              "shown": function () {return (this.refresh_display==='hide')},
-	              "attr": {
-	                "value": "Load more"
-	              }
-	            },
-	            {
-	              "type": "loading-indicator",
-	              "style": {
-	                "height": 60,
-	                "width": 60,
-	                "color": "#3192e1"
-	              }
-	            }
-	          ]
 	        }
 	      ]
 	    },
@@ -272,19 +180,6 @@
 	    "fontSize": 48,
 	    "margin": 10
 	  },
-	  "refresh-view": {
-	    "height": 120,
-	    "width": 750,
-	    "display": "flex",
-	    "MsFlexAlign": "center",
-	    "WebkitAlignItems": "center",
-	    "WebkitBoxAlign": "center",
-	    "alignItems": "center"
-	  },
-	  "refresh-arrow": {
-	    "fontSize": 30,
-	    "color": "#45b5f0"
-	  },
 	  "indicator": {
 	    "height": 40,
 	    "width": 40,
@@ -302,7 +197,7 @@
 	  }
 	})
 	})
-	;__weex_bootstrap__("@weex-component/d1aeed9201fa6a0e8db1497773413eb2", {
+	;__weex_bootstrap__("@weex-component/a35f04a45d2f4aba2362fe51748ba920", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -1052,13 +947,13 @@
 	      },
 	      "shown": function () {return !this.rightItemSrc},
 	      "events": {
-	        "click": "onclickrigthitem"
+	        "click": "onclickrightitem"
 	      }
 	    },
 	    {
 	      "type": "image",
 	      "classList": [
-	        "left-image"
+	        "right-image"
 	      ],
 	      "attr": {
 	        "naviItemPosition": "right",
@@ -1153,14 +1048,14 @@
 	  "left-image": {
 	    "position": "absolute",
 	    "bottom": 20,
-	    "right": 28,
+	    "left": 28,
 	    "width": 50,
 	    "height": 50
 	  },
 	  "right-image": {
 	    "position": "absolute",
 	    "bottom": 20,
-	    "left": 28,
+	    "right": 28,
 	    "width": 50,
 	    "height": 50
 	  }
