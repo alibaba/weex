@@ -6,10 +6,16 @@
  * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
  */
 
-#import "WXBridgeProtocol.h"
+#import <UIKit/UIKit.h>
 
-@interface WXDevToolBridge : NSObject <WXBridgeProtocol>
+@protocol WXErrorViewDelegate <NSObject>
 
-- (instancetype)initWithURL:(NSURL *) URL;
+- (void)onclickErrorView;
+
+@end
+
+@interface WXErrorView : UIView
+
+@property (nonatomic, weak) id<WXErrorViewDelegate>  delegate;
 
 @end

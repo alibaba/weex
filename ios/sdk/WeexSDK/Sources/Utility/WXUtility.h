@@ -93,6 +93,8 @@ extern _Nonnull SEL WXSwizzledSelectorForSelector(_Nonnull SEL selector);
 
 @interface WXUtility : NSObject
 
++ (void)setNotStat:(BOOL)notStat;
++ (BOOL)notStat;
 /**
  * @abstract Returns the environment of current application, you can get some nessary properties such as appVersion、sdkVersion、appName etc.
  *
@@ -132,6 +134,7 @@ extern _Nonnull SEL WXSwizzledSelectorForSelector(_Nonnull SEL selector);
  *
  */
 + (NSString * _Nullable)JSONString:(id _Nonnull)object;
+
 
 #define WXEncodeJson(obj)  [WXUtility JSONString:obj]
 
@@ -278,5 +281,7 @@ CGPoint WXPixelPointResize(CGPoint value);
 + (NSCache *_Nonnull)globalCache;
 
 #define WXGlobalCache   [WXUtility globalCache]
+
++ (NSURL *_Nonnull)urlByDeletingParameters:(NSURL *_Nonnull)url;
 
 @end

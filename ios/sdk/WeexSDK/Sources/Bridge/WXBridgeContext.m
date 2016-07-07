@@ -9,8 +9,7 @@
 #import "WXBridgeContext.h"
 #import "WXBridgeProtocol.h"
 #import "WXJSCoreBridge.h"
-#import "WXWebSocketBridge.h"
-#import "WXDevToolBridge.h"
+#import "WXDebugLoggerBridge.h"
 #import "WXLog.h"
 #import "WXUtility.h"
 #import "WXBridgeMethod.h"
@@ -24,11 +23,18 @@
 #import "WXModuleManager.h"
 #import "WXSDKInstance_private.h"
 
+#define SuppressPerformSelectorLeakWarning(Stuff) \
+do { \
+_Pragma("clang diagnostic push") \
+_Pragma("clang diagnostic ignored \"-Warc-performSelector-leaks\"") \
+Stuff; \
+_Pragma("clang diagnostic pop") \
+} while (0)
+
 @interface WXBridgeContext ()
 
 @property (nonatomic, strong) id<WXBridgeProtocol>  jsBridge;
-@property (nonatomic, strong) WXWebSocketBridge *socketBridge;
-@property (nonatomic, strong) WXDevToolBridge *devToolSocketBrideg;
+@property (nonatomic, strong) WXDebugLoggerBridge *devToolSocketBridge;
 @property (nonatomic, assign) BOOL  debugJS;
 //store the methods which will be executed from native to js
 @property (nonatomic, strong) NSMutableDictionary   *sendQueue;
@@ -80,7 +86,7 @@
     WXAssertBridgeThread();
     _debugJS = [WXDebugTool isDevToolDebug];
     
-    Class bridgeClass = _debugJS ? [WXWebSocketBridge class] : [WXJSCoreBridge class];
+    Class bridgeClass = _debugJS ? NSClassFromString(@"PDDebugger") : [WXJSCoreBridge class];
     
     if (_jsBridge && [_jsBridge isKindOfClass:bridgeClass]) {
         return _jsBridge;
@@ -91,10 +97,10 @@
         _frameworkLoadFinished = NO;
     }
     
-    _jsBridge = _debugJS ? self.socketBridge : [[WXJSCoreBridge alloc] init];
+    _jsBridge = _debugJS ? [NSClassFromString(@"PDDebugger") alloc] : [[WXJSCoreBridge alloc] init];
      __weak typeof(self) weakSelf = self;
-    [_jsBridge registerCallNative:^(NSString *instance, NSArray *tasks, NSString *callback) {
-        [weakSelf invokeNative:instance tasks:tasks callback:callback];
+    [_jsBridge registerCallNative:^NSInteger(NSString *instance, NSArray *tasks, NSString *callback) {
+        return [weakSelf invokeNative:instance tasks:tasks callback:callback];
     }];
     
     return _jsBridge;
@@ -124,15 +130,19 @@
 
 #pragma mark JS Bridge Management
 
-- (void)invokeNative:(NSString *)instance tasks:(NSArray *)tasks callback:(NSString *)callback
+- (NSInteger)invokeNative:(NSString *)instance tasks:(NSArray *)tasks callback:(NSString *)callback
 {
     WXAssertBridgeThread();
     
     if (!instance || !tasks) {
         [WXSDKError monitorAlarm:NO errorCode:WX_ERR_JSFUNC_PARAM msg:@"JS call Native params error !"];
-        return;
+        return 0;
     }
-    [WXSDKError monitorAlarm:YES errorCode:WX_ERR_JSFUNC_PARAM msg:@""];
+
+    if (![WXSDKManager instanceForID:instance]) {
+        WXLogInfo(@"instance already destroyed");
+        return -1;
+    }
     
     for (NSDictionary *task in tasks) {
         WXBridgeMethod *method = [[WXBridgeMethod alloc] initWihData:task];
@@ -143,7 +153,7 @@
     NSMutableArray *sendQueue = [self.sendQueue valueForKey:instance];
     if (!sendQueue) {
         WXLogError(@"No send queue for instance:%@", instance);
-        return;
+        return -1;
     }
     
     if (callback && ![callback isEqualToString:@"-1"]) {
@@ -153,6 +163,8 @@
     }
     
     [self performSelector:@selector(_sendQueueLoop) withObject:nil];
+    
+    return 1;
 }
 
 - (void)createInstance:(NSString *)instance
@@ -234,9 +246,9 @@
     
     __weak __typeof__(self) weakSelf = self;
     [WXBridgeContext _timeSince:^() {
-        WXLogVerbose(@"JSFramework starts executing...");
+        WXLogDebug(@"JSFramework starts executing...");
         [self.jsBridge executeJSFramework:script];
-        WXLogVerbose(@"JSFramework ends executing...");
+        WXLogDebug(@"JSFramework ends executing...");
         if ([self.jsBridge exception]) {
             [WXSDKError monitorAlarm:NO errorCode:WX_ERR_LOAD_JSLIB msg:@"JSFramework executes error !"];
         }
@@ -313,17 +325,26 @@
 
 #pragma mark JS Debug Management
 
+- (void)connectToDevToolWithUrl:(NSURL *)url
+{
+    id webSocketBridge = [NSClassFromString(@"PDDebugger") alloc];
+    if(!webSocketBridge || ![webSocketBridge respondsToSelector:NSSelectorFromString(@"connectToURL:")]) {
+        return;
+    } else {
+        SuppressPerformSelectorLeakWarning(
+           [webSocketBridge performSelector:NSSelectorFromString(@"connectToURL:") withObject:url]
+        );
+    }
+}
+
 - (void)connectToWebSocket:(NSURL *)url
 {
-    if ([WXDebugTool isDevToolDebug]) {
-        _socketBridge = [[WXWebSocketBridge alloc] initWithURL:url];
-    }
-    _devToolSocketBrideg = [[WXDevToolBridge alloc] initWithURL:url];
+    _devToolSocketBridge = [[WXDebugLoggerBridge alloc] initWithURL:url];
 }
 
 - (void)logToWebSocket:(NSString *)flag message:(NSString *)message
 {
-    [_devToolSocketBrideg callJSMethod:@"__logger" args:@[flag, message]];
+    [_devToolSocketBridge callJSMethod:@"__logger" args:@[flag, message]];
 }
 
 #pragma mark Private Mehtods

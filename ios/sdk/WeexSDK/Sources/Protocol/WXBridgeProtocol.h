@@ -8,7 +8,7 @@
 
 #import <JavaScriptCore/JavaScriptCore.h>
 
-typedef void (^WXJSCallNative)(NSString *instance, NSArray *tasks, NSString *callback);
+typedef NSInteger (^WXJSCallNative)(NSString *instance, NSArray *tasks, NSString *callback);
 
 @protocol WXBridgeProtocol <NSObject>
 
@@ -21,9 +21,5 @@ typedef void (^WXJSCallNative)(NSString *instance, NSArray *tasks, NSString *cal
 - (void)registerCallNative:(WXJSCallNative)callNative;
 
 - (void)resetEnvironment;
-
-@optional
-
-- (void)callJSMethod:(NSString *)method params:(NSDictionary*)params;
 
 @end
