@@ -163,8 +163,6 @@
     [self _registerDefaultHandlers];
     
     [[WXSDKManager bridgeMgr] executeJsFramework:script];
-    
-    [WXUtility addStatTrack:[WXAppConfiguration appName]];
 }
 
 + (NSString*)SDKEngineVersion
