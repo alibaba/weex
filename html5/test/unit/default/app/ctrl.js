@@ -60,6 +60,7 @@ describe('the api of app', () => {
     })
 
     it('a simple bundle', () => {
+      app.requireModule = () => {}
       app.init(`
         define('main', {
           "type": "container",
@@ -74,7 +75,6 @@ describe('the api of app', () => {
         bootstrap('main')
       `)
 
-      expect(app.doc.listener.batched).to.be.true
       expect(app.define.calledOnce).to.be.true
       expect(app.bootstrap.calledOnce).to.be.true
 
