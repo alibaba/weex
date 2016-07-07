@@ -202,41 +202,52 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.ui.component;
+package com.taobao.weex.ui.component.helper;
 
-import android.view.ViewGroup;
+import com.taobao.weex.ui.component.Scrollable;
+import com.taobao.weex.ui.component.WXComponent;
 
-import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.common.Component;
-import com.taobao.weex.common.WXDomPropConstant;
-import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.ui.component.list.WXCell;
-import com.taobao.weex.ui.view.WXFrameLayout;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * The same as sticky cell
+ * Created by miomin on 16/7/7.
  */
-@Component(lazyload = false)
-public class WXHeader extends WXCell {
+public class WXStickyHelper {
 
-  public WXHeader(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
-    super(instance, node, parent, lazy);
-    lazy(false);
-    setSticky(WXDomPropConstant.WX_POSITION_STICKY);
-  }
+    private Scrollable scrollable;
 
-  @Override
-  protected void initView() {
-    if(mContext!=null) {
-      mHost = new WXFrameLayout(mContext);
-      ((ViewGroup)mHost).addView(new WXFrameLayout(mContext));
+    public WXStickyHelper(Scrollable scrollable) {
+        this.scrollable = scrollable;
     }
-  }
 
-  @Override
-  public ViewGroup getRealView() {
-    if (mHost == null)
-      return null;
-    return (ViewGroup) ((ViewGroup)mHost).getChildAt(0);
-  }
+    public void bindStickStyle(WXComponent component, Map<String, HashMap<String, WXComponent>> mStickyMap) {
+        Scrollable scroller = component.getParentScroller();
+        if (scroller == null) {
+            return;
+        }
+        HashMap<String, WXComponent> stickyMap = mStickyMap.get(scroller
+                .getRef());
+        if (stickyMap == null) {
+            stickyMap = new HashMap<>();
+        }
+        if (stickyMap.containsKey(component.getRef())) {
+            return;
+        }
+        stickyMap.put(component.getRef(), component);
+        mStickyMap.put(scroller.getRef(), stickyMap);
+    }
+
+    public void unbindStickStyle(WXComponent component, Map<String, HashMap<String, WXComponent>> mStickyMap) {
+        Scrollable scroller = component.getParentScroller();
+        if (scroller == null) {
+            return;
+        }
+        HashMap<String, WXComponent> stickyMap = mStickyMap.get(scroller
+                .getRef());
+        if (stickyMap == null) {
+            return;
+        }
+        stickyMap.remove(component.getRef());
+    }
 }

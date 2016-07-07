@@ -217,6 +217,7 @@ import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.OnWXScrollListener;
 import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.component.helper.WXStickyHelper;
 import com.taobao.weex.ui.view.IWXScroller;
 import com.taobao.weex.ui.view.WXHorizontalScrollView;
 import com.taobao.weex.ui.view.WXScrollView;
@@ -256,9 +257,12 @@ public class WXScroller extends WXRefreshableContainer implements WXScrollViewLi
 
   private int mContentHeight = 0;
 
+  private WXStickyHelper stickyHelper;
+
   public WXScroller(WXSDKInstance instance, WXDomObject node,
                     WXVContainer parent, boolean lazy) {
     super(instance, node, parent, lazy);
+    stickyHelper = new WXStickyHelper(this);
   }
 
   /**
@@ -429,34 +433,12 @@ public class WXScroller extends WXRefreshableContainer implements WXScrollViewLi
   // TODO Need constrain, each container can only have one sticky child
   @Override
   public void bindStickStyle(WXComponent component) {
-    Scrollable scroller = component.getParentScroller();
-    if (scroller == null) {
-      return;
-    }
-    HashMap<String, WXComponent> stickyMap = mStickyMap.get(scroller
-                                                                .getRef());
-    if (stickyMap == null) {
-      stickyMap = new HashMap<>();
-    }
-    if (stickyMap.containsKey(component.getRef())) {
-      return;
-    }
-    stickyMap.put(component.getRef(), component);
-    mStickyMap.put(scroller.getRef(), stickyMap);
+    stickyHelper.bindStickStyle(component,mStickyMap);
   }
 
   @Override
   public void unbindStickStyle(WXComponent component) {
-    Scrollable scroller = component.getParentScroller();
-    if (scroller == null) {
-      return;
-    }
-    HashMap<String, WXComponent> stickyMap = mStickyMap.get(scroller
-                                                                .getRef());
-    if (stickyMap == null) {
-      return;
-    }
-    stickyMap.remove(component.getRef());
+    stickyHelper.unbindStickStyle(component,mStickyMap);
   }
 
   /**

@@ -266,9 +266,8 @@ public class BounceRecyclerView extends BaseBounceView<WXRecyclerView> {
 
   /**
    * @param component
-   * @param index
    */
-  public void notifyStickyShow(WXCell component, int index) {
+  public void notifyStickyShow(WXCell component) {
     if (!headComponentStack.isEmpty()) {
       WXCell oldCom = headComponentStack.pop();
       if (!oldCom.getRef().equals(component.getRef())) {
@@ -287,9 +286,8 @@ public class BounceRecyclerView extends BaseBounceView<WXRecyclerView> {
 
   /**
    * @param component
-   * @param index
    */
-  public void notifyStickyRemove(WXCell component, int index) {
+  public void notifyStickyRemove(WXCell component) {
     if (!headComponentStack.isEmpty() && !headerViewStack.isEmpty() && !tempViewStack.isEmpty()) {
       removeSticky(component);
     }

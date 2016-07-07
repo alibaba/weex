@@ -218,12 +218,9 @@ import android.widget.ImageView;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
-import com.taobao.weex.common.Component;
 import com.taobao.weex.common.OnWXScrollListener;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.ui.component.*;
-import com.taobao.weex.ui.view.listview.WXRecyclerView;
 import com.taobao.weex.ui.component.Scrollable;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXEventType;
@@ -231,6 +228,8 @@ import com.taobao.weex.ui.component.WXHeader;
 import com.taobao.weex.ui.component.WXLoading;
 import com.taobao.weex.ui.component.WXRefresh;
 import com.taobao.weex.ui.component.WXVContainer;
+import com.taobao.weex.ui.component.helper.WXStickyHelper;
+import com.taobao.weex.ui.view.listview.WXRecyclerView;
 import com.taobao.weex.ui.view.listview.adapter.IOnLoadMoreListener;
 import com.taobao.weex.ui.view.listview.adapter.IRecyclerAdapterListener;
 import com.taobao.weex.ui.view.listview.adapter.ListBaseViewHolder;
@@ -243,7 +242,9 @@ import com.taobao.weex.utils.WXViewUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -269,8 +270,15 @@ public class WXListComponent extends WXVContainer implements
 
     protected BounceRecyclerView bounceRecyclerView;
 
+    /**
+     * Map for storing component that is sticky.
+     **/
+    private Map<String, HashMap<String, WXComponent>> mStickyMap = new HashMap<>();
+    private WXStickyHelper stickyHelper;
+
     public WXListComponent(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
         super(instance, node, parent, lazy);
+        stickyHelper = new WXStickyHelper(this);
     }
 
     /**
@@ -290,6 +298,18 @@ public class WXListComponent extends WXVContainer implements
 
     protected int getOrientation(){
         return VERTICAL;
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        if (mStickyMap != null) {
+            mStickyMap.clear();
+        }
+    }
+
+    public Map<String, HashMap<String, WXComponent>> getStickMap() {
+        return mStickyMap;
     }
 
   /**
@@ -404,12 +424,12 @@ public class WXListComponent extends WXVContainer implements
 
   @Override
   public void bindStickStyle(WXComponent component) {
-    //TODO
+      stickyHelper.bindStickStyle(component,mStickyMap);
   }
 
   @Override
   public void unbindStickStyle(WXComponent component) {
-//TODO
+      stickyHelper.unbindStickStyle(component,mStickyMap);
   }
 
   @Override
@@ -493,10 +513,44 @@ public class WXListComponent extends WXVContainer implements
         if (component.getView() == null) {
           return;
         }
-        bounceRecyclerView.notifyStickyShow((WXCell) component, i);
+        bounceRecyclerView.notifyStickyShow((WXCell) component);
       }
     }
   }
+
+    @Override
+    public void onBeforeScroll(int dx, int dy) {
+        if (mStickyMap == null) {
+            return;
+        }
+        HashMap<String, WXComponent> stickyMap = mStickyMap.get(getRef());
+        if (stickyMap == null) {
+            return;
+        }
+        Iterator<Map.Entry<String, WXComponent>> iterator = stickyMap.entrySet().iterator();
+        Map.Entry<String, WXComponent> entry = null;
+        WXComponent stickyComponent;
+        while (iterator.hasNext()) {
+            entry = iterator.next();
+            stickyComponent = entry.getValue();
+
+            if (stickyComponent != null && stickyComponent.getDomObject() != null
+                    && stickyComponent instanceof WXCell) {
+                if (stickyComponent.getView() == null)
+                    return;
+                int top = stickyComponent.getView().getTop();
+
+                boolean showSticky = ((WXCell) stickyComponent).lastLocationY >= 0 && top < 0 && dy > 0;
+                boolean removeSticky = ((WXCell) stickyComponent).lastLocationY <= 0 && top > 0 && dy < 0;
+                if (showSticky) {
+                    bounceRecyclerView.notifyStickyShow((WXCell) stickyComponent);
+                } else if (removeSticky) {
+                    bounceRecyclerView.notifyStickyRemove((WXCell) stickyComponent);
+                }
+                ((WXCell) stickyComponent).lastLocationY = top;
+            }
+        }
+    }
 
   @Override
   public int getScrollY() {
@@ -834,27 +888,6 @@ public class WXListComponent extends WXVContainer implements
             mAppearComponents.remove(unRegisterKeys.get(i));
         }
     }
-
-  @Override
-  public void onBeforeScroll(int dx, int dy) {
-    for (int i = 0, len = childCount(); i < len; i++) {
-      WXComponent value = getChild(i);
-      if (value.getDomObject() != null && (value.getDomObject().isSticky() && value
-          instanceof WXCell) ||
-          value instanceof WXHeader) {
-        if (value.getView() == null)
-          return;
-        int top = value.getView().getTop();
-
-        if (((WXCell)value).lastLocationY >= 0 && top < 0  && dy > 0) {
-          bounceRecyclerView.notifyStickyShow((WXCell) value, i);
-        } else if (((WXCell)value).lastLocationY <= 0 && top > 0  && dy < 0) {
-          bounceRecyclerView.notifyStickyRemove((WXCell) value, i);
-        }
-        ((WXCell)value).lastLocationY = top;
-      }
-    }
-  }
 
   public void unbindAppearComponents(WXComponent component) {
         mAppearComponents.remove(mAppearComponents.indexOfValue(component));
