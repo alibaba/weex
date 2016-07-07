@@ -3,7 +3,6 @@ package com.taobao.weex.devtools.debug;
 import android.content.Context;
 import android.content.Intent;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -41,8 +40,6 @@ import okio.BufferedSource;
 
 public class DebugServerProxy implements IWXDebugProxy {
     private static final String TAG = "DebugServerProxy";
-    public static final String ACTION_DEBUG_SERVER_CONNECTED = "DEBUG_SERVER_CONNECTED";
-    public static final String ACTION_DEBUG_SERVER_CONNECT_FAILED = "DEBUG_SERVER_CONNECT_FAILED";
     private DebugSocketClient mWebSocketClient;
     private ObjectMapper mObjectMapper = new ObjectMapper();
     private MethodDispatcher mMethodDispatcher;
@@ -107,7 +104,7 @@ public class DebugServerProxy implements IWXDebugProxy {
                             public void run() {
                                 Toast.makeText(
                                         WXEnvironment.sApplication,
-                                        "WeexInspector Started", Toast.LENGTH_SHORT)
+                                        "debug server connected", Toast.LENGTH_SHORT)
                                         .show();
                             }
                         }, 0);
@@ -127,6 +124,15 @@ public class DebugServerProxy implements IWXDebugProxy {
     }
 
     @Override
+    public void stop() {
+        if (mWebSocketClient != null) {
+            mWebSocketClient.closeQuietly();
+            mWebSocketClient = null;
+        }
+        mBridge = null;
+    }
+
+    @Override
     public IWXBridge getWXBridge() {
         return mBridge;
     }
@@ -139,14 +145,8 @@ public class DebugServerProxy implements IWXDebugProxy {
         try {
             try {
                 String message = payload.readUtf8();
-                if (!TextUtils.isEmpty(message)) {
-                    if (message.contains("WxDebug.callNative")   /* &&false */) {
-                        handleDebugMessage(message);
-                    } else {
-                        Util.throwIfNull(mPeer);
-                        handleRemoteMessage(mPeer, message);
-                    }
-                }
+                Util.throwIfNull(mPeer);
+                handleRemoteMessage(mPeer, message);
             } catch (Exception e) {
 
             } finally {
@@ -157,19 +157,6 @@ public class DebugServerProxy implements IWXDebugProxy {
             if (LogRedirector.isLoggable(TAG, Log.VERBOSE)) {
                 LogRedirector.v(TAG, "Unexpected I/O exception processing message: " + e);
             }
-        }
-    }
-
-    private void handleDebugMessage(String message) {
-        com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(message);
-
-        String method = jsonObject.getString("method");
-        com.alibaba.fastjson.JSONObject params = jsonObject.getJSONObject("params");
-        if (!TextUtils.isEmpty(method) && "WxDebug.callNative".equals(method) && params != null) {
-            String instance = params.getString("instance");
-            String callback = params.getString("callback");
-            String tasks = params.getString("tasks");
-            mBridge.callNative(instance, tasks, callback);
         }
     }
 
@@ -236,5 +223,4 @@ public class DebugServerProxy implements IWXDebugProxy {
             pendingRequest.callback.onResponse(peer, response);
         }
     }
-
 }

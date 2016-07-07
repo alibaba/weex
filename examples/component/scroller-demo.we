@@ -1,11 +1,5 @@
 <template>
   <scroller class="list" append＝"tree">
-
-    <refresh class="refresh-view" display="{{refresh_display}}" onrefresh="onrefresh">
-      <loading-indicator style="height:60;width:60" ></loading-indicator>
-      <text class="refresh-arrow" style="text-align: center; color:rgb(238, 162, 54)" if="{{(refresh_display==='hide')}}">Pull To Refresh</text>
-    </refresh>
-
     <div class="section" repeat="{{sections}}">
       <div class="header">
         <text class="header-title">{{title}}</text>

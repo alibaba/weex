@@ -225,7 +225,6 @@ import android.widget.FrameLayout;
 public class WXSwipeLayout extends FrameLayout implements NestedScrollingParent {
 
   private NestedScrollingParentHelper parentHelper;
-
   private WXOnRefreshListener onRefreshListener;
   private WXOnLoadingListener onLoadingListener;
 
@@ -277,7 +276,7 @@ public class WXSwipeLayout extends FrameLayout implements NestedScrollingParent 
   private boolean mPullLoadEnable = false;
 
   // Is Refreshing
-  private boolean mRefreshing = false;
+  volatile private boolean mRefreshing = false;
 
   // RefreshView Height
   private float loadingViewHeight = 0;
@@ -367,12 +366,14 @@ public class WXSwipeLayout extends FrameLayout implements NestedScrollingParent 
   }
 
   @Override
-  public boolean onTouchEvent(MotionEvent event) {
-    if ((!mPullRefreshEnable && !mPullLoadEnable) || mRefreshing) {
+  public boolean onInterceptTouchEvent(MotionEvent ev) {
+    if ((!mPullRefreshEnable && !mPullLoadEnable)) {
       return false;
     }
-
-    return super.onTouchEvent(event);
+    if (mRefreshing) {
+      return true;
+    }
+    return super.onInterceptTouchEvent(ev);
   }
 
   /*********************************** NestedScrollParent *************************************/
@@ -741,14 +742,7 @@ public class WXSwipeLayout extends FrameLayout implements NestedScrollingParent 
    */
   public void finishPullRefresh() {
     if (mCurrentAction == PULL_REFRESH) {
-      if (headerView != null) {
-        headerView.postDelayed(new Runnable() {
-          @Override
-          public void run() {
-            resetHeaderView(headerView == null ? 0 : headerView.getMeasuredHeight());
-          }
-        },500);
-      }
+      resetHeaderView(headerView == null ? 0 : headerView.getMeasuredHeight());
     }
   }
 
@@ -757,14 +751,7 @@ public class WXSwipeLayout extends FrameLayout implements NestedScrollingParent 
    */
   public void finishPullLoad() {
     if (mCurrentAction == LOAD_MORE) {
-      if (footerView != null) {
-        footerView.postDelayed(new Runnable() {
-          @Override
-          public void run() {
-            resetFootView(footerView == null ? 0 : footerView.getMeasuredHeight());
-          }
-        },500);
-      }
+      resetFootView(footerView == null ? 0 : footerView.getMeasuredHeight());
     }
   }
 

@@ -229,7 +229,7 @@ public interface IWXBridge extends IWXObject {
    * js call native
 
    */
-  void callNative(String instanceId, String tasks, String callback);
+  int callNative(String instanceId, String tasks, String callback);
 
   void reportJSException(String instanceId, String func, String exception);
 }

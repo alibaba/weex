@@ -35,6 +35,11 @@ function isArray (arr) {
     : (Object.prototype.toString.call(arr) === '[object Array]')
 }
 
+function isPlainObject (obj) {
+  return Object.prototype.toString.call(obj)
+    .slice(8, -1).toLowerCase() === 'object'
+}
+
 function getType (obj) {
   return Object.prototype.toString.call(obj)
     .slice(8, -1).toLowerCase()
@@ -147,6 +152,7 @@ function loopArray (arr, num, direction) {
 module.exports = {
   extend: extend,
   isArray: isArray,
+  isPlainObject: isPlainObject,
   getType: getType,
   appendStyle: appendStyle,
   getUniqueFromArray: getUniqueFromArray,

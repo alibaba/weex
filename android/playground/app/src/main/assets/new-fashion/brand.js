@@ -45,8 +45,8 @@
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/82549c19c22bf0499e7fb5d202c2b2c1", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(16);
+	;__weex_define__("@weex-component/c913f50614100cbae8ac0e99f5f32376", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	__webpack_require__(18);
 
 	;
 	  __weex_module__.exports = {
@@ -81,8 +81,7 @@
 	    }
 	  }
 
-	;__weex_module__.exports.template = __weex_module__.exports.template || {}
-	;Object.assign(__weex_module__.exports.template, {
+	;__weex_module__.exports.template={
 	  "type": "container",
 	  "classList": [
 	    "container"
@@ -118,9 +117,8 @@
 	      ]
 	    }
 	  ]
-	})
-	;__weex_module__.exports.style = __weex_module__.exports.style || {}
-	;Object.assign(__weex_module__.exports.style, {
+	}
+	;__weex_module__.exports.style={
 	  "title": {
 	    "width": 750,
 	    "height": 100
@@ -129,15 +127,15 @@
 	    "marginBottom": 4,
 	    "backgroundColor": "#C0BABC"
 	  }
+	}
 	})
-	})
-	;__weex_bootstrap__("@weex-component/82549c19c22bf0499e7fb5d202c2b2c1", {
+	;__weex_bootstrap__("@weex-component/c913f50614100cbae8ac0e99f5f32376", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
 /***/ },
 
-/***/ 15:
+/***/ 17:
 /***/ function(module, exports) {
 
 	;__weex_define__("@weex-component/banner", [], function(__weex_require__, __weex_exports__, __weex_module__){
@@ -165,8 +163,7 @@
 	    }
 	  };
 
-	;__weex_module__.exports.template = __weex_module__.exports.template || {}
-	;Object.assign(__weex_module__.exports.template, {
+	;__weex_module__.exports.template={
 	  "type": "image",
 	  "style": {
 	    "width": function () {return this.width},
@@ -179,16 +176,16 @@
 	  "events": {
 	    "click": "_clickHandler"
 	  }
-	})
+	}
 	})
 
 /***/ },
 
-/***/ 16:
+/***/ 18:
 /***/ function(module, exports, __webpack_require__) {
 
 	;__weex_define__("@weex-component/banners", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(15);
+	__webpack_require__(17);
 
 	;
 	  __weex_module__.exports = {
@@ -214,8 +211,7 @@
 	    }
 	  };
 
-	;__weex_module__.exports.template = __weex_module__.exports.template || {}
-	;Object.assign(__weex_module__.exports.template, {
+	;__weex_module__.exports.template={
 	  "type": "container",
 	  "children": [
 	    {
@@ -274,7 +270,7 @@
 	      ]
 	    }
 	  ]
-	})
+	}
 	})
 
 /***/ }

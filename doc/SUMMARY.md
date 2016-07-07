@@ -78,9 +78,9 @@
     
 * Service & Tools
     * [CLI](/tools/cli.md)
+    * [Devtools](/tools/devtools.md)
     * [Transformer](/tools/transformer.md)
     * [Playground App](/tools/playground-app.md)
-    * [Debug](/tools/how-to-debug.md)
 
 * [FAQ](/faq.md)
 

@@ -6,7 +6,7 @@
   require('../include/example-list.we');
   module.exports = {
     data: {
-      root: 'examples/syntax',
+      root: 'examples',
       items: [
         {name: 'syntax/hello-world', title: 'Hello World'},
         {name: 'syntax/hello-world-1', title: 'Hello World 1'},

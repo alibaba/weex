@@ -45,8 +45,8 @@
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/04ff08101087ed57bb9c0e3a77fc1809", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(27);
+	;__weex_define__("@weex-component/5ad7a924dc9da8e1fdbbc4b0828fdb93", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	__webpack_require__(29);
 
 	;
 	  __weex_module__.exports = {
@@ -66,8 +66,7 @@
 	    }
 	  };
 
-	;__weex_module__.exports.template = __weex_module__.exports.template || {}
-	;Object.assign(__weex_module__.exports.template, {
+	;__weex_module__.exports.template={
 	  "type": "div",
 	  "classList": [
 	    "slider-page"
@@ -78,24 +77,23 @@
 	      "repeat": function () {return this.sliderItems}
 	    }
 	  ]
-	})
-	;__weex_module__.exports.style = __weex_module__.exports.style || {}
-	;Object.assign(__weex_module__.exports.style, {
+	}
+	;__weex_module__.exports.style={
 	  "slider-page": {
 	    "flexDirection": "row",
 	    "justifyContent": "space-between",
 	    "width": 714,
 	    "height": 420
 	  }
+	}
 	})
-	})
-	;__weex_bootstrap__("@weex-component/04ff08101087ed57bb9c0e3a77fc1809", {
+	;__weex_bootstrap__("@weex-component/5ad7a924dc9da8e1fdbbc4b0828fdb93", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
 /***/ },
 
-/***/ 27:
+/***/ 29:
 /***/ function(module, exports) {
 
 	;__weex_define__("@weex-component/slider-item", [], function(__weex_require__, __weex_exports__, __weex_module__){
@@ -114,8 +112,7 @@
 	    }
 	  };
 
-	;__weex_module__.exports.template = __weex_module__.exports.template || {}
-	;Object.assign(__weex_module__.exports.template, {
+	;__weex_module__.exports.template={
 	  "type": "image",
 	  "classList": [
 	    "slider-item"
@@ -123,14 +120,13 @@
 	  "attr": {
 	    "src": function () {return this.image}
 	  }
-	})
-	;__weex_module__.exports.style = __weex_module__.exports.style || {}
-	;Object.assign(__weex_module__.exports.style, {
+	}
+	;__weex_module__.exports.style={
 	  "slider-item": {
 	    "width": 348,
 	    "height": 400
 	  }
-	})
+	}
 	})
 
 /***/ }
