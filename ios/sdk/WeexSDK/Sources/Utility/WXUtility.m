@@ -375,25 +375,6 @@ CGPoint WXPixelPointResize(CGPoint value)
     return model;
 }
 
-+ (void)addStatTrack:(NSString *)appName
-{
-    if (!appName) {
-        return;
-    }
-    
-    // App name for non-commercial use
-    NSString *urlString = [NSString stringWithFormat:@"http://gm.mmstat.com/weex.1003?appname=%@", appName];
-    NSURL *URL = [NSURL URLWithString:urlString];
-    NSURLRequest *request = [NSURLRequest requestWithURL:URL];
-    
-    NSURLSession *session = [NSURLSession sharedSession];
-    NSURLSessionDataTask *task = [session dataTaskWithRequest:request
-                                            completionHandler:
-                                  ^(NSData *data, NSURLResponse *response, NSError *error) {
-                                  }];
-    [task resume];
-}
-
 CGFloat WXScreenResizeRadio(void)
 {
     return [WXUtility screenResizeScale];

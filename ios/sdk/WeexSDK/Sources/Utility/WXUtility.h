@@ -279,6 +279,4 @@ CGPoint WXPixelPointResize(CGPoint value);
 
 #define WXGlobalCache   [WXUtility globalCache]
 
-+ (void)addStatTrack:(NSString *_Nonnull)appName;
-
 @end
