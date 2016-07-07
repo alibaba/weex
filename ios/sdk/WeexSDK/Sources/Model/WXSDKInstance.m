@@ -81,7 +81,7 @@ NSTimeInterval JSLibInitTime = 0;
     newOptions[bundleUrlOptionKey] = url.absoluteString;
     
     if (!self.pageName || [self.pageName isEqualToString:@""]) {
-        self.pageName = url.absoluteString ? : @"";
+        self.pageName = [WXUtility urlByDeletingParameters:url].absoluteString ? : @"";
     }
     
     __weak typeof(self) weakSelf = self;

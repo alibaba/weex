@@ -490,4 +490,12 @@ CGFloat WXScreenResizeRadio(void)
     return WXNotStat;
 }
 
++ (NSURL *)urlByDeletingParameters:(NSURL *)url
+{
+    NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:YES];
+    components.query = nil;     // remove the query
+    components.fragment = nil;
+    return [components URL];
+}
+
 @end

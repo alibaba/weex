@@ -13,6 +13,7 @@
 #import "WXSDKInstance.h"
 #import "WXSDKManager.h"
 #import "WXConvert.h"
+#import "WXUtility.h"
 
 @interface WXEmbedComponent ()
 
@@ -112,7 +113,7 @@
     _embedInstance.parentInstance = self.weexInstance;
     _embedInstance.parentNodeRef = self.ref;
     _embedInstance.frame = CGRectMake(0.0f, 0.0f, self.view.frame.size.width, self.view.frame.size.height);
-    _embedInstance.pageName = [sourceURL absoluteString];
+    _embedInstance.pageName = [[WXUtility urlByDeletingParameters:sourceURL]  absoluteString];
     _embedInstance.pageObject = self.weexInstance.viewController;
     _embedInstance.viewController = self.weexInstance.viewController;
     

@@ -130,7 +130,7 @@
     _instance = [[WXSDKInstance alloc] init];
     _instance.frame = CGRectMake(0.0f, 0.0f, self.view.bounds.size.width, self.view.bounds.size.height);
     _instance.pageObject = self;
-    _instance.pageName = [sourceURL absoluteString];
+    _instance.pageName = [[WXUtility urlByDeletingParameters:sourceURL] absoluteString];
     _instance.viewController = self;
     
     NSString *newURL = nil;
