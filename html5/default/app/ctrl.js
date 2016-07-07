@@ -20,7 +20,7 @@ export function updateActions () {
     this.doc.listener.updates = []
   }
   if (tasks.length) {
-    this.callTasks(tasks)
+    return this.callTasks(tasks)
   }
 }
 
@@ -34,7 +34,6 @@ export function init (code, data) {
     result = this.bootstrap(name, config, _data || data)
     this.updateActions()
     this.doc.listener.createFinish()
-    this.doc.close()
     _.debug(`After intialized an instance(${this.id})`)
   }
 
@@ -61,27 +60,85 @@ export function init (code, data) {
     functionBody = code.toString()
   }
 
-  const fn = new Function(
-    'define',
-    'require',
-    'document',
-    'bootstrap',
-    'register',
-    'render',
-    '__weex_define__', // alias for define
-    '__weex_bootstrap__', // alias for bootstrap
-    functionBody
-  )
+  const { WXEnvironment } = global
+  if (WXEnvironment && WXEnvironment.platform !== 'Web') {
+    const timer = this.requireModule('timer')
+    const timerAPIs = {
+      setTimeout: (...args) => {
+        const handler = function () {
+          args[0](...args.slice(2))
+        }
+        timer.setTimeout(handler, args[1])
+        return this.uid.toString()
+      },
+      setInterval: (...args) => {
+        const handler = function () {
+          args[0](...args.slice(2))
+        }
+        timer.setInterval(handler, args[1])
+        return this.uid.toString()
+      },
+      clearTimeout: (n) => {
+        timer.clearTimeout(n)
+      },
+      clearInterval: (n) => {
+        timer.clearInterval(n)
+      }
+    }
 
-  fn(
-    define,
-    require,
-    document,
-    bootstrap,
-    register,
-    render,
-    define,
-    bootstrap)
+    const fn = new Function(
+      'define',
+      'require',
+      'document',
+      'bootstrap',
+      'register',
+      'render',
+      '__weex_define__', // alias for define
+      '__weex_bootstrap__', // alias for bootstrap
+      'setTimeout',
+      'setInterval',
+      'clearTimeout',
+      'clearInterval',
+      functionBody
+    )
+
+    fn(
+      define,
+      require,
+      document,
+      bootstrap,
+      register,
+      render,
+      define,
+      bootstrap,
+      timerAPIs.setTimeout,
+      timerAPIs.setInterval,
+      timerAPIs.clearTimeout,
+      timerAPIs.clearInterval)
+  }
+  else {
+    const fn = new Function(
+      'define',
+      'require',
+      'document',
+      'bootstrap',
+      'register',
+      'render',
+      '__weex_define__', // alias for define
+      '__weex_bootstrap__', // alias for bootstrap
+      functionBody
+    )
+
+    fn(
+      define,
+      require,
+      document,
+      bootstrap,
+      register,
+      render,
+      define,
+      bootstrap)
+  }
 
   return result
 }
@@ -105,9 +162,7 @@ export function getRootElement () {
 }
 
 export function fireEvent (ref, type, e, domChanges) {
-  _.debug(`Fire a "${type}" event on an element(${ref})`,
-            `in instance(${this.id})`)
-
+  _.debug(`Fire a "${type}" event on an element(${ref}) in instance(${this.id})`)
   if (Array.isArray(ref)) {
     ref.some((ref) => {
       return this.fireEvent(ref, type, e) !== false
@@ -118,9 +173,11 @@ export function fireEvent (ref, type, e, domChanges) {
   const el = this.doc.getRef(ref)
 
   if (el) {
+    this.doc.close()
     const result = this.doc.fireEvent(el, type, e, domChanges)
     this.updateActions()
     this.doc.listener.updateFinish()
+    this.doc.open()
     return result
   }
 
@@ -134,6 +191,7 @@ export function callback (callbackId, data, ifKeepAlive) {
   const callback = this.callbacks[callbackId]
 
   if (typeof callback === 'function') {
+    this.doc.close()
     callback(data) // data is already a object, @see: lib/runtime/index.js
 
     if (typeof ifKeepAlive === 'undefined' || ifKeepAlive === false) {
@@ -142,6 +200,7 @@ export function callback (callbackId, data, ifKeepAlive) {
 
     this.updateActions()
     this.doc.listener.updateFinish()
+    this.doc.open()
     return
   }
 
@@ -155,6 +214,7 @@ export function refreshData (data) {
   const vm = this.vm
 
   if (vm && data) {
+    this.doc.close()
     if (typeof vm.refreshData === 'function') {
       vm.refreshData(data)
     }
@@ -163,6 +223,7 @@ export function refreshData (data) {
     }
     this.updateActions()
     this.doc.listener.refreshFinish()
+    this.doc.open()
     return
   }
 

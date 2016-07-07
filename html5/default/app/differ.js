@@ -8,6 +8,13 @@ export default class Differ {
     return this.map.length === 0
   }
   append (type, depth, ref, handler) {
+    if (!this.hasTimer) {
+      this.hasTimer = true
+      setTimeout(() => {
+        this.hasTimer = false
+        this.flush(true)
+      }, 0)
+    }
     const map = this.map
     if (!map[depth]) {
       map[depth] = {}
@@ -26,7 +33,7 @@ export default class Differ {
       group[type][ref] = handler
     }
   }
-  flush () {
+  flush (isTimeout) {
     const map = this.map.slice()
     this.map.length = 0
     map.forEach((group) => {

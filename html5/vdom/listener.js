@@ -9,17 +9,17 @@ export default function Listener (id, handler) {
 
 Listener.prototype.createFinish = function (callback) {
   const handler = this.handler
-  handler([createAction('createFinish', [])], callback)
+  return handler([createAction('createFinish', [])], callback)
 }
 
 Listener.prototype.updateFinish = function (callback) {
   const handler = this.handler
-  handler([createAction('updateFinish', [])], callback)
+  return handler([createAction('updateFinish', [])], callback)
 }
 
 Listener.prototype.refreshFinish = function (callback) {
   const handler = this.handler
-  handler([createAction('refreshFinish', [])], callback)
+  return handler([createAction('refreshFinish', [])], callback)
 }
 
 Listener.prototype.createBody = function (element) {
@@ -32,56 +32,54 @@ Listener.prototype.createBody = function (element) {
       return createAction('addElement', [body.ref, child, -1])
     }))
   }
-  this.addActions(actions)
+  return this.addActions(actions)
 }
 
 Listener.prototype.addElement = function (element, ref, index) {
   if (!(index >= 0)) {
     index = -1
   }
-  this.addActions(createAction('addElement', [ref, element.toJSON(), index]))
+  return this.addActions(createAction('addElement', [ref, element.toJSON(), index]))
 }
 
 Listener.prototype.removeElement = function (ref) {
   if (Array.isArray(ref)) {
     const actions = ref.map((r) => createAction('removeElement', [r]))
-    this.addActions(actions)
+    return this.addActions(actions)
   }
-  else {
-    this.addActions(createAction('removeElement', [ref]))
-  }
+  return this.addActions(createAction('removeElement', [ref]))
 }
 
 Listener.prototype.moveElement = function (targetRef, parentRef, index) {
-  this.addActions(createAction('moveElement', [targetRef, parentRef, index]))
+  return this.addActions(createAction('moveElement', [targetRef, parentRef, index]))
 }
 
 Listener.prototype.setAttr = function (ref, key, value) {
   const result = {}
   result[key] = value
-  this.addActions(createAction('updateAttrs', [ref, result]))
+  return this.addActions(createAction('updateAttrs', [ref, result]))
 }
 
 Listener.prototype.setStyle = function (ref, key, value) {
   const result = {}
   result[key] = value
-  this.addActions(createAction('updateStyle', [ref, result]))
+  return this.addActions(createAction('updateStyle', [ref, result]))
 }
 
 Listener.prototype.setStyles = function (ref, style) {
-  this.addActions(createAction('updateStyle', [ref, style]))
+  return this.addActions(createAction('updateStyle', [ref, style]))
 }
 
 Listener.prototype.addEvent = function (ref, type) {
-  this.addActions(createAction('addEvent', [ref, type]))
+  return this.addActions(createAction('addEvent', [ref, type]))
 }
 
 Listener.prototype.removeEvent = function (ref, type) {
-  this.addActions(createAction('removeEvent', [ref, type]))
+  return this.addActions(createAction('removeEvent', [ref, type]))
 }
 
 Listener.prototype.handler = function (actions, cb) {
-  cb && cb()
+  return cb && cb()
 }
 
 Listener.prototype.addActions = function (actions) {
@@ -96,7 +94,7 @@ Listener.prototype.addActions = function (actions) {
     updates.push.apply(updates, actions)
   }
   else {
-    handler(actions)
+    return handler(actions)
   }
 }
 

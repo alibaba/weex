@@ -537,6 +537,11 @@ public class WXBridgeManager implements Callback {
     msg.sendToTarget();
   }
 
+  public void fireEvent(final String instanceId, final String ref,
+                        final String type, final Map<String, Object> data){
+    this.fireEvent(instanceId,ref,type,data,null);
+  }
+
   /**
    * Notify the JavaScript about the event happened on Android
    */
