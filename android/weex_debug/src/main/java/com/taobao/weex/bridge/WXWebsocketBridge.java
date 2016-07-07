@@ -266,10 +266,11 @@ public class WXWebsocketBridge implements IWXBridge,WXWebSocketManager.JSDebugge
     }
 
     @Override
-    public void callNative(String instanceId, String tasks, String callback) {
+    public int callNative(String instanceId, String tasks, String callback) {
         if (!mInit || mJsManager == null)
-            return;
+            return WXBridgeManager.INSTANCE_RENDERING_ERROR ;
         mJsManager.callNative(instanceId, tasks, callback);
+        return WXBridgeManager.INSTANCE_RENDERING;
     }
 
     @Override

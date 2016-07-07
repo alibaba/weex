@@ -216,6 +216,9 @@ public class WXEventType {
   public static final String INPUT = "input";
   public static final String INPUT_CHANGE = "change";
 
+  public static final String VIEWAPPEAR = "viewappear";
+  public static final String VIEWDISAPPEAR = "viewdisappear";
+
   public static final String VIDEO_START = "start";
   public static final String VIDEO_PAUSE = "pause";
   public static final String VIDEO_FINISH = "finish";
@@ -228,7 +231,4 @@ public class WXEventType {
   public static final String ONLOADING = "loading";
 
   public static final String CHANGE = "change";
-
-  public static String  CLICK_LEFT_ITEM= "clickleftitem";
-  public static String  CLICK_RIGHT_ITEM= "clickrightitem";
 }

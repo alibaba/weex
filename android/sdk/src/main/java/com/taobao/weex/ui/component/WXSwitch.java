@@ -243,7 +243,12 @@ public class WXSwitch extends WXComponent{
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
           Map<String, Object> params = new HashMap<>(2);
           params.put("value", isChecked);
-          WXSDKManager.getInstance().fireEvent(mInstanceId, mDomObj.ref, WXEventType.CHANGE, params);
+
+          Map<String, Object> domChanges = new HashMap<>();
+          Map<String, Object> attrsChanges = new HashMap<>();
+          attrsChanges.put("checked",Boolean.toString(isChecked));
+          domChanges.put("attrs",attrsChanges);
+          WXSDKManager.getInstance().fireEvent(mInstanceId, mDomObj.ref, WXEventType.CHANGE, params,domChanges);
         }
       });
     }

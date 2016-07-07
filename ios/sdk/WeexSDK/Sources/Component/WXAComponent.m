@@ -56,15 +56,6 @@
     }
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
-    if (gestureRecognizer == _tap) return YES;
-    
-    if (otherGestureRecognizer == _tap) return YES;
-    
-    return [super gestureRecognizer:gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:otherGestureRecognizer];
-}
-
 - (void)updateAttributes:(NSDictionary *)attributes
 {
     if (attributes[@""]) {

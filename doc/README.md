@@ -2,9 +2,9 @@
 
 Table of Contents
 
-* [Tutorial](./tutorial.md)
-* [Guide](./guide.md)
-* [References](./references/main.md)
-* [Examples](./demo/main.md)
-* [Service & Tools](./tools/main.md)
+* [Tutorial](/tutorial.md)
+* [Syntax](/syntax/main.md)
+* [References](/references/bootstrap.md)
+* [Examples](/demo/hello-world.md)
+* [Service & Tools](/tools/cli.md)
 

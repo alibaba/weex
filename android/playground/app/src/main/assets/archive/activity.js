@@ -45,7 +45,7 @@
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/70d39061c842314b5eee12fe28cf4b02", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/2e7a9b0c408304f70a0706c06cf71c4e", [], function(__weex_require__, __weex_exports__, __weex_module__){
 	__webpack_require__(13);
 
 	;
@@ -95,7 +95,8 @@
 	    }
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "style": {
 	    "flexDirection": "column"
@@ -108,9 +109,9 @@
 	      }
 	    }
 	  ]
-	}
 	})
-	;__weex_bootstrap__("@weex-component/70d39061c842314b5eee12fe28cf4b02", {
+	})
+	;__weex_bootstrap__("@weex-component/2e7a9b0c408304f70a0706c06cf71c4e", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -118,6 +119,83 @@
 
 /***/ 13:
 /***/ function(module, exports) {
+
+	;__weex_define__("@weex-component/tabitem", [], function(__weex_require__, __weex_exports__, __weex_module__){
+
+	;
+	    __weex_module__.exports = {
+	      data: function () {return {
+	        index: 0,
+	        title: "",
+	        titleColor: 0x0,
+	        icon: "",
+	        backgroundColor: 0xffffff,
+	      }},
+	      methods: {
+	        onclickitem: function (e) {
+	          var vm = this;
+	          var params = {
+	            index: vm.index
+	           };
+	          vm.$dispatch('tabItem.onClick', params);
+	        }
+	      }
+	    }
+	  
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
+	  "type": "div",
+	  "style": {
+	    "flex": 1,
+	    "flexDirection": "column",
+	    "alignItems": "center",
+	    "justifyContent": "center",
+	    "backgroundColor": function () {return this.backgroundColor},
+	    "height": 88
+	  },
+	  "events": {
+	    "click": "onclickitem"
+	  },
+	  "children": [
+	    {
+	      "type": "image",
+	      "style": {
+	        "position": "absolute",
+	        "top": 0,
+	        "left": 0,
+	        "right": 0,
+	        "height": 2
+	      },
+	      "attr": {
+	        "src": "http://gtms03.alicdn.com/tps/i3/TB1mdsiMpXXXXXpXXXXNw4JIXXX-640-4.png"
+	      }
+	    },
+	    {
+	      "type": "image",
+	      "style": {
+	        "marginTop": 5,
+	        "width": 40,
+	        "height": 40
+	      },
+	      "attr": {
+	        "src": function () {return this.icon}
+	      }
+	    },
+	    {
+	      "type": "text",
+	      "style": {
+	        "marginTop": 5,
+	        "textAlign": "center",
+	        "color": function () {return this.titleColor},
+	        "fontSize": 20
+	      },
+	      "attr": {
+	        "value": function () {return this.title}
+	      }
+	    }
+	  ]
+	})
+	});
 
 	;__weex_define__("@weex-component/tabbar", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
@@ -162,7 +240,8 @@
 	    }
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": [
 	    "wrapper"
@@ -202,8 +281,9 @@
 	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "wrapper": {
 	    "width": 750,
 	    "position": "absolute",
@@ -229,7 +309,7 @@
 	    "right": 0,
 	    "height": 88
 	  }
-	}
+	})
 	})
 
 /***/ }

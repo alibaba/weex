@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/62f4f410da94b3c4253f0bcea432dcc4", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/c83b0c06923ca78710a266e248ea7638", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(1);
@@ -60,39 +60,20 @@
 	      var GET_URL = 'http://httpbin.org/get';
 	      var POST_URL = 'http://httpbin.org/post';
 	      
-	      stream.fetch({
+	      stream.sendHttp({
 	        method: 'GET',
-	        url: GET_URL,
-	        type:'json'
+	        url: GET_URL
 	      }, function(ret) {
-	        if(typeof ret === 'string'){
-	          ret = JSON.parse(ret);
-	        }
-	        if(!ret.ok){
-	          me.getResult = "request failed";
-	        }else{
-	          console.log('get:'+ret);
-	          me.getResult = ret.data;
-	        }
-	      },function(response){
-	        console.log('get in progress:'+response.length);
-	        me.getResult = "bytes received:"+response.length;
+	        console.log('get', ret);
+	        me.getResult = ret;
 	      });
 
-	      stream.fetch({
+	      stream.sendHttp({
 	        method: 'POST',
-	        url: POST_URL,
-	        type:'json'
+	        url: POST_URL
 	      }, function(ret) {
-	        if(typeof ret === 'string'){
-	          ret = JSON.parse(ret);
-	        }
-	        if(!ret.ok){
-	          me.postResult = "request failed";
-	        }else{
-	          console.log('get:'+ret);
-	          me.postResult = ret.data;
-	        }
+	        console.log('post', ret);
+	        me.postResult = ret;
 	      });
 	    }
 	  };
@@ -104,7 +85,7 @@
 	    {
 	      "type": "wxc-panel",
 	      "attr": {
-	        "title": "stream.fetch",
+	        "title": "stream.sendHttp",
 	        "type": "primary"
 	      },
 	      "children": [
@@ -141,7 +122,7 @@
 	  ]
 	})
 	})
-	;__weex_bootstrap__("@weex-component/62f4f410da94b3c4253f0bcea432dcc4", {
+	;__weex_bootstrap__("@weex-component/c83b0c06923ca78710a266e248ea7638", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -897,7 +878,7 @@
 	    {
 	      "type": "image",
 	      "classList": [
-	        "left-image"
+	        "right-image"
 	      ],
 	      "attr": {
 	        "naviItemPosition": "right",
@@ -992,14 +973,14 @@
 	  "left-image": {
 	    "position": "absolute",
 	    "bottom": 20,
-	    "right": 28,
+	    "left": 28,
 	    "width": 50,
 	    "height": 50
 	  },
 	  "right-image": {
 	    "position": "absolute",
 	    "bottom": 20,
-	    "left": 28,
+	    "right": 28,
 	    "width": 50,
 	    "height": 50
 	  }

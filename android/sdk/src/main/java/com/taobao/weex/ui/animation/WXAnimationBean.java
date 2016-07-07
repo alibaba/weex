@@ -204,11 +204,25 @@
  */
 package com.taobao.weex.ui.animation;
 
+import android.animation.PropertyValuesHolder;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Pair;
+import android.util.Property;
+import android.view.View;
 
+import com.taobao.weex.utils.FunctionParser;
+import com.taobao.weex.utils.WXDataStructureUtil;
+import com.taobao.weex.utils.WXUtils;
+import com.taobao.weex.utils.WXViewUtils;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -225,11 +239,6 @@ public class WXAnimationBean {
 
   public static class Style {
 
-    public final static String ANDROID_TRANSLATION_X = "translationX";
-    public final static String ANDROID_TRANSLATION_Y = "translationY";
-    public final static String ANDROID_ROTATION = "rotation";
-    public final static String ANDROID_SCALE_X = "scaleX";
-    public final static String ANDROID_SCALE_Y = "scaleY";
     public final static String WX_TRANSLATE = "translate";
     public final static String WX_TRANSLATE_X = "translateX";
     public final static String WX_TRANSLATE_Y = "translateY";
@@ -244,17 +253,22 @@ public class WXAnimationBean {
     public final static String RIGHT = "right";
     public final static String LEFT = "left";
     public final static String CENTER = "center";
-    public static Map<String, List<String>> wxToAndroidMap = new HashMap<>();
+    private static final String HALF = "50%";
+    private static final String FULL = "100%";
+    private static final String ZERO = "0%";
+    private static final String PX = "px";
+    private static final String DEG = "deg";
+    public static Map<String, List<Property<View,Float>>> wxToAndroidMap = new HashMap<>();
 
     static {
       wxToAndroidMap.put(WX_TRANSLATE, Arrays.asList
-          (ANDROID_TRANSLATION_X, ANDROID_TRANSLATION_Y));
-      wxToAndroidMap.put(WX_TRANSLATE_X, Collections.singletonList(ANDROID_TRANSLATION_X));
-      wxToAndroidMap.put(WX_TRANSLATE_Y, Collections.singletonList(ANDROID_TRANSLATION_Y));
-      wxToAndroidMap.put(WX_ROTATE, Collections.singletonList(ANDROID_ROTATION));
-      wxToAndroidMap.put(WX_SCALE, Arrays.asList(ANDROID_SCALE_X, ANDROID_SCALE_Y));
-      wxToAndroidMap.put(WX_SCALE_X, Collections.singletonList(ANDROID_SCALE_X));
-      wxToAndroidMap.put(WX_SCALE_Y, Collections.singletonList(ANDROID_SCALE_Y));
+          (View.TRANSLATION_X, View.TRANSLATION_Y));
+      wxToAndroidMap.put(WX_TRANSLATE_X, Collections.singletonList(View.TRANSLATION_X));
+      wxToAndroidMap.put(WX_TRANSLATE_Y, Collections.singletonList(View.TRANSLATION_Y));
+      wxToAndroidMap.put(WX_ROTATE, Collections.singletonList(View.ROTATION));
+      wxToAndroidMap.put(WX_SCALE, Arrays.asList(View.SCALE_X, View.SCALE_Y));
+      wxToAndroidMap.put(WX_SCALE_X, Collections.singletonList(View.SCALE_X));
+      wxToAndroidMap.put(WX_SCALE_Y, Collections.singletonList(View.SCALE_Y));
       wxToAndroidMap = Collections.unmodifiableMap(wxToAndroidMap);
     }
 
@@ -262,23 +276,221 @@ public class WXAnimationBean {
     public String backgroundColor;
     public String transform;
     public String transformOrigin;
-    private Map<String, Float> transformMap = new HashMap<>();
+    private Map<Property<View, Float>, Float> transformMap = new HashMap<>();
     private Pair<Float, Float> pivot;
+    private List<PropertyValuesHolder> holders=new LinkedList<>();
 
-    public Map<String, Float> getTransformMap() {
-      return transformMap;
+    private static Map<Property<View,Float>, Float> parseTransForm(@Nullable String rawTransform, final int width,
+                                                final int height) {
+      if (!TextUtils.isEmpty(rawTransform)) {
+        FunctionParser<Property<View,Float>, Float> parser = new FunctionParser<>
+            (rawTransform, new FunctionParser.Mapper<Property<View,Float>, Float>() {
+              @Override
+              public Map<Property<View,Float>, Float> map(String functionName, List<String> raw) {
+                if (raw != null && !raw.isEmpty()) {
+                  if (WXAnimationBean.Style.wxToAndroidMap.containsKey(functionName)) {
+                    return convertParam(width, height,
+                                        WXAnimationBean.Style.wxToAndroidMap.get(functionName), raw);
+                  }
+                }
+                return new HashMap<>();
+              }
+
+              private Map<Property<View,Float>, Float> convertParam(int width, int height,
+                                                      @NonNull List<Property<View,Float>> nameSet,
+                                                      @NonNull List<String> rawValue) {
+                Map<Property<View,Float>, Float> result = WXDataStructureUtil.newHashMapWithExpectedSize(nameSet.size());
+                List<Float> convertedList = new ArrayList<>(nameSet.size());
+                if (nameSet.contains(View.ROTATION)) {
+                  convertedList.addAll(parseRotation(rawValue));
+                } else if (nameSet.contains(View.TRANSLATION_X) ||
+                           nameSet.contains(View.TRANSLATION_Y)) {
+                  convertedList.addAll(parseTranslation(nameSet, width, height, rawValue));
+                } else if (nameSet.contains(View.SCALE_X) ||
+                           nameSet.contains(View.SCALE_Y)) {
+                  convertedList.addAll(parseScale(nameSet.size(), rawValue));
+                }
+                if (nameSet.size() == convertedList.size()) {
+                  for (int i = 0; i < nameSet.size(); i++) {
+                    result.put(nameSet.get(i), convertedList.get(i));
+                  }
+                }
+                return result;
+              }
+
+              private List<Float> parseScale(int size, @NonNull List<String> rawValue) {
+                List<Float> convertedList = new ArrayList<>(rawValue.size() * 2);
+                List<Float> rawFloat = new ArrayList<>(rawValue.size());
+                for (String item : rawValue) {
+                  rawFloat.add(WXUtils.fastGetFloat(item));
+                }
+                convertedList.addAll(rawFloat);
+                if (size != 1 && rawValue.size() == 1) {
+                  convertedList.addAll(rawFloat);
+                }
+                return convertedList;
+              }
+
+              private List<Float> parseRotation(@NonNull List<String> rawValue) {
+                List<Float> convertedList = new ArrayList<>(1);
+                int suffix;
+                for (String raw : rawValue) {
+                  if ((suffix = raw.lastIndexOf(DEG)) != -1) {
+                    convertedList.add(WXUtils.fastGetFloat(raw.substring(0, suffix)));
+                  } else {
+                    convertedList.add((float) Math.toDegrees(Double.parseDouble(raw)));
+                  }
+                }
+                return convertedList;
+              }
+
+
+              private List<Float> parseTranslation(List<Property<View,Float>> nameSet,
+                                                   int width, int height,
+                                                   @NonNull List<String> rawValue) {
+                List<Float> convertedList = new ArrayList<>(2);
+                String first = rawValue.get(0);
+                if (nameSet.size() == 1) {
+                  parseSingleTranslation(nameSet, width, height, convertedList, first);
+                } else {
+                  parseDoubleTranslation(width, height, rawValue, convertedList, first);
+                }
+                return convertedList;
+              }
+
+              private void parseSingleTranslation(List<Property<View,Float>> nameSet, int width, int height,
+                                                  List<Float> convertedList, String first) {
+                if (nameSet.contains(View.TRANSLATION_X)) {
+                  convertedList.add(parsePercentOrPx(first, width));
+                } else if (nameSet.contains(View.TRANSLATION_Y)) {
+                  convertedList.add(parsePercentOrPx(first, height));
+                }
+              }
+
+              private void parseDoubleTranslation(int width, int height,
+                                                  @NonNull List<String> rawValue,
+                                                  List<Float> convertedList, String first) {
+                String second;
+                if (rawValue.size() == 1) {
+                  second = first;
+                } else {
+                  second = rawValue.get(1);
+                }
+                convertedList.add(parsePercentOrPx(first, width));
+                convertedList.add(parsePercentOrPx(second, height));
+              }
+            });
+        return parser.parse();
+      }
+      return new LinkedHashMap<>();
     }
 
-    public void setTransformMap(Map<String, Float> transformMap) {
-      this.transformMap = transformMap;
+    private static Pair<Float, Float> parsePivot(@Nullable String transformOrigin,
+                                                 int width, int height) {
+      if (!TextUtils.isEmpty(transformOrigin)) {
+        int firstSpace = transformOrigin.indexOf(FunctionParser.SPACE);
+        if (firstSpace != -1) {
+          int i = firstSpace;
+          for (; i < transformOrigin.length(); i++) {
+            if (transformOrigin.charAt(i) != FunctionParser.SPACE) {
+              break;
+            }
+          }
+          if (i < transformOrigin.length() && transformOrigin.charAt(i) != FunctionParser.SPACE) {
+            List<String> list = new ArrayList<>(2);
+            list.add(transformOrigin.substring(0, firstSpace).trim());
+            list.add(transformOrigin.substring(i, transformOrigin.length()).trim());
+            return parsePivot(list, width, height);
+          }
+        }
+      }
+      return parsePivot(Arrays.asList(WXAnimationBean.Style.CENTER,
+                                      WXAnimationBean.Style.CENTER), width, height);
+    }
+
+    private static Pair<Float, Float> parsePivot(@NonNull List<String> list, int width, int height) {
+      return new Pair<>(
+          parsePivotX(list.get(0), width), parsePivotY(list.get(1), height));
+    }
+
+    private static float parsePivotX(String x, int width) {
+      String value = x;
+      if (WXAnimationBean.Style.LEFT.equals(x)) {
+        value = ZERO;
+      } else if (WXAnimationBean.Style.RIGHT.equals(x)) {
+        value = FULL;
+      } else if (WXAnimationBean.Style.CENTER.equals(x)) {
+        value = HALF;
+      }
+      return parsePercentOrPx(value, width);
+    }
+
+    private static float parsePivotY(String y, int height) {
+      String value = y;
+      if (WXAnimationBean.Style.TOP.equals(y)) {
+        value = ZERO;
+      } else if (WXAnimationBean.Style.BOTTOM.equals(y)) {
+        value = FULL;
+      } else if (WXAnimationBean.Style.CENTER.equals(y)) {
+        value = HALF;
+      }
+      return parsePercentOrPx(value, height);
+    }
+
+    private static float parsePercentOrPx(String raw, int unit) {
+      final int precision = 1;
+      int suffix;
+      if ((suffix = raw.lastIndexOf(FunctionParser.PERCENT)) != -1) {
+        return parsePercent(raw.substring(0, suffix), unit, precision);
+      } else if ((suffix = raw.lastIndexOf(PX)) != -1) {
+        return WXViewUtils.getRealPxByWidth(WXUtils.fastGetFloat(raw.substring(0, suffix), precision));
+      }
+      return WXViewUtils.getRealPxByWidth(WXUtils.fastGetFloat(raw, precision));
+    }
+
+    private static float parsePercent(String percent, int unit, int precision) {
+      return WXUtils.fastGetFloat(percent, precision) / 100 * unit;
+    }
+
+    private static List<PropertyValuesHolder> moveBackToOrigin() {
+      List<PropertyValuesHolder> holders = new ArrayList<>(5);
+      holders.add(PropertyValuesHolder.ofFloat(View.TRANSLATION_X, 0));
+      holders.add(PropertyValuesHolder.ofFloat(View.TRANSLATION_Y, 0));
+      holders.add(PropertyValuesHolder.ofFloat(View.SCALE_X, 1));
+      holders.add(PropertyValuesHolder.ofFloat(View.SCALE_Y, 1));
+      holders.add(PropertyValuesHolder.ofFloat(View.ROTATION, 0));
+      return holders;
     }
 
     public Pair<Float, Float> getPivot() {
       return pivot;
     }
 
-    public void setPivot(Pair<Float, Float> pivot) {
-      this.pivot = pivot;
+    public void init(@Nullable String transformOrigin,@Nullable String rawTransform,
+                     final int width, final int height){
+      pivot = parsePivot(transformOrigin,width,height);
+      transformMap = parseTransForm(rawTransform,width,height);
+      initHolders();
+    }
+
+    private void initHolders(){
+      if (transformMap != null) {
+        if (transformMap.isEmpty()) {
+          holders.addAll(moveBackToOrigin());
+        } else {
+          for (Map.Entry<Property<View, Float>, Float> entry : transformMap.entrySet()) {
+            holders.add(PropertyValuesHolder.ofFloat(entry.getKey(), entry.getValue()));
+          }
+        }
+      }
+      if (!TextUtils.isEmpty(opacity)) {
+        holders.add(PropertyValuesHolder.ofFloat(WXAnimationBean.Style.ALPHA,
+                                                 WXUtils.fastGetFloat(opacity, 3)));
+      }
+    }
+
+    public List<PropertyValuesHolder> getHolders(){
+      return holders;
     }
   }
 }

@@ -226,8 +226,8 @@ public class WXConst {
   public static final String KEY_ARGS = "args";
   public static final String KEY_PRIORITY = "priority";
 
-  public static final String OK = "ok";
-  public static final String CANCEL = "cancel";
+  public static final String OK = "OK";
+  public static final String CANCEL = "Cancel";
   public static final String RESULT = "result";
   public static final String DATA = "data";
   public static final String MESSAGE = "message";

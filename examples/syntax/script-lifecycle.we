@@ -1,0 +1,28 @@
+<template>
+  <div>
+    <text class="title" repeat="value in list">{{value}}</text>
+  </div>
+</template>
+
+<style>
+  .title {font-size: 48px;}
+</style>
+
+<script>
+  var initMessage
+  module.exports = {
+    data: {
+      list: ['Lifecycle List']
+    },
+    init: function () {
+      initMessage = 'component init: nothing more happen even the data initialization'
+    },
+    created: function () {
+      this.list.push(initMessage)
+      this.list.push('component created: data init and observed')
+    },
+    ready: function () {
+      this.list.push('component ready: virtual dom generated')
+    }
+  }
+</script>

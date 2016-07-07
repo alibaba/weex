@@ -57,7 +57,8 @@ public class WeexUiTestCaseTcElementOpt extends ActivityInstrumentationTestCase2
         mViewGroup = (ViewGroup) waTestPageActivity.findViewById(R.id.container);
         setViewGroup(mViewGroup);
 
-mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, "TC_");        Thread.sleep(1000);
+        mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, "TC_");
+        Thread.sleep(3000);
     }
 
 //    public void testPreConditions()
