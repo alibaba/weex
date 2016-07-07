@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/4a0169486f84ce938fd025f02d493b76", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/d1aeed9201fa6a0e8db1497773413eb2", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(1);
@@ -265,6 +265,9 @@
 	})
 	;__weex_module__.exports.style = __weex_module__.exports.style || {}
 	;Object.assign(__weex_module__.exports.style, {
+	  "list": {
+	    "height": 850
+	  },
 	  "count": {
 	    "fontSize": 48,
 	    "margin": 10
@@ -299,7 +302,7 @@
 	  }
 	})
 	})
-	;__weex_bootstrap__("@weex-component/4a0169486f84ce938fd025f02d493b76", {
+	;__weex_bootstrap__("@weex-component/d1aeed9201fa6a0e8db1497773413eb2", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -1055,7 +1058,7 @@
 	    {
 	      "type": "image",
 	      "classList": [
-	        "right-image"
+	        "left-image"
 	      ],
 	      "attr": {
 	        "naviItemPosition": "right",
@@ -1150,14 +1153,14 @@
 	  "left-image": {
 	    "position": "absolute",
 	    "bottom": 20,
-	    "left": 28,
+	    "right": 28,
 	    "width": 50,
 	    "height": 50
 	  },
 	  "right-image": {
 	    "position": "absolute",
 	    "bottom": 20,
-	    "right": 28,
+	    "left": 28,
 	    "width": 50,
 	    "height": 50
 	  }

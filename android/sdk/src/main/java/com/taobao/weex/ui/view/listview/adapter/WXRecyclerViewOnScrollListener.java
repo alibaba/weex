@@ -265,6 +265,7 @@ public class WXRecyclerViewOnScrollListener extends RecyclerView.OnScrollListene
   public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
     super.onScrolled(recyclerView, dx, dy);
     RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+    listener.get().onBeforeScroll(dx,dy);
     //  int lastVisibleItemPosition = -1;
     if (layoutManagerType == null) {
       if (layoutManager instanceof LinearLayoutManager) {

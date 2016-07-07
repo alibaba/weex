@@ -212,7 +212,7 @@ import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.WXTextDomObject;
 import com.taobao.weex.dom.flex.Spacing;
 
-import com.taobao.weex.ui.ComponentHolder;
+import com.taobao.weex.ui.SimpleComponentHolder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -265,7 +265,7 @@ public class WXTextTest {
         mParent = new WXDiv(instance, mParentDomObj, null, false);
         mParent.createView(null, -1);
         mWXText = new WXText(instance, mDomObject, mParent, false);
-        mWXText.setHolder(new ComponentHolder(WXText.class));
+        mWXText.bindHolder(new SimpleComponentHolder(WXText.class));
         assertNotNull(instance.getContext());
     }
 

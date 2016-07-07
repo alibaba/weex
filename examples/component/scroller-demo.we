@@ -8,10 +8,45 @@
         <text class="item-title">row {{id}}</text>
       </div>
     </div>
+
+    <loading class="loading-view" display="{{loading_display}}" onloading="onloading">
+      <loading-indicator style="height:60;width:60" ></loading-indicator>
+    </loading>
+
   </scroller>
 </template>
 
 <style>
+  .refresh-view {
+    height: 120px;
+    width: 750px;
+    display: -ms-flex;
+    display: -webkit-flex;
+    display: flex;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    align-items: center;
+  }
+
+  .refresh-arrow {
+    font-size: 30px;
+    color: #45b5f0;
+  }
+
+  .loading-view {
+    height: 80px;
+    width: 750px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .indicator {
+    height: 40px;
+    width: 40px;
+    color: #45b5f0;
+  }
+
   .header {
     background-color: #45b5f0;
     padding: 20px;
@@ -41,8 +76,20 @@
   require('weex-components');
   module.exports = {
     methods: {
+      onrefresh: function(e) {
+        var self = this;
+        self.refresh_display = 'show';
+        self.refresh_display = 'hide';
+      },
+      onloading: function(e) {
+        var self = this;
+        self.loading_display = 'show';
+        self.loading_display = 'hide';
+      }
     },
     data: {
+      refresh_display: 'hide',
+      loading_display: 'hide',
       sections: [
         {
           title: 'Header 1',

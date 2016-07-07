@@ -308,6 +308,15 @@ public class WXPerformance {
   public long networkTime;
 
   /**
+   * pure network time;
+   */
+  public long pureNetworkTime;
+
+  public long actualNetworkTime;
+  public long packageSpendTime;
+  public long syncTaskTime;
+
+  /**
    * component Count
    */
   public long componentCount;
@@ -337,6 +346,9 @@ public class WXPerformance {
    */
   public String errMsg;
 
+  public String connectionType;
+  public String requestType;
+
   public Map<String,Double> getMeasureMap(){
     Map<String,Double> quotas = new HashMap<>();
     quotas.put("JSTemplateSize", JSTemplateSize);
@@ -352,6 +364,10 @@ public class WXPerformance {
     quotas.put("SDKInitExecuteTime",(double)WXEnvironment.sSDKInitExecuteTime);
     quotas.put("firstScreenJSFExecuteTime",(double) firstScreenJSFExecuteTime);
     quotas.put("componentCount",(double)componentCount);
+    quotas.put("actualNetworkTime",(double)actualNetworkTime);
+    quotas.put("pureNetworkTime",(double)pureNetworkTime);
+    quotas.put("syncTaskTime",(double)syncTaskTime);
+    quotas.put("packageSpendTime",(double)packageSpendTime);
     return quotas;
   }
 
@@ -362,11 +378,14 @@ public class WXPerformance {
     quotas.put("pageName", pageName);
     quotas.put("JSLibVersion", JSLibVersion);
     quotas.put("WXSDKVersion", WXSDKVersion);
+    quotas.put("connectionType",connectionType);
+    quotas.put("requestType",requestType);
+
     return quotas;
   }
 
   public static String[] getDimensions(){
-    return new String[]{"bizType","templateUrl","pageName","JSLibVersion","WXSDKVersion"};
+    return new String[]{"bizType","templateUrl","pageName","JSLibVersion","WXSDKVersion","connectionType","requestType"};
   }
 
   public static String[] getMeasures(){
@@ -378,9 +397,15 @@ public class WXPerformance {
         "localReadTime",
         "JSLibInitTime",
         "networkTime",
+        "componentCount",
         "templateLoadTime",
         "SDKInitInvokeTime",
-        "SDKInitExecuteTime"};
+        "SDKInitExecuteTime",
+        "packageSpendTime",
+        "syncTaskTime",
+        "pureNetworkTime",
+        "actualNetworkTime",
+        "firstScreenJSFExecuteTime"};
   }
 
   @Override
@@ -393,6 +418,12 @@ public class WXPerformance {
              + ",screenRenderTime:" + screenRenderTime
              + ",firstScreenJSFExecuteTime:" + firstScreenJSFExecuteTime
              + ",componentCount:" + componentCount
+             + ",syncTaskTime:" + syncTaskTime
+             + ",pureNetworkTime:" + pureNetworkTime
+             + ",actualNetworkTime:" + actualNetworkTime
+             + ",packageSpendTime:" + packageSpendTime
+             + ",connectionType:" + connectionType
+             + ",requestType:" + requestType
              + ",initInvokeTime:"+WXEnvironment.sSDKInitInvokeTime+",initExecuteTime:"+WXEnvironment.sSDKInitExecuteTime
              + ",totalTime:" + totalTime + ",JSLibVersion:" + JSLibVersion + ",WXSDKVersion:" + WXSDKVersion
              + ",errCode:" + errCode + ",renderFailedDetail:" + renderFailedDetail
