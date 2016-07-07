@@ -209,7 +209,7 @@ export function _compileRepeat (target, dest) {
   const key = repeat.key || '$index'
   const value = repeat.value || '$value'
   const trackBy = repeat.trackBy || target.trackBy ||
-    (target.attr && target.attr.trackBy) || key
+    (target.attr && target.attr.trackBy)
 
   const fragBlock = this._createBlock(dest)
   fragBlock.children = []
@@ -421,7 +421,6 @@ export function _bindRepeat (target, fragBlock, info) {
   const list = this._watchBlock(fragBlock, getter, 'repeat',
     (data) => {
       _.debug('the "repeat" item has changed', data)
-
       if (!fragBlock) {
         return
       }
@@ -433,7 +432,7 @@ export function _bindRepeat (target, fragBlock, info) {
       const trackMap = {}
       const reusedMap = {}
       data.forEach((item, index) => {
-        const key = trackBy ? item[trackBy] : index
+        const key = trackBy ? item[trackBy] : (oldStyle ? item[keyName] : index)
         /* istanbul ignore if */
         if (key == null || key === '') {
           return
@@ -444,7 +443,7 @@ export function _bindRepeat (target, fragBlock, info) {
       // 2. remove unused element foreach old item
       const reusedList = []
       oldData.forEach((item, index) => {
-        const key = trackBy ? item[trackBy] : index
+        const key = trackBy ? item[trackBy] : (oldStyle ? item[keyName] : index)
         if (trackMap.hasOwnProperty(key)) {
           reusedMap[key] = {
             item, index, key,
@@ -465,7 +464,7 @@ export function _bindRepeat (target, fragBlock, info) {
       fragBlock.updateMark = fragBlock.start
 
       data.forEach((item, index) => {
-        const key = trackBy ? item[trackBy] : index
+        const key = trackBy ? item[trackBy] : (oldStyle ? item[keyName] : index)
         const reused = reusedMap[key]
         if (reused) {
           if (reused.item === reusedList[0]) {
