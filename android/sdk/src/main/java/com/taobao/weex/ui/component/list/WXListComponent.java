@@ -382,7 +382,7 @@ public class WXListComponent extends WXVContainer implements
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
               super.onScrollStateChanged(recyclerView, newState);
 
-                if(newState == RecyclerView.SCROLL_STATE_IDLE ){
+                    if(newState == RecyclerView.SCROLL_STATE_IDLE ){
                     for(ListBaseViewHolder holder:recycleViewList){
                         if(holder!=null
                                 && holder.getComponent()!=null
@@ -505,17 +505,17 @@ public class WXListComponent extends WXVContainer implements
    * Check last Sticky after scrollTo
    * @param position scroll to position
    */
-  public void checkLastSticky(int position) {
-    bounceRecyclerView.clearSticky();
-    for (int i = 0; i <= position; i++) {
-      WXComponent component = getChild(i);
-      if (component.getDomObject() != null && (component.getDomObject().isSticky() && component instanceof WXCell) || component instanceof WXHeader) {
-        if (component.getView() == null) {
-          return;
-        }
-        bounceRecyclerView.notifyStickyShow((WXCell) component);
+  public void checkLastSticky(final int position) {
+      bounceRecyclerView.clearSticky();
+      for (int i = 0; i <= position; i++) {
+          WXComponent component = getChild(i);
+          if (component.getDomObject() != null && (component.getDomObject().isSticky() && component instanceof WXCell) || component instanceof WXHeader) {
+              if (component.getView() == null) {
+                  return;
+              }
+              bounceRecyclerView.notifyStickyShow((WXCell) component);
+          }
       }
-    }
   }
 
     @Override
@@ -528,7 +528,7 @@ public class WXListComponent extends WXVContainer implements
             return;
         }
         Iterator<Map.Entry<String, WXComponent>> iterator = stickyMap.entrySet().iterator();
-        Map.Entry<String, WXComponent> entry = null;
+        Map.Entry<String, WXComponent> entry;
         WXComponent stickyComponent;
         while (iterator.hasNext()) {
             entry = iterator.next();
@@ -536,11 +536,18 @@ public class WXListComponent extends WXVContainer implements
 
             if (stickyComponent != null && stickyComponent.getDomObject() != null
                     && stickyComponent instanceof WXCell) {
-                if (stickyComponent.getView() == null)
+                if (stickyComponent.getView() == null) {
                     return;
-                int top = stickyComponent.getView().getTop();
+                }
 
-                boolean showSticky = ((WXCell) stickyComponent).lastLocationY >= 0 && top < 0 && dy > 0;
+                int[] location = new int[2];
+                stickyComponent.getView().getLocationOnScreen(location);
+                int[] parentLocation = new int[2];
+                stickyComponent.getParentScroller().getView().getLocationOnScreen(parentLocation);
+
+                int top = location[1] - parentLocation[1];
+
+                boolean showSticky = ((WXCell) stickyComponent).lastLocationY > 0 && top <= 0 && dy > 0;
                 boolean removeSticky = ((WXCell) stickyComponent).lastLocationY <= 0 && top > 0 && dy < 0;
                 if (showSticky) {
                     bounceRecyclerView.notifyStickyShow((WXCell) stickyComponent);
@@ -807,7 +814,6 @@ public class WXListComponent extends WXVContainer implements
             WXLogUtils.e(TAG, WXLogUtils.getStackTrace(e));
             id = RecyclerView.NO_ID;
             WXLogUtils.e(TAG, "getItemViewType: NO ID, this will crash the whole render system of WXListRecyclerView");
-
         }
         return (int) id;
     }

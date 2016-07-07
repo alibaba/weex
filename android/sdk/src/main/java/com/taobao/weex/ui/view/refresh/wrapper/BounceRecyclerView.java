@@ -207,9 +207,11 @@ package com.taobao.weex.ui.view.refresh.wrapper;
 import android.content.Context;
 import android.support.v7.widget.OrientationHelper;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.taobao.weex.dom.flex.CSSLayout;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.list.WXCell;
 import com.taobao.weex.ui.view.listview.WXRecyclerView;
@@ -220,8 +222,8 @@ import java.util.Stack;
 public class BounceRecyclerView extends BaseBounceView<WXRecyclerView> {
 
   private RecyclerViewBaseAdapter adapter = null;
-  private Stack<FrameLayout> headerViewStack = new Stack<>();
-  private Stack<FrameLayout> tempViewStack = new Stack<>();
+  private Stack<View> headerViewStack = new Stack<>();
+  private Stack<View> tempViewStack = new Stack<>();
   private Stack<WXCell> headComponentStack = new Stack<>();
 
   public BounceRecyclerView(Context context, int orientation) {
@@ -306,8 +308,8 @@ public class BounceRecyclerView extends BaseBounceView<WXRecyclerView> {
     headComponent.getView().removeView(headerView);
     FrameLayout tempView = new FrameLayout(getContext());
     tempViewStack.push(tempView);
-    FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(headerView.getMeasuredWidth(),
-                                                               headerView.getMeasuredHeight());
+    FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams((int) headComponent.getDomObject().csslayout.dimensions[CSSLayout.DIMENSION_WIDTH],
+                                        (int) headComponent.getDomObject().csslayout.dimensions[CSSLayout.DIMENSION_HEIGHT]);
     headComponent.getView().addView(tempView, lp);
     ((ViewGroup) getParent()).addView(headerView);
     headerView.setTranslationX(headerViewOffsetX);
@@ -324,8 +326,8 @@ public class BounceRecyclerView extends BaseBounceView<WXRecyclerView> {
       headComponentStack.push(headComponent);
       return;
     }
-    FrameLayout tempView = tempViewStack.pop();
-    FrameLayout headerView = headerViewStack.pop();
+    View tempView = tempViewStack.pop();
+    View headerView = headerViewStack.pop();
     headComponent.getView().removeView(tempView);
     ((ViewGroup) getParent()).removeView(headerView);
     headComponent.getView().addView(headerView);
@@ -340,8 +342,8 @@ public class BounceRecyclerView extends BaseBounceView<WXRecyclerView> {
     int size = headComponentStack.size();
     while (size > 0 && tempViewStack.size() == size && headerViewStack.size() == size) {
       WXCell headComponent = headComponentStack.pop();
-      FrameLayout tempView = tempViewStack.pop();
-      FrameLayout headerView = headerViewStack.pop();
+      View tempView = tempViewStack.pop();
+      View headerView = headerViewStack.pop();
       headComponent.getView().removeView(tempView);
       ((ViewGroup) getParent()).removeView(headerView);
       headComponent.getView().addView(headerView);
