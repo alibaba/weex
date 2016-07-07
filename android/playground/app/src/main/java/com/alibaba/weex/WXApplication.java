@@ -2,7 +2,6 @@ package com.alibaba.weex;
 
 import android.app.Application;
 
-import com.alibaba.weex.commons.adapter.FrescoImageAdapter;
 import com.alibaba.weex.commons.adapter.ImageAdapter;
 import com.alibaba.weex.extend.PlayDebugAdapter;
 import com.alibaba.weex.extend.component.RichText;
@@ -20,7 +19,7 @@ public class WXApplication extends Application {
   @Override
   public void onCreate() {
     super.onCreate();
-    initDebugEnvironment(false, "DEBUG_SERVER_HOST");
+//    initDebugEnvironment(false, "DEBUG_SERVER_HOST");
     WXSDKEngine.addCustomOptions("appName", "WXSample");
     WXSDKEngine.addCustomOptions("appGroup", "WXApp");
     WXSDKEngine.initialize(this,

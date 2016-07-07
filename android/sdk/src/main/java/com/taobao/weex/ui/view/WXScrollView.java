@@ -549,7 +549,10 @@ public class WXScrollView extends ScrollView implements Callback, IWXScroller,
 
       getLocationOnScreen(stickyScrollerP);
       stickyData.getView().getLocationOnScreen(stickyViewP);
-      int parentH = stickyData.getParent().getRealView().getHeight();
+      int parentH = 0;
+      if(stickyData.getParent()!=null && stickyData.getParent().getRealView()!=null){
+        parentH=stickyData.getParent().getRealView().getHeight();
+      }
       int stickyViewH = stickyData.getView().getHeight();
       int stickyShowPos = stickyScrollerP[1];
       int stickyStartHidePos = -parentH + stickyScrollerP[1] + stickyViewH;

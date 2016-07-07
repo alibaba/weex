@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <item name="toolbar" type="id" />
-    <item name="leftItem" type="id" />
-    <item name="rightItem" type="id" />
-    <item name="rightTitleView" type="id" />
-    <item name="toolbar_title" type="id" />
-    <item name="leftTitleView" type="id" />
-</resources>

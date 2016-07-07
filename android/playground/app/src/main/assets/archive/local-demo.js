@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/9dc047404865acabbbd4844a27483821", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/bbff3fc9a3357c6919cf93317c2eef52", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __weex_module__.exports = {
@@ -59,7 +59,8 @@
 	    }}
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "children": [
 	    {
@@ -94,9 +95,9 @@
 	      }
 	    }
 	  ]
-	}
 	})
-	;__weex_bootstrap__("@weex-component/9dc047404865acabbbd4844a27483821", {
+	})
+	;__weex_bootstrap__("@weex-component/bbff3fc9a3357c6919cf93317c2eef52", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 

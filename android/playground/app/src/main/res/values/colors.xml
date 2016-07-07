@@ -5,8 +5,4 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="black_overlay">#66000000</color>
-
-    <color name="whiteLight">#ffffff</color>
-    <color name="whiteDivideLine">#f1f1f1</color>
-    <color name="whitePrimary">#dcdddf</color>
 </resources>

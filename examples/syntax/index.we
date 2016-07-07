@@ -1,0 +1,34 @@
+<template>
+  <example-list items="{{items}}" root="{{root}}"></example-list>
+</template>
+
+<script>
+  require('../include/example-list.we');
+  module.exports = {
+    data: {
+      root: 'examples',
+      items: [
+        {name: 'syntax/hello-world', title: 'Hello World'},
+        {name: 'syntax/hello-world-1', title: 'Hello World 1'},
+        {name: 'syntax/hello-world-2', title: 'Hello World 2'},
+        {name: 'syntax/hello-world-3', title: 'Hello World 3'},
+        {name: 'syntax/hello-world-4', title: 'Hello World 4'},
+        {name: 'syntax/hello-world-5', title: 'Hello World 5'},
+        {name: 'syntax/script-component', title: 'Script Component'},
+        {name: 'syntax/script-data', title: 'Script Data'},
+        {name: 'syntax/script-events', title: 'Script Event'},
+        {name: 'syntax/script-instance', title: 'Script Instance'},
+        {name: 'syntax/script-lifecycle', title: 'Script Lifecycle'},
+        {name: 'syntax/script-module', title: 'Script Module'},
+        {name: 'syntax/script-options', title: 'Script Option'},
+        {name: 'syntax/template-class', title: 'Template Class'},
+        {name: 'syntax/template-content', title: 'Template Content'},
+        {name: 'syntax/template-event', title: 'Template Event'},
+        {name: 'syntax/template-if', title: 'Template IF'},
+        {name: 'syntax/template-repeat', title: 'Template Repeat'},
+        {name: 'syntax/template-repeat-update', title: 'Template Repeat Update'},
+        {name: 'syntax/template-style', title: 'Template Style'}
+      ]
+    }
+  }
+</script>

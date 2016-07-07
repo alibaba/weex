@@ -16,19 +16,6 @@
 
 package com.google.zxing.client.android;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.DecodeHintType;
-import com.google.zxing.Result;
-import com.google.zxing.ResultMetadataType;
-import com.google.zxing.ResultPoint;
-import com.google.zxing.client.android.camera.CameraManager;
-import com.google.zxing.client.android.clipboard.ClipboardInterface;
-import com.google.zxing.client.android.history.HistoryActivity;
-import com.google.zxing.client.android.history.HistoryItem;
-import com.google.zxing.client.android.history.HistoryManager;
-import com.google.zxing.client.android.result.ResultHandler;
-import com.google.zxing.client.android.result.ResultHandlerFactory;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -60,6 +47,18 @@ import android.widget.Toast;
 
 import com.alibaba.weex.R;
 import com.alibaba.weex.WXPageActivity;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.DecodeHintType;
+import com.google.zxing.Result;
+import com.google.zxing.ResultMetadataType;
+import com.google.zxing.ResultPoint;
+import com.google.zxing.client.android.camera.CameraManager;
+import com.google.zxing.client.android.clipboard.ClipboardInterface;
+import com.google.zxing.client.android.history.HistoryActivity;
+import com.google.zxing.client.android.history.HistoryItem;
+import com.google.zxing.client.android.history.HistoryManager;
+import com.google.zxing.client.android.result.ResultHandler;
+import com.google.zxing.client.android.result.ResultHandlerFactory;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKEngine;
 
@@ -584,8 +583,12 @@ public final class CaptureActivity extends Activity implements
               Toast.makeText(this,tip,Toast.LENGTH_SHORT).show();
               finish();
 	      return;
-            } else if (uri.getPath().contains("framework")) {
-
+            } else if (uri.getQueryParameterNames().contains("_wx_devtool")) {
+	      WXEnvironment.sRemoteDebugProxyUrl=uri.getQueryParameter("_wx_devtool");
+	      WXSDKEngine.reload(getApplication(),true);
+	      Toast.makeText(this,"devtool",Toast.LENGTH_SHORT).show();
+	      finish();
+	      return;
             }
 
             if (code.contains("_wx_debug")) {

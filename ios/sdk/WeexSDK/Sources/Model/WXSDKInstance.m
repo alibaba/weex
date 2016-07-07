@@ -47,13 +47,11 @@ NSTimeInterval JSLibInitTime = 0;
         _instanceId = [NSString stringWithFormat:@"%ld", (long)instanceId];
 
         [WXSDKManager storeInstance:self forID:_instanceId];
-        _frame = CGRectMake(NAN, NAN, NAN, NAN);
         
         _bizType = @"";
         _pageName = @"";
         _screenRenderTime = 0;
-        
-        _frame = CGRectMake(NAN, NAN, NAN, NAN);
+
         _moduleInstances = [NSMutableDictionary new];
         _styleConfigs = [NSMutableDictionary new];
         _attrConfigs = [NSMutableDictionary new];
@@ -124,13 +122,21 @@ NSTimeInterval JSLibInitTime = 0;
                                                  userInfo:@{@"message":@"status code error."}];
             }
             
-           if (error) {
-               WXLogError(@"Connection to %@ occurs an error:%@", request.URL, error);
-               if (weakSelf.onFailed) {
-                   weakSelf.onFailed(error);
-               }
-               return ;
-           }
+            if (error) {
+                WXLogError(@"Connection to %@ occurs an error:%@", request.URL, error);
+                if (weakSelf.onFailed) {
+                    weakSelf.onFailed(error);
+                }
+                return;
+            }
+                       
+            if (!totalData) {
+                WXLogError(@"Connection to %@ but no data return", request.URL);
+                if (weakSelf.onFailed) {
+                    weakSelf.onFailed(error);
+                }
+                return;
+            }
                    
             NSString *script = [[NSString alloc] initWithData:totalData encoding:NSUTF8StringEncoding];
             weakSelf.networkTime = -[networkStart timeIntervalSinceNow];
@@ -160,12 +166,16 @@ NSTimeInterval JSLibInitTime = 0;
     }
     
     //TODO WXRootView
-    self.rootView = [[WXView alloc] initWithFrame:self.frame];
-    if(self.onCreate) {
-        self.onCreate(self.rootView);
-    }
+    WXPerformBlockOnMainThread(^{
+        self.rootView = [[WXView alloc] initWithFrame:self.frame];
+        if(self.onCreate) {
+            self.onCreate(self.rootView);
+        }
+    });
     
     [[WXSDKManager bridgeMgr] createInstance:self.instanceId template:source options:dictionary data:data];
+    
+    self.JSTemplateSize = [source lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
 }
 
 - (void)setFrame:(CGRect)frame
@@ -255,9 +265,11 @@ NSTimeInterval JSLibInitTime = 0;
     NSDictionary* dict = @{BIZTYPE:self.bizType,
                            PAGENAME:self.pageName,
                            WXSDKVERSION:WX_SDK_VERSION,
+                           JSLIBVERSION:WX_JS_FRAMEWORK_VERSION,
                            NETWORKTIME:@(_networkTime * 1000),
                            COMMUNICATETIME:[NSNumber numberWithDouble:_communicateTime * 1000],
                            JSLIBINITTIME:[NSNumber numberWithDouble:JSLibInitTime * 1000],
+                           JSTEMPLATESIZE:@(self.JSTemplateSize),
                            SCREENRENDERTIME:[NSNumber numberWithDouble:(_screenRenderTime > 0 ? _screenRenderTime : totalTime) * 1000],
                            TOTALTIME:[NSNumber numberWithDouble:totalTime * 1000]
                            };

@@ -7,28 +7,19 @@ Welcome to create [Pull Requests](https://github.com/alibaba/weex/compare) or op
 ```
 master
  ↑
-dev         <--- PR(hotfix/typo)
+dev         <--- PR(hotfix/typo/3rd-PR)
  ↑ PR
-daily       <--- CI
- ↑ merge/PR
-{domain}    <--- PR(feature/bugfix)
- ↑ merge/PR
 {domain}-feature-{date}
 ```  
 Weex Branches
 
-0. `dev`, `master` branch
-    0. `dev` is the stable developing branch，`master` is the latest (pre-)release branch.
-    0. [Github Release](https://help.github.com/articles/creating-releases/) is used to publish a (pre-)release version to `master` branch.
-    0. A hotfix or typo PR can be committed to `dev`.
-0. `daily` branch
-    0. `domain` branches are merged to `daily` every day.
-    0. Weex CI is built to guarantee the stability of `daily`.
-0. `{domain}` branch
-    0. `{domain}` is the stable developing branch for the specific domain including `android`, `ios`, `jsfm` and `html5`.
-    0. ***It's RECOMMENDED to commit feature or bugfix PR to `domain`***.
+0. `master` branch
+    0. `master` is the latest (pre-)release branch.
+0. `dev` branch
+    0. `dev` is the stable developing branch. [Github Release](https://help.github.com/articles/creating-releases/) is used to publish a (pre-)release version to `master` branch.
+    0. ***It's RECOMMENDED to commit hotfix (like typo) or feature PR to `dev`***.
 0. `{domain}-feature-{date}` branch
-    0. The branch for a developing iteration, e.g. `android-feature-20160607` is an android developing iteration which is done at 2016.06.07. 
+    0. The branch for a developing iteration, e.g. `android-feature-20160607` is an android developing iteration which is done at 2016.06.07. `{domain}` consists of `android`, `ios`, `jsfm` and `html5`. 
     0. **DO NOT commit any PR to such a branch**.
 
 ### Branch Name 
@@ -74,3 +65,19 @@ for example:
 ## Pull Request
 
 [Create Pull Requests](https://github.com/alibaba/weex/compare).
+
+## Code Style Guide
+
+### Objective-C
+
+* Tabs for indentation(not spaces)
+* `*` operator goes with the variable name (e.g. Type *variable;)
+* Function definitions: place each brace on its own line.
+* Other braces: place the open brace on the line preceding the code block; place the close brace on its own line.
+* Use `#pragma marks` to categorize methods into functional groupings and protocol implementations
+* Follow other guidelines on [GitHub Objective-C Style Guide](https://github.com/github/objective-c-style-guide)
+
+### Java & Android 
+
+* Use [Google Java Style](https://google.github.io/styleguide/javaguide.html) as basic guidelines of java code.
+* Follow [AOSP Code Style](https://source.android.com/source/code-style.html) for rest of android related code style.
