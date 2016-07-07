@@ -6,8 +6,8 @@
     top: 70px;
 }
 
-.book .book-search , a[aria-label="Search"] , a[aria-label="Share"] ,  i.fa-facebook , i.fa-twitter{
-    display: none  !important;
+a[aria-label="Share"] ,  i.fa-facebook , i.fa-twitter{
+   display: none  !important;
 }
 
 .top-bar, .top-bar ul{
@@ -126,6 +126,10 @@ a.weex-translate{
     vertical-align: baseline;
     border-radius: .25em;
     background-color: #de2810;
+}
+
+a.weex-translate.incomplete{
+  background-color: #777;                    
 }
 
 .wx-v{

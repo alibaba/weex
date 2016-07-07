@@ -22,7 +22,8 @@ $npm install -g gitbook-cli
 - install gitbook template
 
 ```
-$gitbook fetch [GITBOOK_TEMPLATE_VERSION_IN_book.json]
+$gitbook fetch [GITBOOK_TEMPLATE_VERSION_IN_book.json];
+$gitbook install;
 ```
 
 ## Build Document Site

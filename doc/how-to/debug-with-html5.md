@@ -1,4 +1,5 @@
 # How to debug in html5 renderer ?
+<a href="https://github.com/weexteam/article/wiki/%E6%AC%A2%E8%BF%8E%E5%8F%82%E4%B8%8EWeex%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91"  class="weex-translate incomplete">cn</a>
 
 Since weex-html5 can run on a modern mobile browser, it's naturally supported to debug weex-html5 code in browsers' dev tools. Use browser's devTools to iterate, debug and profile your weex-html5 app. Take chrome's debug tool as a example:
 

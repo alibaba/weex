@@ -54,7 +54,7 @@ WX_NUMBER_CONVERT(NSUInteger, unsignedIntegerValue)
     if([value isKindOfClass:[NSString class]]){
         return value;
     } else if([value isKindOfClass:[NSNumber class]]){
-        return [NSString stringWithFormat:@"%f", [value floatValue]];
+        return [((NSNumber *)value) stringValue];
     } else {
         WXLogError(@"Convert Error:%@ can not be converted to string", value);
     }
@@ -518,7 +518,7 @@ WX_NUMBER_CONVERT(NSUInteger, unsignedIntegerValue)
             return  WXImageQualityHigh;
     }
     
-    return  WXImageQualityNormal;
+    return  WXImageQualityLow;
 }
 
 + (WXImageSharp)WXImageSharp:(id)value
@@ -531,7 +531,7 @@ WX_NUMBER_CONVERT(NSUInteger, unsignedIntegerValue)
         else if ([string isEqualToString:@"unsharpen"])
             return WXImageSharpeningNone;
     }
-    return  WXImageSharpening;
+    return  WXImageSharpeningNone;
 }
 
 #pragma mark Scroller

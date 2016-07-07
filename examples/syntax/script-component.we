@@ -1,0 +1,27 @@
+<!--
+  * `components` option to require sub components
+  * use attribute to pass data to sub components
+  * see `./include/sub.we` source code for more details
+-->
+
+<template>
+  <list>
+    <cell repeat="item in items">
+      <text>{{item.title}}</text>
+      <sub title="a"></sub>
+    </cell>
+  </list>
+</template>
+
+<script>
+  require('./include/sub.we')
+  module.exports = {
+    data: {
+      items: [
+        {title: 'A', url: 'a'},
+        {title: 'B', url: 'b'},
+        {title: 'C', url: 'c'}
+      ]
+    }
+  }
+</script>

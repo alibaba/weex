@@ -101,6 +101,8 @@ extern _Nonnull SEL WXSwizzledSelectorForSelector(_Nonnull SEL selector);
  */
 + (NSDictionary *_Nonnull)getEnvironment;
 
++ (NSDictionary *_Nonnull)getDebugEnvironment;
+
 /**
  * @abstract UserAgent Generation
  *

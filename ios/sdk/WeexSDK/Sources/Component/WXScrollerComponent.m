@@ -111,7 +111,7 @@
         if (loadmoreretry != _loadmoreretry) {
             _previousLoadMoreContentHeight = 0;
         }
-        _loadmoreretry = loadmoreretry;
+        self.loadmoreretry = loadmoreretry;
     }
 }
 
@@ -284,7 +284,7 @@
     CGFloat vh = scrollView.frame.size.height - scrollView.contentInset.top - scrollView.contentInset.bottom;
     CGRect scrollRect = CGRectMake(vx, vy, vw, vh);;
     
-    // notify action for appear
+    // notify action for appear & disappear
     for(WXScrollToTarget *target in self.listenerArray){
         [self scrollToTarget:target scrollRect:scrollRect];
     }

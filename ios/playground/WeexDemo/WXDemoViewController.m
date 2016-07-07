@@ -115,7 +115,7 @@
     };
     
     _instance.updateFinish = ^(UIView *view) {
-        WXLogInfo(@"%@", @"Update Finish...");
+        WXLogVerbose(@"%@", @"Update Finish...");
     };
     if (!self.url) {
         WXLogError(@"error: render url is nil");

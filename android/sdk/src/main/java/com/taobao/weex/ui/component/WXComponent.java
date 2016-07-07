@@ -933,7 +933,7 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
   public void notifyAppearStateChange(String wxEventType,String direction){
     Map<String, Object> params = new HashMap<>();
     params.put("direction", direction);
-    WXBridgeManager.getInstance().fireEvent(mInstanceId,getRef(),wxEventType,params);
+    WXBridgeManager.getInstance().fireEvent(mInstanceId,getRef(),wxEventType,params,null);
   }
 
   public boolean isUsing() {

@@ -84,7 +84,7 @@
     return count;
 }
 
--(id)objectAtIndex:(NSUInteger)index
+- (id)objectAtIndex:(NSUInteger)index
 {
     __block id obj;
     dispatch_sync(_queue, ^{
@@ -102,39 +102,53 @@
     return enu;
 }
 
--(void)insertObject:(id)anObject atIndex:(NSUInteger)index
+- (void)insertObject:(id)anObject atIndex:(NSUInteger)index
 {
     dispatch_barrier_async(_queue, ^{
         [_array insertObject:anObject atIndex:index];
     });
 }
 
--(void)addObject:(id)anObject;
+- (void)addObject:(id)anObject;
 {
     dispatch_barrier_async(_queue, ^{
         [_array addObject:anObject];
     });
 }
 
--(void)removeObjectAtIndex:(NSUInteger)index
+- (void)removeObjectAtIndex:(NSUInteger)index
 {
     dispatch_barrier_async(_queue, ^{
         [_array removeObjectAtIndex:index];
     });
 }
 
--(void)removeLastObject
+- (void)removeLastObject
 {
     dispatch_barrier_async(_queue, ^{
         [_array removeLastObject];
     });
 }
 
--(void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)anObject
+- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)anObject
 {
     dispatch_barrier_async(_queue, ^{
         [_array replaceObjectAtIndex:index withObject:anObject];
     });
+}
+
+- (NSUInteger)indexOfObject:(id)anObject
+{
+    __block NSUInteger index = NSNotFound;
+    dispatch_sync(_queue, ^{
+        for (int i = 0; i < [_array count]; i ++) {
+            if ([_array objectAtIndex:i] == anObject) {
+                index = i;
+                break;
+            }
+        }
+    });
+    return index;
 }
 
 - (void)dealloc

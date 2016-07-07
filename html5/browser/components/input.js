@@ -51,6 +51,40 @@ Input.prototype.attr = {
   }
 }
 
+Input.prototype.event = {
+  input: {
+    updator () {
+      return {
+        attrs: {
+          value: this.node.value
+        }
+      }
+    },
+    extra () {
+      return {
+        value: this.node.value,
+        timestamp: Date.now()
+      }
+    }
+  },
+
+  change: {
+    updator: function () {
+      return {
+        attrs: {
+          value: this.node.value
+        }
+      }
+    },
+    extra: function () {
+      return {
+        value: this.node.value,
+        timestamp: Date.now()
+      }
+    }
+  }
+}
+
 Input.prototype.setPlaceholderColor = function () {
   if (!this.placeholderColor) {
     return

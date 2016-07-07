@@ -1,5 +1,6 @@
 # &lt;scroller&gt;
 <span class="weex-version">0.4</span>
+<a href="https://github.com/weexteam/article/issues/40"  class="weex-translate ">cn</a>
 
 ### Summary
 
@@ -13,9 +14,10 @@ It supports all kinds of weex components as its child components.
 
 ### Attributes
 
-- `scrollDirection`: &lt;string&gt; define scroll direction of component, `horizontal` or `vertical`.
+- `show-scrollbar`: &lt;boolean&gt; `true` | `false`. This value determines whether the scrollbar show. The default value is `true`.
+- `scroll-direction`: &lt;string&gt; define scroll direction of component, `horizontal` or `vertical`.
 
-There is no specific attribute for this component other than the [common attributes](../references/common-attrs.md).
+Other attributes please check out the [common attributes](../references/common-attrs.md).
 
 ### Styles
 

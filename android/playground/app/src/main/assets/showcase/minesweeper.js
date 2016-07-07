@@ -55,8 +55,8 @@
 	      row: [],
 	      vector: [[-1, 0], [-1, -1], [0, -1], [1, -1], [1, 0], [1, 1], [0, 1], [-1, 1]],
 	      strings: {
-	        mine: "❎",
-	        flag: "✅",
+	        mine: "💣",
+	        flag: "🚩",
 	        win: "YOU WIN!",
 	        lose: "YOU LOSE~"
 	      },

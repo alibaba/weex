@@ -90,7 +90,8 @@ static id<WXLogProtocol> _externalLog;
       @(WXLogLevelWarning) : @"warn",
       @(WXLogLevelInfo) : @"info",
       @(WXLogLevelDebug) : @"debug",
-      @(WXLogLevelVerbose) : @"verbose"
+      @(WXLogLevelVerbose) : @"verbose",
+      @(WXLogLevelOff) : @"off"
       };
     return [logLevelEnumToString objectForKey:@([self logLevel])];
 }
