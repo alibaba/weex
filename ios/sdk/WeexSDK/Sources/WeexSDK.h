@@ -10,6 +10,8 @@
 
 #import "WXUtility.h"
 #import "WXType.h"
+#import "WXScrollerProtocol.h"
+#import "WXScrollerComponent.h"
 #import "WXSDKManager.h"
 #import "WXSDKInstance.h"
 #import "WXSDKEngine.h"

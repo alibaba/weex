@@ -7,6 +7,7 @@
  */
 
 #import "WXListComponent.h"
+#import "WXCellComponent.h"
 #import "WXComponent.h"
 #import "WXComponent_internal.h"
 #import "NSArray+Weex.h"
@@ -14,6 +15,7 @@
 #import "WXUtility.h"
 #import "NSObject+WXSwizzle.h"
 #import "WXSDKInstance_private.h"
+
 
 @interface WXTableView : UITableView
 
