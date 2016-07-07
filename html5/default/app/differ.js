@@ -13,7 +13,7 @@ export default class Differ {
       setTimeout(() => {
         this.hasTimer = false
         this.flush(true)
-      })
+      }, 0)
     }
     const map = this.map
     if (!map[depth]) {

@@ -60,27 +60,85 @@ export function init (code, data) {
     functionBody = code.toString()
   }
 
-  const fn = new Function(
-    'define',
-    'require',
-    'document',
-    'bootstrap',
-    'register',
-    'render',
-    '__weex_define__', // alias for define
-    '__weex_bootstrap__', // alias for bootstrap
-    functionBody
-  )
+  const { WXEnvironment } = global
+  if (WXEnvironment && WXEnvironment.platform !== 'Web') {
+    const timer = this.requireModule('timer')
+    const timerAPIs = {
+      setTimeout: (...args) => {
+        const handler = function () {
+          args[0](...args.slice(2))
+        }
+        timer.setTimeout(handler, args[1])
+        return this.uid.toString()
+      },
+      setInterval: (...args) => {
+        const handler = function () {
+          args[0](...args.slice(2))
+        }
+        timer.setInterval(handler, args[1])
+        return this.uid.toString()
+      },
+      clearTimeout: (n) => {
+        timer.clearTimeout(n)
+      },
+      clearInterval: (n) => {
+        timer.clearInterval(n)
+      }
+    }
 
-  fn(
-    define,
-    require,
-    document,
-    bootstrap,
-    register,
-    render,
-    define,
-    bootstrap)
+    const fn = new Function(
+      'define',
+      'require',
+      'document',
+      'bootstrap',
+      'register',
+      'render',
+      '__weex_define__', // alias for define
+      '__weex_bootstrap__', // alias for bootstrap
+      'setTimeout',
+      'setInterval',
+      'clearTimeout',
+      'clearInterval',
+      functionBody
+    )
+
+    fn(
+      define,
+      require,
+      document,
+      bootstrap,
+      register,
+      render,
+      define,
+      bootstrap,
+      timerAPIs.setTimeout,
+      timerAPIs.setInterval,
+      timerAPIs.clearTimeout,
+      timerAPIs.clearInterval)
+  }
+  else {
+    const fn = new Function(
+      'define',
+      'require',
+      'document',
+      'bootstrap',
+      'register',
+      'render',
+      '__weex_define__', // alias for define
+      '__weex_bootstrap__', // alias for bootstrap
+      functionBody
+    )
+
+    fn(
+      define,
+      require,
+      document,
+      bootstrap,
+      register,
+      render,
+      define,
+      bootstrap)
+  }
 
   return result
 }
