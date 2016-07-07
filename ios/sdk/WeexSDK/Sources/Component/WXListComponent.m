@@ -394,9 +394,7 @@
 {
     WXHeaderComponent *header = ((WXSection *)_completedSections[section]).header;
     if (header) {
-        CGFloat headerHeight = header.calculatedFrame.size.height;
-        WXLogInfo(@"header height for section %ld:%f", section, headerHeight);
-        return headerHeight;
+        return header.calculatedFrame.size.height;
     } else {
         return 0.0;
     }
@@ -405,7 +403,7 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     WXHeaderComponent *header = ((WXSection *)_completedSections[section]).header;
-    WXLogInfo(@"header view for section %ld:%@", section, header.view);
+    WXLogVerbose(@"header view for section %ld:%@", section, header.view);
     return header.view;
 }
 
