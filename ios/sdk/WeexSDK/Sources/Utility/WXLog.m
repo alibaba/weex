@@ -43,7 +43,7 @@
 
 
 #ifdef DEBUG
-static const WXLogLevel defaultLogLevel = WXLogLevelDebug;
+static const WXLogLevel defaultLogLevel = WXLogLevelLog;
 #else
 static const WXLogLevel defaultLogLevel = WXLogLevelWarning;
 #endif
