@@ -676,7 +676,6 @@ public class WXSDKInstance implements IWXActivityStateListener {
   }
 
   public void onViewCreated(final WXComponent component) {
-    onViewAppear();
     if (mRenderListener != null && mContext != null) {
       runOnUiThread(new Runnable() {
 
@@ -684,6 +683,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
         public void run() {
           if (mRenderListener != null && mContext != null) {
             mGodCom = component;
+            onViewAppear();
             View wxView=component.getView();
             if(WXEnvironment.isApkDebugable() && WXSDKManager.getInstance().getIWXDebugAdapter()!=null){
               wxView=WXSDKManager.getInstance().getIWXDebugAdapter().wrapContainer(WXSDKInstance.this,wxView);
