@@ -137,7 +137,7 @@
 		77D161391C02DE940010B15B /* WXBridgeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 77D161371C02DE940010B15B /* WXBridgeManager.m */; };
 		77D1613C1C02DEA60010B15B /* WXJSCoreBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = 77D1613A1C02DEA60010B15B /* WXJSCoreBridge.h */; };
 		77D1613D1C02DEA60010B15B /* WXJSCoreBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 77D1613B1C02DEA60010B15B /* WXJSCoreBridge.m */; };
-		77D161431C02DEE40010B15B /* WXBridgeProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 77D161421C02DEE40010B15B /* WXBridgeProtocol.h */; };
+		77D161431C02DEE40010B15B /* WXBridgeProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 77D161421C02DEE40010B15B /* WXBridgeProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77D1614B1C02E3790010B15B /* WXConvert.h in Headers */ = {isa = PBXBuildFile; fileRef = 77D161491C02E3790010B15B /* WXConvert.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		77D1614C1C02E3790010B15B /* WXConvert.m in Sources */ = {isa = PBXBuildFile; fileRef = 77D1614A1C02E3790010B15B /* WXConvert.m */; };
 		77D1614F1C02E3880010B15B /* WXUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 77D1614D1C02E3880010B15B /* WXUtility.h */; settings = {ATTRIBUTES = (Public, ); }; };
