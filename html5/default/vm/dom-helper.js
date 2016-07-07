@@ -39,8 +39,19 @@ export function _createBlock (element) {
   const end = this._createBlockEnd()
   const blockId = lastestBlockId++
   if (element.element) {
-    element.element.insertBefore(start, element.end)
-    element.element.insertBefore(end, element.end)
+    let updateMark = element.updateMark
+    if (updateMark) {
+      if (updateMark.element) {
+        updateMark = updateMark.end
+      }
+      element.element.insertAfter(end, updateMark)
+      element.element.insertAfter(start, updateMark)
+      element.updateMark = end
+    }
+    else {
+      element.element.insertBefore(start, element.end)
+      element.element.insertBefore(end, element.end)
+    }
     element = element.element
   }
   else {
