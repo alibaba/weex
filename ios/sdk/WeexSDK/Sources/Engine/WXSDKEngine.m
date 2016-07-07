@@ -197,7 +197,6 @@
     [self _originalRegisterHandlers:handlers];
     
     [[WXSDKManager bridgeMgr] executeJsFramework:script];
-    [WXUtility addStatTrack:[WXAppConfiguration appName]];
 }
 
 + (void)connectDebugServer:(NSString*)URL
