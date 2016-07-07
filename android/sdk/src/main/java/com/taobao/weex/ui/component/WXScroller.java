@@ -205,6 +205,7 @@
 package com.taobao.weex.ui.component;
 
 import android.graphics.Rect;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -219,13 +220,16 @@ import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.component.helper.WXStickyHelper;
 import com.taobao.weex.ui.view.IWXScroller;
+import com.taobao.weex.ui.view.WXBaseRefreshLayout;
 import com.taobao.weex.ui.view.WXHorizontalScrollView;
 import com.taobao.weex.ui.view.WXScrollView;
 import com.taobao.weex.ui.view.WXScrollView.WXScrollViewListener;
+import com.taobao.weex.ui.view.refresh.wrapper.BaseBounceView;
 import com.taobao.weex.ui.view.refresh.wrapper.BounceScrollerView;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -239,7 +243,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Component for scroller. It also support features like
  * "appear", "disappear" and "sticky"
  */
-public class WXScroller extends WXRefreshableContainer implements WXScrollViewListener,Scrollable {
+public class WXScroller extends WXVContainer implements WXScrollViewListener,Scrollable {
 
   /**
    * Map for storing appear information
@@ -258,6 +262,7 @@ public class WXScroller extends WXRefreshableContainer implements WXScrollViewLi
   private int mContentHeight = 0;
 
   private WXStickyHelper stickyHelper;
+  private Handler handler=new Handler();
 
   public WXScroller(WXSDKInstance instance, WXDomObject node,
                     WXVContainer parent, boolean lazy) {
@@ -289,6 +294,84 @@ public class WXScroller extends WXRefreshableContainer implements WXScrollViewLi
       return ((BounceScrollerView) mHost).getInnerView();
     } else {
       return getView();
+    }
+  }
+
+  /**
+   * Intercept refresh view and loading view
+   */
+  @Override
+  protected void addSubView(View child, int index) {
+    if (child == null || getRealView() == null) {
+      return;
+    }
+
+    if (child instanceof WXBaseRefreshLayout) {
+      return;
+    }
+
+    int count = getRealView().getChildCount();
+    index = index >= count ? -1 : index;
+    if (index == -1) {
+      getRealView().addView(child);
+    } else {
+      getRealView().addView(child, index);
+    }
+  }
+
+  /**
+   * Intercept refresh view and loading view
+   */
+  @Override
+  public void addChild(WXComponent child, int index) {
+    if (child == null || index < -1) {
+      return;
+    }
+
+    checkRefreshOrLoading(child);
+    if (child instanceof WXBaseRefresh) {
+      return;
+    }
+
+    if (mChildren == null) {
+      mChildren = new ArrayList<>();
+    }
+    int count = mChildren.size();
+    index = index >= count ? -1 : index;
+    if (index == -1) {
+      mChildren.add(child);
+    } else {
+      mChildren.add(index, child);
+    }
+  }
+
+  /**
+   * Setting refresh view and loading view
+   * @param child the refresh_view or loading_view
+   */
+  private void checkRefreshOrLoading(WXComponent child) {
+    if (child instanceof WXRefresh) {
+      ((BaseBounceView)mHost).setOnRefreshListener((WXRefresh)child);
+      final WXComponent temp = child;
+      Runnable runnable=new Runnable(){
+        @Override
+        public void run() {
+          ((BaseBounceView)mHost).setHeaderView(temp.getView());
+        }
+      };
+      handler.postDelayed(runnable,100);
+    }
+
+    if (child instanceof WXLoading) {
+      ((BaseBounceView)mHost).setOnLoadingListener((WXLoading)child);
+      final WXComponent temp = child;
+      Runnable runnable=new Runnable(){
+        @Override
+        public void run() {
+          ((BaseBounceView)mHost).setFooterView(temp.getView());
+        }
+      };
+      handler.postDelayed(runnable,100);
     }
   }
 
