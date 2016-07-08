@@ -6,7 +6,7 @@ chai.use(sinonChai)
 
 import * as compiler from '../../../../default/vm/compiler'
 import * as directive from '../../../../default/vm/directive'
-import * as state from '../../../../default/core/state'
+import { initState } from '../../../../default/core/state'
 
 describe.skip('generate workflow', () => {
   let contentIndex = 0

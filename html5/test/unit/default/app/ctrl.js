@@ -21,8 +21,9 @@ describe('the api of app', () => {
     const app = {
       id: id,
       customComponentMap: {},
-      define: sinon.spy(),
-      bootstrap: sinon.stub(),
+      registerComponent: function () {},
+      // define: sinon.spy(),
+      // bootstrap: sinon.stub(),
       callbacks: {
         1: spy2
       },
@@ -32,7 +33,7 @@ describe('the api of app', () => {
 
     app.doc = new Document(id, '', spy1)
     app.doc.createBody('div')
-    app.bootstrap.returns()
+    // app.bootstrap.returns()
 
     Object.assign(app, ctrl)
 
@@ -62,21 +63,23 @@ describe('the api of app', () => {
     it('a simple bundle', () => {
       app.requireModule = () => {}
       app.init(`
-        define('main', {
-          "type": "container",
-          "children": [{
-            "type": "text",
-            "attr": {
-              "value": "Hello World"
-            }
-          }]
+        define('main', function (r, e, m) {
+          e.template = {
+            "type": "container",
+            "children": [{
+              "type": "text",
+              "attr": {
+                "value": "Hello World"
+              }
+            }]
+          }
         })
 
         bootstrap('main')
       `)
 
-      expect(app.define.calledOnce).to.be.true
-      expect(app.bootstrap.calledOnce).to.be.true
+      // expect(app.define.calledOnce).to.be.true
+      // expect(app.bootstrap.calledOnce).to.be.true
 
       const task = spy1.firstCall.args[0][0]
       expect(task.module).to.be.equal('dom')

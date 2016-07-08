@@ -123,7 +123,7 @@ export const define = function (name, deps, factory) {
   }
 }
 
-export function bootstrap (name, config, data) {
+export function bootstrap (app, name, config, data) {
   _.debug(`bootstrap for ${name}`)
 
   let cleanName
@@ -135,7 +135,7 @@ export function bootstrap (name, config, data) {
     cleanName = removeJSSurfix(name)
     // check if define by old 'define' method
     /* istanbul ignore if */
-    if (!this.customComponentMap[cleanName]) {
+    if (!app.customComponentMap[cleanName]) {
       return new Error(`It's not a component: ${name}`)
     }
   }
@@ -156,7 +156,7 @@ export function bootstrap (name, config, data) {
   const _checkDowngrade = downgrade.check(config.downgrade)
   /* istanbul ignore if */
   if (_checkDowngrade.isDowngrade) {
-    this.callTasks([{
+    app.callTasks([{
       module: 'instanceWrap',
       method: 'error',
       args: [
@@ -168,7 +168,7 @@ export function bootstrap (name, config, data) {
     return new Error(`Downgrade[${_checkDowngrade.code}]: ${_checkDowngrade.errorMessage}`)
   }
 
-  this.vm = new Vm(cleanName, null, { _app: this }, null, data)
+  app.vm = new Vm(cleanName, null, { _app: app }, null, data)
 }
 
 /**
@@ -177,22 +177,4 @@ export function bootstrap (name, config, data) {
 export function register (type, options) {
   _.warn('Register is deprecated, please install lastest transformer.')
   this.registerComponent(type, options)
-}
-
-/**
- * @deprecated
- */
-export function render (type, data) {
-  _.warn('Render is deprecated, please install lastest transformer.')
-  return this.bootstrap(type, {}, data)
-}
-
-/**
- * @deprecated
- */
-export function require (type) {
-  _.warn('Require is deprecated, please install lastest transformer.')
-  return (data) => {
-    return this.bootstrap(type, {}, data)
-  }
 }
