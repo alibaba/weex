@@ -8,7 +8,7 @@ import * as compiler from '../../../../default/vm/compiler'
 import * as directive from '../../../../default/vm/directive'
 import * as state from '../../../../default/core/state'
 
-describe('generate workflow', () => {
+describe.skip('generate workflow', () => {
   let contentIndex = 0
   const vm = {}
   Object.assign(vm, compiler, directive, {
@@ -502,7 +502,7 @@ describe('generate workflow', () => {
   })
 })
 
-describe('merge context', () => {
+describe.skip('merge context', () => {
   let vm
 
   beforeEach(() => {
