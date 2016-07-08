@@ -221,8 +221,15 @@ import com.taobao.weex.ui.view.WXVideoView;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXResourceUtils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class WXVideo extends WXComponent {
 
+  public static final String PLAY_STATUS = "playStatus";
+  public static final String PLAY = "play";
+  public static final String PAUSE = "pause";
+  public static final String STOP = "stop";
   private WXVideoView mVideoView;
   private boolean mAutoPlay;
   private String mSrc;
@@ -271,7 +278,7 @@ public class WXVideo extends WXComponent {
         mError = true;
 
         if (mDomObj.event != null && mDomObj.event.contains(WXEventType.VIDEO_FAIL)) {
-          WXSDKManager.getInstance().fireEvent(mInstanceId, getRef(), WXEventType.VIDEO_FAIL);
+          WXVideo.this.notify(WXEventType.VIDEO_FAIL,STOP);
         }
         return true;
       }
@@ -307,7 +314,7 @@ public class WXVideo extends WXComponent {
           WXLogUtils.d("Video", "onCompletion");
         }
         if (mDomObj.event != null && mDomObj.event.contains(WXEventType.VIDEO_FINISH)) {
-          WXSDKManager.getInstance().fireEvent(mInstanceId, getRef(), WXEventType.VIDEO_FINISH);
+          WXVideo.this.notify(WXEventType.VIDEO_FINISH,STOP);
         }
       }
     });
@@ -320,7 +327,7 @@ public class WXVideo extends WXComponent {
           WXLogUtils.d("Video", "onPause");
         }
         if (mDomObj.event != null && mDomObj.event.contains(WXEventType.VIDEO_PAUSE)) {
-          WXSDKManager.getInstance().fireEvent(mInstanceId, getRef(), WXEventType.VIDEO_PAUSE);
+          WXVideo.this.notify(WXEventType.VIDEO_PAUSE,PAUSE);
         }
       }
 
@@ -331,7 +338,7 @@ public class WXVideo extends WXComponent {
         }
 
         if (mDomObj.event != null && mDomObj.event.contains(WXEventType.VIDEO_START)) {
-          WXSDKManager.getInstance().fireEvent(mInstanceId, getRef(), WXEventType.VIDEO_START);
+          WXVideo.this.notify(WXEventType.VIDEO_START,PLAY);
         }
       }
     });
@@ -340,6 +347,19 @@ public class WXVideo extends WXComponent {
     controller.setMediaPlayer(mVideoView);
 
     mHost = videoRoot;
+  }
+
+  private void notify(String event, String newStatus){
+    Map<String, Object> params = new HashMap<>(2);
+    params.put(PLAY_STATUS, newStatus);
+    params.put("timeStamp", System.currentTimeMillis());
+
+    Map<String, Object> domChanges = new HashMap<>();
+    Map<String, Object> attrsChanges = new HashMap<>();
+    attrsChanges.put(PLAY_STATUS,newStatus);
+    domChanges.put("attrs",attrsChanges);
+
+    WXSDKManager.getInstance().fireEvent(mInstanceId, getRef(), event, params,domChanges);
   }
 
   @Override
@@ -367,19 +387,19 @@ public class WXVideo extends WXComponent {
 
   private boolean mStopped;
 
-  @WXComponentProp(name = "playStatus")
+  @WXComponentProp(name = PLAY_STATUS)
   public void setPlaystatus(String playstatus) {
 
     if (mPrepared && !mError && !mStopped) {
-      if (playstatus.equals("play")) {
+      if (playstatus.equals(PLAY)) {
         mVideoView.start();
-      } else if (playstatus.equals("pause")) {
+      } else if (playstatus.equals(PAUSE)) {
         mVideoView.pause();
-      } else if (playstatus.equals("stop")) {
+      } else if (playstatus.equals(STOP)) {
         mVideoView.stopPlayback();
         mStopped = true;
       }
-    } else if ((mError || mStopped) && playstatus.equals("play")) {
+    } else if ((mError || mStopped) && playstatus.equals(PLAY)) {
       mError = false;
       mVideoView.resume();
       mProgressBar.setVisibility(View.VISIBLE);
