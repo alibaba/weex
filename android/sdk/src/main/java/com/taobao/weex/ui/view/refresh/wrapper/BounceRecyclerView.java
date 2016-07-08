@@ -303,7 +303,11 @@ public class BounceRecyclerView extends BaseBounceView<WXRecyclerView> {
     headComponentStack.push(headComponent);
     FrameLayout headerView = (FrameLayout) headComponent.getView().getChildAt(0);
     headerViewStack.push(headerView);
-    int headerViewOffsetX = getLeft();
+    int[] location = new int[2];
+    int[] parentLocation = new int[2];
+    headComponent.getView().getLocationOnScreen(location);
+    headComponent.getParentScroller().getView().getLocationOnScreen(parentLocation);
+    int headerViewOffsetX = location[0] - parentLocation[0];
     int headerViewOffsetY = getTop();
     headComponent.getView().removeView(headerView);
     FrameLayout tempView = new FrameLayout(getContext());
