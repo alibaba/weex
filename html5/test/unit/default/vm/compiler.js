@@ -503,15 +503,14 @@ describe.skip('generate workflow', () => {
 })
 
 describe.skip('merge context', () => {
+  const { mergeContext } = compiler
   let vm
 
   beforeEach(() => {
     vm = {
-      _data: { a: 1, b: 2 },
-      _mergeContext: compiler._mergeContext
+      _data: { a: 1, b: 2 }
     }
-    Object.assign(vm, state)
-    vm._initState()
+    initState(vm)
   })
 
   afterEach(() => {
@@ -519,14 +518,14 @@ describe.skip('merge context', () => {
   })
 
   it('merge external data', () => {
-    const context = vm._mergeContext({ a: 3 })
+    const context = mergeContext(vm, { a: 3 })
     expect(context).not.equal(vm)
     expect(context.a).eql(3)
     expect(context.b).eql(2)
   })
 
   it('react with changes, but not with internal for ext-key', () => {
-    const context = vm._mergeContext({ a: 3 })
+    const context = mergeContext(vm, { a: 3 })
     vm.a = 4
     vm.b = 5
     expect(context.a).eql(3)
@@ -536,7 +535,7 @@ describe.skip('merge context', () => {
   })
 
   it('merge external data if key not bound', () => {
-    const context = vm._mergeContext({ c: 3 })
+    const context = mergeContext(vm, { c: 3 })
     expect(context).not.equal(vm)
     expect(context.a).eql(1)
     expect(context.b).eql(2)
@@ -544,7 +543,7 @@ describe.skip('merge context', () => {
   })
 
   it('not react with changes for extra key', () => {
-    const context = vm._mergeContext({ c: 3 })
+    const context = mergeContext(vm, { c: 3 })
     vm.c = 9
     expect(context.a).eql(1)
     expect(context.b).eql(2)

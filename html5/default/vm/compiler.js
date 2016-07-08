@@ -4,13 +4,33 @@
  *
  * required:
  * index.js: Vm
- * dom-helper.js: _createElement, _createBlock
- * dom-helper.js: _attachTarget, _moveTarget, _removeTarget
- * directive.js: _bindElement, _bindSubVm, _watch
+ * dom-helper.js: createElement, createBlock
+ * dom-helper.js: attachTarget, moveTarget, removeTarget
+ * directive.js: bindElement, bindSubVm, setId, watch
  * events.js: $on
  */
 
 import * as _ from '../util'
+import {
+  initData,
+  initComputed
+} from '../core/state'
+import {
+  bindElement,
+  setId,
+  bindSubVm,
+  bindSubVmAfterInitialized,
+  applyNaitveComponentOptions,
+  watch
+} from './directive'
+import {
+  createBlock,
+  createBody,
+  createElement,
+  attachTarget,
+  moveTarget,
+  removeTarget
+} from './dom-helper'
 
 /**
  * build(externalDirs)
@@ -22,34 +42,36 @@ import * as _ from '../util'
  *       -> compile(templateWithoutFor, parentNode): diff(list) onchange
  *     else if (dirs have v-if) assert
  *       -> compile(templateWithoutIf, parentNode): toggle(shown) onchange
- *     else if (type is native)
- *       set(dirs): update(id/attr/style/class) onchange
- *       append(template, parentNode)
- *       foreach childNodes -> compile(childNode, template)
+ *     else if (type is dynamic)
+ *       -> compile(templateWithoutDynamicType, parentNode): watch(type) onchange
  *     else if (type is custom)
  *       addChildVm(vm, parentVm)
  *       build(externalDirs)
  *       foreach childNodes -> compile(childNode, template)
+ *     else if (type is native)
+ *       set(dirs): update(id/attr/style/class) onchange
+ *       append(template, parentNode)
+ *       foreach childNodes -> compile(childNode, template)
  */
-export function _build () {
-  const opt = this._options || {}
+export function build (vm) {
+  const opt = vm._options || {}
   const template = opt.template || {}
 
   if (opt.replace) {
     if (template.children && template.children.length === 1) {
-      compile(this, template.children[0], this._parentEl)
+      compile(vm, template.children[0], vm._parentEl)
     }
     else {
-      compile(this, template.children, this._parentEl)
+      compile(vm, template.children, vm._parentEl)
     }
   }
   else {
-    compile(this, template, this._parentEl)
+    compile(vm, template, vm._parentEl)
   }
 
-  _.debug(`"ready" lifecycle in Vm(${this._type})`)
-  this.$emit('hook:ready')
-  this._ready = true
+  _.debug(`"ready" lifecycle in Vm(${vm._type})`)
+  vm.$emit('hook:ready')
+  vm._ready = true
 }
 
 /**
@@ -61,7 +83,7 @@ export function _build () {
  * @param {object}       dest
  * @param {object}       meta
  */
-export function compile (vm, target, dest, meta) {
+function compile (vm, target, dest, meta) {
   const app = vm._app || {}
 
   if (app.lastSignal === -1) {
@@ -75,7 +97,7 @@ export function compile (vm, target, dest, meta) {
   meta = meta || {}
   if (targetIsContent(target)) {
     _.debug('compile "content" block by', target)
-    vm._content = vm._createBlock(dest)
+    vm._content = createBlock(vm, dest)
     return
   }
 
@@ -186,7 +208,7 @@ function targetIsComposed (vm, target, type) {
  * @param {object} meta
  */
 function compileFragment (vm, target, dest, meta) {
-  const fragBlock = vm._createBlock(dest)
+  const fragBlock = createBlock(vm, dest)
   target.forEach((child) => {
     compile(vm, child, fragBlock, meta)
   })
@@ -210,7 +232,7 @@ function compileRepeat (vm, target, dest) {
   const trackBy = repeat.trackBy || target.trackBy ||
     (target.attr && target.attr.trackBy)
 
-  const fragBlock = vm._createBlock(dest)
+  const fragBlock = createBlock(vm, dest)
   fragBlock.children = []
   fragBlock.data = []
   fragBlock.vms = []
@@ -227,7 +249,7 @@ function compileRepeat (vm, target, dest) {
  */
 function compileShown (vm, target, dest, meta) {
   const newMeta = { shown: true }
-  const fragBlock = vm._createBlock(dest)
+  const fragBlock = createBlock(vm, dest)
 
   if (dest.element && dest.children) {
     dest.children.push(fragBlock)
@@ -250,15 +272,15 @@ function compileShown (vm, target, dest, meta) {
 function compileType (vm, target, dest, typeGetter, meta) {
   const type = typeGetter.call(vm)
   const newMeta = Object.assign({ type }, meta)
-  const fragBlock = vm._createBlock(dest)
+  const fragBlock = createBlock(vm, dest)
 
   if (dest.element && dest.children) {
     dest.children.push(fragBlock)
   }
 
-  vm._watch(typeGetter, (value) => {
+  watch(vm, typeGetter, (value) => {
     const newMeta = Object.assign({ type: value }, meta)
-    vm._removeBlock(fragBlock, true)
+    removeTarget(vm, fragBlock, true)
     compile(vm, target, fragBlock, newMeta)
   })
 
@@ -276,7 +298,7 @@ function compileCustomComponent (vm, component, target, dest, type, meta) {
   const Ctor = vm.constructor
   const subVm = new Ctor(type, component, vm, dest, undefined, {
     'hook:init': function () {
-      vm._setId(target.id, null, this)
+      setId(vm, null, target.id, this)
       // bind template earlier because of lifecycle issues
       this._externalBinding = {
         parent: vm,
@@ -284,7 +306,7 @@ function compileCustomComponent (vm, component, target, dest, type, meta) {
       }
     },
     'hook:created': function () {
-      vm._bindSubVm(this, target, meta.repeat)
+      bindSubVm(vm, this, target, meta.repeat)
     },
     'hook:ready': function () {
       if (this._content) {
@@ -292,7 +314,7 @@ function compileCustomComponent (vm, component, target, dest, type, meta) {
       }
     }
   })
-  vm._bindSubVmAfterInitialized(subVm, target)
+  bindSubVmAfterInitialized(vm, subVm, target)
 }
 
 /**
@@ -304,17 +326,17 @@ function compileCustomComponent (vm, component, target, dest, type, meta) {
  * @param {string} type
  */
 function compileNativeComponent (vm, template, dest, type) {
-  vm._applyNaitveComponentOptions(template)
+  applyNaitveComponentOptions(template)
 
   let element
   if (dest.ref === '_documentElement') {
     // if its parent is documentElement then it's a body
     _.debug('compile to create body for', type)
-    element = vm._createBody(type)
+    element = createBody(vm, type)
   }
   else {
     _.debug('compile to create element for', type)
-    element = vm._createElement(type)
+    element = createElement(vm, type)
   }
 
   if (!vm._rootEl) {
@@ -333,7 +355,7 @@ function compileNativeComponent (vm, template, dest, type) {
     }
   }
 
-  vm._bindElement(element, template)
+  bindElement(vm, element, template)
 
   if (template.attr && template.attr.append) { // backward, append prop in attr
     template.append = template.attr.append
@@ -348,14 +370,14 @@ function compileNativeComponent (vm, template, dest, type) {
   const app = vm._app || {}
   if (app.lastSignal !== -1 && !treeMode) {
     _.debug('compile to append single node for', element)
-    app.lastSignal = vm._attachTarget(element, dest)
+    app.lastSignal = attachTarget(vm, element, dest)
   }
   if (app.lastSignal !== -1) {
     compileChildren(vm, template, element)
   }
   if (app.lastSignal !== -1 && treeMode) {
     _.debug('compile to append whole tree for', element)
-    app.lastSignal = vm._attachTarget(element, dest)
+    app.lastSignal = attachTarget(vm, element, dest)
   }
 }
 
@@ -451,7 +473,7 @@ function bindRepeat (vm, target, fragBlock, info) {
           reusedList.push(item)
         }
         else {
-          vm._removeTarget(oldChildren[index])
+          removeTarget(vm, oldChildren[index])
         }
       })
 
@@ -470,7 +492,7 @@ function bindRepeat (vm, target, fragBlock, info) {
           }
           else {
             reusedList.$remove(reused.item)
-            vm._moveTarget(reused.target, fragBlock.updateMark, true)
+            moveTarget(vm, reused.target, fragBlock.updateMark, true)
           }
           children.push(reused.target)
           vms.push(reused.vm)
@@ -512,7 +534,7 @@ function bindShown (vm, target, fragBlock, meta) {
         compile(vm, target, fragBlock, meta)
       }
       else {
-        vm._removeBlock(fragBlock, true)
+        removeTarget(vm, fragBlock, true)
       }
     }
   )
@@ -538,7 +560,7 @@ function watchBlock (vm, fragBlock, calc, type, handler) {
   const config = {}
   const depth = (fragBlock.element.depth || 0) + 1
 
-  return vm._watch(calc, (value) => {
+  return watch(vm, calc, (value) => {
     config.latestValue = value
     if (differ && !config.recorded) {
       differ.append(type, depth, fragBlock.blockId, () => {
@@ -561,8 +583,8 @@ function watchBlock (vm, fragBlock, calc, type, handler) {
 function mergeContext (context, mergedData) {
   const newContext = Object.create(context)
   newContext._data = mergedData
-  newContext._initData()
-  newContext._initComputed()
+  initData(newContext)
+  initComputed(newContext)
   newContext._realParent = context
   return newContext
 }
