@@ -1,11 +1,17 @@
 package com.alibaba.weex;
 
+import com.google.zxing.client.android.CaptureActivity;
+
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -16,9 +22,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.zxing.client.android.CaptureActivity;
 import com.alibaba.weex.commons.AbstractWeexActivity;
 import com.taobao.weex.WXRenderErrorCode;
+import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.utils.WXFileUtils;
 import com.taobao.weex.utils.WXSoInstallMgrSdk;
@@ -33,6 +39,8 @@ public class IndexActivity extends AbstractWeexActivity {
 
   private ProgressBar mProgressBar;
   private TextView mTipView;
+
+  private BroadcastReceiver mReloadReceiver;
 
 
   @Override
@@ -61,6 +69,22 @@ public class IndexActivity extends AbstractWeexActivity {
     }else{
       renderPageByURL(WEEX_INDEX_URL);
     }
+
+
+    mReloadReceiver=new BroadcastReceiver() {
+      @Override
+      public void onReceive(Context context, Intent intent) {
+        createWeexInstance();
+        if(TextUtils.equals(CURRENT_IP,DEFAULT_IP)){
+          renderPage(WXFileUtils.loadFileContent("index.js", IndexActivity.this),WEEX_INDEX_URL);
+        }else{
+          renderPageByURL(WEEX_INDEX_URL);
+        }
+        mProgressBar.setVisibility(View.VISIBLE);
+      }
+    };
+
+    LocalBroadcastManager.getInstance(this).registerReceiver(mReloadReceiver,new IntentFilter(WXSDKEngine.JS_FRAMEWORK_RELOAD));
   }
 
   @Override
@@ -79,6 +103,12 @@ public class IndexActivity extends AbstractWeexActivity {
     if (id == R.id.action_refresh) {
       if(!TextUtils.equals(CURRENT_IP,DEFAULT_IP)){
         createWeexInstance();
+        if(TextUtils.equals(CURRENT_IP,DEFAULT_IP)){
+          renderPage(WXFileUtils.loadFileContent("index.js", this),WEEX_INDEX_URL);
+        }else{
+          renderPageByURL(WEEX_INDEX_URL);
+        }
+        mProgressBar.setVisibility(View.VISIBLE);
         return true;
       }
     } else if (id == R.id.action_scan) {
@@ -121,6 +151,12 @@ public class IndexActivity extends AbstractWeexActivity {
     } else {
       mTipView.setText("render error:" + s1);
     }
+  }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    LocalBroadcastManager.getInstance(this).unregisterReceiver(mReloadReceiver);
   }
 }
 

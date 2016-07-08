@@ -59,7 +59,7 @@ public class WeexPerTestCaseListPerfWithAppendTree extends ActivityInstrumentati
         setViewGroup(mViewGroup);
 
         mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, "TC_");
-        sleep(1000);
+        sleep(3000);
     }
 
 //    public void testPreConditions()
@@ -100,6 +100,7 @@ public class WeexPerTestCaseListPerfWithAppendTree extends ActivityInstrumentati
 //               myGroup.findViewsWithText(inputListView, "TC_Monitor_List_WithAppendTree", View.FIND_VIEWS_WITH_TEXT);
 
                Log.e(TAG, "TC_Monitor_List_WithAppendTree size== " + inputListView.size());
+               sleep(2000);
 
                if(inputListView.size()!=0){
                   final WXTextView inputTypeView = (WXTextView)inputListView.get(0);

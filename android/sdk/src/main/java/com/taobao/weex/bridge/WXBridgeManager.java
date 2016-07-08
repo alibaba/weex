@@ -226,6 +226,7 @@ import com.taobao.weex.common.WXJSBridgeMsgType;
 import com.taobao.weex.common.WXRefreshData;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.common.WXThread;
+import com.taobao.weex.ui.module.WXTimerModule;
 import com.taobao.weex.utils.WXConst;
 import com.taobao.weex.utils.WXFileUtils;
 import com.taobao.weex.utils.WXHack;
@@ -236,6 +237,7 @@ import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -277,7 +279,13 @@ public class WXBridgeManager implements Callback {
   public static final String METHOD_REFRESH_INSTANCE = "refreshInstance";
   private static final String UNDEFINED = "-1";
   private static final int INIT_FRAMEWORK_OK = 1;
+
+  public static final int DESTROY_INSTANCE = -1;
+  public static final int INSTANCE_RENDERING = 1;
+  public static final int INSTANCE_RENDERING_ERROR = 0;
+
   private static WXBridgeManager mBridgeManager;
+
   /**
    * next tick tasks, can set priority
    */
@@ -293,6 +301,7 @@ public class WXBridgeManager implements Callback {
   private WXThread mJSThread;
   private Handler mJSHandler;
   private IWXBridge mWXBridge;
+  private IWXDebugProxy mWxDebugProxy;
 
   private boolean mMock = false;
   /**
@@ -330,14 +339,16 @@ public class WXBridgeManager implements Callback {
   private void launchInspector(boolean remoteDebug) {
     if (WXEnvironment.isApkDebugable()) {
       try {
-        HackedClass<Object> waBridge = WXHack.into("com.taobao.weex.devtools.debug.DebugServerProxy");
-
-        IWXDebugProxy debugProxy = (IWXDebugProxy) waBridge.constructor(Context.class, WXBridgeManager.class)
+        if (mWxDebugProxy != null) {
+          mWxDebugProxy.stop();
+        }
+        HackedClass<Object> debugProxyClass = WXHack.into("com.taobao.weex.devtools.debug.DebugServerProxy");
+        mWxDebugProxy = (IWXDebugProxy) debugProxyClass.constructor(Context.class, WXBridgeManager.class)
                 .getInstance(WXEnvironment.getApplication(), WXBridgeManager.this);
-        if (debugProxy != null) {
-          debugProxy.start();
+        if (mWxDebugProxy != null) {
+          mWxDebugProxy.start();
           if (remoteDebug) {
-            mWXBridge = debugProxy.getWXBridge();
+            mWXBridge = mWxDebugProxy.getWXBridge();
           }
         }
       } catch (HackAssertionException e) {
@@ -345,6 +356,7 @@ public class WXBridgeManager implements Callback {
       }
     }
   }
+
   public boolean callModuleMethod(String instanceId, String moduleStr, String methodStr, JSONArray args) {
     return WXModuleManager.callModuleMethod(instanceId, moduleStr, methodStr, args);
   }
@@ -405,18 +417,38 @@ public class WXBridgeManager implements Callback {
     mJSHandler.sendMessageDelayed(message, timerInfo.time);
   }
 
+  public void sendMessageDelayed(Message message, long delayMillis){
+    if (message == null || mJSHandler == null || mJSThread == null
+        || !mJSThread.isWXThreadAlive() || mJSThread.getLooper() == null) {
+      return;
+    }
+    mJSHandler.sendMessageDelayed(message,delayMillis);
+  }
+
+  public void removeMessage(int what,Object obj){
+    if (mJSHandler == null || mJSThread == null
+        || !mJSThread.isWXThreadAlive() || mJSThread.getLooper() == null) {
+      return;
+    }
+    mJSHandler.removeMessages(what,obj);
+  }
+
   /**
    * Dispatch the native task to be executed.
    * @param instanceId {@link WXSDKInstance#mInstanceId}
    * @param tasks tasks to be executed
    * @param callback next tick id
    */
-  public void callNative(String instanceId, String tasks, String callback) {
+  public int callNative(String instanceId, String tasks, String callback) {
     if (TextUtils.isEmpty(tasks)) {
       if (WXEnvironment.isApkDebugable()) {
         WXLogUtils.e("[WXBridgeManager] callNative: call Native tasks is null");
       }
-      return;
+      return INSTANCE_RENDERING_ERROR;
+    }
+
+    if(mDestroyedInstanceId.equals(instanceId)){
+      return DESTROY_INSTANCE;
     }
 
     if (WXEnvironment.isApkDebugable()) {
@@ -448,12 +480,12 @@ public class WXBridgeManager implements Callback {
       }
     }
 
-    if (UNDEFINED.equals(callback)
-        || mDestroyedInstanceId.equals(instanceId)) {
-      return;
+    if (UNDEFINED.equals(callback)) {
+      return INSTANCE_RENDERING_ERROR;
     }
     // get next tick
     getNextTick(instanceId, callback);
+    return INSTANCE_RENDERING;
   }
 
   private void getNextTick(final String instanceId, final String callback) {
@@ -503,6 +535,11 @@ public class WXBridgeManager implements Callback {
     msg.what = WXJSBridgeMsgType.INIT_FRAMEWORK;
     msg.setTarget(mJSHandler);
     msg.sendToTarget();
+  }
+
+  public void fireEvent(final String instanceId, final String ref,
+                        final String type, final Map<String, Object> data){
+    this.fireEvent(instanceId,ref,type,data,null);
   }
 
   /**
@@ -785,10 +822,34 @@ public class WXBridgeManager implements Callback {
         WXJSObject[] args = {obj};
         mWXBridge.execJS("", null, METHOD_SET_TIMEOUT, args);
         break;
+      case WXJSBridgeMsgType.MODULE_TIMEOUT:
+        args = createTimerArgs(msg.arg1, (Integer) msg.obj, false);
+        mWXBridge.execJS(String.valueOf(msg.arg1), null, METHOD_CALL_JS, args);
+        break;
+      case WXJSBridgeMsgType.MODULE_INTERVAL:
+        WXTimerModule.setInterval((Integer) msg.obj, msg.arg2, msg.arg1);
+        args = createTimerArgs(msg.arg1, (Integer) msg.obj, true);
+        mWXBridge.execJS(String.valueOf(msg.arg1), null, METHOD_CALL_JS, args);
+        break;
       default:
         break;
     }
     return false;
+  }
+
+  private WXJSObject[] createTimerArgs(int instanceId, int funcId, boolean keepAlive) {
+    ArrayList<Object> argsList = new ArrayList<>();
+    argsList.add(funcId);
+    argsList.add(new HashMap<>());
+    argsList.add(keepAlive);
+    WXHashMap<String, Object> task = new WXHashMap<>();
+    task.put(WXConst.KEY_METHOD, METHOD_CALLBACK);
+    task.put(WXConst.KEY_ARGS, argsList);
+    Object[] tasks={task};
+    return new WXJSObject[]{
+        new WXJSObject(WXJSObject.String, String.valueOf(instanceId)),
+        new WXJSObject(WXJSObject.JSON,
+                       WXJsonUtils.fromObjectToJSONString(tasks))};
   }
 
   private void invokeInitFramework(Message msg) {
@@ -881,7 +942,7 @@ public class WXBridgeManager implements Callback {
       mWXBridge.execJS(String.valueOf(instanceId), null, METHOD_CALL_JS,
                        args);
       // If task is not empty, loop until it is empty
-      if (!mNextTickTasks.isEmpty() && !mUITasks.isEmpty()) {
+      if (!mNextTickTasks.isEmpty() || !mUITasks.isEmpty()) {
         mJSHandler.sendEmptyMessage(WXJSBridgeMsgType.CALL_JS_BATCH);
       }
     } catch (Throwable e) {

@@ -11,6 +11,7 @@
 #import <WeexSDK/WXSDKEngine.h>
 #import <WeexSDK/WXUtility.h>
 #import <WeexSDK/WXDebugTool.h>
+#import <WeexSDK/WXSDKManager.h>
 #import "UIViewController+WXDemoNaviBar.h"
 #import "DemoDefine.h"
 
@@ -49,12 +50,21 @@
     
     _weexHeight = self.view.frame.size.height - 64;
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationRefreshInstance:) name:@"RefreshInstance" object:nil];
+    
     [self render];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [self updateInstanceState:WeexInstanceAppear];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self updateInstanceState:WeexInstanceDisappear];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -77,6 +87,7 @@
 - (void)dealloc
 {
     [_instance destroyInstance];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)render
@@ -112,10 +123,11 @@
     
     _instance.renderFinish = ^(UIView *view) {
         NSLog(@"render finish");
+        [weakSelf updateInstanceState:WeexInstanceAppear];
     };
     
     _instance.updateFinish = ^(UIView *view) {
-        WXLogVerbose(@"%@", @"Update Finish...");
+        WXLogDebug(@"%@", @"Update Finish...");
     };
     if (!self.url) {
         WXLogError(@"error: render url is nil");
@@ -124,6 +136,20 @@
     NSURL *URL = [self testURL: [self.url absoluteString]];
     NSString *randomURL = [NSString stringWithFormat:@"%@?random=%d",URL.absoluteString,arc4random()];
     [_instance renderWithURL:[NSURL URLWithString:randomURL] options:@{@"bundleUrl":URL.absoluteString} data:nil];
+}
+
+- (void)updateInstanceState:(WXState)state
+{
+    if (_instance && _instance.state != state) {
+        _instance.state = state;
+        
+        if (state == WeexInstanceAppear) {
+            [[WXSDKManager bridgeMgr] fireEvent:_instance.instanceId ref:WX_SDK_ROOT_REF type:@"viewappear" params:nil domChanges:nil];
+        }
+        else if (state == WeexInstanceDisappear) {
+            [[WXSDKManager bridgeMgr] fireEvent:_instance.instanceId ref:WX_SDK_ROOT_REF type:@"viewdisappear" params:nil domChanges:nil];
+        }
+    }
 }
 
 #pragma mark - refresh
@@ -207,6 +233,11 @@
         url = [tmp substringWithRange:subRange];
     }
     return [NSURL URLWithString:url];
+}
+
+#pragma mark - notification
+- (void)notificationRefreshInstance:(NSNotification *)notification {
+    [self refreshWeex];
 }
 
 @end

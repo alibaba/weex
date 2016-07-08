@@ -27,10 +27,12 @@
 #import "WXDebuggerDomainController.h"
 #import "WXTimelineDomainController.h"
 #import "WXCSSDomainController.h"
+#import "WXDevTool.h"
 
 #import "WXAppConfiguration.h"
 #import "WXDeviceInfo.h"
 #import <WeexSDK/WXSDKEngine.h>
+#import "WXUtility.h"
 
 #import <objc/runtime.h>
 #import <objc/message.h>
@@ -64,7 +66,12 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
     NSMutableDictionary *_controllers;
     __strong SRWebSocket *_socket;
     NSMutableArray  *_msgAry;
+    NSMutableArray  *_debugAry;
     BOOL _isConnect;
+    WXJSCallNative  _nativeCallBlock;
+    NSThread    *_bridgeThread;
+    NSThread    *_inspectThread;
+    NSString    *_registerData;
 }
 
 + (PDDebugger *)defaultInstance;
@@ -72,10 +79,14 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
     static dispatch_once_t onceToken;
     static PDDebugger *defaultInstance = nil;
     dispatch_once(&onceToken, ^{
-        defaultInstance = [[[self class] alloc] init];
+        defaultInstance = [[super allocWithZone:NULL] init];
     });
     
     return defaultInstance;
+}
+
++ (id) allocWithZone:(struct _NSZone *)zone {
+    return [self defaultInstance];
 }
 
 - (id)init;
@@ -91,12 +102,16 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
     return self;
 }
 
+- (void) coutLogWithLevel:(NSString *)level arguments:(NSArray *)arguments {
+    
+    [[PDConsoleDomainController defaultInstance] logWithArguments:arguments severity:level];
+}
+
 #pragma mark - SRWebSocketDelegate
 
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket;
 {
     _isConnect = YES;
-    
     NSString *deviceID = [WXDeviceInfo getDeviceID];
     NSString *machine = [self _deviceName] ? : @"";
     NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"] ?: [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
@@ -105,42 +120,25 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
         @"iOS", @"platform",
         machine, @"model",
         [WXSDKEngine SDKEngineVersion],@"weexVersion",
-        /*[[NSBundle mainBundle] bundleIdentifier], @"app_id",*/
         appName, @"name",
-        /*[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"], @"app_version",
-        [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"], @"app_build",*/
         nil];
+//    __weak __typeof__(self) weakSelf = self;
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        [weakSelf _registerDeviceWithParams:parameters];
+//    });
     
-    /*
-    NSString *appIconFile = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIconFile"];
-    if (!appIconFile) {
-        NSArray *files = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIconFiles"];
-        if (files.count) {
-            appIconFile = [files objectAtIndex:0];
-        }
-    }
-    
-    if (appIconFile) {
-        UIImage *appIcon = [UIImage imageNamed:appIconFile];
-        if (appIcon) {
-#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 70000
-            NSString *base64IconString = [UIImagePNGRepresentation(appIcon) base64EncodedStringWithOptions:0];
-#else
-            NSString *base64IconString = [UIImagePNGRepresentation(appIcon) base64Encoding];
-#endif
-            [parameters setObject:base64IconString forKey:@"app_icon_base64"];
-        }
-    }*/
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-//        [self sendEventWithName:@"Gateway.registerDevice" parameters:parameters];
-        [self _registerDeviceWithParams:parameters];
-        
-    });
+    [self _registerDeviceWithParams:parameters];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(NSString *)message;
 {
+    if ([WXDevTool isDebug]) {
+        __weak typeof(self) weakSelf = self;
+        [self _executeBridgeThead:^() {
+            [weakSelf _evaluateNative:message];
+        }];
+    }
+    
     NSDictionary *obj = [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
 
     NSString *fullMethodName = [obj objectForKey:@"method"];
@@ -166,7 +164,9 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
 
         NSData *data = [NSJSONSerialization dataWithJSONObject:response options:0 error:nil];
         NSString *encodedData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        [webSocket send:encodedData];
+        [self _executeBridgeThead:^() {
+            [webSocket send:encodedData];
+        }];
     };
 
     PDDynamicDebuggerDomain *domain = [self domainForName:domainName];
@@ -270,9 +270,11 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
 
     NSData *data = [NSJSONSerialization dataWithJSONObject:obj options:0 error:nil];
     NSString *encodedData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    
+    __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         [_msgAry addObject:encodedData];
-        [self _executionMsgAry];
+        [weakSelf _executionMsgAry];
     });
 }
 
@@ -314,6 +316,11 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
     NSLog(@"Connecting to %@", url);
     _msgAry = nil;
     _msgAry = [NSMutableArray array];
+    _debugAry = nil;
+    _debugAry = [NSMutableArray array];
+    _bridgeThread = nil;
+    _registerData = nil;
+    _isConnect = NO;
     
     [_socket close];
     _socket.delegate = nil;
@@ -330,7 +337,9 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
 
 - (void)disconnect;
 {
+    _nativeCallBlock = nil;
     _msgAry = nil;
+    _debugAry = nil;
     [_bonjourBrowser stop];
     _bonjourBrowser.delegate = nil;
     _bonjourBrowser = nil;
@@ -451,7 +460,140 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
     [self _addController:[WXCSSDomainController defaultInstance]];
 }
 
+#pragma mark - WXBridgeProtocol
+- (void)executeJSFramework:(NSString *)frameworkScript {
+    //WXLogInfo(@"======yangshengtao 0:jsThread:%@,currentThread:%@",_bridgeThread,[NSThread currentThread]);
+//    [self _initBridgeThread];
+    NSDictionary *WXEnvironment = @{@"WXEnvironment":[WXUtility getEnvironment]};
+    NSDictionary *args = @{@"source":frameworkScript, @"env":WXEnvironment};
+    [self callJSMethod:@"WxDebug.initJSRuntime" params:args];
+}
+
+- (void)callJSMethod:(NSString *)method params:(NSDictionary*)params {
+//    [self _initBridgeThread];
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [dict setObject:method forKey:@"method"];
+    [dict setObject:params forKey:@"params"];
+    [_debugAry addObject:[WXUtility JSONString:dict]];
+    [self _executionDebugAry];
+}
+
+- (void)callJSMethod:(NSString *)method args:(NSArray *)args {
+//    WXLogInfo(@"======yangshengtao 0:jsThread:%@,currentThread:%@",_bridgeThread,[NSThread currentThread]);
+//    [self _initBridgeThread];
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+    [params setObject:method forKey:@"method"];
+    [params setObject:args forKey:@"args"];
+    
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [dict setObject:@"WxDebug.callJS" forKey:@"method"];
+    [dict setObject:params forKey:@"params"];
+    
+    [_debugAry addObject:[WXUtility JSONString:dict]];
+    [self _executionDebugAry];
+}
+
+- (void)registerCallNative:(WXJSCallNative)callNative
+{
+    WXLogInfo(@"======yangshengtao 0:jsThread:%@,currentThread:%@",_bridgeThread,[NSThread currentThread]);
+    [self _initBridgeThread];
+    _nativeCallBlock = callNative;
+}
+
+- (JSValue*) exception
+{
+    return nil;
+}
+
+- (void)resetEnvironment
+{
+    [self _initEnvironment];
+}
+
+
+
 #pragma mark - Private Methods
+- (void)_initBridgeThread {
+    _bridgeThread = [NSThread currentThread];
+    if (_debugAry.count > 0 && _registerData) {
+        if (![_registerData isEqualToString:_debugAry[0]]) {
+            [_debugAry insertObject:_registerData atIndex:0];
+        }
+    }
+}
+
+- (void)_executeBridgeThead:(dispatch_block_t)block
+{
+    if ([WXDevTool isDebug]) {
+        if([NSThread currentThread] == _bridgeThread) {
+            block();
+        } else if (_bridgeThread){
+            [self performSelector:@selector(_executeBridgeThead:)
+                         onThread:_bridgeThread
+                       withObject:[block copy]
+                    waitUntilDone:NO];
+        }
+    } else {
+        if([NSThread currentThread] == [NSThread mainThread]) {
+            block();
+        } else {
+            [self performSelector:@selector(_executeBridgeThead:)
+                         onThread:[NSThread mainThread]
+                       withObject:[block copy]
+                    waitUntilDone:NO];
+        }
+    }
+    
+    /*
+    if([NSThread currentThread] == _bridgeThread){
+        block();
+    } else {
+        [self performSelector:@selector(_executeBridgeThead:)
+                     onThread:_curThread
+                   withObject:[block copy]
+                waitUntilDone:NO];
+    }
+     */
+}
+
+-(void)_evaluateNative:(NSString *)data
+{
+    NSDictionary *dict = [WXUtility objectFromJSON:data];
+    NSString *method = [[dict objectForKey:@"method"] substringFromIndex:8];
+    NSDictionary *args = [dict objectForKey:@"params"];
+    
+    if ([method isEqualToString:@"callNative"]) {
+        // call native
+        NSString *instanceId = args[@"instance"];
+        NSArray *methods = args[@"tasks"];
+        NSString *callbackId = args[@"callback"];
+        
+        // params parse
+        if(!methods || methods.count <= 0){
+            return;
+        }
+        //call native
+        WXLogDebug(@"Calling native... instancdId:%@, methods:%@, callbackId:%@", instanceId, [WXUtility JSONString:methods], callbackId);
+        _nativeCallBlock(instanceId, methods, callbackId);
+    }
+    
+    if ([method isEqualToString:@"reload"]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [WXSDKEngine restart];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshInstance" object:nil];
+        });
+    }
+}
+
+- (void)_executionDebugAry {
+    if (!_isConnect) return;
+    
+    for (NSString *msg in _debugAry) {
+        [_socket send:msg];
+    }
+    [_debugAry removeAllObjects];
+}
+
 - (void)_executionMsgAry {
     if (!_isConnect) return;
     
@@ -496,8 +638,14 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
     
     NSData *data = [NSJSONSerialization dataWithJSONObject:obj options:0 error:nil];
     NSString *encodedData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    [_msgAry insertObject:encodedData atIndex:0];
-    [self _executionMsgAry];
+    //WXLogInfo(@"======yangshengtao 1:jsThread:%@,currentThread:%@",_bridgeThread,[NSThread currentThread]);
+    if (_bridgeThread) {
+        [self _executeBridgeThead:^{
+            _registerData = encodedData;
+            [_debugAry insertObject:encodedData atIndex:0];
+            [self _executionDebugAry];
+        }];
+    }
 }
 
 - (void)_resolveService:(NSNetService*)service;
@@ -506,6 +654,11 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
     _currentService = service;
     _currentService.delegate = self;
     [_currentService resolveWithTimeout:10.f];
+}
+
+- (void)_initEnvironment
+{
+    [self callJSMethod:@"setEnvironment" args:@[[WXUtility getEnvironment]]];
 }
 
 - (NSString *)_domainNameForController:(PDDomainController *)controller;

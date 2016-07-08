@@ -205,7 +205,6 @@
 package com.taobao.weex.utils;
 
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -217,9 +216,12 @@ import java.util.Map;
  * This class will translate the raw string presentation of a group of function(s) to give type
  * according to the {@link com.taobao.weex.utils.FunctionParser.Mapper}
  */
-public class FunctionParser<T> {
+public class FunctionParser<K, V> {
 
-  private Mapper<T> mapper;
+  public static final char SPACE = ' ';
+  public static final char PERCENT = '%';
+
+  private Mapper<K, V> mapper;
   private Lexer lexer;
 
   /**
@@ -227,7 +229,7 @@ public class FunctionParser<T> {
    * @param source the raw string representation of a group of function(s)
    * @param mapper the mapping rule between string and corresponding type of object.
    */
-  public FunctionParser(@NonNull String source, @NonNull Mapper<T> mapper) {
+  public FunctionParser(@NonNull String source, @NonNull Mapper<K, V> mapper) {
     this.lexer = new Lexer(source);
     this.mapper = mapper;
   }
@@ -237,20 +239,20 @@ public class FunctionParser<T> {
    * is defined by the function order in the raw string.
    * @return
    */
-  public LinkedHashMap<String, T> parse() {
+  public LinkedHashMap<K, V> parse() {
     lexer.moveOn();
     return definition();
   }
 
-  private LinkedHashMap<String, T> definition() {
-    LinkedHashMap<String, T> result = new LinkedHashMap<>();
+  private LinkedHashMap<K, V> definition() {
+    LinkedHashMap<K, V> result = new LinkedHashMap<>();
     do {
       result.putAll(function());
     } while (lexer.getCurrentToken() == Token.FUNC_NAME);
     return result;
   }
 
-  private Map<String, T> function() {
+  private Map<K, V> function() {
     List<String> list = new LinkedList<>();
     String functionName = match(Token.FUNC_NAME);
     match(Token.LEFT_PARENT);
@@ -276,7 +278,7 @@ public class FunctionParser<T> {
     FUNC_NAME, PARAM_VALUE, LEFT_PARENT, RIGHT_PARENT, COMMA
   }
 
-  public interface Mapper<T> {
+  public interface Mapper<K, V> {
 
     /**
      * Map one function to a specified type of object
@@ -285,7 +287,7 @@ public class FunctionParser<T> {
      * @return the expected mapping relationship, where the key in the map is the same as the
      * functionName, and the value in the map is the type of object that expected by user.
      */
-    Map<String, T> map(String functionName, List<String> raw);
+    Map<K, V> map(String functionName, List<String> raw);
   }
 
   private static class WXInterpretationException extends RuntimeException {
@@ -303,6 +305,18 @@ public class FunctionParser<T> {
    */
   private static class Lexer {
 
+    private static final String LEFT_PARENT = "(";
+    private static final String RIGHT_PARENT = ")";
+    private static final String COMMA = ",";
+    private static final char A_LOWER = 'a';
+    private static final char Z_LOWER = 'z';
+    private static final char A_UPPER = 'A';
+    private static final char Z_UPPER = 'Z';
+    private static final char ZERO = '0';
+    private static final char NINE = '9';
+    private static final char DOT = '.';
+    private static final char MINUS = '-';
+    private static final char PLUS = '+';
     private String source;
     private Token current;
     private String value;
@@ -321,30 +335,29 @@ public class FunctionParser<T> {
     }
 
     private boolean moveOn() {
-      StringBuilder stringBuilder = new StringBuilder();
+      int start = pointer;
       char curChar;
       while (pointer < source.length()) {
         curChar = source.charAt(pointer);
-        if (Character.isWhitespace(curChar)) {
-          pointer++;
-          if (stringBuilder.length() != 0) {
+        if (curChar == SPACE) {
+          if (start == pointer++) {
+            start++;
+          } else {
             break;
           }
-        } else if (Character.isLetterOrDigit(curChar) || curChar == '.'
-                   || curChar == '%' || curChar == '-' || curChar == '+') {
-          stringBuilder.append(curChar);
+        } else if (isCharacterOrDigit(curChar) || curChar == DOT
+                   || curChar == PERCENT || curChar == MINUS || curChar == PLUS) {
           pointer++;
         } else {
-          if (stringBuilder.length() == 0) {
-            stringBuilder.append(curChar);
+          if (start == pointer) {
             pointer++;
           }
           break;
         }
       }
-      String token = stringBuilder.toString();
-      if (!TextUtils.isEmpty(token) || pointer < source.length()) {
-        moveOn(token);
+      if (start != pointer) {
+        String symbol = source.substring(start, pointer);
+        moveOn(symbol);
         return true;
       } else {
         current = null;
@@ -354,30 +367,44 @@ public class FunctionParser<T> {
     }
 
     private void moveOn(String token) {
-      if (TextUtils.equals(token, "(")) {
+      if (LEFT_PARENT.equals(token)) {
         current = Token.LEFT_PARENT;
-        value = "(";
-      } else if (TextUtils.equals(token, ")")) {
+        value = LEFT_PARENT;
+      } else if (RIGHT_PARENT.equals(token)) {
         current = Token.RIGHT_PARENT;
-        value = ")";
-      } else if (TextUtils.equals(token, ",")) {
+        value = RIGHT_PARENT;
+      } else if (COMMA.equals(token)) {
         current = Token.COMMA;
-        value = ",";
-      } else if (token.matches("(?i)[\\+-]?[0-9]+(\\.[0-9]+)?(%||deg||px)?")) {
-        current = Token.PARAM_VALUE;
-        value = token;
-      } else if (token.matches("[a-zA-Z]+")) {
+        value = COMMA;
+      } else if (isFuncName(token)) {
         current = Token.FUNC_NAME;
         value = token;
       } else {
-        throw new WXInterpretationException("Illegal Token");
+        current = Token.PARAM_VALUE;
+        value = token;
       }
+    }
+
+    private boolean isFuncName(CharSequence funcName) {
+      char letter;
+      for (int i = 0; i < funcName.length(); i++) {
+        letter = funcName.charAt(i);
+        if (!((A_LOWER <= letter && letter <= Z_LOWER) || (A_UPPER <= letter && letter <= Z_UPPER))) {
+          return false;
+        }
+      }
+      return true;
     }
 
     private void reset() {
       pointer = 0;
       value = null;
       current = null;
+    }
+
+    private boolean isCharacterOrDigit(char letter) {
+      return (ZERO <= letter && letter <= NINE) || (A_LOWER <= letter && letter <= Z_LOWER) ||
+              (A_UPPER <= letter && letter <= Z_UPPER);
     }
   }
 

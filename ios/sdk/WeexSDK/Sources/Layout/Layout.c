@@ -15,7 +15,7 @@
 
 // in concatenated header, don't include Layout.h it's already at the top
 #ifndef CSS_LAYOUT_IMPLEMENTATION
-#include "Layout.h"
+#include "WXLayoutDefine.h"
 #endif
 
 #ifdef _MSC_VER

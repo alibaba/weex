@@ -1,15 +1,10 @@
 <template>
-  <wxc-navpage data-role="none" height={{navBarHeight}} background-color="#ff5898" title={{title}} title-color="white" left-item-title="More" left-item-color="white" right-item-src="http://gtms02.alicdn.com/tps/i2/TB1ED7iMpXXXXXEXXXXWA_BHXXX-48-48.png" onclickleftitem = "onclickleftitem" onclickrightitem = "onclickrightitem">
-      <wxc-panel title="Push and pop page">
-        <wxc-button type="primary" size="middle" value="push" onclick="push"></wxc-button>
-        <wxc-button type="success" size="middle" value="pop" onclick="pop" style="margin-top:12px;"></wxc-button>
+  <wxc-navpage data-role="none" height={{navBarHeight}} background-color="#ff5898" title={{title}} title-color="white" left-item-title="More" left-item-color="white" right-item-src="http://gtms02.alicdn.com/tps/i2/TB1ED7iMpXXXXXEXXXXWA_BHXXX-48-48.png">
+      <wxc-panel title="push a new page">
+        <wxc-button type="primary" size="small" value="push" onclick="push"></wxc-button>
       </wxc-panel>
-      <wxc-panel title="Set NavBar">
-        <wxc-button type="success" size="middle" value="SetTitle" onclick="setNaviBarTitle"></wxc-button>
-        <wxc-button type="success" size="middle" value="SetRight" onclick="setNaviBarRightItem" style="margin-top:12px;"></wxc-button>
-        <wxc-button type="success" size="middle" value="ClearRight" onclick="clearNaviBarRightItem" style="margin-top:12px;"></wxc-button>
-        <wxc-button type="success" size="middle" value="SetLeft" onclick="setNavBarLeftItem" style="margin-top:12px;"></wxc-button>
-        <wxc-button type="success" size="middle" value="ClearLeft" onclick="clearNavBarLeftItem" style="margin-top:12px;"></wxc-button>
+      <wxc-panel title="pop to the last page">
+        <wxc-button type="success" size="small" value="pop" onclick="pop"></wxc-button>
       </wxc-panel>
   </wxc-navpage>
 </template>
@@ -30,7 +25,7 @@
               var scale = env.scale;
               var deviceWidth = env.deviceWidth / scale;
               this.navBarHeight = 64.0 * 750.0 / deviceWidth;
-            }
+            }   
         }.bind(this));
 
         this.$on('naviBar.rightItem.click',function(e){
@@ -46,7 +41,7 @@
           this.$call('modal', 'toast', {
             'message': 'naviBar.leftItem.click',
             'duration': duration
-           });
+           });  
         });
 
         var bundleUrl = this.$getConfig().bundleUrl;
@@ -79,7 +74,7 @@
           // in Browser or WebView
           base = h5Base;
         }
-        this.baseURL = base;
+        this.baseURL = base;     
     },
     methods: {
       push: function() {
@@ -98,66 +93,6 @@
         }
         vm.$call('navigator','pop',params, function () {});
       },
-
-      setNaviBarTitle: function (e,parentName) {
-         var params = {
-           title: 'I am title',
-           titleColor: 'white',
-         };
-         this.$call('navigator','setNavBarTitle',params,null);
-      },
-
-      setNaviBarRightItem: function (e,parentName) {
-        var params = {
-          // Set icon or title
-          //title: 'More',
-          //titleColor: 'white',
-          //if icon from native res
-          fromNative: 'true',
-          autoReset: true ,
-          icon: 'ic_menu_manage'
-        };
-        this.$call('navigator','setNavBarRightItem',params,null);
-      },
-
-      clearNaviBarRightItem: function (e,parentName) {
-        this.$call('navigator','clearNavBarRightItem',null,null);
-      },
-
-      setNavBarLeftItem: function (e,parentName) {
-        var params = {
-          // Set icon or title
-          title: 'Home',
-          titleColor: 'white',
-          //if icon from native res
-          fromNative: 'true',
-          autoReset: true ,
-          icon: 'ic_menu_manage'
-        };
-        this.$call('navigator','setNavBarLeftItem',params,null);
-      },
-
-      clearNavBarLeftItem: function (e,parentName) {
-        this.$call('navigator','clearNavBarLeftItem',null,null);
-      },
-
-      onclickleftitem: function (e) {
-         nativeLog("onclickleftitem");
-         this.$call('modal', 'toast', {
-           'message': "Click Left",
-           'duration': 2
-         });
-      },
-
-      onclickrightitem: function (e) {
-         nativeLog("onclickrightitem");
-
-         this.$call('modal', 'toast', {
-           'message': "Click Right",
-           'duration': 2
-         });
-      },
-
     }
   }
 </script>

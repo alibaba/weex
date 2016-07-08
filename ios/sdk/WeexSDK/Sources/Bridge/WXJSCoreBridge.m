@@ -37,21 +37,23 @@
         _jsContext[@"WXEnvironment"] = data;
         
         _jsContext[@"setTimeout"] = ^(JSValue* function, JSValue* timeout) {
+            // this setTimeout is used by internal logic in JS framework, normal setTimeout called by users will call WXTimerModule's method;
             [weakSelf performSelector: @selector(triggerTimeout:) withObject:^() {
                 [function callWithArguments:@[]];
             } afterDelay:[timeout toDouble] / 1000];
         };
-
+    
         _jsContext[@"nativeLog"] = ^() {
             static NSDictionary *levelMap;
             static dispatch_once_t onceToken;
             dispatch_once(&onceToken, ^{
                 levelMap = @{
-                             @"__ERROR":@(WXLogFlagError),
+                             @"__ERROR": @(WXLogFlagError),
                              @"__WARN": @(WXLogFlagWarning),
+                             @"__LOG": @(WXLogFlagInfo),
                              @"__INFO": @(WXLogFlagInfo),
                              @"__DEBUG": @(WXLogFlagDebug),
-                             @"__VERBOSE": @(WXLogFlagVerbose)
+                             @"__LOG": @(WXLogFlagLog)
                              };
             });
             
@@ -94,19 +96,19 @@
 
 - (void)callJSMethod:(NSString *)method args:(NSArray *)args
 {
-    WXLogVerbose(@"Calling JS... method:%@, args:%@", method, args);
-    
+    WXLogDebug(@"Calling JS... method:%@, args:%@", method, args);
     [[_jsContext globalObject] invokeMethod:method withArguments:args];
 }
 
 - (void)registerCallNative:(WXJSCallNative)callNative
 {
-    void (^callNativeBlock)(JSValue *, JSValue *, JSValue *) = ^(JSValue *instance, JSValue *tasks, JSValue *callback){
+    NSInteger (^callNativeBlock)(JSValue *, JSValue *, JSValue *) = ^(JSValue *instance, JSValue *tasks, JSValue *callback){
         NSString *instanceId = [instance toString];
         NSArray *tasksArray = [tasks toArray];
         NSString *callbackId = [callback toString];
-        WXLogVerbose(@"Calling native... instance:%@, tasks:%@, callback:%@", instanceId, tasksArray, callbackId);
-        callNative(instanceId, tasksArray, callbackId);
+        
+        WXLogDebug(@"Calling native... instance:%@, tasks:%@, callback:%@", instanceId, tasksArray, callbackId);
+        return callNative(instanceId, tasksArray, callbackId);
     };
     
     _jsContext[@"callNative"] = callNativeBlock;

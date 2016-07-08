@@ -11,6 +11,7 @@
 #import "UIViewController+WXDemoNaviBar.h"
 #import "WXDemoViewController.h"
 #import "WXDebugTool.h"
+#import "WXDevTool.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import <WeexSDK/WXSDKEngine.h>
 
@@ -49,6 +50,7 @@
     _captureLayer = [AVCaptureVideoPreviewLayer layerWithSession:_session];
     _captureLayer.videoGravity=AVLayerVideoGravityResizeAspectFill;
     _captureLayer.frame=self.view.layer.bounds;
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -80,7 +82,9 @@
 - (void)openURL:(NSString*)URL
 {
     NSURL *url = [NSURL URLWithString:URL];
-    [self remoteDebug:url];
+    if ([self remoteDebug:url]) {
+        return;
+    }
     [self jsReplace:url];
     WXDemoViewController * controller = [[WXDemoViewController alloc] init];
     controller.url = url;
@@ -130,11 +134,13 @@
 #pragma mark Remote debug
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-- (void)remoteDebug:(NSURL *)url
+- (BOOL)remoteDebug:(NSURL *)url
 {
     if ([url.scheme isEqualToString:@"ws"]) {
         [WXSDKEngine connectDebugServer:url.absoluteString];
         [WXSDKEngine initSDKEnviroment];
+        
+        return YES;
     }
     
     NSString *query = url.query;
@@ -149,10 +155,27 @@
                 [vc performSelector:NSSelectorFromString(@"loadRefreshCtl")];
                 [self.navigationController popToViewController:vc animated:NO];
             }
-            return;
+            return YES;
+        } else if ([[elts firstObject] isEqualToString:@"_wx_devtool"]) {
+            NSString *devToolURL = [[elts lastObject]  stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            [WXDevTool setDebug:YES];
+            [WXDevTool launchDevToolDebugWithUrl:devToolURL];
+
+            [WXSDKEngine restart];
+            
+            if ([[[self.navigationController viewControllers] objectAtIndex:0] isKindOfClass:NSClassFromString(@"WXDemoViewController")]) {
+                WXDemoViewController * vc = (WXDemoViewController*)[[self.navigationController viewControllers] objectAtIndex:0];
+                [self.navigationController popToViewController:vc animated:NO];
+            }
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshInstance" object:nil];
+            
+            return YES;
         }
     }
+    
+    return NO;
 }
 #pragma clang diagnostic pop
+
 
 @end
