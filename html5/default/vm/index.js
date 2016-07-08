@@ -14,8 +14,10 @@ import {
   initEvents,
   mixinEvents
 } from './events'
-
-import { registerModules, registerMethods } from '../app/register'
+import {
+  registerModules,
+  registerMethods
+} from '../app/register'
 
 /**
  * ViewModel constructor
