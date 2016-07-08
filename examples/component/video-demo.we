@@ -32,16 +32,20 @@
       play: function() {
         this.playStatus = 'play'
       },
-      onpause: function() {
+      onpause: function(e) {
+        this.playStatus = e.playStatus;
         this.$call('modal', 'toast', {'message': 'video pause'});
       },
-      onstart: function() {
+      onstart: function(e) {
+        this.playStatus = e.playStatus;
         this.$call('modal', 'toast', {'message': 'video start'});
       },
-      onfinish: function() {
+      onfinish: function(e) {
+        this.playStatus = e.playStatus;
         this.$call('modal', 'toast', {'message': 'video finish'});
       },
-      onfail: function() {
+      onfail: function(e) {
+        this.playStatus = e.playStatus;
         this.$call('modal', 'toast', {'message': 'video fail'});
       }
     }
