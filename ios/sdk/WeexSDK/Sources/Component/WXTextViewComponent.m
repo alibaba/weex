@@ -102,7 +102,7 @@
         if (attributes[@"rows"]) {
             _rows = [attributes[@"rows"] integerValue];
         } else {
-            _rows = 1;
+            _rows = 2;
         }
         if (attributes[@"disabled"]) {
             _disabled = [attributes[@"disabled"] boolValue];
@@ -343,7 +343,7 @@
     __weak typeof(self) weakSelf = self;
     return ^CGSize (CGSize constrainedSize) {
         
-        CGSize computedSize = [[[NSString alloc] init]sizeWithAttributes:nil];
+        CGSize computedSize = [[[NSString alloc] init]sizeWithAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:[UIFont systemFontSize]]}];
         computedSize.height = computedSize.height * _rows;
         //TODO:more elegant way to use max and min constrained size
         if (!isnan(weakSelf.cssNode->style.minDimensions[CSS_WIDTH])) {
