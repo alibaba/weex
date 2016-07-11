@@ -1,5 +1,6 @@
 'use strict'
 
+import { extend } form '../utils'
 const Component = require('./component')
 
 // Component which can have no subcomponents.
@@ -10,6 +11,11 @@ function Atomic (data) {
 }
 
 Atomic.prototype = Object.create(Component.prototype)
+
+Atomic.prototype.createChildren = function (data) {
+	// do nonthing
+	return
+}
 
 Atomic.prototype.appendChild = function (data) {
   // do nothing

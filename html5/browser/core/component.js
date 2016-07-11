@@ -4,9 +4,9 @@
 
 // const config = require('../config')
 const utils = require('../utils')
-const ComponentManager = require('../componentManager')
-const flexbox = require('../flexbox')
-const valueFilter = require('../valueFilter')
+const ComponentManager = require('./componentManager')
+const flexbox = require('./flexbox')
+const valueFilter = require('./valueFilter')
 require('fixedsticky')
 
 function Component (data, nodeType) {

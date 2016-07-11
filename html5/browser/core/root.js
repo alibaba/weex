@@ -1,6 +1,6 @@
 'use strict'
 
-const ComponentManager = require('../componentManager')
+const ComponentManager = require('./componentManager')
 const Component = require('./component')
 // const utils = require('../utils')
 const logger = require('../logger')

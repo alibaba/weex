@@ -4,7 +4,7 @@
 // const Component = require('../components/component')
 const scroll = require('scroll-to')
 // const config = require('../config')
-const logger = require('../logger')
+const logger = require('../../logger')
 
 const dom = {
 
