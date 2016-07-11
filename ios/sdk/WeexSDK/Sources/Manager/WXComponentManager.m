@@ -116,6 +116,33 @@ static NSThread *WXComponentThread;
     [self _awakeDisplayLink];
 }
 
+- (void)rootViewFrameDidChange:(CGRect)frame
+{
+    WXAssertComponentThread();
+    
+    if (_rootCSSNode) {
+        [self _applyRootFrame:frame toRootCSSNode:_rootCSSNode];
+        if (!_rootComponent.styles[@"width"]) {
+            _rootComponent.cssNode->style.dimensions[CSS_WIDTH] = frame.size.width;
+        }
+        if (!_rootComponent.styles[@"height"]) {
+            _rootComponent.cssNode->style.dimensions[CSS_HEIGHT] = frame.size.height;
+        }
+        [_rootComponent setNeedsLayout];
+        [self startComponentTasks];
+    }
+}
+
+- (void)_applyRootFrame:(CGRect)rootFrame toRootCSSNode:(css_node_t *)rootCSSNode
+{
+    _rootCSSNode->style.position[CSS_LEFT] = self.weexInstance.frame.origin.x;
+    _rootCSSNode->style.position[CSS_TOP] = self.weexInstance.frame.origin.y;
+    
+    // if no instance width/height, use layout width/height, as Android's wrap_content
+    _rootCSSNode->style.dimensions[CSS_WIDTH] = self.weexInstance.frame.size.width ?: CSS_UNDEFINED;
+    _rootCSSNode->style.dimensions[CSS_HEIGHT] =  self.weexInstance.frame.size.height ?: CSS_UNDEFINED;
+}
+
 - (void)_addUITask:(void (^)())block
 {
     [_uiTaskQueue addObject:block];
@@ -531,12 +558,8 @@ static css_node_t * rootNodeGetChild(void *context, int i)
 - (void)_initRootCSSNode
 {
     _rootCSSNode = new_css_node();
-    _rootCSSNode->style.position[CSS_LEFT] = self.weexInstance.frame.origin.x;
-    _rootCSSNode->style.position[CSS_TOP] = self.weexInstance.frame.origin.y;
     
-    // if no instance width/height, use layout width/height, as Android's wrap_content
-    _rootCSSNode->style.dimensions[CSS_WIDTH] = self.weexInstance.frame.size.width ?: CSS_UNDEFINED;
-    _rootCSSNode->style.dimensions[CSS_HEIGHT] =  self.weexInstance.frame.size.height ?: CSS_UNDEFINED;
+    [self _applyRootFrame:self.weexInstance.frame toRootCSSNode:_rootCSSNode];
     
     _rootCSSNode->style.flex_wrap = CSS_NOWRAP;
     _rootCSSNode->is_dirty = rootNodeIsDirty;

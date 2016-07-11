@@ -180,8 +180,15 @@ NSTimeInterval JSLibInitTime = 0;
 
 - (void)setFrame:(CGRect)frame
 {
-    _frame = frame;
-//    [self.componentManager changeRootFrame];
+    if (!CGRectEqualToRect(frame, _frame)) {
+        _frame = frame;
+        if (self.rootView) {
+            self.rootView.frame = frame;
+            WXPerformBlockOnComponentThread(^{
+                [self.componentManager rootViewFrameDidChange:frame];
+            });
+        }
+    }
 }
 
 - (void)reloadData:(id)data
