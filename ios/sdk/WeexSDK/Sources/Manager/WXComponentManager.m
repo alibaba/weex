@@ -128,41 +128,15 @@ static NSThread *WXComponentThread;
     WXAssertComponentThread();
     WXAssertParam(data);
     
-    WXComponent *rootComponent = [self _buildComponentForData:data];
-    _rootComponent = rootComponent;
-    WXSDKInstance *instance = self.weexInstance;
-    instance.rootView.wx_component = rootComponent;
+    _rootComponent = [self _buildComponentForData:data];
+    self.weexInstance.rootView.wx_component = _rootComponent;
     
-    _rootCSSNode = new_css_node();
-    if (CGRectEqualToRect(instance.frame, CGRectZero)) {
-        _rootCSSNode->style.position[CSS_LEFT] = [WXConvert WXPixelType:data[@"style"][@"left"]];
-        _rootCSSNode->style.position[CSS_TOP] = [WXConvert WXPixelType:data[@"style"][@"top"]];
-        _rootCSSNode->style.dimensions[CSS_WIDTH] = [WXConvert WXPixelType:data[@"style"][@"width"]];
-        _rootCSSNode->style.dimensions[CSS_HEIGHT] = [WXConvert WXPixelType:data[@"style"][@"height"]];
-    } else {
-        _rootCSSNode->style.position[CSS_LEFT] = instance.frame.origin.x;
-        _rootCSSNode->style.position[CSS_TOP] = instance.frame.origin.y;
-        _rootCSSNode->style.dimensions[CSS_WIDTH] = instance.frame.size.width;
-        _rootCSSNode->style.dimensions[CSS_HEIGHT] = instance.frame.size.height;
-    }
-
-    _rootCSSNode->style.flex_wrap = CSS_NOWRAP;
-    _rootCSSNode->is_dirty = rootNodeIsDirty;
-    _rootCSSNode->get_child = rootNodeGetChild;
-    _rootCSSNode->context = (__bridge void *)(self);
-    _rootCSSNode->children_count = 1;
+    [self _initRootCSSNode];
     
     __weak typeof(self) weakSelf = self;
     [self _addUITask:^{
         __strong typeof(self) strongSelf = weakSelf;
-        if (CGRectEqualToRect(instance.rootView.frame, CGRectZero)) {
-            CGRect newFrame = CGRectMake(WXRoundPixelValue(strongSelf->_rootCSSNode->layout.position[CSS_LEFT]),
-                                         WXRoundPixelValue(strongSelf->_rootCSSNode->layout.position[CSS_TOP]),
-                                         WXRoundPixelValue(strongSelf->_rootCSSNode->layout.dimensions[CSS_WIDTH]),
-                                         WXRoundPixelValue(strongSelf->_rootCSSNode->layout.dimensions[CSS_HEIGHT]));
-            instance.rootView.frame = newFrame;
-        }
-        [instance.rootView addSubview:rootComponent.view];
+        [strongSelf.weexInstance.rootView addSubview:strongSelf->_rootComponent.view];
     }];
 }
 
@@ -534,6 +508,7 @@ static css_node_t * rootNodeGetChild(void *context, int i)
     
     NSMutableSet<WXComponent *> *dirtyComponents = [NSMutableSet set];
     [_rootComponent _calculateFrameWithSuperAbsolutePosition:CGPointZero gatherDirtyComponents:dirtyComponents];
+    [self _calculateRootFrame];
   
     for (WXComponent *dirtyComponent in dirtyComponents) {
         [self _addUITask:^{
@@ -552,6 +527,39 @@ static css_node_t * rootNodeGetChild(void *context, int i)
         }
     });
 }
+
+- (void)_initRootCSSNode
+{
+    _rootCSSNode = new_css_node();
+    _rootCSSNode->style.position[CSS_LEFT] = self.weexInstance.frame.origin.x;
+    _rootCSSNode->style.position[CSS_TOP] = self.weexInstance.frame.origin.y;
+    
+    // if no instance width/height, use layout width/height, as Android's wrap_content
+    _rootCSSNode->style.dimensions[CSS_WIDTH] = self.weexInstance.frame.size.width ?: CSS_UNDEFINED;
+    _rootCSSNode->style.dimensions[CSS_HEIGHT] =  self.weexInstance.frame.size.height ?: CSS_UNDEFINED;
+    
+    _rootCSSNode->style.flex_wrap = CSS_NOWRAP;
+    _rootCSSNode->is_dirty = rootNodeIsDirty;
+    _rootCSSNode->get_child = rootNodeGetChild;
+    _rootCSSNode->context = (__bridge void *)(self);
+    _rootCSSNode->children_count = 1;
+}
+
+- (void)_calculateRootFrame
+{
+    if (!_rootCSSNode->layout.should_update) {
+        return;
+    }
+    _rootCSSNode->layout.should_update = false;
+    
+    self.weexInstance.rootView.frame = CGRectMake(WXRoundPixelValue(_rootCSSNode->layout.position[CSS_LEFT]),
+                                 WXRoundPixelValue(_rootCSSNode->layout.position[CSS_TOP]),
+                                 WXRoundPixelValue(_rootCSSNode->layout.dimensions[CSS_WIDTH]),
+                                 WXRoundPixelValue(_rootCSSNode->layout.dimensions[CSS_HEIGHT]));
+    
+    resetNodeLayout(_rootCSSNode);
+}
+
 
 #pragma mark Fixed 
 
