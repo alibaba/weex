@@ -379,6 +379,13 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
       finish();
       return true;
     } else if (id == R.id.action_refresh) {
+
+      if(mUri.isHierarchical() && mUri.getQueryParameterNames()!=null && mUri.getQueryParameterNames().contains(Constants.WEEX_TPL_KEY)){
+        String url=mUri.getQueryParameter(Constants.WEEX_TPL_KEY);
+        loadWXfromService(url);
+        return true;
+      }
+
       if (TextUtils.equals(mUri.getScheme(), "http") || TextUtils.equals(mUri.getScheme(), "https")) {
         loadWXfromService(mUri.toString());
         return true;
