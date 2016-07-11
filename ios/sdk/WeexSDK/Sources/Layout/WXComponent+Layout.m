@@ -55,8 +55,6 @@
     }
     _cssNode->context = (__bridge void *)self;
     
-    
-    
     [self _recomputeCSSNodeChildren];
     [self _fillCSSNode:styles];
     

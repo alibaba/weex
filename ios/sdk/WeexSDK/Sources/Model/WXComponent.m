@@ -279,7 +279,6 @@
     
     [self _recomputeCSSNodeChildren];
     [self setNeedsLayout];
-    
 }
 
 - (void)_removeFromSupercomponent
