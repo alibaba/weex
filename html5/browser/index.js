@@ -2,6 +2,8 @@
 
 // require('../native')
 
+require('../native')
+
 import '../shared'
 import runtime from '../runtime'
 import { subversion } from '../../package.json'

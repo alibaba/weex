@@ -18,7 +18,7 @@ require('../scroll')
 //  - pullright
 //  - contentrefresh
 
-const Component = require('./component')
+import Component from './component'
 // const utils = require('../utils')
 
 const directionMap = {
@@ -198,6 +198,9 @@ Scroller.prototype.insertBefore = function (child, before) {
     else if (before.fixedPlaceholder) {
       this.scrollElement.insertBefore(child.node, before.fixedPlaceholder)
     }
+    else if (before.stickyPlaceholder) {
+      this.scrollElement.insertBefore(child.node, before.stickyPlaceholder)
+    }
     else {
       this.scrollElement.insertBefore(child.node, before.node)
     }
@@ -230,11 +233,9 @@ Scroller.prototype.removeChild = function (child) {
   componentManager.removeElementByRef(child.data.ref)
   const refreshLoadingPlaceholder = child.refreshPlaceholder
     || child.loadingPlaceholder
+  child.unsetPosition()
   if (refreshLoadingPlaceholder) {
     this.scrollElement.removeChild(refreshLoadingPlaceholder)
-  }
-  if (child.fixedPlaceholder) {
-    this.scrollElement.removeChild(child.fixedPlaceholder)
   }
   child.node.parentNode.removeChild(child.node)
 

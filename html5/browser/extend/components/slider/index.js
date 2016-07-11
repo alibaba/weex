@@ -4,7 +4,7 @@
 
 const extend = require('../utils').extend
 // const config = require('../config')
-const Component = require('./component')
+import Component from './component'
 // const ComponentManager = require('../componentManager')
 // const LazyLoad = require('../lazyLoad')
 require('../carrousel')

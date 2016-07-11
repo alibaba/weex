@@ -1,7 +1,5 @@
 'use strict'
 
-// const FrameUpdater = require('../frameUpdater')
-// const Component = require('../components/component')
 const scroll = require('scroll-to')
 // const config = require('../config')
 const logger = require('../../logger')

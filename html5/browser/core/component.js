@@ -1,15 +1,14 @@
-/* global lib */
-
 'use strict'
 
 // const config = require('../config')
 const utils = require('../utils')
+const logger = require('../logger')
 const ComponentManager = require('./componentManager')
 const flexbox = require('./flexbox')
 const valueFilter = require('./valueFilter')
-require('fixedsticky')
+import Sticky from '../sticky'
 
-function Component (data, nodeType) {
+export default function Component (data, nodeType) {
   this.data = data
   this.node = this.create(nodeType)
 
@@ -26,27 +25,27 @@ function Component (data, nodeType) {
 
 Component.prototype = {
 
-  create: function (nodeType) {
+  create (nodeType) {
     const node = document.createElement(nodeType || 'div')
     return node
   },
 
-  getComponentManager: function () {
+  getComponentManager () {
     return ComponentManager.getInstance(this.data.instanceId)
   },
 
-  getParent: function () {
+  getParent () {
     return this.getComponentManager().componentMap[this.parentRef]
   },
 
-  getParentScroller: function () {
+  getParentScroller () {
     if (this.isInScrollable()) {
       return this._parentScroller
     }
     return null
   },
 
-  getRootScroller: function () {
+  getRootScroller () {
     if (this.isInScrollable()) {
       let scroller = this._parentScroller
       let parent = scroller._parentScroller
@@ -59,18 +58,18 @@ Component.prototype = {
     return null
   },
 
-  getRootContainer: function () {
+  getRootContainer () {
     const root = this.getComponentManager().weexInstance.getRoot()
       || document.body
     return root
   },
 
-  isScrollable: function () {
+  isScrollable () {
     const t = this.data.type
     return ComponentManager.getScrollableTypes().indexOf(t) !== -1
   },
 
-  isInScrollable: function () {
+  isInScrollable () {
     if (typeof this._isInScrollable === 'boolean') {
       return this._isInScrollable
     }
@@ -97,12 +96,12 @@ Component.prototype = {
       return true
     }
     if (!parent) {
-      console && console.error('isInScrollable - parent not exist.')
+      console && logger.warn('isInScrollable - parent not exist.')
       return
     }
   },
 
-  createChildren: function () {
+  createChildren () {
     const children = this.data.children
     const parentRef = this.data.ref
     const componentManager = this.getComponentManager()
@@ -127,7 +126,7 @@ Component.prototype = {
   },
 
   // @todo: changed param data to child
-  appendChild: function (data) {
+  appendChild (data) {
     const children = this.data.children
     const componentManager = this.getComponentManager()
     const child = componentManager.createElement(data)
@@ -143,7 +142,7 @@ Component.prototype = {
     return child
   },
 
-  insertBefore: function (child, before) {
+  insertBefore (child, before) {
     const children = this.data.children
     let i = 0
     let l
@@ -172,6 +171,9 @@ Component.prototype = {
       if (before.fixedPlaceholder) {
         this.node.insertBefore(child.node, before.fixedPlaceholder)
       }
+      else if (before.stickyPlaceholder) {
+        this.node.insertBefore(child.node, before.stickyPlaceholder)
+      }
       else {
         this.node.insertBefore(child.node, before.node)
       }
@@ -179,7 +181,7 @@ Component.prototype = {
     }
   },
 
-  removeChild: function (child) {
+  removeChild (child) {
     const children = this.data.children
     // remove from this.data.children
     let i = 0
@@ -197,13 +199,11 @@ Component.prototype = {
     }
     // remove from componentMap recursively
     componentManager.removeElementByRef(child.data.ref)
-    if (child.fixedPlaceholder) {
-      this.node.removeChild(child.fixedPlaceholder)
-    }
+    child.unsetPosition()
     child.node.parentNode.removeChild(child.node)
   },
 
-  updateAttrs: function (attrs) {
+  updateAttrs (attrs) {
     // Note：attr must be injected into the dom element because
     // it will be accessed from the outside developer by event.target.attr.
     if (!this.node.attr) {
@@ -227,7 +227,7 @@ Component.prototype = {
     }
   },
 
-  updateStyle: function (style) {
+  updateStyle (style) {
     for (const key in style) {
       let value = style[key]
       const styleSetter = this.style[key]
@@ -244,7 +244,7 @@ Component.prototype = {
     }
   },
 
-  bindEvents: function (evts) {
+  bindEvents (evts) {
     const componentManager = this.getComponentManager()
     if (evts && utils.isArray(evts)) {
       for (let i = 0, l = evts.length; i < l; i++) {
@@ -269,7 +269,7 @@ Component.prototype = {
   //  - config: event config object
   //     - bubbles
   //     - cancelable
-  dispatchEvent: function (type, data, config) {
+  dispatchEvent (type, data, config) {
     const event = document.createEvent('HTMLEvents')
     config = config || {}
     event.initEvent(type, config.bubbles || false, config.cancelable || false)
@@ -279,7 +279,7 @@ Component.prototype = {
     this.node.dispatchEvent(event)
   },
 
-  updateRecursiveAttr: function (data) {
+  updateRecursiveAttr (data) {
     this.updateAttrs(data.attr)
     const componentManager = this.getComponentManager()
     const children = this.data.children
@@ -293,7 +293,7 @@ Component.prototype = {
     }
   },
 
-  updateRecursiveStyle: function (data) {
+  updateRecursiveStyle (data) {
     this.updateStyle(data.style)
     const componentManager = this.getComponentManager()
     const children = this.data.children
@@ -307,7 +307,7 @@ Component.prototype = {
     }
   },
 
-  updateRecursiveAll: function (data) {
+  updateRecursiveAll (data) {
     this.updateAttrs(data.attr)
     this.updateStyle(data.style)
     const componentManager = this.getComponentManager()
@@ -328,6 +328,72 @@ Component.prototype = {
         }
       }
     }
+  },
+
+  addAppendHandler (cb) {
+    let pre
+    if (this.onAppend) {
+      pre = this.onAppend.bind(this)
+    }
+    this.onAppend = function () {
+      pre && pre.call(this)
+      cb && cb.call(this)
+    }.bind(this)
+  },
+
+  // Set positon to fixed, with a placeholder if it's in a
+  // scrollable component.
+  setFixed () {
+    // delay processing in case the node is not appended yet.
+    setTimeout(function () {
+      this.node.style.position = 'fixed'
+      if (!this.isInScrollable()) {
+        return
+      }
+      const parent = this.node.parentNode
+      if (parent) {
+        this.fixedPlaceholder = document.createElement('div')
+        this.fixedPlaceholder.classList.add('weex-fixed-placeholder')
+        this.fixedPlaceholder.style.cssText = [
+          'display:none;',
+          'width:0px;',
+          'height:0px;'
+        ].join('')
+        parent.insertBefore(this.fixedPlaceholder, this.node)
+        this.getRootContainer().appendChild(this.node)
+      }
+    }.bind(this), 0)
+  },
+
+  // unset a fixed node to the pecified 'position' or 'relative' by default.
+  unsetFixed (position) {
+    position = position ? position + '' : 'relative'
+    if (this.fixedPlaceholder) {
+      const parent = this.fixedPlaceholder.parentNode
+      parent.insertBefore(this.node, this.fixedPlaceholder)
+      parent.removeChild(this.fixedPlaceholder)
+      this.fixedPlaceholder = null
+      this.node.style.position = position
+    }
+  },
+
+  setSticky () {
+    this.node.style.zIndex = 100
+    setTimeout(function () {
+      this.sticky = new Sticky(this)
+    }.bind(this), 0)
+  },
+
+  unsetSticky () {
+    if (this.sticky) {
+      this.sticky.destroy()
+      this.sticky = null
+    }
+  },
+
+  // usally used to unset sticky and fixed.
+  unsetPosition (position) {
+    this.style.position.call(this, position)
   },
 
   attr: {}, // attr setters
@@ -357,10 +423,10 @@ Component.prototype = {
   // }
   event: {},
 
-  clearAttr: function () {
+  clearAttr () {
   },
 
-  clearStyle: function () {
+  clearStyle () {
     this.node.cssText = ''
   }
 }
@@ -372,59 +438,17 @@ Component.prototype.style.position = function (value) {
   // This is a peace of hacking to fix the problem about
   // mixing fixed and transform. See 'http://stackoverflo
   // w.com/questions/15194313/webkit-css-transform3d-posi
-  // tion-fixed-issue' for more info.
-  if (value !== 'fixed') {
-    if (this.fixedPlaceholder) {
-      const parent = this.fixedPlaceholder.parentNode
-      parent.insertBefore(this.node, this.fixedPlaceholder)
-      parent.removeChild(this.fixedPlaceholder)
-      this.fixedPlaceholder = null
-    }
-  }
-  else { // value === 'fixed'
+  // tion-fixed-issue' for more info
+  value !== 'fixed' && this.unsetFixed()
+  value !== 'sticky' && this.unsetSticky()
+  if (value === 'fixed') {
     // For the elements who are fixed: this fixedPlaceholder
     // shoud be inserted, and the fixed element itself should
     // be placed out in root container.
-    this.node.style.position = 'fixed'
-    let parent = this.node.parentNode
-    const replaceWithFixedPlaceholder = function () {
-      this.fixedPlaceholder = document.createElement('div')
-      this.fixedPlaceholder.classList.add('weex-fixed-placeholder')
-      this.fixedPlaceholder.style.display = 'none'
-      this.fixedPlaceholder.style.width = '0px'
-      this.fixedPlaceholder.style.height = '0px'
-      parent.insertBefore(this.fixedPlaceholder, this.node)
-      this.getRootContainer().appendChild(this.node)
-    }.bind(this)
-    if (!parent) {
-      let pre
-      if (this.onAppend) {
-        pre = this.onAppend.bind(this)
-      }
-      this.onAppend = function () {
-        parent = this.node.parentNode
-        replaceWithFixedPlaceholder()
-        pre && pre()
-      }.bind(this)
-    }
-    else {
-      replaceWithFixedPlaceholder()
-    }
-    return
+    return this.setFixed()
   }
-
   if (value === 'sticky') {
-    this.node.style.zIndex = 100
-    setTimeout(function () {
-      const Sticky = lib.sticky
-      this.sticky = new Sticky(this.node, {
-        top: 0
-      })
-    }.bind(this), 0)
+    return this.setSticky()
   }
-  else {
-    this.node.style.position = value
-  }
+  this.node.style.position = value
 }
-
-module.exports = Component

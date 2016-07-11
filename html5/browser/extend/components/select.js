@@ -1,6 +1,6 @@
 'use strict'
 
-const Atomic = require('./component')
+const Atomic = require('./atomic')
 const sender = require('../bridge/sender')
 const utils = require('../utils')
 

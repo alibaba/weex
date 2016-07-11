@@ -1,7 +1,6 @@
 'use strict'
 
-import { extend } form '../utils'
-const Component = require('./component')
+import Component from './component'
 
 // Component which can have no subcomponents.
 // This component should not be instantiated directly, since
