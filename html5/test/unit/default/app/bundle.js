@@ -182,7 +182,7 @@ describe('parsing a bundle file', () => {
       const ready = sinon.spy()
 
       before(() => {
-        global.needTransformerVersion = '>=0.1 <1.0'
+        global.transformerVersion = '>=0.1 <1.0'
         app.define('@weex-component/main', (require, exports, module) => {
           module.exports = {
             template: componentTemplate,
@@ -192,7 +192,7 @@ describe('parsing a bundle file', () => {
       })
 
       after(() => {
-        global.needTransformerVersion = undefined
+        global.transformerVersion = undefined
       })
 
       it('not a weex component', () => {

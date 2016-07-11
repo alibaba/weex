@@ -8,7 +8,6 @@ import {
   unproxy
 } from './observer'
 import {
-  isArray,
   isPlainObject,
   bind
 } from '../util'

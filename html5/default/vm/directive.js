@@ -3,7 +3,7 @@
  * Directive Parser
  */
 
-import * as _ from '../util'
+import { bind, typof } from '../util'
 
 import Watcher from '../core/watcher'
 import config from '../config'
@@ -29,8 +29,8 @@ export function _applyNaitveComponentOptions (template) {
       if (template[key] == null) {
         template[key] = options[key]
       }
-      else if (_.typof(template[key]) === 'object' &&
-        _.typof(options[key]) === 'object') {
+      else if (typof(template[key]) === 'object' &&
+        typof(options[key]) === 'object') {
         for (const subkey in options[key]) {
           if (template[key][subkey] == null) {
             template[key][subkey] = options[key][subkey]
@@ -232,7 +232,7 @@ export function _setStyle (el, style) {
  * add an event type and handler to an element and generate a dom update
  */
 export function _setEvent (el, type, handler) {
-  el.addEvent(type, _.bind(handler, this))
+  el.addEvent(type, bind(handler, this))
 }
 
 /**
@@ -251,7 +251,7 @@ export function _bindEvents (el, events) {
       handler = this[handler]
       /* istanbul ignore if */
       if (!handler) {
-        _.error(`The method "${handler}" is not defined.`)
+        console.debug(`[JS Framework] The method "${handler}" is not defined.`)
       }
     }
     this._setEvent(el, key, handler)

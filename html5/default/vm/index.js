@@ -3,7 +3,7 @@
  * ViewModel Constructor & definition
  */
 
-import * as _ from '../util'
+import { extend } from '../util'
 import * as state from '../core/state'
 import * as compiler from './compiler'
 import * as directive from './directive'
@@ -15,7 +15,7 @@ import { registerModules, registerMethods } from '../app/register'
 function callOldReadyEntry (vm, component) {
   if (component.methods &&
       component.methods.ready) {
-    _.warn('"exports.methods.ready" is deprecated, ' +
+    console.warn('[JS Framework] "exports.methods.ready" is deprecated, ' +
       'please use "exports.created" instead')
     component.methods.ready.call(vm)
   }
@@ -60,18 +60,18 @@ export default function Vm (
   // bind events and lifecycles
   this._initEvents(externalEvents)
 
-  _.debug(`"init" lifecycle in Vm(${this._type})`)
+  console.debug(`[JS Framework] "init" lifecycle in Vm(${this._type})`)
   this.$emit('hook:init')
   this._inited = true
   // proxy data and methods
   // observe data and add this to vms
   this._data = typeof data === 'function' ? data() : data
   if (mergedData) {
-    _.extend(this._data, mergedData)
+    extend(this._data, mergedData)
   }
   this._initState()
 
-  _.debug(`"created" lifecycle in Vm(${this._type})`)
+  console.debug(`[JS Framework] "created" lifecycle in Vm(${this._type})`)
   this.$emit('hook:created')
   this._created = true
   // backward old ready entry
@@ -82,8 +82,8 @@ export default function Vm (
   this._build()
 }
 
-_.extend(Vm.prototype, state, compiler, directive, domHelper, events)
-_.extend(Vm, {
+extend(Vm.prototype, state, compiler, directive, domHelper, events)
+extend(Vm, {
   registerModules,
   registerMethods
 })

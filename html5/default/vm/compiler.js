@@ -10,7 +10,10 @@
  * events.js: $on
  */
 
-import * as _ from '../util'
+import {
+  extend,
+  bind
+} from '../util'
 
 /**
  * build(externalDirs)
@@ -47,7 +50,7 @@ export function _build () {
     this._compile(template, this._parentEl)
   }
 
-  _.debug(`"ready" lifecycle in Vm(${this._type})`)
+  console.debug(`[JS Framework] "ready" lifecycle in Vm(${this._type})`)
   this.$emit('hook:ready')
   this._ready = true
 }
@@ -75,18 +78,18 @@ export function _compile (target, dest, meta) {
   }
   meta = meta || {}
   if (context._targetIsContent(target)) {
-    _.debug('compile "content" block by', target)
+    console.debug('[JS Framework] compile "content" block by', target)
     context._content = context._createBlock(dest)
     return
   }
 
   if (context._targetNeedCheckRepeat(target, meta)) {
-    _.debug('compile "repeat" logic by', target)
+    console.debug('[JS Framework] compile "repeat" logic by', target)
     context._compileRepeat(target, dest)
     return
   }
   if (context._targetNeedCheckShown(target, meta)) {
-    _.debug('compile "if" logic by', target)
+    console.debug('[JS Framework] compile "if" logic by', target)
     context._compileShown(target, dest, meta)
     return
   }
@@ -98,11 +101,11 @@ export function _compile (target, dest, meta) {
   const type = typeGetter
   const component = context._targetIsComposed(target, type)
   if (component) {
-    _.debug('compile composed component by', target)
+    console.debug('[JS Framework] compile composed component by', target)
     context._compileCustomComponent(component, target, dest, type, meta)
     return
   }
-  _.debug('compile native component by', target)
+  console.debug('[JS Framework] compile native component by', target)
   context._compileNativeComponent(target, dest, type)
 }
 
@@ -250,7 +253,7 @@ export function _compileShown (target, dest, meta) {
  */
 export function _compileType (target, dest, typeGetter, meta) {
   const type = typeGetter.call(this)
-  const newMeta = Object.assign({ type }, meta)
+  const newMeta = extend({ type }, meta)
   const fragBlock = this._createBlock(dest)
 
   if (dest.element && dest.children) {
@@ -258,7 +261,7 @@ export function _compileType (target, dest, typeGetter, meta) {
   }
 
   this._watch(typeGetter, (value) => {
-    const newMeta = Object.assign({ type: value }, meta)
+    const newMeta = extend({ type: value }, meta)
     this._removeBlock(fragBlock, true)
     this._compile(target, fragBlock, newMeta)
   })
@@ -311,11 +314,11 @@ export function _compileNativeComponent (template, dest, type) {
   let element
   if (dest.ref === '_documentElement') {
     // if its parent is documentElement then it's a body
-    _.debug('compile to create body for', type)
+    console.debug(`[JS Framework] compile to create body for ${type}`)
     element = this._createBody(type)
   }
   else {
-    _.debug('compile to create element for', type)
+    console.debug(`[JS Framework] compile to create element for ${type}`)
     element = this._createElement(type)
   }
 
@@ -329,7 +332,7 @@ export function _compileNativeComponent (template, dest, type) {
       for (const type in target.events) {
         const handler = vm[target.events[type]]
         if (handler) {
-          element.addEvent(type, _.bind(handler, vm))
+          element.addEvent(type, bind(handler, vm))
         }
       }
     }
@@ -349,14 +352,14 @@ export function _compileNativeComponent (template, dest, type) {
   const treeMode = template.append === 'tree'
   const app = this._app || {}
   if (app.lastSignal !== -1 && !treeMode) {
-    _.debug('compile to append single node for', element)
+    console.debug('[JS Framework] compile to append single node for', element)
     app.lastSignal = this._attachTarget(element, dest)
   }
   if (app.lastSignal !== -1) {
     this._compileChildren(template, element)
   }
   if (app.lastSignal !== -1 && treeMode) {
-    _.debug('compile to append whole tree for', element)
+    console.debug('[JS Framework] compile to append whole tree for', element)
     app.lastSignal = this._attachTarget(element, dest)
   }
 }
@@ -401,8 +404,8 @@ export function _bindRepeat (target, fragBlock, info) {
         if (!mergedData.hasOwnProperty('INDEX')) {
           Object.defineProperty(mergedData, 'INDEX', {
             value: () => {
-              _.warn('"INDEX" in repeat is deprecated,' +
-                ' please use "$index" instead')
+              console.warn('[JS Framework] "INDEX" in repeat is deprecated, ' +
+                'please use "$index" instead')
             }
           })
         }
@@ -420,7 +423,7 @@ export function _bindRepeat (target, fragBlock, info) {
 
   const list = this._watchBlock(fragBlock, getter, 'repeat',
     (data) => {
-      _.debug('the "repeat" item has changed', data)
+      console.debug('[JS Framework] the "repeat" item has changed', data)
       if (!fragBlock) {
         return
       }
@@ -504,7 +507,7 @@ export function _bindRepeat (target, fragBlock, info) {
 export function _bindShown (target, fragBlock, meta) {
   const display = this._watchBlock(fragBlock, target.shown, 'shown',
     (display) => {
-      _.debug('the "if" item was changed', display)
+      console.debug('[JS Framework] the "if" item was changed', display)
 
       if (!fragBlock || !!fragBlock.display === !!display) {
         return
