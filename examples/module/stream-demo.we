@@ -59,6 +59,9 @@
           console.log('get:'+ret);
           me.postResult = ret.data;
         }
+      },function(response){
+        console.log('get in progress:'+response.length);
+        me.postResult = "bytes received:"+response.length;
       });
     }
   };

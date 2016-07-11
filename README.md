@@ -29,7 +29,7 @@ Please ***INSTALL [Git for Windows](https://git-scm.com/download/win)*** and run
     0. Install [Android Environment](http://developer.android.com/training/basics/firstapp/index.html)
 0. Run playground, In Android Studio
     0. Open `android/playground`
-    0. In `app/java/com.alibaba.weex/WXMainActivity`, modify `CURRENT_IP` to your local IP
+    0. In `app/java/com.alibaba.weex/IndexActivity`, modify `CURRENT_IP` to your local IP
     0. Click <img src="http://gtms04.alicdn.com/tps/i4/TB1wCcqMpXXXXakXpXX3G7tGXXX-34-44.png" height="16" > (`Run` button)
 0. [Add an example](./examples/README.md#add-an-example)
 
