@@ -44,7 +44,7 @@ function generateContent () {
 
 function writeContent() {
   var content = generateContent()
-  var filePath = path.join(dirPath, 'frameworks.js')
+  var filePath = path.join(dirPath, 'config.js')
   fs.writeFileSync(filePath, content)
 }
 

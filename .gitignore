@@ -22,7 +22,7 @@ pids
 *.seed
 
 # build framework options by script
-html5/runtime/frameworks.js
+html5/runtime/config.js
 
 # e2e test
 html5/test/e2e/reports

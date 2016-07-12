@@ -2,7 +2,7 @@ var path = require('path')
 var fs = require('fs')
 
 var dirPath = path.resolve(__dirname, '..', 'html5', 'runtime')
-var filePath = path.join(dirPath, 'frameworks.js')
+var filePath = path.join(dirPath, 'config.js')
 if (!fs.existsSync(filePath)) {
   require('child_process').spawnSync('npm', ['run', 'build:config'])
 }
