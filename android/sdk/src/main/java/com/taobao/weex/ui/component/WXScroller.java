@@ -229,7 +229,6 @@ import com.taobao.weex.ui.view.refresh.wrapper.BounceScrollerView;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -333,9 +332,6 @@ public class WXScroller extends WXVContainer implements WXScrollViewListener,Scr
       return;
     }
 
-    if (mChildren == null) {
-      mChildren = new ArrayList<>();
-    }
     int count = mChildren.size();
     index = index >= count ? -1 : index;
     if (index == -1) {
