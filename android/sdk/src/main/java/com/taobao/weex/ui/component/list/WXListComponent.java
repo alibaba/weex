@@ -839,7 +839,14 @@ public class WXListComponent extends WXVContainer implements
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        long id;
+        try {
+            id = Long.parseLong(getChild(position).getDomObject().ref);
+        } catch (RuntimeException e) {
+            WXLogUtils.e(TAG, WXLogUtils.getStackTrace(e));
+            id = RecyclerView.NO_ID;
+        }
+        return id;
     }
 
     @Override
