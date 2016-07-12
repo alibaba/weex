@@ -208,7 +208,6 @@ import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.SparseArray;
@@ -270,8 +269,8 @@ public class WXListComponent extends WXVContainer implements
     private static final Pattern transformPattern = Pattern.compile("([a-z]+)\\(([0-9\\.]+),?([0-9\\.]+)?\\)");
 
     private SparseArray<WXComponent> mAppearComponents = new SparseArray<>();
-    private ArrayMap<Integer,ArrayList<WXComponent>> mViewTypes;
-    private ArrayMap<String, Long> mRefToViewType;
+    private HashMap<Integer,ArrayList<WXComponent>> mViewTypes;
+    private HashMap<String, Long> mRefToViewType;
 
     protected BounceRecyclerView bounceRecyclerView;
 
@@ -851,7 +850,7 @@ public class WXListComponent extends WXVContainer implements
         int id = generateViewType(component);
 
         if (mViewTypes == null) {
-            mViewTypes = new ArrayMap<>();
+            mViewTypes = new HashMap<>();
         }
 
         ArrayList<WXComponent> mTypes = mViewTypes.get(id);
@@ -888,7 +887,7 @@ public class WXListComponent extends WXVContainer implements
 
             if (!TextUtils.isEmpty(type)) {
                 if (mRefToViewType == null) {
-                    mRefToViewType = new ArrayMap<>();
+                    mRefToViewType = new HashMap<>();
                 }
                 if (!mRefToViewType.containsKey(type)) {
                     mRefToViewType.put(type, id);
