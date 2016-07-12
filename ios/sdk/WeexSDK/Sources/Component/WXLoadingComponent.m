@@ -99,14 +99,15 @@
     id<WXScrollerProtocol> scrollerProtocol = [self ancestorScroller];
     if (scrollerProtocol == nil || !_initFinished)
         return;
-    
     WXComponent *scroller = (WXComponent*)scrollerProtocol;
     CGPoint contentOffset = [scrollerProtocol contentOffset];
     if (_displayState) {
+        [self.view setAlpha:1.0];
         contentOffset.y = [scrollerProtocol contentSize].height - scroller.calculatedFrame.size.height + self.calculatedFrame.size.height;
         [scrollerProtocol setContentOffset:contentOffset animated:YES];
         [_indicator start];
     } else {
+        [self.view setAlpha:0.0];
         _displayState = NO;
         contentOffset.y = contentOffset.y - self.calculatedFrame.size.height;
         [scrollerProtocol setContentOffset:contentOffset animated:YES];
