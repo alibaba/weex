@@ -290,6 +290,12 @@ public class WXSDKInstance implements IWXActivityStateListener {
 
   private ViewGroup rootView;
 
+  public interface OnInstanceVisibleListener{
+    void onAppear();
+    void onDisappear();
+  }
+  private List<OnInstanceVisibleListener> mVisibleListeners = new ArrayList<>();
+
   public WXSDKInstance(Context context) {
     init(context);
   }
@@ -303,6 +309,14 @@ public class WXSDKInstance implements IWXActivityStateListener {
       return null;
     else
       return ((WXVContainer) (this.getGodCom())).getChild(0);
+  }
+
+  public void addOnInstanceVisibleListener(OnInstanceVisibleListener l){
+    mVisibleListeners.add(l);
+  }
+
+  public void removeOnInstanceVisibleListener(OnInstanceVisibleListener l){
+    mVisibleListeners.remove(l);
   }
 
   public void init(Context context) {
@@ -632,6 +646,10 @@ public class WXSDKInstance implements IWXActivityStateListener {
     WXComponent comp = getRootCom();
     if(comp != null) {
       WXBridgeManager.getInstance().fireEvent(this.mInstanceId, comp.getRef(), WXEventType.VIEWDISAPPEAR, null, null);
+      //call disappear of nested instances
+      for(OnInstanceVisibleListener instance:mVisibleListeners){
+        instance.onDisappear();
+      }
     }
   }
 
@@ -639,6 +657,9 @@ public class WXSDKInstance implements IWXActivityStateListener {
     WXComponent comp = getRootCom();
     if(comp != null) {
       WXBridgeManager.getInstance().fireEvent(this.mInstanceId, comp.getRef(), WXEventType.VIEWAPPEAR,null, null);
+      for(OnInstanceVisibleListener instance:mVisibleListeners){
+        instance.onAppear();
+      }
     }
   }
 
@@ -647,6 +668,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
     for (IWXActivityStateListener listener : mActivityStateListeners) {
       listener.onActivityResume();
     }
+    onViewAppear();
   }
 
   @Override
