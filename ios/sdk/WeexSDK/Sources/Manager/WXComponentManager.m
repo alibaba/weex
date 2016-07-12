@@ -68,6 +68,8 @@ static NSThread *WXComponentThread;
 
 - (void)dealloc
 {
+    free_css_node(_rootCSSNode);
+    [NSMutableArray wx_releaseArray:_fixedComponents];
 }
 
 #pragma mark Thread Management

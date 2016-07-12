@@ -28,6 +28,7 @@ typedef void(^OperationBlock)(void);
     return [super initWithRootViewController:baseViewController];
 }
 
+//reduced pop/push animation in iOS 7
 - (UIViewController *)popViewControllerAnimated:(BOOL)animated
 {
     if (WX_SYS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0"))
@@ -36,7 +37,7 @@ typedef void(^OperationBlock)(void);
     __weak typeof(self) weakSelf = self;
     [self addOperationBlock:^{
         if ([self.viewControllers count] > 0 ) {
-            UIViewController *viewController = [super popViewControllerAnimated:animated];
+            UIViewController *viewController = [super popViewControllerAnimated:NO];
             if (!viewController) {
                 weakSelf.operationInProcess = NO;
             }
@@ -54,7 +55,7 @@ typedef void(^OperationBlock)(void);
     __weak typeof(self) weakSelf = self;
     [self addOperationBlock:^{
         if ([weakSelf.viewControllers containsObject:viewController]) {
-            NSArray *viewControllers = [super popToViewController:viewController animated:animated];
+            NSArray *viewControllers = [super popToViewController:viewController animated:NO];
             if (viewControllers.count == 0) {
                 weakSelf.operationInProcess = NO;
             }
@@ -73,7 +74,7 @@ typedef void(^OperationBlock)(void);
     
     __weak typeof(self) weakSelf = self;
     [self addOperationBlock:^{
-        NSArray *viewControllers = [super popToRootViewControllerAnimated:animated];
+        NSArray *viewControllers = [super popToRootViewControllerAnimated:NO];
         if (viewControllers.count == 0) {
             weakSelf.operationInProcess = NO;
         }
@@ -87,7 +88,7 @@ typedef void(^OperationBlock)(void);
         return [super pushViewController:viewController animated:animated];
     
     [self addOperationBlock:^{
-        [super pushViewController:viewController animated:animated];
+        [super pushViewController:viewController animated:NO];
     }];
 }
 
