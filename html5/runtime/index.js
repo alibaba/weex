@@ -1,4 +1,4 @@
-import frameworks from './frameworks'
+import frameworks from './config'
 
 import { Document, Element, Comment } from '../vdom'
 
