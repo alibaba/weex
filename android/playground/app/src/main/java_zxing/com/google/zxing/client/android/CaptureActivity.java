@@ -16,6 +16,19 @@
 
 package com.google.zxing.client.android;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.DecodeHintType;
+import com.google.zxing.Result;
+import com.google.zxing.ResultMetadataType;
+import com.google.zxing.ResultPoint;
+import com.google.zxing.client.android.camera.CameraManager;
+import com.google.zxing.client.android.clipboard.ClipboardInterface;
+import com.google.zxing.client.android.history.HistoryActivity;
+import com.google.zxing.client.android.history.HistoryItem;
+import com.google.zxing.client.android.history.HistoryManager;
+import com.google.zxing.client.android.result.ResultHandler;
+import com.google.zxing.client.android.result.ResultHandlerFactory;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -47,18 +60,6 @@ import android.widget.Toast;
 
 import com.alibaba.weex.R;
 import com.alibaba.weex.WXPageActivity;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.DecodeHintType;
-import com.google.zxing.Result;
-import com.google.zxing.ResultMetadataType;
-import com.google.zxing.ResultPoint;
-import com.google.zxing.client.android.camera.CameraManager;
-import com.google.zxing.client.android.clipboard.ClipboardInterface;
-import com.google.zxing.client.android.history.HistoryActivity;
-import com.google.zxing.client.android.history.HistoryItem;
-import com.google.zxing.client.android.history.HistoryManager;
-import com.google.zxing.client.android.result.ResultHandler;
-import com.google.zxing.client.android.result.ResultHandlerFactory;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKEngine;
 
@@ -576,7 +577,7 @@ public final class CaptureActivity extends Activity implements
           String code = rawResult.getText();
           if (!TextUtils.isEmpty(code)) {
             Uri uri = Uri.parse(code);
-            if (uri.getPath().contains("bundle")) {
+            if (uri.getQueryParameterNames().contains("bundle")) {
               WXEnvironment.sDynamicMode = uri.getBooleanQueryParameter("debug", false);
               WXEnvironment.sDynamicUrl = uri.getQueryParameter("bundle");
               String tip=WXEnvironment.sDynamicMode?"Has switched to Dynamic Mode":"Has switched to Normal Mode";

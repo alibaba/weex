@@ -8,7 +8,7 @@
 
 #import "WXBridgeProtocol.h"
 
-@interface WXWebSocketBridge : NSObject <WXBridgeProtocol>
+@interface WXDebugLoggerBridge : NSObject <WXBridgeProtocol>
 
 - (instancetype)initWithURL:(NSURL *) URL;
 

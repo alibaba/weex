@@ -142,7 +142,7 @@
 
     if (value.count > 1) {
         y = [value[1] doubleValue];
-        if ([value[0] hasSuffix:@"%"] && _view) {
+        if ([value[1] hasSuffix:@"%"] && _view) {
             y *= _view.bounds.size.height / 100;
         } else {
             y = WXPixelResize(y);

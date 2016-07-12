@@ -200,7 +200,21 @@ static WXModuleFactory *_sharedInstance = nil;
     return dict;
 }
 
+- (NSDictionary *)_getModuleConfigs {
+    NSMutableDictionary *modelesDic = [[NSMutableDictionary alloc] init];
+    void (^moduleBlock)(id, id, BOOL *) = ^(id mKey, id mObj, BOOL * mStop) {
+        WXModuleConfig *modeleConfig = (WXModuleConfig *)mObj;
+        [modelesDic setObject:modeleConfig.clazz forKey:modeleConfig.name];
+    };
+    [_moduleMap enumerateKeysAndObjectsUsingBlock:moduleBlock];
+    return modelesDic;
+}
+
 #pragma mark Public Methods
+
++ (NSDictionary *)moduleConfigs {
+    return [[self _sharedInstance] _getModuleConfigs];
+}
 
 + (Class)classWithModuleName:(NSString *)name
 {
