@@ -520,6 +520,15 @@ public class WXDomObject extends CSSNode implements Cloneable {
     }
   }
 
+  /** package **/
+  /**
+   * Get default style map for component.
+   * @return
+   */
+  protected Map<String,String> getDefaultStyle(){
+    return null;
+  }
+
   public ArrayList<String> getFixedStyleRefs() {
     return fixedStyleRefs;
   }

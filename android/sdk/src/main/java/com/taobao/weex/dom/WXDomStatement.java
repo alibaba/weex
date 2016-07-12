@@ -1192,7 +1192,24 @@ class WXDomStatement {
       mRegistry.put(dom.ref, dom);
     }
 
-    if (dom.style != null && dom.style.size() > 0) {
+    if(dom.style == null){
+      dom.style = new WXStyle();
+    }
+    WXStyle style = dom.style;
+
+    /** merge default styles **/
+    Map<String,String> defaults = dom.getDefaultStyle();
+    if(defaults != null){
+      Iterator<Map.Entry<String,String>> it = defaults.entrySet().iterator();
+      while(it.hasNext()){
+        Map.Entry<String,String> entry = it.next();
+        if(!style.containsKey(entry.getKey())){
+          style.put(entry.getKey(),entry.getValue());
+        }
+      }
+    }
+
+    if (dom.style.size() > 0) {
       CSSTransformFromStyle.transformStyle(dom);
     }
 
