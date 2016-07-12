@@ -215,6 +215,9 @@ import com.taobao.weex.ui.view.WXCircleIndicator;
 import com.taobao.weex.utils.WXResourceUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * Slider indicator
@@ -284,6 +287,20 @@ public class WXIndicator extends WXComponent {
       mHost.setVisibility(View.VISIBLE);
     } else {
       mHost.setVisibility(View.GONE);
+    }
+  }
+
+  public static class IndicatorDomNode extends WXDomObject{
+    public IndicatorDomNode(){
+      super();
+    }
+
+    @Override
+    protected Map<String, String> getDefaultStyle() {
+      Map<String,String> map = new HashMap<>();
+      map.put("left","0");
+      map.put("top","0");
+      return map;
     }
   }
 }

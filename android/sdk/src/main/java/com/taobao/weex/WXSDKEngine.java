@@ -306,6 +306,7 @@ public class WXSDKEngine {
       registerModule("stream", WXStreamModule.class);
       registerModule("timer", WXTimerModule.class, true);
 
+      registerDomObject(WXBasicComponentType.INDICATOR, WXIndicator.IndicatorDomNode.class);
       registerDomObject(WXBasicComponentType.TEXT, WXTextDomObject.class);
       registerDomObject(WXBasicComponentType.INPUT, WXTextDomObject.class);
       registerDomObject(WXBasicComponentType.SWITCH, WXSwitchDomObject.class);
