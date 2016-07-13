@@ -441,6 +441,8 @@
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
+    [_loadingComponent.view setHidden:NO];
+    [_refreshComponent.view setHidden:NO];
     //refresh
     if (_refreshComponent && scrollView.contentOffset.y + _refreshComponent.calculatedFrame.size.height < _refreshComponent.calculatedFrame.origin.y) {
         [_refreshComponent refresh];
