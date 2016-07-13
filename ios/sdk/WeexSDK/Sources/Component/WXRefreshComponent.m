@@ -135,6 +135,11 @@
     [scrollerProtocol setContentOffset:offset animated:YES];
 }
 
+- (BOOL)displayState
+{
+    return _displayState;
+}
+
 - (void)setFrame:(CGRect)frame
 {
     CGRect rect = frame;
