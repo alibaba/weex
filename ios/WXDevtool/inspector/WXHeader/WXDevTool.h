@@ -13,7 +13,8 @@
 
 /**
  *  set debug status
- *  @param isDebug  : YES:open debug;default is NO
+ *  @param isDebug  : YES:open debug model and inspect model;
+ *                    default is NO,if isDebug is NO, open inspect only;
  **/
 + (void)setDebug:(BOOL)isDebug;
 
@@ -23,18 +24,12 @@
  **/
 + (BOOL)isDebug;
 
-/**
- *  launch weex inspector
- *  @param url  : ws://ip:port/debugProxy/native, ip and port is your devtool server address
- *                eg:@"ws://30.30.29.242:8088/debugProxy/native"
- **/
-+ (void)launchInspectorWithSocketUrl:(NSString *)url;
 
 /**
  *  launch weex debug
  *  @param url  : ws://ip:port/debugProxy/native, ip and port is your devtool server address
  *                eg:@"ws://30.30.29.242:8088/debugProxy/native"
  **/
-+ (void)launchDebugWithSocketUrl:(NSString *)url;
++ (void)launchDevToolDebugWithUrl:(NSString *)url;
 
 @end

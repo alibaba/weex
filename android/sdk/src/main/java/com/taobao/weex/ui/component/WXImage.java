@@ -226,6 +226,11 @@ import com.taobao.weex.utils.WXResourceUtils;
 @Component(lazyload = false)
 public class WXImage extends WXComponent {
 
+    @Deprecated
+    public WXImage(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
+        this(instance,dom,parent,isLazy);
+    }
+
     public WXImage(WXSDKInstance instance, WXDomObject node,
                    WXVContainer parent, boolean lazy) {
         super(instance, node, parent, lazy);

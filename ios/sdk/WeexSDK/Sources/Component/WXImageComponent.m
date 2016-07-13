@@ -49,8 +49,11 @@ static dispatch_queue_t WXImageUpdateQueue;
         if (!WXImageUpdateQueue) {
             WXImageUpdateQueue = dispatch_queue_create("com.taobao.weex.ImageUpdateQueue", DISPATCH_QUEUE_SERIAL);
         }
-        
-        _imageSrc = [WXConvert NSString:attributes[@"src"]];
+        if (attributes[@"src"]) {
+            _imageSrc = [WXConvert NSString:attributes[@"src"]];
+        } else {
+            WXLogWarning(@"image src is nil");
+        }
         _resizeMode = [WXConvert UIViewContentMode:attributes[@"resize"]];
         _imageQuality = [WXConvert WXImageQuality:styles[@"quality"]];
         _imageSharp = [WXConvert WXImageSharp:styles[@"sharpen"]];
@@ -164,7 +167,7 @@ static dispatch_queue_t WXImageUpdateQueue;
         if (weakSelf.imageSrc) {
             NSString *imageSrc = weakSelf.imageSrc;
             NSDictionary *userInfo = @{@"imageQuality":@(weakSelf.imageQuality), @"imageSharp":@(weakSelf.imageSharp)};
-            WXLogVerbose(@"Updating image, component:%@, image source:%@, userInfo:%@", self.ref, imageSrc, userInfo);
+            WXLogDebug(@"Updating image, component:%@, image source:%@, userInfo:%@", self.ref, imageSrc, userInfo);
             weakSelf.imageOperation = [[weakSelf imageLoader] downloadImageWithURL:imageSrc imageFrame:weakSelf.calculatedFrame userInfo:userInfo completed:^(UIImage *image, NSError *error, BOOL finished) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     __strong typeof(self) strongSelf = weakSelf;

@@ -250,6 +250,11 @@ public class WXSlider extends WXVContainer implements OnPageChangeListener {
 
   private boolean mShowIndicators;
 
+  @Deprecated
+  public WXSlider(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
+    this(instance,dom,parent,isLazy);
+  }
+
   public WXSlider(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
     super(instance, node, parent, lazy);
   }

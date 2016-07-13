@@ -225,6 +225,7 @@ public class WXBasicComponentType {
   public static final String INDICATOR = "indicator";
   public static final String VIDEO = "video";
   public static final String INPUT = "input";
+  public static final String TEXTAREA = "textarea";
   public static final String SWITCH = "switch";
   public static final String A = "a";
   public static final String EMBED = "embed";

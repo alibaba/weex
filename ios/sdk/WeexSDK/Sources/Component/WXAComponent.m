@@ -48,7 +48,7 @@
                                                             withContainer:)]) {
             __weak typeof(self) weexSelf = self;
             [navigationHandler pushViewControllerWithParam:@{@"url":_href} completion:^(NSString *code, NSDictionary *responseData) {
-                WXLogVerbose(@"Push success -> %@", weexSelf.href);
+                WXLogDebug(@"Push success -> %@", weexSelf.href);
             } withContainer:self.weexInstance.viewController];
         } else {
             WXLogError(@"Event handler of class %@ does not respond to pushViewControllerWithParam", NSStringFromClass([navigationHandler class]));

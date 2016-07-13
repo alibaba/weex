@@ -1,13 +1,14 @@
 <template>
-  <div style="flex-direction: column;">
-    <slider class="slider" interval="{{intervalValue}}" auto-play="{{isAutoPlay}}" >
-      <div class="slider-pages" repeat="{{itemList}}" onclick="goWeexSite" >
-        <image class="thumb" src="{{pictureUrl}}"></image>
-        <text class="title">{{title}}</text>
-      </div>
-    </slider>
 
   <div class="container" onclick="goWeexSite" >
+    <div style="flex-direction: column;">
+      <slider class="slider" interval="{{intervalValue}}" auto-play="{{isAutoPlay}}" >
+        <div class="slider-pages" repeat="{{itemList}}" onclick="goWeexSite" >
+          <image class="thumb" src="{{pictureUrl}}"></image>
+          <text class="title">{{title}}</text>
+        </div>
+      </slider>
+    </div>
     <div class="cell">
        <image class="thumb" src="http://t.cn/RGE3AJt"></image>  
        <text class="title">JavaScript</text>

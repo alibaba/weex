@@ -81,7 +81,7 @@ NSTimeInterval JSLibInitTime = 0;
     newOptions[bundleUrlOptionKey] = url.absoluteString;
     
     if (!self.pageName || [self.pageName isEqualToString:@""]) {
-        self.pageName = url.absoluteString ? : @"";
+        self.pageName = [WXUtility urlByDeletingParameters:url].absoluteString ? : @"";
     }
     
     __weak typeof(self) weakSelf = self;
@@ -147,7 +147,7 @@ NSTimeInterval JSLibInitTime = 0;
 
 - (void)renderView:(NSString *)source options:(NSDictionary *)options data:(id)data
 {
-    WXLogVerbose(@"Render view: %@, data:%@", self, [WXUtility JSONString:data]);
+    WXLogDebug(@"Render view: %@, data:%@", self, [WXUtility JSONString:data]);
     
     if (!self.instanceId) {
         WXLogError(@"Fail to find instance！");
@@ -157,7 +157,7 @@ NSTimeInterval JSLibInitTime = 0;
     _renderStartDate = [NSDate new];
     
     NSMutableDictionary *dictionary = [options mutableCopy];
-    if ([WXLog logLevel] >= WXLogLevelVerbose) {
+    if ([WXLog logLevel] >= WXLogLevelLog) {
         dictionary[@"debug"] = @(YES);
     }
     
@@ -191,7 +191,7 @@ NSTimeInterval JSLibInitTime = 0;
 
 - (void)refreshInstance:(id)data
 {
-    WXLogVerbose(@"refresh instance: %@, data:%@", self, [WXUtility JSONString:data]);
+    WXLogDebug(@"refresh instance: %@, data:%@", self, [WXUtility JSONString:data]);
     
     if (!self.instanceId) {
         WXLogError(@"Fail to find instance！");
@@ -212,9 +212,10 @@ NSTimeInterval JSLibInitTime = 0;
     
     __weak typeof(self) weakSelf = self;
     WXPerformBlockOnComponentThread(^{
-        [weakSelf.componentManager unload];
+        __strong typeof(self) strongSelf = weakSelf;
+        [strongSelf.componentManager unload];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [WXSDKManager removeInstanceforID:weakSelf.instanceId];
+            [WXSDKManager removeInstanceforID:strongSelf.instanceId];
         });
     });
 }
@@ -227,8 +228,10 @@ NSTimeInterval JSLibInitTime = 0;
     }
     
     NSMutableDictionary *data = [NSMutableDictionary dictionary];
-    [data setObject:[NSNumber numberWithLong:state] forKey:@"state"];
-    [[WXSDKManager bridgeMgr] updateState:self.instanceId data:data];
+    [data setObject:[NSString stringWithFormat:@"%ld",(long)state] forKey:@"state"];
+    //[[WXSDKManager bridgeMgr] updateState:self.instanceId data:data];
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:WX_INSTANCE_NOTIFICATION_UPDATE_STATE object:self userInfo:data];
 }
 
 - (id)moduleForClass:(Class)moduleClass
@@ -285,12 +288,12 @@ NSTimeInterval JSLibInitTime = 0;
 
 - (void)addObservers
 {
-//    [self addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew context:nil];
+    [self addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew context:nil];
 }
 
 - (void)removeObservers
 {
-//    [self removeObserver:self forKeyPath:@"state"];
+    [self removeObserver:self forKeyPath:@"state"];
 }
 
 - (WXComponentManager *)componentManager

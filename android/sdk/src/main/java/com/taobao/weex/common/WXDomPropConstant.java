@@ -339,7 +339,8 @@ public class WXDomPropConstant {
   public static final String WX_ATTR_INPUT_AUTOFOCUS = "autofocus";
   public static final String WX_ATTR_INPUT_LINES = "lines";
   public static final String WX_ATTR_INPUT_SINGLELINE = "singleline";
-  public static final String WX_ATTR_INPUT_MAXLENGTH = "maxlength";
+  public static final String WX_ATTR_INPUT_MAXLENGTH = "maxLength";
+  public static final String WX_ATTR_TEXTAREA_ROWS = "rows";
 
   //switch
   public static final String WX_ATTR_SWITCH_CHECKED = "checked";

@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/ba54782e95d6a294a75a9df39824e036", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/9789d0e14ae2b78a4968f43ed1875039", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(1);
@@ -143,41 +143,6 @@
 	    "append＝\"tree\"": ""
 	  },
 	  "children": [
-	    {
-	      "type": "refresh",
-	      "classList": [
-	        "refresh-view"
-	      ],
-	      "attr": {
-	        "display": function () {return this.refresh_display}
-	      },
-	      "events": {
-	        "refresh": "onrefresh"
-	      },
-	      "children": [
-	        {
-	          "type": "loading-indicator",
-	          "style": {
-	            "height": 60,
-	            "width": 60
-	          }
-	        },
-	        {
-	          "type": "text",
-	          "classList": [
-	            "refresh-arrow"
-	          ],
-	          "style": {
-	            "textAlign": "center",
-	            "color": "rgb(238,162,54)"
-	          },
-	          "shown": function () {return (this.refresh_display==='hide')},
-	          "attr": {
-	            "value": "Pull To Refresh"
-	          }
-	        }
-	      ]
-	    },
 	    {
 	      "type": "div",
 	      "classList": [
@@ -290,7 +255,7 @@
 	  }
 	})
 	})
-	;__weex_bootstrap__("@weex-component/ba54782e95d6a294a75a9df39824e036", {
+	;__weex_bootstrap__("@weex-component/9789d0e14ae2b78a4968f43ed1875039", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -1040,7 +1005,7 @@
 	      },
 	      "shown": function () {return !this.rightItemSrc},
 	      "events": {
-	        "click": "onclickrigthitem"
+	        "click": "onclickrightitem"
 	      }
 	    },
 	    {

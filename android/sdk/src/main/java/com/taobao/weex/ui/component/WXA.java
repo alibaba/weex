@@ -214,6 +214,11 @@ import com.taobao.weex.dom.WXDomObject;
 
 public class WXA extends WXDiv {
 
+  @Deprecated
+  public WXA(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
+    this(instance,dom,parent,isLazy);
+  }
+
   public WXA(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
     super(instance, dom, parent, isLazy);
   }
