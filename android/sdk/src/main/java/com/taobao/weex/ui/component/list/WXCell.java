@@ -218,6 +218,11 @@ public class WXCell extends WXVContainer {
 
     public int lastLocationY = -1;
 
+    @Deprecated
+    public WXCell(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
+        this(instance,dom,parent,isLazy);
+    }
+
     public WXCell(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
         super(instance, dom, parent,true );
     }

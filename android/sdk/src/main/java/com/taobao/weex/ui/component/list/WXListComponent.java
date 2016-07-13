@@ -276,6 +276,11 @@ public class WXListComponent extends WXVContainer implements
     private Map<String, HashMap<String, WXComponent>> mStickyMap = new HashMap<>();
     private WXStickyHelper stickyHelper;
 
+  @Deprecated
+  public WXListComponent(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
+    this(instance,dom,parent,isLazy);
+  }
+
     public WXListComponent(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
         super(instance, node, parent, lazy);
         stickyHelper = new WXStickyHelper(this);

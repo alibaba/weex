@@ -264,6 +264,11 @@ public class WXScroller extends WXVContainer implements WXScrollViewListener,Scr
   private WXStickyHelper stickyHelper;
   private Handler handler=new Handler();
 
+  @Deprecated
+  public WXScroller(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
+    this(instance,dom,parent,isLazy);
+  }
+
   public WXScroller(WXSDKInstance instance, WXDomObject node,
                     WXVContainer parent, boolean lazy) {
     super(instance, node, parent, lazy);

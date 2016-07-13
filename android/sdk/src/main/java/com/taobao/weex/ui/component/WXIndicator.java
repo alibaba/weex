@@ -224,6 +224,11 @@ import java.util.Map;
  */
 public class WXIndicator extends WXComponent {
 
+  @Deprecated
+  public WXIndicator(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
+    this(instance,dom,parent,isLazy);
+  }
+
   public WXIndicator(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
     super(instance, dom, parent, isLazy);
   }

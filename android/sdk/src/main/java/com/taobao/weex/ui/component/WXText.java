@@ -223,6 +223,11 @@ public class WXText extends WXComponent{
    **/
   public static final int sDEFAULT_SIZE = 32;
 
+  @Deprecated
+  public WXText(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
+    this(instance,dom,parent,isLazy);
+  }
+
   public WXText(WXSDKInstance instance, WXDomObject node,
                 WXVContainer parent, boolean lazy) {
     super(instance, node, parent, lazy);
