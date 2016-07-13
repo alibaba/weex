@@ -12,7 +12,6 @@ android {
         versionName "0.5.2.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk{
-            abiFilters "armeabi-v7a"
             abiFilters "x86"
             abiFilters "armeabi"
         }
