@@ -194,9 +194,10 @@ _Pragma("clang diagnostic pop") \
         args = @[instance, temp, options ?: @{}];
     }
     
+    __weak __typeof__(self) weakSelf = self;
     WXSDKInstance *sdkInstance = [WXSDKManager instanceForID:instance] ;
     [WXBridgeContext _timeSince:^() {
-        [self callJSMethod:@"createInstance" args:args];
+        [weakSelf callJSMethod:@"createInstance" args:args];
         WXLogInfo(@"CreateInstance Finish...%f", -[sdkInstance.renderStartDate timeIntervalSinceNow]);
     } endBlock:^(NSTimeInterval time) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -247,9 +248,9 @@ _Pragma("clang diagnostic pop") \
     __weak __typeof__(self) weakSelf = self;
     [WXBridgeContext _timeSince:^() {
         WXLogDebug(@"JSFramework starts executing...");
-        [self.jsBridge executeJSFramework:script];
+        [weakSelf.jsBridge executeJSFramework:script];
         WXLogDebug(@"JSFramework ends executing...");
-        if ([self.jsBridge exception]) {
+        if ([weakSelf.jsBridge exception]) {
             [WXSDKError monitorAlarm:NO errorCode:WX_ERR_LOAD_JSLIB msg:@"JSFramework executes error !"];
         }
         else {
@@ -260,7 +261,7 @@ _Pragma("clang diagnostic pop") \
             
             //execute methods which has been stored in methodQueue temporarily.
             for (NSDictionary *method in _methodQueue) {
-                [self callJSMethod:method[@"method"] args:method[@"args"]];
+                [weakSelf callJSMethod:method[@"method"] args:method[@"args"]];
             }
             [_methodQueue removeAllObjects];
         }

@@ -233,12 +233,14 @@ if ([removeEventName isEqualToString:@#eventName]) {\
 {
     NSMutableDictionary *position = [[NSMutableDictionary alloc] initWithCapacity:4];
     
-    CGRect frame = [self.view convertRect:self.calculatedFrame toView:self.view.window];
-    position[@"x"] = @(frame.origin.x);
-    position[@"y"] = @(frame.origin.y);
-    position[@"width"] = @(frame.size.width);
-    position[@"height"] = @(frame.size.height);
-    
+    if (!CGRectEqualToRect(self.calculatedFrame, CGRectZero)) {
+        CGRect frame = [self.view.superview convertRect:self.calculatedFrame toView:self.view.window];
+        position[@"x"] = @(frame.origin.x);
+        position[@"y"] = @(frame.origin.y);
+        position[@"width"] = @(frame.size.width);
+        position[@"height"] = @(frame.size.height);
+    }
+
     [self fireEvent:@"click" params:@{@"position":position}];
 }
 
