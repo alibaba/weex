@@ -3,7 +3,14 @@ const { expect } = chai
 
 global.callNative = function () {}
 
-import * as domHelper from '../../../../default/vm/dom-helper'
+import {
+  createElement,
+  createBlock,
+  createBody,
+  attachTarget,
+  moveTarget,
+  removeTarget
+} from '../../../../default/vm/dom-helper'
 import { Document } from '../../../../vdom'
 
 describe('help create body', () => {
@@ -13,7 +20,6 @@ describe('help create body', () => {
     vm = {
       _app: { doc: new Document('foo') }
     }
-    Object.assign(vm, domHelper)
   })
 
   afterEach(() => {
@@ -22,7 +28,7 @@ describe('help create body', () => {
   })
 
   it('create body with type', () => {
-    const result = vm._createBody('bar')
+    const result = createBody(vm, 'bar')
     expect(result).is.an.object
     expect(result.type).eql('bar')
     expect(result.ref).eql('_root')
@@ -37,7 +43,6 @@ describe('help create element', () => {
     vm = {
       _app: { doc: new Document('foo') }
     }
-    Object.assign(vm, domHelper)
   })
 
   afterEach(() => {
@@ -46,7 +51,7 @@ describe('help create element', () => {
   })
 
   it('create element with type', () => {
-    const result = vm._createElement('bar')
+    const result = createElement(vm, 'bar')
     expect(result).is.an.object
     expect(result.type).eql('bar')
     expect(result.docId).is.not.ok
@@ -60,7 +65,6 @@ describe('help create block', () => {
     vm = {
       _app: { doc: new Document('foo') }
     }
-    Object.assign(vm, domHelper)
   })
 
   afterEach(() => {
@@ -70,7 +74,7 @@ describe('help create block', () => {
 
   it('create block with element', () => {
     const element = vm._app.doc.createElement('bar')
-    const result = vm._createBlock(element)
+    const result = createBlock(vm, element)
     expect(result).is.an.object
     expect(result.start).is.an.object
     expect(result.end).is.an.object
@@ -90,7 +94,6 @@ describe('help attach target', () => {
     vm = {
       _app: { doc: new Document('foo') }
     }
-    Object.assign(vm, domHelper)
   })
 
   afterEach(() => {
@@ -99,86 +102,86 @@ describe('help attach target', () => {
   })
 
   it('attach body to documentElement', () => {
-    const target = vm._createBody('bar')
+    const target = createBody(vm, 'bar')
     const dest = vm._app.doc.documentElement
-    vm._attachTarget(target, dest)
+    attachTarget(vm, target, dest)
     expect(dest.children).eql([target])
   })
 
   it('attach element to body', () => {
-    const target = vm._createElement('bar')
-    const dest = vm._createBody('baz')
-    vm._attachTarget(target, dest)
+    const target = createElement(vm, 'bar')
+    const dest = createBody(vm, 'baz')
+    attachTarget(vm, target, dest)
     expect(dest.children).eql([target])
   })
 
   it('attach element to element', () => {
-    const target = vm._createElement('bar')
-    const dest = vm._createElement('baz')
-    vm._attachTarget(target, dest)
+    const target = createElement(vm, 'bar')
+    const dest = createElement(vm, 'baz')
+    attachTarget(vm, target, dest)
     expect(dest.children).eql([target])
   })
 
   it('attach block to element', () => {
-    const parent = vm._createElement('bar')
-    const target = vm._createBlock(parent)
-    const dest = vm._createElement('baz')
-    vm._attachTarget(target, dest)
+    const parent = createElement(vm, 'bar')
+    const target = createBlock(vm, parent)
+    const dest = createElement(vm, 'baz')
+    attachTarget(vm, target, dest)
     // block can't attach to another element
     expect(dest.children).eql([])
     expect(parent.children).eql([target.start, target.end])
   })
 
   it('attach element to block', () => {
-    const target = vm._createElement('bar')
-    const parent = vm._createElement('baz')
-    const dest = vm._createBlock(parent)
-    vm._attachTarget(target, dest)
+    const target = createElement(vm, 'bar')
+    const parent = createElement(vm, 'baz')
+    const dest = createBlock(vm, parent)
+    attachTarget(vm, target, dest)
     expect(parent.children).eql([dest.start, target, dest.end])
   })
 
   it('attach block to block', () => {
-    const element = vm._createElement('bar')
-    const target = vm._createBlock(element)
-    const parent = vm._createElement('baz')
-    const dest = vm._createBlock(parent)
-    vm._attachTarget(target, dest)
+    const element = createElement(vm, 'bar')
+    const target = createBlock(vm, element)
+    const parent = createElement(vm, 'baz')
+    const dest = createBlock(vm, parent)
+    attachTarget(vm, target, dest)
     // block can't attach to another element
     expect(parent.children).eql([dest.start, dest.end])
     expect(element.children).eql([target.start, target.end])
   })
 
   it('attach element to block with an update mark', () => {
-    const target = vm._createElement('bar')
-    const parent = vm._createElement('baz')
-    const dest = vm._createBlock(parent)
-    const mark = vm._createElement('qux')
+    const target = createElement(vm, 'bar')
+    const parent = createElement(vm, 'baz')
+    const dest = createBlock(vm, parent)
+    const mark = createElement(vm, 'qux')
 
-    vm._attachTarget(target, dest)
-    vm._attachTarget(mark, dest)
+    attachTarget(vm, target, dest)
+    attachTarget(vm, mark, dest)
     expect(parent.children).eql([dest.start, target, mark, dest.end])
 
     dest.updateMark = mark
-    vm._attachTarget(target, dest)
+    attachTarget(vm, target, dest)
     expect(parent.children).eql([dest.start, mark, target, dest.end])
     expect(dest.updateMark).eql(target)
   })
 
   it('attach block to block with an update mark', () => {
-    const element = vm._createElement('bar')
-    const target = vm._createBlock(element)
-    const parent = vm._createElement('baz')
-    const dest = vm._createBlock(parent)
-    const mark = vm._createElement('qux')
+    const element = createElement(vm, 'bar')
+    const target = createBlock(vm, element)
+    const parent = createElement(vm, 'baz')
+    const dest = createBlock(vm, parent)
+    const mark = createElement(vm, 'qux')
 
-    vm._attachTarget(target, dest)
-    vm._attachTarget(mark, dest)
+    attachTarget(vm, target, dest)
+    attachTarget(vm, mark, dest)
     // block can't attach to another element
     expect(parent.children).eql([dest.start, mark, dest.end])
     expect(element.children).eql([target.start, target.end])
 
     dest.updateMark = mark
-    vm._attachTarget(target, dest)
+    attachTarget(vm, target, dest)
     // block can't attach to another element
     expect(parent.children).eql([dest.start, mark, dest.end])
     expect(element.children).eql([target.start, target.end])
@@ -192,18 +195,17 @@ describe('help move target', () => {
     vm = {
       _app: { doc: new Document('foo') }
     }
-    Object.assign(vm, domHelper)
-    parent = vm._createElement('r')
-    dest = vm._createBlock(parent)
-    target1 = vm._createElement('t1')
-    vm._attachTarget(target1, dest)
-    block1 = vm._createBlock(dest)
-    target2 = vm._createElement('t2')
-    vm._attachTarget(target2, dest)
-    block2 = vm._createBlock(dest)
-    target3 = vm._createElement('t3')
-    vm._attachTarget(target3, block2)
-    block3 = vm._createBlock(block2)
+    parent = createElement(vm, 'r')
+    dest = createBlock(vm, parent)
+    target1 = createElement(vm, 't1')
+    attachTarget(vm, target1, dest)
+    block1 = createBlock(vm, dest)
+    target2 = createElement(vm, 't2')
+    attachTarget(vm, target2, dest)
+    block2 = createBlock(vm, dest)
+    target3 = createElement(vm, 't3')
+    attachTarget(vm, target3, block2)
+    block3 = createBlock(vm, block2)
   })
 
   afterEach(() => {
@@ -225,7 +227,7 @@ describe('help move target', () => {
     const mark = target2
     dest.updateMark = mark
 
-    vm._moveTarget(target1, mark)
+    moveTarget(vm, target1, mark)
 
     /* eslint-disable indent */
     expect(parent.children).eql([
@@ -242,7 +244,7 @@ describe('help move target', () => {
     const mark = block2.end
     dest.updateMark = mark
 
-    vm._moveTarget(target1, mark)
+    moveTarget(vm, target1, mark)
 
     /* eslint-disable indent */
     expect(parent.children).eql([
@@ -259,7 +261,7 @@ describe('help move target', () => {
     const mark = target2
     dest.updateMark = mark
 
-    vm._moveTarget(block1, mark)
+    moveTarget(vm, block1, mark)
 
     /* eslint-disable indent */
     expect(parent.children).eql([
@@ -277,7 +279,7 @@ describe('help move target', () => {
     const mark = block2.end
     dest.updateMark = mark
 
-    vm._moveTarget(block1, mark)
+    moveTarget(vm, block1, mark)
 
     /* eslint-disable indent */
     expect(parent.children).eql([
@@ -295,7 +297,7 @@ describe('help move target', () => {
     const mark = block1.end
     dest.updateMark = mark
 
-    vm._moveTarget(block2, mark)
+    moveTarget(vm, block2, mark)
 
     /* eslint-disable indent */
     expect(parent.children).eql([
@@ -317,7 +319,6 @@ describe('help remove target', () => {
     vm = {
       _app: { doc: new Document('foo') }
     }
-    Object.assign(vm, domHelper)
   })
 
   afterEach(() => {
@@ -327,54 +328,54 @@ describe('help remove target', () => {
 
   it('remove body', () => {
     const parent = vm._app.doc.documentElement
-    const element = vm._createBody('baz')
+    const element = createBody(vm, 'baz')
     parent.appendChild(element)
     expect(parent.children).eql([element])
-    vm._removeTarget(element)
+    removeTarget(vm, element)
     expect(parent.children).eql([])
   })
 
   it('remove element', () => {
-    const parent = vm._createElement('bar')
-    const element = vm._createElement('baz')
+    const parent = createElement(vm, 'bar')
+    const element = createElement(vm, 'baz')
     parent.appendChild(element)
     expect(parent.children).eql([element])
-    vm._removeTarget(element)
+    removeTarget(vm, element)
     expect(parent.children).eql([])
   })
 
   it('remove block', () => {
-    const element = vm._createElement('baz')
-    const prevElement = vm._createElement('prev')
-    const nextElement = vm._createElement('next')
-    const parent = vm._createElement('bar')
-    vm._attachTarget(prevElement, parent)
-    const block = vm._createBlock(parent)
-    vm._attachTarget(element, block)
-    vm._attachTarget(nextElement, parent)
+    const element = createElement(vm, 'baz')
+    const prevElement = createElement(vm, 'prev')
+    const nextElement = createElement(vm, 'next')
+    const parent = createElement(vm, 'bar')
+    attachTarget(vm, prevElement, parent)
+    const block = createBlock(vm, parent)
+    attachTarget(vm, element, block)
+    attachTarget(vm, nextElement, parent)
 
     expect(parent.children).eql([
       prevElement, block.start, element, block.end, nextElement])
 
-    vm._removeTarget(block)
+    removeTarget(vm, block)
     expect(parent.children).eql([
       prevElement, nextElement])
   })
 
   it('remove block but preserved itself', () => {
-    const element = vm._createElement('baz')
-    const prevElement = vm._createElement('prev')
-    const nextElement = vm._createElement('next')
-    const parent = vm._createElement('bar')
-    vm._attachTarget(prevElement, parent)
-    const block = vm._createBlock(parent)
-    vm._attachTarget(element, block)
-    vm._attachTarget(nextElement, parent)
+    const element = createElement(vm, 'baz')
+    const prevElement = createElement(vm, 'prev')
+    const nextElement = createElement(vm, 'next')
+    const parent = createElement(vm, 'bar')
+    attachTarget(vm, prevElement, parent)
+    const block = createBlock(vm, parent)
+    attachTarget(vm, element, block)
+    attachTarget(vm, nextElement, parent)
 
     expect(parent.children).eql([
       prevElement, block.start, element, block.end, nextElement])
 
-    vm._removeBlock(block, true)
+    removeTarget(vm, block, true)
     expect(parent.children).eql([
       prevElement, block.start, block.end, nextElement])
   })

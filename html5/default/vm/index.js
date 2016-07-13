@@ -4,22 +4,20 @@
  */
 
 import * as _ from '../util'
-import * as state from '../core/state'
-import * as compiler from './compiler'
-import * as directive from './directive'
-import * as domHelper from './dom-helper'
-import * as events from './events'
-
-import { registerModules, registerMethods } from '../app/register'
-
-function callOldReadyEntry (vm, component) {
-  if (component.methods &&
-      component.methods.ready) {
-    _.warn('"exports.methods.ready" is deprecated, ' +
-      'please use "exports.created" instead')
-    component.methods.ready.call(vm)
-  }
-}
+import {
+  initState
+} from '../core/state'
+import {
+  build
+} from './compiler'
+import {
+  initEvents,
+  mixinEvents
+} from './events'
+import {
+  registerModules,
+  registerMethods
+} from '../app/register'
 
 /**
  * ViewModel constructor
@@ -58,31 +56,38 @@ export default function Vm (
   this._type = type
 
   // bind events and lifecycles
-  this._initEvents(externalEvents)
+  initEvents(this, externalEvents)
 
   _.debug(`"init" lifecycle in Vm(${this._type})`)
   this.$emit('hook:init')
   this._inited = true
+
   // proxy data and methods
   // observe data and add this to vms
   this._data = typeof data === 'function' ? data() : data
   if (mergedData) {
     _.extend(this._data, mergedData)
   }
-  this._initState()
+  initState(this)
 
   _.debug(`"created" lifecycle in Vm(${this._type})`)
   this.$emit('hook:created')
   this._created = true
+
   // backward old ready entry
-  callOldReadyEntry(this, options)
+  if (options.methods && options.methods.ready) {
+    _.warn('"exports.methods.ready" is deprecated, ' +
+      'please use "exports.created" instead')
+    options.methods.ready.call(this)
+  }
 
   // if no parentElement then specify the documentElement
   this._parentEl = parentEl || this._app.doc.documentElement
-  this._build()
+  build(this)
 }
 
-_.extend(Vm.prototype, state, compiler, directive, domHelper, events)
+mixinEvents(Vm.prototype)
+
 _.extend(Vm, {
   registerModules,
   registerMethods

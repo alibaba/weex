@@ -11,6 +11,11 @@
  */
 
 import * as _ from '../util'
+import {
+  define,
+  bootstrap,
+  register
+} from './bundle'
 
 export function updateActions () {
   this.differ.flush()
@@ -29,25 +34,25 @@ export function init (code, data) {
 
   let result
   // @see: lib/app/bundle.js
-  const define = _.bind(this.define, this)
-  const bootstrap = (name, config, _data) => {
-    result = this.bootstrap(name, config, _data || data)
+  const bundleDefine = _.bind(define, this)
+  const bundleBootstrap = (name, config, _data) => {
+    result = bootstrap(this, name, config, _data || data)
     this.updateActions()
     this.doc.listener.createFinish()
     _.debug(`After intialized an instance(${this.id})`)
   }
 
   // backward(register/render)
-  const register = _.bind(this.register, this)
-  const render = (name, _data) => {
-    result = this.bootstrap(name, {}, _data)
+  const bundleRegister = _.bind(register, this)
+  const bundleRender = (name, _data) => {
+    result = bootstrap(this, name, {}, _data)
   }
 
-  const require = name => _data => {
-    result = this.bootstrap(name, {}, _data)
+  const bundleRequire = name => _data => {
+    result = bootstrap(this, name, {}, _data)
   }
 
-  const document = this.doc
+  const bundleDocument = this.doc
 
   let functionBody
   /* istanbul ignore if */
@@ -103,14 +108,14 @@ export function init (code, data) {
     )
 
     fn(
-      define,
-      require,
-      document,
-      bootstrap,
-      register,
-      render,
-      define,
-      bootstrap,
+      bundleDefine,
+      bundleRequire,
+      bundleDocument,
+      bundleBootstrap,
+      bundleRegister,
+      bundleRender,
+      bundleDefine,
+      bundleBootstrap,
       timerAPIs.setTimeout,
       timerAPIs.setInterval,
       timerAPIs.clearTimeout,
@@ -130,14 +135,14 @@ export function init (code, data) {
     )
 
     fn(
-      define,
-      require,
-      document,
-      bootstrap,
-      register,
-      render,
-      define,
-      bootstrap)
+      bundleDefine,
+      bundleRequire,
+      bundleDocument,
+      bundleBootstrap,
+      bundleRegister,
+      bundleRender,
+      bundleDefine,
+      bundleBootstrap)
   }
 
   return result

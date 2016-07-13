@@ -13,16 +13,14 @@ import {
   bind
 } from '../util'
 
-export function _initState () {
-  const vm = this
+export function initState (vm) {
   vm._watchers = []
-  vm._initData()
-  vm._initComputed()
-  vm._initMethods()
+  initData(vm)
+  initComputed(vm)
+  initMethods(vm)
 }
 
-export function _initData () {
-  const vm = this
+export function initData (vm) {
   let data = vm._data
 
   if (!isPlainObject(data)) {
@@ -41,8 +39,7 @@ export function _initData () {
 function noop () {
 }
 
-export function _initComputed () {
-  const vm = this
+export function initComputed (vm) {
   const computed = vm._computed
   if (computed) {
     for (let key in computed) {
@@ -84,8 +81,7 @@ function makeComputedGetter (getter, owner) {
   }
 }
 
-export function _initMethods () {
-  const vm = this
+export function initMethods (vm) {
   const methods = vm._methods
   if (methods) {
     for (let key in methods) {
