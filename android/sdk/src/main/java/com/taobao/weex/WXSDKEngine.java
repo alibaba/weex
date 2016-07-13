@@ -291,6 +291,10 @@ public class WXSDKEngine {
       registerDomObject(WXBasicComponentType.INPUT, BasicEditTextDomObject.class);
       registerDomObject(WXBasicComponentType.TEXTAREA, TextAreaEditTextDomObject.class);
       registerDomObject(WXBasicComponentType.SWITCH, WXSwitchDomObject.class);
+      registerDomObject(WXBasicComponentType.LIST, WXListDomObject.class);
+      registerDomObject(WXBasicComponentType.VLIST, WXListDomObject.class);
+      registerDomObject(WXBasicComponentType.HLIST, WXListDomObject.class);
+      registerDomObject(WXBasicComponentType.SCROLLER, WXScrollerDomObject.class);
     } catch (WXException e) {
       WXLogUtils.e("[WXSDKEngine] register:" + WXLogUtils.getStackTrace(e));
     }

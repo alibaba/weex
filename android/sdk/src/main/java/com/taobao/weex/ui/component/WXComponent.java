@@ -131,6 +131,7 @@ import android.content.Context;
 import android.graphics.PointF;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -151,6 +152,7 @@ import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.flex.CSSLayout;
 import com.taobao.weex.dom.flex.Spacing;
 import com.taobao.weex.ui.IFComponentHolder;
+import com.taobao.weex.ui.component.list.WXCell;
 import com.taobao.weex.ui.component.list.WXListComponent;
 import com.taobao.weex.ui.view.WXBackgroundDrawable;
 import com.taobao.weex.ui.view.WXCircleIndicator;
@@ -362,6 +364,14 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
 //      params.width = realWidth;
 //      params.height = realHeight;
 //      mHost.setLayoutParams(params);
+    } else if (mParent.getRealView() instanceof BounceRecyclerView && this instanceof WXCell) {
+      RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) mHost.getLayoutParams();
+      if (params == null)
+        params = new RecyclerView.LayoutParams(realWidth,realHeight);
+      params.width = realWidth;
+      params.height = realHeight;
+      params.setMargins(realLeft, 0, realRight, 0);
+      mHost.setLayoutParams(params);
     } else if (mParent.getRealView() instanceof FrameLayout) {
       FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(realWidth, realHeight);
       params.setMargins(realLeft, realTop, realRight, realBottom);
@@ -374,10 +384,6 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
       ScrollView.LayoutParams params = new ScrollView.LayoutParams(realWidth, realHeight);
       params.setMargins(realLeft, realTop, realRight, realBottom);
       mHost.setLayoutParams(params);
-    } else if (mParent.getRealView() instanceof BounceRecyclerView) {
-//      RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(realWidth, realHeight);
-//      params.setMargins(realLeft, 0, realRight, 0);
-//      mHost.setLayoutParams(params);
     }
 
     mPreRealWidth = realWidth;
