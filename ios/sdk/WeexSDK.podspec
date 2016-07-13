@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '7.0'
   s.source =  { :path => '.' }
   s.source_files = 'WeexSDK/Sources/**/*.{h,m,mm,c}'
-  s.resources = 'WeexSDK/Resources/weex_config.plist', 'WeexSDK/Resources/main.js'
+  s.resources = 'WeexSDK/Resources/main.js', 'WeexSDK/Resources/wx_load_error@3x.png'
 
   s.requires_arc = true
   s.prefix_header_file = 'WeexSDK/Sources/Supporting Files/WeexSDK-Prefix.pch'

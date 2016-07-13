@@ -44,6 +44,12 @@
  * @param name The module name
  **/
 + (NSMutableDictionary *)moduleMethodMapsWithName:(NSString *)name;
+
+
+/**
+ * @abstract Returns the registered modules.
+ */
++ (NSDictionary *) moduleConfigs;
        
 @end
 

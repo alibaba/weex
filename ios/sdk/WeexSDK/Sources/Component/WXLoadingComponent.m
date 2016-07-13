@@ -99,14 +99,23 @@
     
     WXComponent *scroller = (WXComponent*)scrollerProtocol;
     CGPoint contentOffset = [scrollerProtocol contentOffset];
+    NSInteger screen = [scrollerProtocol contentSize].height/([UIScreen mainScreen].bounds.size.height);
     if (_displayState) {
-        contentOffset.y = [scrollerProtocol contentSize].height - scroller.calculatedFrame.size.height + self.view.frame.size.height;
+        if (screen) {
+            contentOffset.y = [scrollerProtocol contentSize].height - scroller.calculatedFrame.size.height + self.view.frame.size.height;
+        } else {
+            contentOffset.y = self.view.frame.size.height;
+        }
+        
         [scrollerProtocol setContentOffset:contentOffset animated:YES];
         [_indicator start];
     } else {
         UIEdgeInsets insets = [scrollerProtocol contentInset];
         insets.bottom = 0;
-        
+        if (!screen) {
+            contentOffset.y = 0;
+            [scrollerProtocol setContentOffset:contentOffset animated:YES];
+        }
         [scrollerProtocol setContentInset:insets];
         [_indicator stop];
     }
@@ -127,8 +136,9 @@
     CGRect rect = self.view.frame;
     
     id<WXScrollerProtocol> scrollerProtocol = self.ancestorScroller;
+    WXComponent *scroller = (WXComponent*)scrollerProtocol;
     if (scrollerProtocol) {
-        rect.origin.y = [scrollerProtocol contentSize].height;
+        rect.origin.y = scroller.calculatedFrame.size.height;
     }
     
     [self.view setFrame:rect];
