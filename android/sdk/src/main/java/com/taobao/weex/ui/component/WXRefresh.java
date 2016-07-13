@@ -219,6 +219,11 @@ import com.taobao.weex.ui.view.refresh.wrapper.BaseBounceView;
  */
 public class WXRefresh extends WXBaseRefresh implements WXSwipeLayout.WXOnRefreshListener{
 
+  @Deprecated
+  public WXRefresh(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
+    this(instance,dom,parent,isLazy);
+  }
+
   public WXRefresh(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
     super(instance, node, parent, lazy);
   }
