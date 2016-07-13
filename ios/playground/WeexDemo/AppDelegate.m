@@ -88,16 +88,16 @@
     
 #ifdef DEBUG
     [WXDebugTool setDebug:YES];
-    [WXLog setLogLevel:WXLogLevelInfo];
-#else
-    [WXDebugTool setDebug:NO];
-#endif
-#ifndef UITEST
-    [[ATManager shareInstance] show];
+    [WXLog setLogLevel:WXLogLevelLog];
 #else
     [WXDebugTool setDebug:NO];
     [WXLog setLogLevel:WXLogLevelError];
 #endif
+    
+#ifndef UITEST
+    [[ATManager shareInstance] show];
+#endif
+    
 }
 
 -(UIViewController *)demoController

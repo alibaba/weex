@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/c83b0c06923ca78710a266e248ea7638", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/a7c8f395a9fe63d3701adaeb7a25eb97", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(1);
@@ -60,20 +60,42 @@
 	      var GET_URL = 'http://httpbin.org/get';
 	      var POST_URL = 'http://httpbin.org/post';
 	      
-	      stream.sendHttp({
+	      stream.fetch({
 	        method: 'GET',
-	        url: GET_URL
+	        url: GET_URL,
+	        type:'json'
 	      }, function(ret) {
-	        console.log('get', ret);
-	        me.getResult = ret;
+	        if(typeof ret === 'string'){
+	          ret = JSON.parse(ret);
+	        }
+	        if(!ret.ok){
+	          me.getResult = "request failed";
+	        }else{
+	          console.log('get:'+ret);
+	          me.getResult = ret.data;
+	        }
+	      },function(response){
+	        console.log('get in progress:'+response.length);
+	        me.getResult = "bytes received:"+response.length;
 	      });
 
-	      stream.sendHttp({
+	      stream.fetch({
 	        method: 'POST',
-	        url: POST_URL
+	        url: POST_URL,
+	        type:'json'
 	      }, function(ret) {
-	        console.log('post', ret);
-	        me.postResult = ret;
+	        if(typeof ret === 'string'){
+	          ret = JSON.parse(ret);
+	        }
+	        if(!ret.ok){
+	          me.postResult = "request failed";
+	        }else{
+	          console.log('get:'+ret);
+	          me.postResult = ret.data;
+	        }
+	      },function(response){
+	        console.log('get in progress:'+response.length);
+	        me.postResult = "bytes received:"+response.length;
 	      });
 	    }
 	  };
@@ -85,7 +107,7 @@
 	    {
 	      "type": "wxc-panel",
 	      "attr": {
-	        "title": "stream.sendHttp",
+	        "title": "stream.fetch",
 	        "type": "primary"
 	      },
 	      "children": [
@@ -122,7 +144,7 @@
 	  ]
 	})
 	})
-	;__weex_bootstrap__("@weex-component/c83b0c06923ca78710a266e248ea7638", {
+	;__weex_bootstrap__("@weex-component/a7c8f395a9fe63d3701adaeb7a25eb97", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -872,7 +894,7 @@
 	      },
 	      "shown": function () {return !this.rightItemSrc},
 	      "events": {
-	        "click": "onclickrigthitem"
+	        "click": "onclickrightitem"
 	      }
 	    },
 	    {
