@@ -47,7 +47,7 @@ function getTextWidth(text, font) {
 
 
 function rePostionVersion(vDis){
-    vDis =   vDis ? vDis : -20;
+    vDis =   vDis ? vDis : -28;
     if ($(".weex-version").length < 1){return ;}
     var vOffset = $(".weex-version").offset();
     var titleJObj = $(".weex-version").parents(".markdown-section").find("h1,h2,h3");
@@ -65,7 +65,14 @@ function rePostionTranslate(){
     titleJObj.append(translateMark);
 }
 
-window._rePostionVersion =   function () {
+window._rePostionAll =   function () {
     rePostionVersion();
     rePostionTranslate();
 }
+
+contentLoaded(window,function(){
+    setTimeout(function(){
+        window._rePostionAll();
+    },100);
+})
+

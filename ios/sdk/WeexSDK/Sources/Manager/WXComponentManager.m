@@ -431,8 +431,9 @@ static css_node_t * rootNodeGetChild(void *context, int i)
     
     [_indexDict removeAllObjects];
     [_uiTaskQueue removeAllObjects];
+
     dispatch_async(dispatch_get_main_queue(), ^{
-        _rootComponent = nil;
+         _rootComponent = nil;
     });
     
     [self _stopDisplayLink];
@@ -524,18 +525,16 @@ static css_node_t * rootNodeGetChild(void *context, int i)
     }
     
     layoutNode(_rootCSSNode, _rootCSSNode->style.dimensions[CSS_WIDTH], _rootCSSNode->style.dimensions[CSS_HEIGHT], CSS_DIRECTION_INHERIT);
-    //
-    //    if ([WXLog logLevel] >= WXLogLevelVerbose) {
-    //        print_css_node_NSLog(_cssNode);
-    //    }
     
     if ([_rootComponent needsLayout]) {
-//        print_css_node(_rootCSSNode, CSS_PRINT_LAYOUT | CSS_PRINT_STYLE | CSS_PRINT_CHILDREN);
+        if ([WXLog logLevel] >= WXLogLevelDebug) {
+            print_css_node(_rootCSSNode, CSS_PRINT_LAYOUT | CSS_PRINT_STYLE | CSS_PRINT_CHILDREN);
+        }
     }
     
     NSMutableSet<WXComponent *> *dirtyComponents = [NSMutableSet set];
     [_rootComponent _calculateFrameWithSuperAbsolutePosition:CGPointZero gatherDirtyComponents:dirtyComponents];
-    
+  
     for (WXComponent *dirtyComponent in dirtyComponents) {
         [self _addUITask:^{
             [dirtyComponent _layoutDidFinish];

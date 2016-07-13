@@ -49,8 +49,11 @@ static dispatch_queue_t WXImageUpdateQueue;
         if (!WXImageUpdateQueue) {
             WXImageUpdateQueue = dispatch_queue_create("com.taobao.weex.ImageUpdateQueue", DISPATCH_QUEUE_SERIAL);
         }
-        
-        _imageSrc = [WXConvert NSString:attributes[@"src"]];
+        if (attributes[@"src"]) {
+            _imageSrc = [WXConvert NSString:attributes[@"src"]];
+        } else {
+            WXLogWarning(@"image src is nil");
+        }
         _resizeMode = [WXConvert UIViewContentMode:attributes[@"resize"]];
         _imageQuality = [WXConvert WXImageQuality:styles[@"quality"]];
         _imageSharp = [WXConvert WXImageSharp:styles[@"sharpen"]];

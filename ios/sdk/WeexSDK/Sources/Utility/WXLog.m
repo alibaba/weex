@@ -43,7 +43,7 @@
 
 
 #ifdef DEBUG
-static const WXLogLevel defaultLogLevel = WXLogLevelDebug;
+static const WXLogLevel defaultLogLevel = WXLogLevelLog;
 #else
 static const WXLogLevel defaultLogLevel = WXLogLevelWarning;
 #endif
@@ -89,8 +89,8 @@ static id<WXLogProtocol> _externalLog;
       @(WXLogLevelError) : @"error",
       @(WXLogLevelWarning) : @"warn",
       @(WXLogLevelInfo) : @"info",
-      @(WXLogLevelDebug) : @"debug",
       @(WXLogLevelLog) : @"log",
+      @(WXLogLevelDebug) : @"debug",
       @(WXLogLevelOff) : @"off"
       };
     return [logLevelEnumToString objectForKey:@([self logLevel])];
@@ -180,7 +180,7 @@ static id<WXLogProtocol> _externalLog;
     NSArray *messageAry = [NSArray arrayWithObjects:message, nil];
     Class PDLogClass = NSClassFromString(@"PDDebugger");
     if (PDLogClass) {
-         SEL selector = @selector(coutLogWithLevel: arguments:);
+        SEL selector = NSSelectorFromString(@"coutLogWithLevel:arguments:");
         NSMethodSignature *methodSignature = [PDLogClass instanceMethodSignatureForSelector:selector];
         if (methodSignature == nil) {
             NSString *info = [NSString stringWithFormat:@"%@ not found", NSStringFromSelector(selector)];

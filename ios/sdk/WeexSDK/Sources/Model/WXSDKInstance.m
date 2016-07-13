@@ -81,7 +81,7 @@ NSTimeInterval JSLibInitTime = 0;
     newOptions[bundleUrlOptionKey] = url.absoluteString;
     
     if (!self.pageName || [self.pageName isEqualToString:@""]) {
-        self.pageName = url.absoluteString ? : @"";
+        self.pageName = [WXUtility urlByDeletingParameters:url].absoluteString ? : @"";
     }
     
     __weak typeof(self) weakSelf = self;
@@ -228,8 +228,10 @@ NSTimeInterval JSLibInitTime = 0;
     }
     
     NSMutableDictionary *data = [NSMutableDictionary dictionary];
-    [data setObject:[NSNumber numberWithLong:state] forKey:@"state"];
-    [[WXSDKManager bridgeMgr] updateState:self.instanceId data:data];
+    [data setObject:[NSString stringWithFormat:@"%ld",(long)state] forKey:@"state"];
+    //[[WXSDKManager bridgeMgr] updateState:self.instanceId data:data];
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:WX_INSTANCE_NOTIFICATION_UPDATE_STATE object:self userInfo:data];
 }
 
 - (id)moduleForClass:(Class)moduleClass
@@ -286,12 +288,12 @@ NSTimeInterval JSLibInitTime = 0;
 
 - (void)addObservers
 {
-//    [self addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew context:nil];
+    [self addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew context:nil];
 }
 
 - (void)removeObservers
 {
-//    [self removeObserver:self forKeyPath:@"state"];
+    [self removeObserver:self forKeyPath:@"state"];
 }
 
 - (WXComponentManager *)componentManager

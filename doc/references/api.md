@@ -1,5 +1,6 @@
 # APIs
 <span class="weex-version">0.4</span>
+<a href="https://github.com/weexteam/article/issues/30"  class="weex-translate">cn</a>
 
 You can access these apis through `this`(Vm) context in script methods.
 

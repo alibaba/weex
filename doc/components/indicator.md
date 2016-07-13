@@ -1,5 +1,6 @@
 # &lt;indicator&gt;
 <span class="weex-version">0.4</span>
+<a href="https://github.com/weexteam/article/wiki/%E6%AC%A2%E8%BF%8E%E5%8F%82%E4%B8%8EWeex%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91"  class="weex-translate incomplete">cn</a>
 
 ### Summary
 
@@ -24,7 +25,10 @@ There is no specific attribute for this component other than the [common attribu
 - support flexbox related styles
 - support box model related styles
 - support ``position`` related styles
-- support ``opacity``, ``background-color`` etc.
+
+**Note:** There are some specific details about the style `width` and `height` on this component: the position of indicator will not only depend on the `top`, `left`, `bottom` and `right`, but also depend on the value of `width` and `height`. Imagine there is a virtual container outside the indicator, and it inherit the `width` and `height` of the indicator. The `top`, `left`, `right` and `bottom` will always take effect on this container, not the indicator points themselves, and the indicator points will be positioned in the center of it. And also you should know the default `width` and `height` is the parent slider's `width` and `height`.
+
+**Note:** `background-color` is not recommended to apply on this component, and you should use `item-color` and `item-selectedColor` instead.
 
 ### Events
 

@@ -7,7 +7,8 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "WXBridgeMethod.h"
+
+@class WXBridgeMethod;
 
 @interface WXBridgeManager : NSObject
 
@@ -73,14 +74,17 @@
  **/
 - (void)registerComponents:(NSArray* )components;
 
+- (void)fireEvent:(NSString *)instanceId ref:(NSString *)ref type:(NSString *)type params:(NSDictionary *)params DEPRECATED_MSG_ATTRIBUTE("Use fireEvent:ref:type:params:domChanges: method instead.");
+
 /**
  *  FireEvent
  *  @param instanceId:   instance id
  *  @param ref       :   node reference
  *  @param type      :   event type
  *  @param params    :   parameters
+ *  @param domChanges:   dom value changes, used for two-way data binding
  **/
-- (void)fireEvent:(NSString *)instanceId ref:(NSString *)ref type:(NSString *)type params:(NSDictionary *)params;
+- (void)fireEvent:(NSString *)instanceId ref:(NSString *)ref type:(NSString *)type params:(NSDictionary *)params domChanges:(NSDictionary *)domChanges;
 
 /**
  *  callBack
