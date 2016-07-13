@@ -220,6 +220,11 @@ public abstract class WXVContainer extends WXComponent {
   private static final String TAG="WXVContainer";
   protected ArrayList<WXComponent> mChildren = new ArrayList<>();
 
+  @Deprecated
+  public WXVContainer(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
+    this(instance,dom,parent,isLazy);
+  }
+
   public WXVContainer(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
     super(instance, node, parent, lazy);
   }

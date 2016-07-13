@@ -218,6 +218,11 @@ import java.util.Map;
 
 public class WXSwitch extends WXComponent{
 
+  @Deprecated
+  public WXSwitch(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
+    this(instance,dom,parent,isLazy);
+  }
+
   public WXSwitch(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
     super(instance, dom, parent, isLazy);
   }

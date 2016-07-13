@@ -219,6 +219,11 @@ import com.taobao.weex.ui.view.WXFrameLayout;
 @Component(lazyload = false)
 public class WXHeader extends WXCell {
 
+  @Deprecated
+  public WXHeader(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
+    this(instance,dom,parent,isLazy);
+  }
+
   public WXHeader(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
     super(instance, node, parent, lazy);
     lazy(false);
