@@ -13,6 +13,7 @@ cd dist/weex-js-framework
 
 rm -Rf src
 mkdir src
+cp ../../.babelrc .
 cp -Rf ../../html5/* src/
 rm -Rf src/browser
 rm -Rf src/test
