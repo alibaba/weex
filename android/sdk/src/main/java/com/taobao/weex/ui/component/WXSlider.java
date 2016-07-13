@@ -229,6 +229,9 @@ import java.util.Map;
 
 public class WXSlider extends WXVContainer implements OnPageChangeListener {
 
+  public static final String INDEX = "index";
+  public static final String SHOW_INDICATORS = "showIndicators";
+  public static final String AUTO_PLAY = "autoPlay";
   Map<String, Object> params = new HashMap<>();
   /**
    * Scrollable sliderview
@@ -349,18 +352,6 @@ public class WXSlider extends WXVContainer implements OnPageChangeListener {
     }
   }
 
-//  @Override
-//  protected void bindImpl(View view) {
-//    if(view==null){
-//      super.bindImpl(view);
-//    }
-//    else if(view instanceof ViewGroup){
-//      if(((ViewGroup) view).getChildAt(0) instanceof WXCircleViewPager){
-//        super.bindImpl(((ViewGroup) view).getChildAt(0));
-//      }
-//    }
-//  }
-
   public void addIndicator(WXIndicator indicator) {
     mIndicator = indicator;
     mIndicator.getView().setCircleViewPager(mViewPager);
@@ -384,7 +375,7 @@ public class WXSlider extends WXVContainer implements OnPageChangeListener {
     mViewPager.setCurrentItem(i);
   }
 
-  @WXComponentProp(name = "autoPlay")
+  @WXComponentProp(name = AUTO_PLAY)
   public void setAutoPlay(String autoPlay) {
     if (TextUtils.isEmpty(autoPlay) || autoPlay.equals("false")) {
       mViewPager.stopAutoScroll();
@@ -394,7 +385,7 @@ public class WXSlider extends WXVContainer implements OnPageChangeListener {
     }
   }
 
-  @WXComponentProp(name = "showIndicators")
+  @WXComponentProp(name = SHOW_INDICATORS)
   public void setShowIndicators(String show) {
     if (TextUtils.isEmpty(show) || show.equals("false")) {
       mShowIndicators = false;
@@ -411,6 +402,13 @@ public class WXSlider extends WXVContainer implements OnPageChangeListener {
   @Override
   public void onPageScrolled(int arg0, float arg1, int arg2) {
 
+  }
+
+  @WXComponentProp(name = INDEX)
+  public void setIndex(int index){
+    if(mViewPager != null){
+      mViewPager.setCurrentItem(index);
+    }
   }
 
   @Override
