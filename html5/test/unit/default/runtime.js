@@ -7,7 +7,7 @@ const {
 chai.use(sinonChai)
 
 import framework from '../../../runtime'
-import frameworks from '../../../runtime/frameworks'
+import frameworks from '../../../runtime/config'
 import config from '../../../default/config'
 import Vm from '../../../default/vm'
 
