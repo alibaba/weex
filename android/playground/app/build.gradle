@@ -8,7 +8,7 @@ android {
         applicationId "com.alibaba.weex"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 3
+        versionCode 4
         versionName "0.5.2.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk{
