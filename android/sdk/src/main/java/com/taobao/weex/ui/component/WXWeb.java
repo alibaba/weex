@@ -204,8 +204,10 @@
  */
 package com.taobao.weex.ui.component;
 
+import android.content.Context;
 import android.text.TextUtils;
 
+import android.view.View;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.dom.WXDomObject;
@@ -235,8 +237,7 @@ public class WXWeb extends WXComponent {
     }
 
     @Override
-    protected void initView() {
-
+    protected View initComponentHostView(Context context) {
         mWebView.setOnErrorListener(new IWebView.OnErrorListener() {
             @Override
             public void onError(String type, Object message) {
@@ -273,7 +274,7 @@ public class WXWeb extends WXComponent {
                 }
             }
         });
-        mHost = mWebView.getView();
+        return mWebView.getView();
     }
 
     @Override
