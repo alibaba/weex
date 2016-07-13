@@ -390,14 +390,14 @@ public class WXSoInstallMgrSdk {
       return false;
     }
     try{
-
+      long start=System.currentTimeMillis();
       if(WXSoInstallMgrSdk.class.getClassLoader() instanceof PathClassLoader ) {
 
         String path = ((PathClassLoader) (WXSoInstallMgrSdk.class.getClassLoader())).findLibrary(libName);
         File file = new File(path);
 
         if (!file.exists() || size == file.length()) {
-          WXLogUtils.e("weex so size check path :" + path);
+          WXLogUtils.w("weex so size check path :" + path+"   "+(System.currentTimeMillis() - start));
           return true;
         } else {
           return false;
