@@ -132,6 +132,8 @@ import com.taobao.weex.common.WXModule;
 import com.taobao.weex.dom.WXDomModule;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.WXDomRegistry;
+import com.taobao.weex.dom.WXListDomObject;
+import com.taobao.weex.dom.WXScrollerDomObject;
 import com.taobao.weex.dom.WXSwitchDomObject;
 import com.taobao.weex.dom.WXTextDomObject;
 import com.taobao.weex.dom.module.WXModalUIModule;
@@ -310,6 +312,10 @@ public class WXSDKEngine {
       registerDomObject(WXBasicComponentType.TEXT, WXTextDomObject.class);
       registerDomObject(WXBasicComponentType.INPUT, WXTextDomObject.class);
       registerDomObject(WXBasicComponentType.SWITCH, WXSwitchDomObject.class);
+      registerDomObject(WXBasicComponentType.LIST, WXListDomObject.class);
+      registerDomObject(WXBasicComponentType.VLIST, WXListDomObject.class);
+      registerDomObject(WXBasicComponentType.HLIST, WXListDomObject.class);
+      registerDomObject(WXBasicComponentType.SCROLLER, WXScrollerDomObject.class);
     } catch (WXException e) {
       WXLogUtils.e("[WXSDKEngine] register:" + WXLogUtils.getStackTrace(e));
     }
