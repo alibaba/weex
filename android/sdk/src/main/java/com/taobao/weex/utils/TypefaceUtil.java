@@ -202,36 +202,59 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.ui.component;
+package com.taobao.weex.utils;
+
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import com.taobao.weex.dom.WXStyle;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * basic Component types
+ * Created by sospartan on 7/13/16.
  */
-public class WXBasicComponentType {
+public class TypefaceUtil {
+  private static final Map<String, Typeface> sTypefaceCache = new HashMap<String, Typeface>();
 
-  public static final String TEXT = "text";
-  public static final String IMAGE = "image";
-  public static final String IMG = "img";
-  public static final String CONTAINER = "container";
-  public static final String DIV = "div";
-  public static final String SCROLLER = "scroller";
-  public static final String SLIDER = "slider";
-  public static final String LIST = "list";
-  public static final String VLIST = "vlist";
-  public static final String HLIST = "hlist";
-  public static final String CELL = "cell";
-  public static final String HEADER = "header";
-  public static final String FOOTER = "footer";
-  public static final String INDICATOR = "indicator";
-  public static final String VIDEO = "video";
-  public static final String INPUT = "input";
-  public static final String TEXTAREA = "textarea";
-  public static final String SWITCH = "switch";
-  public static final String A = "a";
-  public static final String EMBED = "embed";
-  public static final String WEB = "web";
-  public static final String REFRESH = "refresh";
-  public static final String LOADING = "loading";
-  public static final String LOADING_INDICATOR = "loading-indicator";
+  public static void applyFontStyle(Paint paint, int style, int weight, String family) {
+    int oldStyle;
+    Typeface typeface = paint.getTypeface();
+    if (typeface == null) {
+      oldStyle = 0;
+    } else {
+      oldStyle = typeface.getStyle();
+    }
 
+    int want = 0;
+    if ((weight == Typeface.BOLD)
+      || ((oldStyle & Typeface.BOLD) != 0 && weight == WXStyle.UNSET)) {
+      want |= Typeface.BOLD;
+    }
+
+    if ((style == Typeface.ITALIC)
+      || ((oldStyle & Typeface.ITALIC) != 0 && style == WXStyle.UNSET)) {
+      want |= Typeface.ITALIC;
+    }
+
+    if (family != null) {
+      typeface = getOrCreateTypeface(family, want);
+    }
+
+    if (typeface != null) {
+      paint.setTypeface(Typeface.create(typeface, want));
+    } else {
+      paint.setTypeface(Typeface.defaultFromStyle(want));
+    }
+  }
+
+  public static Typeface getOrCreateTypeface(String family, int style) {
+    if (sTypefaceCache.get(family) != null) {
+      return sTypefaceCache.get(family);
+    }
+
+    Typeface typeface = Typeface.create(family, style);
+    sTypefaceCache.put(family, typeface);
+    return typeface;
+  }
 }

@@ -204,34 +204,48 @@
  */
 package com.taobao.weex.ui.component;
 
+import android.text.TextUtils;
+import android.widget.EditText;
+import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.common.WXDomPropConstant;
+import com.taobao.weex.dom.TextAreaEditTextDomObject;
+import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.view.WXEditText;
+
 /**
- * basic Component types
+ * Created by sospartan on 7/11/16.
  */
-public class WXBasicComponentType {
+public class Textarea extends AbstractEditComponent {
+  public Textarea(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
+    super(instance, dom, parent, isLazy);
+  }
 
-  public static final String TEXT = "text";
-  public static final String IMAGE = "image";
-  public static final String IMG = "img";
-  public static final String CONTAINER = "container";
-  public static final String DIV = "div";
-  public static final String SCROLLER = "scroller";
-  public static final String SLIDER = "slider";
-  public static final String LIST = "list";
-  public static final String VLIST = "vlist";
-  public static final String HLIST = "hlist";
-  public static final String CELL = "cell";
-  public static final String HEADER = "header";
-  public static final String FOOTER = "footer";
-  public static final String INDICATOR = "indicator";
-  public static final String VIDEO = "video";
-  public static final String INPUT = "input";
-  public static final String TEXTAREA = "textarea";
-  public static final String SWITCH = "switch";
-  public static final String A = "a";
-  public static final String EMBED = "embed";
-  public static final String WEB = "web";
-  public static final String REFRESH = "refresh";
-  public static final String LOADING = "loading";
-  public static final String LOADING_INDICATOR = "loading-indicator";
+  @Override
+  protected void appleStyleAfterCreated(WXEditText editText) {
+    super.appleStyleAfterCreated(editText);
+    String rowsStr = (String) mDomObj.style.get(WXDomPropConstant.WX_ATTR_TEXTAREA_ROWS);
 
+    int rows = TextAreaEditTextDomObject.DEFAULT_ROWS;
+    try{
+      if(!TextUtils.isEmpty(rowsStr)) {
+        rows = Integer.parseInt(rowsStr);
+      }
+    }catch (NumberFormatException e){
+      //ignore
+      e.printStackTrace();
+    }
+
+    editText.setLines(rows);
+    editText.setMinLines(rows);
+  }
+
+  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_TEXTAREA_ROWS)
+  public void setRows(int rows){
+    WXEditText text = getView();
+    if(text == null||rows <=0 ){
+      return;
+    }
+
+    text.setLines(rows);
+  }
 }

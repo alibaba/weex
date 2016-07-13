@@ -202,36 +202,43 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.ui.component;
+package com.taobao.weex.dom;
+
+import com.taobao.weex.common.WXDomPropConstant;
+import com.taobao.weex.dom.flex.Spacing;
+
+import java.util.Map;
 
 /**
- * basic Component types
+ * Created by sospartan on 7/12/16.
  */
-public class WXBasicComponentType {
+public class TextAreaEditTextDomObject extends BasicEditTextDomObject {
 
-  public static final String TEXT = "text";
-  public static final String IMAGE = "image";
-  public static final String IMG = "img";
-  public static final String CONTAINER = "container";
-  public static final String DIV = "div";
-  public static final String SCROLLER = "scroller";
-  public static final String SLIDER = "slider";
-  public static final String LIST = "list";
-  public static final String VLIST = "vlist";
-  public static final String HLIST = "hlist";
-  public static final String CELL = "cell";
-  public static final String HEADER = "header";
-  public static final String FOOTER = "footer";
-  public static final String INDICATOR = "indicator";
-  public static final String VIDEO = "video";
-  public static final String INPUT = "input";
-  public static final String TEXTAREA = "textarea";
-  public static final String SWITCH = "switch";
-  public static final String A = "a";
-  public static final String EMBED = "embed";
-  public static final String WEB = "web";
-  public static final String REFRESH = "refresh";
-  public static final String LOADING = "loading";
-  public static final String LOADING_INDICATOR = "loading-indicator";
+  public static final int DEFAULT_ROWS = 2;
+  private int mNumberOfLines = DEFAULT_ROWS;
+
+  @Override
+  protected float getMeasureHeight(){
+    return getMeasuredLineHeight() * mNumberOfLines;
+  }
+
+
+  @Override
+  protected void updateStyleAndAttrs() {
+    super.updateStyleAndAttrs();
+    if (attr != null) {
+      String rowsStr = (String) attr.get(WXDomPropConstant.WX_ATTR_TEXTAREA_ROWS);
+      if (rowsStr != null) {
+        try {
+          int lines = Integer.parseInt(rowsStr);
+          if (lines > 0) {
+            mNumberOfLines = lines;
+          }
+        } catch (NumberFormatException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+  }
 
 }

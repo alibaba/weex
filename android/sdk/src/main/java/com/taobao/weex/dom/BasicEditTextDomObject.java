@@ -202,36 +202,93 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.ui.component;
+package com.taobao.weex.dom;
+
+import android.text.TextPaint;
+import com.taobao.weex.common.WXDomPropConstant;
+import com.taobao.weex.dom.flex.CSSConstants;
+import com.taobao.weex.dom.flex.CSSNode;
+import com.taobao.weex.dom.flex.MeasureOutput;
+import com.taobao.weex.ui.component.WXText;
+import com.taobao.weex.utils.TypefaceUtil;
+import com.taobao.weex.utils.WXViewUtils;
+
+import static com.taobao.weex.dom.WXStyle.UNSET;
 
 /**
- * basic Component types
+ * Created by sospartan on 7/12/16.
  */
-public class WXBasicComponentType {
+public class BasicEditTextDomObject extends WXDomObject {
 
-  public static final String TEXT = "text";
-  public static final String IMAGE = "image";
-  public static final String IMG = "img";
-  public static final String CONTAINER = "container";
-  public static final String DIV = "div";
-  public static final String SCROLLER = "scroller";
-  public static final String SLIDER = "slider";
-  public static final String LIST = "list";
-  public static final String VLIST = "vlist";
-  public static final String HLIST = "hlist";
-  public static final String CELL = "cell";
-  public static final String HEADER = "header";
-  public static final String FOOTER = "footer";
-  public static final String INDICATOR = "indicator";
-  public static final String VIDEO = "video";
-  public static final String INPUT = "input";
-  public static final String TEXTAREA = "textarea";
-  public static final String SWITCH = "switch";
-  public static final String A = "a";
-  public static final String EMBED = "embed";
-  public static final String WEB = "web";
-  public static final String REFRESH = "refresh";
-  public static final String LOADING = "loading";
-  public static final String LOADING_INDICATOR = "loading-indicator";
+  private TextPaint mPaint = new TextPaint();
+
+  //  private int mFontSize = UNSET;
+  private int mLineHeight = UNSET;
+//  private String mFontFamily = null;
+
+  public BasicEditTextDomObject() {
+    super();
+    mPaint.setTextSize(WXViewUtils.getRealPxByWidth(WXText.sDEFAULT_SIZE));
+    setMeasureFunction(new MeasureFunction() {
+      @Override
+      public void measure(CSSNode node, float width, MeasureOutput measureOutput) {
+        if (CSSConstants.isUndefined(width)) {
+          width = node.cssstyle.maxWidth;
+        }
+        measureOutput.height = getMeasureHeight();
+        measureOutput.width = width;
+      }
+    });
+  }
+
+  @Override
+  public void layoutBefore() {
+    super.layoutBefore();
+    updateStyleAndAttrs();
+  }
+
+  protected final float getMeasuredLineHeight() {
+    return mLineHeight != UNSET && mLineHeight > 0 ? mLineHeight : mPaint.getFontMetrics(null);
+  }
+
+  protected float getMeasureHeight() {
+    return getMeasuredLineHeight();
+  }
+
+  protected void updateStyleAndAttrs() {
+    if (style != null) {
+      int fontSize = UNSET, fontStyle = UNSET, fontWeight = UNSET;
+      String fontFamily = null;
+      if (style.containsKey(WXDomPropConstant.WX_FONTSIZE)) {
+        fontSize = WXStyle.getFontSize(style);
+      }
+
+      if (style.containsKey(WXDomPropConstant.WX_FONTFAMILY)) {
+        fontFamily = WXStyle.getFontFamily(style);
+      }
+
+      if (style.containsKey(WXDomPropConstant.WX_FONTSTYLE)) {
+        fontStyle = WXStyle.getFontStyle(style);
+      }
+
+      if (style.containsKey(WXDomPropConstant.WX_FONTWEIGHT)) {
+        fontWeight = WXStyle.getFontWeight(style);
+      }
+
+      int lineHeight = WXStyle.getLineHeight(style);
+      if (lineHeight != UNSET)
+        mLineHeight = lineHeight;
+
+      if (fontSize != UNSET)
+        mPaint.setTextSize(fontSize);
+
+      if (fontFamily != null) {
+        TypefaceUtil.applyFontStyle(mPaint, fontStyle, fontWeight, fontFamily);
+      }
+
+      this.dirty();
+
+    }
+  }
 
 }
