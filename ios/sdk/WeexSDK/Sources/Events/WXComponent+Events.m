@@ -231,7 +231,14 @@ if ([removeEventName isEqualToString:@#eventName]) {\
 
 - (void)onClick:(__unused UITapGestureRecognizer *)recognizer
 {
-    [self fireEvent:@"click" params:nil];
+    NSMutableDictionary *position = [[NSMutableDictionary alloc] initWithCapacity:4];
+    
+    position[@"x"] = @(self.absolutePosition.x);
+    position[@"y"] = @(self.absolutePosition.y);
+    position[@"width"] = @(self.calculatedFrame.size.width);
+    position[@"height"] = @(self.calculatedFrame.size.height);
+    
+    [self fireEvent:@"click" params:@{@"position":position}];
 }
 
 #pragma mark - Swipe event
