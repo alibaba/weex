@@ -3,7 +3,7 @@
  * ViewModel Constructor & definition
  */
 
-import * as _ from '../util'
+import { extend } from '../util'
 import {
   initState
 } from '../core/state'
@@ -58,7 +58,7 @@ export default function Vm (
   // bind events and lifecycles
   initEvents(this, externalEvents)
 
-  _.debug(`"init" lifecycle in Vm(${this._type})`)
+  console.debug(`[JS Framework] "init" lifecycle in Vm(${this._type})`)
   this.$emit('hook:init')
   this._inited = true
 
@@ -66,17 +66,17 @@ export default function Vm (
   // observe data and add this to vms
   this._data = typeof data === 'function' ? data() : data
   if (mergedData) {
-    _.extend(this._data, mergedData)
+    extend(this._data, mergedData)
   }
   initState(this)
 
-  _.debug(`"created" lifecycle in Vm(${this._type})`)
+  console.debug(`[JS Framework] "created" lifecycle in Vm(${this._type})`)
   this.$emit('hook:created')
   this._created = true
 
   // backward old ready entry
   if (options.methods && options.methods.ready) {
-    _.warn('"exports.methods.ready" is deprecated, ' +
+    console.warn('"exports.methods.ready" is deprecated, ' +
       'please use "exports.created" instead')
     options.methods.ready.call(this)
   }
@@ -88,7 +88,7 @@ export default function Vm (
 
 mixinEvents(Vm.prototype)
 
-_.extend(Vm, {
+extend(Vm, {
   registerModules,
   registerMethods
 })

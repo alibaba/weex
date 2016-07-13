@@ -13,7 +13,7 @@
  */
 
 import semver from 'semver'
-import * as _ from '../util'
+import { typof, isPlainObject } from '../util'
 import Vm from '../vm'
 import * as downgrade from './downgrade'
 
@@ -50,9 +50,9 @@ export function clearCommonModules () {
 // Notice: DO NOT use function define() {},
 // it will cause error after builded by webpack
 export const define = function (name, deps, factory) {
-  _.debug('define a component', name)
+  console.debug(`[JS Framework] define a component ${name}`)
 
-  if (_.typof(deps) === 'function') {
+  if (typof(deps) === 'function') {
     factory = deps
     deps = []
   }
@@ -124,7 +124,7 @@ export const define = function (name, deps, factory) {
 }
 
 export function bootstrap (app, name, config, data) {
-  _.debug(`bootstrap for ${name}`)
+  console.debug(`[JS Framework] bootstrap for ${name}`)
 
   let cleanName
 
@@ -143,14 +143,14 @@ export function bootstrap (app, name, config, data) {
     return new Error(`Wrong component name: ${name}`)
   }
 
-  config = _.isPlainObject(config) ? config : {}
+  config = isPlainObject(config) ? config : {}
 
   if (typeof config.transformerVersion === 'string' &&
-    typeof global.needTransformerVersion === 'string' &&
+    typeof global.transformerVersion === 'string' &&
     !semver.satisfies(config.transformerVersion,
-      global.needTransformerVersion)) {
+      global.transformerVersion)) {
     return new Error(`JS Bundle version: ${config.transformerVersion} ` +
-      `not compatible with ${global.needTransformerVersion}`)
+      `not compatible with ${global.transformerVersion}`)
   }
 
   const _checkDowngrade = downgrade.check(config.downgrade)
@@ -175,6 +175,6 @@ export function bootstrap (app, name, config, data) {
  * @deprecated
  */
 export function register (type, options) {
-  _.warn('Register is deprecated, please install lastest transformer.')
+  console.warn('[JS Framework] Register is deprecated, please install lastest transformer.')
   this.registerComponent(type, options)
 }

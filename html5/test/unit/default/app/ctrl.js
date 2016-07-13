@@ -53,11 +53,11 @@ describe('the api of app', () => {
 
   describe('init', () => {
     before(() => {
-      global.needTransformerVersion = '0.1.3'
+      global.transformerVersion = '0.1.3'
     })
 
     after(() => {
-      global.needTransformerVersion = undefined
+      global.transformerVersion = undefined
     })
 
     it('a simple bundle', () => {

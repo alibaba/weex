@@ -1,11 +1,13 @@
 import '../shared'
 import runtime from '../runtime'
 import { subversion } from '../../package.json'
+import * as methods from '../default/api/methods'
 
 const { native, transformer } = subversion
 
+// register instance management APIs
 for (const methodName in runtime) {
-  global[methodName] = function (...args) {
+  global[methodName] = (...args) => {
     const ret = runtime[methodName](...args)
     if (ret instanceof Error) {
       console.error(ret.toString())
@@ -14,14 +16,9 @@ for (const methodName in runtime) {
   }
 }
 
-Object.assign(global, {
-  frameworkVersion: native,
-  needTransformerVersion: transformer
-})
+// register framework meta info
+global.frameworkVersion = native
+global.transformerVersion = transformer
 
-/**
- * register methods
- */
-const methods = require('../default/api/methods')
-const { registerMethods } = global
-registerMethods(methods)
+// register special methods for Weex framework
+global.registerMethods(methods)

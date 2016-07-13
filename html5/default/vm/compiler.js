@@ -10,7 +10,10 @@
  * events.js: $on
  */
 
-import * as _ from '../util'
+import {
+  extend,
+  bind
+} from '../util'
 import {
   initData,
   initComputed
@@ -69,7 +72,7 @@ export function build (vm) {
     compile(vm, template, vm._parentEl)
   }
 
-  _.debug(`"ready" lifecycle in Vm(${vm._type})`)
+  console.debug(`[JS Framework] "ready" lifecycle in Vm(${vm._type})`)
   vm.$emit('hook:ready')
   vm._ready = true
 }
@@ -96,18 +99,18 @@ function compile (vm, target, dest, meta) {
   }
   meta = meta || {}
   if (targetIsContent(target)) {
-    _.debug('compile "content" block by', target)
+    console.debug('[JS Framework] compile "content" block by', target)
     vm._content = createBlock(vm, dest)
     return
   }
 
   if (targetNeedCheckRepeat(target, meta)) {
-    _.debug('compile "repeat" logic by', target)
+    console.debug('[JS Framework] compile "repeat" logic by', target)
     compileRepeat(vm, target, dest)
     return
   }
   if (targetNeedCheckShown(target, meta)) {
-    _.debug('compile "if" logic by', target)
+    console.debug('[JS Framework] compile "if" logic by', target)
     compileShown(vm, target, dest, meta)
     return
   }
@@ -119,11 +122,11 @@ function compile (vm, target, dest, meta) {
   const type = typeGetter
   const component = targetIsComposed(vm, target, type)
   if (component) {
-    _.debug('compile composed component by', target)
+    console.debug('[JS Framework] compile composed component by', target)
     compileCustomComponent(vm, component, target, dest, type, meta)
     return
   }
-  _.debug('compile native component by', target)
+  console.debug('[JS Framework] compile native component by', target)
   compileNativeComponent(vm, target, dest, type)
 }
 
@@ -271,7 +274,7 @@ function compileShown (vm, target, dest, meta) {
  */
 function compileType (vm, target, dest, typeGetter, meta) {
   const type = typeGetter.call(vm)
-  const newMeta = Object.assign({ type }, meta)
+  const newMeta = extend({ type }, meta)
   const fragBlock = createBlock(vm, dest)
 
   if (dest.element && dest.children) {
@@ -279,7 +282,7 @@ function compileType (vm, target, dest, typeGetter, meta) {
   }
 
   watch(vm, typeGetter, (value) => {
-    const newMeta = Object.assign({ type: value }, meta)
+    const newMeta = extend({ type: value }, meta)
     removeTarget(vm, fragBlock, true)
     compile(vm, target, fragBlock, newMeta)
   })
@@ -331,11 +334,11 @@ function compileNativeComponent (vm, template, dest, type) {
   let element
   if (dest.ref === '_documentElement') {
     // if its parent is documentElement then it's a body
-    _.debug('compile to create body for', type)
+    console.debug(`[JS Framework] compile to create body for ${type}`)
     element = createBody(vm, type)
   }
   else {
-    _.debug('compile to create element for', type)
+    console.debug(`[JS Framework] compile to create element for ${type}`)
     element = createElement(vm, type)
   }
 
@@ -349,7 +352,7 @@ function compileNativeComponent (vm, template, dest, type) {
       for (const type in target.events) {
         const handler = parentVm[target.events[type]]
         if (handler) {
-          element.addEvent(type, _.bind(handler, parentVm))
+          element.addEvent(type, bind(handler, parentVm))
         }
       }
     }
@@ -369,14 +372,14 @@ function compileNativeComponent (vm, template, dest, type) {
   const treeMode = template.append === 'tree'
   const app = vm._app || {}
   if (app.lastSignal !== -1 && !treeMode) {
-    _.debug('compile to append single node for', element)
+    console.debug('[JS Framework] compile to append single node for', element)
     app.lastSignal = attachTarget(vm, element, dest)
   }
   if (app.lastSignal !== -1) {
     compileChildren(vm, template, element)
   }
   if (app.lastSignal !== -1 && treeMode) {
-    _.debug('compile to append whole tree for', element)
+    console.debug('[JS Framework] compile to append whole tree for', element)
     app.lastSignal = attachTarget(vm, element, dest)
   }
 }
@@ -421,8 +424,8 @@ function bindRepeat (vm, target, fragBlock, info) {
         if (!mergedData.hasOwnProperty('INDEX')) {
           Object.defineProperty(mergedData, 'INDEX', {
             value: () => {
-              _.warn('"INDEX" in repeat is deprecated,' +
-                ' please use "$index" instead')
+              console.warn('[JS Framework] "INDEX" in repeat is deprecated, ' +
+                'please use "$index" instead')
             }
           })
         }
@@ -440,7 +443,7 @@ function bindRepeat (vm, target, fragBlock, info) {
 
   const list = watchBlock(vm, fragBlock, getter, 'repeat',
     (data) => {
-      _.debug('the "repeat" item has changed', data)
+      console.debug('[JS Framework] the "repeat" item has changed', data)
       if (!fragBlock) {
         return
       }
@@ -524,7 +527,7 @@ function bindRepeat (vm, target, fragBlock, info) {
 function bindShown (vm, target, fragBlock, meta) {
   const display = watchBlock(vm, fragBlock, target.shown, 'shown',
     (display) => {
-      _.debug('the "if" item was changed', display)
+      console.debug('[JS Framework] the "if" item was changed', display)
 
       if (!fragBlock || !!fragBlock.display === !!display) {
         return
