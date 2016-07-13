@@ -61,3 +61,4 @@ See [FAQ](http://alibaba.github.io/weex/doc/faq.html) for more information.
 ## Contributing
 
 See [Weex Contributing Guide](./CONTRIBUTING.md) for more information.
+
