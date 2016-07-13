@@ -1,11 +1,10 @@
 # &lt;slider&gt;
+<span class="weex-version">0.4</span>
+<a href="https://github.com/weexteam/article/wiki/%E6%AC%A2%E8%BF%8E%E5%8F%82%E4%B8%8EWeex%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91"  class="weex-translate incomplete">cn</a>
 
 ### Summary
 
 A slide's player to show slides (mostly as pictures) one page by another. The default interval between two slides is 3 seconds.
-
-
-**Notes:** A `<scroller>` can be used as a root element or a embed element. The scoll direction of this component is column, and it can't be changed.
 
 ### Child Components
 
@@ -42,8 +41,8 @@ Other attributes please check out the [common attributes](../references/common-a
   <div>
     <slider auto-play="true" onchange="change" style="...">
       <image repeat="{{imageList}}" src="{{src}}" style="..."></image>
-      <indicator>
-    </slider></indicator>
+      <indicator></indicator>
+    </slider>
   </div>
 </template>
 

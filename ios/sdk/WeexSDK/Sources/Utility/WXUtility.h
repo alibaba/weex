@@ -1,0 +1,287 @@
+/**
+ * Created by Weex.
+ * Copyright (c) 2016, Alibaba, Inc. All rights reserved.
+ *
+ * This source code is licensed under the Apache Licence 2.0.
+ * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
+ */
+
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+#import "WXDefine.h"
+#import "WXType.h"
+#import "WXLog.h"
+
+// The default screen width which helps us to caculate the real size or scale in different devices.
+static const CGFloat WXDefaultScreenWidth = 750.0;
+
+#define WX_ENUMBER_CASE(_invoke, idx, code, obj, _type, op, _flist) \
+case code:{\
+    _type *_tmp = malloc(sizeof(_type));\
+    memset(_tmp, 0, sizeof(_type));\
+    *_tmp = [obj op];\
+    [_invoke setArgument:_tmp atIndex:(idx) + 2];\
+    *(_flist + idx) = _tmp;\
+    break;\
+}
+#define WX_EPCHAR_CASE(_invoke, idx, code, obj, _type, op, _flist) \
+case code:{\
+    _type *_tmp = (_type  *)[obj op];\
+    [_invoke setArgument:&_tmp atIndex:(idx) + 2];\
+    *(_flist + idx) = 0;\
+    break;\
+}\
+
+#define WX_ALLOC_FLIST(_ppFree, _count) \
+do {\
+    _ppFree = (void *)malloc(sizeof(void *) * (_count));\
+    memset(_ppFree, 0, sizeof(void *) * (_count));\
+} while(0)
+
+#define WX_FREE_FLIST(_ppFree, _count) \
+do {\
+    for(int i = 0; i < _count; i++){\
+        if(*(_ppFree + i ) != 0) {\
+            free(*(_ppFree + i));\
+        }\
+    }\
+    free(_ppFree);\
+}while(0)
+
+#define WX_ARGUMENTS_SET(_invocation, _sig, idx, _obj, _ppFree) \
+do {\
+    const char *encode = [_sig getArgumentTypeAtIndex:(idx) + 2];\
+    switch(encode[0]){\
+        WX_EPCHAR_CASE(_invocation, idx, _C_CHARPTR, _obj, char *, UTF8String, _ppFree)\
+        WX_ENUMBER_CASE(_invocation, idx, _C_INT, _obj, int, intValue, _ppFree)\
+        WX_ENUMBER_CASE(_invocation, idx, _C_SHT, _obj, short, shortValue, _ppFree)\
+        WX_ENUMBER_CASE(_invocation, idx, _C_LNG, _obj, long, longValue, _ppFree)\
+        WX_ENUMBER_CASE(_invocation, idx, _C_LNG_LNG, _obj, long long, longLongValue, _ppFree)\
+        WX_ENUMBER_CASE(_invocation, idx, _C_UCHR, _obj, unsigned char, unsignedCharValue, _ppFree)\
+        WX_ENUMBER_CASE(_invocation, idx, _C_UINT, _obj, unsigned int, unsignedIntValue, _ppFree)\
+        WX_ENUMBER_CASE(_invocation, idx, _C_USHT, _obj, unsigned short, unsignedShortValue, _ppFree)\
+        WX_ENUMBER_CASE(_invocation, idx, _C_ULNG, _obj, unsigned long, unsignedLongValue, _ppFree)\
+        WX_ENUMBER_CASE(_invocation, idx, _C_ULNG_LNG, _obj,unsigned long long, unsignedLongLongValue, _ppFree)\
+        WX_ENUMBER_CASE(_invocation, idx, _C_FLT, _obj, float, floatValue, _ppFree)\
+        WX_ENUMBER_CASE(_invocation, idx, _C_DBL, _obj, double, doubleValue, _ppFree)\
+        WX_ENUMBER_CASE(_invocation, idx, _C_BOOL, _obj, bool, boolValue, _ppFree)\
+        default: { [_invocation setArgument:&_obj atIndex:(idx) + 2]; *(_ppFree + idx) = 0; break;}\
+    }\
+}while(0)
+
+/**
+ * @abstract execute asynchronous action block on the main thread.
+ *
+ */
+extern void WXPerformBlockOnMainThread( void (^ _Nonnull block)());
+
+/**
+ * @abstract execute synchronous action block on the main thread.
+ *
+ */
+extern void WXPerformBlockSyncOnMainThread( void (^ _Nonnull block)());
+
+/**
+ * @abstract swizzling methods.
+ *
+ */
+extern void WXSwizzleInstanceMethod(_Nonnull Class class, _Nonnull SEL original, _Nonnull SEL replaced);
+
+extern void WXSwizzleInstanceMethodWithBlock(_Nonnull Class class, _Nonnull SEL original, _Nonnull id block, _Nonnull SEL replaced);
+
+extern _Nonnull SEL WXSwizzledSelectorForSelector(_Nonnull SEL selector);
+
+@interface WXUtility : NSObject
+
++ (void)setNotStat:(BOOL)notStat;
++ (BOOL)notStat;
+/**
+ * @abstract Returns the environment of current application, you can get some nessary properties such as appVersion、sdkVersion、appName etc.
+ *
+ * @return A dictionary object which contains these properties.
+ *
+ */
++ (NSDictionary *_Nonnull)getEnvironment;
+
++ (NSDictionary *_Nonnull)getDebugEnvironment;
+
+/**
+ * @abstract UserAgent Generation
+ *
+ * @return A ua string by splicing (deviceName、appVersion、sdkVersion、externalField、screenSize)
+ *
+ */
++ (NSString *_Nonnull)userAgent;
+
+/**
+ * @abstract JSON Decode Mehthod
+ *
+ * @param JSON String.
+ *
+ * @return A json object by decoding json string.
+ *
+ */
++ (id _Nullable)objectFromJSON:(NSString * _Nonnull)json;
+
+#define WXDecodeJson(json)  [WXUtility objectFromJSON:json]
+
+/**
+ * @abstract JSON Encode Mehthod
+ *
+ * @param JSON Object.
+ *
+ * @return A json string by encoding json object.
+ *
+ */
++ (NSString * _Nullable)JSONString:(id _Nonnull)object;
+
+
+#define WXEncodeJson(obj)  [WXUtility JSONString:obj]
+
+/**
+ * @abstract JSON Object Copy Mehthod
+ *
+ * @param JSON Object.
+ *
+ * @return A json object by copying.
+ *
+ */
++ (id _Nullable)copyJSONObject:(id _Nonnull)object;
+
+#define WXCopyJson(obj)     [WXUtility copyJSONObject:obj]
+
+/**
+ *
+ *  Checks if a String is whitespace, empty ("") or nil
+ *  @code
+ *    [WXUtility isBlankString: nil]       = true
+ *    [WXUtility isBlankString: ""]        = true
+ *    [WXUtility isBlankString: " "]       = true
+ *    [WXUtility isBlankString: "bob"]     = false
+ *    [WXUtility isBlankString: "  bob  "] = false
+ *  @endcode
+ *  @param string the String to check, may be null
+ *
+ *  @return true if the String is null, empty or whitespace
+ */
++ (BOOL)isBlankString:(NSString * _Nullable)string ;
+
+/**
+ * @abstract Returns a standard error object
+ *
+ * @param error code.
+ *
+ * @param error message.
+ *
+ * @return A error object type of NSError.
+ *
+ */
++ (NSError * _Nonnull)errorWithCode:(NSInteger)code message:(NSString * _Nullable)message;
+
+/**
+ * @abstract Returns a Font Object by setting some properties such as size、weight、style and fontFamily.
+ *
+ * @param textSize.
+ *
+ * @param textWeight. The type of WXTextWeight (Normal or Bold).
+ *
+ * @param textStyle. The type of WXTextStyle (Normal or Italic).
+ *
+ * @param fontFamily.
+ *
+ * @return A font object according to the above params.
+ *
+ */
++ (UIFont *_Nonnull)fontWithSize:(CGFloat)size textWeight:(WXTextWeight)textWeight textStyle:(WXTextStyle)textStyle fontFamily:(NSString *_Nullable)fontFamily;
+
+/**
+ * @abstract Returns the scale of the main screen.
+ *
+ */
+CGFloat WXScreenScale();
+
+/**
+ * @abstract Returns the metrics of the main screen.
+ *
+ */
+CGSize WXScreenSize();
+
+/**
+ * @abstract Returns the resize radio of the main screen. 
+ *
+ * @discussion If orientation is equal to landscape, the value is caculated as follows: WXScreenSize().height / WXDefaultScreenWidth, otherwise, WXScreenSize().width / WXDefaultScreenWidth.
+ *
+ */
+CGFloat WXScreenResizeRadio(void);
+
+/**
+ * @abstract Returns a Round float coordinates to the main screen pixel.
+ *
+ */
+CGFloat WXRoundPixelValue(CGFloat value);
+
+/**
+ * @abstract Returns a Floor float coordinates to the main screen pixel.
+ *
+ */
+CGFloat WXFloorPixelValue(CGFloat value);
+
+/**
+ * @abstract Returns a Ceil float coordinates to the main screen pixel.
+ *
+ */
+CGFloat WXCeilPixelValue(CGFloat value);
+
+/**
+ *  @abstract Returns a resized pixel which is caculated according to the WXScreenResizeRadio.
+ *
+ */
+CGFloat WXPixelResize(CGFloat value);
+
+/**
+ *  @abstract Returns a resized frame which is caculated according to the WXScreenResizeRadio.
+ *
+ */
+CGRect WXPixelFrameResize(CGRect value);
+
+/**
+ *  @abstract Returns a resized point which is caculated according to the WXScreenResizeRadio.
+ *
+ */
+CGPoint WXPixelPointResize(CGPoint value);
+
+/**
+ *  @abstract Returns the document directory path.
+ *
+ */
++ (NSString *_Nonnull)documentDirectory;
+
+#define WXDocumentPath     [WXUtility documentDirectory]
+
+/**
+ *  @abstract Returns the system cache directory path.
+ *
+ */
++ (NSString *_Nonnull)cacheDirectory;
+
+#define WXCachePath     [WXUtility cacheDirectory]
+
+/**
+ *  @abstract Returns the system library directory path.
+ *
+ */
++ (NSString *_Nonnull)libraryDirectory;
+
+#define WXLibararyPath  [WXUtility libraryDirectory]
+
+/**
+ *  @abstract Returns the global cache whose size is 5M.
+ *
+ */
++ (NSCache *_Nonnull)globalCache;
+
+#define WXGlobalCache   [WXUtility globalCache]
+
++ (NSURL *_Nonnull)urlByDeletingParameters:(NSURL *_Nonnull)url;
+
+@end

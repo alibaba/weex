@@ -212,7 +212,7 @@ import com.alibaba.fastjson.JSONObject;
 /**
  * Handler for dom operations.
  */
-class WXDomHandler implements Handler.Callback {
+public class WXDomHandler implements Handler.Callback {
 
   /**
    * The batch operation in dom thread will run at most once in 16ms.
@@ -272,6 +272,15 @@ class WXDomHandler implements Handler.Callback {
       case MsgType.WX_DOM_REFRESH_FINISH:
         mWXDomManager.refreshFinish(task.instanceId);
         break;
+      case MsgType.WX_DOM_UPDATE_FINISH:
+        mWXDomManager.updateFinish(task.instanceId);
+        break;
+      case MsgType.WX_ANIMATION:
+        mWXDomManager.startAnimation(task.instanceId,
+                                     (String) task.args.get(0),
+                                     (String) task.args.get(1),
+                                     (String) task.args.get(2));
+        break;
       case MsgType.WX_DOM_BATCH:
         mWXDomManager.batch();
         mHasBatch = false;
@@ -300,6 +309,8 @@ class WXDomHandler implements Handler.Callback {
     public static final int WX_DOM_SCROLLTO = 0x08;
     public static final int WX_DOM_CREATE_FINISH = 0x09;
     public static final int WX_DOM_REFRESH_FINISH = 0x0a;
+    public static final int WX_DOM_UPDATE_FINISH = 0x0b;
+    public static final int WX_ANIMATION=0xc;
 
     public static final int WX_DOM_BATCH = 0xff;
   }

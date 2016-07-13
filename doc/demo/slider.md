@@ -6,4 +6,4 @@ Weex Slider Demo
 
 ## weex code
 
-See [slider example](https://github.com/alibaba/weex/tree/master/examples/sliderDemo.we).
+See [slider example](https://github.com/alibaba/weex/tree/dev/examples/component/list/list-demo.we).

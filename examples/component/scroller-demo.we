@@ -1,9 +1,5 @@
 <template>
-  <scroller class="list">
-    <refresh class="refresh-view" display="{{refresh_display}}" onrefresh="onrefresh">
-      <text class="refresh-arrow" if="{{(refresh_display==='hide')}}">↓ Pull To Refresh</text>
-      <loading-indicator class="indicator"></loading-indicator>
-    </refresh>
+  <scroller class="list" append＝"tree">
     <div class="section" repeat="{{sections}}">
       <div class="header">
         <text class="header-title">{{title}}</text>
@@ -12,17 +8,24 @@
         <text class="item-title">row {{id}}</text>
       </div>
     </div>
+
     <loading class="loading-view" display="{{loading_display}}" onloading="onloading">
-      <loading-indicator class="indicator"></loading-indicator>
+      <loading-indicator style="height:60;width:60" ></loading-indicator>
     </loading>
+
   </scroller>
 </template>
 
 <style>
   .refresh-view {
-    height: 80px;
+    height: 120px;
     width: 750px;
-    justify-content: center;
+    display: -ms-flex;
+    display: -webkit-flex;
+    display: flex;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
     align-items: center;
   }
 
@@ -76,20 +79,12 @@
       onrefresh: function(e) {
         var self = this;
         self.refresh_display = 'show';
-        self.$call('timer', 'setTimeout', function() {
-          self.refresh_display = 'hide';
-        }, 3000);
+        self.refresh_display = 'hide';
       },
-      onloading: function() {
+      onloading: function(e) {
         var self = this;
         self.loading_display = 'show';
-        self.$call('timer', 'setTimeout', function() {
-          if (self.sections.length <= 5) {
-            self.sections.push(self.moreSections[self.sections.length - 2]);
-          }
-
-          self.loading_display = 'hide';
-        }, 3000);
+        self.loading_display = 'hide';
       }
     },
     data: {

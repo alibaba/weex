@@ -131,6 +131,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 
 import com.taobao.weex.adapter.DefaultWXHttpAdapter;
+import com.taobao.weex.adapter.IWXDebugAdapter;
 import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
 import com.taobao.weex.adapter.IWXUserTrackAdapter;
@@ -162,6 +163,7 @@ public class WXSDKManager {
   private IWXUserTrackAdapter mIWXUserTrackAdapter;
   private IWXImgLoaderAdapter mIWXImgLoaderAdapter;
   private IWXHttpAdapter mIWXHttpAdapter;
+  private IWXDebugAdapter mIWXDebugAdapter;
   private IActivityNavBarSetter mActivityNavBarSetter;
 
   private WXSDKManager() {
@@ -172,16 +174,20 @@ public class WXSDKManager {
 
   public static WXSDKManager getInstance() {
     if (sManager == null) {
-      sManager = new WXSDKManager();
+      synchronized (WXSDKManager.class) {
+        if(sManager == null) {
+          sManager = new WXSDKManager();
+        }
+      }
     }
     return sManager;
   }
 
-  IActivityNavBarSetter getActivityNavBarSetter() {
+  public IActivityNavBarSetter getActivityNavBarSetter() {
     return mActivityNavBarSetter;
   }
 
-  void setActivityNavBarSetter(IActivityNavBarSetter mActivityNavBarSetter) {
+  public void setActivityNavBarSetter(IActivityNavBarSetter mActivityNavBarSetter) {
     this.mActivityNavBarSetter = mActivityNavBarSetter;
   }
 
@@ -238,11 +244,15 @@ public class WXSDKManager {
   /**
    * FireEvent back to JS
    */
-  public void fireEvent(final String instanceId, String ref, String type, Map<String, Object> params) {
+  public void fireEvent(final String instanceId, String ref, String type, Map<String, Object> params){
+    fireEvent(instanceId,ref,type,params,null);
+  }
+
+  public void fireEvent(final String instanceId, String ref, String type, Map<String, Object> params,Map<String,Object> domChanges) {
     if (WXEnvironment.isApkDebugable() && Looper.getMainLooper().getThread().getId() != Thread.currentThread().getId()) {
       throw new WXRuntimeException("[WXSDKManager]  fireEvent error");
     }
-    mBridgeManager.fireEvent(instanceId, ref, type, params);
+    mBridgeManager.fireEvent(instanceId, ref, type, params,domChanges);
   }
 
   void createInstance(WXSDKInstance instance, String code, Map<String, Object> options, String jsonInitData) {
@@ -275,7 +285,7 @@ public class WXSDKManager {
     return mIWXUserTrackAdapter;
   }
 
-  public void setIWXUserTrackAdapter(IWXUserTrackAdapter IWXUserTrackAdapter) {
+  void setIWXUserTrackAdapter(IWXUserTrackAdapter IWXUserTrackAdapter) {
     mIWXUserTrackAdapter = IWXUserTrackAdapter;
   }
 
@@ -283,7 +293,10 @@ public class WXSDKManager {
     return mIWXImgLoaderAdapter;
   }
 
-  public void setIWXImgLoaderAdapter(IWXImgLoaderAdapter IWXImgLoaderAdapter) {
+  void setIWXImgLoaderAdapter(IWXImgLoaderAdapter IWXImgLoaderAdapter) {
+    if(IWXImgLoaderAdapter==null){
+      throw new NullPointerException("image adapter is null!");
+    }
     mIWXImgLoaderAdapter = IWXImgLoaderAdapter;
   }
 
@@ -294,7 +307,14 @@ public class WXSDKManager {
     return mIWXHttpAdapter;
   }
 
-  public void setIWXHttpAdapter(IWXHttpAdapter IWXHttpAdapter) {
+  void setIWXHttpAdapter(IWXHttpAdapter IWXHttpAdapter) {
     mIWXHttpAdapter = IWXHttpAdapter;
+  }
+  public IWXDebugAdapter getIWXDebugAdapter() {
+    return mIWXDebugAdapter;
+  }
+
+  public void setIWXDebugAdapter(IWXDebugAdapter IWXDebugAdapter) {
+    mIWXDebugAdapter = IWXDebugAdapter;
   }
 }

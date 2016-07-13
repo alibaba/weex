@@ -216,4 +216,6 @@ public class WXJSBridgeMsgType {
   public static final int REGISTER_COMPONENTS = 0x08;
   public static final int REGISTER_MODULES = 0x09;
   public static final int REFRESH_INSTANCE = 0x0a;
+  public static final int MODULE_TIMEOUT = 0x0b;
+  public static final int MODULE_INTERVAL = 0x0c;
 }

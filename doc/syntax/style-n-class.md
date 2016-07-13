@@ -1,4 +1,6 @@
 # Style & Class
+<span class="weex-version">0.4</span>
+<a href="https://github.com/weexteam/article/issues/6"  class="weex-translate">cn</a>
 
 ## The Basic Syntax
 

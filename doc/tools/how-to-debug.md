@@ -1,16 +1,14 @@
 ###How to Debug
-####1.add dependency
+####1.add dependency(iOS skip this step)
 build.gradle
 
 ```` gradle
 compile project(':weex_debug')
-compile 'com.taobao.android:dexposed:0.1.8'
-compile 'com.jakewharton.scalpel:scalpel:1.1.2'
 ````  
 setting.gradle
 
 ```` gradle
-include ":weex_debug"
+include ":weex_debug"  
 project(":weex_debug").projectDir=new File("../weex_debug")
 ````
 
@@ -19,7 +17,7 @@ project(":weex_debug").projectDir=new File("../weex_debug")
 Tip: if your local weex tool version<0.0.31 you shoud update your weex tool
 
 ````shell
-npm install -g weex-toolkit@0.0.31
+npm install -g weex-toolkit
 ````  
 Next: you can start local server
 
@@ -34,7 +32,7 @@ copy "http://30.10.217.78:4000/" to your browser。The browser will show a QR Co
 Use your 'playgroud' to scan the code QR in your browser.you can find this content:  
 ![server](http://gw.alicdn.com/mt/TB1EgO_JVXXXXa9XVXXXXXXXXXX-1698-648.png)
 
-#####DEvice Log Level
+#####Device Log Level
 
 The sort of Level Log is as follows：
 Error > Warn > Info > Debug > Verbose > ALL.  

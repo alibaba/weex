@@ -208,5 +208,6 @@ package com.taobao.weex.ui.view.listview.adapter;
 public interface IOnLoadMoreListener {
 
   void onLoadMore(int offScreenY);
-  void notifyAppearStateChange(int firstVisible,int lastVisible);
+  void notifyAppearStateChange(int firstVisible, int lastVisible, int directionX, int directionY);
+  void onBeforeScroll(int dx, int dy);
 }

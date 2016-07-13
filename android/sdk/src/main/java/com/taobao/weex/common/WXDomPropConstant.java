@@ -281,6 +281,8 @@ public class WXDomPropConstant {
   public static final String WX_TEXT_ELLIPSIS = "ellipsis";
   public static final String WX_TEXT_CLIP = "clip";
 
+  public static final String WX_TEXT_LINE_HEIGHT="lineHeight";
+
   public static final String WX_ATTR_DISABLED = "disabled";
 
   public static final String WX_ATTR_PREFIX = "prefix";
@@ -311,6 +313,7 @@ public class WXDomPropConstant {
 
   //ListView attrs
   public static final String WX_ATTR_SCOPE = "scope";
+  public static final String WX_ATTR_LOAD_MORE_RETRY = "loadmoreretry";
   public static final String WX_ATTR_LOAD_MORE_OFFSET = "loadmoreoffset";
 
   //Image recycle attrs
@@ -334,12 +337,15 @@ public class WXDomPropConstant {
   public static final String WX_ATTR_INPUT_PLACEHOLDER = "placeholder";
   public static final String WX_INPUT_PLACEHOLDER_COLOR = "placeholderColor";
   public static final String WX_ATTR_INPUT_AUTOFOCUS = "autofocus";
-    public static final String WX_ATTR_INPUT_LINES = "lines";
-    public static final String WX_ATTR_INPUT_SINGLELINE = "singleline";
-    public static final String WX_ATTR_INPUT_MAXLENGTH = "maxlength";
+  public static final String WX_ATTR_INPUT_LINES = "lines";
+  public static final String WX_ATTR_INPUT_SINGLELINE = "singleline";
+  public static final String WX_ATTR_INPUT_MAXLENGTH = "maxlength";
 
   //switch
   public static final String WX_ATTR_SWITCH_CHECKED = "checked";
+
+  //slider
+  public static final String WX_ATTR_SLIDER_VALUE = "value";
 
   //visibility
   public static final String WX_VISIBILITY = "visibility";

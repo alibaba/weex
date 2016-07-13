@@ -1,10 +1,6 @@
 <template>
   <div>
     <list class="list">
-      <refresh class="refresh-view" display="{{refresh_display}}" onrefresh="onrefresh">
-        <text class="refresh-arrow" if="{{(refresh_display==='hide')}}">↓ Pull To Refresh</text>
-        <loading-indicator class="indicator"></loading-indicator>
-      </refresh>
       <cell onappear="onappear" ondisappear="ondisappear" class="row" repeat="{{rows}}" index="{{$index}}">
         <div class="item">
           <text class="item-title">row {{id}}</text>
@@ -17,23 +13,11 @@
 
 <style>
   .list {
-    height: 810px;
-    border-width: 10px;
-    border-color: orange;
+    height:850px
   }
   .count {
     font-size: 48px;
     margin:10px;
-  }
-  .refresh-view {
-    height: 80px;
-    width: 750px;
-    justify-content: center;
-    align-items: center;
-  }
-  .refresh-arrow {
-    font-size: 30px;
-    color: #45b5f0;
   }
   .indicator {
     height: 40px;
@@ -52,20 +36,12 @@
   }
   .item-title {
   }
-
 </style>
 
 <script>
   require('weex-components');
   module.exports = {
     methods: {
-      onrefresh: function(e) {
-        var self = this;
-        self.refresh_display = 'show';
-        self.$call('timer', 'setTimeout', function() {
-          self.refresh_display = 'hide';
-        },3000);
-      },
       onappear: function (e) {
         var appearId = this.rows[e.target.attr.index].id;
         nativeLog('+++++', appearId);
@@ -93,8 +69,6 @@
       }
     },
     data: {
-      refresh_display : 'hide',
-      loading_display : 'hide',
       appearMin:1,
       appearMax:1,
       appearIds:[],

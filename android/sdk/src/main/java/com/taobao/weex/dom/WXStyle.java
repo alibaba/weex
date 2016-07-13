@@ -204,12 +204,16 @@
  */
 package com.taobao.weex.dom;
 
+import android.text.Layout;
+import android.text.TextUtils;
+
 import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.dom.flex.CSSAlign;
 import com.taobao.weex.dom.flex.CSSFlexDirection;
 import com.taobao.weex.dom.flex.CSSJustify;
 import com.taobao.weex.dom.flex.CSSPositionType;
 import com.taobao.weex.dom.flex.CSSWrap;
+import com.taobao.weex.ui.animation.WXAnimationBean;
 import com.taobao.weex.ui.component.WXText;
 import com.taobao.weex.ui.component.WXTextDecoration;
 import com.taobao.weex.utils.WXUtils;
@@ -224,8 +228,11 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class WXStyle extends ConcurrentHashMap<String, Object> {
 
+  public static final String TRANSFORM = "transform";
+  public static final String TRANSFORM_ORIGIN = "transformOrigin";
   private static final long serialVersionUID = 611132641365274134L;
-
+  static final int UNSET = -1;
+  private WXAnimationBean animationBean;
   /*
    * text-decoration
    **/
@@ -307,10 +314,45 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
     return fontFamily;
   }
 
+  public static Layout.Alignment getTextAlignment(Map<String, Object> style){
+    Layout.Alignment alignment= Layout.Alignment.ALIGN_NORMAL;
+    String textAlign= (String) style.get(WXDomPropConstant.WX_TEXTALIGN);
+    if(TextUtils.equals(WXDomPropConstant.WX_TEXTALIGN_LEFT,textAlign)){
+      alignment= Layout.Alignment.ALIGN_NORMAL;
+    }
+    else if(TextUtils.equals(WXDomPropConstant.WX_TEXTALIGN_CENTER,textAlign)){
+      alignment=Layout.Alignment.ALIGN_CENTER;
+    }
+    else if(TextUtils.equals(WXDomPropConstant.WX_TEXTALIGN_RIGHT,textAlign)){
+      alignment= Layout.Alignment.ALIGN_OPPOSITE;
+    }
+    return alignment;
+  }
+
+  public static TextUtils.TruncateAt getTextOverflow(Map<String, Object> style){
+    TextUtils.TruncateAt truncateAt=null;
+    String ellipse = (String) style.get(WXDomPropConstant.WX_TEXT_OVERFLOW);
+    if(TextUtils.equals(WXDomPropConstant.WX_TEXT_ELLIPSIS,ellipse)){
+      truncateAt = TextUtils.TruncateAt.END;
+    }
+    return truncateAt;
+  }
+
   public static int getLines(Map<String, Object> style) {
     return WXUtils.getInt(style.get(WXDomPropConstant.WX_LINES));
   }
 
+  public static int getLineHeight(Map<String, Object> style){
+    if (style == null) {
+      return UNSET;
+    }
+    int lineHeight = WXUtils.getInt(style.get(WXDomPropConstant.WX_TEXT_LINE_HEIGHT));
+    if (lineHeight <= 0) {
+      lineHeight = UNSET;
+      return lineHeight;
+    }
+    return (int) WXViewUtils.getRealPxByWidth(lineHeight);
+  }
   /*
    * flexbox
    **/
@@ -580,5 +622,13 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
   public String getOverflow() {
     Object obj = get(WXDomPropConstant.WX_OVERFLOW);
     return obj == null ? WXDomPropConstant.WX_OVERFLOW_VISIBLE : obj.toString();
+  }
+
+  public WXAnimationBean getAnimationBean() {
+    return animationBean;
+  }
+
+  public void setAnimationBean(WXAnimationBean animationBean) {
+    this.animationBean = animationBean;
   }
 }

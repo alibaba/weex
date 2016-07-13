@@ -204,6 +204,9 @@
  */
 package com.taobao.weex.ui;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomObject;
@@ -272,20 +275,6 @@ public class WXRenderManager {
           return;
         }
         task.execute();
-      }
-    });
-  }
-
-  public void flushView(final String instanceId, final String ref) {
-    mWXRenderHandler.post(new Runnable() {
-
-      @Override
-      public void run() {
-        WXRenderStatement statement = mRegistries.get(instanceId);
-        if (statement == null) {
-          return;
-        }
-        statement.flushView(ref);
       }
     });
   }
@@ -433,11 +422,20 @@ public class WXRenderManager {
     statement.refreshFinish(width, height);
   }
 
-  public void startAnimation(String instanceId, String ref, String animation, String callBack) {
+  public void updateFinish(String instanceId) {
     WXRenderStatement statement = mRegistries.get(instanceId);
     if (statement == null) {
       return;
     }
-    statement.startAnimation(ref, animation, callBack);
+    statement.updateFinish();
+  }
+
+
+  public void startAnimation(String instanceId, @NonNull String ref, @Nullable String callBack) {
+    WXRenderStatement statement = mRegistries.get(instanceId);
+    if (statement == null) {
+      return;
+    }
+    statement.startAnimation(ref, callBack);
   }
 }

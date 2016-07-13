@@ -1,0 +1,30 @@
+<template>
+  <scroller class="ct" style="height:{{ctHeight}}">
+    <web class="web" src="{{src}}"></web>
+  </scroller>
+</template>
+
+<style>
+  .web {
+    width: 750;
+    height: 600;
+    background-color: #fff;
+  }
+  .ct {
+    width: 750;
+    height: 2000;
+    background-color: #eee;
+  }
+</style>
+
+<script>
+  module.exports = {
+    data: {
+      src: './test/web-inner.html',
+      ctHeight: 0
+    },
+    ready: function () {
+      this.ctHeight = this.$getConfig().env.deviceHeight
+    }
+  }
+</script>

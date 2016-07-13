@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Weex HTML5</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-touch-fullscreen" content="yes" />
+  <meta name="format-detection" content="telephone=no, email=no" />
+  <style>
+    html, body, #weex {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+  <script src="./dist/weex.js"></script>
+</head>
+<body>
+  <div id="weex"></div>
+  <script>
+  /**
+   * Init weex instance depending on the url params.
+   * There are three ways to load weex bundles, depends on the
+   * parameter 'loader' in the url:
+   *
+   *   + xhr: use XMLHttpRequest. Parameter 'page' should be
+   *   the bundle's url.
+   *   + source: use the transformed code itself. 'page' should
+   *   be the transformed weex bundle.
+   *
+   * @param {String} bundle - It has different meaning depends on
+   *   the type of loader.
+   */
+  (function () {
+    function getUrlParam (key) {
+      var reg = new RegExp('[?|&]' + key + '=([^&]+)')
+      var match = location.search.match(reg)
+      return match && match[1]
+    }
+
+    var loader = getUrlParam('loader') || 'xhr'
+    var page = getUrlParam('page') || 'demo/build/index.js'
+
+    window.weex.init({
+      appId: location.href,
+      loader: loader,
+      source: page,
+      rootId: 'weex'
+    })
+  })();
+  </script>
+</body>
+</html>

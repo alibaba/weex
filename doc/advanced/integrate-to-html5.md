@@ -1,4 +1,6 @@
 ## Integrate Weex HTML5 to your project
+<span class="weex-version">0.4</span>
+<a href="https://github.com/weexteam/article/issues/10"  class="weex-translate">cn</a>
 
 ### Intro
 
@@ -8,28 +10,20 @@ The bundle transformed from the source can currently run on android, ios and web
 
 ### Get Weex HTML5
 
-Use npm to install the latest version of Weex HTML5, require it in your code by CommonJS and use it as a npm package. You should require Weex JS Framework as well, which is as a dependency to Weex HTML5, or you can require a whole javascript file with path `./node_modules/weex-html5/dist/bundle.js`. In this way you don't need to require Weex JS Framework manually anymore since it is already embeded.
+Use npm to install the latest version of Weex HTML5, require it in your code by CommonJS and use it as a npm package.
 
 #### Install from npm
 
-Make sure you get the latest version by `npm install` or `npm update`. For more informations of npm, please visit the [npm official site](https://docs.npmjs.com/).
+Make sure you get the latest version by `npm install` or `npm update`. For more information of npm, please visit the [npm official site](https://docs.npmjs.com/).
 
 ```
-npm install weex-jsframework
 npm install weex-html5
 ```
 
-#### 1. require weex-jsframework and weex-html5.
+require weex-html5:
 
 ```
-require('weex-jsframework')
-var weex = require('weex-html5')
-```
-
-#### 2. require the total-bundle.
-
-```
-var weex = require('weex-html5/dist/bundle')
+const weex = require('weex-html5')
 ```
 
 ### Initialize and run
@@ -73,7 +67,5 @@ function weexInit() {
 weexInit()
 ```
 
-### github repo
 
-### links
 

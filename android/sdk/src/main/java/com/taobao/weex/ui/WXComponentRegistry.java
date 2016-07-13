@@ -206,12 +206,9 @@ package com.taobao.weex.ui;
 
 import android.text.TextUtils;
 
-import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.common.WXException;
-import com.taobao.weex.ui.component.WXComponent;
-import com.taobao.weex.ui.component.WXComponentPropCache;
-import com.taobao.weex.utils.WXLogUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -222,35 +219,34 @@ import java.util.Map;
  */
 public class WXComponentRegistry {
 
-  private static Map<String, Class<? extends WXComponent>> sComponent = new HashMap<>();
+  private static Map<String, IFComponentHolder> sTypeComponentMap = new HashMap<>();
+  private static ArrayList<Map<String, String>> sComponentInfos=new ArrayList<>();
 
-  public static boolean registerComponent(String type, Class<? extends WXComponent> clazz, boolean appendTree) throws WXException {
-    if (clazz == null || TextUtils.isEmpty(type)) {
+  public static boolean registerComponent(final String type, final IFComponentHolder holder, final Map<String, String> componentInfo) throws WXException {
+    if (holder == null || TextUtils.isEmpty(type)) {
       return false;
     }
 
-//    if (sComponent.containsKey(type)) {
-//      if (WXEnvironment.isApkDebugable()) {
-//        throw new WXException("Exist duplicate component :" + type);
-//      } else {
-//        WXLogUtils.e("WXComponentRegistry Exist duplicate component: " + type);
-//        return false;
-//      }
-//    }
+    //execute task in js thread to make sure register order is same as the order invoke register method.
+    WXBridgeManager.getInstance().getJSHandler()
+    .post(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          registerNativeComponent(type, holder);
+          registerJSComponent(componentInfo);
+          sComponentInfos.add(componentInfo);
+        } catch (WXException e) {
+          e.printStackTrace();
+        }
 
-    WXComponentPropCache.getMethods(clazz);
-
-    Map<String, String> componentInfo = new HashMap<>();
-    componentInfo.put("type", type);
-    if (appendTree) {
-      componentInfo.put("append", "tree");
-    }
-
-    return registerNativeComponent(type, clazz) && registerJSComponent(componentInfo);
+      }
+    });
+    return true;
   }
 
-  public static boolean registerNativeComponent(String type, Class<? extends WXComponent> clazz) throws WXException {
-    sComponent.put(type, clazz);
+  private static boolean registerNativeComponent(String type, IFComponentHolder holder) throws WXException {
+    sTypeComponentMap.put(type, holder);
     return true;
   }
 
@@ -261,30 +257,23 @@ public class WXComponentRegistry {
     return true;
   }
 
-  public static boolean registerComponent(Map<String, String> componentInfo, Class<? extends WXComponent> clazz) throws WXException {
-    if (componentInfo == null || clazz == null) {
-      return false;
-    }
+  public static IFComponentHolder getComponent(String type) {
+    return sTypeComponentMap.get(type);
+  }
 
-    String type = componentInfo.get("style");
-    if (type == null) {
-      return false;
-    }
-    if (sComponent.containsKey(type)) {
-      if (WXEnvironment.isApkDebugable()) {
-        throw new WXException("Exist duplicate component:" + type);
-      } else {
-        WXLogUtils.e("WXComponentRegistry Exist duplicate component: " + type);
-        return false;
+  public static void reload(){
+    WXBridgeManager.getInstance().getJSHandler().post(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          for(Map<String,String> com:sComponentInfos){
+            registerJSComponent(com);
+          }
+        } catch (WXException e) {
+          e.printStackTrace();
+        }
       }
-    }
-
-    WXComponentPropCache.getMethods(clazz);
-
-    return registerNativeComponent(type, clazz) && registerJSComponent(componentInfo);
+    });
   }
 
-  public static Class<? extends WXComponent> getComponent(String type) {
-    return sComponent.get(type);
-  }
 }

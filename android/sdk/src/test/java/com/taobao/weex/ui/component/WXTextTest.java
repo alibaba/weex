@@ -212,6 +212,7 @@ import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.WXTextDomObject;
 import com.taobao.weex.dom.flex.Spacing;
 
+import com.taobao.weex.ui.SimpleComponentHolder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -247,6 +248,7 @@ public class WXTextTest {
 
         mParentDomObj = Mockito.mock(WXDomObject.class);
         Mockito.when(mParentDomObj.getPadding()).thenReturn(new Spacing());
+        Mockito.when(mParentDomObj.getBorder()).thenReturn(new Spacing());
         Mockito.when(mParentDomObj.clone()).thenReturn(mParentDomObj);
         mParentDomObj.ref = "_root";
 
@@ -260,9 +262,10 @@ public class WXTextTest {
         Mockito.when(mDomObject.getLayoutWidth()).thenReturn(100f);
         Mockito.when(mDomObject.getLayoutHeight()).thenReturn(100f);
 
-        mParent = new WXDiv(instance, mParentDomObj, null, "1", false);
+        mParent = new WXDiv(instance, mParentDomObj, null, false);
         mParent.createView(null, -1);
-        mWXText = new WXText(instance, mDomObject, mParent, "1", false);
+        mWXText = new WXText(instance, mDomObject, mParent, false);
+        mWXText.bindHolder(new SimpleComponentHolder(WXText.class));
         assertNotNull(instance.getContext());
     }
 
@@ -294,7 +297,9 @@ public class WXTextTest {
     @Test
     public void testBind(){
         testCreateView();
-        mWXText.bind(null);
+//        mWXText.bind(null);
+        mWXText.applyLayoutAndEvent(mWXText);
+        mWXText.bindData(mWXText);
 
         assertNotNull(mWXText.getView().getLayoutParams());
         assertEquals(100, mWXText.getView().getLayoutParams().height);

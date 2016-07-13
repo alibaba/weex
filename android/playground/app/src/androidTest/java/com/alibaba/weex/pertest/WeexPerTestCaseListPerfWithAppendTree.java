@@ -16,6 +16,8 @@ import com.alibaba.weex.WXPageActivity;
 import com.alibaba.weex.WeappJsBaseTestCase;
 import com.alibaba.weex.constants.Constants;
 import com.alibaba.weex.util.ScreenShot;
+import com.alibaba.weex.util.ViewUtil;
+import com.taobao.weex.ui.view.WXTextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -56,7 +58,8 @@ public class WeexPerTestCaseListPerfWithAppendTree extends ActivityInstrumentati
         mViewGroup = (ViewGroup) waTestPageActivity.findViewById(R.id.container);
         setViewGroup(mViewGroup);
 
-        mCaseListIndexView = getTestCaseListViewByText("TC_");
+        mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, "TC_");
+        sleep(3000);
     }
 
 //    public void testPreConditions()
@@ -70,10 +73,10 @@ public class WeexPerTestCaseListPerfWithAppendTree extends ActivityInstrumentati
     public void testPerfMonitorListAppendTree(){
 
         for(final View caseView : mCaseListIndexView){
-           if (((TextView)caseView).getText().toString().equals("TC_Monitor")){
+           if (((WXTextView)caseView).getText().toString().equals("TC_Monitor")){
                Log.e(TAG, "TC_Monitor find");
 
-               final TextView inputView  = (TextView)caseView;
+               final WXTextView inputView  = (WXTextView)caseView;
                 mInstrumentation.runOnMainSync(new Runnable() {
                     @Override
                     public void run() {
@@ -93,12 +96,14 @@ public class WeexPerTestCaseListPerfWithAppendTree extends ActivityInstrumentati
                Log.e(TAG, myGroup.toString());
 
                ArrayList<View> inputListView = new ArrayList<View>();
-               myGroup.findViewsWithText(inputListView, "TC_Monitor_List_WithAppendTree", View.FIND_VIEWS_WITH_TEXT);
+               inputListView = ViewUtil.findViewWithText(myGroup, "TC_Monitor_List_WithAppendTree");
+//               myGroup.findViewsWithText(inputListView, "TC_Monitor_List_WithAppendTree", View.FIND_VIEWS_WITH_TEXT);
 
                Log.e(TAG, "TC_Monitor_List_WithAppendTree size== " + inputListView.size());
+               sleep(2000);
 
                if(inputListView.size()!=0){
-                  final TextView inputTypeView = (TextView)inputListView.get(0);
+                  final WXTextView inputTypeView = (WXTextView)inputListView.get(0);
 
                    mInstrumentation.runOnMainSync(new Runnable() {
                        @Override

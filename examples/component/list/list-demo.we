@@ -1,8 +1,5 @@
 <template>
-  <list class="list" onloadmore="loadmore" loadmoreoffset=2000>
-    <!--<div class="fixed" style="background-color:{{backgroundColor}}" onclick="onfixedclick">-->
-    <!--<text style="font-size:30px;color:white;font-weight: bold;">Composite:{{composite}}</text>-->
-    <!--</div>-->
+  <list class="list" loadmoreoffset=2000>
     <cell class="cell" onclick="oncellclick" rownumber={{id}} repeat="{{shopList}}" scope="{{scopeValue}}" append="tree"
           composite={{composite}}>
       <div class="shopDiv">
@@ -138,6 +135,10 @@
         </div>
       </div>
     </cell>
+    <loading class="refresh-view" display="{{loading_display}}" onloading="onloading">
+      <text class="refresh-arrow" style="text-align: center; color:rgb(238, 162, 54)" if="{{(refresh_display==='hide')}}">Load more</text>
+      <loading-indicator style="height:60;width:60;color:#3192e1"></loading-indicator>
+    </loading>
   </list>
 </template>
 
@@ -219,11 +220,25 @@
     width: 20;
     height: 20;
   }
+
+  .refresh-view {
+    height: 120px;
+    width: 750px;
+    display: -ms-flex;
+    display: -webkit-flex;
+    display: flex;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    align-items: center;
+  }
 </style>
 
 <script>
   module.exports = {
     data: {
+      refresh_display : 'hide',
+      loading_display : 'hide',
       backgroundColor: 'red',
       composite: 'false',
       shopList: [
@@ -529,12 +544,6 @@
       ],
     },
     methods: {
-      loadmore: function(e) {
-        this.$call('modal', 'toast', {
-          'message': 'loadmore',
-          'duration': 2.0
-        });
-      },
       oncellclick: function(e) {
         this.$call('modal', 'toast', {
           'message': 'row ' + e.target.attr.rownumber + ' clicked',

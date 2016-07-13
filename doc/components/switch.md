@@ -1,4 +1,6 @@
 # &lt;switch&gt;
+<span class="weex-version">0.4</span>
+<a href="https://github.com/weexteam/article/wiki/%E6%AC%A2%E8%BF%8E%E5%8F%82%E4%B8%8EWeex%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91"  class="weex-translate incomplete">cn</a>
 
 ### Summary
 
@@ -16,14 +18,17 @@ Other attributes please check out the [common attributes](../references/common-a
 
 ### Styles
 
-**common styles**: check out [common styles for components](../references/common-style.md)
+**Notes:** There are several style properties that you mustn't use on this component, mostly have impact on the layout. Here are all the invalid properties:
 
-- support flexbox related styles
-- support box model related styles
-- support ``position`` related styles
-- support ``opacity``, ``background-color`` etc.
+- `width`
+- `height`
+- `min-width`
+- `min-height`
+- `margin` and `margin-xx`s
+- `padding` and `padding-xx`s
+- `border` and `border-xx`s
 
-**Notes:** The `width` and `height` is not configurable and the size of this component is fixed to `100x60` (for the design width 750px).
+**Notes:** Specially the `width` and `height` related properties is not configurable and the size of this component is fixed to `100x60` (for the design width 750px).
 
 ### Events
 

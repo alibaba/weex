@@ -577,22 +577,25 @@ public final class CaptureActivity extends Activity implements
           String code = rawResult.getText();
           if (!TextUtils.isEmpty(code)) {
             Uri uri = Uri.parse(code);
-            if (uri.getPath().contains("bundle")) {
+            if (uri.getQueryParameterNames().contains("bundle")) {
               WXEnvironment.sDynamicMode = uri.getBooleanQueryParameter("debug", false);
               WXEnvironment.sDynamicUrl = uri.getQueryParameter("bundle");
               String tip=WXEnvironment.sDynamicMode?"Has switched to Dynamic Mode":"Has switched to Normal Mode";
               Toast.makeText(this,tip,Toast.LENGTH_SHORT).show();
               finish();
 	      return;
-            } else if (uri.getPath().contains("framework")) {
-
+            } else if (uri.getQueryParameterNames().contains("_wx_devtool")) {
+	      WXEnvironment.sRemoteDebugProxyUrl=uri.getQueryParameter("_wx_devtool");
+	      WXSDKEngine.reload(getApplication(),true);
+	      Toast.makeText(this,"devtool",Toast.LENGTH_SHORT).show();
+	      finish();
+	      return;
             }
 
             if (code.contains("_wx_debug")) {
               uri = Uri.parse(code);
               String debug_url = uri.getQueryParameter("_wx_debug");
-              WXEnvironment.sDebugWsUrl = debug_url;
-              WXSDKEngine.restartBridge(true);
+	      WXSDKEngine.switchDebugModel(true,debug_url);
               finish();
             } else {
               Toast.makeText(this, rawResult.getText(), Toast.LENGTH_SHORT)

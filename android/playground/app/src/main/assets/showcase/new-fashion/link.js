@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/85bc89788e4c68b54486adfe45d92247", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/6c7b31e9640a3460351bcd855406e8da", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __weex_module__.exports = {
@@ -62,7 +62,8 @@
 	    }
 	  };
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "text",
 	  "classList": [
 	    "link"
@@ -74,9 +75,9 @@
 	  "attr": {
 	    "value": function () {return this.text}
 	  }
-	}
 	})
-	;__weex_bootstrap__("@weex-component/85bc89788e4c68b54486adfe45d92247", {
+	})
+	;__weex_bootstrap__("@weex-component/6c7b31e9640a3460351bcd855406e8da", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 

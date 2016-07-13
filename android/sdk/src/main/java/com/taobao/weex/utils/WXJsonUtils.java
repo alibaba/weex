@@ -204,10 +204,15 @@
  */
 package com.taobao.weex.utils;
 
+import android.util.Log;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.taobao.weex.WXEnvironment;
+import com.taobao.weex.common.WXRuntimeException;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Tool for parse JSON
@@ -231,12 +236,22 @@ public class WXJsonUtils {
     return result;
   }
 
+
   public static JSONArray parseArrayStr(String arrStr) {
     return JSONObject.parseArray(arrStr);
   }
 
   public static String fromObjectToJSONString(Object obj) {
-    return JSONObject.toJSONString(obj);
+    try {
+      return JSONObject.toJSONString(obj);
+    }catch(Exception e){
+      if(WXEnvironment.isApkDebugable()){
+        throw new WXRuntimeException("fromObjectToJSONString parse error!");
+      }
+      WXLogUtils.e("fromObjectToJSONString error:"+e.getMessage());
+      return "{}";
+    }
+
   }
 
   public static String fromObject2JSONArrayString(Object obj) {

@@ -6,52 +6,180 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Environment;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ScrollView;
+
+import com.taobao.weex.ui.view.WXScrollView;
+import com.taobao.weex.ui.view.listview.WXRecyclerView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by huabing.thb on 15-10-27.
  */
 public  class ScreenShot {
 
+    public  static View rootView;
+    public static ArrayList<View> allViews = new ArrayList<View>();
+    public static View firstScrollView = null;
+    public static View firstListView = null;
+
+    public static View findFirstScrollerByRootView(View  rootView){
+
+        View firstScrollView = null;
+
+        if(null != rootView){
+            allViews = ViewUtil.getAllChildViews(rootView);
+            for (View view:allViews
+                 ) {
+                if(view instanceof android.widget.ScrollView){
+                    firstScrollView = view;
+                    break;
+                }
+            }
+        }
+        return firstScrollView;
+    }
+
+    public static View findFirstListByRootView(View  rootView){
+        View firstListView = null;
+        if(null != rootView){
+            allViews = ViewUtil.getAllChildViews(rootView);
+            for (View view:allViews
+                    ) {
+                if(view instanceof WXRecyclerView){
+                    firstListView = view;
+                    break;
+                }
+            }
+        }
+        return firstListView;
+    }
+
+    private static Bitmap doSanpForListOrScroller(View sanpView){
+
+        Bitmap b = null;
+
+        if(sanpView!=null){
+
+            int[] location = new int[2];
+            sanpView.getLocationInWindow(location);
+            int x = location[0];
+            int y = location[1];
+
+            sanpView = rootView;
+            sanpView.setDrawingCacheEnabled(true);
+            sanpView.buildDrawingCache();
+//            sanpView = ((View)sanpView.getParent().getParent());
+            Bitmap bitmap = sanpView.getDrawingCache();
+
+//            sanpView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+//                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+//            sanpView.layout(0, 0, sanpView.getMeasuredWidth(), sanpView.getMeasuredHeight());
+//            sanpView.buildDrawingCache();
+//            Bitmap bitmap = sanpView.getDrawingCache();
+//            b = bitmap;
+
+
+            int sanpWidth = sanpView.getWidth();
+
+            Log.e("weex_test", "sanpView.getWidth=="+ sanpWidth);
+
+            int snapHeight = sanpView.getHeight();
+            Log.e("weex_test", "sanpView.getHeight==" + snapHeight);
+
+//            bitmap = Bitmap.createBitmap(sanpWidth+x, snapHeight+x,Bitmap.Config.ARGB_8888);
+
+//            int width = activity.getWindowManager().getDefaultDisplay().getWidth();
+//            int height = activity.getWindowManager().getDefaultDisplay().getHeight();
+
+            int baseWidth = 750;
+            int baseHeight = 1134;
+
+            // 计算缩放因子
+//            float heightScale = ((float) baseHeight) / scrollerHeight;
+            float widthScale = ((float) baseWidth) / sanpWidth;
+
+            // 新建立矩阵 按照宽度缩放因子自适应缩放
+            Matrix matrix = new Matrix();
+            matrix.postScale(widthScale, widthScale);
+
+            Log.e("weex_test", "widthScale=="+widthScale+ "|"+
+                    "Real sanpWidth==" + sanpWidth*widthScale +"|" +
+            "Real snapHeight==" + widthScale*snapHeight +
+            "|" + "sanpView.x=" + x +
+            "|" + "sanpView.y= " + y);
+            b = Bitmap.createBitmap(bitmap, 0, 0, sanpWidth, snapHeight);
+//            b = Bitmap.createBitmap(bitmap, 0, 0, rootView.getWidth(), rootView.getHeight());
+
+            // 缩放
+
+//            Bitmap returnBmp = Bitmap.createBitmap((int) dw, (int) dh,
+//                    Bitmap.Config.ARGB_4444);
+
+            b = Bitmap.createBitmap(bitmap,0, 0,
+                    sanpWidth, snapHeight, matrix, true);
+//            b = Bitmap.createBitmap(bitmap, 0, 0, scrollerWidth,
+//                    scrollerHeight, matrix, true);
+//            b = Bitmap.createBitmap(bitmap, 0, statusBarHeight + actionBarHeight, width,
+//                    height - statusBarHeight - actionBarHeight, matrix, true);
+
+            sanpView.destroyDrawingCache();
+
+        }else {
+            Log.e("weex_test", "snapshot view is " + sanpView);
+        }
+        return b;
+
+    }
     // Gets the Activity screenshots, save to png file
     private static Bitmap takeScreenShot(Activity activity) {
 
         View view = activity.getWindow().getDecorView();
-        view.setDrawingCacheEnabled(true);
+
+        rootView = view;
+        firstScrollView = findFirstScrollerByRootView(rootView);
+        firstListView = findFirstListByRootView(rootView);
+
+        Bitmap snapBitmap = null;
+        // 优先scroller ->list->root
+        if(null !=firstScrollView ){
+            snapBitmap = doSanpForListOrScroller(firstScrollView);
+        }
+        else {
+            Log.e("weex_test", "firstScrollView is " + firstScrollView);
+            if (null != firstListView){
+                snapBitmap = doSanpForListOrScroller(firstListView);
+            }else {
+                Log.e("weex_test", "firstListView is " + firstListView);
+
+                if(null != rootView){
+//                    snapBitmap = doSanpForListOrScroller(rootView);
+                }
+            }
+        }
+
+        return  snapBitmap;
+
+    }
+
+    public static Bitmap convertViewToBitmap(View view){
+        view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
         view.buildDrawingCache();
         Bitmap bitmap = view.getDrawingCache();
 
-        int statusBarHeight = getStatusBarHeight1(activity);
-
-        int width = activity.getWindowManager().getDefaultDisplay().getWidth();
-        int height = activity.getWindowManager().getDefaultDisplay().getHeight();
-
-        int baseWidth = 750;
-//        int baseHeight = height;
-
-        // 计算缩放因子
-//        float heightScale = ((float) baseHeight) / height;
-        float widthScale = ((float) baseWidth) / width;
-
-        // 新建立矩阵 按照宽度缩放因子自适应缩放
-        Matrix matrix = new Matrix();
-        matrix.postScale(widthScale, widthScale);
-
-        int actionBarHeight = getActionBarHeight(activity);
-        Log.e("actionBarHeight==", "actionBarHeight==" + actionBarHeight);
-
-        Bitmap b = Bitmap.createBitmap(bitmap, 0, statusBarHeight + actionBarHeight, width,
-                height - statusBarHeight - actionBarHeight, matrix, true);
-        view.destroyDrawingCache();
-        return b;
+        return bitmap;
     }
 
     private static void savePic(Bitmap b, String strFileName) {

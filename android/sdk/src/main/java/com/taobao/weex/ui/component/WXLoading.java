@@ -204,25 +204,48 @@
  */
 package com.taobao.weex.ui.component;
 
+import android.text.TextUtils;
+
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.ui.view.listview.OnLoadMoreListener;
+import com.taobao.weex.ui.component.list.WXListComponent;
+import com.taobao.weex.ui.view.WXBaseRefreshLayout;
+import com.taobao.weex.ui.view.refresh.core.WXSwipeLayout;
+import com.taobao.weex.ui.view.refresh.wrapper.BaseBounceView;
 
 /**
  * div component
  */
-public class WXLoading extends WXBaseRefresh implements OnLoadMoreListener {
+public class WXLoading extends WXBaseRefresh implements WXSwipeLayout.WXOnLoadingListener {
 
-  public WXLoading(WXSDKInstance instance, WXDomObject node, WXVContainer parent, String instanceId, boolean lazy) {
-    super(instance, node, parent, instanceId, lazy);
+  public WXLoading(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
+    super(instance, node, parent, lazy);
   }
 
   @Override
-  public void onLoadMore() {
-    if (mDomObj.event != null && mDomObj.event.contains(WXEventType.RECYCLERVIEW_ONLOADING)) {
-      WXSDKManager.getInstance().fireEvent(mInstanceId, getRef(), WXEventType.RECYCLERVIEW_ONLOADING);
+  protected void initView() {
+    mHost = new WXBaseRefreshLayout(mContext);
+  }
+
+  @Override
+  public void onLoading() {
+    if (mDomObj.event != null && mDomObj.event.contains(WXEventType.ONLOADING)) {
+      WXSDKManager.getInstance().fireEvent(mInstanceId, getRef(), WXEventType.ONLOADING);
     }
   }
 
+  @WXComponentProp(name = "display")
+  public void setDisplay(String display) {
+    if (!TextUtils.isEmpty(display)) {
+      if (display.equals("hide")) {
+        if (getParent() instanceof WXListComponent || getParent() instanceof WXScroller) {
+          if (((BaseBounceView)getParent().getView()).getSwipeLayout().isRefreshing()) {
+            ((BaseBounceView) getParent().getView()).finishPullLoad();
+            ((BaseBounceView) getParent().getView()).onLoadmoreComplete();
+          }
+        }
+      }
+    }
+  }
 }

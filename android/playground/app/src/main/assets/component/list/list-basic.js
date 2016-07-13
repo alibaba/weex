@@ -44,66 +44,160 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/3d5af54906d3ecb8779d5ed7f84a907d", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/a35f04a45d2f4aba2362fe51748ba920", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(1);
 	  __weex_module__.exports = {
+	    methods: {
+	      onappear: function (e) {
+	        var appearId = this.rows[e.target.attr.index].id;
+	        nativeLog('+++++', appearId);
+	        var appearIds = this.appearIds;
+	        appearIds.push(appearId);
+	        this.getMinAndMaxIds(appearIds);
+	      },
+	      ondisappear:function (e) {
+	        var disAppearId = this.rows[e.target.attr.index].id;
+	        nativeLog('+++++', disAppearId);
+	        var appearIds = this.appearIds;
+	        var index = appearIds.indexOf(disAppearId);
+	        if (index > -1) {
+	          appearIds.splice(index, 1);
+	        }
+	        this.getMinAndMaxIds(appearIds);
+	      },
+	      getMinAndMaxIds:function (appearIds) {
+	        appearIds.sort(function(a, b) {
+	          return a - b;
+	        });
+	        this.appearIds = appearIds;
+	        this.appearMax = appearIds[appearIds.length - 1];
+	        this.appearMin = appearIds[0];
+	      }
+	    },
 	    data: function () {return {
-	      items: [
-	        {id: 1, title: 'Title Start'},
-	        {id: 2, title: 'Title Title'},
-	        {id: 3, title: 'Title Title'},
-	        {id: 4, title: 'Title Title'},
-	        {id: 5, title: 'Title Title'},
-	        {id: 6, title: 'Title Title'},
-	        {id: 7, title: 'Title Title'},
-	        {id: 8, title: 'Title Title'},
-	        {id: 9, title: 'Title Title'},
-	        {id: 10, title: 'Title Title'},
-	        {id: 11, title: 'Title Title'},
-	        {id: 12, title: 'Title Title'},
-	        {id: 13, title: 'Title Title'},
-	        {id: 14, title: 'Title Title'},
-	        {id: 15, title: 'Title End'}
+	      appearMin:1,
+	      appearMax:1,
+	      appearIds:[],
+	      rows:[
+	        {id: 1},
+	        {id: 2},
+	        {id: 3},
+	        {id: 4},
+	        {id: 5},
+	        {id: 6},
+	        {id: 7},
+	        {id: 8},
+	        {id: 9},
+	        {id: 10},
+	        {id: 11},
+	        {id: 12},
+	        {id: 13},
+	        {id: 14},
+	        {id: 15},
+	        {id: 16},
+	        {id: 17},
+	        {id: 18},
+	        {id: 19},
+	        {id: 20},
+	        {id: 21},
+	        {id: 22},
+	        {id: 23},
+	        {id: 24},
+	        {id: 25},
+	        {id: 26},
+	        {id: 27},
+	        {id: 28},
+	        {id: 29}
 	      ]
 	    }}
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "children": [
 	    {
 	      "type": "list",
+	      "classList": [
+	        "list"
+	      ],
 	      "children": [
 	        {
 	          "type": "cell",
 	          "append": "tree",
-	          "repeat": function () {return this.items},
+	          "events": {
+	            "appear": "onappear",
+	            "disappear": "ondisappear"
+	          },
+	          "classList": [
+	            "row"
+	          ],
+	          "repeat": function () {return this.rows},
+	          "attr": {
+	            "index": function () {return this.$index}
+	          },
 	          "children": [
 	            {
-	              "type": "text",
+	              "type": "div",
 	              "classList": [
 	                "item"
 	              ],
-	              "attr": {
-	                "value": function () {return (this.title) + ' ' + (this.id)}
-	              }
+	              "children": [
+	                {
+	                  "type": "text",
+	                  "classList": [
+	                    "item-title"
+	                  ],
+	                  "attr": {
+	                    "value": function () {return 'row ' + (this.id)}
+	                  }
+	                }
+	              ]
 	            }
 	          ]
 	        }
 	      ]
+	    },
+	    {
+	      "type": "text",
+	      "classList": [
+	        "count"
+	      ],
+	      "attr": {
+	        "value": function () {return 'Appear items:' + (this.appearMin) + ' - ' + (this.appearMax)}
+	      }
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
-	  "item": {
-	    "fontSize": 48,
-	    "height": 100
-	  }
-	}
 	})
-	;__weex_bootstrap__("@weex-component/3d5af54906d3ecb8779d5ed7f84a907d", {
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
+	  "list": {
+	    "height": 850
+	  },
+	  "count": {
+	    "fontSize": 48,
+	    "margin": 10
+	  },
+	  "indicator": {
+	    "height": 40,
+	    "width": 40,
+	    "color": "#45b5f0"
+	  },
+	  "row": {
+	    "width": 750
+	  },
+	  "item": {
+	    "justifyContent": "center",
+	    "borderBottomWidth": 2,
+	    "borderBottomColor": "#c0c0c0",
+	    "height": 100,
+	    "padding": 20
+	  }
+	})
+	})
+	;__weex_bootstrap__("@weex-component/a35f04a45d2f4aba2362fe51748ba920", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -145,7 +239,8 @@
 	    }
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": function () {return ['btn', 'btn-' + (this.type), 'btn-sz-' + (this.size)]},
 	  "children": [
@@ -157,8 +252,9 @@
 	      }
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "btn": {
 	    "marginBottom": 0,
 	    "alignItems": "center",
@@ -251,7 +347,7 @@
 	  "btn-txt-sz-small": {
 	    "fontSize": 30
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -269,7 +365,8 @@
 	    methods: {}
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": function () {return ['h' + (this.level)]},
 	  "style": {
@@ -284,8 +381,9 @@
 	      }
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "h1": {
 	    "height": 110,
 	    "paddingTop": 20,
@@ -310,7 +408,7 @@
 	  "txt-h3": {
 	    "fontSize": 42
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -337,7 +435,8 @@
 	    }
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": [
 	    "item"
@@ -354,8 +453,9 @@
 	      "type": "content"
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "item": {
 	    "paddingTop": 25,
 	    "paddingBottom": 25,
@@ -366,7 +466,7 @@
 	    "borderBottomWidth": 1,
 	    "borderColor": "#dddddd"
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -389,7 +489,8 @@
 	    }
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": function () {return ['panel', 'panel-' + (this.type)]},
 	  "style": {
@@ -425,8 +526,9 @@
 	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "panel": {
 	    "marginBottom": 20,
 	    "backgroundColor": "#ffffff",
@@ -474,7 +576,7 @@
 	    "color": "#ffffff"
 	  },
 	  "panel-body": {}
-	}
+	})
 	})
 
 /***/ },
@@ -491,7 +593,8 @@
 	    }}
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": function () {return ['tip', 'tip-' + (this.type)]},
 	  "children": [
@@ -503,8 +606,9 @@
 	      }
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "tip": {
 	    "paddingLeft": 36,
 	    "paddingRight": 36,
@@ -543,7 +647,7 @@
 	  "tip-txt-danger": {
 	    "color": "#a94442"
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -638,7 +742,8 @@
 	    }
 	}
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "style": {
 	    "overflow": "hidden",
@@ -653,12 +758,13 @@
 	      "type": "content"
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "wrap": {
 	    "overflow": "hidden"
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -723,7 +829,8 @@
 	    }
 	}
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": [
 	    "wrap"
@@ -746,8 +853,9 @@
 	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "wrap": {
 	    "overflow": "hidden",
 	    "position": "relative"
@@ -757,7 +865,7 @@
 	    "position": "absolute",
 	    "transform": "translateY(0) translateZ(0)"
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -811,7 +919,8 @@
 	        }
 	    }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": [
 	    "container"
@@ -838,13 +947,13 @@
 	      },
 	      "shown": function () {return !this.rightItemSrc},
 	      "events": {
-	        "click": "onclickrigthitem"
+	        "click": "onclickrightitem"
 	      }
 	    },
 	    {
 	      "type": "image",
 	      "classList": [
-	        "left-image"
+	        "right-image"
 	      ],
 	      "attr": {
 	        "naviItemPosition": "right",
@@ -900,8 +1009,9 @@
 	      }
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "container": {
 	    "flexDirection": "row",
 	    "position": "fixed",
@@ -938,18 +1048,18 @@
 	  "left-image": {
 	    "position": "absolute",
 	    "bottom": 20,
-	    "right": 28,
+	    "left": 28,
 	    "width": 50,
 	    "height": 50
 	  },
 	  "right-image": {
 	    "position": "absolute",
 	    "bottom": 20,
-	    "left": 28,
+	    "right": 28,
 	    "width": 50,
 	    "height": 50
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -959,7 +1069,8 @@
 	;__weex_define__("@weex-component/wxc-navpage", [], function(__weex_require__, __weex_exports__, __weex_module__){
 	__webpack_require__(9);
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": [
 	    "wrapper"
@@ -996,8 +1107,9 @@
 	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "wrapper": {
 	    "position": "absolute",
 	    "top": 0,
@@ -1006,7 +1118,7 @@
 	    "bottom": 0,
 	    "width": 750
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -1057,7 +1169,8 @@
 	        }
 	    }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": [
 	    "wrapper"
@@ -1097,8 +1210,9 @@
 	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "wrapper": {
 	    "width": 750,
 	    "position": "absolute",
@@ -1124,7 +1238,7 @@
 	    "right": 0,
 	    "height": 88
 	  }
-	}
+	})
 	})
 
 /***/ },
@@ -1153,7 +1267,8 @@
 	        }
 	    }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "div",
 	  "classList": [
 	    "container"
@@ -1196,8 +1311,9 @@
 	      }
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "container": {
 	    "flex": 1,
 	    "flexDirection": "column",
@@ -1222,7 +1338,7 @@
 	    "textAlign": "center",
 	    "fontSize": 20
 	  }
-	}
+	})
 	})
 
 /***/ }

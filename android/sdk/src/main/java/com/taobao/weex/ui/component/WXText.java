@@ -204,43 +204,33 @@
  */
 package com.taobao.weex.ui.component;
 
-import android.text.Spannable;
-import android.text.TextUtils;
-import android.text.TextUtils.TruncateAt;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.View;
-import android.widget.TextView;
+import android.text.Layout;
+import android.view.ViewGroup;
 
 import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.common.WXDomPropConstant;
+import com.taobao.weex.common.Component;
 import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.dom.WXStyle;
-import com.taobao.weex.dom.flex.CSSConstants;
 import com.taobao.weex.ui.view.WXTextView;
 
 /**
  * Text component
  */
+@Component(lazyload = false)
 public class WXText extends WXComponent{
 
   /**
    * The default text size
    **/
   public static final int sDEFAULT_SIZE = 32;
-  private Object mPreExtra;
 
   public WXText(WXSDKInstance instance, WXDomObject node,
-                WXVContainer parent, String instanceId, boolean lazy) {
-    super(instance, node, parent, instanceId, lazy);
+                WXVContainer parent, boolean lazy) {
+    super(instance, node, parent, lazy);
   }
 
   @Override
   protected void initView() {
     mHost = new WXTextView(mContext);
-//    getView().setEllipsize(TruncateAt.END);
-    //Remove padding for ascents and descents
-    getView().setIncludeFontPadding(false);
   }
 
   @Override
@@ -250,71 +240,33 @@ public class WXText extends WXComponent{
 
   @Override
   public void updateExtra(Object extra) {
-    super.updateExtra(extra);
-    if (mHost == null || extra == mPreExtra) {
-      return;
-    }
-    Spannable spannable = (Spannable) extra;
-    if (spannable == null) {
-      return;
-    }
-    int fontSize = WXStyle.getFontSize(mDomObj.style);
-
-    getView().setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize);
-
-    mPreExtra = spannable;
-    getView().setText(spannable);
-  }
-
-  @Override
-  public View detachViewAndClearPreInfo() {
-    mPreExtra = null;
-    return super.detachViewAndClearPreInfo();
-  }
-
-  @WXComponentProp(name = WXDomPropConstant.WX_TEXTALIGN)
-  public void setTextAlign(String textAlign) {
-    int iTextAlign = getTextAlign(textAlign);
-    if (iTextAlign > 0) {
-      getView().setGravity(iTextAlign | Gravity.CENTER_VERTICAL);
+    if(extra instanceof Layout &&
+       getView()!=null && !extra.equals(getView().getTextLayout())) {
+      final Layout layout = (Layout) extra;
+      getView().setTextLayout(layout);
+      getView().invalidate();
     }
   }
 
-  private int getTextAlign(String textAlign) {
-    int align = Gravity.LEFT;
-    if (TextUtils.isEmpty(textAlign)) {
-      return align;
-    }
-    if (textAlign.equals(WXDomPropConstant.WX_TEXTALIGN_LEFT)) {
-      align = Gravity.LEFT;
-    } else if (textAlign.equals(WXDomPropConstant.WX_TEXTALIGN_CENTER)) {
-      align = Gravity.CENTER;
-    } else if (textAlign.equals(WXDomPropConstant.WX_TEXTALIGN_RIGHT)) {
-      align = Gravity.RIGHT;
-    }
-    return align;
-  }
-
-  @WXComponentProp(name = WXDomPropConstant.WX_LINES)
-  public void setLines(int lines) {
-    TextView temp = getView();
-    if (lines > 1) {
-      temp.setSingleLine(false);
-      temp.setMaxLines(lines);
-    } else if (lines == 1) {
-      temp.setSingleLine(true);
-    }
-  }
-
-  @WXComponentProp(name = WXDomPropConstant.WX_TEXT_OVERFLOW)
-  public void setTextOverFlow(String textOverFlow) {
-    TextView temp = getView();
-    if(textOverFlow.equals(WXDomPropConstant.WX_TEXT_ELLIPSIS)){
-      int lines=WXStyle.getLines(getDomObject().style);
-      if(!CSSConstants.isUndefined(lines)&&lines!=0){
-        temp.setSingleLine(true);
-        temp.setEllipsize(TruncateAt.END);
+  /**
+   * Flush view no matter what height and width the {@link WXDomObject} specifies.
+   * @param object must be a {@link Layout} object, otherwise, nothing will happen.
+   */
+  private void flushView(Object extra){
+    if(extra instanceof Layout &&
+       getView()!=null && !extra.equals(getView().getTextLayout())){
+      final Layout layout = (Layout) extra;
+      /**The following if block change the height of the width of the textView.
+       * other part of the code is the same to updateExtra
+       */
+      ViewGroup.LayoutParams layoutParams=getView().getLayoutParams();
+      if(layoutParams!=null){
+        layoutParams.height=layout.getHeight();
+        layoutParams.width=layout.getWidth();
+        getView().setLayoutParams(layoutParams);
       }
+      getView().setTextLayout(layout);
+      getView().invalidate();
     }
   }
 }

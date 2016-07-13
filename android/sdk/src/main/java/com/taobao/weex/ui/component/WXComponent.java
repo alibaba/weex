@@ -138,31 +138,32 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
-import com.alibaba.fastjson.JSON;
 import com.taobao.weex.IWXActivityStateListener;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.bridge.Invoker;
 import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.common.IWXObject;
 import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.dom.flex.CSSLayout;
 import com.taobao.weex.dom.flex.Spacing;
+import com.taobao.weex.ui.IFComponentHolder;
 import com.taobao.weex.ui.component.list.WXListComponent;
 import com.taobao.weex.ui.view.WXBackgroundDrawable;
 import com.taobao.weex.ui.view.WXCircleIndicator;
 import com.taobao.weex.ui.view.gesture.WXGesture;
 import com.taobao.weex.ui.view.gesture.WXGestureObservable;
 import com.taobao.weex.ui.view.gesture.WXGestureType;
-import com.taobao.weex.ui.view.listview.BounceRecyclerView;
+import com.taobao.weex.ui.view.refresh.wrapper.BounceRecyclerView;
 import com.taobao.weex.utils.WXLogUtils;
+import com.taobao.weex.utils.WXReflectionUtils;
 import com.taobao.weex.utils.WXResourceUtils;
 import com.taobao.weex.utils.WXUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -199,16 +200,27 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
   private int mPreRealLeft = 0;
   private int mPreRealTop = 0;
   private WXGesture wxGesture;
+  private IFComponentHolder mHolder;
+  private boolean isUsing = false;
 
+  @Deprecated
   public WXComponent(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
+    this(instance,dom,parent,isLazy);
+  }
+
+  public WXComponent(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
     mInstance = instance;
     mContext = mInstance.getContext();
     mParent = parent;
     mDomObj = dom.clone();
-    mInstanceId = instanceId;
+    mInstanceId = instance.getInstanceId();
     mLazy = isLazy;
     mGestureType = new HashSet<>();
     ++mComponentNum;
+  }
+
+  public void bindHolder(IFComponentHolder holder){
+    mHolder = holder;
   }
 
   /**
@@ -223,28 +235,29 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     mLazy = lazy;
   }
 
-  /**
-   * bind view's prop
-   *
-   * @param view
-   */
-  public final void bind(View view) {
-    if (!mLazy) {
-      bindImpl(view);
+
+  public void applyLayoutAndEvent(WXComponent component) {
+    if(!isLazy()) {
+      if (component == null) {
+        component = this;
+      }
+      getOrCreateBorder().attachView(mHost);
+      setLayout(component.mDomObj);
+      setPadding(component.mDomObj.getPadding(), component.mDomObj.getBorder());
+      addEvents();
+
     }
   }
 
-  protected void bindImpl(View view) {
-    if (view != null) {
-      mHost = view;
-      getOrCreateBorder().attachView(view);
+  public void bindData(WXComponent component){
+    if(!isLazy()) {
+      if (component == null) {
+        component = this;
+      }
+      updateProperties(component.mDomObj.style);
+      updateProperties(component.mDomObj.attr);
+      updateExtra(component.mDomObj.getExtra());
     }
-
-    setLayout(mDomObj);
-    setPadding(mDomObj.getPadding(), mDomObj.getBorder());
-    updateProperties();
-    addEvents();
-    updateExtra(mDomObj.getExtra());
   }
 
   protected WXBorder getOrCreateBorder() {
@@ -263,12 +276,34 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     }
 
     mDomObj = domObject;
+
+    if (this instanceof WXRefresh && mParent instanceof WXRefreshableContainer &&
+        isOuterRefreshableContainer(mParent)) {
+      mInstance.setRefreshMargin(mDomObj.csslayout.dimensions[CSSLayout.DIMENSION_HEIGHT]);
+    }
+    if ((this instanceof WXBaseRefresh && mParent instanceof WXRefreshableContainer)) {
+      return;
+    }
+
+    if (mParent instanceof WXRefreshableContainer && isOuterRefreshableContainer(mParent)) {
+      if (!(this instanceof WXBaseRefresh)) {
+          CSSLayout newLayout = new CSSLayout();
+          newLayout.copy(mDomObj.csslayout);
+          newLayout.position[CSSLayout.POSITION_TOP] = mDomObj.csslayout.position[CSSLayout
+              .POSITION_TOP] - mInstance.getRefreshMargin();
+          mDomObj.csslayout.copy(newLayout);
+      }
+    }
+
     Spacing parentPadding = mParent.getDomObject().getPadding();
+    Spacing parentBorder = mParent.getDomObject().getBorder();
     Spacing margin = mDomObj.getMargin();
     int realWidth = (int) mDomObj.getLayoutWidth();
     int realHeight = (int) mDomObj.getLayoutHeight();
-    int realLeft = (int) (mDomObj.getLayoutX() - parentPadding.get(Spacing.LEFT) );
-    int realTop = (int) (mDomObj.getLayoutY() - parentPadding.get(Spacing.TOP) );
+    int realLeft = (int) (mDomObj.getLayoutX() - parentPadding.get(Spacing.LEFT) -
+                          parentBorder.get(Spacing.LEFT));
+    int realTop = (int) (mDomObj.getLayoutY() - parentPadding.get(Spacing.TOP) -
+                         parentBorder.get(Spacing.TOP));
     int realRight = (int) margin.get(Spacing.RIGHT);
     int realBottom = (int) margin.get(Spacing.BOTTOM);
 
@@ -282,8 +317,8 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     }
 
     //calculate first screen time
-    if (!mInstance.mEnd && mAbsoluteY >= WXViewUtils.getScreenHeight()) {
-      mInstance.firstScreenRenderFinished(System.currentTimeMillis());
+    if (!mInstance.mEnd && mAbsoluteY >= mInstance.getWeexHeight()) {
+      mInstance.firstScreenRenderFinished();
     }
 
     if (mHost == null) {
@@ -340,8 +375,9 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
       params.setMargins(realLeft, realTop, realRight, realBottom);
       mHost.setLayoutParams(params);
     } else if (mParent.getRealView() instanceof BounceRecyclerView) {
-//      mHost.setLayoutParams(new ViewGroup.LayoutParams(realWidth, realHeight));
-      //todo Nothing
+//      RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(realWidth, realHeight);
+//      params.setMargins(realLeft, 0, realRight, 0);
+//      mHost.setLayoutParams(params);
     }
 
     mPreRealWidth = realWidth;
@@ -362,14 +398,14 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     mHost.setPadding(left, top, right, bottom);
   }
 
-  private void updateProperties() {
-    if (mDomObj.attr != null && mDomObj.attr.size() > 0) {
-      updateProperties(mDomObj.attr);
-    }
-    if (mDomObj.style != null && mDomObj.style.size() > 0) {
-      updateProperties(mDomObj.style);
-    }
-  }
+//  private void updateProperties() {
+//    if (mDomObj.attr != null && mDomObj.attr.size() > 0) {
+//      updateProperties(mDomObj.attr);
+//    }
+//    if (mDomObj.style != null && mDomObj.style.size() > 0) {
+//      updateProperties(mDomObj.style);
+//    }
+//  }
 
   private void addEvents() {
     int count = mDomObj.event == null ? 0 : mDomObj.event.size();
@@ -396,54 +432,28 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     return measureOutput;
   }
 
-  public final void updateProperties(Map<String, Object> props) {
-    if (props.isEmpty() || mHost == null) {
+  public void updateProperties(Map<String, Object> props) {
+    if (props == null||props.isEmpty() || mHost == null) {
       return;
     }
-    Map<String, Method> methodMap = WXComponentPropCache.getMethods(getClass());
+
 
     Iterator<Entry<String, Object>> iterator = props.entrySet().iterator();
     while (iterator.hasNext()) {
       String key = iterator.next().getKey();
-      Method method = methodMap.get(key);
-      if (method != null) {
+      Invoker invoker = mHolder.getMethod(key);
+      if (invoker != null) {
         try {
-          Type[] paramClazzs = WXComponentPropCache.getMethodGenericParameterTypes(method);
+          Type[] paramClazzs = invoker.getParameterTypes();
           if (paramClazzs.length != 1) {
-            WXLogUtils.e("[WXComponent] setX method only one parameter：" + method);
+            WXLogUtils.e("[WXComponent] setX method only one parameter：" + invoker);
             return;
           }
           Object param;
-          Type paramClazz = paramClazzs[0];
-          Object value = props.get(key);
-          String sValue;
-          if (value instanceof String) {
-            sValue = (String) value;
-          } else {
-            sValue = JSON.toJSONString(value);
-          }
-
-          if (paramClazz == int.class) {
-            param = WXUtils.getInt(sValue);
-          } else if (paramClazz == String.class) {
-            param = sValue;
-          } else if (paramClazz == long.class) {
-            param = WXUtils.getLong(sValue);
-          } else if (paramClazz == double.class) {
-            param = WXUtils.getDouble(sValue);
-          } else if (paramClazz == float.class) {
-            param = WXUtils.getFloat(sValue);
-          } else if (ParameterizedType.class.isAssignableFrom(paramClazz.getClass())) {
-            param = JSON.parseObject(sValue, paramClazz);
-          } else if (IWXObject.class.isAssignableFrom(paramClazz.getClass())) {
-            param = JSON.parseObject(sValue, paramClazz);
-          } else {
-            param = JSON.parseObject(sValue, paramClazz);
-          }
-
-          method.invoke(this, param);
+          param = WXReflectionUtils.parseArgument(paramClazzs[0],props.get(key));
+          invoker.invoke(this, param);
         } catch (Exception e) {
-          WXLogUtils.e("[WXComponent] updateProperties :" + "class:" + getClass() + "method:" + method.getName() + " function " + WXLogUtils.getStackTrace(e));
+          WXLogUtils.e("[WXComponent] updateProperties :" + "class:" + getClass() + "method:" + invoker.toString() + " function " + WXLogUtils.getStackTrace(e));
         }
       }
     }
@@ -491,7 +501,7 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
                      "WXGestureObservable, so no gesture is supported.");
       }
     } else {
-      WXScroller scroller = getParentScroller();
+      Scrollable scroller = getParentScroller();
       if (type.equals(WXEventType.APPEAR) && scroller != null) {
         scroller.bindAppearEvent(this);
       }
@@ -539,17 +549,17 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
   /**
    * get Scroller components
    */
-  public WXScroller getParentScroller() {
+  public Scrollable getParentScroller() {
     WXComponent component = this;
     WXVContainer container;
-    WXScroller scroller;
+    Scrollable scroller;
     for (; ; ) {
       container = component.getParent();
       if (container == null) {
         return null;
       }
-      if (container instanceof WXScroller) {
-        scroller = (WXScroller) container;
+      if (container instanceof Scrollable) {
+        scroller = (Scrollable) container;
         return scroller;
       }
       if (container.getRef().equals(WXDomObject.ROOT)) {
@@ -577,7 +587,7 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
    * @param index
    */
   public final void createView(WXVContainer parent, int index) {
-    if (!mLazy) {
+    if(!isLazy()) {
       createViewImpl(parent, index);
     }
   }
@@ -591,7 +601,9 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
   }
 
   protected void initView() {
-    mHost = new FrameLayout(mContext);
+    if(mContext!=null) {
+      mHost = new FrameLayout(mContext);
+    }
   }
 
   public View getView() {
@@ -613,14 +625,6 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     mDomObj = dom;
   }
 
-  /**
-   * Flush the corresponding view.
-   * If multiple property setter conflicts, this method can be called to resolve conflict.
-   */
-  public void flushView() {
-
-  }
-
   public final void removeEvent(String type) {
     if (TextUtils.isEmpty(type)) {
       return;
@@ -634,7 +638,7 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     if (type.equals(WXEventType.CLICK) && getRealView() != null) {
       getRealView().setOnClickListener(null);
     }
-    WXScroller scroller = getParentScroller();
+    Scrollable scroller = getParentScroller();
     if (type.equals(WXEventType.APPEAR) && scroller != null) {
       scroller.unbindAppearEvent(this);
     }
@@ -674,7 +678,7 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     }
 
     if (mDomObj.isSticky()) {
-      WXScroller scroller = getParentScroller();
+      Scrollable scroller = getParentScroller();
       if (scroller != null) {
         scroller.unbindStickStyle(this);
       }
@@ -692,7 +696,7 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
   @WXComponentProp(name = WXDomPropConstant.WX_POSITION)
   public void setSticky(String sticky) {
     if (!TextUtils.isEmpty(sticky) && sticky.equals(WXDomPropConstant.WX_POSITION_STICKY)) {
-      WXScroller waScroller = getParentScroller();
+      Scrollable waScroller = getParentScroller();
       if (waScroller != null) {
         waScroller.bindStickStyle(this);
       }
@@ -907,7 +911,7 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     mPreRealWidth = 0;
     mPreRealHeight = 0;
     mPreRealTop = 0;
-    mHost = null;
+//    mHost = null;
     return original;
   }
 
@@ -930,13 +934,35 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     return mGestureType != null && mGestureType.contains(WXGestureType.toString());
   }
 
-  public void notifyApppearStateChange(String wxEventType){
-    WXBridgeManager.getInstance().fireEvent(mInstanceId,getRef(),wxEventType,null);
+  public void notifyAppearStateChange(String wxEventType,String direction){
+    if(getDomObject().containsEvent(WXEventType.APPEAR) || getDomObject().containsEvent(WXEventType.DISAPPEAR)) {
+      Map<String, Object> params = new HashMap<>();
+      params.put("direction", direction);
+      WXBridgeManager.getInstance().fireEvent(mInstanceId, getRef(), wxEventType, params,null);
+    }
+  }
+
+  public boolean isUsing() {
+    return isUsing;
+  }
+
+  public void setUsing(boolean using) {
+    isUsing = using;
   }
 
   public static class MeasureOutput {
 
     public int width;
     public int height;
+  }
+
+  public boolean isOuterRefreshableContainer(WXComponent component) {
+    if (component.getParent() == null) {
+      return true;
+    } else if (component.getParent() instanceof WXRefreshableContainer) {
+      return false;
+    } else {
+      return isOuterRefreshableContainer(component.getParent());
+    }
   }
 }

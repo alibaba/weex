@@ -44,11 +44,13 @@
 /* 0 */
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/27404869ac7d04c3c768257387390d1b", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/cb2317d07ad026f4c51aa61496b2b05c", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __weex_module__.exports = {
 	    data: function () {return {
+	      refresh_display : 'hide',
+	      loading_display : 'hide',
 	      backgroundColor: 'red',
 	      composite: 'false',
 	      shopList: [
@@ -354,12 +356,6 @@
 	      ],
 	    }},
 	    methods: {
-	      loadmore: function(e) {
-	        this.$call('modal', 'toast', {
-	          'message': 'loadmore',
-	          'duration': 2.0
-	        });
-	      },
 	      oncellclick: function(e) {
 	        this.$call('modal', 'toast', {
 	          'message': 'row ' + e.target.attr.rownumber + ' clicked',
@@ -380,14 +376,12 @@
 
 	  }
 
-	;__weex_module__.exports.template={
+	;__weex_module__.exports.template = __weex_module__.exports.template || {}
+	;Object.assign(__weex_module__.exports.template, {
 	  "type": "list",
 	  "classList": [
 	    "list"
 	  ],
-	  "events": {
-	    "loadmore": "loadmore"
-	  },
 	  "attr": {
 	    "loadmoreoffset": "2000"
 	  },
@@ -1081,10 +1075,47 @@
 	          ]
 	        }
 	      ]
+	    },
+	    {
+	      "type": "loading",
+	      "classList": [
+	        "refresh-view"
+	      ],
+	      "attr": {
+	        "display": function () {return this.loading_display}
+	      },
+	      "events": {
+	        "loading": "onloading"
+	      },
+	      "children": [
+	        {
+	          "type": "text",
+	          "classList": [
+	            "refresh-arrow"
+	          ],
+	          "style": {
+	            "textAlign": "center",
+	            "color": "rgb(238,162,54)"
+	          },
+	          "shown": function () {return (this.refresh_display==='hide')},
+	          "attr": {
+	            "value": "Load more"
+	          }
+	        },
+	        {
+	          "type": "loading-indicator",
+	          "style": {
+	            "height": 60,
+	            "width": 60,
+	            "color": "#3192e1"
+	          }
+	        }
+	      ]
 	    }
 	  ]
-	}
-	;__weex_module__.exports.style={
+	})
+	;__weex_module__.exports.style = __weex_module__.exports.style || {}
+	;Object.assign(__weex_module__.exports.style, {
 	  "flexRow": {
 	    "flexDirection": "row"
 	  },
@@ -1145,10 +1176,19 @@
 	  "smallImg": {
 	    "width": 20,
 	    "height": 20
+	  },
+	  "refresh-view": {
+	    "height": 120,
+	    "width": 750,
+	    "display": "flex",
+	    "MsFlexAlign": "center",
+	    "WebkitAlignItems": "center",
+	    "WebkitBoxAlign": "center",
+	    "alignItems": "center"
 	  }
-	}
 	})
-	;__weex_bootstrap__("@weex-component/27404869ac7d04c3c768257387390d1b", {
+	})
+	;__weex_bootstrap__("@weex-component/cb2317d07ad026f4c51aa61496b2b05c", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 

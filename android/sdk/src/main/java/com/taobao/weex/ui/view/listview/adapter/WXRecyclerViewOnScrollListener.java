@@ -256,10 +256,6 @@ public class WXRecyclerViewOnScrollListener extends RecyclerView.OnScrollListene
       if (visibleItemCount > 0 && currentScrollState == RecyclerView.SCROLL_STATE_IDLE) {
         if (listener != null && listener.get() != null) {
           listener.get().onLoadMore(bottomOffset);
-          if(layoutManager instanceof LinearLayoutManager){
-            LinearLayoutManager linearLayoutManager=(LinearLayoutManager)layoutManager;
-            listener.get().notifyAppearStateChange(linearLayoutManager.findFirstVisibleItemPosition(),linearLayoutManager.findLastVisibleItemPosition());
-          }
         }
       }
     }
@@ -269,6 +265,7 @@ public class WXRecyclerViewOnScrollListener extends RecyclerView.OnScrollListene
   public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
     super.onScrolled(recyclerView, dx, dy);
     RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+    listener.get().onBeforeScroll(dx,dy);
     //  int lastVisibleItemPosition = -1;
     if (layoutManagerType == null) {
       if (layoutManager instanceof LinearLayoutManager) {
@@ -287,6 +284,10 @@ public class WXRecyclerViewOnScrollListener extends RecyclerView.OnScrollListene
       case LINEAR:
         lastVisibleItemPosition = ((LinearLayoutManager) layoutManager)
             .findLastVisibleItemPosition();
+        listener.get().notifyAppearStateChange(((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition()
+            ,lastVisibleItemPosition
+            ,dx
+            ,dy);
         break;
       case GRID:
         lastVisibleItemPosition = ((GridLayoutManager) layoutManager)
