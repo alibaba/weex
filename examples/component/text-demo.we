@@ -44,7 +44,7 @@
       <text class="txt" style="text-overflow:clip;width: 450px;lines:1">text-overflow: clip, text-overflow: clip</text>
       <text class="txt" style="text-overflow:ellipsis;width: 450px;lines:1">text-overflow: ellipsis, text-overflow: ellipsis</text>
     </wxc-panel>
-    <wxc-panel title="text-lineheight" type="primary">
+    <wxc-panel title="line-height" type="primary">
       <text class="txt">no lineheight setting</text>
       <text class="txt" style="line-height: 50">lineheight 50</text>
       <text class="txt" style="line-height: 80"> lineheight 80</text>
