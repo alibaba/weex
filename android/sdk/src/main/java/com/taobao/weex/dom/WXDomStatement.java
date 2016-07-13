@@ -639,8 +639,6 @@ class WXDomStatement {
       return;
     }
 
-    transformStyle(domObject, true);
-
     if (domObject.isFixed()) {
       WXDomObject rootDom = mRegistry.get(WXDomObject.ROOT);
       if (rootDom == null) {
@@ -650,6 +648,8 @@ class WXDomStatement {
 
     }
     parent.add(domObject, index);
+
+    transformStyle(domObject, true);
 
     //Create component in dom thread
     final WXComponent component = mWXRenderManager.createComponentOnDomThread(mInstanceId, domObject, parentRef, index);
