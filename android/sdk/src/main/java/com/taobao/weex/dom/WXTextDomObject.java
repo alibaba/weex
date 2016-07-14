@@ -190,14 +190,31 @@ public class WXTextDomObject extends WXDomObject {
 
   @Override
   public WXTextDomObject clone() {
+    WXTextDomObject dom = null;
     try {
-      return (WXTextDomObject) super.clone();
+      dom = new WXTextDomObject();
+      if (this.cssstyle != null) {
+        dom.cssstyle.copy(this.cssstyle);
+      }
+      dom.ref = ref;
+      dom.type = type;
+      dom.style = style;
+      dom.attr = attr;
+      dom.event = event == null ? null : event.clone();
+      dom.hasBeenMeasured = hasBeenMeasured;
+      dom.atomicReference = atomicReference;
+      if (this.csslayout != null) {
+        dom.csslayout.copy(this.csslayout);
+      }
     } catch (Exception e) {
       if (WXEnvironment.isApkDebugable()) {
         WXLogUtils.e("WXTextDomObject clone error: " + WXLogUtils.getStackTrace(e));
       }
-      return null;
     }
+    if (dom != null) {
+      dom.spanned = spanned;
+    }
+    return dom;
   }
 
   /**

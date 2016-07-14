@@ -476,22 +476,30 @@ public class WXDomObject extends CSSNode implements Cloneable {
     if (sDestroy.get()) {
       return null;
     }
-    else {
-      try {
-        WXDomObject dom = (WXDomObject) super.clone();
-        dom.cssstyle.copy(cssstyle);
+    WXDomObject dom = null;
+    try {
+      dom = new WXDomObject();
+      if (this.cssstyle != null) {
+        dom.cssstyle.copy(this.cssstyle);
+      }
+
+      dom.ref = ref;
+      dom.type = type;
+      dom.style = style;//style == null ? null : style.clone();
+      dom.attr = attr;//attr == null ? null : attr.clone();
+      dom.event = event == null ? null : event.clone();
+      if (this.csslayout != null) {
         dom.csslayout.copy(this.csslayout);
-        if(dom.event!=null){
-          dom.event=event.clone();
-        }
-        return dom;
-      } catch (Exception e) {
-        if (WXEnvironment.isApkDebugable()) {
-          WXLogUtils.e("WXDomObject clone error: " + WXLogUtils.getStackTrace(e));
-        }
-        return null;
+      }
+
+
+    } catch (Exception e) {
+      if (WXEnvironment.isApkDebugable()) {
+        WXLogUtils.e("WXDomObject clone error: " + WXLogUtils.getStackTrace(e));
       }
     }
+
+    return dom;
   }
 
   public void destroy() {
