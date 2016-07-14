@@ -452,14 +452,15 @@ public class WXAnimationBean {
       return WXUtils.fastGetFloat(percent, precision) / 100 * unit;
     }
 
-    private static List<PropertyValuesHolder> moveBackToOrigin() {
-      List<PropertyValuesHolder> holders = new ArrayList<>(5);
-      holders.add(PropertyValuesHolder.ofFloat(View.TRANSLATION_X, 0));
-      holders.add(PropertyValuesHolder.ofFloat(View.TRANSLATION_Y, 0));
-      holders.add(PropertyValuesHolder.ofFloat(View.SCALE_X, 1));
-      holders.add(PropertyValuesHolder.ofFloat(View.SCALE_Y, 1));
-      holders.add(PropertyValuesHolder.ofFloat(View.ROTATION, 0));
-      return holders;
+    private static @NonNull Map<Property<View, Float>, Float> createDefaultTransform(){
+      Map<Property<View, Float>, Float> defaultMap=
+          WXDataStructureUtil.newHashMapWithExpectedSize(5);
+      defaultMap.put(View.TRANSLATION_X, 0f);
+      defaultMap.put(View.TRANSLATION_Y, 0f);
+      defaultMap.put(View.SCALE_X, 1f);
+      defaultMap.put(View.SCALE_Y, 1f);
+      defaultMap.put(View.ROTATION, 0f);
+      return defaultMap;
     }
 
     public Pair<Float, Float> getPivot() {
@@ -469,19 +470,14 @@ public class WXAnimationBean {
     public void init(@Nullable String transformOrigin,@Nullable String rawTransform,
                      final int width, final int height){
       pivot = parsePivot(transformOrigin,width,height);
-      transformMap = parseTransForm(rawTransform,width,height);
+      transformMap = createDefaultTransform();
+      transformMap.putAll(parseTransForm(rawTransform,width,height));
       initHolders();
     }
 
     private void initHolders(){
-      if (transformMap != null) {
-        if (transformMap.isEmpty()) {
-          holders.addAll(moveBackToOrigin());
-        } else {
-          for (Map.Entry<Property<View, Float>, Float> entry : transformMap.entrySet()) {
-            holders.add(PropertyValuesHolder.ofFloat(entry.getKey(), entry.getValue()));
-          }
-        }
+      for (Map.Entry<Property<View, Float>, Float> entry : transformMap.entrySet()) {
+        holders.add(PropertyValuesHolder.ofFloat(entry.getKey(), entry.getValue()));
       }
       if (!TextUtils.isEmpty(opacity)) {
         holders.add(PropertyValuesHolder.ofFloat(WXAnimationBean.Style.ALPHA,

@@ -256,14 +256,13 @@ public class WXAnimationModule extends WXModule {
     }
   }
 
-  public static void startAnimation(WXSDKInstance mWXSDKInstance,WXComponent component,
-                                    @Nullable String callback) {
+  public static void startAnimation(WXSDKInstance mWXSDKInstance, WXComponent component,
+                                    @NonNull WXAnimationBean animationBean, @Nullable String callback) {
     try {
-      WXAnimationBean animationBean = component.getDomObject().style.getAnimationBean();
-      Animator animator = createAnimator(animationBean, component.getRealView());
+      Animator animator = createAnimator(animationBean, component.getView());
       if (animator != null) {
         Animator.AnimatorListener animatorCallback = createAnimatorListener(mWXSDKInstance, callback);
-        component.getRealView().setLayerType(View.LAYER_TYPE_HARDWARE,null);
+        component.getView().setLayerType(View.LAYER_TYPE_HARDWARE,null);
         Interpolator interpolator = createTimeInterpolator(animationBean);
         if (animatorCallback != null) {
           animator.addListener(animatorCallback);
