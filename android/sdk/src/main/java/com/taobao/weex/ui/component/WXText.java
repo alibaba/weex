@@ -204,7 +204,9 @@
  */
 package com.taobao.weex.ui.component;
 
+import android.content.Context;
 import android.text.Layout;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.taobao.weex.WXSDKInstance;
@@ -216,7 +218,7 @@ import com.taobao.weex.ui.view.WXTextView;
  * Text component
  */
 @Component(lazyload = false)
-public class WXText extends WXComponent{
+public class WXText extends WXComponent<WXTextView>{
 
   /**
    * The default text size
@@ -234,13 +236,8 @@ public class WXText extends WXComponent{
   }
 
   @Override
-  protected void initView() {
-    mHost = new WXTextView(mContext);
-  }
-
-  @Override
-  public WXTextView getView() {
-    return (WXTextView) super.getView();
+  protected WXTextView initComponentHostView(Context context) {
+    return new WXTextView(context);
   }
 
   @Override
@@ -255,7 +252,7 @@ public class WXText extends WXComponent{
 
   /**
    * Flush view no matter what height and width the {@link WXDomObject} specifies.
-   * @param object must be a {@link Layout} object, otherwise, nothing will happen.
+   * @param extra must be a {@link Layout} object, otherwise, nothing will happen.
    */
   private void flushView(Object extra){
     if(extra instanceof Layout &&

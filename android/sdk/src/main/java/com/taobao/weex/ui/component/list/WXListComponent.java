@@ -204,6 +204,7 @@
  */
 package com.taobao.weex.ui.component.list;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.support.annotation.NonNull;
@@ -255,7 +256,7 @@ import java.util.regex.Pattern;
  * {@link #onViewRecycled(ListBaseViewHolder)}. In other situations, the association may not valid
  * or not even exist.
  */
-public class WXListComponent extends WXVContainer implements
+public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
         IRecyclerAdapterListener<ListBaseViewHolder>,IOnLoadMoreListener,Scrollable {
 
     public static final String TRANSFORM = "transform";
@@ -368,8 +369,8 @@ public class WXListComponent extends WXVContainer implements
     }
 
     @Override
-    protected void initView() {
-        bounceRecyclerView = new BounceRecyclerView(mContext, getOrientation());
+    protected BounceRecyclerView initComponentHostView(Context context) {
+        bounceRecyclerView = new BounceRecyclerView(context, getOrientation());
 
         String transforms = (String) mDomObj.attr.get(TRANSFORM);
         if (transforms != null) {
@@ -424,7 +425,7 @@ public class WXListComponent extends WXVContainer implements
                 }
             }
         });
-      mHost = bounceRecyclerView;
+      return bounceRecyclerView;
     }
 
   @Override
@@ -574,61 +575,39 @@ public class WXListComponent extends WXVContainer implements
     return bounceRecyclerView == null?0:bounceRecyclerView.getInnerView().getScrollX();
   }
 
-    /**
-        * @return BounceRecyclerView
-        */
-    public BounceRecyclerView getView() {
-        return (BounceRecyclerView) super.getView();
+  /**
+    * Append a child component to the end of WXListComponent. This will not refresh the underlying
+    * view immediately. The message of index of the inserted child is given to the adapter, and the
+    * adapter will determine when to refresh. The default implementation of adapter will push the
+    * message into a message and refresh the view in a period of time.
+    *
+    * @param child the inserted child
+    */
+  @Override
+  public void addChild(WXComponent child) {
+      addChild(child, -1);
+  }
+
+  /**
+    * @param child the inserted child
+    * @param index the index of the child to be inserted.
+    * @see #addChild(WXComponent)
+    */
+  @Override
+  public void addChild(WXComponent child, int index) {
+    super.addChild(child, index);
+
+    int adapterPosition = index == -1 ? mChildren.size() - 1 : index;
+    BounceRecyclerView view = getView();
+    if (view != null) {
+      view.getAdapter().notifyItemInserted(adapterPosition);
     }
 
-    /**
-        * @return BounceRecyclerView
-        */
-    @Override
-    public BounceRecyclerView getRealView() {
-        return (BounceRecyclerView) super.getView();
+    if (hasAppearAndDisAppearEvent(child)) {
+      mAppearComponents.put(adapterPosition, child);
+      child.registerAppearEvent = true;
     }
-
-    /**
-        * @return RecyclerView
-        */
-    public RecyclerView getInnerView() {
-        return bounceRecyclerView.getInnerView();
-    }
-
-    /**
-        * Append a child component to the end of WXListComponent. This will not refresh the underlying
-        * view immediately. The message of index of the inserted child is given to the adapter, and the
-        * adapter will determine when to refresh. The default implementation of adapter will push the
-        * message into a message and refresh the view in a period of time.
-        *
-        * @param child the inserted child
-        */
-    @Override
-    public void addChild(WXComponent child) {
-        addChild(child, -1);
-    }
-
-    /**
-        * @param child the inserted child
-        * @param index the index of the child to be inserted.
-        * @see #addChild(WXComponent)
-        */
-    @Override
-    public void addChild(WXComponent child, int index) {
-        super.addChild(child, index);
-
-        int adapterPosition = index == -1 ? mChildren.size() - 1 : index;
-        BounceRecyclerView view =  getView();
-        if(view != null) {
-        view.getAdapter().notifyItemInserted(adapterPosition);
-        }
-
-        if(hasAppearAndDisAppearEvent(child)){
-        mAppearComponents.put(adapterPosition, child);
-        child.registerAppearEvent = true;
-        }
-    }
+  }
 
   private boolean hasAppearAndDisAppearEvent(WXComponent child) {
 

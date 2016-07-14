@@ -178,12 +178,12 @@ import java.util.Set;
  * abstract component
  *
  */
-public abstract class WXComponent implements IWXObject, IWXActivityStateListener {
+public abstract class  WXComponent<T extends View> implements IWXObject, IWXActivityStateListener {
 
   public static final int HORIZONTAL = 0;
   public static final int VERTICAL = 1;
   public static int mComponentNum = 0;
-  public View mHost;
+  public T mHost;
   public volatile WXVContainer mParent;
   public volatile WXDomObject mDomObj;
   public String mInstanceId;
@@ -599,20 +599,47 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
   }
 
   protected void createViewImpl(WXVContainer parent, int index) {
-    initView();
-    if (parent != null) {
-      parent.addSubView(mHost, index);
+    if (mContext != null) {
+      mHost = initComponentHostView(mContext);
+      if (mHost == null) {
+        //compatible
+        initView();
+      }
+      onHostViewInitialized(mHost);
+      if (parent != null) {
+        parent.addSubView(mHost, index);
+      }
+      getOrCreateBorder().attachView(mHost);
+    }else{
+      WXLogUtils.e("createViewImpl","Context is null");
     }
-    getOrCreateBorder().attachView(mHost);
   }
 
+  /**
+   * Use {@link #initComponentHostView(Context context)} instead.
+   */
+  @Deprecated
   protected void initView() {
-    if(mContext!=null) {
-      mHost = new FrameLayout(mContext);
-    }
+    if (mContext != null)
+      mHost = initComponentHostView(mContext);
   }
 
-  public View getView() {
+  protected T initComponentHostView(Context context){
+    /**
+     * compatible old initView
+     * TODO: change to abstract method in next V1.0 .
+     */
+    return null;
+  }
+
+  /**
+   * After view init.
+   */
+  protected void onHostViewInitialized(T host){
+
+  }
+
+  public T getView() {
     return mHost;
   }
 

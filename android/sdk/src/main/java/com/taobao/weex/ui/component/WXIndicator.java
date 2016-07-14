@@ -204,6 +204,7 @@
  */
 package com.taobao.weex.ui.component;
 
+import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -222,7 +223,7 @@ import java.util.Map;
  *
  * Slider indicator
  */
-public class WXIndicator extends WXComponent {
+public class WXIndicator extends WXComponent<WXCircleIndicator> {
 
   @Deprecated
   public WXIndicator(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
@@ -234,8 +235,8 @@ public class WXIndicator extends WXComponent {
   }
 
   @Override
-  protected void initView() {
-    mHost = new WXCircleIndicator(mContext);
+  protected WXCircleIndicator initComponentHostView(Context context) {
+    WXCircleIndicator view = new WXCircleIndicator(context);
     if (mParent instanceof WXSlider) {
       ((WXSlider) mParent).addIndicator(this);
     } else {
@@ -243,11 +244,7 @@ public class WXIndicator extends WXComponent {
         throw new WXRuntimeException("WXIndicator initView error.");
       }
     }
-  }
-
-  @Override
-  public WXCircleIndicator getView() {
-    return (WXCircleIndicator) super.getView();
+    return null;
   }
 
   @WXComponentProp(name = "itemColor")

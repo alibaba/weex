@@ -204,6 +204,7 @@
  */
 package com.taobao.weex.ui.component;
 
+import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -224,7 +225,7 @@ import com.taobao.weex.utils.WXResourceUtils;
  * Image component
  */
 @Component(lazyload = false)
-public class WXImage extends WXComponent {
+public class WXImage extends WXComponent<WXImageView> {
 
     @Deprecated
     public WXImage(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
@@ -237,16 +238,11 @@ public class WXImage extends WXComponent {
     }
 
     @Override
-    protected void initView() {
-        mHost = new WXImageView(mContext, mDomObj);
-        ((ImageView) getView()).setScaleType(ScaleType.FIT_XY);
+    protected WXImageView initComponentHostView(Context context) {
+        WXImageView view = new WXImageView(mContext, mDomObj);
+        view.setScaleType(ScaleType.FIT_XY);
+        return view;
     }
-
-    @Override
-    public View getView() {
-        return super.getView();
-    }
-
 
     @Override
     @WXComponentProp(name = WXDomPropConstant.WX_BACKGROUNDCOLOR)

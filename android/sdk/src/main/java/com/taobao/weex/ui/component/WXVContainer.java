@@ -209,13 +209,14 @@ import android.view.ViewGroup;
 
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.view.WXFrameLayout;
 
 import java.util.ArrayList;
 
 /**
  * All container components must implement this class
  */
-public abstract class WXVContainer extends WXComponent {
+public abstract class WXVContainer<T extends ViewGroup> extends WXComponent<T> {
 
   private static final String TAG="WXVContainer";
   protected ArrayList<WXComponent> mChildren = new ArrayList<>();
@@ -228,6 +229,7 @@ public abstract class WXVContainer extends WXComponent {
   public WXVContainer(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
     super(instance, node, parent, lazy);
   }
+
 
   @Override
   public void applyLayoutAndEvent(WXComponent component) {
@@ -285,11 +287,6 @@ public abstract class WXVContainer extends WXComponent {
     if(getView()!=null){
        getView().setClipToPadding(false);
     }
-  }
-
-  @Override
-  public ViewGroup getView() {
-    return (ViewGroup) super.getView();
   }
 
   @Override

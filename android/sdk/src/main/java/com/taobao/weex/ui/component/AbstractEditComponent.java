@@ -228,7 +228,7 @@ import java.util.Map;
 /**
  * Created by sospartan on 7/11/16.
  */
-public abstract class AbstractEditComponent extends WXComponent {
+public abstract class AbstractEditComponent extends WXComponent<WXEditText> {
 
   private final InputMethodManager mInputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
   private String mBeforeText = "";
@@ -240,12 +240,10 @@ public abstract class AbstractEditComponent extends WXComponent {
   }
 
   @Override
-  protected void initView() {
-    super.initView();
-    WXEditText inputView = new WXEditText(mContext);
+  protected WXEditText initComponentHostView(Context context) {
+    WXEditText inputView = new WXEditText(context);
     appleStyleAfterCreated(inputView);
-
-    mHost = inputView;
+    return inputView;
   }
 
   /**
@@ -269,11 +267,6 @@ public abstract class AbstractEditComponent extends WXComponent {
     editText.setText((String) mDomObj.attr.get("value"));
   }
 
-
-  @Override
-  public WXEditText getView() {
-    return (WXEditText) super.getView();
-  }
 
   @Override
   public void addEvent(String type) {

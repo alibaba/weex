@@ -204,6 +204,7 @@
  */
 package com.taobao.weex.ui.component;
 
+import android.content.Context;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
 import android.view.View;
@@ -227,7 +228,7 @@ import com.taobao.weex.utils.WXViewUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WXSlider extends WXVContainer implements OnPageChangeListener {
+public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeListener {
 
   Map<String, Object> params = new HashMap<>();
   /**
@@ -243,10 +244,6 @@ public class WXSlider extends WXVContainer implements OnPageChangeListener {
    * Adapter for sliderview
    */
   private WXCirclePageAdapter mAdapter;
-  /**
-   * Container for sliderview
-   */
-  private FrameLayout mRoot;
 
   private boolean mShowIndicators;
 
@@ -260,22 +257,23 @@ public class WXSlider extends WXVContainer implements OnPageChangeListener {
   }
 
   @Override
-  protected void initView() {
-    mRoot = new FrameLayout(mContext);
+  protected FrameLayout initComponentHostView(Context context) {
+    FrameLayout view = new FrameLayout(context);
     // init view pager
     FrameLayout.LayoutParams pagerParams = new FrameLayout.LayoutParams(
-        LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-    mViewPager = new WXCircleViewPager(mContext);
+      LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+    mViewPager = new WXCircleViewPager(context);
     mViewPager.setLayoutParams(pagerParams);
 
     // init adapter
     mAdapter = new WXCirclePageAdapter();
     mViewPager.setAdapter(mAdapter);
     // add to parent
-    mRoot.addView(mViewPager);
-    mHost = mRoot;
+    view.addView(mViewPager);
     mViewPager.setOnPageChangeListener(this);
     registerActivityStateListener();
+
+    return view;
   }
 
   //TODO Slider don't support any gesture for now.
@@ -362,10 +360,14 @@ public class WXSlider extends WXVContainer implements OnPageChangeListener {
 //  }
 
   public void addIndicator(WXIndicator indicator) {
+    FrameLayout root = getView();
+    if (root == null) {
+      return;
+    }
     mIndicator = indicator;
     mIndicator.getView().setCircleViewPager(mViewPager);
     mIndicator.getView().setOnPageChangeListener(this);
-    mRoot.addView(mIndicator.getView());
+    root.addView(mIndicator.getView());
   }
 
   @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SLIDER_VALUE)
