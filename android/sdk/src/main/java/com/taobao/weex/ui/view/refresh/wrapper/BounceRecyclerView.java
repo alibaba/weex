@@ -270,6 +270,8 @@ public class BounceRecyclerView extends BaseBounceView<WXRecyclerView> {
    * @param component
    */
   public void notifyStickyShow(WXCell component) {
+    if (component == null)
+      return;
     if (!headComponentStack.isEmpty()) {
       WXCell oldCom = headComponentStack.pop();
       if (!oldCom.getRef().equals(component.getRef())) {
@@ -290,6 +292,8 @@ public class BounceRecyclerView extends BaseBounceView<WXRecyclerView> {
    * @param component
    */
   public void notifyStickyRemove(WXCell component) {
+    if (component == null)
+      return;
     if (!headComponentStack.isEmpty() && !headerViewStack.isEmpty() && !tempViewStack.isEmpty()) {
       removeSticky(component);
     }
@@ -302,6 +306,10 @@ public class BounceRecyclerView extends BaseBounceView<WXRecyclerView> {
     WXCell headComponent = headComponentStack.pop();
     headComponentStack.push(headComponent);
     FrameLayout headerView = (FrameLayout) headComponent.getView().getChildAt(0);
+    if (headerView == null)
+      return;
+    if (headComponent.getView() == null)
+      return;
     headerViewStack.push(headerView);
     int[] location = new int[2];
     int[] parentLocation = new int[2];
