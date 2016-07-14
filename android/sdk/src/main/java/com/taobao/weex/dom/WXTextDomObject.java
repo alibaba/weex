@@ -290,7 +290,7 @@ public class WXTextDomObject extends WXDomObject {
     Layout layout;
     if (!FloatUtil.floatsEqual(previousWidth, textWidth) || previousLayout == null) {
       layout = new StaticLayout(spanned, textPaint, (int) Math.ceil(textWidth),
-                                Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
+                                Layout.Alignment.ALIGN_NORMAL, 1, 0, true);
     } else {
       layout = previousLayout;
     }
