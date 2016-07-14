@@ -361,7 +361,7 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
 
   public void addIndicator(WXIndicator indicator) {
     FrameLayout root = getView();
-    if(root == null){
+    if (root == null) {
       return;
     }
     mIndicator = indicator;

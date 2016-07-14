@@ -599,9 +599,9 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
   }
 
   protected void createViewImpl(WXVContainer parent, int index) {
-    if(mContext != null) {
+    if (mContext != null) {
       mHost = initComponentHostView(mContext);
-      if(mHost == null){
+      if (mHost == null) {
         //compatible
         initView();
       }
@@ -620,7 +620,7 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
    */
   @Deprecated
   protected void initView() {
-    if(mContext != null)
+    if (mContext != null)
       mHost = initComponentHostView(mContext);
   }
 

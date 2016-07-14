@@ -595,18 +595,18 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
     */
   @Override
   public void addChild(WXComponent child, int index) {
-      super.addChild(child, index);
+    super.addChild(child, index);
 
-      int adapterPosition = index == -1 ? mChildren.size() - 1 : index;
-      BounceRecyclerView view =  getView();
-      if(view != null) {
+    int adapterPosition = index == -1 ? mChildren.size() - 1 : index;
+    BounceRecyclerView view = getView();
+    if (view != null) {
       view.getAdapter().notifyItemInserted(adapterPosition);
-      }
+    }
 
-      if(hasAppearAndDisAppearEvent(child)){
+    if (hasAppearAndDisAppearEvent(child)) {
       mAppearComponents.put(adapterPosition, child);
       child.registerAppearEvent = true;
-      }
+    }
   }
 
   private boolean hasAppearAndDisAppearEvent(WXComponent child) {
