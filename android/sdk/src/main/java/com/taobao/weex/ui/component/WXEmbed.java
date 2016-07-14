@@ -213,6 +213,7 @@ import android.widget.ImageView;
 
 import com.taobao.weappplus_sdk.R;
 import com.taobao.weex.IWXRenderListener;
+import com.taobao.weex.WXRenderErrorCode;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.common.WXDomPropConstant;
@@ -274,24 +275,26 @@ public class WXEmbed extends WXDiv implements WXSDKInstance.OnInstanceVisibleLis
 
       @Override
       public void onException(WXSDKInstance instance, String errCode, String msg) {
-        final ImageView imageView = new ImageView(mContext);
-        imageView.setImageResource(R.drawable.error);
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ERROR_IMG_WIDTH, ERROR_IMG_HEIGHT);
-        layoutParams.gravity = Gravity.CENTER;
-        imageView.setLayoutParams(layoutParams);
-        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-        imageView.setAdjustViewBounds(true);
-        imageView.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            imageView.setOnClickListener(null);
-            imageView.setEnabled(false);
-            WXEmbed.this.instance = createInstance();
-          }
-        });
-        getView().removeAllViews();
-        getView().addView(imageView);
-        WXLogUtils.e("WXEmbed", "Error code :" + errCode + ",\n error message :" + msg);
+        if(TextUtils.equals(msg, WXRenderErrorCode.WX_NETWORK_ERROR)) {
+          final ImageView imageView = new ImageView(mContext);
+          imageView.setImageResource(R.drawable.error);
+          FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ERROR_IMG_WIDTH, ERROR_IMG_HEIGHT);
+          layoutParams.gravity = Gravity.CENTER;
+          imageView.setLayoutParams(layoutParams);
+          imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+          imageView.setAdjustViewBounds(true);
+          imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              imageView.setOnClickListener(null);
+              imageView.setEnabled(false);
+              WXEmbed.this.instance = createInstance();
+            }
+          });
+          getView().removeAllViews();
+          getView().addView(imageView);
+          WXLogUtils.e("WXEmbed", "NetWork failure :" + errCode + ",\n error message :" + msg);
+        }
       }
     });
     ViewGroup.LayoutParams layoutParams = getView().getLayoutParams();

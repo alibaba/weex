@@ -223,7 +223,7 @@ public enum WXErrorCode {
   /**
    * So library corrupted
    */
-  WX_ERR_BAD_SO("-2003", "so error"),
+  WX_ERR_BAD_SO("-2003", "so size error, to reload apk so"),
 
   /**
    * Failure for extract and copy so from apk
