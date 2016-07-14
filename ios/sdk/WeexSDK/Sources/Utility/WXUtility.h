@@ -93,6 +93,8 @@ extern _Nonnull SEL WXSwizzledSelectorForSelector(_Nonnull SEL selector);
 
 @interface WXUtility : NSObject
 
++ (void)setNotStat:(BOOL)notStat;
++ (BOOL)notStat;
 /**
  * @abstract Returns the environment of current application, you can get some nessary properties such as appVersion、sdkVersion、appName etc.
  *
