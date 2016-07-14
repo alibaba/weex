@@ -253,8 +253,16 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
    */
   private void startHotRefresh() {
     try {
-      String host = new URL(mUri.toString()).getHost();
-      String wsUrl = "ws://" + host + ":8082";
+      String wsPortName = "wsport";
+      String url = mUri.toString();
+      String host = new URL(url).getHost();
+      String port = "8082";
+      if (url.contains(wsPortName)) {
+          port = url.split(wsPortName)[1];
+          if(port.contains("\\?"))
+              port = port.split("\\?")[0];
+      }
+      String wsUrl = "ws://" + host + ":" + port;
       mWXHandler.obtainMessage(Constants.HOT_REFRESH_CONNECT, 0, 0, wsUrl).sendToTarget();
     } catch (MalformedURLException e) {
       e.printStackTrace();
