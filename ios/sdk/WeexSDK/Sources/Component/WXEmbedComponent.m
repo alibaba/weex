@@ -84,6 +84,7 @@
         NSURL *sourceURL = [NSURL URLWithString:attributes[@"src"]];
         if (!sourceURL|| ![[sourceURL absoluteString] isEqualToString:[_sourceURL absoluteString]]) {
             _sourceURL = sourceURL;
+            _createFinished = NO;
             [self _layoutEmbedView];
         }
     }
