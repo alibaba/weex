@@ -152,7 +152,9 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
                         } else {
                             NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(cfStrEncoding);
                             responseData = [[NSString alloc]initWithData:totalData encoding:encoding];
-                            [callbackRsp setObject:responseData forKey:@"data"];
+                            if (responseData) {
+                                [callbackRsp setObject:responseData forKey:@"data"];
+                            }
                         }
                     }
                     callback([WXUtility JSONString:callbackRsp]);
