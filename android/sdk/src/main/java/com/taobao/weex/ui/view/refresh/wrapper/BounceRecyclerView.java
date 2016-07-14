@@ -209,7 +209,6 @@ import android.support.v7.widget.OrientationHelper;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.list.WXCell;
@@ -303,7 +302,7 @@ public class BounceRecyclerView extends BaseBounceView<WXRecyclerView> {
   private void showSticky() {
     WXCell headComponent = headComponentStack.pop();
     headComponentStack.push(headComponent);
-    FrameLayout headerView = (FrameLayout) headComponent.getView().getChildAt(0);
+    View headerView = headComponent.getRealView();
     if (headerView == null)
       return;
     headerViewStack.push(headerView);
