@@ -228,6 +228,8 @@ public class WXDomObject extends CSSNode implements Cloneable {
 
   public static final String TAG = WXDomObject.class.getSimpleName();
   public static final String ROOT = "_root";
+  public static final String TRANSFORM = "transform";
+  public static final String TRANSFORM_ORIGIN = "transformOrigin";
   public AtomicBoolean sDestroy = new AtomicBoolean();
   public String ref = ROOT;
   public String type = WXBasicComponentType.SCROLLER;
@@ -474,30 +476,22 @@ public class WXDomObject extends CSSNode implements Cloneable {
     if (sDestroy.get()) {
       return null;
     }
-    WXDomObject dom = null;
-    try {
-      dom = new WXDomObject();
-      if (this.cssstyle != null) {
-        dom.cssstyle.copy(this.cssstyle);
-      }
-
-      dom.ref = ref;
-      dom.type = type;
-      dom.style = style;//style == null ? null : style.clone();
-      dom.attr = attr;//attr == null ? null : attr.clone();
-      dom.event = event == null ? null : event.clone();
-      if (this.csslayout != null) {
+    else {
+      try {
+        WXDomObject dom = (WXDomObject) super.clone();
+        dom.cssstyle.copy(cssstyle);
         dom.csslayout.copy(this.csslayout);
-      }
-
-
-    } catch (Exception e) {
-      if (WXEnvironment.isApkDebugable()) {
-        WXLogUtils.e("WXDomObject clone error: " + WXLogUtils.getStackTrace(e));
+        if(dom.event!=null){
+          dom.event=event.clone();
+        }
+        return dom;
+      } catch (Exception e) {
+        if (WXEnvironment.isApkDebugable()) {
+          WXLogUtils.e("WXDomObject clone error: " + WXLogUtils.getStackTrace(e));
+        }
+        return null;
       }
     }
-
-    return dom;
   }
 
   public void destroy() {
