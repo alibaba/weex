@@ -256,7 +256,7 @@ public class WXSDKManager {
   }
 
   void createInstance(WXSDKInstance instance, String code, Map<String, Object> options, String jsonInitData) {
-    mWXRenderManager.createInstance(instance, instance.getInstanceId());
+    mWXRenderManager.createInstance(instance);
     mBridgeManager.createInstance(instance.getInstanceId(), code, options, jsonInitData);
   }
 
