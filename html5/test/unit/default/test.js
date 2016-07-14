@@ -22,6 +22,7 @@ import chai from 'chai'
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai'
 
+import '../../../shared'
 import framework from '../../../runtime'
 import { subversion } from '../../../../package.json'
 
@@ -774,6 +775,22 @@ describe('test input and output', () => {
 
     expected.children.push({ type: 'text', attr: { value: '2 - 12345' }})
     actual = doc.toJSON()
+    expect(actual).eql(expected)
+
+    framework.destroyInstance(name)
+    delete allDocs[name]
+  })
+
+  it('promise case', () => {
+    const name = 'promise'
+    const inputCode = readInput(name)
+    const outputCode = readOutput(name)
+    const doc = new Document(name)
+    allDocs[name] = doc
+
+    framework.createInstance(name, inputCode)
+    const expected = eval('(' + outputCode + ')')
+    const actual = doc.toJSON()
     expect(actual).eql(expected)
 
     framework.destroyInstance(name)

@@ -293,8 +293,8 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
       }
     }
 
-    if ("POST".equals(request.method)) {
-      connection.setRequestMethod("POST");
+    if ("POST".equals(request.method) || "PUT".equals(request.method) || "PATCH".equals(request.method)) {
+      connection.setRequestMethod(request.method);
       if (request.body != null) {
         if (listener != null) {
           listener.onHttpUploadProgress(0);
