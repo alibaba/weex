@@ -62,6 +62,7 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
     
     NSString *method = [options objectForKey:@"method"];
     if ([WXUtility isBlankString:method]) {
+        // default HTTP method is GET
         method = @"GET";
     }
     NSString *urlStr = [options objectForKey:@"url"];
@@ -79,7 +80,13 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
     NSURL *url = [NSURL URLWithString:urlStr];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:method];
-    [request setTimeoutInterval:60.0];
+    if ([options valueForKey:@"timeout"]){
+        [request setTimeoutInterval:[[options valueForKey:@"timeout"] floatValue]];
+    } else {
+        //default timeout is 30.0s
+        [request setTimeoutInterval:30.0];
+    }
+    
     for (NSString *header in headers) {
         NSString *value = [headers objectForKey:header];
         [request setValue:value forHTTPHeaderField:header];
@@ -93,6 +100,7 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
     
     id<WXNetworkProtocol> networkHandler = [WXHandlerFactory handlerForProtocol:@protocol(WXNetworkProtocol)];
     __block NSString *respEncode = nil;
+    __weak typeof(self) weakSelf = self;
     [networkHandler sendRequest:request
                 withSendingData:^(int64_t bytesSent, int64_t totalBytes) {
                 } withResponse:^(NSURLResponse *response) {
@@ -109,14 +117,14 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
                     [callbackRsp setObject:statusText forKey:@"statusText"];
                     [callbackRsp setObject:[NSNumber numberWithInteger:received] forKey:@"length"];
                     
-                    [[WXSDKManager bridgeMgr] callBack:self.weexInstance.instanceId funcId:progressCallback params:[WXUtility JSONString:callbackRsp] keepAlive:true];
+                    [[WXSDKManager bridgeMgr] callBack:weakSelf.weexInstance.instanceId funcId:progressCallback params:[WXUtility JSONString:callbackRsp] keepAlive:true];
                     
                 } withReceiveData:^(NSData *data) {
                     [callbackRsp setObject:@{ @"LOADING" : @3  } forKey:@"readyState"];
                     received += [data length];
                     [callbackRsp setObject:[NSNumber numberWithInteger:received] forKey:@"length"];
                     
-                    [[WXSDKManager bridgeMgr] callBack:self.weexInstance.instanceId funcId:progressCallback params:[WXUtility JSONString:callbackRsp] keepAlive:true];
+                    [[WXSDKManager bridgeMgr] callBack:weakSelf.weexInstance.instanceId funcId:progressCallback params:[WXUtility JSONString:callbackRsp] keepAlive:true];
                     
                 } withCompeletion:^(NSData *totalData, NSError *error) {
                     
