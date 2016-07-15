@@ -317,7 +317,7 @@ public class WXSDKEngine {
   /**
    *
    * Register component. The registration is singleton in {@link WXSDKEngine} level
-   * @param type name of component. Same as type filed in the JS.
+   * @param type name of component. Same as type field in the JS.
    * @param clazz the class of the {@link WXComponent} to be registered.
    * @param appendTree true for appendTree flag
    * @return true for registration success, false for otherwise.
