@@ -1,7 +1,7 @@
 // http://nightwatchjs.org/guide#settings-file
 module.exports = {
   'src_folders': ['html5/test/e2e/specs'],
-  'output_folder': 'html5/test/e2e/reports',
+  'output_folder': false,
 
   'selenium': {
     'start_process': true,
