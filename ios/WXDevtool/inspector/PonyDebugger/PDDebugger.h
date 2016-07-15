@@ -88,6 +88,9 @@ extern void _PDLogObjectsImpl(NSString *severity, NSArray *arguments);
 #pragma mark CSSStyle
 - (void)enableCSSStyle;
 
+#pragma mark openDevTool Debug
+- (void)enableDevToolDebug;
+
 #pragma mark - listenning on server
 //- (void)serverStartWithHost:(NSString *)host port:(NSUInteger)port;
 

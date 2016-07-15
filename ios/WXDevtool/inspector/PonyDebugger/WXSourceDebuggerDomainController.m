@@ -6,16 +6,16 @@
  * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
  */
 
-#import "WXDebuggerDomainController.h"
+#import "WXSourceDebuggerDomainController.h"
 
-@implementation WXDebuggerDomainController
+@implementation WXSourceDebuggerDomainController
 @dynamic domain;
 
-+ (WXDebuggerDomainController *)defaultInstance {
-    static WXDebuggerDomainController *defaultInstance = nil;
++ (WXSourceDebuggerDomainController *)defaultInstance {
+    static WXSourceDebuggerDomainController *defaultInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        defaultInstance = [[WXDebuggerDomainController alloc] init];
+        defaultInstance = [[WXSourceDebuggerDomainController alloc] init];
     });
     return defaultInstance;
 }

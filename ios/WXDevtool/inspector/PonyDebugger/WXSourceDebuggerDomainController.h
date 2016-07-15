@@ -10,9 +10,11 @@
 #import "PDDebuggerDomain.h"
 #import "PDDynamicDebuggerDomain.h"
 
-@interface WXDebuggerDomainController : PDDomainController <PDDebuggerCommandDelegate>
+@interface WXSourceDebuggerDomainController : PDDomainController <PDDebuggerCommandDelegate>
 
-+ (WXDebuggerDomainController *)defaultInstance;
+@property (nonatomic, strong) PDDebuggerDomain *domain;
+
++ (WXSourceDebuggerDomainController *)defaultInstance;
 
 - (void)remoteDebuggerControllerTest;
 
@@ -20,7 +22,5 @@
                               url:(NSString *)url
                   isContentScript:(NSNumber *)isContentScript
                      sourceMapURL:(NSString *)sourceMapURL;
-
-@property (nonatomic, strong) PDDebuggerDomain *domain;
 
 @end

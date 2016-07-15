@@ -10,6 +10,8 @@ Remote debug for your native iOS app using Chrome Developer Tools
 		$:weex-devtool  
 
 	it will launch chrome browser, showing wss ip address in chrome address bar.
+	
+	For more detailed instructions, redirect to [weex-toolkit](https://github.com/weexteam/weex-toolkit#weex-debug-command)
 		
 		
 ## playground install WXDevtool

@@ -177,7 +177,7 @@ static id<WXLogProtocol> _externalLog;
     va_list args;
     va_start(args, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
-    NSArray *messageAry = @[message];
+    NSArray *messageAry = [NSArray arrayWithObjects:message, nil];
     Class PDLogClass = NSClassFromString(@"PDDebugger");
     if (PDLogClass) {
         SEL selector = NSSelectorFromString(@"coutLogWithLevel:arguments:");

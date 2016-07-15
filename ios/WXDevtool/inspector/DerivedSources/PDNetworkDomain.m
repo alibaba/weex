@@ -13,7 +13,7 @@
 #import "PDNetworkDomain.h"
 #import "PDObject.h"
 #import "PDNetworkTypes.h"
-#import "WXDebuggerDomainController.h"
+#import "WXSourceDebuggerDomainController.h"
 
 
 @interface PDNetworkDomain ()
@@ -103,7 +103,7 @@
     
     [self.debuggingServer sendEventWithName:@"Network.responseReceived" parameters:params];
     
-    [[WXDebuggerDomainController defaultInstance] getScriptSourceTreeWithId:requestId url:response.url isContentScript:[NSNumber numberWithBool:NO] sourceMapURL:@""];
+    [[WXSourceDebuggerDomainController defaultInstance] getScriptSourceTreeWithId:requestId url:response.url isContentScript:[NSNumber numberWithBool:NO] sourceMapURL:@""];
 }
 
 // Fired when data chunk was received over the network.
