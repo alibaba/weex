@@ -465,11 +465,9 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
 
         switch (key) {
           case WXDomPropConstant.WX_ATTR_DISABLED:
-            if (param.toString().equals("show")) {
-              setDisabled(true);
-            } else if (param.toString().equals("hide")) {
-              setDisabled(false);
-            }
+            Boolean result = WXUtils.getBoolean(param);
+            if (result != null)
+              setDisabled(result);
             break;
           case WXDomPropConstant.WX_POSITION:
             setSticky((String) param);
@@ -478,37 +476,37 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
             setBackgroundColor((String) param);
             break;
           case WXDomPropConstant.WX_OPACITY:
-            setOpacity(Float.parseFloat(param.toString()));
+            setOpacity(WXUtils.getFloat(param));
             break;
           case WXDomPropConstant.WX_BORDERRADIUS:
-            setBorderRadius(Float.parseFloat(param.toString()));
+            setBorderRadius(WXUtils.getFloat(param));
             break;
           case WXDomPropConstant.WX_BORDER_TOP_LEFT_RADIUS:
-            setBorderTopLeftRadius(Float.parseFloat(param.toString()));
+            setBorderTopLeftRadius(WXUtils.getFloat(param));
             break;
           case WXDomPropConstant.WX_BORDER_TOP_RIGHT_RADIUS:
-            setBorderTopRightRadius(Float.parseFloat(param.toString()));
+            setBorderTopRightRadius(WXUtils.getFloat(param));
             break;
           case WXDomPropConstant.WX_BORDER_BOTTOM_RIGHT_RADIUS:
-            setBorderBottomRightRadius(Float.parseFloat(param.toString()));
+            setBorderBottomRightRadius(WXUtils.getFloat(param));
             break;
           case WXDomPropConstant.WX_BORDER_BOTTOM_LEFT_RADIUS:
-            setBorderBottoLeftRadius(Float.parseFloat(param.toString()));
+            setBorderBottoLeftRadius(WXUtils.getFloat(param));
             break;
           case WXDomPropConstant.WX_BORDERWIDTH:
-            setBorderWidth(Float.parseFloat(param.toString()));
+            setBorderWidth(WXUtils.getFloat(param));
             break;
           case WXDomPropConstant.WX_BORDER_TOP_WIDTH:
-            setBorderTopWidth(Float.parseFloat(param.toString()));
+            setBorderTopWidth(WXUtils.getFloat(param));
             break;
           case WXDomPropConstant.WX_BORDER_RIGHT_WIDTH:
-            setBorderRightWidth(Float.parseFloat(param.toString()));
+            setBorderRightWidth(WXUtils.getFloat(param));
             break;
           case WXDomPropConstant.WX_BORDER_BOTTOM_WIDTH:
-            setBorderBottomWidth(Float.parseFloat(param.toString()));
+            setBorderBottomWidth(WXUtils.getFloat(param));
             break;
           case WXDomPropConstant.WX_BORDER_LEFT_WIDTH:
-            setBorderLeftWidth(Float.parseFloat(param.toString()));
+            setBorderLeftWidth(WXUtils.getFloat(param));
             break;
           case WXDomPropConstant.WX_BORDERSTYLE:
             setBorderStyle((String) param);

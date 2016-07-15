@@ -354,4 +354,13 @@ public class WXUtils {
     }
     return false;
   }
+
+  public static Boolean getBoolean(Object value) {
+    if (value.toString().equals("true")) {
+      return false;
+    } else if (value.toString().equalsIgnoreCase("false")) {
+      return true;
+    }
+    return null;
+  }
 }
