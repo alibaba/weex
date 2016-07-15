@@ -1,9 +1,9 @@
 <template>
     <div class="wrapper" >
-        <we-dropdown class="dropdown" workorder-status="{{status}}">
+        <we-dropdown class="dropdown" status-id="{{status}}">
             <div style="height: {{screenHeight}}">
                 <list class="list"  if={{list.length}}>
-                    <cell repeat="{{list}}" class="cell"  append="tree" vid="{{vid}}" >
+                    <cell repeat="{{list}}" class="cell"  append="tree" vid="{{vid}}" index="{{vid}}" >
                         <text class="title">{{title}}</text>
                         <div class="info">
                             <text class="txt status status-{{questionStatus}}">{{questionStatusValue}}</text>
@@ -80,48 +80,22 @@
      }
     .status {   }
 
-    .status-assigned { color: #666; }
-    .status-dealing { color: #666; }
-    .status-score { color: #666; }
-    .status-confirmed { color: #090; }
-    .status-feedback { color: #666; }
-    .status-wait_confirm { color: #f90; }
-    .status-wait_feedback { color: #f00; }
+    .status-1 { color: #090; }
+    .status-2 { color: #f00; }
 
 </style>
 
 <script>
-    require('weex-components');
     require('./we-dropdown.we');
+
+    var initData = '[{\"addTime\":\"2016-07-14\",\"questionStatus\":\"2\",\"questionStatusValue\":\"Closed\",\"title\":\"This is a demo\",\"vid\":\"AW5PMSC\"},{\"addTime\":\"2016-07-14\",\"questionStatus\":\"1\",\"questionStatusValue\":\"Waiting\",\"title\":\"This is a demo\",\"vid\":\"AW5PMSM\"},{\"addTime\":\"2016-07-14\",\"questionStatus\":\"2\",\"questionStatusValue\":\"Confirmed\",\"title\":\"This is a demo\",\"vid\":\"AW5PMSA\"}]';
 
     module.exports = {
         data: {
             screenHeight: 0,
             // biz
-            status: '0',
-            list: [
-                {
-                    'addTime': '2016-07-14',
-                    'questionStatus': 'wait_confirm',
-                    'questionStatusValue': 'waiting',
-                    'title': 'This is a demo',
-                    'vid': 'AW5PMSC'
-                },
-                {
-                    'addTime': '2016-07-14',
-                    'questionStatus': 'wait_feedback',
-                    'questionStatusValue': 'feedback',
-                    'title': 'This is a demo',
-                    'vid': 'AW5PMSM'
-                },
-                {
-                    'addTime': '2016-07-14',
-                    'questionStatus': 'confirmed',
-                    'questionStatusValue': 'confirmed',
-                    'title': 'This is a demo',
-                    'vid': 'AW5PMSA'
-                }
-            ]
+            status: '1',
+            list: []
         },
         ready: function () {
             this.screenHeight = this.$getConfig().env.deviceHeight ;
@@ -131,13 +105,28 @@
                     message: JSON.stringify(detail)
                 });
                 this.status = detail.id;
+                this.filter();
             }.bind(this));
+            this.filter();
         },
 
         methods: {
             toast: function (params) {
                 var modal = require('@weex-module/modal');
                 modal.toast(params);
+            },
+
+            filter: function () {
+                var status = this.status;
+                this.list = [];
+                var allList = JSON.parse(initData);
+                if(status == '0') {
+                    this.list = allList;
+                }else {
+                    this.list = allList.filter(function(item){
+                        return item.questionStatus == status;
+                    });
+                }
             }
         }
     }

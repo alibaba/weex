@@ -6,12 +6,12 @@
         <div class="mask" id="mask" onclick="switchView"></div>
         <div class="options" id="options">
             <div repeat="{{status}}" class="cell" vid="{{id}}" onclick="onItemClick">
-                <text class="name {{style}}">{{name}}</text>
-                <image class="icon-curr-flag" src="{{flagSrc}}" if="{{style}}"></image>
+                <text class="name {{id==statusId?'current': ''}}">{{name}}</text>
+                <image class="icon-curr-flag" src="{{flagSrc}}" if="{{id==statusId}}"></image>
             </div>
         </div>
         <div class="select" onclick="switchView">
-            <text class="current-text">{{currentStatus}}</text>
+            <text class="current-text">{{statusName}}</text>
             <image class="icon-arrow" id="arrow" src="{{arrowSrc}}"></image>
         </div>
     </div>
@@ -115,24 +115,23 @@
 
 
 <script>
-    require('weex-components');
     var animation = require('@weex-module/animation');
 
     module.exports = {
         data: {
-            workorderStatus: '0' ,
+            statusId: '0', 
             status: [
-                {id: '0', name: 'All', style: ''},
-                {id: '1', name: 'Doing', style: ''},
-                {id: '2', name: 'Done', style: ''}
+                {id: '0', name: 'All'},
+                {id: '1', name: 'Doing'},
+                {id: '2', name: 'Done'}
             ],
             flagSrc: 'https://gw.alicdn.com/tps/TB11a2lKFXXXXbVXpXXXXXXXXXX-32-32.png',
             arrowSrc: 'https://gw.alicdn.com/tps/TB1O3_aKFXXXXXdXVXXXXXXXXXX-27-23.png'
         },
         computed: {
-            currentStatus: {
+            statusName: {
                 get: function(){
-                    var id = this.workorderStatus;
+                    var id = this.statusId;
                     return this.status.filter(function(s){
                         return s.id == id
                     })[0].name;
@@ -140,8 +139,7 @@
             }
         },
         methods: {
-            switchView: function(){
-                this.updateStatus(this.workorderStatus);
+            switchView: function() { 
                 this.toggleMaskVisible();
 
                 this.opacity(this._ids.mask.el.ref);
@@ -155,20 +153,13 @@
                 this.updateStatus(vid);
                 this.switchView();
                 this.$dispatch('statuschange', {
-                    id: vid,
-                    name: this.currentStatus
+                    id: this.statusId,
+                    name: this.statusName
                 })
             },
 
-            updateStatus: function(id) {
-                var current = this.status.filter(function(s){
-                    return s.id == id;
-                })[0];
-                this.workorderStatus = id;
-                this.status.forEach(function(s){
-                    s.style = '';
-                });
-                current.style = 'current';
+            updateStatus: function(id) { 
+                this.statusId = id; 
             },
 
             toggleMaskVisible: function(){
@@ -203,7 +194,7 @@
                     self.current_rotate = 0;
                 }
                 self.current_rotate = self.current_rotate + 180;
-                self.anim(ref,{
+                self.anim(ref, {
                     transform: 'rotate(' + self.current_rotate + 'deg)'
                 }, 'linear', 100, callback);
             },
