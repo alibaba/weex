@@ -207,7 +207,6 @@ package com.taobao.weex.ui;
 import android.text.TextUtils;
 
 import com.taobao.weappplus_sdk.BuildConfig;
-import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.ui.component.WXComponentFactory;
 import com.taobao.weex.utils.WXSoInstallMgrSdk;
@@ -219,7 +218,6 @@ import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 /**
@@ -241,7 +239,7 @@ public class WXRenderStatementTest {
         PowerMockito.when(WXSoInstallMgrSdk.initSo(null, 1, null)).thenReturn(true);
 //        WXSDKEngine.init(RuntimeEnvironment.application);
         WXSDKInstance instance = Mockito.mock(WXSDKInstance.class);
-        mWXRenderStatement = new WXRenderStatement(instance, "123");
+        mWXRenderStatement = new WXRenderStatement(instance);
     }
 
     public void testCreateBody() throws Exception {
