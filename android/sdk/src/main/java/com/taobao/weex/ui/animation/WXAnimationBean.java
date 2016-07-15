@@ -246,7 +246,6 @@ public class WXAnimationBean {
     public final static String WX_SCALE_X = "scaleX";
     public final static String WX_SCALE_Y = "scaleY";
     public final static String WX_SCALE = "scale";
-    public final static String ALPHA = "alpha";
     public final static String BACKGROUND_COLOR = "backgroundColor";
     public final static String TOP = "top";
     public final static String BOTTOM = "bottom";
@@ -480,8 +479,7 @@ public class WXAnimationBean {
         holders.add(PropertyValuesHolder.ofFloat(entry.getKey(), entry.getValue()));
       }
       if (!TextUtils.isEmpty(opacity)) {
-        holders.add(PropertyValuesHolder.ofFloat(WXAnimationBean.Style.ALPHA,
-                                                 WXUtils.fastGetFloat(opacity, 3)));
+        holders.add(PropertyValuesHolder.ofFloat(View.ALPHA, WXUtils.fastGetFloat(opacity, 3)));
       }
     }
 
