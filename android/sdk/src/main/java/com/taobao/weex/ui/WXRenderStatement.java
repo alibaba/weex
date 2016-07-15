@@ -238,7 +238,6 @@ import java.util.Map;
  */
 class WXRenderStatement {
 
-  private String mInstanceId;
   private Map<String, WXComponent> mRegistry;
   private WXSDKInstance mWXSDKInstance;
   /**
@@ -246,9 +245,8 @@ class WXRenderStatement {
    */
   private WXVContainer mGodComponent;
 
-  public WXRenderStatement(WXSDKInstance instance, String instaceId) {
+  public WXRenderStatement(WXSDKInstance instance) {
     mWXSDKInstance = instance;
-    mInstanceId = instaceId;
     mRegistry = new HashMap<>();
   }
 

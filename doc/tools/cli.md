@@ -86,5 +86,5 @@ a http server will start running , your current directory(.) will be the documen
 
 ## Issue & Feedback
 
-[Github Issue List](https://github.com/alibaba/weex_toolchain/issues)
+[Github Issue List](https://github.com/weexteam/weex-toolkit/issues)
 
