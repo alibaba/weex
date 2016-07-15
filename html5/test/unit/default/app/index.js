@@ -7,7 +7,7 @@ chai.use(sinonChai)
 global.callNative = function () {}
 
 import AppInstance from '../../../../default/app'
-import * as bundle from '../../../../default/app/bundle'
+// import * as bundle from '../../../../default/app/bundle'
 import * as ctrl from '../../../../default/app/ctrl'
 import { Element } from '../../../../vdom'
 import {
@@ -51,7 +51,7 @@ describe('App Instance', () => {
 
     it('with some apis', () => {
       const proto = Object.getPrototypeOf(app)
-      expect(proto).to.contain.all.keys(bundle)
+      // expect(proto).to.contain.all.keys(bundle)
       expect(proto).to.contain.all.keys(ctrl)
       expect(proto).to.contain.all.keys({
         registerComponent,

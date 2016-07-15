@@ -47,8 +47,8 @@
     "lint": "eslint html5",
     "test:unit": "mocha --compilers js:babel-core/register html5/test/unit/*/*.js html5/test/unit/*/*/*.js",
     "test:cover": "babel-node node_modules/isparta/bin/isparta cover --report text node_modules/mocha/bin/_mocha -- --reporter dot html5/test/unit/*/*.js html5/test/unit/*/*/*.js",
-    "test:e2e": "node html5/test/e2e/runner.js",
-    "test": "npm run build:config && npm run lint && npm run test:cover",
+    "test:e2e": "npm run build:browser && node html5/test/e2e/runner.js",
+    "test": "npm run build:config && npm run lint && npm run test:cover && npm run test:e2e",
     "serve": "serve ./ -p 12580",
     "clean:examples": "echo \"\\033[36;1m[Clean]\\033[0m \\033[33mexamples\\033[0m\" && rm -vrf examples/build/*",
     "clean:test": "echo \"\\033[36;1m[Clean]\\033[0m \\033[33mtest\\033[0m\" && rm -vrf test/build/*",
@@ -59,7 +59,7 @@
   },
   "subversion": {
     "browser": "0.2.23",
-    "framework": "0.14.7",
+    "framework": "0.15.0",
     "transformer": ">=0.1.5 <0.4"
   },
   "dependencies": {
