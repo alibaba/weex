@@ -111,6 +111,7 @@
 package com.taobao.weex;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -484,20 +485,18 @@ public class WXSDKEngine {
       }
     }
   }
-  public static void reload(final Application application,boolean remoteDebug){
-    if(remoteDebug){
-      WXEnvironment.sRemoteDebugMode=true;
-      WXBridgeManager.getInstance().restart();
-      WXBridgeManager.getInstance().initScriptsFramework(null);
-      WXModuleManager.reload();
-      WXComponentRegistry.reload();
-      WXSDKManager.getInstance().postOnUiThread(new Runnable() {
-        @Override
-        public void run() {
-          LocalBroadcastManager.getInstance(application).sendBroadcast(new Intent(JS_FRAMEWORK_RELOAD));
-        }
-      }, 1000);
-    }
+  public static void reload(final Context context, boolean remoteDebug) {
+    WXEnvironment.sRemoteDebugMode = remoteDebug;
+    WXBridgeManager.getInstance().restart();
+    WXBridgeManager.getInstance().initScriptsFramework(null);
+    WXModuleManager.reload();
+    WXComponentRegistry.reload();
+    WXSDKManager.getInstance().postOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(JS_FRAMEWORK_RELOAD));
+      }
+    }, 1000);
   }
 
   public static void reload() {
