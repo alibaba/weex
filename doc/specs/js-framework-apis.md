@@ -4,9 +4,9 @@
 
 ## Intro about JS Runtime
 
-There APIs is designed for JS Framework and Native Engine working together.
+These APIs are designed for JS Framework and Native Engine working together.
 
-Considering the limitation of mobile phone resource, *Weex runs only one JS runtime* to handle all Weex instances. So it need a multi-instance management layer in JavaScript. These JS Framework APIs are just designed to finish the management job.
+Considering the limitation of mobile phone resource, *Weex runs only one JS runtime* to handle all Weex instances. So it need a multi-instance management layer in JavaScript. These JS Framework APIs are just designed to do the management job.
 
 * First, each Weex instance have a lifecycle, from `createInstance` to `destroyInstance`. During this period, we can import some extra data by `refreshInstance`.
 * To communicate with Native Engine, we have a couple of APIs: `callNative` and `callJS`. They are used to call each other by some commands and messages.
@@ -55,12 +55,12 @@ Example:
 
 ```
 registerComponents({
-  container: {}, 
-  text: {}, 
+  container: {},
+  text: {},
   image: {},
   slider: {append: 'tree'},
-  list: {}, 
-  cell: {append: 'tree'}, 
+  list: {},
+  cell: {append: 'tree'},
   ...
 })
 ```
