@@ -347,27 +347,19 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
     }
   }
 
-//  @Override
-//  protected void bindImpl(View view) {
-//    if(view==null){
-//      super.bindImpl(view);
-//    }
-//    else if(view instanceof ViewGroup){
-//      if(((ViewGroup) view).getChildAt(0) instanceof WXCircleViewPager){
-//        super.bindImpl(((ViewGroup) view).getChildAt(0));
-//      }
-//    }
-//  }
-
   public void addIndicator(WXIndicator indicator) {
     FrameLayout root = getView();
     if (root == null) {
       return;
     }
     mIndicator = indicator;
-    mIndicator.getView().setCircleViewPager(mViewPager);
-    mIndicator.getView().setOnPageChangeListener(this);
-    root.addView(mIndicator.getView());
+    WXCircleIndicator indicatorView = indicator.getView();
+    if(indicatorView != null){
+      indicatorView.setCircleViewPager(mViewPager);
+      indicatorView.setOnPageChangeListener(this);
+      root.addView(indicatorView);
+    }
+
   }
 
   @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SLIDER_VALUE)
