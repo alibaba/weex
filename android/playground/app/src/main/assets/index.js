@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/0e1e16da3df6f124806760e661cfb765", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/2720f5df2d848285e38e4b2906e8540a", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(15);
@@ -65,7 +65,6 @@
 	        {name: 'component/scroller-demo', title: 'Scroller'},
 	        {name: 'component/list/list-basic', title: 'List (Basic)'},
 	        {name: 'component/list/list-demo', title: 'List (Advanced)'},
-	        {name: 'component/list/list-demo-horizon', title: 'List (Horizontal)'},
 	        {name: 'component/slider/index', title: 'Slider'},
 	        {name: 'component/a-demo', title: 'A'},
 	        {name: 'component/video-demo', title: 'Video'},
@@ -97,7 +96,7 @@
 	  }
 	})
 	})
-	;__weex_bootstrap__("@weex-component/0e1e16da3df6f124806760e661cfb765", {
+	;__weex_bootstrap__("@weex-component/2720f5df2d848285e38e4b2906e8540a", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -847,7 +846,7 @@
 	      },
 	      "shown": function () {return !this.rightItemSrc},
 	      "events": {
-	        "click": "onclickrigthitem"
+	        "click": "onclickrightitem"
 	      }
 	    },
 	    {

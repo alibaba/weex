@@ -74,8 +74,16 @@
         _loadmoreretry = attributes[@"loadmoreretry"] ? [WXConvert NSUInteger:attributes[@"loadmoreretry"]] : 0;
         _listenLoadMore = [events containsObject:@"loadmore"];
 
-        
         _scrollerCSSNode = new_css_node();
+        
+        // let scroller fill the rest space if it is a child component and has no fixed height & width
+        if (((_scrollDirection == WXScrollDirectionVertical &&
+            isUndefined(self.cssNode->style.dimensions[CSS_HEIGHT])) ||
+            (_scrollDirection == WXScrollDirectionHorizontal &&
+              isUndefined(self.cssNode->style.dimensions[CSS_WIDTH]))) &&
+             self.cssNode->style.flex <= 0.0) {
+            self.cssNode->style.flex = 1.0;
+        }
     }
     
     return self;
@@ -445,14 +453,14 @@
 - (void) scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
     //refresh
-        if (_refreshComponent && scrollView.contentOffset.y < _refreshComponent.calculatedFrame.origin.y) {
+        if (_refreshComponent && scrollView.contentOffset.y + _refreshComponent.calculatedFrame.size.height < _refreshComponent.calculatedFrame.origin.y) {
     
             [_refreshComponent refresh];
         }
     
     //loading
         if (_loadingComponent &&
-            scrollView.contentOffset.y + scrollView.frame.size.height > _loadingComponent.view.frame.origin.y + _loadingComponent.calculatedFrame.size.height) {
+            scrollView.contentOffset.y + scrollView.frame.size.height > _loadingComponent.view.frame.origin.y + _loadingComponent.view.frame.size.height) {
     
             [_loadingComponent loading];
         }
@@ -483,13 +491,14 @@
     else {
         inset.top = 0;
     }
+    
     if ([_loadingComponent displayState]) {
         inset.bottom = _loadingComponent.calculatedFrame.size.height;
     }
     else {
         inset.bottom = 0;
     }
-
+    
     [scrollView setContentInset:inset];
 }
 
@@ -555,14 +564,7 @@
             WXRoundPixelValue(_scrollerCSSNode->layout.dimensions[CSS_WIDTH]),
             WXRoundPixelValue(_scrollerCSSNode->layout.dimensions[CSS_HEIGHT])
         };
-        
-//        if (_scrollDirection == WXScrollDirectionVertical && size.height > self.cssNode->layout.dimensions[CSS_HEIGHT] && superAbsolutePosition.y + size.height <= self.weexInstance.rootView.frame.size.height) {
-//            // vertical frame
-//            self.cssNode->layout.dimensions[CSS_HEIGHT] = size.height;
-//        } else if (_scrollDirection == WXScrollDirectionHorizontal && size.width > self.cssNode->layout.dimensions[CSS_WIDTH] && superAbsolutePosition.x + size.width <= self.weexInstance.rootView.frame.size.width) {
-//            // horizontal frame
-//            self.cssNode->layout.dimensions[CSS_WIDTH] = size.width;
-//        } else
+
         if (!CGSizeEqualToSize(size, _contentSize)) {
             // content size
             _contentSize = size;

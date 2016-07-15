@@ -1,5 +1,6 @@
 # &lt;text&gt;
 <span class="weex-version">0.4</span>
+<a href="https://github.com/weexteam/article/wiki/%E6%AC%A2%E8%BF%8E%E5%8F%82%E4%B8%8EWeex%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91"  class="weex-translate incomplete">cn</a>
 
 ### Summary
 
@@ -31,6 +32,8 @@ Other attributes please check out the [common attributes](../references/common-a
 - support `text-decoration` style.
 - support `text-align` style.
 - support `text-overflow` style.
+- support `line-height`<sup class="wx-v">0.6.1</sup> style. 
+- not support `flex-direction`, `justify-content`, `align-items` which is active for child nodes, and text has no child nodes.
 
 **common styles**: check out [common styles for components](../references/common-style.md)
 

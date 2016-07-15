@@ -1,11 +1,11 @@
-import frameworks from './frameworks'
+import frameworks from './config'
 
 import { Document, Element, Comment } from '../vdom'
 
 const config = {
   Document, Element, Comment,
   sendTasks (...args) {
-    global.callNative(...args)
+    return global.callNative(...args)
   }
 }
 

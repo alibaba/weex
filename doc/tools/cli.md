@@ -86,26 +86,5 @@ a http server will start running , your current directory(.) will be the documen
 
 ## Issue & Feedback
 
-[Github Issue List](https://github.com/alibaba/weex_toolchain/issues)
+[Github Issue List](https://github.com/weexteam/weex-toolkit/issues)
 
-## Changelog
-* 160602(0.0.39) : improve weex debugger ui 
-* 160525(0.0.38) : add examples , improve create sub command
-* 160525(0.0.37) : add `create` sub command for create we file using standard weex template
-* 160509(0.0.30) : add --port &  --wsport options , show encoding url when QR displayed
-* 160506(0.0.29) : improve --watch & -s feature ; fixing hot-reload with playground App.
-* 160505(0.0.25) : support batch transform  & option --watch added
-* 160427(0.0.22) : improve -s feedback information & update upstream transformer lib
-* 160418 : temporary turnoff H5 preview
-* 160401 : format for opensource
-* 160331 : update upstream lib , ready for opensource
-* 160321 : update HTML5 runtime
-* 160301 : add -s option  &  update upstream lib
-* 160224 : update upstream weex-html5 lib , improve stability
-* 160223 : add -o option for transform weex JS bundle directly
-* 160201 : adopt new weex JS bundle style(define / require) & output transformer Error/Warning logs
-* 160129 : add  native runtime  support  with --qr option
-* 160122 : add -n , -h options &  improve CLI feedback output
-* 160119 : update upstream weex-html5 lib
-* 160118 : hot reload function & English document
-* 160114 : first version 

@@ -204,16 +204,47 @@
  */
 package com.taobao.weex.ui.component.list;
 
+import android.view.ViewGroup;
+
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.component.WXVContainer;
+import com.taobao.weex.ui.view.WXFrameLayout;
 
 /**
  * Root component for components in {@link WXListComponent}
  */
 public class WXCell extends WXVContainer {
 
+    public int lastLocationY = -1;
+
     public WXCell(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
         super(instance, dom, parent,true );
+    }
+
+    /**
+     * If Cell is Sticky, need wraped FrameLayout
+     */
+    @Override
+    protected void initView() {
+        if(mContext!=null) {
+            if (mDomObj != null && mDomObj.isSticky()) {
+                mHost = new WXFrameLayout(mContext);
+                ((ViewGroup) mHost).addView(new WXFrameLayout(mContext));
+            } else {
+                super.initView();
+            }
+        }
+    }
+
+    @Override
+    public ViewGroup getRealView() {
+        if (mHost == null)
+            return null;
+        if (mDomObj != null && mDomObj.isSticky()) {
+            return (ViewGroup) ((ViewGroup) mHost).getChildAt(0);
+        } else {
+            return super.getRealView();
+        }
     }
 }

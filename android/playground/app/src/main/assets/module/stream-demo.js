@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/62f4f410da94b3c4253f0bcea432dcc4", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/a7c8f395a9fe63d3701adaeb7a25eb97", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(1);
@@ -93,6 +93,9 @@
 	          console.log('get:'+ret);
 	          me.postResult = ret.data;
 	        }
+	      },function(response){
+	        console.log('get in progress:'+response.length);
+	        me.postResult = "bytes received:"+response.length;
 	      });
 	    }
 	  };
@@ -141,7 +144,7 @@
 	  ]
 	})
 	})
-	;__weex_bootstrap__("@weex-component/62f4f410da94b3c4253f0bcea432dcc4", {
+	;__weex_bootstrap__("@weex-component/a7c8f395a9fe63d3701adaeb7a25eb97", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -891,7 +894,7 @@
 	      },
 	      "shown": function () {return !this.rightItemSrc},
 	      "events": {
-	        "click": "onclickrigthitem"
+	        "click": "onclickrightitem"
 	      }
 	    },
 	    {

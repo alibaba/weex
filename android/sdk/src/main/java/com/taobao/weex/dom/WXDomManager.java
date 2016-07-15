@@ -206,6 +206,8 @@ package com.taobao.weex.dom;
 
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXEnvironment;
@@ -531,5 +533,19 @@ public final class WXDomManager {
       return;
     }
     statement.updateFinish();
+  }
+
+  void startAnimation(@NonNull String instanceId,
+                      @NonNull String ref,
+                      @NonNull String animation,
+                      @Nullable String callBack){
+    if (!isDomThread()) {
+      throw new WXRuntimeException("RefreshFinish operation must be done in dom thread");
+    }
+    WXDomStatement statement = mDomRegistries.get(instanceId);
+    if (statement == null) {
+      return;
+    }
+    statement.startAnimation(ref,animation,callBack);
   }
 }

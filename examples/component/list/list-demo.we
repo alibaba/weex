@@ -135,6 +135,10 @@
         </div>
       </div>
     </cell>
+    <loading class="refresh-view" display="{{loading_display}}" onloading="onloading">
+      <text class="refresh-arrow" style="text-align: center; color:rgb(238, 162, 54)" if="{{(refresh_display==='hide')}}">Load more</text>
+      <loading-indicator style="height:60;width:60;color:#3192e1"></loading-indicator>
+    </loading>
   </list>
 </template>
 
@@ -216,11 +220,25 @@
     width: 20;
     height: 20;
   }
+
+  .refresh-view {
+    height: 120px;
+    width: 750px;
+    display: -ms-flex;
+    display: -webkit-flex;
+    display: flex;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    align-items: center;
+  }
 </style>
 
 <script>
   module.exports = {
     data: {
+      refresh_display : 'hide',
+      loading_display : 'hide',
       backgroundColor: 'red',
       composite: 'false',
       shopList: [

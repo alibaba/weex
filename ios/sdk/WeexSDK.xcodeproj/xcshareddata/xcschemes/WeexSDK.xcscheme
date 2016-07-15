@@ -32,7 +32,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "77D161061C02DBE70010B15B"
+               BlueprintIdentifier = "74C8963C1D2AC2210043B82A"
                BuildableName = "WeexSDKTests.xctest"
                BlueprintName = "WeexSDKTests"
                ReferencedContainer = "container:WeexSDK.xcodeproj">

@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/0391f3ee884425b7cf58b848a33e514a", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/05320618c71d22cf16d62ca43033067b", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(1);
@@ -62,7 +62,7 @@
 	              var scale = env.scale;
 	              var deviceWidth = env.deviceWidth / scale;
 	              this.navBarHeight = 64.0 * 750.0 / deviceWidth;
-	            }
+	            }   
 	        }.bind(this));
 
 	        this.$on('naviBar.rightItem.click',function(e){
@@ -78,7 +78,7 @@
 	          this.$call('modal', 'toast', {
 	            'message': 'naviBar.leftItem.click',
 	            'duration': duration
-	           });
+	           });  
 	        });
 
 	        var bundleUrl = this.$getConfig().bundleUrl;
@@ -111,7 +111,7 @@
 	          // in Browser or WebView
 	          base = h5Base;
 	        }
-	        this.baseURL = base;
+	        this.baseURL = base;     
 	    },
 	    methods: {
 	      push: function() {
@@ -130,66 +130,6 @@
 	        }
 	        vm.$call('navigator','pop',params, function () {});
 	      },
-
-	      setNaviBarTitle: function (e,parentName) {
-	         var params = {
-	           title: 'I am title',
-	           titleColor: 'white',
-	         };
-	         this.$call('navigator','setNavBarTitle',params,null);
-	      },
-
-	      setNaviBarRightItem: function (e,parentName) {
-	        var params = {
-	          // Set icon or title
-	          //title: 'More',
-	          //titleColor: 'white',
-	          //if icon from native res
-	          fromNative: 'true',
-	          autoReset: true ,
-	          icon: 'ic_menu_manage'
-	        };
-	        this.$call('navigator','setNavBarRightItem',params,null);
-	      },
-
-	      clearNaviBarRightItem: function (e,parentName) {
-	        this.$call('navigator','clearNavBarRightItem',null,null);
-	      },
-
-	      setNavBarLeftItem: function (e,parentName) {
-	        var params = {
-	          // Set icon or title
-	          title: 'Home',
-	          titleColor: 'white',
-	          //if icon from native res
-	          fromNative: 'true',
-	          autoReset: true ,
-	          icon: 'ic_menu_manage'
-	        };
-	        this.$call('navigator','setNavBarLeftItem',params,null);
-	      },
-
-	      clearNavBarLeftItem: function (e,parentName) {
-	        this.$call('navigator','clearNavBarLeftItem',null,null);
-	      },
-
-	      onclickleftitem: function (e) {
-	         nativeLog("onclickleftitem");
-	         this.$call('modal', 'toast', {
-	           'message': "Click Left",
-	           'duration': 2
-	         });
-	      },
-
-	      onclickrightitem: function (e) {
-	         nativeLog("onclickrightitem");
-
-	         this.$call('modal', 'toast', {
-	           'message': "Click Right",
-	           'duration': 2
-	         });
-	      },
-
 	    }
 	  }
 
@@ -206,40 +146,22 @@
 	    "leftItemColor": "white",
 	    "rightItemSrc": "http://gtms02.alicdn.com/tps/i2/TB1ED7iMpXXXXXEXXXXWA_BHXXX-48-48.png"
 	  },
-	  "events": {
-	    "clickleftitem": "onclickleftitem",
-	    "clickrightitem": "onclickrightitem"
-	  },
 	  "children": [
 	    {
 	      "type": "wxc-panel",
 	      "attr": {
-	        "title": "Push and pop page"
+	        "title": "push a new page"
 	      },
 	      "children": [
 	        {
 	          "type": "wxc-button",
 	          "attr": {
 	            "type": "primary",
-	            "size": "middle",
+	            "size": "small",
 	            "value": "push"
 	          },
 	          "events": {
 	            "click": "push"
-	          }
-	        },
-	        {
-	          "type": "wxc-button",
-	          "attr": {
-	            "type": "success",
-	            "size": "middle",
-	            "value": "pop"
-	          },
-	          "events": {
-	            "click": "pop"
-	          },
-	          "style": {
-	            "marginTop": 12
 	          }
 	        }
 	      ]
@@ -247,74 +169,18 @@
 	    {
 	      "type": "wxc-panel",
 	      "attr": {
-	        "title": "Set NavBar"
+	        "title": "pop to the last page"
 	      },
 	      "children": [
 	        {
 	          "type": "wxc-button",
 	          "attr": {
 	            "type": "success",
-	            "size": "middle",
-	            "value": "SetTitle"
+	            "size": "small",
+	            "value": "pop"
 	          },
 	          "events": {
-	            "click": "setNaviBarTitle"
-	          }
-	        },
-	        {
-	          "type": "wxc-button",
-	          "attr": {
-	            "type": "success",
-	            "size": "middle",
-	            "value": "SetRight"
-	          },
-	          "events": {
-	            "click": "setNaviBarRightItem"
-	          },
-	          "style": {
-	            "marginTop": 12
-	          }
-	        },
-	        {
-	          "type": "wxc-button",
-	          "attr": {
-	            "type": "success",
-	            "size": "middle",
-	            "value": "ClearRight"
-	          },
-	          "events": {
-	            "click": "clearNaviBarRightItem"
-	          },
-	          "style": {
-	            "marginTop": 12
-	          }
-	        },
-	        {
-	          "type": "wxc-button",
-	          "attr": {
-	            "type": "success",
-	            "size": "middle",
-	            "value": "SetLeft"
-	          },
-	          "events": {
-	            "click": "setNavBarLeftItem"
-	          },
-	          "style": {
-	            "marginTop": 12
-	          }
-	        },
-	        {
-	          "type": "wxc-button",
-	          "attr": {
-	            "type": "success",
-	            "size": "middle",
-	            "value": "ClearLeft"
-	          },
-	          "events": {
-	            "click": "clearNavBarLeftItem"
-	          },
-	          "style": {
-	            "marginTop": 12
+	            "click": "pop"
 	          }
 	        }
 	      ]
@@ -322,7 +188,7 @@
 	  ]
 	})
 	})
-	;__weex_bootstrap__("@weex-component/0391f3ee884425b7cf58b848a33e514a", {
+	;__weex_bootstrap__("@weex-component/05320618c71d22cf16d62ca43033067b", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -1072,7 +938,7 @@
 	      },
 	      "shown": function () {return !this.rightItemSrc},
 	      "events": {
-	        "click": "onclickrigthitem"
+	        "click": "onclickrightitem"
 	      }
 	    },
 	    {
