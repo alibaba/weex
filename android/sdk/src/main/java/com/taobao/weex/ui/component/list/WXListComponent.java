@@ -225,7 +225,6 @@ import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.component.Scrollable;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXEventType;
-import com.taobao.weex.ui.component.WXHeader;
 import com.taobao.weex.ui.component.WXLoading;
 import com.taobao.weex.ui.component.WXRefresh;
 import com.taobao.weex.ui.component.WXVContainer;
@@ -515,7 +514,7 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
       bounceRecyclerView.clearSticky();
       for (int i = 0; i <= position; i++) {
           WXComponent component = getChild(i);
-          if (component.getDomObject() != null && (component.getDomObject().isSticky() && component instanceof WXCell) || component instanceof WXHeader) {
+          if (component.isSticky() && component instanceof WXCell) {
               if (component.getView() == null) {
                   return;
               }
