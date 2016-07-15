@@ -226,4 +226,9 @@ public class WXHeader extends WXCell {
     lazy(false);
     setSticky(WXDomPropConstant.WX_POSITION_STICKY);
   }
+
+  @Override
+  public boolean isSticky() {
+    return true;
+  }
 }

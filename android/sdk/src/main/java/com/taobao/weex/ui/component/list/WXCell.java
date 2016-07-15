@@ -212,7 +212,6 @@ import android.widget.FrameLayout;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.flex.CSSLayout;
-import com.taobao.weex.ui.component.WXHeader;
 import com.taobao.weex.ui.component.WXVContainer;
 import com.taobao.weex.ui.view.WXFrameLayout;
 
@@ -241,7 +240,7 @@ public class WXCell extends WXVContainer<WXFrameLayout> {
      */
     @Override
     protected WXFrameLayout initComponentHostView(Context context) {
-        if ((mDomObj != null && mDomObj.isSticky()) || this instanceof WXHeader) {
+        if (isSticky()) {
             WXFrameLayout view = new WXFrameLayout(context);
             mRealView = new WXFrameLayout(context);
             view.addView(mRealView);

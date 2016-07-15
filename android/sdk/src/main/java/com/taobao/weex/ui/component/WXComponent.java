@@ -710,12 +710,16 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
       return;
     }
 
-    if (mDomObj.isSticky()) {
+    if (isSticky()) {
       Scrollable scroller = getParentScroller();
       if (scroller != null) {
         scroller.unbindStickStyle(this);
       }
     }
+  }
+
+  public boolean isSticky() {
+    return mDomObj.style == null ? false : mDomObj.style.isSticky();
   }
 
   @WXComponentProp(name = WXDomPropConstant.WX_ATTR_DISABLED)
