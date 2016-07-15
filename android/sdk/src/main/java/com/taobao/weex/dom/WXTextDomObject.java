@@ -93,7 +93,7 @@ public class WXTextDomObject extends WXDomObject {
 
   private static final Canvas DUMMY_CANVAS = new Canvas();
   private static final String ELLIPSIS = "\u2026";
-  private final TextPaint textPaint = new TextPaint();
+  private final TextPaint mTextPaint = new TextPaint();
   private boolean mIsColorSet = false;
   private boolean hasBeenMeasured = false;
   private int mColor;
@@ -129,7 +129,7 @@ public class WXTextDomObject extends WXDomObject {
    */
   public WXTextDomObject() {
     super();
-    textPaint.setFlags(TextPaint.ANTI_ALIAS_FLAG);
+    mTextPaint.setFlags(TextPaint.ANTI_ALIAS_FLAG);
     setMeasureFunction(TEXT_MEASURE_FUNCTION);
   }
 
@@ -306,7 +306,7 @@ public class WXTextDomObject extends WXDomObject {
     textWidth = getTextWidth(width, forceWidth);
     Layout layout;
     if (!FloatUtil.floatsEqual(previousWidth, textWidth) || previousLayout == null) {
-      layout = new StaticLayout(spanned, textPaint, (int) Math.ceil(textWidth),
+      layout = new StaticLayout(spanned, mTextPaint, (int) Math.ceil(textWidth),
                                 Layout.Alignment.ALIGN_NORMAL, 1, 0, true);
     } else {
       layout = previousLayout;
@@ -345,7 +345,7 @@ public class WXTextDomObject extends WXDomObject {
     if (forceToDesired) {
       textWidth = outerWidth;
     } else {
-      float desiredWidth = Layout.getDesiredWidth(spanned, textPaint);
+      float desiredWidth = Layout.getDesiredWidth(spanned, mTextPaint);
       if (CSSConstants.isUndefined(outerWidth) || desiredWidth < outerWidth) {
         textWidth = desiredWidth;
       } else {
