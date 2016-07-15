@@ -158,16 +158,11 @@
             return YES;
         } else if ([[elts firstObject] isEqualToString:@"_wx_devtool"]) {
             NSString *devToolURL = [[elts lastObject]  stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-            [WXDevTool setDebug:YES];
             [WXDevTool launchDevToolDebugWithUrl:devToolURL];
-
-            [WXSDKEngine restart];
-            
             if ([[[self.navigationController viewControllers] objectAtIndex:0] isKindOfClass:NSClassFromString(@"WXDemoViewController")]) {
                 WXDemoViewController * vc = (WXDemoViewController*)[[self.navigationController viewControllers] objectAtIndex:0];
                 [self.navigationController popToViewController:vc animated:NO];
             }
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshInstance" object:nil];
             
             return YES;
         }

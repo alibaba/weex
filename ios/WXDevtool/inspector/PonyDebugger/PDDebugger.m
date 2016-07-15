@@ -24,9 +24,10 @@
 #import "PDDOMDomainController.h"
 #import "PDInspectorDomainController.h"
 #import "PDConsoleDomainController.h"
-#import "WXDebuggerDomainController.h"
+#import "WXSourceDebuggerDomainController.h"
 #import "WXTimelineDomainController.h"
 #import "WXCSSDomainController.h"
+#import "WXDebugDomainController.h"
 #import "WXDevTool.h"
 
 #import "WXAppConfiguration.h"
@@ -133,10 +134,7 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(NSString *)message;
 {
     if ([WXDevTool isDebug]) {
-        __weak typeof(self) weakSelf = self;
-        [self _executeBridgeThead:^() {
-            [weakSelf _evaluateNative:message];
-        }];
+        [self _changeToDebugLogicMessage:message];
     }
     
     NSDictionary *obj = [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
@@ -154,6 +152,12 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
         if (result) {
             NSMutableDictionary *newResult = [[NSMutableDictionary alloc] initWithCapacity:result.count];
             [result enumerateKeysAndObjectsUsingBlock:^(id key, id val, BOOL *stop) {
+                if ([key isEqualToString:@"WXDebug_result"]) {
+                    [WXDevTool setDebug:YES];
+                    [WXSDKEngine restart];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshInstance" object:nil];
+                    return;
+                }
                 [newResult setObject:[val PD_JSONObjectCopy] forKey:key];
             }];
             [response setObject:newResult forKey:@"result"];
@@ -443,11 +447,11 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
 - (void)enableRemoteDebugger {
     [self _addController:[PDRuntimeDomainController defaultInstance]];
     [self _addController:[PDPageDomainController defaultInstance]];
-    [self _addController:[WXDebuggerDomainController defaultInstance]];
+    [self _addController:[WXSourceDebuggerDomainController defaultInstance]];
 }
 
 - (void)remoteDebuggertest {
-    [[WXDebuggerDomainController defaultInstance] remoteDebuggerControllerTest];
+    [[WXSourceDebuggerDomainController defaultInstance] remoteDebuggerControllerTest];
 }
 
 #pragma mark - Timeline
@@ -458,6 +462,11 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
 #pragma mark CSSStyle
 - (void)enableCSSStyle {
     [self _addController:[WXCSSDomainController defaultInstance]];
+}
+
+#pragma mark - DevToolDebug
+- (void)enableDevToolDebug {
+    [self _addController:[WXDebugDomainController defaultInstance]];
 }
 
 #pragma mark - WXBridgeProtocol
@@ -513,6 +522,13 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
 
 
 #pragma mark - Private Methods
+- (void)_changeToDebugLogicMessage:(NSString *)message {
+    __weak typeof(self) weakSelf = self;
+    [self _executeBridgeThead:^() {
+        [weakSelf _evaluateNative:message];
+    }];
+}
+
 - (void)_initBridgeThread {
     _bridgeThread = [NSThread currentThread];
     if (_debugAry.count > 0 && _registerData) {
@@ -559,7 +575,12 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
 -(void)_evaluateNative:(NSString *)data
 {
     NSDictionary *dict = [WXUtility objectFromJSON:data];
-    NSString *method = [[dict objectForKey:@"method"] substringFromIndex:8];
+    
+    NSString *fullMethodName = [dict objectForKey:@"method"];
+    NSInteger dotPosition = [fullMethodName rangeOfString:@"."].location;
+    NSString *method = [fullMethodName substringFromIndex:dotPosition + 1];
+    
+//    NSString *method = [[dict objectForKey:@"method"] substringFromIndex:8];
     NSDictionary *args = [dict objectForKey:@"params"];
     
     if ([method isEqualToString:@"callNative"]) {
@@ -644,6 +665,12 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
             _registerData = encodedData;
             [_debugAry insertObject:encodedData atIndex:0];
             [self _executionDebugAry];
+        }];
+    }else if(![WXDevTool isDebug]) {
+        [self _executeBridgeThead:^{
+            _registerData = encodedData;
+            [_msgAry insertObject:encodedData atIndex:0];
+            [self _executionMsgAry];
         }];
     }
 }
