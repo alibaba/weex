@@ -260,10 +260,7 @@ public class WXSoInstallMgrSdk {
 
   public static boolean isCPUSupport(){
     String cpuType = _cpuType();
-    if (cpuType.equalsIgnoreCase(MIPS) ) {
-      return false;
-    }
-    return true;
+    return cpuType.equalsIgnoreCase(MIPS);
   }
 
   /**
@@ -280,7 +277,7 @@ public class WXSoInstallMgrSdk {
       return false;
     }
 
-    boolean InitSuc = false;
+    boolean InitSuc;
 
     //        if (checkSoIsInValid(libName, weexSoSize)) {
 
