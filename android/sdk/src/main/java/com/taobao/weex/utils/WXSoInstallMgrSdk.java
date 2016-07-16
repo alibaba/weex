@@ -337,26 +337,17 @@ public class WXSoInstallMgrSdk {
         } else {
           try {
             InitSuc = unZipSelectedFiles(libName, version, utAdapter);
-          } catch (ZipException e) {
-            e.printStackTrace();
           } catch (IOException e2) {
             e2.printStackTrace();
           }
         }
 
       }
-    } catch (Exception e) {
+    } catch (Exception | Error e) {
       InitSuc = false;
       e.printStackTrace();
-    } catch (java.lang.UnsatisfiedLinkError e2) {
-      InitSuc = false;
-      e2.printStackTrace();
-
-    } catch (java.lang.Error e3) {
-      InitSuc = false;
-      e3.printStackTrace();
     }
-    return InitSuc;
+      return InitSuc;
 
   }
 
