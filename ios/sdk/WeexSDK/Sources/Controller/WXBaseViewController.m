@@ -11,6 +11,7 @@
 #import "WXSDKInstance.h"
 #import "WXSDKInstance_private.h"
 #import "WXSDKEngine.h"
+#import "WXSDKManager.h"
 #import "WXUtility.h"
 
 @interface WXBaseViewController ()
@@ -129,7 +130,7 @@
     _instance = [[WXSDKInstance alloc] init];
     _instance.frame = CGRectMake(0.0f, 0.0f, self.view.bounds.size.width, self.view.bounds.size.height);
     _instance.pageObject = self;
-    _instance.pageName = [sourceURL absoluteString];
+    _instance.pageName = [[WXUtility urlByDeletingParameters:sourceURL] absoluteString];
     _instance.viewController = self;
     
     NSString *newURL = nil;
@@ -148,12 +149,27 @@
         weakSelf.weexView = view;
         [weakSelf.view addSubview:weakSelf.weexView];
     };
+    
+    _instance.onFailed = ^(NSError *error) {
+        
+    };
+    
+    _instance.renderFinish = ^(UIView *view) {
+        [weakSelf _updateInstanceState:WeexInstanceAppear];
+    };
 }
 
 - (void)_updateInstanceState:(WXState)state
 {
-    if (_instance) {
+    if (_instance && _instance.state != state) {
         _instance.state = state;
+        
+        if (state == WeexInstanceAppear) {
+            [[WXSDKManager bridgeMgr] fireEvent:_instance.instanceId ref:WX_SDK_ROOT_REF type:@"viewappear" params:nil domChanges:nil];
+        }
+        else if (state == WeexInstanceDisappear) {
+            [[WXSDKManager bridgeMgr] fireEvent:_instance.instanceId ref:WX_SDK_ROOT_REF type:@"viewdisappear" params:nil domChanges:nil];
+        }
     }
 }
 

@@ -156,7 +156,7 @@
 {
     if (_finishLoadEvent) {
         NSDictionary *data = [self baseInfo];
-        [self fireEvent:@"pagefinish" params:data];
+        [self fireEvent:@"pagefinish" params:data domChanges:@{@"src":self.webview.request.URL.absoluteString}];
     }
 }
 

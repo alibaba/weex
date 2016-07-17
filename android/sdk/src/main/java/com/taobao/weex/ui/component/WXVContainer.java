@@ -217,7 +217,8 @@ import java.util.ArrayList;
  */
 public abstract class WXVContainer extends WXComponent {
 
-  protected ArrayList<WXComponent> mChildren;
+  private static final String TAG="WXVContainer";
+  protected ArrayList<WXComponent> mChildren = new ArrayList<>();
 
   public WXVContainer(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
     super(instance, node, parent, lazy);
@@ -326,9 +327,6 @@ public abstract class WXVContainer extends WXComponent {
     if (child == null || index < -1) {
       return;
     }
-    if (mChildren == null) {
-      mChildren = new ArrayList<>();
-    }
     int count = mChildren.size();
     index = index >= count ? -1 : index;
     if (index == -1) {
@@ -371,6 +369,20 @@ public abstract class WXVContainer extends WXComponent {
     }
     if(destroy) {
       child.destroy();
+    }
+  }
+
+  @Override
+  public void notifyAppearStateChange(String wxEventType, String direction) {
+    super.notifyAppearStateChange(wxEventType, direction);
+    if(getView()==null || mChildren==null){
+      return;
+    }
+    for(WXComponent component:mChildren){
+      if(component.getView()!=null && !(component.getView().getVisibility()==View.VISIBLE)){
+        wxEventType=WXEventType.DISAPPEAR;
+      }
+      component.notifyAppearStateChange(wxEventType,direction);
     }
   }
 }

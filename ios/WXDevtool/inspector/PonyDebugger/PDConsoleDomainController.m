@@ -84,7 +84,7 @@
     [text deleteCharactersInRange:NSMakeRange(text.length - 1, 1)];
 
     PDConsoleConsoleMessage *consoleMessage = [[PDConsoleConsoleMessage alloc] init];
-    NSArray *severityOptions = @[@"debug", @"log", @"warn", @"info", @"error"];
+    NSArray *severityOptions = @[@"debug", @"log", @"warning", @"info", @"error"];
     if ([severityOptions containsObject:severity]) {
         consoleMessage.level = severity;
     } else {

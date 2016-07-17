@@ -39,8 +39,19 @@ export function _createBlock (element) {
   const end = this._createBlockEnd()
   const blockId = lastestBlockId++
   if (element.element) {
-    element.element.insertBefore(start, element.end)
-    element.element.insertBefore(end, element.end)
+    let updateMark = element.updateMark
+    if (updateMark) {
+      if (updateMark.element) {
+        updateMark = updateMark.end
+      }
+      element.element.insertAfter(end, updateMark)
+      element.element.insertAfter(start, updateMark)
+      element.updateMark = end
+    }
+    else {
+      element.element.insertBefore(start, element.end)
+      element.element.insertBefore(end, element.end)
+    }
     element = element.element
   }
   else {
@@ -90,15 +101,16 @@ export function _attachTarget (target, dest) {
     }
     // for check repeat case
     if (after) {
-      this._moveTarget(target, after)
+      const signal = this._moveTarget(target, after)
       dest.updateMark = target.element ? target.end : target
+      return signal
     }
     else if (target.element) {
       dest.element.insertBefore(target.start, before)
       dest.element.insertBefore(target.end, before)
     }
     else {
-      dest.element.insertBefore(target, before)
+      return dest.element.insertBefore(target, before)
     }
   }
   else {
@@ -107,7 +119,7 @@ export function _attachTarget (target, dest) {
       dest.appendChild(target.end)
     }
     else {
-      dest.appendChild(target)
+      return dest.appendChild(target)
     }
   }
 }
@@ -120,11 +132,9 @@ export function _attachTarget (target, dest) {
  */
 export function _moveTarget (target, after) {
   if (target.element) {
-    this._moveBlock(target, after)
+    return this._moveBlock(target, after)
   }
-  else {
-    this._moveElement(target, after)
-  }
+  return this._moveElement(target, after)
 }
 
 /**
@@ -136,7 +146,7 @@ export function _moveTarget (target, after) {
 export function _moveElement (element, after) {
   const parent = after.parentNode
   if (parent) {
-    parent.insertAfter(element, after)
+    return parent.insertAfter(element, after)
   }
 }
 
@@ -151,6 +161,7 @@ export function _moveBlock (fragBlock, after) {
 
   if (parent) {
     let el = fragBlock.start
+    let signal
     const group = [el]
 
     while (el && el !== fragBlock.end) {
@@ -159,10 +170,13 @@ export function _moveBlock (fragBlock, after) {
     }
 
     let temp = after
-    group.forEach((el) => {
-      parent.insertAfter(el, temp)
+    group.every((el) => {
+      signal = parent.insertAfter(el, temp)
       temp = el
+      return signal !== -1
     })
+
+    return signal
   }
 }
 

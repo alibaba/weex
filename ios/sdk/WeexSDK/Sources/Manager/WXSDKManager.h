@@ -7,9 +7,10 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "WXBridgeManager.h"
-#import "WXModuleManager.h"
 #import "WXSDKInstance.h"
+#import "WXBridgeManager.h"
+
+@class WXModuleManager;
 
 @interface WXSDKManager : NSObject
 
@@ -37,5 +38,10 @@
  * @abstract Returns weex instance for specific identifier
  **/
 + (void)removeInstanceforID:(NSString *)identifier;
+
+/**
+ * @abstract unload
+ **/
++ (void)unload;
 
 @end

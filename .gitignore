@@ -21,6 +21,9 @@ pids
 *.pid
 *.seed
 
+# build framework options by script
+html5/runtime/config.js
+
 # e2e test
 html5/test/e2e/reports
 html5/test/e2e/screenshots

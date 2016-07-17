@@ -1,0 +1,267 @@
+<style>
+.weex-doc-header{
+    height: 70px;
+    width: 100%;
+}
+.book .book-summary , .book .book-body{
+    top: 70px;
+}
+
+a[aria-label="Share"] ,  i.fa-facebook , i.fa-twitter{
+   display: none  !important;
+}
+
+.top-bar, .top-bar ul{
+    background-color: white;
+    padding-left: 0;
+}
+
+dl, ol, ul {
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    list-style-position: outside;
+}
+
+.top-bar {
+    /* padding: .5rem; */
+}
+
+.top-bar:after {
+    clear: both;
+}
+.top-bar:after, .top-bar:before {
+    content: ' ';
+    display: table;
+}
+*, :after, :before {
+    box-sizing: inherit;
+}
+
+.top-bar a {
+    
+    font-size: 16px;
+    color: #333333;
+    text-align: left;
+    /* font-family: HelveticaNeue-Light; */
+}
+
+.top-bar-title {
+    float: left;
+    margin-right: 5px;
+    margin-left: 10px;    
+    margin-top: 29px;    
+    background: url("http://alibaba.github.io/weex/img/weex_logo_blue@3x.png") no-repeat;
+    height: 33px;
+    width: 145px;
+    background-position: 0px 0px;
+    -webkit-background-size: cover;
+    background-size: cover;
+    cursor:pointer;
+}
+
+ .top-bar-left {
+    margin-top: 25px;         
+    float: left;
+}
+
+.top-bar-right {
+    float: right;
+}
+.top-bar .top-bar-right {
+    margin-right: 100px;
+    margin-top: 25px;
+}
+.top-bar .top-bar-right .github {
+    width: 32px;
+    height: 32px;
+}
+
+
+.menu {
+    margin: 0;
+    list-style-type: none;
+}
+
+.menu>li {
+    display: table-cell;    
+    vertical-align: middle;    
+}
+
+
+.menu>li>a {
+    display: block;
+    padding: .7rem 1rem;
+    line-height: 1;
+    line-height: 1;
+    text-decoration: none;
+    line-height: inherit;
+    cursor: pointer;
+}
+
+
+span.weex-version{
+    position: absolute;
+    min-width: 10px;
+    padding: 3px 7px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    background-color: #777;
+    border-radius: 10px;
+}
+
+a.weex-translate{
+    font-size: 16px;
+    position: relative;
+    top: -6px;
+    left: 20px;
+    padding: 2px 4px;    
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+    background-color: #de2810;
+}
+
+a.weex-translate.incomplete{
+  background-color: #777;                    
+}
+ 
+
+.wx-v{
+    padding: 3px 7px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    background-color: #777;
+    border-radius: 10px;
+}
+</style>
+
+    <!-- 
+    <link rel="stylesheet"  href="//g.alicdn.com/mtb/lab-zikuan/0.1.3/weex/weex_doc.css" >
+
+    <link rel="stylesheet"  href="http://127.0.0.1/taobao/weex-os/weex/doc/ali_addition/weex_doc.css" >
+    -->
+
+<script>
+function contentLoaded(win, fn) {
+
+	var done = false, top = true,
+
+	doc = win.document,
+	root = doc.documentElement,
+	modern = doc.addEventListener,
+
+	add = modern ? 'addEventListener' : 'attachEvent',
+	rem = modern ? 'removeEventListener' : 'detachEvent',
+	pre = modern ? '' : 'on',
+
+	init = function(e) {
+		if (e.type == 'readystatechange' && doc.readyState != 'complete') return;
+		(e.type == 'load' ? win : doc)[rem](pre + e.type, init, false);
+		if (!done && (done = true)) fn.call(win, e.type || e);
+	},
+
+	poll = function() {
+		try { root.doScroll('left'); } catch(e) { setTimeout(poll, 50); return; }
+		init('poll');
+	};
+
+	if (doc.readyState == 'complete') fn.call(win, 'lazy');
+	else {
+		if (!modern && root.doScroll) {
+			try { top = !win.frameElement; } catch(e) { }
+			if (top) poll();
+		}
+		doc[add](pre + 'DOMContentLoaded', init, false);
+		doc[add](pre + 'readystatechange', init, false);
+		win[add](pre + 'load', init, false);
+	}
+}
+
+
+
+function getTextWidth(text, font) {
+    // re-use canvas object for better performance
+    var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
+    var context = canvas.getContext("2d");
+    context.font = font;
+    var metrics = context.measureText(text);
+    return metrics.width;
+}
+
+
+
+function rePostionVersion(vDis){
+    vDis =   vDis ? vDis : -28;
+    if ($(".weex-version").length < 1){return ;}
+    var vOffset = $(".weex-version").offset();
+    var titleJObj = $(".weex-version").parents(".markdown-section").find("h1,h2,h3");
+    var titleOffset = titleJObj.offset();
+    var vDistance = (vOffset.top - titleOffset.top + vDis  );
+    var hDistance = (titleJObj.width());
+    $(".weex-version").css("transform", "translate("+hDistance+"px,-"+vDistance+"px)"); 
+}
+
+
+function rePostionTranslate(){
+    if ($(".weex-version").length < 1){return ;}
+    var translateMark = $(".weex-translate").filter(':visible');
+    var titleJObj = translateMark.parents(".markdown-section").find("h1,h2,h3").eq(0);
+    titleJObj.append(translateMark);
+}
+
+window._rePostionAll =   function () {
+    rePostionVersion();
+    rePostionTranslate();
+}
+
+contentLoaded(window,function(){
+    setTimeout(function(){
+        window._rePostionAll();
+    },100);
+})
+</script>
+
+    <!-- 
+    <script src="//g.alicdn.com/mtb/lab-zikuan/0.1.3/weex/weex_doc.js"></script>
+    <script src="http://127.0.0.1/taobao/weex-os/weex/doc/ali_addition/weex_doc.js"></script>
+    -->    
+    
+<div class="weex-doc-header">
+    <div class="top-bar">
+        <div class="top-bar-title" onclick="location='http://alibaba.github.io/weex/index.html'" ></div>                        
+        <div class="top-bar-left">
+            <ul  class="menu" role="menubar" >
+                <li role="menuitem">
+                    <a href='http://alibaba.github.io/weex/demo.html'>Showcase</a>                            
+                </li>
+                <li role="menuitem" >
+                    <a href="http://alibaba.github.io/weex/download.html">Download</a>
+                </li>
+            </ul>
+        </div>
+        <div class="top-bar-right">
+            <ul class="menu">
+                <li>
+                    <a href="https://github.com/alibaba/weex">
+                        <img class='github' src='//g.alicdn.com/mtb/lab-zikuan/0.1.1/weex/github.png' alt='github' >
+                    </a>
+                 </li>
+                </li>
+            </ul>                    
+        </div>
+    </div>        
+</div>
+

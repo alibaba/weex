@@ -42,15 +42,15 @@
 
 - (void)setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated;
 
-- (CGPoint) contentOffset;
+- (CGPoint)contentOffset;
 
-- (CGSize) contentSize;
+- (CGSize)contentSize;
 
 - (void)setContentSize:(CGSize)size;
 
-- (UIEdgeInsets) contentInset;
+- (UIEdgeInsets)contentInset;
 
-- (void) setContentInset:(UIEdgeInsets)contentInset;
+- (void)setContentInset:(UIEdgeInsets)contentInset;
 
 @end
 
