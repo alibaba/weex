@@ -478,54 +478,35 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
           case WXDomPropConstant.WX_OPACITY:
             setOpacity(WXUtils.getFloat(param));
             break;
+
           case WXDomPropConstant.WX_BORDERRADIUS:
-            setBorderRadius(WXUtils.getFloat(param));
-            break;
           case WXDomPropConstant.WX_BORDER_TOP_LEFT_RADIUS:
-            setBorderTopLeftRadius(WXUtils.getFloat(param));
-            break;
           case WXDomPropConstant.WX_BORDER_TOP_RIGHT_RADIUS:
-            setBorderTopRightRadius(WXUtils.getFloat(param));
-            break;
           case WXDomPropConstant.WX_BORDER_BOTTOM_RIGHT_RADIUS:
-            setBorderBottomRightRadius(WXUtils.getFloat(param));
-            break;
           case WXDomPropConstant.WX_BORDER_BOTTOM_LEFT_RADIUS:
-            setBorderBottoLeftRadius(WXUtils.getFloat(param));
+            setBorderRadius(key,WXUtils.getFloat(param));
             break;
+
           case WXDomPropConstant.WX_BORDERWIDTH:
-            setBorderWidth(WXUtils.getFloat(param));
-            break;
           case WXDomPropConstant.WX_BORDER_TOP_WIDTH:
-            setBorderTopWidth(WXUtils.getFloat(param));
-            break;
           case WXDomPropConstant.WX_BORDER_RIGHT_WIDTH:
-            setBorderRightWidth(WXUtils.getFloat(param));
-            break;
           case WXDomPropConstant.WX_BORDER_BOTTOM_WIDTH:
-            setBorderBottomWidth(WXUtils.getFloat(param));
-            break;
           case WXDomPropConstant.WX_BORDER_LEFT_WIDTH:
-            setBorderLeftWidth(WXUtils.getFloat(param));
+            setBorderWidth(key,WXUtils.getFloat(param));
             break;
+
           case WXDomPropConstant.WX_BORDERSTYLE:
             setBorderStyle((String) param);
             break;
+
           case WXDomPropConstant.WX_BORDERCOLOR:
-            setBorderColor((String) param);
-            break;
           case WXDomPropConstant.WX_BORDER_TOP_COLOR:
-            setBorderTopColor((String) param);
-            break;
           case WXDomPropConstant.WX_BORDER_RIGHT_COLOR:
-            setBorderRightColor((String) param);
-            break;
           case WXDomPropConstant.WX_BORDER_BOTTOM_COLOR:
-            setBorderBottomColor((String) param);
-            break;
           case WXDomPropConstant.WX_BORDER_LEFT_COLOR:
-            setBorderLeftColor((String) param);
+            setBorderColor(key, (String) param);
             break;
+
           case WXDomPropConstant.WX_VISIBILITY:
             setVisibility((String) param);
             break;
@@ -822,91 +803,77 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
     }
   }
 
-  public void setBorderRadius(float borderRadius) {
+  private void setBorderRadius(String key, float borderRadius) {
     if (borderRadius >= 0) {
-      getOrCreateBorder().setBorderRadius(WXViewUtils.getRealPxByWidth(borderRadius));
+      switch (key) {
+        case WXDomPropConstant.WX_BORDERRADIUS:
+          getOrCreateBorder().setBorderRadius(WXViewUtils.getRealPxByWidth(borderRadius));
+          break;
+        case WXDomPropConstant.WX_BORDER_TOP_LEFT_RADIUS:
+          getOrCreateBorder().setBorderRadius(WXBackgroundDrawable.BORDER_TOP_LEFT_RADIUS, WXViewUtils.getRealPxByWidth(borderRadius));
+          break;
+        case WXDomPropConstant.WX_BORDER_TOP_RIGHT_RADIUS:
+          getOrCreateBorder().setBorderRadius(WXBackgroundDrawable.BORDER_TOP_RIGHT_RADIUS, WXViewUtils.getRealPxByWidth(borderRadius));
+          break;
+        case WXDomPropConstant.WX_BORDER_BOTTOM_RIGHT_RADIUS:
+          getOrCreateBorder().setBorderRadius(WXBackgroundDrawable.BORDER_BOTTOM_RIGHT_RADIUS, WXViewUtils.getRealPxByWidth(borderRadius));
+          break;
+        case WXDomPropConstant.WX_BORDER_BOTTOM_LEFT_RADIUS:
+          getOrCreateBorder().setBorderRadius(WXBackgroundDrawable.BORDER_BOTTOM_LEFT_RADIUS, WXViewUtils.getRealPxByWidth(borderRadius));
+          break;
+      }
     }
   }
 
-  public void setBorderTopLeftRadius(float borderRadius) {
-    setBorderRadius(WXBackgroundDrawable.BORDER_TOP_LEFT_RADIUS, borderRadius);
-  }
-
-  private void setBorderRadius(int position, float borderRadius) {
-    if (borderRadius >= 0) {
-      getOrCreateBorder().setBorderRadius(position, WXViewUtils.getRealPxByWidth(borderRadius));
-    }
-  }
-
-  public void setBorderTopRightRadius(float borderRadius) {
-    setBorderRadius(WXBackgroundDrawable.BORDER_TOP_RIGHT_RADIUS, borderRadius);
-  }
-
-  public void setBorderBottomRightRadius(float borderRadius) {
-    setBorderRadius(WXBackgroundDrawable.BORDER_BOTTOM_RIGHT_RADIUS, borderRadius);
-  }
-
-  public void setBorderBottoLeftRadius(float borderRadius) {
-    setBorderRadius(WXBackgroundDrawable.BORDER_BOTTOM_LEFT_RADIUS, borderRadius);
-  }
-
-  public void setBorderWidth(float borderWidth) {
-    setBorderWidth(Spacing.ALL, borderWidth);
-  }
-
-  private void setBorderWidth(int position, float borderWidth) {
+  private void setBorderWidth(String key, float borderWidth) {
     if (borderWidth >= 0) {
-      getOrCreateBorder().setBorderWidth(position, WXViewUtils.getRealPxByWidth(borderWidth));
+      switch (key) {
+        case WXDomPropConstant.WX_BORDERWIDTH:
+          getOrCreateBorder().setBorderWidth(Spacing.ALL, borderWidth);
+          break;
+        case WXDomPropConstant.WX_BORDER_TOP_WIDTH:
+          getOrCreateBorder().setBorderWidth(Spacing.TOP, WXViewUtils.getRealPxByWidth(borderWidth));
+          break;
+        case WXDomPropConstant.WX_BORDER_RIGHT_WIDTH:
+          getOrCreateBorder().setBorderWidth(Spacing.RIGHT, WXViewUtils.getRealPxByWidth(borderWidth));
+          break;
+        case WXDomPropConstant.WX_BORDER_BOTTOM_WIDTH:
+          getOrCreateBorder().setBorderWidth(Spacing.BOTTOM, WXViewUtils.getRealPxByWidth(borderWidth));
+          break;
+        case WXDomPropConstant.WX_BORDER_LEFT_WIDTH:
+          getOrCreateBorder().setBorderWidth(Spacing.LEFT, WXViewUtils.getRealPxByWidth(borderWidth));
+          break;
+      }
     }
-  }
-
-  public void setBorderTopWidth(float borderWidth) {
-    setBorderWidth(Spacing.TOP, borderWidth);
-  }
-
-  public void setBorderRightWidth(float borderWidth) {
-    setBorderWidth(Spacing.RIGHT, borderWidth);
-  }
-
-  public void setBorderBottomWidth(float borderWidth) {
-    setBorderWidth(Spacing.BOTTOM, borderWidth);
-  }
-
-  public void setBorderLeftWidth(float borderWidth) {
-    setBorderWidth(Spacing.LEFT, borderWidth);
   }
 
   public void setBorderStyle(String borderStyle) {
     getOrCreateBorder().setBorderStyle(borderStyle);
   }
 
-  public void setBorderColor(String borderColor) {
-    setBorderColor(Spacing.ALL, borderColor);
-  }
-
-  private void setBorderColor(int position, String borderColor) {
+  private void setBorderColor(String key, String borderColor) {
     if (!TextUtils.isEmpty(borderColor)) {
       int colorInt = WXResourceUtils.getColor(borderColor);
       if (colorInt != Integer.MIN_VALUE) {
-        getOrCreateBorder().setBorderColor(position, colorInt);
+        switch (key) {
+          case WXDomPropConstant.WX_BORDERCOLOR:
+            getOrCreateBorder().setBorderColor(Spacing.ALL, colorInt);
+            break;
+          case WXDomPropConstant.WX_BORDER_TOP_COLOR:
+            getOrCreateBorder().setBorderColor(Spacing.TOP, colorInt);
+            break;
+          case WXDomPropConstant.WX_BORDER_RIGHT_COLOR:
+            getOrCreateBorder().setBorderColor(Spacing.RIGHT, colorInt);
+            break;
+          case WXDomPropConstant.WX_BORDER_BOTTOM_COLOR:
+            getOrCreateBorder().setBorderColor(Spacing.BOTTOM, colorInt);
+            break;
+          case WXDomPropConstant.WX_BORDER_LEFT_COLOR:
+            getOrCreateBorder().setBorderColor(Spacing.LEFT, colorInt);
+            break;
+        }
       }
     }
-  }
-
-  public void setBorderTopColor(String borderColor) {
-    setBorderColor(Spacing.TOP, borderColor);
-  }
-
-  public void setBorderRightColor(String borderColor) {
-    setBorderColor(Spacing.RIGHT, borderColor);
-  }
-
-  public void setBorderBottomColor(String borderColor) {
-    setBorderColor(Spacing.BOTTOM, borderColor);
-  }
-
-  public void setBorderLeftColor(String borderColor) {
-    setBorderColor(Spacing.LEFT, borderColor);
   }
 
   public

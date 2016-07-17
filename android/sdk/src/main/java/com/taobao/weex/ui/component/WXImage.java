@@ -206,7 +206,6 @@ package com.taobao.weex.ui.component;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
@@ -245,7 +244,6 @@ public class WXImage extends WXComponent<WXImageView> {
     }
 
     @Override
-    @WXComponentProp(name = WXDomPropConstant.WX_BACKGROUNDCOLOR)
     public void setBackgroundColor(String color) {
         if (!TextUtils.isEmpty(color)) {
             int colorInt = WXResourceUtils.getColor(color);
@@ -255,25 +253,21 @@ public class WXImage extends WXComponent<WXImageView> {
         }
     }
 
-    @Override
     @WXComponentProp(name = WXDomPropConstant.WX_BORDERRADIUS)
     public void setBorderRadius(float borderRadius) {
 
     }
 
-    @Override
     @WXComponentProp(name = WXDomPropConstant.WX_BORDERWIDTH)
     public void setBorderWidth(float borderWidth) {
 
     }
 
-    @Override
     @WXComponentProp(name = WXDomPropConstant.WX_BORDERSTYLE)
     public void setBorderStyle(String borderStyle) {
 
     }
 
-    @Override
     @WXComponentProp(name = WXDomPropConstant.WX_BORDERCOLOR)
     public void setBorderColor(String borderColor) {
 

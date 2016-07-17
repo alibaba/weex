@@ -307,7 +307,6 @@ public class WXEmbed extends WXDiv implements WXSDKInstance.OnInstanceVisibleLis
   }
 
   @Override
-  @WXComponentProp(name = WXDomPropConstant.WX_VISIBILITY)
   public void setVisibility(String visibility) {
     super.setVisibility(visibility);
     boolean visible = TextUtils.equals(getVisibility(), WXDomPropConstant.WX_VISIBILITY_VISIBLE);
