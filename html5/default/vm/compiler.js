@@ -499,6 +499,12 @@ function bindRepeat (vm, target, fragBlock, info) {
           }
           children.push(reused.target)
           vms.push(reused.vm)
+          if (oldStyle) {
+            reused.vm = item
+          }
+          else {
+            reused.vm[valueName] = item
+          }
           reused.vm[keyName] = index
           fragBlock.updateMark = reused.target
         }
