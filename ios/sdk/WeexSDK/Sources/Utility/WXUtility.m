@@ -368,30 +368,12 @@ static BOOL WXNotStat;
     return machine;
 }
 
-+ (NSString *)registeredDeviceName {
++ (NSString *)registeredDeviceName
+{
     NSString *machine = [[UIDevice currentDevice] model];
     NSString *systemVer = [[UIDevice currentDevice] systemVersion] ? : @"";
     NSString *model = [NSString stringWithFormat:@"%@:%@",machine,systemVer];
     return model;
-}
-
-+ (void)addStatTrack:(NSString *)appName
-{
-    if (!appName || [self notStat]) {
-        return;
-    }
-    
-    // App name for non-commercial use
-    NSString *urlString = [NSString stringWithFormat:@"http://gm.mmstat.com/weex.1004?appname=%@", appName];
-    NSURL *URL = [NSURL URLWithString:urlString];
-    NSURLRequest *request = [NSURLRequest requestWithURL:URL];
-    
-    NSURLSession *session = [NSURLSession sharedSession];
-    NSURLSessionDataTask *task = [session dataTaskWithRequest:request
-                                            completionHandler:
-                                  ^(NSData *data, NSURLResponse *response, NSError *error) {
-                                  }];
-    [task resume];
 }
 
 CGFloat WXScreenResizeRadio(void)
@@ -487,6 +469,14 @@ CGFloat WXScreenResizeRadio(void)
 
 + (BOOL)notStat {
     return WXNotStat;
+}
+
++ (NSURL *)urlByDeletingParameters:(NSURL *)url
+{
+    NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:YES];
+    components.query = nil;     // remove the query
+    components.fragment = nil;
+    return [components URL];
 }
 
 @end

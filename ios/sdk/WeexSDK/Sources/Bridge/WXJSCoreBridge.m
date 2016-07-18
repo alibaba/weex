@@ -53,7 +53,7 @@
                              @"__LOG": @(WXLogFlagInfo),
                              @"__INFO": @(WXLogFlagInfo),
                              @"__DEBUG": @(WXLogFlagDebug),
-                             @"__VERBOSE": @(WXLogFlagVerbose)
+                             @"__LOG": @(WXLogFlagLog)
                              };
             });
             
@@ -96,8 +96,7 @@
 
 - (void)callJSMethod:(NSString *)method args:(NSArray *)args
 {
-    WXLogVerbose(@"Calling JS... method:%@, args:%@", method, args);
-    
+    WXLogDebug(@"Calling JS... method:%@, args:%@", method, args);
     [[_jsContext globalObject] invokeMethod:method withArguments:args];
 }
 
@@ -107,7 +106,8 @@
         NSString *instanceId = [instance toString];
         NSArray *tasksArray = [tasks toArray];
         NSString *callbackId = [callback toString];
-        WXLogVerbose(@"Calling native... instance:%@, tasks:%@, callback:%@", instanceId, tasksArray, callbackId);
+        
+        WXLogDebug(@"Calling native... instance:%@, tasks:%@, callback:%@", instanceId, tasksArray, callbackId);
         return callNative(instanceId, tasksArray, callbackId);
     };
     

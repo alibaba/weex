@@ -208,7 +208,13 @@ package com.taobao.weex.common;
  * Created by budao on 16/6/25.
  */
 public interface IWXDebugProxy {
-    void start();
-    IWXBridge getWXBridge();
+    String ACTION_DEBUG_SERVER_CONNECTED = "DEBUG_SERVER_CONNECTED";
+    String ACTION_DEBUG_SERVER_CONNECT_FAILED = "DEBUG_SERVER_CONNECT_FAILED";
+    String ACTION_DEBUG_INSTANCE_REFRESH = "DEBUG_INSTANCE_REFRESH";
 
+    void start();
+
+    void stop();
+
+    IWXBridge getWXBridge();
 }

@@ -204,6 +204,11 @@
  */
 package com.taobao.weex.dom;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.util.Pair;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXEnvironment;
@@ -216,6 +221,7 @@ import com.taobao.weex.dom.flex.CSSNode;
 import com.taobao.weex.dom.flex.Spacing;
 import com.taobao.weex.ui.IWXRenderTask;
 import com.taobao.weex.ui.WXRenderManager;
+import com.taobao.weex.ui.animation.WXAnimationBean;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXVContainer;
 import com.taobao.weex.utils.WXConst;
@@ -254,7 +260,7 @@ class WXDomStatement {
   private String mInstanceId;
   private WXRenderManager mWXRenderManager;
   private ArrayList<IWXRenderTask> mNormalTasks;
-  private Set<String> mUpdate;
+  private Set <Pair<String, Map<String, Object>>> animations;
   private CSSLayoutContext mLayoutContext;
   private volatile boolean mDirty;
   private boolean mDestroy;
@@ -275,7 +281,7 @@ class WXDomStatement {
     mLayoutContext = new CSSLayoutContext();
     mRegistry = new ConcurrentHashMap<>();
     mNormalTasks = new ArrayList<>();
-    mUpdate = new HashSet<>();
+    animations = new HashSet<>();
     mWXRenderManager = renderManager;
   }
 
@@ -386,13 +392,15 @@ class WXDomStatement {
       WXSDKManager.getInstance().getSDKInstance(mInstanceId).updateDomObjTime(System.currentTimeMillis() - start);
     }
 
+    parseAnimation();
+    animations.clear();
+
     int count = mNormalTasks.size();
     for (int i = 0; i < count && !mDestroy; ++i) {
       mWXRenderManager.runOnThread(mInstanceId, mNormalTasks.get(i));
     }
     mNormalTasks.clear();
     mAddDom.clear();
-    mUpdate.clear();
     mDirty = false;
     if(WXSDKManager.getInstance().getSDKInstance(mInstanceId)!=null) {
       WXSDKManager.getInstance().getSDKInstance(mInstanceId).batchTime(System.currentTimeMillis() - start0);
@@ -437,7 +445,6 @@ class WXDomStatement {
     }
     if (dom.hasUpdate()) {
       dom.markUpdateSeen();
-      mUpdate.add(dom.ref);
       if (!dom.isYoung()) {
         final WXDomObject copy = dom.clone();
         if (copy == null) {
@@ -464,6 +471,24 @@ class WXDomStatement {
     int count = dom.childCount();
     for (int i = 0; i < count; ++i) {
       applyUpdate(dom.getChild(i));
+    }
+  }
+
+  private void parseAnimation() {
+    WXAnimationBean animationBean;
+    for(final Pair<String, Map<String, Object>> pair:animations) {
+      if (!TextUtils.isEmpty(pair.first)) {
+        animationBean = createAnimationBean(pair.first, pair.second);
+        if (animationBean != null) {
+          mRegistry.get(pair.first).style.setAnimationBean(animationBean);
+          mNormalTasks.add(new IWXRenderTask() {
+            @Override
+            public void execute() {
+              mWXRenderManager.startAnimation(mInstanceId, pair.first, null);
+            }
+          });
+        }
+      }
     }
   }
 
@@ -649,7 +674,7 @@ class WXDomStatement {
         }
       }
     });
-
+    animations.add(new Pair<String, Map<String, Object>>(domObject.ref,domObject.style));
     mDirty = true;
 
     if (instance != null) {
@@ -819,6 +844,7 @@ class WXDomStatement {
     transformStyle(domObject, false);
 
     updateStyle(domObject, style);
+    animations.add(new Pair<String, Map<String, Object>>(ref,style));
     mDirty = true;
 
     if (instance != null) {
@@ -1082,6 +1108,66 @@ class WXDomStatement {
     }
   }
 
+  void startAnimation(@NonNull final String ref, @NonNull String animation,
+                      @Nullable final String callBack){
+    if (mDestroy) {
+      return;
+    }
+    WXDomObject domObject = mRegistry.get(ref);
+    if (domObject == null) {
+      return;
+    }
+    WXAnimationBean animationBean=createAnimationBean(ref, animation);
+    if(animationBean!=null) {
+      domObject.style.setAnimationBean(animationBean);
+      mNormalTasks.add(new IWXRenderTask() {
+        @Override
+        public void execute() {
+          mWXRenderManager.startAnimation(mInstanceId, ref, callBack);
+        }
+      });
+    }
+  }
+
+  private WXAnimationBean createAnimationBean(String ref, String animation){
+    try {
+      WXAnimationBean animationBean =
+          JSONObject.parseObject(animation, WXAnimationBean.class);
+      if (animationBean != null && animationBean.styles != null) {
+        WXDomObject domObject=mRegistry.get(ref);
+        int width=(int)domObject.getLayoutWidth();
+        int height=(int)domObject.getLayoutHeight();
+        animationBean.styles.init(animationBean.styles.transformOrigin,
+                                  animationBean.styles.transform,width,height);
+      }
+      return animationBean;
+    } catch (RuntimeException e) {
+      WXLogUtils.e(WXLogUtils.getStackTrace(e));
+      return null;
+    }
+  }
+
+  private WXAnimationBean createAnimationBean(String ref,Map<String, Object> style){
+    if (style != null) {
+      try {
+        Object transform = style.get(WXStyle.TRANSFORM);
+        if (transform instanceof String && !TextUtils.isEmpty((String) transform)) {
+          String transformOrigin = (String) style.get(WXStyle.TRANSFORM_ORIGIN);
+          WXAnimationBean animationBean = new WXAnimationBean();
+          WXDomObject domObject = mRegistry.get(ref);
+          int width = (int) domObject.getLayoutWidth();
+          int height = (int) domObject.getLayoutHeight();
+          animationBean.styles = new WXAnimationBean.Style();
+          animationBean.styles.init(transformOrigin, (String) transform, width, height);
+          return animationBean;
+        }
+      }catch (RuntimeException e){
+        WXLogUtils.e(WXLogUtils.getStackTrace(e));
+        return null;
+      }
+    }
+    return null;
+  }
 
   /**
    * Creating the mapping between {@link WXDomObject#ref} to {@link WXDomObject}
