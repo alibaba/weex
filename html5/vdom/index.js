@@ -4,6 +4,7 @@
  */
 
 import Listener from './listener'
+import { extend } from '../shared'
 
 const DEFAULT_TAG_NAME = 'div'
 
@@ -500,7 +501,7 @@ Element.prototype.fireEvent = function (type, e) {
 }
 
 Element.prototype.toStyle = function () {
-  return Object.assign({}, this.classStyle, this.style)
+  return extend({}, this.classStyle, this.style)
 }
 
 Element.prototype.toJSON = function () {

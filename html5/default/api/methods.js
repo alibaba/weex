@@ -1,7 +1,7 @@
 /**
  * @fileOverview The api for invoking with "$" prefix
  */
-import * as _ from '../util'
+import { extend, typof } from '../util'
 
 /**
  * ==========================================================
@@ -17,7 +17,7 @@ import * as _ from '../util'
  * @return {Vm}
  */
 export function $ (id) {
-  _.warn('Vm#$ is deprecated, please use Vm#$vm instead')
+  console.warn('[JS Framework] Vm#$ is deprecated, please use Vm#$vm instead')
   const info = this._ids[id]
   if (info) {
     return info.vm
@@ -70,7 +70,7 @@ export function $renderThen (fn) {
  * @param  {number} offset
  */
 export function $scrollTo (id, offset) {
-  _.warn('Vm#$scrollTo is deprecated, ' +
+  console.warn('[JS Framework] Vm#$scrollTo is deprecated, ' +
           'please use "require(\'@weex-module/dom\')' +
           '.scrollTo(el, options)" instead')
   const el = this.$el(id)
@@ -117,11 +117,11 @@ export function $transition (id, options, callback) {
  * @property {number} env.deviceHeight
  */
 export function $getConfig (callback) {
-  const config = _.extend({
+  const config = extend({
     env: global.WXEnvironment || {}
   }, this._app.options)
-  if (_.typof(callback) === 'function') {
-    _.warn('the callback of Vm#$getConfig(callback) is deprecated, ' +
+  if (typof(callback) === 'function') {
+    console.warn('[JS Framework] the callback of Vm#$getConfig(callback) is deprecated, ' +
       'this api now can directly RETURN config info.')
     callback(config)
   }
@@ -135,7 +135,7 @@ export function $getConfig (callback) {
  * @param  {Function} callback
  */
 export function $sendHttp (params, callback) {
-  _.warn('Vm#$sendHttp is deprecated, ' +
+  console.warn('[JS Framework] Vm#$sendHttp is deprecated, ' +
           'please use "require(\'@weex-module/stream\')' +
           '.sendHttp(params, callback)" instead')
   const stream = this._app.requireModule('stream')
@@ -148,7 +148,7 @@ export function $sendHttp (params, callback) {
  * @param  {string} url
  */
 export function $openURL (url) {
-  _.warn('Vm#$openURL is deprecated, ' +
+  console.warn('[JS Framework] Vm#$openURL is deprecated, ' +
           'please use "require(\'@weex-module/event\')' +
           '.openURL(url)" instead')
   const event = this._app.requireModule('event')
@@ -161,7 +161,7 @@ export function $openURL (url) {
  * @param  {string} title
  */
 export function $setTitle (title) {
-  _.warn('Vm#$setTitle is deprecated, ' +
+  console.warn('[JS Framework] Vm#$setTitle is deprecated, ' +
           'please use "require(\'@weex-module/pageInfo\')' +
           '.setTitle(title)" instead')
   const pageInfo = this._app.requireModule('pageInfo')
@@ -176,7 +176,7 @@ export function $setTitle (title) {
  * @param  {...*} the rest arguments
  */
 export function $call (moduleName, methodName, ...args) {
-  _.warn('Vm#$call is deprecated, ' +
+  console.warn('[JS Framework] Vm#$call is deprecated, ' +
     'please use "require(\'@weex-module/moduleName\')" instead')
   const module = this._app.requireModule(moduleName)
   if (module && module[methodName]) {
