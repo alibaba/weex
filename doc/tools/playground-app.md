@@ -1,5 +1,6 @@
 Weex Playground App
 ===================
+<a href="https://github.com/weexteam/article/issues/48"  class="weex-translate">cn</a>
 
 One of best parts of Weex is Native Runtime . After preview your `we file` render in H5 using weex-toolkit CLI , you can try Native Runtime in a standalone App , this is Weex Playground App . More then that ,Weex playground App preset  a lot of  Demo & ShowCase ,so you will get to experience  performance of Weex native runtime  easily.
 
