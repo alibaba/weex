@@ -209,7 +209,6 @@ import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -265,7 +264,7 @@ public class WXListComponent extends WXVContainer implements
     private ArrayList<ListBaseViewHolder> recycleViewList = new ArrayList<>();
     private static final Pattern transformPattern = Pattern.compile("([a-z]+)\\(([0-9\\.]+),?([0-9\\.]+)?\\)");
 
-    private SparseArray<WXComponent> mAppearComponents = new SparseArray<>();
+    private List<WXComponent> mAppearComponents = new ArrayList<>();
     private HashMap<String, Long> mRefToViewType;
 
     protected BounceRecyclerView bounceRecyclerView;
@@ -625,7 +624,7 @@ public class WXListComponent extends WXVContainer implements
         }
 
         if(hasAppearAndDisAppearEvent(child)){
-        mAppearComponents.put(adapterPosition, child);
+        mAppearComponents.add(child);
         child.registerAppearEvent = true;
         }
     }
@@ -880,14 +879,14 @@ public class WXListComponent extends WXVContainer implements
 
     @Override
     public void notifyAppearStateChange(int firstVisible, int lastVisible,int directionX,int directionY) {
-        List<Integer> unRegisterKeys = new ArrayList<>();
+        List<WXComponent> unRegisterKeys = new ArrayList<>();
 
         //notify appear state
         for (int i = 0, len = mAppearComponents.size(); i < len; i++) {
-            int key = mAppearComponents.keyAt(i);
-            WXComponent value = mAppearComponents.get(key);
+            WXComponent value = mAppearComponents.get(i);
+          int key=mChildren.indexOf(value);
             if (!value.registerAppearEvent) {
-                unRegisterKeys.add(key);
+                unRegisterKeys.add(value);
                 continue;
             }
             if (key >= firstVisible && key <= lastVisible && !value.appearState) {
@@ -908,7 +907,7 @@ public class WXListComponent extends WXVContainer implements
     }
 
   public void unbindAppearComponents(WXComponent component) {
-        mAppearComponents.remove(mAppearComponents.indexOfValue(component));
+        mAppearComponents.remove(component);
     }
 
     private void recycleImage(View view) {
