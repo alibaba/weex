@@ -58,6 +58,7 @@
         [self addSubview:_scrollView];
         
         _itemViews = [NSMutableArray array];
+        _currentIndex = -1;
     }
     return self;
 }
@@ -153,6 +154,7 @@
     self.scrollView.contentSize = CGSizeMake(self.itemViews.count * self.frame.size.width, self.frame.size.height);
     
     [self _resortItemViews];
+    [self _resetItemFrames];
     [self _scroll2Center];
     [self setNeedsLayout];
 }
@@ -165,10 +167,16 @@
     
     NSInteger center = [self _centerItemIndex];
     NSInteger index = 0;
-    if (self.currentIndex > center) {
-        index = self.currentIndex - center;
-    } else {
-        index = self.currentIndex + self.itemViews.count - center;
+    
+    if (self.currentIndex >= 0) {
+        if (self.currentIndex > center) {
+            index = self.currentIndex - center;
+        } else {
+            index = self.currentIndex + self.itemViews.count - center;
+        }
+    }
+    else {
+        index = self.itemViews.count - center;
     }
     
     __weak typeof(self) weakSelf = self;
@@ -196,6 +204,8 @@
         itemView.frame = frame;
         xOffset += frame.size.width;
     }
+    
+    
 }
 
 - (NSInteger)_centerItemIndex
@@ -271,6 +281,7 @@
 @property (nonatomic, assign) NSInteger currentIndex;
 @property (nonatomic, assign) BOOL  autoPlay;
 @property (nonatomic, assign) NSUInteger interval;
+@property (nonatomic, assign) NSInteger index;
 @property (nonatomic, assign) BOOL  sliderChangeEvent;
 @property (nonatomic, strong) NSMutableArray *childrenView;
 
@@ -298,6 +309,10 @@
             _interval = [attributes[@"interval"] integerValue];
         }
         
+        if (attributes[@"index"]) {
+            _index = [attributes[@"index"] integerValue];
+        }
+        
         self.cssNode->style.flex_direction = CSS_FLEX_DIRECTION_ROW;
     }
     return self;
@@ -322,6 +337,11 @@
     } else {
         [self _stopAutoPlayTimer];
     }
+}
+
+- (void)layoutDidFinish
+{
+    _sliderView.currentIndex = _index;
 }
 
 - (void)viewDidUnload
@@ -357,6 +377,8 @@
             return;
         }
         
+        subcomponent.isViewFrameSyncWithCalculated = NO;
+        
         if (index == -1) {
             [sliderView insertItemView:view atIndex:index];
         } else {
@@ -384,6 +406,17 @@
         } else {
             [self _stopAutoPlayTimer];
         }
+    }
+    
+    if (attributes[@"interval"]) {
+        _interval = [attributes[@"interval"] integerValue];
+    }
+    
+    if (attributes[@"index"]) {
+        _index = [attributes[@"index"] integerValue];
+        
+        self.currentIndex = _index;
+        [_sliderView scroll2ItemView:self.currentIndex animated:YES];
     }
 }
 
@@ -455,7 +488,7 @@
     self.currentIndex = index;
     
     if (_sliderChangeEvent) {
-        [self fireEvent:@"change" params:@{@"index":@(index)}];
+        [self fireEvent:@"change" params:@{@"index":@(index)} domChanges:@{@"index": @(index)}];
     }
 }
 
