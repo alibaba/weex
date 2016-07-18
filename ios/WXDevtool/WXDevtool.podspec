@@ -22,9 +22,9 @@ Pod::Spec.new do |s|
   s.platform     = :ios
   s.ios.deployment_target = '7.0'
   s.source =  { :path => '.' }
-  s.source_files = 'inspector/**/*.{h,m,mm,c}'
+  s.source_files = 'WXDevTool/Source/**/*.{h,m,mm,c}'
 
   s.requires_arc = true
   s.frameworks = 'Foundation', 'UIKit'
-  s.dependency 'SocketRocket'
+  s.dependency 'WeexSDK'
 end
