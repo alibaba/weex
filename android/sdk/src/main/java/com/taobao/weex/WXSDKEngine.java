@@ -224,6 +224,7 @@ public class WXSDKEngine {
           sm.setIWXImgLoaderAdapter(config.getImgAdapter());
           sm.setIWXUserTrackAdapter(config.getUtAdapter());
           sm.setIWXDebugAdapter(config.getDebugAdapter());
+          sm.setIWXTypefaceAdapter(config.getTypefaceAdapter());
           if(config.getDebugAdapter()!=null){
             config.getDebugAdapter().initDebug(application);
           }

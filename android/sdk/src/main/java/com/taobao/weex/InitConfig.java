@@ -207,6 +207,7 @@ package com.taobao.weex;
 import com.taobao.weex.adapter.IWXDebugAdapter;
 import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
+import com.taobao.weex.adapter.IWXTypefaceAdapter;
 import com.taobao.weex.adapter.IWXUserTrackAdapter;
 
 /**
@@ -217,6 +218,7 @@ public class InitConfig {
   private IWXImgLoaderAdapter imgAdapter;
   private IWXUserTrackAdapter utAdapter;
   private IWXDebugAdapter debugAdapter;
+  private IWXTypefaceAdapter typefaceAdapter;
   private String framework;
 
   public IWXHttpAdapter getHttpAdapter() {
@@ -234,6 +236,10 @@ public class InitConfig {
   public IWXDebugAdapter getDebugAdapter(){
     return debugAdapter;
   }
+
+  public IWXTypefaceAdapter getTypefaceAdapter() {
+    return typefaceAdapter;
+  }
   public String getFramework() {
     return framework;
   }
@@ -246,6 +252,7 @@ public class InitConfig {
     IWXImgLoaderAdapter imgAdapter;
     IWXUserTrackAdapter utAdapter;
     IWXDebugAdapter debugAdapter;
+    IWXTypefaceAdapter typefaceAdapter;
     String framework;
     public Builder(){
 
@@ -271,6 +278,11 @@ public class InitConfig {
       return this;
     }
 
+    public Builder setTypefaceAdapter(IWXTypefaceAdapter typefaceAdapter) {
+      this.typefaceAdapter = typefaceAdapter;
+      return this;
+    }
+
     public Builder setFramework(String framework){
       this.framework=framework;
       return this;
@@ -282,6 +294,7 @@ public class InitConfig {
       config.imgAdapter = this.imgAdapter;
       config.utAdapter = this.utAdapter;
       config.debugAdapter=this.debugAdapter;
+      config.typefaceAdapter = this.typefaceAdapter;
       config.framework=this.framework;
       return config;
     }

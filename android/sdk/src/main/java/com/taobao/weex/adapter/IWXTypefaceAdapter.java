@@ -202,67 +202,10 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.utils;
+package com.taobao.weex.adapter;
 
-import android.graphics.Paint;
 import android.graphics.Typeface;
 
-import com.taobao.weex.WXSDKManager;
-import com.taobao.weex.dom.WXStyle;
-
-import java.util.HashMap;
-import java.util.Map;
-
-/**
- * Created by sospartan on 7/13/16.
- */
-public class TypefaceUtil {
-  private static final Map<String, Typeface> sTypefaceCache = new HashMap<String, Typeface>();
-
-  public static void applyFontStyle(Paint paint, int style, int weight, String family) {
-    int oldStyle;
-    Typeface typeface = paint.getTypeface();
-    if (typeface == null) {
-      oldStyle = 0;
-    } else {
-      oldStyle = typeface.getStyle();
-    }
-
-    int want = 0;
-    if ((weight == Typeface.BOLD)
-      || ((oldStyle & Typeface.BOLD) != 0 && weight == WXStyle.UNSET)) {
-      want |= Typeface.BOLD;
-    }
-
-    if ((style == Typeface.ITALIC)
-      || ((oldStyle & Typeface.ITALIC) != 0 && style == WXStyle.UNSET)) {
-      want |= Typeface.ITALIC;
-    }
-
-    if (family != null) {
-      typeface = getOrCreateTypeface(family, want);
-    }
-
-    if (typeface != null) {
-      paint.setTypeface(Typeface.create(typeface, want));
-    } else {
-      paint.setTypeface(Typeface.defaultFromStyle(want));
-    }
-  }
-
-  private static Typeface getOrCreateTypeface(String family, int style) {
-    if (sTypefaceCache.get(family) != null) {
-      return sTypefaceCache.get(family);
-    }
-
-    Typeface typeface = null;
-    if(WXSDKManager.getInstance().getIWXTypefaceAdapter() != null) {
-      typeface = WXSDKManager.getInstance().getIWXTypefaceAdapter().createTypeface(family, style);
-    }
-    if (typeface == null) {
-      typeface =Typeface.create(family, style);
-    }
-    sTypefaceCache.put(family, typeface);
-    return typeface;
-  }
+public interface IWXTypefaceAdapter {
+    Typeface createTypeface(String path, int style);
 }
