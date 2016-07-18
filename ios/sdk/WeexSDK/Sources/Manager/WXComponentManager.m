@@ -577,10 +577,13 @@ static css_node_t * rootNodeGetChild(void *context, int i)
     }
     _rootCSSNode->layout.should_update = false;
     
-    self.weexInstance.rootView.frame = CGRectMake(WXRoundPixelValue(_rootCSSNode->layout.position[CSS_LEFT]),
-                                 WXRoundPixelValue(_rootCSSNode->layout.position[CSS_TOP]),
-                                 WXRoundPixelValue(_rootCSSNode->layout.dimensions[CSS_WIDTH]),
-                                 WXRoundPixelValue(_rootCSSNode->layout.dimensions[CSS_HEIGHT]));
+    CGRect frame = CGRectMake(WXRoundPixelValue(_rootCSSNode->layout.position[CSS_LEFT]),
+                              WXRoundPixelValue(_rootCSSNode->layout.position[CSS_TOP]),
+                              WXRoundPixelValue(_rootCSSNode->layout.dimensions[CSS_WIDTH]),
+                              WXRoundPixelValue(_rootCSSNode->layout.dimensions[CSS_HEIGHT]));
+    WXPerformBlockOnMainThread(^{
+        self.weexInstance.rootView.frame = frame;
+    });
     
     resetNodeLayout(_rootCSSNode);
 }

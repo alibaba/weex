@@ -182,12 +182,14 @@ NSTimeInterval JSLibInitTime = 0;
 {
     if (!CGRectEqualToRect(frame, _frame)) {
         _frame = frame;
-        if (self.rootView) {
-            self.rootView.frame = frame;
-            WXPerformBlockOnComponentThread(^{
-                [self.componentManager rootViewFrameDidChange:frame];
-            });
-        }
+        WXPerformBlockOnMainThread(^{
+            if (self.rootView) {
+                self.rootView.frame = frame;
+                WXPerformBlockOnComponentThread(^{
+                    [self.componentManager rootViewFrameDidChange:frame];
+                });
+            }
+        });
     }
 }
 
