@@ -134,6 +134,7 @@ import com.taobao.weex.adapter.DefaultWXHttpAdapter;
 import com.taobao.weex.adapter.IWXDebugAdapter;
 import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
+import com.taobao.weex.adapter.IWXTypefaceAdapter;
 import com.taobao.weex.adapter.IWXUserTrackAdapter;
 import com.taobao.weex.appfram.navigator.IActivityNavBarSetter;
 import com.taobao.weex.bridge.WXBridgeManager;
@@ -164,6 +165,7 @@ public class WXSDKManager {
   private IWXImgLoaderAdapter mIWXImgLoaderAdapter;
   private IWXHttpAdapter mIWXHttpAdapter;
   private IWXDebugAdapter mIWXDebugAdapter;
+  private IWXTypefaceAdapter mIWXTypefaceAdapter;
   private IActivityNavBarSetter mActivityNavBarSetter;
 
   private WXSDKManager() {
@@ -316,5 +318,13 @@ public class WXSDKManager {
 
   public void setIWXDebugAdapter(IWXDebugAdapter IWXDebugAdapter) {
     mIWXDebugAdapter = IWXDebugAdapter;
+  }
+
+  public IWXTypefaceAdapter getIWXTypefaceAdapter() {
+    return mIWXTypefaceAdapter;
+  }
+
+  public void setIWXTypefaceAdapter(IWXTypefaceAdapter typefaceAdapter) {
+    this.mIWXTypefaceAdapter = typefaceAdapter;
   }
 }

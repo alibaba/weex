@@ -14,6 +14,7 @@
         {name: 'syntax/index', title: 'More Syntax'},
         {name: 'style/index', title: 'Common Style'},
         {name: 'animation', title: 'Animation'},
+        {name: 'iconfont', title: 'Iconfont'},
         // component
         {name: 'component/text-demo', title: 'Text'},
         {name: 'component/image-demo', title: 'Image'},
