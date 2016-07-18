@@ -84,6 +84,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, readonly, assign) CGRect calculatedFrame;
 
 /**
+ * @abstract Tell if component's view frame will keep synchronized with calculatedFrame. 
+ * Default Value is YES.
+ */
+@property(nonatomic, assign) BOOL isViewFrameSyncWithCalculated;
+
+/**
  * @abstract Return the calculated absolute position.
  *
  * @warning Subclasses must not override this.

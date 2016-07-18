@@ -72,6 +72,7 @@
         
         _isNeedJoinLayoutSystem = YES;
         _isLayoutDirty = YES;
+        _isViewFrameSyncWithCalculated = YES;
         
         _async = NO;
         
