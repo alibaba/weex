@@ -202,158 +202,43 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.ui.component;
+package com.taobao.weex.dom;
 
-import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
+import android.support.v4.util.ArrayMap;
 
-import com.taobao.weappplus_sdk.R;
-import com.taobao.weex.IWXRenderListener;
-import com.taobao.weex.WXRenderErrorCode;
-import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.common.WXDomPropConstant;
-import com.taobao.weex.common.WXPerformance;
-import com.taobao.weex.common.WXRenderStrategy;
-import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.utils.WXLogUtils;
-import com.taobao.weex.utils.WXViewUtils;
 
-public class WXEmbed extends WXDiv implements WXSDKInstance.OnInstanceVisibleListener {
+import java.util.Map;
 
-  private String src;
-  private WXSDKInstance instance;
-  private final static int ERROR_IMG_WIDTH = (int) WXViewUtils.getRealPxByWidth(270);
-  private final static int ERROR_IMG_HEIGHT = (int) WXViewUtils.getRealPxByWidth(260);
+public class WXScrollerDomObject extends WXDomObject {
 
-  private boolean mIsVisible = true;
+    @Override
+    protected Map<String, String> getDefaultStyle() {
+        Map<String, String> map = new ArrayMap<>();
 
-  @Deprecated
-  public WXEmbed(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
-    this(instance,dom,parent,isLazy);
-  }
-
-  public WXEmbed(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
-    super(instance, node, parent, lazy);
-  }
-
-  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SRC)
-  public void setSrc(String src) {
-    this.src = src;
-    if (instance != null) {
-      instance.destroy();
-      instance = null;
-    }
-    if (TextUtils.equals(getVisibility(), WXDomPropConstant.WX_VISIBILITY_VISIBLE)) {
-      instance = createInstance();
-    }
-  }
-
-  private WXSDKInstance createInstance() {
-    WXSDKInstance sdkInstance = new WXSDKInstance(mContext);
-    mInstance.addOnInstanceVisibleListener(this);
-    sdkInstance.registerRenderListener(new IWXRenderListener() {
-      @Override
-      public void onViewCreated(WXSDKInstance instance, View view) {
-        getView().removeAllViews();
-        getView().addView(view);
-      }
-
-      @Override
-      public void onRenderSuccess(WXSDKInstance instance, int width, int height) {
-
-      }
-
-      @Override
-      public void onRefreshSuccess(WXSDKInstance instance, int width, int height) {
-
-      }
-
-      @Override
-      public void onException(WXSDKInstance instance, String errCode, String msg) {
-        if(TextUtils.equals(msg, WXRenderErrorCode.WX_NETWORK_ERROR)) {
-          final ImageView imageView = new ImageView(mContext);
-          imageView.setImageResource(R.drawable.error);
-          FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ERROR_IMG_WIDTH, ERROR_IMG_HEIGHT);
-          layoutParams.gravity = Gravity.CENTER;
-          imageView.setLayoutParams(layoutParams);
-          imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-          imageView.setAdjustViewBounds(true);
-          imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              imageView.setOnClickListener(null);
-              imageView.setEnabled(false);
-              WXEmbed.this.instance = createInstance();
+        boolean isVertical = true;
+        if (parent != null) {
+            String direction = (String) parent.attr.get(WXDomPropConstant.WX_ATTR_SCROLL_DIRECTION);
+            if (direction != null && direction.equals("horizontal")) {
+                isVertical = false;
             }
-          });
-          getView().removeAllViews();
-          getView().addView(imageView);
-          WXLogUtils.e("WXEmbed", "NetWork failure :" + errCode + ",\n error message :" + msg);
         }
-      }
-    });
-    ViewGroup.LayoutParams layoutParams = getView().getLayoutParams();
-    sdkInstance.renderByUrl(WXPerformance.DEFAULT,
-                            src,
-                            null, null, layoutParams.width,
-                            layoutParams.height,
-                            WXRenderStrategy.APPEND_ASYNC);
-    return sdkInstance;
-  }
 
-  @Override
-  @WXComponentProp(name = WXDomPropConstant.WX_VISIBILITY)
-  public void setVisibility(String visibility) {
-    super.setVisibility(visibility);
-    boolean visible = TextUtils.equals(getVisibility(), WXDomPropConstant.WX_VISIBILITY_VISIBLE);
-    if (!TextUtils.isEmpty(src) && visible) {
-      if (instance == null) {
-        instance = createInstance();
-      } else {
-        instance.onViewAppear();
-      }
+        if (isVertical) {
+            if (style != null) {
+                if (style.get(WXDomPropConstant.WX_HEIGHT) == null &&
+                        style.get(WXDomPropConstant.WX_FLEX) == null) {
+                    map.put(WXDomPropConstant.WX_FLEX, "1");
+                }
+            }
+        } else {
+            if (style != null) {
+                if (style.get(WXDomPropConstant.WX_WIDTH) == null &&
+                        style.get(WXDomPropConstant.WX_FLEX) == null) {
+                    map.put(WXDomPropConstant.WX_FLEX, "1");
+                }
+            }
+        }
+        return map;
     }
-
-    if (!visible) {
-      if (instance != null) {
-        instance.onViewDisappear();
-      }
-    }
-    mIsVisible = visible;
-  }
-
-  @Override
-  public void destroy() {
-    super.destroy();
-    if (instance != null) {
-      instance.destroy();
-      instance = null;
-    }
-    src = null;
-  }
-
-  @Override
-  public void onAppear() {
-    //appear event from root instance will not trigger visibility change
-    if(mIsVisible && instance != null){
-      WXComponent comp = instance.getRootCom();
-      if(comp != null)
-        WXBridgeManager.getInstance().fireEvent(instance.getInstanceId(), comp.getRef(), WXEventType.VIEWAPPEAR,null, null);
-    }
-  }
-
-  @Override
-  public void onDisappear() {
-    //appear event from root instance will not trigger visibility change
-    if(mIsVisible && instance != null){
-      WXComponent comp = instance.getRootCom();
-      if(comp != null)
-        WXBridgeManager.getInstance().fireEvent(instance.getInstanceId(), comp.getRef(), WXEventType.VIEWDISAPPEAR,null, null);
-    }
-  }
 }

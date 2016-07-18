@@ -742,6 +742,9 @@ public class WXSDKInstance implements IWXActivityStateListener {
 
 
     mWXPerformance.totalTime = time;
+    if(mWXPerformance.screenRenderTime<0.001){
+      mWXPerformance.screenRenderTime =  time;
+    }
     mWXPerformance.componentCount = WXComponent.mComponentNum;
     WXLogUtils.d(WXLogUtils.WEEX_PERF_TAG, "mComponentNum:" + WXComponent.mComponentNum);
     WXComponent.mComponentNum = 0;

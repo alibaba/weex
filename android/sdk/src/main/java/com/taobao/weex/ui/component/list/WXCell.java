@@ -204,19 +204,26 @@
  */
 package com.taobao.weex.ui.component.list;
 
+import android.content.Context;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.dom.flex.CSSLayout;
 import com.taobao.weex.ui.component.WXVContainer;
 import com.taobao.weex.ui.view.WXFrameLayout;
 
 /**
  * Root component for components in {@link WXListComponent}
  */
-public class WXCell extends WXVContainer {
+public class WXCell extends WXVContainer<WXFrameLayout> {
 
     public int lastLocationY = -1;
+    private ViewGroup mRealView;
+    private View mTempStickyView;
+    private View mHeadView;
 
     @Deprecated
     public WXCell(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
@@ -227,29 +234,51 @@ public class WXCell extends WXVContainer {
         super(instance, dom, parent,true );
     }
 
+
     /**
      * If Cell is Sticky, need wraped FrameLayout
      */
     @Override
-    protected void initView() {
-        if(mContext!=null) {
-            if (mDomObj != null && mDomObj.isSticky()) {
-                mHost = new WXFrameLayout(mContext);
-                ((ViewGroup) mHost).addView(new WXFrameLayout(mContext));
-            } else {
-                super.initView();
-            }
+    protected WXFrameLayout initComponentHostView(Context context) {
+        if (isSticky()) {
+            WXFrameLayout view = new WXFrameLayout(context);
+            mRealView = new WXFrameLayout(context);
+            view.addView(mRealView);
+            return view;
+        } else {
+            WXFrameLayout view = new WXFrameLayout(context);
+            mRealView = view;
+            return view;
         }
     }
 
     @Override
     public ViewGroup getRealView() {
-        if (mHost == null)
-            return null;
-        if (mDomObj != null && mDomObj.isSticky()) {
-            return (ViewGroup) ((ViewGroup) mHost).getChildAt(0);
-        } else {
-            return super.getRealView();
-        }
+        return mRealView;
+    }
+
+    public void removeSticky() {
+        mHeadView = getView().getChildAt(0);
+        int[] location = new int[2];
+        int[] parentLocation = new int[2];
+        getView().getLocationOnScreen(location);
+        getParentScroller().getView().getLocationOnScreen(parentLocation);
+        int headerViewOffsetX = location[0] - parentLocation[0];
+        int headerViewOffsetY = getParent().getView().getTop();
+        getView().removeView(mHeadView);
+        mRealView = (ViewGroup) mHeadView;
+        mTempStickyView = new FrameLayout(mContext);
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams((int) getDomObject().csslayout.dimensions[CSSLayout.DIMENSION_WIDTH],
+                (int) getDomObject().csslayout.dimensions[CSSLayout.DIMENSION_HEIGHT]);
+        getView().addView(mTempStickyView, lp);
+        mHeadView.setTranslationX(headerViewOffsetX);
+        mHeadView.setTranslationY(headerViewOffsetY);
+    }
+
+    public void recoverySticky() {
+        getView().removeView(mTempStickyView);
+        getView().addView(mHeadView);
+        mHeadView.setTranslationX(0);
+        mHeadView.setTranslationY(0);
     }
 }

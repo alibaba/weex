@@ -251,17 +251,27 @@ public class SimpleComponentHolder implements IFComponentHolder{
 
     Annotation[] annotations;
     Annotation anno;
-    for (Method method : mClz.getMethods()) {
-      annotations = method.getDeclaredAnnotations();
-      for (int i = 0,annotationsCount = annotations.length;
-           i < annotationsCount; ++i) {
-        anno = annotations[i];
-        if (anno != null && anno instanceof WXComponentProp) {
-          String name = ((WXComponentProp) anno).name();
-          methods.put(name, new MethodInvoker(method));
-          break;
+    try {
+      for (Method method : mClz.getMethods()) {
+        try {
+          annotations = method.getDeclaredAnnotations();
+          for (int i = 0, annotationsCount = annotations.length;
+               i < annotationsCount; ++i) {
+            anno = annotations[i];
+            if (anno != null && anno instanceof WXComponentProp) {
+              String name = ((WXComponentProp) anno).name();
+              methods.put(name, new MethodInvoker(method));
+              break;
+            }
+          }
+        } catch (ArrayIndexOutOfBoundsException e) {
+          e.printStackTrace();
+          //ignore: getDeclaredAnnotations may throw this
         }
       }
+    }catch (IndexOutOfBoundsException e){
+      e.printStackTrace();
+      //ignore: getMethods may throw this
     }
 
     mMethods = methods;

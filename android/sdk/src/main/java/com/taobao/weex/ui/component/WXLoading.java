@@ -204,6 +204,7 @@
  */
 package com.taobao.weex.ui.component;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import com.taobao.weex.WXSDKInstance;
@@ -211,6 +212,7 @@ import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.component.list.WXListComponent;
 import com.taobao.weex.ui.view.WXBaseRefreshLayout;
+import com.taobao.weex.ui.view.WXFrameLayout;
 import com.taobao.weex.ui.view.refresh.core.WXSwipeLayout;
 import com.taobao.weex.ui.view.refresh.wrapper.BaseBounceView;
 
@@ -224,8 +226,8 @@ public class WXLoading extends WXBaseRefresh implements WXSwipeLayout.WXOnLoadin
   }
 
   @Override
-  protected void initView() {
-    mHost = new WXBaseRefreshLayout(mContext);
+  protected WXFrameLayout initComponentHostView(Context context) {
+    return new WXBaseRefreshLayout(mContext);
   }
 
   @Override

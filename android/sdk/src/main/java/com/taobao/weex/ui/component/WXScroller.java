@@ -204,6 +204,7 @@
  */
 package com.taobao.weex.ui.component;
 
+import android.content.Context;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -243,7 +244,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Component for scroller. It also support features like
  * "appear", "disappear" and "sticky"
  */
-public class WXScroller extends WXVContainer implements WXScrollViewListener,Scrollable {
+public class WXScroller extends WXVContainer<ViewGroup> implements WXScrollViewListener,Scrollable {
 
   /**
    * Map for storing appear information
@@ -283,13 +284,6 @@ public class WXScroller extends WXVContainer implements WXScrollViewListener,Scr
     return mRealView;
   }
 
-  /**
-   * @return BounceScrollView
-   */
-  @Override
-  public ViewGroup getView() {
-    return super.getView();
-  }
 
   /**
    * @return ScrollView
@@ -414,21 +408,19 @@ public class WXScroller extends WXVContainer implements WXScrollViewListener,Scr
   }
 
   @Override
-  protected void initView() {
+  protected ViewGroup initComponentHostView(Context context) {
     String scroll;
-//    if (mDomObj != null && mDomObj.attr != null) {
-//      mInstance.getRecycleImageManager().setIfRecycleImage(mDomObj.attr.getIsRecycleImage());
-//    }
     if (mDomObj == null || mDomObj.attr == null) {
       scroll = "vertical";
     } else {
       scroll = mDomObj.attr.getScrollDirection();
     }
+
+    ViewGroup host;
     if(("horizontal").equals(scroll)){
       mOrientation = HORIZONTAL;
-      mHost = new WXHorizontalScrollView(mContext);
+      WXHorizontalScrollView scrollView = new WXHorizontalScrollView(mContext);
       mRealView = new FrameLayout(mContext);
-      WXHorizontalScrollView scrollView = (WXHorizontalScrollView) getInnerView();
       scrollView.setScrollViewListener(new WXHorizontalScrollView.ScrollViewListener() {
         @Override
         public void onScrollChanged(WXHorizontalScrollView scrollView, int x, int y, int oldx, int oldy) {
@@ -436,19 +428,22 @@ public class WXScroller extends WXVContainer implements WXScrollViewListener,Scr
         }
       });
       FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
-          LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
       scrollView.addView(mRealView, layoutParams);
-      mHost.setHorizontalScrollBarEnabled(false);
+      scrollView.setHorizontalScrollBarEnabled(false);
+
+      host = scrollView;
     }else{
       mOrientation = VERTICAL;
-      mHost = new BounceScrollerView(mContext, mOrientation, this);
+      BounceScrollerView scrollerView = new BounceScrollerView(mContext, mOrientation, this);
       mRealView = new FrameLayout(mContext);
-      ((BounceScrollerView)mHost).getInnerView().addScrollViewListener(this);
+      WXScrollView innerView = scrollerView.getInnerView();
+      innerView.addScrollViewListener(this);
       FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
-          LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-      ((BounceScrollerView)mHost).getInnerView().addView(mRealView, layoutParams);
-      ((BounceScrollerView)mHost).getInnerView().setVerticalScrollBarEnabled(true);
-      ((BounceScrollerView)mHost).getInnerView().addScrollViewListener(new WXScrollViewListener() {
+        LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+      innerView.addView(mRealView, layoutParams);
+      innerView.setVerticalScrollBarEnabled(true);
+      innerView.addScrollViewListener(new WXScrollViewListener() {
         @Override
         public void onScrollChanged(WXScrollView scrollView, int x, int y, int oldx, int oldy) {
 
@@ -483,8 +478,9 @@ public class WXScroller extends WXVContainer implements WXScrollViewListener,Scr
           }
         }
       });
+      host = scrollerView;
     }
-
+    return host;
   }
 
   @Override
@@ -503,18 +499,10 @@ public class WXScroller extends WXVContainer implements WXScrollViewListener,Scr
 
   @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SHOWSCROLLBAR)
   public void setShowScrollbar(boolean show) {
-    if (show) {
-      if (mOrientation == VERTICAL) {
-        ((BounceScrollerView)mHost).getInnerView().setVerticalScrollBarEnabled(true);
-      } else {
-        mHost.setHorizontalScrollBarEnabled(true);
-      }
+    if (mOrientation == VERTICAL) {
+      getInnerView().setVerticalScrollBarEnabled(show);
     } else {
-      if (mOrientation == VERTICAL) {
-        ((BounceScrollerView)mHost).getInnerView().setVerticalScrollBarEnabled(false);
-      } else {
-        mHost.setHorizontalScrollBarEnabled(false);
-      }
+      getInnerView().setHorizontalScrollBarEnabled(show);
     }
   }
 

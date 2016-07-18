@@ -224,6 +224,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
+import dalvik.system.PathClassLoader;
+
 
 /**
  * Utility class for managing so library, including load native library and version management.
@@ -247,6 +249,9 @@ public class WXSoInstallMgrSdk {
   private final static String ARMEABI = "armeabi"; //default
   private final static String X86 = "x86";
   private final static String MIPS = "mips";
+  private final static int ARMEABI_Size = 3559244;
+  private final static int X86_Size = 5090620;
+
   static Context mContext = null;
 
   public static void init(Context c) {
@@ -282,39 +287,39 @@ public class WXSoInstallMgrSdk {
 
     boolean InitSuc = false;
 
-    //        if (checkSoIsInValid(libName, weexSoSize)) {
+    if (checkSoIsInValid(libName, ARMEABI_Size) ||checkSoIsInValid(libName, X86_Size)) {
 
-    /**
-     * Load library with {@link System#loadLibrary(String)}
-     */
-    try {
-      System.loadLibrary(libName);
-      commit(utAdapter, null, null);
+      /**
+       * Load library with {@link System#loadLibrary(String)}
+       */
+      try {
+        System.loadLibrary(libName);
+        commit(utAdapter, null, null);
 
-      InitSuc = true;
-    } catch (Exception e) {
-      if (cpuType.contains(ARMEABI)||cpuType.contains(X86)) {
-        commit(utAdapter, WXErrorCode.WX_ERR_LOAD_SO.getErrorCode(), WXErrorCode.WX_ERR_LOAD_SO.getErrorMsg() + ":" + e.getMessage());
+        InitSuc = true;
+      } catch (Exception e) {
+        if (cpuType.contains(ARMEABI) || cpuType.contains(X86)) {
+          commit(utAdapter, WXErrorCode.WX_ERR_LOAD_SO.getErrorCode(), WXErrorCode.WX_ERR_LOAD_SO.getErrorMsg() + ":" + e.getMessage());
+        }
+        InitSuc = false;
+      } catch (java.lang.UnsatisfiedLinkError e2) {
+        if (cpuType.contains(ARMEABI) || cpuType.contains(X86)) {
+          commit(utAdapter, WXErrorCode.WX_ERR_LOAD_SO.getErrorCode(), WXErrorCode.WX_ERR_LOAD_SO.getErrorMsg() + ":" + e2.getMessage());
+        }
+        InitSuc = false;
+      } catch (java.lang.Error e3) {
+        if (cpuType.contains(ARMEABI) || cpuType.contains(X86)) {
+          commit(utAdapter, WXErrorCode.WX_ERR_LOAD_SO.getErrorCode(), WXErrorCode.WX_ERR_LOAD_SO.getErrorMsg() + ":" + e3.getMessage());
+        }
+        InitSuc = false;
       }
-      InitSuc = false;
-    } catch (java.lang.UnsatisfiedLinkError e2) {
-      if (cpuType.contains(ARMEABI)||cpuType.contains(X86)) {
-        commit(utAdapter, WXErrorCode.WX_ERR_LOAD_SO.getErrorCode(), WXErrorCode.WX_ERR_LOAD_SO.getErrorMsg() + ":" + e2.getMessage());
-      }
-      InitSuc = false;
-    } catch (java.lang.Error e3) {
-      if (cpuType.contains(ARMEABI)||cpuType.contains(X86)) {
-        commit(utAdapter, WXErrorCode.WX_ERR_LOAD_SO.getErrorCode(), WXErrorCode.WX_ERR_LOAD_SO.getErrorMsg() + ":" + e3.getMessage());
+
+    }else {
+      if (cpuType.contains(ARMEABI) || cpuType.contains(X86)) {
+        commit(utAdapter, WXErrorCode.WX_ERR_BAD_SO.getErrorCode(), WXErrorCode.WX_ERR_BAD_SO.getErrorMsg());
       }
       InitSuc = false;
     }
-
-    //        }else{
-    //            if (cpuType.contains(ARMEABI)) {
-    //                commit(utAdapter, WXErrorCode.WX_ERR_BAD_SO.getErrorCode(), WXErrorCode.WX_ERR_BAD_SO.getErrorMsg());
-    //            }
-    //            InitSuc = false;
-    //        }
 
     try {
 
@@ -384,16 +389,25 @@ public class WXSoInstallMgrSdk {
     if (null == context) {
       return false;
     }
+    try{
+      long start=System.currentTimeMillis();
+      if(WXSoInstallMgrSdk.class.getClassLoader() instanceof PathClassLoader ) {
 
-    String path = "/data/data/" + context.getPackageName() + "/lib" + "/lib" + libName + ".so";
+        String path = ((PathClassLoader) (WXSoInstallMgrSdk.class.getClassLoader())).findLibrary(libName);
+        File file = new File(path);
 
-    File file = new File(path);
-
-    if (size == file.length()) {
-      return true;
+        if (!file.exists() || size == file.length()) {
+          WXLogUtils.w("weex so size check path :" + path+"   "+(System.currentTimeMillis() - start));
+          return true;
+        } else {
+          return false;
+        }
+      }
+    }catch(Throwable e ){
+      WXLogUtils.e("weex so size check fail exception :"+e.getMessage());
     }
 
-    return false;
+    return true;
   }
 
   /**

@@ -204,6 +204,7 @@
  */
 package com.taobao.weex.ui.component;
 
+import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -224,7 +225,7 @@ import com.taobao.weex.utils.WXResourceUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WXVideo extends WXComponent {
+public class WXVideo extends WXComponent<FrameLayout> {
 
   public static final String PLAY_STATUS = "playStatus";
   public static final String PLAY = "play";
@@ -247,22 +248,22 @@ public class WXVideo extends WXComponent {
   }
 
   @Override
-  protected void initView() {
+  protected FrameLayout initComponentHostView(Context context) {
     FrameLayout videoRoot = new FrameLayout(mContext);
     videoRoot.setBackgroundColor(WXResourceUtils.getColor("#ee000000"));
 
     mVideoView = new WXVideoView(mContext);
     FrameLayout.LayoutParams videoLayoutParams =
-            new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                    FrameLayout.LayoutParams.MATCH_PARENT);
+      new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+        FrameLayout.LayoutParams.MATCH_PARENT);
     videoLayoutParams.gravity = Gravity.CENTER;
     mVideoView.setLayoutParams(videoLayoutParams);
     videoRoot.addView(mVideoView);
 
     mProgressBar = new ProgressBar(mContext);
     FrameLayout.LayoutParams pLayoutParams =
-            new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
-                    FrameLayout.LayoutParams.WRAP_CONTENT);
+      new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
+        FrameLayout.LayoutParams.WRAP_CONTENT);
     mProgressBar.setLayoutParams(pLayoutParams);
     pLayoutParams.gravity = Gravity.CENTER;
     videoRoot.addView(mProgressBar);
@@ -351,7 +352,7 @@ public class WXVideo extends WXComponent {
     mVideoView.setMediaController(controller);
     controller.setMediaPlayer(mVideoView);
 
-    mHost = videoRoot;
+   return videoRoot;
   }
 
   private void notify(String event, String newStatus){
@@ -374,7 +375,7 @@ public class WXVideo extends WXComponent {
 
   @WXComponentProp(name = "src")
   public void setSrc(String src) {
-    if (TextUtils.isEmpty(src) || mHost == null) {
+    if (TextUtils.isEmpty(src) || getView() == null) {
       return;
     }
 

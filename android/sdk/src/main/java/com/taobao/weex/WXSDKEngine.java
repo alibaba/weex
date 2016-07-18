@@ -111,6 +111,7 @@
 package com.taobao.weex;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -152,7 +153,7 @@ public class WXSDKEngine {
 
   public static final String JS_FRAMEWORK_RELOAD="js_framework_reload";
 
-  private static final String V8_SO_NAME = "weexcore";
+  private static final String V8_SO_NAME = "weexv8";
   private volatile static boolean init;
   private static final Object mLock = new Object();
   private static final String TAG = "WXSDKEngine";
@@ -291,6 +292,10 @@ public class WXSDKEngine {
       registerDomObject(WXBasicComponentType.INPUT, BasicEditTextDomObject.class);
       registerDomObject(WXBasicComponentType.TEXTAREA, TextAreaEditTextDomObject.class);
       registerDomObject(WXBasicComponentType.SWITCH, WXSwitchDomObject.class);
+      registerDomObject(WXBasicComponentType.LIST, WXListDomObject.class);
+      registerDomObject(WXBasicComponentType.VLIST, WXListDomObject.class);
+      registerDomObject(WXBasicComponentType.HLIST, WXListDomObject.class);
+      registerDomObject(WXBasicComponentType.SCROLLER, WXScrollerDomObject.class);
     } catch (WXException e) {
       WXLogUtils.e("[WXSDKEngine] register:" + WXLogUtils.getStackTrace(e));
     }
@@ -315,7 +320,7 @@ public class WXSDKEngine {
    * @param clazz the class of the {@link WXComponent} to be registered.
    * @param appendTree true for appendTree flag
    * @return true for registration success, false for otherwise.
-   * @param names names(alias) of component. Same as type filed in the JS.
+   * @param names names(alias) of component. Same as type field in the JS.
    * @throws WXException Throws exception if type conflicts.
    */
   public static boolean registerComponent(Class<? extends WXComponent> clazz, boolean appendTree,String ... names) throws WXException {
@@ -480,20 +485,18 @@ public class WXSDKEngine {
       }
     }
   }
-  public static void reload(final Application application,boolean remoteDebug){
-    if(remoteDebug){
-      WXEnvironment.sRemoteDebugMode=true;
-      WXBridgeManager.getInstance().restart();
-      WXBridgeManager.getInstance().initScriptsFramework(null);
-      WXModuleManager.reload();
-      WXComponentRegistry.reload();
-      WXSDKManager.getInstance().postOnUiThread(new Runnable() {
-        @Override
-        public void run() {
-          LocalBroadcastManager.getInstance(application).sendBroadcast(new Intent(JS_FRAMEWORK_RELOAD));
-        }
-      }, 1000);
-    }
+  public static void reload(final Context context, boolean remoteDebug) {
+    WXEnvironment.sRemoteDebugMode = remoteDebug;
+    WXBridgeManager.getInstance().restart();
+    WXBridgeManager.getInstance().initScriptsFramework(null);
+    WXModuleManager.reload();
+    WXComponentRegistry.reload();
+    WXSDKManager.getInstance().postOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(JS_FRAMEWORK_RELOAD));
+      }
+    }, 1000);
   }
 
   public static void reload() {

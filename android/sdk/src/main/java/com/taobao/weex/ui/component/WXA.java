@@ -211,6 +211,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.view.WXFrameLayout;
 
 public class WXA extends WXDiv {
 
@@ -224,11 +225,10 @@ public class WXA extends WXDiv {
   }
 
   @Override
-  protected void initView() {
-    super.initView();
-    if (mDomObj != null && mDomObj.attr != null && !TextUtils.isEmpty((String) mDomObj.attr.get("href"))) {
+  protected void onHostViewInitialized(WXFrameLayout host) {
+    if (host != null && mDomObj != null && mDomObj.attr != null && !TextUtils.isEmpty((String) mDomObj.attr.get("href"))) {
 
-      mHost.setOnClickListener(new View.OnClickListener() {
+      host.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
           JSONArray array = new JSONArray();
