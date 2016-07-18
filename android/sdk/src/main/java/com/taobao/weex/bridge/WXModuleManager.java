@@ -211,6 +211,7 @@ import com.taobao.weex.common.Destroyable;
 import com.taobao.weex.common.WXException;
 import com.taobao.weex.common.WXModule;
 import com.taobao.weex.dom.WXDomModule;
+import com.taobao.weex.ui.module.WXTimerModule;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXReflectionUtils;
 
@@ -360,7 +361,7 @@ public class WXModuleManager {
       WXLogUtils.e("callModuleMethod >>> invoke module:" + moduleStr + ", method:" + methodStr + " failed. " + WXLogUtils.getStackTrace(e));
       return false;
     } finally {
-      if (wxModule instanceof WXDomModule) {
+      if (wxModule instanceof WXDomModule || wxModule instanceof WXTimerModule) {
         wxModule.mWXSDKInstance = null;
       }
     }
