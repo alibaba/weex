@@ -8,6 +8,6 @@
   .title{
     color: red;
     font-size: 36;
-    font-family: iconfont.ttf;
+    font-family: fonts/iconfont.ttf;
   }
 </style>
