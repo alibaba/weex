@@ -250,7 +250,7 @@ public class WXSoInstallMgrSdk {
   private final static String X86 = "x86";
   private final static String MIPS = "mips";
   private final static int ARMEABI_Size = 3559244;
-  private final static int X86_Size = 5090620;
+  private final static int X86_Size = 4304032;
 
   static Context mContext = null;
 
