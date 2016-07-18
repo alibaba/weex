@@ -281,7 +281,14 @@ public class WXModuleManager {
       return false;
     }
 
-    sModuleFactoryMap.put(moduleName, factory);
+    try {
+      sModuleFactoryMap.put(moduleName, factory);
+    }catch (ArrayStoreException e){
+      e.printStackTrace();
+      //ignore:
+      //may throw this exception:
+      //java.lang.String cannot be stored in an array of type java.util.HashMap$HashMapEntry[]
+    }
     return true;
   }
 
