@@ -360,6 +360,23 @@ public class WXModuleManager {
     return true;
   }
 
+  public static WXModule getModule(String instanceId, String moduleStr) {
+    ModuleFactory factory = sModuleFactoryMap.get(moduleStr);
+    if(factory == null){
+      WXLogUtils.e("[WXModuleManager] module factory not found.");
+      return null;
+    }
+    final WXModule wxModule = findModule(instanceId, moduleStr,factory);
+    if (wxModule == null) {
+      return null;
+    }
+    wxModule.mWXSDKInstance = WXSDKManager.getInstance().getSDKInstance(instanceId);
+
+    return wxModule;
+  }
+
+
+
   private static WXModule findModule(String instanceId, String moduleStr,ModuleFactory factory) {
     // find WXModule
     WXModule wxModule = sGlobalModuleMap.get(moduleStr);

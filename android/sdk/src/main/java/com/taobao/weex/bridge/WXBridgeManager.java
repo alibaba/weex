@@ -223,9 +223,12 @@ import com.taobao.weex.common.IWXDebugProxy;
 import com.taobao.weex.common.WXConfig;
 import com.taobao.weex.common.WXErrorCode;
 import com.taobao.weex.common.WXJSBridgeMsgType;
+import com.taobao.weex.common.WXMethodCallConstant;
+import com.taobao.weex.common.WXModule;
 import com.taobao.weex.common.WXRefreshData;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.common.WXThread;
+import com.taobao.weex.dom.WXDomModule;
 import com.taobao.weex.ui.module.WXTimerModule;
 import com.taobao.weex.utils.WXConst;
 import com.taobao.weex.utils.WXFileUtils;
@@ -472,7 +475,14 @@ public class WXBridgeManager implements Callback {
         for (int i = 0; i < size; ++i) {
           task = (JSONObject) array.get(i);
           if (task != null && WXSDKManager.getInstance().getSDKInstance(instanceId) != null) {
-            WXModuleManager.callModuleMethod(instanceId, (String) task.get("module"), (String) task.get("method"), (JSONArray) task.get("args"));
+            if (task.get(WXMethodCallConstant.MODULE).equals(WXMethodCallConstant.DOM)) {
+              WXModule domModule = WXModuleManager.getModule(instanceId,(String) task.get(WXMethodCallConstant.MODULE));
+              if (domModule instanceof WXDomModule)
+                ((WXDomModule)domModule).callDomMethod(task);
+            } else {
+              WXModuleManager.callModuleMethod(instanceId, (String) task.get(WXMethodCallConstant.MODULE),
+                      (String) task.get(WXMethodCallConstant.METHOD), (JSONArray) task.get(WXMethodCallConstant.ARGS));
+            }
           }
         }
       } catch (Exception e) {
