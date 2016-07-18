@@ -251,7 +251,12 @@ public class WXComponentRegistry {
   }
 
   private static boolean registerNativeComponent(String type, IFComponentHolder holder) throws WXException {
-    sTypeComponentMap.put(type, holder);
+    try {
+      sTypeComponentMap.put(type, holder);
+    }catch (ArrayStoreException e){
+      e.printStackTrace();
+      //ignore: ArrayStoreException: java.lang.String cannot be stored in an array of type java.util.HashMap$HashMapEntry[]
+    }
     return true;
   }
 
