@@ -6,7 +6,7 @@ module.exports = {
   'selenium': {
     'start_process': true,
     'server_path': 'node_modules/selenium-server/lib/runner/selenium-server-standalone-2.53.0.jar',
-    'log_path': 'html5/test/e2e/logs',
+    'log_path': false,
     'host': '127.0.0.1',
     'port': 4444,
     'cli_args': {
