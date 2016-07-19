@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.alibaba.weex.commons.adapter.ImageAdapter;
 import com.alibaba.weex.extend.PlayDebugAdapter;
+import com.alibaba.weex.extend.TypefaceAdapter;
 import com.alibaba.weex.extend.component.RichText;
 import com.alibaba.weex.extend.module.MyModule;
 import com.alibaba.weex.extend.module.RenderModule;
@@ -23,11 +24,12 @@ public class WXApplication extends Application {
     WXSDKEngine.addCustomOptions("appName", "WXSample");
     WXSDKEngine.addCustomOptions("appGroup", "WXApp");
     WXSDKEngine.initialize(this,
-                           new InitConfig.Builder()
-                               .setImgAdapter(new ImageAdapter())
-                               .setDebugAdapter(new PlayDebugAdapter())
-                               .build()
-                          );
+            new InitConfig.Builder()
+                    .setImgAdapter(new ImageAdapter())
+                    .setDebugAdapter(new PlayDebugAdapter())
+                    .setTypefaceAdapter(new TypefaceAdapter())
+                    .build()
+    );
 
     try {
       Fresco.initialize(this);
@@ -40,7 +42,6 @@ public class WXApplication extends Application {
     } catch (WXException e) {
       e.printStackTrace();
     }
-
   }
 
   /**
