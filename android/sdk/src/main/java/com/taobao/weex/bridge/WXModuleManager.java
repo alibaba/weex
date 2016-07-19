@@ -325,9 +325,14 @@ public class WXModuleManager {
       Type paramClazz;
       for (int i = 0; i < paramClazzs.length; i++) {
         paramClazz = paramClazzs[i];
-        if(i>=args.size() && !paramClazz.getClass().isPrimitive()){
-          params[i] = null;
-          continue;
+        if(i>=args.size()){
+          if(!paramClazz.getClass().isPrimitive()) {
+            params[i] = null;
+            continue;
+          }else {
+            WXLogUtils.e("[WXModuleManager] module method argument list not match.");
+            return false;
+          }
         }
         value = args.get(i);
 
