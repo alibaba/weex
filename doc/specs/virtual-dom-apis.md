@@ -2,69 +2,140 @@
 <span class="weex-version">0.4</span>
 <a href="https://github.com/weexteam/article/wiki/%E6%AC%A2%E8%BF%8E%E5%8F%82%E4%B8%8EWeex%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91"  class="weex-translate incomplete">cn</a>
 
-### `Document`
+## `Document`
 
-Each instance has a corresponding document with the same id. A document has many nodes which compose a node tree.
+Each instance has a corresponding document with the instance id. A document has many nodes which compose a node tree.
 
-* `new Document(id)`
-* `createBody(type, props)` Create body with a certian type and props. The `type` is one of `container`, `list` or `scroller`, and the `props` may contain `attr` and `style`.
-* `createElement(tagName, props)` Create a certain type element with props.
-* `createComment(text)` Create a comment node with a certain comment text.
-* `setListener(listener)` Set a dom listener which listens each dom updates and tells the rendering engine
-* `open()` Set a flag which means init rendering start, so each dom update will be called immediately
-* `close()` Set a flag which means init rendering finished, so the dom updates later will be batched in each task.
-* `addRef(el)` Add a new ref to the internal node map for a `el`
-* `getRef(ref)` Get node by `ref` from the internal node map
-* `removeRef(ref)` Removes the `ref` record from the internal node map
-* `id` document id (also the instance id)
-* `listener` dom listener
-* `closed` flag which means rendering finished
-* `body` document body element
-* `eventManager` document event manager
+### Constructor
 
-### `Node`
+##### `new Document(id: string, url: string?)`
 
-* `create(instanceId)`
-* `destroy()`
-* `getRenderer()` Get dom listener of the owner document
-* `next()` Returns the next sibling or null
-* `prev()` Returns the previous sibling or null
-* `ref`
+### Members
 
-### `Element`
+##### `createElement(tagName: string, props: Object?): Element`
 
-extends from `Node`
+Create a certain type `Element`. And the `props` may contain `attr` object and `style` object. e.g. `createBody('div', {style: {backgroundColor: '#ffffff'}})`
 
-* `new Element(type, props, ownerDocument)` Create an element and the `props` may contain `attr` and `style`.
-* `appendChild(node)`
-* `insertBefore(node, before)`
-* `insertAfter(node, after)`
-* `removeChild(node, preserved)` Removes a child. The parameter `preserved` means whether destroy the removed node immediately or preserve it.
-* `clear()`
-* `setAttr(key, value)`
-* `setStyle(key, value)`
-* `setClassStyle(classStyle)`
-* `addEvent(type, handler)`
-* `removeEvent(type)`
-* `toJSON()` Format of `{ref, type, attr{string}, style{string}, event[string], children[Element]}`
-* `type` Element type
-* `attr` Several attribuets for this element
-* `style` Several style rules for this element
-* `classStyle` Class style map, each class has several style rules
-* `event` Event type list
+##### `createComment(text: string): Comment`
 
-### `Comment`
+Create a `Comment` with a certain comment text.
 
-extends from `Node` and will not passed to rendering engine
+##### `open()`
 
-* `new Comment(value, ownerDocument)`
-* `type` Returns 'comment'
-* `value`
+Set a flag which means init rendering start, so each dom update will be called immediately
 
-### `EventManager`
+##### `close()`
 
-Document event manager
+Set a flag which means init rendering finished, so the dom updates later will be batched in each task.
 
-* `add(el, type, handler)` Adds an event `handler` for certain `type` to a certain `el` element
-* `remove(el, type)` Removes event handler for certain `type` to a certain `el` element
-* `fire(el, type, e)` Fires a certain event to `el` with `type` and event object `e`
+##### `fireEvent(el: Element, type: string, e: Object?, domChanges: Object?)`
+
+Fire an certain type of event on a certain element with an event object. When the event leads to some dom changes, the fourth parameter will describe the change just like `props` parameter in `createElement` method.
+
+#### Read-only & Getters
+
+##### `id: string`
+
+##### `URL: string?`
+
+##### `body: Element`
+
+body element
+
+##### `documentElement: Element`
+
+document element
+
+##### `getRef(ref: string): Node?`
+
+Get node by `ref` from the internal node map
+
+**Note**: the `documentElement` will be generated automatically when a document created, and the `body` should to be created manually and appended to `documentElement` to work. The `type` of a `body` must be one of `div`, `list` or `scroller`.
+
+## `Node`
+
+### Constructor
+
+##### `new Node()`
+
+### Members
+
+##### `destroy()`
+
+#### Read-only & Getters
+
+##### `ref: string`
+
+##### `nextSibling: Node?`
+
+##### `previousSibling: Node?`
+
+##### `parentNode: Node?`
+
+## `Element` extends `Node`
+
+### Constructor
+
+##### `new Element(type: string, props: Object?, ownerDocument: Document)`
+
+Create an element and the `props` may contain `attr` object and `style` object.
+
+### Members
+
+#### DOM Tree
+
+##### `appendChild(node: Node)`
+
+##### `insertBefore(node: Node, before: Node?)`
+
+##### `insertAfter(node: Node, after: Node?)`
+
+##### `removeChild(node: Node, preserved: boolean?)`
+
+Removes a child. The parameter `preserved` means whether destroy the removed node immediately or preserve it.
+
+##### `clear()`
+
+#### DOM props
+
+##### `setAttr(key: string, value: string, silent: boolean?)`
+
+If `slient` is truthy, it won't cause native calls. Used for handling event with virtual-DOM changes.
+
+##### `setStyle(key: string, value: string, silent: boolean?)`
+
+The `slient` parameter is just same as `setAttr` method.
+
+##### `setClassStyle(classStyle: Object)`
+
+The specificity of class style is lower than normal style. In another way the normal style will override the same name value in class style.
+
+##### `addEvent(type: string, handler: Function)`
+
+##### `removeEvent(type: string)`
+
+##### `fireEvent(type: string, e: any)`
+
+#### Read-only & Getters
+
+##### `toJSON(): Object`
+
+Format of `{ref: string, type: string, attr: Object, style: Object, event: Array(string), children: Array}`
+
+## `Comment` extends `Node`
+
+`Comment` won't be passed to the rendering engine. So it's very useful as a assistant placeholder sometimes.
+
+### Constructor
+
+##### `new Comment(value: string)`
+
+### Members
+
+#### Read-only & Getters
+
+##### `type: string`
+
+Returns `'comment'`
+
+##### `value: string`
