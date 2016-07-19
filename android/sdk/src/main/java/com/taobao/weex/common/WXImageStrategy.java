@@ -215,4 +215,6 @@ public class WXImageStrategy {
    * Whether to sharp the image. The default is false.
    */
   public boolean isSharpen;
+
+  public String placeHolder;
 }

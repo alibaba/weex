@@ -298,6 +298,7 @@ public class WXDomPropConstant {
   public static final String WX_ATTR_IMAGE_QUALITY_HIGH = "high";
 
   public static final String WX_ATTR_SRC = "src";
+  public static final String WX_ATTR_PLACE_HOLDER="placeHolder";
 
   public static final String WX_RESIZE_MODE = "resizeMode";
   public static final String WX_RESIZE = "resize";
