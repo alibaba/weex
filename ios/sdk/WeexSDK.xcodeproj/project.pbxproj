@@ -67,6 +67,14 @@
 		59D3CA681D00544B008835DC /* WeexSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 59D3CA671D00544B008835DC /* WeexSDK.h */; };
 		7408C48E1CFB345D000BCCD0 /* WXComponent+Events.h in Headers */ = {isa = PBXBuildFile; fileRef = 7408C48C1CFB345D000BCCD0 /* WXComponent+Events.h */; };
 		7408C48F1CFB345D000BCCD0 /* WXComponent+Events.m in Sources */ = {isa = PBXBuildFile; fileRef = 7408C48D1CFB345D000BCCD0 /* WXComponent+Events.m */; };
+		740938EC1D3D075700DBB801 /* SRWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A27E7D81C3E360B00D7A552 /* SRWebSocket.m */; };
+		740938EE1D3D079100DBB801 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 740938ED1D3D079100DBB801 /* JavaScriptCore.framework */; };
+		740938EF1D3D083900DBB801 /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7469869B1C4DEAC20054A57E /* libicucore.tbd */; };
+		740938F31D3D0D9300DBB801 /* WXComponentTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 740938EA1D3D026600DBB801 /* WXComponentTests.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		740938F51D3D0DDE00DBB801 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 740938F41D3D0DDE00DBB801 /* AVFoundation.framework */; };
+		740938F71D3D0DFD00DBB801 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 740938F61D3D0DFD00DBB801 /* CoreMedia.framework */; };
+		740938F91D3D0E0300DBB801 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 740938F81D3D0E0300DBB801 /* MediaPlayer.framework */; };
+		740938FB1D3D0E1700DBB801 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 740938FA1D3D0E1700DBB801 /* AVKit.framework */; };
 		7410811F1CED585A001BC6E5 /* WXComponentManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 7410811D1CED585A001BC6E5 /* WXComponentManager.h */; };
 		741081201CED585A001BC6E5 /* WXComponentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7410811E1CED585A001BC6E5 /* WXComponentManager.m */; };
 		741081231CED6756001BC6E5 /* WXComponentFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 741081211CED6756001BC6E5 /* WXComponentFactory.h */; };
@@ -258,6 +266,12 @@
 		59D3CA671D00544B008835DC /* WeexSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeexSDK.h; sourceTree = "<group>"; };
 		7408C48C1CFB345D000BCCD0 /* WXComponent+Events.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WXComponent+Events.h"; sourceTree = "<group>"; };
 		7408C48D1CFB345D000BCCD0 /* WXComponent+Events.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WXComponent+Events.m"; sourceTree = "<group>"; };
+		740938EA1D3D026600DBB801 /* WXComponentTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXComponentTests.m; sourceTree = "<group>"; };
+		740938ED1D3D079100DBB801 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		740938F41D3D0DDE00DBB801 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		740938F61D3D0DFD00DBB801 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		740938F81D3D0E0300DBB801 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		740938FA1D3D0E1700DBB801 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		7410811D1CED585A001BC6E5 /* WXComponentManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXComponentManager.h; sourceTree = "<group>"; };
 		7410811E1CED585A001BC6E5 /* WXComponentManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXComponentManager.m; sourceTree = "<group>"; };
 		741081211CED6756001BC6E5 /* WXComponentFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXComponentFactory.h; sourceTree = "<group>"; };
@@ -379,6 +393,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				740938FB1D3D0E1700DBB801 /* AVKit.framework in Frameworks */,
+				740938F91D3D0E0300DBB801 /* MediaPlayer.framework in Frameworks */,
+				740938F71D3D0DFD00DBB801 /* CoreMedia.framework in Frameworks */,
+				740938F51D3D0DDE00DBB801 /* AVFoundation.framework in Frameworks */,
+				740938EF1D3D083900DBB801 /* libicucore.tbd in Frameworks */,
+				740938EE1D3D079100DBB801 /* JavaScriptCore.framework in Frameworks */,
 				74C896421D2AC2210043B82A /* WeexSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -503,6 +523,7 @@
 			children = (
 				74C8963F1D2AC2210043B82A /* WeexSDKTests.m */,
 				74C896411D2AC2210043B82A /* Info.plist */,
+				740938EA1D3D026600DBB801 /* WXComponentTests.m */,
 			);
 			path = WeexSDKTests;
 			sourceTree = "<group>";
@@ -755,6 +776,11 @@
 		A5818E244F9E235722E3B938 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				740938FA1D3D0E1700DBB801 /* AVKit.framework */,
+				740938F81D3D0E0300DBB801 /* MediaPlayer.framework */,
+				740938F61D3D0DFD00DBB801 /* CoreMedia.framework */,
+				740938F41D3D0DDE00DBB801 /* AVFoundation.framework */,
+				740938ED1D3D079100DBB801 /* JavaScriptCore.framework */,
 				7469869B1C4DEAC20054A57E /* libicucore.tbd */,
 				DAB176F008F516E4F9391C61 /* libPods-WeexSDK.a */,
 			);
@@ -1018,6 +1044,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				740938EC1D3D075700DBB801 /* SRWebSocket.m in Sources */,
+				740938F31D3D0D9300DBB801 /* WXComponentTests.m in Sources */,
 				74C896401D2AC2210043B82A /* WeexSDKTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1140,9 +1168,14 @@
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/WeexSDK/Dependency",
+				);
 				INFOPLIST_FILE = WeexSDKTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.taobao.weex.WeexSDKTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1153,9 +1186,14 @@
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/WeexSDK/Dependency",
+				);
 				INFOPLIST_FILE = WeexSDKTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.taobao.weex.WeexSDKTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
