@@ -1,5 +1,8 @@
 import chai from 'chai'
+import sinon from 'sinon'
+import sinonChai from 'sinon-chai'
 const { expect } = chai
+chai.use(sinonChai)
 
 import {
   registerComponent,
@@ -36,28 +39,22 @@ describe('register', () => {
 
   describe('component', () => {
     it('with exports', () => {
-      const exports = {
+      const def = {
         a: 'b'
       }
 
-      ctx.registerComponent('componentA', exports)
-      expect(ctx.requireComponent('componentA')).to.deep.equal(exports)
+      ctx.registerComponent('componentA', def)
+      expect(ctx.requireComponent('componentA')).to.deep.equal(def)
     })
 
     it('with a existing name', () => {
-      const exports = {
+      const def = {
         a: 'b'
       }
-
-      let err
-      try {
-        ctx.registerComponent('componentA', exports)
-      }
-      catch (e) {
-        err = e
-      }
-
-      expect(err).to.be.a('Error')
+      sinon.stub(console, 'error')
+      ctx.registerComponent('componentA', def)
+      expect(console.error).callCount(1)
+      console.error.restore()
     })
   })
 
