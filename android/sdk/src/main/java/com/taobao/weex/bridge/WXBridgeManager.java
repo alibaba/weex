@@ -220,8 +220,10 @@ import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.IWXBridge;
 import com.taobao.weex.common.IWXDebugProxy;
+import com.taobao.weex.common.TypeModuleFactory;
 import com.taobao.weex.common.WXConfig;
 import com.taobao.weex.common.WXErrorCode;
+import com.taobao.weex.common.WXException;
 import com.taobao.weex.common.WXJSBridgeMsgType;
 import com.taobao.weex.common.WXMethodCallConstant;
 import com.taobao.weex.common.WXModule;
@@ -288,6 +290,8 @@ public class WXBridgeManager implements Callback {
   public static final int INSTANCE_RENDERING_ERROR = 0;
 
   private static WXBridgeManager mBridgeManager;
+
+  private static WXModule sDomModule;
 
   /**
    * next tick tasks, can set priority
@@ -475,8 +479,8 @@ public class WXBridgeManager implements Callback {
         for (int i = 0; i < size; ++i) {
           task = (JSONObject) array.get(i);
           if (task != null && WXSDKManager.getInstance().getSDKInstance(instanceId) != null) {
-            if (task.get(WXMethodCallConstant.MODULE).equals(WXMethodCallConstant.DOM)) {
-              WXModule domModule = WXModuleManager.getModule(instanceId,(String) task.get(WXMethodCallConstant.MODULE));
+            if (task.get(WXMethodCallConstant.MODULE).equals(WXMethodCallConstant.WXDOM)) {
+              WXModule domModule = getDomModule(instanceId);
               if (domModule instanceof WXDomModule)
                 ((WXDomModule)domModule).callDomMethod(task);
             } else {
@@ -887,6 +891,7 @@ public class WXBridgeManager implements Callback {
              mInit = true;
              execRegisterFailTask();
              WXEnvironment.JsFrameworkInit = true;
+             registerDomModule();
           }else{
               WXLogUtils.e("[WXBridgeManager] invokeInitFramework  ExecuteJavaScript fail");
           }
@@ -1101,6 +1106,24 @@ public class WXBridgeManager implements Callback {
     public String callbackId;
     public long time;
     public String instanceId;
+  }
+
+  private static void registerDomModule() throws WXException {
+
+    final ModuleFactory factory = new TypeModuleFactory(WXDomModule.class);
+
+    try {
+      sDomModule = new TypeModuleFactory(WXDomModule.class).buildInstance();
+    } catch (Exception e) {
+      WXLogUtils.e("Dom class must have a default constructor without params. " + WXLogUtils.getStackTrace(e));
+    }
+
+    WXModuleManager.registerJSModule(WXMethodCallConstant.WXDOM, factory);
+  }
+
+  private static WXModule getDomModule(String instanceId) {
+    sDomModule.mWXSDKInstance = WXSDKManager.getInstance().getSDKInstance(instanceId);
+    return sDomModule;
   }
 
 }

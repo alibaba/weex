@@ -222,7 +222,7 @@ public class WXMethodCallConstant {
 
   // args
   public static final String MODULE = "module";
-  public static final String DOM = "dom";
+  public static final String WXDOM = "dom";
   public static final String METHOD = "method";
   public static final String ARGS = "args";
 }

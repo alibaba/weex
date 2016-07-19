@@ -204,11 +204,14 @@
  */
 package com.taobao.weex.bridge;
 
+import android.text.TextUtils;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.Destroyable;
 import com.taobao.weex.common.WXException;
+import com.taobao.weex.common.WXMethodCallConstant;
 import com.taobao.weex.common.WXModule;
 import com.taobao.weex.dom.WXDomModule;
 import com.taobao.weex.utils.WXLogUtils;
@@ -245,6 +248,11 @@ public class WXModuleManager {
    */
   public static boolean registerModule(final String moduleName, final ModuleFactory factory, final boolean global) throws WXException {
     if (moduleName == null || factory == null) {
+      return false;
+    }
+
+    if (TextUtils.equals(moduleName,WXMethodCallConstant.WXDOM)) {
+      WXLogUtils.e("Connot registered module name is dom.");
       return false;
     }
 
@@ -358,21 +366,6 @@ public class WXModuleManager {
       }
     }
     return true;
-  }
-
-  public static WXModule getModule(String instanceId, String moduleStr) {
-    ModuleFactory factory = sModuleFactoryMap.get(moduleStr);
-    if(factory == null){
-      WXLogUtils.e("[WXModuleManager] module factory not found.");
-      return null;
-    }
-    final WXModule wxModule = findModule(instanceId, moduleStr,factory);
-    if (wxModule == null) {
-      return null;
-    }
-    wxModule.mWXSDKInstance = WXSDKManager.getInstance().getSDKInstance(instanceId);
-
-    return wxModule;
   }
 
 
