@@ -58,7 +58,7 @@ These options are defined and transformed by Transformer. Actually you can also 
 
 ### Details of template option definitions
 
-A piece of multi-level embeded JSON-like object which describes the view structure.
+A piece of multi-level embedded JSON-like object which describes the view structure.
 
 Every level JSON-like object has these members below:
 
@@ -66,11 +66,11 @@ Every level JSON-like object has these members below:
 * `component`: an optional boolean, whether this component is composed or native
 * `attr`: an optional k-v pairs which contains all attributes of an element, the value could be a string, number, boolean or a function that bind some data value
 * `style`: an optional k-v pairs which contains all styles of an element, just the same format as the `attr`
-* `classList`: an optional array of strings which contains class names for styleing.
+* `classList`: an optional array of strings which contains class names for styling.
 * `events`: an optional k-v pairs whose keys are event type and values are corresponding method names
 * `children`: an optional array of child components info
-* `append`: an optional string which determines a compiling workflow strategy: append node-by-node singly or a whole node tree just one time. the defualt value is `node` and another supported value is `tree`.
-* `shown`: a optional function which returns a boolean value to determins whether this component should be displayed
+* `append`: an optional string which determines a compiling workflow strategy: append node-by-node singly or a whole node tree just one time. the default value is `node` and another supported value is `tree`.
+* `shown`: a optional function which returns a boolean value to determine whether this component should be displayed
 * `repeat`: a optional function which returns a list data to displays components with each
 
 **Corresponding Keys to Weex Transformer:**
