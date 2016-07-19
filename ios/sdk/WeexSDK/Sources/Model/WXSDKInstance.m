@@ -9,6 +9,7 @@
 #import "WXSDKInstance.h"
 #import "WXSDKInstance_private.h"
 #import "WXSDKManager.h"
+#import "WXSDKError.h"
 #import "WXAppMonitorProtocol.h"
 #import "WXNetworkProtocol.h"
 #import "WXModuleFactory.h"
@@ -124,6 +125,8 @@ NSTimeInterval JSLibInitTime = 0;
             
             if (error) {
                 WXLogError(@"Connection to %@ occurs an error:%@", request.URL, error);
+                [WXSDKError monitorAlarm:NO errorCode:WX_ERR_JSBUNDLE_DOWNLOAD errorMessage:error.description withURL:[WXUtility urlByDeletingParameters:url]];
+                
                 if (weakSelf.onFailed) {
                     weakSelf.onFailed(error);
                 }
@@ -132,6 +135,7 @@ NSTimeInterval JSLibInitTime = 0;
                        
             if (!totalData) {
                 WXLogError(@"Connection to %@ but no data return", request.URL);
+                
                 if (weakSelf.onFailed) {
                     weakSelf.onFailed(error);
                 }
