@@ -1,12 +1,12 @@
 # coding: utf-8
 Pod::Spec.new do |s|
 
-  s.name         = "TBWXDevtool"
+  s.name         = "WXDevtool"
   s.version      = "0.0.1"
-  s.summary      = "TBWXDevtool Framework."
+  s.summary      = "WXDevtool Source."
 
   s.description  = <<-DESC
-                   WXDevtool Framework description
+                   WXDevtool Source description
                    DESC
 
   s.homepage     = "https://github.com/alibaba/weex"
@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
   s.source_files = 'WXDevTool/Source/**/*.{h,m,mm,c}'
 
   s.requires_arc = true
-#s.vendored_frameworks = 'TBWXDevTool.framework'
+#s.vendored_frameworks = 'WXDevTool.framework'
   s.frameworks = 'Foundation'
   s.dependency 'WeexSDK'
 end
