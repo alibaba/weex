@@ -17,7 +17,7 @@ static BOOL WXDebug;
 
 + (void)setDebug:(BOOL)isDebug {
     WXDebug = isDebug;
-    [WXDebugTool setDevToolDebug:YES];
+    [WXDebugTool setDevToolDebug:isDebug];
 }
 
 + (BOOL)isDebug {
