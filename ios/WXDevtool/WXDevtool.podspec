@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
   s.source_files = 'WXDevTool/Source/**/*.{h,m,mm,c}'
 
   s.requires_arc = true
-  s.vendored_frameworks = 'TBWXDevTool.framework'
+#s.vendored_frameworks = 'TBWXDevTool.framework'
   s.frameworks = 'Foundation'
   s.dependency 'WeexSDK'
 end
