@@ -946,10 +946,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 421E7FD57E17C231508BA514 /* Pods-TBWXDevTool.debug.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					armv7s,
-				);
+				ARCHS = "$(ARCHS_STANDARD)";
 				DEAD_CODE_STRIPPING = NO;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -978,10 +975,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B7CA78A41D406A09A4D0B154 /* Pods-TBWXDevTool.release.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					armv7s,
-				);
+				ARCHS = "$(ARCHS_STANDARD)";
 				DEAD_CODE_STRIPPING = NO;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
