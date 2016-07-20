@@ -462,56 +462,59 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
         }
       } else {
         Object param = props.get(key);
-
-        switch (key) {
-          case WXDomPropConstant.WX_ATTR_DISABLED:
-            Boolean result = WXUtils.getBoolean(param);
-            if (result != null)
-              setDisabled(result);
-            break;
-          case WXDomPropConstant.WX_POSITION:
-            setSticky((String) param);
-            break;
-          case WXDomPropConstant.WX_BACKGROUNDCOLOR:
-            setBackgroundColor((String) param);
-            break;
-          case WXDomPropConstant.WX_OPACITY:
-            setOpacity(WXUtils.getFloat(param));
-            break;
-
-          case WXDomPropConstant.WX_BORDERRADIUS:
-          case WXDomPropConstant.WX_BORDER_TOP_LEFT_RADIUS:
-          case WXDomPropConstant.WX_BORDER_TOP_RIGHT_RADIUS:
-          case WXDomPropConstant.WX_BORDER_BOTTOM_RIGHT_RADIUS:
-          case WXDomPropConstant.WX_BORDER_BOTTOM_LEFT_RADIUS:
-            setBorderRadius(key,WXUtils.getFloat(param));
-            break;
-
-          case WXDomPropConstant.WX_BORDERWIDTH:
-          case WXDomPropConstant.WX_BORDER_TOP_WIDTH:
-          case WXDomPropConstant.WX_BORDER_RIGHT_WIDTH:
-          case WXDomPropConstant.WX_BORDER_BOTTOM_WIDTH:
-          case WXDomPropConstant.WX_BORDER_LEFT_WIDTH:
-            setBorderWidth(key,WXUtils.getFloat(param));
-            break;
-
-          case WXDomPropConstant.WX_BORDERSTYLE:
-            setBorderStyle((String) param);
-            break;
-
-          case WXDomPropConstant.WX_BORDERCOLOR:
-          case WXDomPropConstant.WX_BORDER_TOP_COLOR:
-          case WXDomPropConstant.WX_BORDER_RIGHT_COLOR:
-          case WXDomPropConstant.WX_BORDER_BOTTOM_COLOR:
-          case WXDomPropConstant.WX_BORDER_LEFT_COLOR:
-            setBorderColor(key, (String) param);
-            break;
-
-          case WXDomPropConstant.WX_VISIBILITY:
-            setVisibility((String) param);
-            break;
-        }
+        callComponentMethod(param,key);
       }
+    }
+  }
+
+  private void callComponentMethod(Object param, String key) {
+    switch (key) {
+      case WXDomPropConstant.WX_ATTR_DISABLED:
+        Boolean result = WXUtils.getBoolean(param);
+        if (result != null)
+          setDisabled(result);
+        break;
+      case WXDomPropConstant.WX_POSITION:
+        setSticky((String) param);
+        break;
+      case WXDomPropConstant.WX_BACKGROUNDCOLOR:
+        setBackgroundColor((String) param);
+        break;
+      case WXDomPropConstant.WX_OPACITY:
+        setOpacity(WXUtils.getFloat(param));
+        break;
+
+      case WXDomPropConstant.WX_BORDERRADIUS:
+      case WXDomPropConstant.WX_BORDER_TOP_LEFT_RADIUS:
+      case WXDomPropConstant.WX_BORDER_TOP_RIGHT_RADIUS:
+      case WXDomPropConstant.WX_BORDER_BOTTOM_RIGHT_RADIUS:
+      case WXDomPropConstant.WX_BORDER_BOTTOM_LEFT_RADIUS:
+        setBorderRadius(key,WXUtils.getFloat(param));
+        break;
+
+      case WXDomPropConstant.WX_BORDERWIDTH:
+      case WXDomPropConstant.WX_BORDER_TOP_WIDTH:
+      case WXDomPropConstant.WX_BORDER_RIGHT_WIDTH:
+      case WXDomPropConstant.WX_BORDER_BOTTOM_WIDTH:
+      case WXDomPropConstant.WX_BORDER_LEFT_WIDTH:
+        setBorderWidth(key,WXUtils.getFloat(param));
+        break;
+
+      case WXDomPropConstant.WX_BORDERSTYLE:
+        setBorderStyle((String) param);
+        break;
+
+      case WXDomPropConstant.WX_BORDERCOLOR:
+      case WXDomPropConstant.WX_BORDER_TOP_COLOR:
+      case WXDomPropConstant.WX_BORDER_RIGHT_COLOR:
+      case WXDomPropConstant.WX_BORDER_BOTTOM_COLOR:
+      case WXDomPropConstant.WX_BORDER_LEFT_COLOR:
+        setBorderColor(key, (String) param);
+        break;
+
+      case WXDomPropConstant.WX_VISIBILITY:
+        setVisibility((String) param);
+        break;
     }
   }
 

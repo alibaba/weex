@@ -224,7 +224,7 @@ import com.taobao.weex.utils.WXResourceUtils;
  * Image component
  */
 @Component(lazyload = false)
-public class WXImage extends WXComponent<WXImageView> {
+public class WXImage extends WXComponent<ImageView> {
 
     @Deprecated
     public WXImage(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {

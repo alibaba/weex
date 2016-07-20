@@ -238,13 +238,21 @@ public class WXIndicator extends WXComponent<WXCircleIndicator> {
   protected WXCircleIndicator initComponentHostView(Context context) {
     WXCircleIndicator view = new WXCircleIndicator(context);
     if (mParent instanceof WXSlider) {
-      ((WXSlider) mParent).addIndicator(this);
+      return view;
     } else {
       if (WXEnvironment.isApkDebugable()) {
         throw new WXRuntimeException("WXIndicator initView error.");
       }
     }
     return null;
+  }
+
+  @Override
+  protected void onHostViewInitialized(WXCircleIndicator host) {
+    super.onHostViewInitialized(host);
+    if (mParent instanceof WXSlider) {
+      ((WXSlider) mParent).addIndicator(this);
+    }
   }
 
   @WXComponentProp(name = "itemColor")

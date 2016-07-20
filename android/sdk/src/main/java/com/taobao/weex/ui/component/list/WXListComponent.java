@@ -210,7 +210,6 @@ import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -265,7 +264,7 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
     private ArrayList<ListBaseViewHolder> recycleViewList = new ArrayList<>();
     private static final Pattern transformPattern = Pattern.compile("([a-z]+)\\(([0-9\\.]+),?([0-9\\.]+)?\\)");
 
-    private SparseArray<WXComponent> mAppearComponents = new SparseArray<>();
+    private List<WXComponent> mAppearComponents = new ArrayList<>();
     private HashMap<String, Long> mRefToViewType;
 
     protected BounceRecyclerView bounceRecyclerView;
@@ -588,22 +587,22 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
   }
 
   /**
-    * @param child the inserted child
-    * @param index the index of the child to be inserted.
-    * @see #addChild(WXComponent)
-    */
+  * @param child the inserted child
+  * @param index the index of the child to be inserted.
+  * @see #addChild(WXComponent)
+  */
   @Override
   public void addChild(WXComponent child, int index) {
     super.addChild(child, index);
 
     int adapterPosition = index == -1 ? mChildren.size() - 1 : index;
-    BounceRecyclerView view = getView();
-    if (view != null) {
+    BounceRecyclerView view =  getView();
+    if(view != null) {
       view.getAdapter().notifyItemInserted(adapterPosition);
     }
 
-    if (hasAppearAndDisAppearEvent(child)) {
-      mAppearComponents.put(adapterPosition, child);
+    if(hasAppearAndDisAppearEvent(child)){
+      mAppearComponents.add(child);
       child.registerAppearEvent = true;
     }
   }
@@ -858,14 +857,14 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
 
     @Override
     public void notifyAppearStateChange(int firstVisible, int lastVisible,int directionX,int directionY) {
-        List<Integer> unRegisterKeys = new ArrayList<>();
+        List<WXComponent> unRegisterKeys = new ArrayList<>();
 
         //notify appear state
         for (int i = 0, len = mAppearComponents.size(); i < len; i++) {
-            int key = mAppearComponents.keyAt(i);
-            WXComponent value = mAppearComponents.get(key);
+            WXComponent value = mAppearComponents.get(i);
+          int key=mChildren.indexOf(value);
             if (!value.registerAppearEvent) {
-                unRegisterKeys.add(key);
+                unRegisterKeys.add(value);
                 continue;
             }
             if (key >= firstVisible && key <= lastVisible && !value.appearState) {
@@ -886,7 +885,7 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
     }
 
   public void unbindAppearComponents(WXComponent component) {
-        mAppearComponents.remove(mAppearComponents.indexOfValue(component));
+        mAppearComponents.remove(component);
     }
 
     private void recycleImage(View view) {

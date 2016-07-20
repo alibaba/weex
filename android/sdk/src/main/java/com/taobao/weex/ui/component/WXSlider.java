@@ -230,6 +230,10 @@ import java.util.Map;
 
 public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeListener {
 
+  public static final String INDEX = "index";
+  public static final String SHOW_INDICATORS = "showIndicators";
+  public static final String AUTO_PLAY = "autoPlay";
+  public static final String INTERVAL = "interval";
   Map<String, Object> params = new HashMap<>();
   /**
    * Scrollable sliderview
@@ -347,27 +351,19 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
     }
   }
 
-//  @Override
-//  protected void bindImpl(View view) {
-//    if(view==null){
-//      super.bindImpl(view);
-//    }
-//    else if(view instanceof ViewGroup){
-//      if(((ViewGroup) view).getChildAt(0) instanceof WXCircleViewPager){
-//        super.bindImpl(((ViewGroup) view).getChildAt(0));
-//      }
-//    }
-//  }
-
   public void addIndicator(WXIndicator indicator) {
     FrameLayout root = getView();
     if (root == null) {
       return;
     }
     mIndicator = indicator;
-    mIndicator.getView().setCircleViewPager(mViewPager);
-    mIndicator.getView().setOnPageChangeListener(this);
-    root.addView(mIndicator.getView());
+    WXCircleIndicator indicatorView = indicator.getView();
+    if(indicatorView != null){
+      indicatorView.setCircleViewPager(mViewPager);
+      indicatorView.setOnPageChangeListener(this);
+      root.addView(indicatorView);
+    }
+
   }
 
   @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SLIDER_VALUE)
@@ -386,7 +382,7 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
     mViewPager.setCurrentItem(i);
   }
 
-  @WXComponentProp(name = "autoPlay")
+  @WXComponentProp(name = AUTO_PLAY)
   public void setAutoPlay(String autoPlay) {
     if (TextUtils.isEmpty(autoPlay) || autoPlay.equals("false")) {
       mViewPager.stopAutoScroll();
@@ -396,7 +392,7 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
     }
   }
 
-  @WXComponentProp(name = "showIndicators")
+  @WXComponentProp(name = SHOW_INDICATORS)
   public void setShowIndicators(String show) {
     if (TextUtils.isEmpty(show) || show.equals("false")) {
       mShowIndicators = false;
@@ -413,6 +409,20 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
   @Override
   public void onPageScrolled(int arg0, float arg1, int arg2) {
 
+  }
+
+  @WXComponentProp(name = INTERVAL)
+  public void setInterval(int intervalMS){
+    if(mViewPager != null){
+      mViewPager.setIntervalTime(intervalMS);
+    }
+  }
+
+  @WXComponentProp(name = INDEX)
+  public void setIndex(int index){
+    if(mViewPager != null){
+      mViewPager.setCurrentItem(index);
+    }
   }
 
   @Override
