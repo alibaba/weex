@@ -1052,6 +1052,7 @@
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = WXDevTool/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1082,6 +1083,7 @@
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = WXDevTool/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1122,6 +1124,7 @@
 				0ABB39F61D3F37700091332E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0AFA0EC51D2CE79E006E30BB /* Build configuration list for PBXProject "TBWXDevTool" */ = {
 			isa = XCConfigurationList;
