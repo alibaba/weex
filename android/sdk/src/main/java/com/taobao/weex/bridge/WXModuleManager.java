@@ -211,7 +211,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.Destroyable;
 import com.taobao.weex.common.WXException;
-import com.taobao.weex.common.WXMethodCallConstant;
 import com.taobao.weex.common.WXModule;
 import com.taobao.weex.dom.WXDomModule;
 import com.taobao.weex.ui.module.WXTimerModule;
@@ -252,7 +251,7 @@ public class WXModuleManager {
       return false;
     }
 
-    if (TextUtils.equals(moduleName,WXMethodCallConstant.WXDOM)) {
+    if (TextUtils.equals(moduleName,WXDomModule.WXDOM)) {
       WXLogUtils.e("Connot registered module name is dom.");
       return false;
     }

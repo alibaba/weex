@@ -225,7 +225,6 @@ import com.taobao.weex.common.WXConfig;
 import com.taobao.weex.common.WXErrorCode;
 import com.taobao.weex.common.WXException;
 import com.taobao.weex.common.WXJSBridgeMsgType;
-import com.taobao.weex.common.WXMethodCallConstant;
 import com.taobao.weex.common.WXModule;
 import com.taobao.weex.common.WXRefreshData;
 import com.taobao.weex.common.WXRuntimeException;
@@ -479,12 +478,12 @@ public class WXBridgeManager implements Callback {
         for (int i = 0; i < size; ++i) {
           task = (JSONObject) array.get(i);
           if (task != null && WXSDKManager.getInstance().getSDKInstance(instanceId) != null) {
-            if (TextUtils.equals(WXMethodCallConstant.WXDOM, (String) task.get(WXMethodCallConstant.MODULE))) {
+            if (TextUtils.equals(WXDomModule.WXDOM, (String) task.get(WXDomModule.MODULE))) {
               WXDomModule domModule = getDomModule(instanceId);
               domModule.callDomMethod(task);
             } else {
-              WXModuleManager.callModuleMethod(instanceId, (String) task.get(WXMethodCallConstant.MODULE),
-                      (String) task.get(WXMethodCallConstant.METHOD), (JSONArray) task.get(WXMethodCallConstant.ARGS));
+              WXModuleManager.callModuleMethod(instanceId, (String) task.get(WXDomModule.MODULE),
+                      (String) task.get(WXDomModule.METHOD), (JSONArray) task.get(WXDomModule.ARGS));
             }
           }
         }
@@ -1117,7 +1116,7 @@ public class WXBridgeManager implements Callback {
       WXLogUtils.e("Dom class must have a default constructor without params. " + WXLogUtils.getStackTrace(e));
     }
 
-    WXModuleManager.registerJSModule(WXMethodCallConstant.WXDOM, factory);
+    WXModuleManager.registerJSModule(WXDomModule.WXDOM, factory);
   }
 
   private static WXDomModule getDomModule(String instanceId) {

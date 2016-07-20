@@ -210,7 +210,6 @@ import android.text.TextUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXSDKManager;
-import com.taobao.weex.common.WXMethodCallConstant;
 import com.taobao.weex.common.WXModule;
 
 import java.util.ArrayList;
@@ -224,51 +223,67 @@ import java.util.ArrayList;
  */
 public final class WXDomModule extends WXModule {
 
-  public void callDomMethod(JSONObject task) {
-    String method = (String) task.get(WXMethodCallConstant.METHOD);
-    JSONArray args = (JSONArray) task.get(WXMethodCallConstant.ARGS);
+  // method
+  private static final String CREATE_BODY = "createBody";
+  private static final String UPDATE_ATTRS = "updateAttrs";
+  private static final String  UPDATE_STYLE = "updateStyle";
+  private static final String REMOVE_ELEMENT = "removeElement";
+  private static final String  ADD_ELEMENT = "addElement";
+  private static final String MOVE_ELEMENT = "moveElement";
+  private static final String ADD_EVENT = "addEvent";
+  private static final String  REMOVE_EVENT = "removeEvent";
+  private static final String  CREATE_FINISH = "createFinish";
+  private static final String  REFRESH_FINISH = "refreshFinish";
+  private static final String  UPDATE_FINISH = "updateFinish";
+  private static final String SCROLL_TO_ELEMENT  = "scrollToElement";
 
-    try {
-      switch (method) {
-        case WXMethodCallConstant.CREATE_BODY:
-          createBody((JSONObject) args.get(0));
-          break;
-        case WXMethodCallConstant.UPDATE_ATTRS:
-          updateAttrs((String) args.get(0), (JSONObject) args.get(1));
-          break;
-        case WXMethodCallConstant.UPDATE_STYLE:
-          updateStyle((String) args.get(0), (JSONObject) args.get(1));
-          break;
-        case WXMethodCallConstant.REMOVE_ELEMENT:
-          removeElement((String) args.get(0));
-          break;
-        case WXMethodCallConstant.ADD_ELEMENT:
-          addElement((String) args.get(0), (JSONObject) args.get(1), (Integer) args.get(2));
-          break;
-        case WXMethodCallConstant.MOVE_ELEMENT:
-          moveElement((String) args.get(0), (String) args.get(1), (Integer) args.get(2));
-          break;
-        case WXMethodCallConstant.ADD_EVENT:
-          addEvent((String) args.get(0), (String) args.get(1));
-          break;
-        case WXMethodCallConstant.REMOVE_EVENT:
-          removeEvent((String) args.get(0), (String) args.get(1));
-          break;
-        case WXMethodCallConstant.CREATE_FINISH:
-          createFinish();
-          break;
-        case WXMethodCallConstant.REFRESH_FINISH:
-          refreshFinish();
-          break;
-        case WXMethodCallConstant.UPDATE_FINISH:
-          updateFinish();
-          break;
-        case WXMethodCallConstant.SCROLL_TO_ELEMENT:
-          scrollToElement((String) args.get(0), (JSONObject) args.get(1));
-          break;
-      }
-    } finally {
-      mWXSDKInstance = null;
+  // args
+  public static final String MODULE = "module";
+  public static final String WXDOM = "dom";
+  public static final String METHOD = "method";
+  public static final String ARGS = "args";
+
+  public void callDomMethod(JSONObject task) {
+    String method = (String) task.get(METHOD);
+    JSONArray args = (JSONArray) task.get(ARGS);
+
+    switch (method) {
+      case CREATE_BODY:
+        createBody((JSONObject) args.get(0));
+        break;
+      case UPDATE_ATTRS:
+        updateAttrs((String) args.get(0), (JSONObject) args.get(1));
+        break;
+      case UPDATE_STYLE:
+        updateStyle((String) args.get(0), (JSONObject) args.get(1));
+        break;
+      case REMOVE_ELEMENT:
+        removeElement((String) args.get(0));
+        break;
+      case ADD_ELEMENT:
+        addElement((String) args.get(0), (JSONObject) args.get(1), (Integer) args.get(2));
+        break;
+      case MOVE_ELEMENT:
+        moveElement((String) args.get(0), (String) args.get(1), (Integer) args.get(2));
+        break;
+      case ADD_EVENT:
+        addEvent((String) args.get(0), (String) args.get(1));
+        break;
+      case REMOVE_EVENT:
+        removeEvent((String) args.get(0), (String) args.get(1));
+        break;
+      case CREATE_FINISH:
+        createFinish();
+        break;
+      case REFRESH_FINISH:
+        refreshFinish();
+        break;
+      case UPDATE_FINISH:
+        updateFinish();
+        break;
+      case SCROLL_TO_ELEMENT:
+        scrollToElement((String) args.get(0), (JSONObject) args.get(1));
+        break;
     }
   }
 
