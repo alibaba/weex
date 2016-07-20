@@ -479,10 +479,9 @@ public class WXBridgeManager implements Callback {
         for (int i = 0; i < size; ++i) {
           task = (JSONObject) array.get(i);
           if (task != null && WXSDKManager.getInstance().getSDKInstance(instanceId) != null) {
-            if (task.get(WXMethodCallConstant.MODULE).equals(WXMethodCallConstant.WXDOM)) {
-              WXModule domModule = getDomModule(instanceId);
-              if (domModule instanceof WXDomModule)
-                ((WXDomModule)domModule).callDomMethod(task);
+            if (TextUtils.equals(WXMethodCallConstant.WXDOM, (String) task.get(WXMethodCallConstant.MODULE))) {
+              WXDomModule domModule = getDomModule(instanceId);
+              domModule.callDomMethod(task);
             } else {
               WXModuleManager.callModuleMethod(instanceId, (String) task.get(WXMethodCallConstant.MODULE),
                       (String) task.get(WXMethodCallConstant.METHOD), (JSONArray) task.get(WXMethodCallConstant.ARGS));
@@ -1121,9 +1120,9 @@ public class WXBridgeManager implements Callback {
     WXModuleManager.registerJSModule(WXMethodCallConstant.WXDOM, factory);
   }
 
-  private static WXModule getDomModule(String instanceId) {
+  private static WXDomModule getDomModule(String instanceId) {
     sDomModule.mWXSDKInstance = WXSDKManager.getInstance().getSDKInstance(instanceId);
-    return sDomModule;
+    return (WXDomModule) sDomModule;
   }
 
 }

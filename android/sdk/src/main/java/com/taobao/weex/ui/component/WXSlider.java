@@ -230,6 +230,10 @@ import java.util.Map;
 
 public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeListener {
 
+  public static final String INDEX = "index";
+  public static final String SHOW_INDICATORS = "showIndicators";
+  public static final String AUTO_PLAY = "autoPlay";
+  public static final String INTERVAL = "interval";
   Map<String, Object> params = new HashMap<>();
   /**
    * Scrollable sliderview
@@ -378,7 +382,7 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
     mViewPager.setCurrentItem(i);
   }
 
-  @WXComponentProp(name = "autoPlay")
+  @WXComponentProp(name = AUTO_PLAY)
   public void setAutoPlay(String autoPlay) {
     if (TextUtils.isEmpty(autoPlay) || autoPlay.equals("false")) {
       mViewPager.stopAutoScroll();
@@ -388,7 +392,7 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
     }
   }
 
-  @WXComponentProp(name = "showIndicators")
+  @WXComponentProp(name = SHOW_INDICATORS)
   public void setShowIndicators(String show) {
     if (TextUtils.isEmpty(show) || show.equals("false")) {
       mShowIndicators = false;
@@ -405,6 +409,20 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
   @Override
   public void onPageScrolled(int arg0, float arg1, int arg2) {
 
+  }
+
+  @WXComponentProp(name = INTERVAL)
+  public void setInterval(int intervalMS){
+    if(mViewPager != null){
+      mViewPager.setIntervalTime(intervalMS);
+    }
+  }
+
+  @WXComponentProp(name = INDEX)
+  public void setIndex(int index){
+    if(mViewPager != null){
+      mViewPager.setCurrentItem(index);
+    }
   }
 
   @Override
