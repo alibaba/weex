@@ -8,12 +8,10 @@ buildscript {
         classpath files('license/license-gradle-plugin-0.12.1.jar')
         classpath files('license/maven-license-plugin-1.10.b1.jar')
         classpath files('license/plexus-utils-3.0.24.jar')
+        classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.5.0'
     }
 }
 
-//plugins {
-//    id "com.github.hierynomus.license" version "0.12.1"
-//}
 
 allprojects {
     repositories {
@@ -24,7 +22,7 @@ allprojects {
 
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.hierynomus.license'
-
+apply plugin: 'com.vanniktech.android.junit.jacoco'
 
 version = "1.5.2.4"
 
@@ -33,16 +31,12 @@ android {
     buildToolsVersion "23.0.2"
     resourcePrefix "weex"
 
-//    def libsDir = projectDir.path + "/src/main/jni/"
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 19
         versionCode 1
         versionName "1.0"
         ndk {
-//            moduleName "weexcore"
-//            cFlags "-I" + file(libsDir+"v8core").absolutePath
-//            ldLibs "log",libsDir + "libv8_base_arm.a",libsDir + "libv8_snapshot_arm.a"
             abiFilters "armeabi","x86"
         }
     }
@@ -128,7 +122,6 @@ license{
                "**/CSSWrapConvert.java",
                "**/WXTextDomObject.java",
                "**/WXCustomStyleSpan.java"])
-//    includes(['src/main/java/**/*.java'])
 }
 preBuild.dependsOn licenseFormat
 
