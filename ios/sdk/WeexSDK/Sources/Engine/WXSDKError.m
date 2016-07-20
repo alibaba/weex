@@ -19,8 +19,6 @@ NSString * const kMonitorAlarmDomModule = @"domModule";
 
 + (void)monitorAlarm:(BOOL)success errorCode:(WXSDKErrCode)errorCode msg:(NSString *)format, ... NS_FORMAT_FUNCTION(3,4)
 {
-    if (success) return;
-    
     va_list args;
     va_start(args, format);
     NSString *errorMsg = [[NSString alloc] initWithFormat:format arguments:args];
@@ -31,10 +29,6 @@ NSString * const kMonitorAlarmDomModule = @"domModule";
 
 + (void)monitorAlarm:(BOOL)success errorCode:(WXSDKErrCode)errorCode errorMessage:(NSString *)errorMsg withURL:(NSURL *)url
 {
-    if (success) {
-        return;
-    }
-    
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if (!success) {
             WXLogError(@"%@", errorMsg);

@@ -135,13 +135,16 @@ NSTimeInterval JSLibInitTime = 0;
                        
             if (!totalData) {
                 WXLogError(@"Connection to %@ but no data return", request.URL);
+                [WXSDKError monitorAlarm:NO errorCode:WX_ERR_JSBUNDLE_DOWNLOAD errorMessage:@"Template data is empty." withURL:[WXUtility urlByDeletingParameters:url]];
                 
                 if (weakSelf.onFailed) {
                     weakSelf.onFailed(error);
                 }
                 return;
             }
-                   
+                
+            [WXSDKError monitorAlarm:YES errorCode:WX_ERR_JSBUNDLE_DOWNLOAD msg:@""];
+                       
             NSString *script = [[NSString alloc] initWithData:totalData encoding:NSUTF8StringEncoding];
             weakSelf.networkTime = -[networkStart timeIntervalSinceNow];
             [weakSelf renderView:script options:newOptions data:data];
