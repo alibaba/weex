@@ -312,7 +312,7 @@ public class WXBridgeManager implements Callback {
   private List<ArrayList<Map<String, String>>> mRegisterComponentFailList = new ArrayList<>(8);
   private List<Map<String, Object>> mRegisterModuleFailList = new ArrayList<>(8);
 
-  private String mDestroyedInstanceId = "-1";
+  private List<String> mDestroyedInstanceId = new ArrayList<>();
 
   private StringBuilder mLodBuilder = new StringBuilder(500);
 
@@ -447,7 +447,7 @@ public class WXBridgeManager implements Callback {
       return INSTANCE_RENDERING_ERROR;
     }
 
-    if(mDestroyedInstanceId.equals(instanceId)){
+    if(mDestroyedInstanceId!=null &&mDestroyedInstanceId.contains(instanceId)){
       return DESTROY_INSTANCE;
     }
 
@@ -767,13 +767,14 @@ public class WXBridgeManager implements Callback {
         || TextUtils.isEmpty(instanceId)) {
       return;
     }
-    mDestroyedInstanceId = instanceId;
+    if(mDestroyedInstanceId!=null) {
+      mDestroyedInstanceId.add(instanceId);
+    }
     // clear message with instanceId
     mJSHandler.removeCallbacksAndMessages(instanceId);
     post(new Runnable() {
       @Override
       public void run() {
-        mDestroyedInstanceId = "-1";
         removeTaskByInstance(instanceId);
         invokeDestroyInstance(instanceId);
       }
@@ -1064,6 +1065,10 @@ public class WXBridgeManager implements Callback {
       mJSThread.quit();
     }
     mBridgeManager = null;
+    if(mDestroyedInstanceId!=null){
+      mDestroyedInstanceId.clear();
+    }
+
   }
 
   /**
