@@ -244,7 +244,7 @@ public class WXImage extends WXComponent<ImageView> {
     }
 
     @Override
-    protected void setBackgroundColor(String color) {
+    public void setBackgroundColor(String color) {
         if (!TextUtils.isEmpty(color)) {
             int colorInt = WXResourceUtils.getColor(color);
             if (colorInt != Integer.MIN_VALUE) {
@@ -253,24 +253,23 @@ public class WXImage extends WXComponent<ImageView> {
         }
     }
 
-    @Override
-    protected void setBorderRadius(String key, float borderRadius) {
 
+    /** Image is not support border. **/
+
+    @Override
+    public void setBorderRadius(String key, float borderRadius) {
     }
 
     @Override
-    protected void setBorderWidth(String key, float borderWidth) {
-
+    public void setBorderWidth(String key, float borderWidth) {
     }
 
     @Override
-    protected void setBorderStyle(String borderStyle) {
-
+    public void setBorderStyle(String borderStyle) {
     }
 
     @Override
-    protected void setBorderColor(String key, String borderColor) {
-
+    public void setBorderColor(String key, String borderColor) {
     }
 
     @Override
