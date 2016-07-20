@@ -283,6 +283,8 @@ public class WXBridgeManager implements Callback {
   public static final int INSTANCE_RENDERING = 1;
   public static final int INSTANCE_RENDERING_ERROR = 0;
 
+  private static long LOW_MEM_VALUE = 80;
+
   private static WXBridgeManager mBridgeManager;
 
   /**
@@ -696,6 +698,9 @@ public class WXBridgeManager implements Callback {
 
   private void invokeCreateInstance(String instanceId, String template,
                                     Map<String, Object> options, String data) {
+
+    initFramework("");
+
     if (mMock) {
       mock(instanceId);
     } else {
@@ -862,6 +867,12 @@ public class WXBridgeManager implements Callback {
       framework = (String) msg.obj;
     }
 
+    if(WXUtils.getAvailMemory(WXEnvironment.getApplication()) > LOW_MEM_VALUE) {
+      initFramework(framework);
+    }
+  }
+
+  private void initFramework(String framework){
     if (!isJSFrameworkInit()) {
       if (TextUtils.isEmpty(framework)) {
         if (WXEnvironment.isApkDebugable()) {
@@ -874,16 +885,16 @@ public class WXBridgeManager implements Callback {
         return;
       }
       try {
-          long start = System.currentTimeMillis();
-          if(mWXBridge.initFramework(framework, assembleDefaultOptions())==INIT_FRAMEWORK_OK){
-             WXEnvironment.sJSLibInitTime = System.currentTimeMillis() - start;
-             WXLogUtils.renderPerformanceLog("initFramework", WXEnvironment.sJSLibInitTime);
-             mInit = true;
-             execRegisterFailTask();
-             WXEnvironment.JsFrameworkInit = true;
-          }else{
-              WXLogUtils.e("[WXBridgeManager] invokeInitFramework  ExecuteJavaScript fail");
-          }
+        long start = System.currentTimeMillis();
+        if(mWXBridge.initFramework(framework, assembleDefaultOptions())==INIT_FRAMEWORK_OK){
+          WXEnvironment.sJSLibInitTime = System.currentTimeMillis() - start;
+          WXLogUtils.renderPerformanceLog("initFramework", WXEnvironment.sJSLibInitTime);
+          mInit = true;
+          execRegisterFailTask();
+          WXEnvironment.JsFrameworkInit = true;
+        }else{
+          WXLogUtils.e("[WXBridgeManager] invokeInitFramework  ExecuteJavaScript fail");
+        }
       } catch (Throwable e) {
         WXLogUtils.e("[WXBridgeManager] invokeInitFramework " + e.getCause());
       }
