@@ -107,7 +107,7 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
                     [callbackRsp setObject:@{ @"HEADERS_RECEIVED" : @2  } forKey:@"readyState"];
                     [callbackRsp setObject:[NSNumber numberWithInteger:httpResponse.statusCode] forKey:@"status"];
                     [callbackRsp setObject:httpResponse.allHeaderFields forKey:@"headers"];
-                    statusText = [self.class getStatusText:httpResponse.statusCode];
+                    statusText = [weakSelf.class getStatusText:httpResponse.statusCode];
                     [callbackRsp setObject:statusText forKey:@"statusText"];
                     [callbackRsp setObject:[NSNumber numberWithInteger:received] forKey:@"length"];
                     
