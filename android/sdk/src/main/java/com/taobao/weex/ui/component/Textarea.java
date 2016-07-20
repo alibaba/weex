@@ -205,7 +205,7 @@
 package com.taobao.weex.ui.component;
 
 import android.text.TextUtils;
-import android.widget.EditText;
+
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.dom.TextAreaEditTextDomObject;
@@ -237,6 +237,16 @@ public class Textarea extends AbstractEditComponent {
 
     editText.setLines(rows);
     editText.setMinLines(rows);
+  }
+
+  @Override
+  protected boolean setProperties(Object param, String key) {
+    switch (key) {
+      case WXDomPropConstant.WX_ATTR_TEXTAREA_ROWS:
+        setRows((Integer) param);
+        return true;
+    }
+    return super.setProperties(param, key);
   }
 
   @WXComponentProp(name = WXDomPropConstant.WX_ATTR_TEXTAREA_ROWS)

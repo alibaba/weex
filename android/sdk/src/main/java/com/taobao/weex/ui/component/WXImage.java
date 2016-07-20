@@ -244,7 +244,7 @@ public class WXImage extends WXComponent<ImageView> {
     }
 
     @Override
-    public void setBackgroundColor(String color) {
+    protected void setBackgroundColor(String color) {
         if (!TextUtils.isEmpty(color)) {
             int colorInt = WXResourceUtils.getColor(color);
             if (colorInt != Integer.MIN_VALUE) {
@@ -253,26 +253,41 @@ public class WXImage extends WXComponent<ImageView> {
         }
     }
 
-    @WXComponentProp(name = WXDomPropConstant.WX_BORDERRADIUS)
-    public void setBorderRadius(float borderRadius) {
+    @Override
+    protected void setBorderRadius(String key, float borderRadius) {
 
     }
 
-    @WXComponentProp(name = WXDomPropConstant.WX_BORDERWIDTH)
-    public void setBorderWidth(float borderWidth) {
+    @Override
+    protected void setBorderWidth(String key, float borderWidth) {
 
     }
 
-    @WXComponentProp(name = WXDomPropConstant.WX_BORDERSTYLE)
-    public void setBorderStyle(String borderStyle) {
+    @Override
+    protected void setBorderStyle(String borderStyle) {
 
     }
 
-    @WXComponentProp(name = WXDomPropConstant.WX_BORDERCOLOR)
-    public void setBorderColor(String borderColor) {
+    @Override
+    protected void setBorderColor(String key, String borderColor) {
 
     }
 
+    @Override
+    protected boolean setProperties(Object param, String key) {
+        switch (key) {
+            case WXDomPropConstant.WX_RESIZE_MODE:
+                setResizeMode((String) param);
+                return true;
+            case WXDomPropConstant.WX_RESIZE:
+                setResize((String) param);
+                return true;
+            case WXDomPropConstant.WX_ATTR_SRC:
+                setSrc((String) param);
+                return true;
+        }
+        return super.setProperties(param, key);
+    }
 
     @WXComponentProp(name = WXDomPropConstant.WX_RESIZE_MODE)
     public void setResizeMode(String resizeMode) {
