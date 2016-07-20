@@ -210,6 +210,8 @@ import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.Destroyable;
 import com.taobao.weex.common.WXException;
 import com.taobao.weex.common.WXModule;
+import com.taobao.weex.dom.WXDomModule;
+import com.taobao.weex.ui.module.WXTimerModule;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXReflectionUtils;
 
@@ -364,7 +366,9 @@ public class WXModuleManager {
       WXLogUtils.e("callModuleMethod >>> invoke module:" + moduleStr + ", method:" + methodStr + " failed. " + WXLogUtils.getStackTrace(e));
       return false;
     } finally {
-      wxModule.mWXSDKInstance = null;
+      if (wxModule instanceof WXDomModule || wxModule instanceof WXTimerModule) {
+        wxModule.mWXSDKInstance = null;
+      }
     }
     return true;
   }
@@ -433,12 +437,12 @@ public class WXModuleManager {
 
 
     @Override
-    public void invoke(Map<String, Object> data) {
+    public void invoke(Object data) {
       WXBridgeManager.getInstance().callback(mInstanceId,mCallbackId,data,false);
     }
 
     @Override
-    public void invokeAndKeepAlive(Map<String, Object> data) {
+    public void invokeAndKeepAlive(Object data) {
       WXBridgeManager.getInstance().callback(mInstanceId,mCallbackId,data,true);
     }
   }

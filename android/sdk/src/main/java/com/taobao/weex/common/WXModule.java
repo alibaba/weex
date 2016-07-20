@@ -211,9 +211,5 @@ import com.taobao.weex.WXSDKInstance;
  */
 public abstract class WXModule implements IWXObject {
 
-  /**
-   * Only invalid when method with {@link WXModuleAnno} annotation is executing.
-   * Do <strong>not</strong> hold reference to this object other than above situation.
-   */
   public WXSDKInstance mWXSDKInstance;
 }
