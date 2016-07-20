@@ -228,6 +228,7 @@ import com.taobao.weex.ui.view.WXScrollView.WXScrollViewListener;
 import com.taobao.weex.ui.view.refresh.wrapper.BaseBounceView;
 import com.taobao.weex.ui.view.refresh.wrapper.BounceScrollerView;
 import com.taobao.weex.utils.WXLogUtils;
+import com.taobao.weex.utils.WXUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
 import java.util.ArrayList;
@@ -495,6 +496,18 @@ public class WXScroller extends WXVContainer<ViewGroup> implements WXScrollViewL
 
   public Map<String, HashMap<String, WXComponent>> getStickMap() {
     return mStickyMap;
+  }
+
+  @Override
+  protected boolean setProperties(Object param, String key) {
+    switch (key) {
+      case WXDomPropConstant.WX_ATTR_SHOWSCROLLBAR:
+        Boolean result = WXUtils.getBoolean(param,null);
+        if (result != null)
+          setShowScrollbar(result);
+        return true;
+    }
+    return super.setProperties(param, key);
   }
 
   @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SHOWSCROLLBAR)

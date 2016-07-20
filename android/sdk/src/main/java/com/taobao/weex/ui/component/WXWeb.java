@@ -210,9 +210,11 @@ import android.text.TextUtils;
 import android.view.View;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.view.IWebView;
 import com.taobao.weex.ui.view.WXWebView;
+import com.taobao.weex.utils.WXUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -283,12 +285,27 @@ public class WXWeb extends WXComponent {
         getWebView().destroy();
     }
 
-    @WXComponentProp(name = "show-loading")
+    @Override
+    protected boolean setProperties(Object param, String key) {
+        switch (key) {
+            case WXDomPropConstant.WX_ATTR_SHOW_LOADING:
+                Boolean result = WXUtils.getBoolean(param,null);
+                if (result != null)
+                    setShowLoading((Boolean) param);
+                return true;
+            case WXDomPropConstant.WX_ATTR_SRC:
+                setUrl((String) param);
+                return true;
+        }
+        return super.setProperties(param, key);
+    }
+
+    @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SHOW_LOADING)
     public void setShowLoading(boolean showLoading) {
         getWebView().setShowLoading(showLoading);
     }
 
-    @WXComponentProp(name = "src")
+    @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SRC)
     public void setUrl(String url) {
         if (TextUtils.isEmpty(url) || mHost == null) {
             return;

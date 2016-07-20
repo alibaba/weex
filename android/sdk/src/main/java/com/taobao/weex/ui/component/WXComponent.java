@@ -469,9 +469,10 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
   protected boolean setProperties(Object param, String key) {
     switch (key) {
       case WXDomPropConstant.WX_ATTR_DISABLED:
-        Boolean result = WXUtils.getBoolean(param);
-        if (result != null)
+        Boolean result = WXUtils.getBoolean(param,null);
+        if (result != null) {
           setDisabled(result);
+        }
         return true;
       case WXDomPropConstant.WX_POSITION:
         setSticky((String) param);

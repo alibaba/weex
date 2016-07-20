@@ -353,4 +353,15 @@ public class WXDomPropConstant {
   public static final String WX_VISIBILITY_VISIBLE = WX_OVERFLOW_VISIBLE;
   public static final String WX_VISIBILITY_HIDDEN = WX_OVERFLOW_HIDDEN;
 
+  //indicator
+  public static final String WX_ATTR_ITEM_COLOR = "itemColor";
+  public static final String WX_ATTR_ITEM_SELECTED_COLOR = "itemSelectedColor";
+  public static final String WX_ATTR_ITEM_SIZE = "itemSize";
+
+  //refresh
+  public static final String WX_ATTR_DISPLAY = "display";
+
+  //web
+  public static final String WX_ATTR_SHOW_LOADING = "show-loading";
+
 }

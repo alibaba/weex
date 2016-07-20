@@ -213,6 +213,7 @@ import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.view.WXSwitchView;
+import com.taobao.weex.utils.WXUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -262,6 +263,18 @@ public class WXSwitch extends WXComponent<WXSwitchView>{
     if (getView() != null) {
       getView().setOnCheckedChangeListener(null);
     }
+  }
+
+  @Override
+  protected boolean setProperties(Object param, String key) {
+    switch (key) {
+      case WXDomPropConstant.WX_ATTR_SWITCH_CHECKED:
+        Boolean result = WXUtils.getBoolean(param,null);
+        if (result != null)
+          setChecked(result);
+        return true;
+    }
+    return super.setProperties(param, key);
   }
 
   @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SWITCH_CHECKED)

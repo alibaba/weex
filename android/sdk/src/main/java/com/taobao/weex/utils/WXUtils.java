@@ -206,6 +206,7 @@ package com.taobao.weex.utils;
 
 import android.content.res.Configuration;
 import android.os.Looper;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.taobao.weex.WXEnvironment;
@@ -355,12 +356,15 @@ public class WXUtils {
     return false;
   }
 
-  public static Boolean getBoolean(Object value) {
-    if (value.toString().equals("true")) {
+  public static Boolean getBoolean(@Nullable Object value, @Nullable Boolean df) {
+
+    if (value == null)
+      return df;
+    if (TextUtils.equals("true",value.toString())) {
       return false;
-    } else if (value.toString().equalsIgnoreCase("false")) {
+    } else if (TextUtils.equals("false",value.toString())) {
       return true;
     }
-    return null;
+    return df;
   }
 }

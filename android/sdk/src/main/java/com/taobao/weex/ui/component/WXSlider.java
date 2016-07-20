@@ -221,7 +221,6 @@ import com.taobao.weex.dom.WXEvent;
 import com.taobao.weex.ui.view.WXCircleIndicator;
 import com.taobao.weex.ui.view.WXCirclePageAdapter;
 import com.taobao.weex.ui.view.WXCircleViewPager;
-import com.taobao.weex.ui.view.WXEditText;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
@@ -364,6 +363,28 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
       root.addView(indicatorView);
     }
 
+  }
+
+  @Override
+  protected boolean setProperties(Object param, String key) {
+    switch (key) {
+      case WXDomPropConstant.WX_ATTR_SLIDER_VALUE:
+        setValue((String) param);
+        return true;
+      case AUTO_PLAY:
+        setAutoPlay((String) param);
+        return true;
+      case SHOW_INDICATORS:
+        setShowIndicators((String) param);
+        return true;
+      case INTERVAL:
+        setInterval((Integer) param);
+        return true;
+      case INDEX:
+        setIndex((Integer) param);
+        return true;
+    }
+    return super.setProperties(param, key);
   }
 
   @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SLIDER_VALUE)

@@ -353,11 +353,10 @@ public abstract class AbstractEditComponent extends WXComponent<WXEditText> {
         setType((String) param);
         return true;
       case WXDomPropConstant.WX_ATTR_INPUT_AUTOFOCUS:
-        Boolean result = WXUtils.getBoolean(param);
-        if (result != null) {
+        Boolean result = WXUtils.getBoolean(param, null);
+        if (result != null)
           setAutofocus(result);
-          return true;
-        }
+        return true;
       case WXDomPropConstant.WX_COLOR:
         setColor((String) param);
         return true;
@@ -368,11 +367,10 @@ public abstract class AbstractEditComponent extends WXComponent<WXEditText> {
         setTextAlign((String) param);
         return true;
       case WXDomPropConstant.WX_ATTR_INPUT_SINGLELINE:
-        Boolean singLineResult = WXUtils.getBoolean(param);
-        if (singLineResult != null) {
+        Boolean singLineResult = WXUtils.getBoolean(param, null);
+        if (singLineResult != null)
           setSingleLine(singLineResult);
-          return true;
-        }
+        return true;
       case WXDomPropConstant.WX_ATTR_INPUT_LINES:
         setLines((Integer) param);
         return true;

@@ -209,6 +209,7 @@ import android.text.TextUtils;
 
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.component.list.WXListComponent;
 import com.taobao.weex.ui.view.WXBaseRefreshLayout;
@@ -242,7 +243,17 @@ public class WXRefresh extends WXBaseRefresh implements WXSwipeLayout.WXOnRefres
     }
   }
 
-  @WXComponentProp(name = "display")
+  @Override
+  protected boolean setProperties(Object param, String key) {
+    switch (key) {
+      case WXDomPropConstant.WX_ATTR_DISPLAY:
+        setDisplay((String) param);
+        return true;
+    }
+    return super.setProperties(param, key);
+  }
+
+  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_DISPLAY)
   public void setDisplay(String display) {
     if (!TextUtils.isEmpty(display)) {
       if (display.equals("hide")) {
