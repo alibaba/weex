@@ -227,8 +227,11 @@ public class TextAreaEditTextDomObject extends BasicEditTextDomObject {
   protected void updateStyleAndAttrs() {
     super.updateStyleAndAttrs();
     if (attr != null) {
-      String rowsStr = (String) attr.get(WXDomPropConstant.WX_ATTR_TEXTAREA_ROWS);
-      if (rowsStr != null) {
+      Object raw = attr.get(WXDomPropConstant.WX_ATTR_TEXTAREA_ROWS);
+      if( raw == null){
+        return;
+      }else if(raw instanceof  String) {
+        String rowsStr = (String) raw;
         try {
           int lines = Integer.parseInt(rowsStr);
           if (lines > 0) {
@@ -237,6 +240,8 @@ public class TextAreaEditTextDomObject extends BasicEditTextDomObject {
         } catch (NumberFormatException e) {
           e.printStackTrace();
         }
+      }else if( raw instanceof Integer){
+        mNumberOfLines = (Integer) raw;
       }
     }
   }
