@@ -155,6 +155,8 @@
 		0A0103201D35E25300F0D592 /* WXDevTool.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A01029B1D35E25300F0D592 /* WXDevTool.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A0103211D35E25300F0D592 /* WXDevTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A01029C1D35E25300F0D592 /* WXDevTool.m */; };
 		0A0103221D35E27000F0D592 /* TBWXDevTool.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AFA0ECE1D2CE79E006E30BB /* TBWXDevTool.h */; };
+		0ABB39F11D3F37700091332E /* TBWXDevTool_MTL.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0ABB39F01D3F37700091332E /* TBWXDevTool_MTL.h */; };
+		0ABB39F31D3F37700091332E /* TBWXDevTool_MTL.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ABB39F21D3F37700091332E /* TBWXDevTool_MTL.m */; };
 		0ABDFC6F1D3C7B6900206418 /* WXDebugDomain.h in Headers */ = {isa = PBXBuildFile; fileRef = 0ABDFC6D1D3C7B6900206418 /* WXDebugDomain.h */; };
 		0ABDFC701D3C7B6900206418 /* WXDebugDomain.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ABDFC6E1D3C7B6900206418 /* WXDebugDomain.m */; };
 		0ABDFC731D3C7C2000206418 /* WXDebugDomainController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0ABDFC711D3C7C1F00206418 /* WXDebugDomainController.h */; };
@@ -167,6 +169,19 @@
 		0AFA10141D2CEC49006E30BB /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AFA10131D2CEC49006E30BB /* CoreData.framework */; };
 		75C1C0A17938023E1B39089E /* libPods-TBWXDevTool.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A04B5D4DF9E863CD1DE1B075 /* libPods-TBWXDevTool.a */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		0ABB39EC1D3F37700091332E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+				0ABB39F11D3F37700091332E /* TBWXDevTool_MTL.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0A0102161D35E25300F0D592 /* PDApplicationCacheDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDApplicationCacheDomain.h; sourceTree = "<group>"; };
@@ -302,6 +317,9 @@
 		0A0102991D35E25300F0D592 /* WXDeviceInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXDeviceInfo.m; sourceTree = "<group>"; };
 		0A01029B1D35E25300F0D592 /* WXDevTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXDevTool.h; sourceTree = "<group>"; };
 		0A01029C1D35E25300F0D592 /* WXDevTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXDevTool.m; sourceTree = "<group>"; };
+		0ABB39EE1D3F37700091332E /* libTBWXDevTool_MTL.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTBWXDevTool_MTL.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		0ABB39F01D3F37700091332E /* TBWXDevTool_MTL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBWXDevTool_MTL.h; sourceTree = "<group>"; };
+		0ABB39F21D3F37700091332E /* TBWXDevTool_MTL.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBWXDevTool_MTL.m; sourceTree = "<group>"; };
 		0ABDFC6D1D3C7B6900206418 /* WXDebugDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXDebugDomain.h; sourceTree = "<group>"; };
 		0ABDFC6E1D3C7B6900206418 /* WXDebugDomain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXDebugDomain.m; sourceTree = "<group>"; };
 		0ABDFC711D3C7C1F00206418 /* WXDebugDomainController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXDebugDomainController.h; sourceTree = "<group>"; };
@@ -322,6 +340,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		0ABB39EB1D3F37700091332E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0AFA0EC71D2CE79E006E30BB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -500,10 +525,20 @@
 			path = Source/WXHeader;
 			sourceTree = "<group>";
 		};
+		0ABB39EF1D3F37700091332E /* TBWXDevTool_MTL */ = {
+			isa = PBXGroup;
+			children = (
+				0ABB39F01D3F37700091332E /* TBWXDevTool_MTL.h */,
+				0ABB39F21D3F37700091332E /* TBWXDevTool_MTL.m */,
+			);
+			path = TBWXDevTool_MTL;
+			sourceTree = "<group>";
+		};
 		0AFA0EC11D2CE79E006E30BB = {
 			isa = PBXGroup;
 			children = (
 				0AFA0ECD1D2CE79E006E30BB /* WXDevTool */,
+				0ABB39EF1D3F37700091332E /* TBWXDevTool_MTL */,
 				0AFA10171D2CEC61006E30BB /* Frameworks */,
 				0AFA0ECC1D2CE79E006E30BB /* Products */,
 				5BBAAFD202BB8905B015DA7C /* Pods */,
@@ -514,6 +549,7 @@
 			isa = PBXGroup;
 			children = (
 				0AFA0ECB1D2CE79E006E30BB /* TBWXDevTool.framework */,
+				0ABB39EE1D3F37700091332E /* libTBWXDevTool_MTL.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -646,6 +682,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		0ABB39ED1D3F37700091332E /* TBWXDevTool_MTL */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0ABB39F41D3F37700091332E /* Build configuration list for PBXNativeTarget "TBWXDevTool_MTL" */;
+			buildPhases = (
+				0ABB39EA1D3F37700091332E /* Sources */,
+				0ABB39EB1D3F37700091332E /* Frameworks */,
+				0ABB39EC1D3F37700091332E /* CopyFiles */,
+				0ABB39F71D3F377B0091332E /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TBWXDevTool_MTL;
+			productName = TBWXDevTool_MTL;
+			productReference = 0ABB39EE1D3F37700091332E /* libTBWXDevTool_MTL.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		0AFA0ECA1D2CE79E006E30BB /* TBWXDevTool */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0AFA0ED31D2CE79E006E30BB /* Build configuration list for PBXNativeTarget "TBWXDevTool" */;
@@ -676,6 +730,9 @@
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = Taobao;
 				TargetAttributes = {
+					0ABB39ED1D3F37700091332E = {
+						CreatedOnToolsVersion = 7.2.1;
+					};
 					0AFA0ECA1D2CE79E006E30BB = {
 						CreatedOnToolsVersion = 7.2.1;
 					};
@@ -699,6 +756,7 @@
 			targets = (
 				0AFA0ECA1D2CE79E006E30BB /* TBWXDevTool */,
 				0AFA101A1D2D1439006E30BB /* TBWeexDevTool */,
+				0ABB39ED1D3F37700091332E /* TBWXDevTool_MTL */,
 			);
 		};
 /* End PBXProject section */
@@ -714,6 +772,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		0ABB39F71D3F377B0091332E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/sh\n\nexport LANG=en_US.UTF-8\n\n# capture ERR signal\ntrap 'exit 2' ERR\n\nBUILD_CONFIG=Release\n\nrm -rf Products/*\n                \n                DEVICE_ARCHS=\"$1\"\n                [ -z \"$DEVICE_ARCHS\" ] && {\n                DEVICE_ARCHS=\"armv7 arm64\";\n                };\n                \n                echo \"ARCHS: $DEVICE_ARCHS\"\n                echo \"\"\n                \n                for arch in $DEVICE_ARCHS; do\n                BUILD_ARCHS=\"$BUILD_ARCHS -arch $arch\"\n                done\n                \n                \n                files=`ls`\n                WORKSPACE=\n                PROJECT=\n                for file in $files\n                do\n                if [ `echo $file|grep 'xcworkspace'` ];then\n                WORKSPACE=$file\n                echo \"=> found xcode workspace : '$WORKSPACE'\"\n                elif [ `echo $file|grep 'xcodeproj'` ];then\n                PROJECT=$file\n                echo \"=> found xocde project : '$PROJECT'\"\n                fi\n                done;\n                \n                PROJECT=`ls .|grep xcodeproj|cut -d. -f1`\n                SRCROOT=.\n                \n                #SCHEMES=`xcodebuild -list |sed -n '/Schemes/,$p' | awk 'NR>1'`\n                SCHEME='TBWXDevTool'\n                \n                # Sets the target folders and the final framework product.\n                FRAMEWORK_NAME=`xcodebuild -sdk iphoneos -showBuildSettings|grep 'PRODUCT_NAME'|awk 'NR>1'|awk -F '=' '{print $2}'|awk 'gsub(/^ *| *$/,\"\")'`\n                echo \"FRAMEWORK_NAME=>${FRAMEWORK_NAME}\"\n                \n                FRAMEWORK_VERSION=1.0\n                FRAMEWORK_CONFIG=$BUILD_CONFIG\n                [ -z $BUILD_CONFIG ] && {\n                FRAMEWORK_CONFIG=Debug;\n                }\n                \n                echo \"Building configuration \\`$FRAMEWORK_CONFIG'\"\n                \n                # The products directory will be creates when building the project.\n                PRODUCT_DIR=Products\n                [[ ! -d \"$PRODUCT_DIR\" ]] && { mkdir -pv \"$PRODUCT_DIR\"; }\n                \n                \n                # DEVICE_FRAMEWORK=${PRODUCT_DIR}/${FRAMEWORK_CONFIG}-iphoneos/${FRAMEWORK_NAME}.framework\n                # SIMULATOR_FRAMEWORK=${PRODUCT_DIR}/${FRAMEWORK_CONFIG}-iphonesimulator/${FRAMEWORK_NAME}.framework\n                \n                # Building both architectures.\n                set -o history -o histexpand\n                BUILD_SETTINGS=\n                if [ $WORKSPACE ];then\n                xcodebuild clean build -workspace $WORKSPACE -configuration \"${FRAMEWORK_CONFIG}\" -scheme \"${SCHEME}\" -sdk iphoneos $BUILD_ARCHS\n                BUILD_SETTINGS=$(xcodebuild clean build -workspace $WORKSPACE -configuration \"${FRAMEWORK_CONFIG}\" -scheme \"${SCHEME}\" -sdk iphoneos $BUILD_ARCHS -showBuildSettings 2>/dev/null)\n                echo $BUILD_SETTINGS\n                eval \"$(echo \"$BUILD_SETTINGS\" | grep BUILT_PRODUCTS_DIR | grep \" = \" | sed \"s/ = /=/g\" | sed \"s/    //g\")\"\n                else\n                xcodebuild clean build -configuration \"${FRAMEWORK_CONFIG}\" -scheme \"${SCHEME}\" -sdk iphoneos $BUILD_ARCHS\n                BUILD_SETTINGS=$(xcodebuild clean build -configuration \"${FRAMEWORK_CONFIG}\" -scheme \"${SCHEME}\" -sdk iphoneos $BUILD_ARCHS -showBuildSettings 2>/dev/null)\n                eval \"$(echo \"$BUILD_SETTINGS\" | grep BUILT_PRODUCTS_DIR | grep \" = \" | sed \"s/ = /=/g\" | sed \"s/    //g\")\"\n                fi\n                echo \"==》BUILT_PRODUCTS_DIR: ${BUILT_PRODUCTS_DIR} \"\n                DEVICE_FRAMEWORK=${BUILT_PRODUCTS_DIR}/${FRAMEWORK_NAME}.framework\n                \n                \n                set -o history -o histexpand\n                if [ $WORKSPACE ];then\n                xcodebuild clean build -workspace $WORKSPACE -configuration \"${FRAMEWORK_CONFIG}\" -scheme \"${SCHEME}\" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6s'\n                BUILD_SETTINGS=$(xcodebuild clean build -workspace $WORKSPACE -configuration \"${FRAMEWORK_CONFIG}\" -scheme \"${SCHEME}\" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6s' -showBuildSettings 2>/dev/null)\n                echo $BUILD_SETTINGS\n                eval \"$(echo \"$BUILD_SETTINGS\" | grep BUILT_PRODUCTS_DIR | grep \" = \" | sed \"s/ = /=/g\" | sed \"s/    //g\")\"\n                else\n                xcodebuild clean build  -configuration \"${FRAMEWORK_CONFIG}\" -scheme \"${SCHEME}\" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6s'\n                BUILD_SETTINGS=$(xcodebuild clean build  -configuration \"${FRAMEWORK_CONFIG}\" -scheme \"${SCHEME}\" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6s' -showBuildSettings 2>/dev/null)\n                echo $BUILD_SETTINGS\n                eval \"$(echo \"$BUILD_SETTINGS\" | grep BUILT_PRODUCTS_DIR | grep \" = \" | sed \"s/ = /=/g\" | sed \"s/    //g\")\"\n                fi\n                echo \"==》BUILT_PRODUCTS_DIR: ${BUILT_PRODUCTS_DIR} \"\n                SIMULATOR_FRAMEWORK=${BUILT_PRODUCTS_DIR}/${FRAMEWORK_NAME}.framework\n                \n                \n                # Copies the headers files to the final product folder.\n                cp -r \"${SIMULATOR_FRAMEWORK}\" \"${PRODUCT_DIR}\"\n                \n                # Uses the Lipo Tool to merge both binary files (i386 + armv7) into one Universal final product.\n                echo \"\"\n                rm -f \"${PRODUCT_DIR}/${FRAMEWORK_NAME}.framework/${FRAMEWORK_NAME}\"\n                echo \"Use 'lipo' to create fat binary(i386+arm).\"\n                lipo -create \"${DEVICE_FRAMEWORK}/${FRAMEWORK_NAME}\" \"${SIMULATOR_FRAMEWORK}/${FRAMEWORK_NAME}\" -output \"${PRODUCT_DIR}/${FRAMEWORK_NAME}.framework/${FRAMEWORK_NAME}\"\n                \n                \n                # Removes the temporary files.\n                echo \"Clean temporary files.\"\n                find $PRODUCT_DIR -depth 1 | grep \"Debug\\|Release\" | xargs rm -rf\n                \n                echo \"\\nBUILD FINISH.\"\n                \n                exit 0\n";
+		};
 		0AFA101E1D2D1478006E30BB /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -775,6 +846,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		0ABB39EA1D3F37700091332E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0ABB39F31D3F37700091332E /* TBWXDevTool_MTL.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0AFA0EC61D2CE79E006E30BB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -853,6 +932,24 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		0ABB39F51D3F37700091332E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		0ABB39F61D3F37700091332E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 		0AFA0ED11D2CE79E006E30BB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1018,6 +1115,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		0ABB39F41D3F37700091332E /* Build configuration list for PBXNativeTarget "TBWXDevTool_MTL" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0ABB39F51D3F37700091332E /* Debug */,
+				0ABB39F61D3F37700091332E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		0AFA0EC51D2CE79E006E30BB /* Build configuration list for PBXProject "TBWXDevTool" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
