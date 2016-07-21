@@ -116,12 +116,10 @@ static NSString *WXMD5Hash(NSString *string)
 @synthesize weexInstance;
 
 WX_EXPORT_METHOD(@selector(length:))
-WX_EXPORT_METHOD(@selector(key:callback:))
 WX_EXPORT_METHOD(@selector(getItem:callback:))
 WX_EXPORT_METHOD(@selector(setItem:value:))
 WX_EXPORT_METHOD(@selector(getAllKeys:))
 WX_EXPORT_METHOD(@selector(removeItem:))
-WX_EXPORT_METHOD(@selector(clear))
 
 - (void)dealloc{
     [_storage removeAllObjects];
@@ -147,19 +145,6 @@ WX_EXPORT_METHOD(@selector(clear))
         callback(@"unknown error!");
     }
     
-}
-
-- (void)key:(NSUInteger)index callback:(WXModuleCallback)callback
-{
-    NSError *error;
-    [self ensureSetup:&error];
-    
-    if (error) {
-        callback(error.description);
-        return ;
-    }
-    
-    callback([_storage allValues][index]);
 }
 
 - (void)getAllKeys:(WXModuleCallback)callback
@@ -234,15 +219,6 @@ WX_EXPORT_METHOD(@selector(clear))
         [_storage removeObjectForKey:key];
         [self writeStorage];
     }
-}
-
-- (void)clear
-{
-    dispatch_async(WXStorageGetMethodQueue(), ^{
-        [_storage removeAllObjects];
-        [[WXUtility globalCache] removeAllObjects];
-        WXStorageDeleteDirectory();
-    });
 }
 
 #pragma mark - Utils
