@@ -38,6 +38,7 @@ export function init (app, code, data) {
     result = bootstrap(app, name, {}, _data)
   }
   const bundleDocument = app.doc
+  const bundleRequireModule = name => app.requireModule(name)
 
   // prepare code
   let functionBody
@@ -88,6 +89,8 @@ export function init (app, code, data) {
       'render',
       '__weex_define__', // alias for define
       '__weex_bootstrap__', // alias for bootstrap
+      '__weex_document__', // alias for bootstrap
+      '__weex_require__',
       'setTimeout',
       'setInterval',
       'clearTimeout',
@@ -104,6 +107,8 @@ export function init (app, code, data) {
       bundleRender,
       bundleDefine,
       bundleBootstrap,
+      bundleDocument,
+      bundleRequireModule,
       timerAPIs.setTimeout,
       timerAPIs.setInterval,
       timerAPIs.clearTimeout,
@@ -119,6 +124,8 @@ export function init (app, code, data) {
       'render',
       '__weex_define__', // alias for define
       '__weex_bootstrap__', // alias for bootstrap
+      '__weex_document__', // alias for bootstrap
+      '__weex_require__',
       functionBody
     )
 
@@ -130,7 +137,9 @@ export function init (app, code, data) {
       bundleRegister,
       bundleRender,
       bundleDefine,
-      bundleBootstrap)
+      bundleBootstrap,
+      bundleDocument,
+      bundleRequireModule)
   }
 
   return result
