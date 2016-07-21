@@ -6,15 +6,8 @@ chai.use(sinonChai)
 
 global.callNative = function () {}
 
-import AppInstance from '../../../../default/app'
-// import * as bundle from '../../../../default/app/bundle'
-import * as ctrl from '../../../../default/app/ctrl'
+import App from '../../../../default/app'
 import { Element } from '../../../../vdom'
-import {
-  registerComponent,
-  requireComponent,
-  requireModule
-} from '../../../../default/app/register'
 
 describe('App Instance', () => {
   const oriCallNative = global.callNative
@@ -32,7 +25,7 @@ describe('App Instance', () => {
   })
 
   beforeEach(() => {
-    app = new AppInstance(Date.now() + '')
+    app = new App(Date.now() + '')
   })
 
   after(() => {
@@ -41,23 +34,18 @@ describe('App Instance', () => {
 
   describe('normal check', () => {
     it('is a class', () => {
-      expect(AppInstance).to.be.an('function')
+      expect(App).to.be.an('function')
     })
 
     it('being created', () => {
       expect(app).to.be.an('object')
-      expect(app).to.be.instanceof(AppInstance)
+      expect(app).to.be.instanceof(App)
     })
 
     it('with some apis', () => {
-      const proto = Object.getPrototypeOf(app)
-      // expect(proto).to.contain.all.keys(bundle)
-      expect(proto).to.contain.all.keys(ctrl)
-      expect(proto).to.contain.all.keys({
-        registerComponent,
-        requireComponent,
-        requireModule
-      })
+      expect(app.requireModule).a.function
+      expect(app.updateActions).a.function
+      expect(app.callTasks).a.function
     })
   })
 
@@ -130,4 +118,3 @@ describe('App Instance', () => {
     })
   })
 })
-

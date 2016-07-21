@@ -1,20 +1,32 @@
 /**
  * @fileOverview Main entry, instance manager
  *
- * - createInstance(instanceId, code, options, data)
- * - refreshInstance(instanceId, data)
- * - destroyInstance(instanceId)
+ * - createInstance(id, code, options, data)
+ * - refreshInstance(id, data)
+ * - destroyInstance(id)
  * - registerComponents(components)
  * - registerModules(modules)
- * - getRoot(instanceId)
+ * - getRoot(id)
  * - instanceMap
- * - callJS(instanceId, tasks)
+ * - callJS(id, tasks)
  *   - fireEvent(ref, type, data)
  *   - callback(funcId, data)
  */
 
 import config from './config'
-import AppInstance from './app'
+import App from './app'
+import {
+  init as initApp,
+  refresh,
+  destroy,
+  getRootElement,
+  fireEvent,
+  callback
+} from './app/ctrl'
+import {
+  initModules,
+  initMethods
+} from './app/register'
 import Vm from './vm'
 
 const {
@@ -32,58 +44,55 @@ export function init (cfg) {
 /**
  * create a Weex instance
  *
- * @param  {string} instanceId
+ * @param  {string} id
  * @param  {string} code
  * @param  {object} [options] option `HAS_LOG` enable print log
  * @param  {object} [data]
  */
-export function createInstance (instanceId, code, options, data) {
-  let instance = instanceMap[instanceId]
+export function createInstance (id, code, options, data) {
+  let instance = instanceMap[id]
   options = options || {}
-
   let result
   if (!instance) {
-    instance = new AppInstance(instanceId, options)
-    instanceMap[instanceId] = instance
-    result = instance.init(code, data)
+    instance = new App(id, options)
+    instanceMap[id] = instance
+    result = initApp(instance, code, data)
   }
   else {
-    result = new Error(`invalid instance id "${instanceId}"`)
+    result = new Error(`invalid instance id "${id}"`)
   }
-
   return result
 }
 
 /**
  * refresh a Weex instance
  *
- * @param  {string} instanceId
+ * @param  {string} id
  * @param  {object} data
  */
-export function refreshInstance (instanceId, data) {
-  const instance = instanceMap[instanceId]
+export function refreshInstance (id, data) {
+  const instance = instanceMap[id]
   let result
   if (instance) {
-    result = instance.refreshData(data)
+    result = refresh(instance, data)
   }
   else {
-    result = new Error(`invalid instance id "${instanceId}"`)
+    result = new Error(`invalid instance id "${id}"`)
   }
   return result
 }
 
 /**
  * destroy a Weex instance
- * @param  {string} instanceId
+ * @param  {string} id
  */
-export function destroyInstance (instanceId) {
-  const instance = instanceMap[instanceId]
+export function destroyInstance (id) {
+  const instance = instanceMap[id]
   if (!instance) {
-    return new Error(`invalid instance id "${instanceId}"`)
+    return new Error(`invalid instance id "${id}"`)
   }
-
-  instance.destroy()
-  delete instanceMap[instanceId]
+  destroy(instance)
+  delete instanceMap[id]
   return instanceMap
 }
 
@@ -114,7 +123,7 @@ export function registerComponents (components) {
  */
 export function registerModules (modules) {
   if (typeof modules === 'object') {
-    Vm.registerModules(modules)
+    initModules(modules)
   }
 }
 
@@ -122,62 +131,60 @@ export function registerModules (modules) {
  * register the name and methods of each api
  * @param  {object} apis a object of apis
  */
-export function registerMethods (apis) {
-  if (typeof apis === 'object') {
-    Vm.registerMethods(apis)
+export function registerMethods (methods) {
+  if (typeof methods === 'object') {
+    initMethods(Vm, methods)
   }
 }
+
 global.registerMethods = registerMethods
 
 /**
  * get a whole element tree of an instance
  * for debugging
- * @param  {string} instanceId
+ * @param  {string} id
  * @return {object} a virtual dom tree
  */
-export function getRoot (instanceId) {
-  const instance = instanceMap[instanceId]
+export function getRoot (id) {
+  const instance = instanceMap[id]
   let result
   if (instance) {
-    result = instance.getRootElement()
+    result = getRootElement(instance)
   }
   else {
-    result = new Error(`invalid instance id "${instanceId}"`)
+    result = new Error(`invalid instance id "${id}"`)
   }
   return result
 }
 
 const jsHandlers = {
-  fireEvent: function fireEvent (instanceId, ref, type, data, domChanges) {
-    const instance = instanceMap[instanceId]
-    return instance.fireEvent(ref, type, data, domChanges)
+  fireEvent: (id, ...args) => {
+    return fireEvent(instanceMap[id], ...args)
   },
-
-  callback: function callback (instanceId, funcId, data, ifLast) {
-    const instance = instanceMap[instanceId]
-    return instance.callback(funcId, data, ifLast)
+  callback: (id, ...args) => {
+    return callback(instanceMap[id], ...args)
   }
 }
 
 /**
  * accept calls from native (event or callback)
  *
- * @param  {string} instanceId
+ * @param  {string} id
  * @param  {array} tasks list with `method` and `args`
  */
-export function receiveTasks (instanceId, tasks) {
-  const instance = instanceMap[instanceId]
+export function receiveTasks (id, tasks) {
+  const instance = instanceMap[id]
   if (instance && Array.isArray(tasks)) {
     const results = []
     tasks.forEach((task) => {
       const handler = jsHandlers[task.method]
       const args = [...task.args]
       if (typeof handler === 'function') {
-        args.unshift(instanceId)
+        args.unshift(id)
         results.push(handler(...args))
       }
     })
     return results
   }
-  return new Error(`invalid instance id "${instanceId}" or tasks`)
+  return new Error(`invalid instance id "${id}" or tasks`)
 }
