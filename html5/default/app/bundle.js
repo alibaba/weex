@@ -62,7 +62,7 @@ export function clearCommonModules () {
  * Notice: DO NOT use function define() {},
  * it will cause error after builded by webpack
  */
-export function define (app, name, ...args) {
+export function defineFn (app, name, ...args) {
   console.debug(`[JS Framework] define a component ${name}`)
 
   // adapt args:

@@ -13,7 +13,7 @@
 import { extend, typof } from '../util'
 import renderer from '../config'
 import {
-  define,
+  defineFn,
   bootstrap,
   register
 } from './bundle'
@@ -23,7 +23,7 @@ export function init (app, code, data) {
   let result
 
   // prepare app env methods
-  const bundleDefine = (...args) => define(app, ...args)
+  const bundleDefine = (...args) => defineFn(app, ...args)
   const bundleBootstrap = (name, config, _data) => {
     result = bootstrap(app, name, config, _data || data)
     updateActions(app)
