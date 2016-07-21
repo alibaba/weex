@@ -211,6 +211,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.WXModule;
+import com.taobao.weex.utils.WXLogUtils;
 
 import java.util.ArrayList;
 
@@ -247,43 +248,50 @@ public final class WXDomModule extends WXModule {
     String method = (String) task.get(METHOD);
     JSONArray args = (JSONArray) task.get(ARGS);
 
-    switch (method) {
-      case CREATE_BODY:
-        createBody((JSONObject) args.get(0));
-        break;
-      case UPDATE_ATTRS:
-        updateAttrs((String) args.get(0), (JSONObject) args.get(1));
-        break;
-      case UPDATE_STYLE:
-        updateStyle((String) args.get(0), (JSONObject) args.get(1));
-        break;
-      case REMOVE_ELEMENT:
-        removeElement((String) args.get(0));
-        break;
-      case ADD_ELEMENT:
-        addElement((String) args.get(0), (JSONObject) args.get(1), (Integer) args.get(2));
-        break;
-      case MOVE_ELEMENT:
-        moveElement((String) args.get(0), (String) args.get(1), (Integer) args.get(2));
-        break;
-      case ADD_EVENT:
-        addEvent((String) args.get(0), (String) args.get(1));
-        break;
-      case REMOVE_EVENT:
-        removeEvent((String) args.get(0), (String) args.get(1));
-        break;
-      case CREATE_FINISH:
-        createFinish();
-        break;
-      case REFRESH_FINISH:
-        refreshFinish();
-        break;
-      case UPDATE_FINISH:
-        updateFinish();
-        break;
-      case SCROLL_TO_ELEMENT:
-        scrollToElement((String) args.get(0), (JSONObject) args.get(1));
-        break;
+    try {
+      switch (method) {
+        case CREATE_BODY:
+          createBody((JSONObject) args.get(0));
+          break;
+        case UPDATE_ATTRS:
+          updateAttrs((String) args.get(0), (JSONObject) args.get(1));
+          break;
+        case UPDATE_STYLE:
+          updateStyle((String) args.get(0), (JSONObject) args.get(1));
+          break;
+        case REMOVE_ELEMENT:
+          removeElement((String) args.get(0));
+          break;
+        case ADD_ELEMENT:
+          addElement((String) args.get(0), (JSONObject) args.get(1), (Integer) args.get(2));
+          break;
+        case MOVE_ELEMENT:
+          moveElement((String) args.get(0), (String) args.get(1), (Integer) args.get(2));
+          break;
+        case ADD_EVENT:
+          addEvent((String) args.get(0), (String) args.get(1));
+          break;
+        case REMOVE_EVENT:
+          removeEvent((String) args.get(0), (String) args.get(1));
+          break;
+        case CREATE_FINISH:
+          createFinish();
+          break;
+        case REFRESH_FINISH:
+          refreshFinish();
+          break;
+        case UPDATE_FINISH:
+          updateFinish();
+          break;
+        case SCROLL_TO_ELEMENT:
+          scrollToElement((String) args.get(0), (JSONObject) args.get(1));
+          break;
+      }
+
+    }catch (IndexOutOfBoundsException e){
+      // no enougn args
+      e.printStackTrace();
+      WXLogUtils.e("Dom module call miss arguments.");
     }
   }
 
