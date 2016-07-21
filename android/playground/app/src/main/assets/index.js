@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/2720f5df2d848285e38e4b2906e8540a", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/07af0ad494f255ee8dd4608f574faee0", [], function(__weex_require__, exports, __weex_module__){
 
 	;
 	  __webpack_require__(15);
@@ -82,7 +82,8 @@
 	        {name: 'showcase/new-fashion/index', title: 'Activity'},
 	        {name: 'showcase/calculator', title: 'Calculator'},
 	        {name: 'showcase/minesweeper', title: 'Minesweeper'},
-	        {name: 'showcase/ui', title: 'UI Gallery'}
+	        {name: 'showcase/ui', title: 'UI Gallery'},
+	        {name: 'showcase/skeleton', title: 'Skeleton Animation'}
 	      ]
 	    }}
 	  }
@@ -96,7 +97,7 @@
 	  }
 	})
 	})
-	;__weex_bootstrap__("@weex-component/2720f5df2d848285e38e4b2906e8540a", {
+	;__weex_bootstrap__("@weex-component/07af0ad494f255ee8dd4608f574faee0", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -104,7 +105,7 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/index", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/index", [], function(__weex_require__, exports, __weex_module__){
 
 	;
 	  __webpack_require__(2);
@@ -125,7 +126,7 @@
 /* 2 */
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/wxc-button", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/wxc-button", [], function(__weex_require__, exports, __weex_module__){
 
 	;
 	  __weex_module__.exports = {
@@ -253,7 +254,7 @@
 /* 3 */
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/wxc-hn", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/wxc-hn", [], function(__weex_require__, exports, __weex_module__){
 
 	;
 	  __weex_module__.exports = {
@@ -314,7 +315,7 @@
 /* 4 */
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/wxc-list-item", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/wxc-list-item", [], function(__weex_require__, exports, __weex_module__){
 
 	;
 	  __weex_module__.exports = {
@@ -372,7 +373,7 @@
 /* 5 */
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/wxc-panel", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/wxc-panel", [], function(__weex_require__, exports, __weex_module__){
 
 	;
 	  __weex_module__.exports = {
@@ -482,7 +483,7 @@
 /* 6 */
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/wxc-tip", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/wxc-tip", [], function(__weex_require__, exports, __weex_module__){
 
 	;
 	  __weex_module__.exports = {
@@ -553,7 +554,7 @@
 /* 7 */
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/wxc-countdown", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/wxc-countdown", [], function(__weex_require__, exports, __weex_module__){
 
 	;
 	__weex_module__.exports = {
@@ -670,7 +671,7 @@
 /* 8 */
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/wxc-marquee", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/wxc-marquee", [], function(__weex_require__, exports, __weex_module__){
 
 	;
 	__weex_module__.exports = {
@@ -771,7 +772,7 @@
 /* 9 */
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/wxc-navbar", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/wxc-navbar", [], function(__weex_require__, exports, __weex_module__){
 
 	;
 	    __weex_module__.exports = {
@@ -965,8 +966,25 @@
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/wxc-navpage", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/wxc-navpage", [], function(__weex_require__, exports, __weex_module__){
 	__webpack_require__(9);
+
+	;
+	    __weex_module__.exports = {
+	        data: function () {return {
+	          dataRole: 'navbar',
+	          backgroundColor: 'black',
+	          height: 88,
+	          title: "",
+	          titleColor: 'black',
+	          rightItemSrc: '',
+	          rightItemTitle: '',
+	          rightItemColor: 'black',
+	          leftItemSrc: '',
+	          leftItemTitle: '',
+	          leftItemColor: 'black',
+	        }}
+	    }
 
 	;__weex_module__.exports.template = __weex_module__.exports.template || {}
 	;Object.assign(__weex_module__.exports.template, {
@@ -1024,7 +1042,7 @@
 /* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/wxc-tabbar", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/wxc-tabbar", [], function(__weex_require__, exports, __weex_module__){
 	__webpack_require__(12);
 
 	;
@@ -1144,7 +1162,7 @@
 /* 12 */
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/wxc-tabitem", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/wxc-tabitem", [], function(__weex_require__, exports, __weex_module__){
 
 	;
 	    __weex_module__.exports = {
@@ -1246,7 +1264,7 @@
 /* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/example-list", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/example-list", [], function(__weex_require__, exports, __weex_module__){
 	__webpack_require__(16);
 
 	;
@@ -1334,7 +1352,7 @@
 /* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/example-list-item", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/example-list-item", [], function(__weex_require__, exports, __weex_module__){
 
 	;
 	  __webpack_require__(1);
