@@ -205,7 +205,6 @@
 package com.taobao.weex.ui.component;
 
 import android.text.TextUtils;
-import android.widget.EditText;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.dom.TextAreaEditTextDomObject;
@@ -241,7 +240,7 @@ public class Textarea extends AbstractEditComponent {
 
   @WXComponentProp(name = WXDomPropConstant.WX_ATTR_TEXTAREA_ROWS)
   public void setRows(int rows){
-    WXEditText text = getView();
+    WXEditText text = getHostView();
     if(text == null||rows <=0 ){
       return;
     }

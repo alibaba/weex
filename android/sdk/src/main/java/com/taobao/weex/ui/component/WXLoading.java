@@ -242,9 +242,9 @@ public class WXLoading extends WXBaseRefresh implements WXSwipeLayout.WXOnLoadin
     if (!TextUtils.isEmpty(display)) {
       if (display.equals("hide")) {
         if (getParent() instanceof WXListComponent || getParent() instanceof WXScroller) {
-          if (((BaseBounceView)getParent().getView()).getSwipeLayout().isRefreshing()) {
-            ((BaseBounceView) getParent().getView()).finishPullLoad();
-            ((BaseBounceView) getParent().getView()).onLoadmoreComplete();
+          if (((BaseBounceView)getParent().getHostView()).getSwipeLayout().isRefreshing()) {
+            ((BaseBounceView) getParent().getHostView()).finishPullLoad();
+            ((BaseBounceView) getParent().getHostView()).onLoadmoreComplete();
           }
         }
       }

@@ -424,18 +424,18 @@ public abstract class AbstractEditComponent extends WXComponent<WXEditText> {
 
   @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_LINES)
   public void setLines(int lines) {
-    if (getView() == null) {
+    if (getHostView() == null) {
       return;
     }
-    getView().setLines(lines);
+    getHostView().setLines(lines);
   }
 
   @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_MAXLENGTH)
   public void setMaxLength(int maxLength) {
-    if (getView() == null) {
+    if (getHostView() == null) {
       return;
     }
-    getView().setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
+    getHostView().setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
   }
 
   @Override
@@ -460,7 +460,7 @@ public abstract class AbstractEditComponent extends WXComponent<WXEditText> {
         break;
       case WXDomPropConstant.WX_ATTR_INPUT_TYPE_PASSWORD:
         inputType = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD;
-        getView().setTransformationMethod(PasswordTransformationMethod.getInstance());
+        getHostView().setTransformationMethod(PasswordTransformationMethod.getInstance());
         break;
       case WXDomPropConstant.WX_ATTR_INPUT_TYPE_TEL:
         inputType = InputType.TYPE_CLASS_PHONE;

@@ -239,8 +239,8 @@ public class WXSwitch extends WXComponent<WXSwitchView>{
   @Override
   public void addEvent(String type) {
     super.addEvent(type);
-    if (type != null && type.equals(WXEventType.CHANGE) && getView() != null) {
-      getView().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+    if (type != null && type.equals(WXEventType.CHANGE) && getHostView() != null) {
+      getHostView().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
           Map<String, Object> params = new HashMap<>(2);
@@ -259,13 +259,13 @@ public class WXSwitch extends WXComponent<WXSwitchView>{
   @Override
   protected void removeEventFromView(String type) {
     super.removeEventFromView(type);
-    if (getView() != null) {
-      getView().setOnCheckedChangeListener(null);
+    if (getHostView() != null) {
+      getHostView().setOnCheckedChangeListener(null);
     }
   }
 
   @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SWITCH_CHECKED)
   public void setChecked(boolean checked) {
-    getView().setChecked(checked);
+    getHostView().setChecked(checked);
   }
 }

@@ -209,7 +209,6 @@ import android.view.ViewGroup;
 
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.ui.view.WXFrameLayout;
 
 import java.util.ArrayList;
 
@@ -230,6 +229,14 @@ public abstract class WXVContainer<T extends ViewGroup> extends WXComponent<T> {
     super(instance, node, parent, lazy);
   }
 
+  /**
+   * use {@link #getHostView()} instead
+   * @return
+   */
+  @Deprecated
+  public ViewGroup getView(){
+    return mHost;
+  }
 
   @Override
   public void applyLayoutAndEvent(WXComponent component) {
@@ -284,8 +291,8 @@ public abstract class WXVContainer<T extends ViewGroup> extends WXComponent<T> {
     for (int i = 0; i < count; ++i) {
       getChild(i).createViewImpl(this, i);
     }
-    if(getView()!=null){
-       getView().setClipToPadding(false);
+    if(getHostView()!=null){
+       getHostView().setClipToPadding(false);
     }
   }
 
@@ -365,9 +372,9 @@ public abstract class WXVContainer<T extends ViewGroup> extends WXComponent<T> {
     if(mInstance!=null
             &&mInstance.getRootView()!=null
             && child.mDomObj.isFixed()){
-      mInstance.getRootView().removeView(child.getView());
+      mInstance.getRootView().removeView(child.getHostView());
     }else if(getRealView() != null) {
-      getRealView().removeView(child.getView());
+      getRealView().removeView(child.getHostView());
     }
     if(destroy) {
       child.destroy();
@@ -377,11 +384,11 @@ public abstract class WXVContainer<T extends ViewGroup> extends WXComponent<T> {
   @Override
   public void notifyAppearStateChange(String wxEventType, String direction) {
     super.notifyAppearStateChange(wxEventType, direction);
-    if(getView()==null || mChildren==null){
+    if(getHostView()==null || mChildren==null){
       return;
     }
     for(WXComponent component:mChildren){
-      if(component.getView()!=null && !(component.getView().getVisibility()==View.VISIBLE)){
+      if(component.getHostView()!=null && !(component.getHostView().getVisibility()==View.VISIBLE)){
         wxEventType=WXEventType.DISAPPEAR;
       }
       component.notifyAppearStateChange(wxEventType,direction);
