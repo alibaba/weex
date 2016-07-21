@@ -208,7 +208,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.taobao.weex.utils.WXLogUtils;
 
@@ -255,14 +254,13 @@ public class WXDatabaseSupplier extends SQLiteOpenHelper {
         return sInstance;
     }
 
-    synchronized SQLiteDatabase get() {
+    SQLiteDatabase get() {
         ensureDatabase();
         return mDb;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.e("TEST",STATEMENT_CREATE_TABLE);
         db.execSQL(STATEMENT_CREATE_TABLE);
     }
 
@@ -311,12 +309,12 @@ public class WXDatabaseSupplier extends SQLiteOpenHelper {
         }
     }
 
-    private synchronized boolean deleteDB() {
+    private boolean deleteDB() {
         closeDatabase();
         return mContext.deleteDatabase(DATABASE_NAME);
     }
 
-    private synchronized void closeDatabase() {
+    public void closeDatabase() {
         if (mDb != null && mDb.isOpen()) {
             mDb.close();
             mDb = null;

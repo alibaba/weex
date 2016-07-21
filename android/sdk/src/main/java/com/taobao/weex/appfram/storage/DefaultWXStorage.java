@@ -237,6 +237,7 @@ public class DefaultWXStorage implements IWXStorageAdapter {
             return false;
         }finally {
             statement.close();
+            mDatabaseSupplier.closeDatabase();
         }
     }
 
@@ -258,14 +259,20 @@ public class DefaultWXStorage implements IWXStorageAdapter {
             return null;
         }finally {
             c.close();
+            mDatabaseSupplier.closeDatabase();
         }
     }
 
     @Override
     public boolean removeItem(String key) {
-        int count = mDatabaseSupplier.get().delete(WXDatabaseSupplier.TABLE_STORAGE,
-                WXDatabaseSupplier.COLUMN_KEY+"=?",
-                new String[]{key});
+        int count = 0;
+        try {
+            count = mDatabaseSupplier.get().delete(WXDatabaseSupplier.TABLE_STORAGE,
+                    WXDatabaseSupplier.COLUMN_KEY+"=?",
+                    new String[]{key});
+        }finally{
+            mDatabaseSupplier.closeDatabase();
+        }
         return count==1;
     }
 
@@ -280,6 +287,7 @@ public class DefaultWXStorage implements IWXStorageAdapter {
             return 0;
         }finally {
             statement.close();
+            mDatabaseSupplier.closeDatabase();
         }
     }
 
@@ -297,6 +305,7 @@ public class DefaultWXStorage implements IWXStorageAdapter {
             return result;
         }finally {
             c.close();
+            mDatabaseSupplier.closeDatabase();
         }
 
     }
