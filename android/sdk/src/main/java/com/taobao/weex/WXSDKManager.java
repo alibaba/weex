@@ -136,6 +136,7 @@ import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
 import com.taobao.weex.adapter.IWXUserTrackAdapter;
 import com.taobao.weex.appfram.navigator.IActivityNavBarSetter;
+import com.taobao.weex.appfram.storage.IWXStorageAdapter;
 import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.bridge.WXModuleManager;
 import com.taobao.weex.common.WXRefreshData;
@@ -165,6 +166,8 @@ public class WXSDKManager {
   private IWXHttpAdapter mIWXHttpAdapter;
   private IWXDebugAdapter mIWXDebugAdapter;
   private IActivityNavBarSetter mActivityNavBarSetter;
+
+  private IWXStorageAdapter mIWXStorageAdapter;
 
   private WXSDKManager() {
     mWXRenderManager = new WXRenderManager();
@@ -317,4 +320,14 @@ public class WXSDKManager {
   public void setIWXDebugAdapter(IWXDebugAdapter IWXDebugAdapter) {
     mIWXDebugAdapter = IWXDebugAdapter;
   }
+
+  void setIWXStorageAdapter(IWXStorageAdapter storageAdapter){
+    this.mIWXStorageAdapter = storageAdapter;
+  }
+
+  public IWXStorageAdapter getIWXStorageAdapter(){
+    return mIWXStorageAdapter;
+  }
+
+
 }
