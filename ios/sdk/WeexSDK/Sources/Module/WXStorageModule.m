@@ -7,195 +7,322 @@
  */
 
 #import "WXStorageModule.h"
-#import <WeexSDK/WXSDKManager.h>
-#import <WeexSDK/WXUtility.h>
+#import "WXSDKManager.h"
+#import "WXUtility.h"
+#import "WXAssert.h"
+#import <CommonCrypto/CommonCrypto.h>
 
-#define defaultKey  @"default"
-#define LocalStoreFile @"store.plist"
+static NSString * const WXStorageDirectory            = @"wxstorage_v1";
+static NSString * const WXStorageFileName             = @"wxstorage.json";
+static NSUInteger const WXStorageInlineValueThreshold = 1024;
+static NSString * const WXStorageThreadName           = @"com.taobao.weex.storage";
+static BOOL             WXStorageHasCreatedDirectory  = NO;
+/**
+ *  @abstract macro for asserting that we are running on the storage thread.
+ */
+#define WXAssertStorageThread() \
+WXAssert([[NSThread currentThread].name isEqualToString:WXStorageThreadName], @"must be called on the storage thread")
 
-@implementation WXStorageModule
+static dispatch_queue_t WXStorageGetMethodQueue() {
+    static dispatch_queue_t storageQueue;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        storageQueue = dispatch_queue_create("com.taobao.weex.storage", DISPATCH_QUEUE_SERIAL);
+    });
+    return storageQueue;
+}
+
+static NSString * WXStorageGetDirectory() {
+    static NSString *storageDirectory = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        storageDirectory = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
+        storageDirectory = [storageDirectory stringByAppendingPathComponent:WXStorageDirectory];
+    });
+    return storageDirectory;
+}
+
+static void  WXStorageDeleteDirectory()
 {
-    NSString *_plist;
-    BOOL _setupFinished;
+    [[NSFileManager defaultManager] removeItemAtPath:WXStorageGetDirectory() error:NULL];
+    WXStorageHasCreatedDirectory = NO;
+}
+
+static NSString * WXStorageGetFilePath() {
+    static NSString *storageFilePath = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        storageFilePath = [WXStorageGetDirectory() stringByAppendingPathComponent:WXStorageFileName];
+    });
+    return storageFilePath;
+}
+
+static NSString * WXStorageReadFile(NSString *filePath, NSString *filename, NSError **errorOut)
+{
+    if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+        NSStringEncoding encoding;
+        NSString *entryString = [NSString stringWithContentsOfFile:filePath usedEncoding:&encoding error:errorOut];
+        if (errorOut){
+            
+        }else if (encoding != NSUTF8StringEncoding) {
+            *errorOut = [WXUtility errorWithCode:0 message:[NSString stringWithFormat:@"Incorrect encoding of storage file: %@, key: %@",@(encoding),filename]];
+        } else {
+            return entryString;
+        }
+    }
+    return nil;
+}
+
+static id WXStorageJSONParse(NSString *jsonString, BOOL mutable, NSError **error)
+{
+    if (jsonString) {
+        // The result of invoking dataUsingEncoding:allowLossyConversion: with NO as the second argument (that is, requiring lossless conversion).
+        NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+        if (!jsonData) {
+            *error = [WXUtility errorWithCode:0 message:@"JSONParse received invalid UTF8 data"];
+            return nil;
+        }
+        NSJSONReadingOptions options = NSJSONReadingAllowFragments;
+        if (mutable) {
+            options |= NSJSONReadingMutableContainers;
+        }
+        return [NSJSONSerialization JSONObjectWithData:jsonData
+                                               options:options
+                                                 error:error];
+    }
+    return nil;
+}
+
+static NSString *WXMD5Hash(NSString *string)
+{
+    const char *str = string.UTF8String;
+    unsigned char result[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(str, (CC_LONG)strlen(str), result);
+    
+    return [NSString stringWithFormat:@"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
+            result[0], result[1], result[2], result[3],
+            result[4], result[5], result[6], result[7],
+            result[8], result[9], result[10], result[11],
+            result[12], result[13], result[14], result[15]
+            ];
+}
+
+
+@implementation WXStorageModule {
+    BOOL _haveSetup;
+    NSMutableDictionary<NSString *, NSString *> * _storage;
 }
 
 @synthesize weexInstance;
 
+WX_EXPORT_METHOD(@selector(length:))
+WX_EXPORT_METHOD(@selector(key:callback:))
+WX_EXPORT_METHOD(@selector(getItem:callback:))
+WX_EXPORT_METHOD(@selector(setItem:value:))
+WX_EXPORT_METHOD(@selector(getAllKeys:))
+WX_EXPORT_METHOD(@selector(removeItem:))
+WX_EXPORT_METHOD(@selector(clear))
 
-WX_EXPORT_METHOD(@selector(mutiSet:callback:))
-WX_EXPORT_METHOD(@selector(mutiGet:callback:))
-WX_EXPORT_METHOD(@selector(mutiRemove:callback:))
-WX_EXPORT_METHOD(@selector(clear:))
-
-static dispatch_queue_t WXStorageQueue()
-{
-    static dispatch_queue_t queue;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        queue = dispatch_queue_create("com.taobao.weex.storageQueue", NULL);
-    });
-    return queue;
+- (void)dealloc{
+    [_storage removeAllObjects];
 }
 
-- (id)init
+#pragma mark - Export
+
+- (void)length:(WXModuleCallback)callback
 {
-    self= [super init];
-    if (self) {
-        [self setup];
+    NSError *error;
+    [self ensureSetup:&error];
+    
+    if (error) {
+        callback(error.description);
+        return ;
     }
-    return self;
+    NSDictionary *fileAttrs = [[NSFileManager defaultManager] attributesOfItemAtPath:WXStorageGetFilePath() error:&error];
+    if (error) {
+        callback(error.description);
+    }else if (fileAttrs){
+        callback(@([fileAttrs fileSize]));
+    }else{
+        callback(@"unknown error!");
+    }
+    
 }
 
-- (void)setup
+- (void)key:(NSUInteger)index callback:(WXModuleCallback)callback
 {
-    _setupFinished = NO;
-    _plist = [WXDocumentPath stringByAppendingString: LocalStoreFile];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    if (![fileManager fileExistsAtPath:_plist]) {
-        BOOL ret = [fileManager createFileAtPath:_plist contents:nil attributes:nil];
-        if (ret) {
-            _setupFinished = YES;
-        }
+    NSError *error;
+    [self ensureSetup:&error];
+    
+    if (error) {
+        callback(error.description);
+        return ;
     }
-    else {
-        _setupFinished = YES;
-    }
+    
+    callback([_storage allValues][index]);
 }
 
-- (void)mutiSet:(id)data callback:(NSString *)callback {
+- (void)getAllKeys:(WXModuleCallback)callback
+{
+    NSError *error;
+    [self ensureSetup:&error];
     
-    if (!_setupFinished) {
-        return;
+    if (error) {
+        callback(error.description);
+        return ;
     }
-    
-    dispatch_async(WXStorageQueue(), ^{
-        NSData *storeData = [NSData dataWithContentsOfFile:_plist];
-        NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:storeData];
-        NSMutableDictionary *inputDict = [unarchiver decodeObjectForKey:defaultKey] ;
-        [unarchiver finishDecoding];
-        
-        if (!inputDict) {
-            inputDict = [NSMutableDictionary new];
-        }
-    
-        NSEnumerator *enumerator = [data keyEnumerator];
-        NSString *key;
-        while ((key = [enumerator nextObject])) {
-            id object = [data objectForKey:key];
-            [inputDict setObject:object forKey:key];
-            [WXGlobalCache setObject:object forKey:key];
-        }
-        
-        NSMutableData *ouputData = [[NSMutableData alloc] init];
-        NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:ouputData];
-        [archiver encodeObject:inputDict forKey:defaultKey];
-        [archiver finishEncoding];
-        
-        [ouputData writeToFile:_plist atomically:YES];
-        
-        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                           @"success", @"result",
-                                            nil];
-        NSString *params = WXEncodeJson(dict);
-        [[WXSDKManager bridgeMgr] callBack:self.weexInstance.instanceId funcId:callback params:params];
-    });
+    callback(_storage.allKeys);
 }
 
--(void)mutiGet:(id)data callback:(NSString *)callback
+- (void)getItem:(NSString *)key callback:(WXModuleCallback)callback
 {
-    if (!_setupFinished || ![data isKindOfClass:[NSArray class]]) {
-        return;
-    }
+    NSError *error;
+    [self ensureSetup:&error];
     
-    dispatch_async(WXStorageQueue(), ^{
-        
-        NSMutableArray *keys = [NSMutableArray arrayWithArray:data];
-        NSMutableDictionary *retValue = [NSMutableDictionary new];
-        
-        for (id key in data) {
-            id object = [WXGlobalCache objectForKey:key];
-            if (object) {
-                [retValue setObject:object forKey:key];
-                [keys removeObject:key];
+    if (error) {
+        callback(error.description);
+        return ;
+    }
+    NSString *value = _storage[key];
+    if (value == (id)kCFNull) {
+        value = [[WXUtility globalCache] objectForKey:key];
+        if (!value) {
+            NSString *filePath = [self filePathForKey:key];
+            NSError *error;
+            value = WXStorageReadFile(filePath, key, &error);
+            if (value) {
+                [[WXUtility globalCache] setObject:value forKey:key cost:value.length];
+            } else {
+                [_storage removeObjectForKey:key];
             }
         }
-        
-        if ([keys count] > 0) {
-            NSData *storeData = [NSData dataWithContentsOfFile:_plist];
-            NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:storeData];
-            NSDictionary *inputDict = [unarchiver decodeObjectForKey:defaultKey];
-            [unarchiver finishDecoding];
-            
-            for (id key in keys) {
-                id object = [inputDict objectForKey:key];
-                if (object) {
-                    [retValue setObject:object forKey:key];
-                    [WXGlobalCache setObject:object forKey:key];
-                }
-                else {
-                    [retValue setObject:@"" forKey:key];
-                }
-            }
-        }
-        
-        NSString *params = WXEncodeJson(retValue);
-        [[WXSDKManager bridgeMgr] callBack:self.weexInstance.instanceId funcId:callback params:params];
+    }
+    callback(value);
+}
+
+- (void)setItem:(NSString *)key value:(NSString *)value
+{
+    NSError *error;
+    [self ensureSetup:&error];
+    
+    if (error) {
+        return ;
+    }
+    
+    BOOL changedStorage = NO;
+    [self writeEntry:@[key,value] changedStorage:&changedStorage errorOut:&error];
+    
+    if (changedStorage) {
+        [self writeStorage];
+    }
+}
+
+- (void)removeItem:(NSString *)key
+{
+    NSError *error;
+    [self ensureSetup:&error];
+    
+    if (error) {
+        return ;
+    }
+    if (_storage[key] == (id)kCFNull) {
+        NSString *filePath = [self filePathForKey:key];
+        [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+        [[WXUtility globalCache] removeObjectForKey:key];
+        [_storage removeObjectForKey:key];
+    } else if (_storage[key]) {
+        [_storage removeObjectForKey:key];
+        [self writeStorage];
+    }
+}
+
+- (void)clear
+{
+    dispatch_async(WXStorageGetMethodQueue(), ^{
+        [_storage removeAllObjects];
+        [[WXUtility globalCache] removeAllObjects];
+        WXStorageDeleteDirectory();
     });
 }
 
-- (void)mutiRemove:(id)data callback:(NSString *)callback
+#pragma mark - Utils
+
+- (NSString *)filePathForKey:(NSString *)key
 {
-    if (!_setupFinished || ![data isKindOfClass:[NSArray class]]) {
-        return;
-    }
-    
-    dispatch_async(WXStorageQueue(), ^{
-        NSArray *keys = (NSArray *)data;
-        NSData *storeData = [NSData dataWithContentsOfFile:_plist];
-        NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:storeData];
-        NSMutableDictionary *inputDict = [unarchiver decodeObjectForKey:defaultKey];
-        [unarchiver finishDecoding];
-        
-        for (NSString *key in keys) {
-            [inputDict removeObjectForKey:key];
-            [WXGlobalCache removeObjectForKey:key];
-        }
-        
-        NSMutableData *ouputData = [[NSMutableData alloc] init];
-        NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:ouputData];
-        [archiver encodeObject:inputDict forKey:defaultKey];
-        [archiver finishEncoding];
-        
-        [ouputData writeToFile:_plist atomically:YES];
-        
-        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                     @"success", @"result",
-                                     nil];
-        NSString *params = WXEncodeJson(dict);
-        [[WXSDKManager bridgeMgr] callBack:self.weexInstance.instanceId funcId:callback params:params];
-    });
+    NSString *safeFileName = WXMD5Hash(key);
+    return [WXStorageGetDirectory() stringByAppendingPathComponent:safeFileName];
 }
 
-- (void)clear:(NSString *)callback
+- (void)ensureSetup:(NSError **)error
 {
-    if (!_setupFinished) {
+    WXAssertStorageThread();
+    
+    if (!WXStorageHasCreatedDirectory) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:WXStorageGetDirectory()
+                                  withIntermediateDirectories:YES
+                                                   attributes:nil
+                                                        error:error];
+        if (error) {
+            return;
+        }
+        WXStorageHasCreatedDirectory = YES;
+    }
+    if (!_haveSetup) {
+        NSString *serialized = WXStorageReadFile(WXStorageGetFilePath(), nil, error);
+        _storage = serialized ? WXStorageJSONParse(serialized,YES, error) : [NSMutableDictionary new];
+        if (error) {
+            _storage = [NSMutableDictionary new];
+        }
+        _haveSetup = YES;
+    }
+}
+
+- (void)writeEntry:(NSArray<NSString *> *)entry changedStorage:(BOOL *)changedStorage errorOut:(NSError **)error
+{
+    if (entry.count != 2) {
+        *error = [WXUtility errorWithCode:0 message:@"Entries must be arrays of the form [key: string, value: string]"];
+        return ;
+    }
+    NSString *key = entry[0];
+    
+    NSString *value = entry[1];
+    NSString *filePath = [self filePathForKey:key];
+    
+    if (value.length <= WXStorageInlineValueThreshold) {
+        if (_storage[key] == (id)kCFNull) {
+            // If the value already existed but wasn't inlined, remove the old file.
+            [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+            [[WXUtility globalCache] removeObjectForKey:key];
+        }
+        *changedStorage = YES;
+        _storage[key] = value;
         return;
     }
+    [value writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:error];
+    [[WXUtility globalCache] setObject:value forKey:key cost:value.length];
+    if (error) {
+        
+    } else if (_storage[key] != (id)kCFNull) {
+        *changedStorage = YES;
+        _storage[key] = (id)kCFNull;
+    }
+}
+
+- (BOOL)writeStorage
+{
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:_storage
+                                                       options:(NSJSONWritingOptions)0
+                                                         error:&error];
+    if (error) {
+        return NO;
+    }
+    NSString *serialized = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     
-    dispatch_async(WXStorageQueue(), ^{
-        NSData *storeData = [NSData dataWithContentsOfFile:_plist];
-        NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:storeData];
-        NSMutableDictionary *inputDict = [unarchiver decodeObjectForKey:defaultKey];
-        [unarchiver finishDecoding];
-        
-        [inputDict removeAllObjects];
-        [WXGlobalCache removeAllObjects];
-        
-        NSMutableData *ouputData = [[NSMutableData alloc] init];
-        NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:ouputData];
-        [archiver encodeObject:inputDict forKey:defaultKey];
-        [archiver finishEncoding];
-    });
+    return [serialized writeToFile:WXStorageGetFilePath()
+                        atomically:YES
+                          encoding:NSUTF8StringEncoding
+                             error:&error];
 }
 
 @end
