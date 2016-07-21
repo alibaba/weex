@@ -24,7 +24,7 @@ export default function AppInstance (instanceId, options) {
   this.uid = 0
 }
 
-function normalize (app, v) {
+function normalize (v, app) {
   const type = typof(v)
 
   switch (type) {
@@ -58,7 +58,7 @@ AppInstance.prototype.callTasks = function (tasks) {
   }
 
   tasks.forEach((task) => {
-    task.args = task.args.map(arg => normalize(this, arg))
+    task.args = task.args.map(arg => normalize(arg, this))
   })
 
   return renderer.sendTasks(this.id, tasks, '-1')
@@ -69,4 +69,3 @@ extend(AppInstance.prototype, ctrl, {
   requireComponent,
   requireModule
 })
-
