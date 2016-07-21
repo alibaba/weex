@@ -23,4 +23,5 @@ general:
   branches:
     ignore:
       - gh-pages # ignore weex website
-      - /^doc/   # ignore doc update
+      - doc      # ignore doc
+      - /doc-.*/ # ignore doc
