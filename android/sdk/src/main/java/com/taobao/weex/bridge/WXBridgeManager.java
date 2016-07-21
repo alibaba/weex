@@ -496,7 +496,7 @@ public class WXBridgeManager implements Callback {
   }
 
 
-  private synchronized void addJSTask(String method,String instanceId, Object... args) {
+  private void addJSTask(String method,String instanceId, Object... args) {
     if (args == null || args.length == 0) {
       return;
     }
