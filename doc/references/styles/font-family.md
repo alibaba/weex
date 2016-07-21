@@ -1,4 +1,4 @@
-# `font-family` CSS Property <sup>standard</sup>
+# `font-family` CSS Property <sup>standard name</sup>
 
 ## Summary
 

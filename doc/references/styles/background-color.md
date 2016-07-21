@@ -1,4 +1,4 @@
-# `background-color` CSS Property <sup>standard</sup>
+# `background-color` CSS Property <sup>standard name</sup>
 
 ## Summary
 

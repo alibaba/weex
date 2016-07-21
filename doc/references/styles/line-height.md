@@ -1,4 +1,4 @@
-# `line-height` CSS Property <sup>standard</sup>
+# `line-height` CSS Property <sup>standard name</sup>
 
 ## Summary
 

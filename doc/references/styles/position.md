@@ -1,4 +1,4 @@
-# `position` CSS Property <sup>standard</sup>
+# `position` CSS Property <sup>standard name</sup>
 
 ## Summary
 

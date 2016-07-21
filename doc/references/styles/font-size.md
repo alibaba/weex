@@ -1,4 +1,4 @@
-# `font-size` CSS Property <sup>standard</sup>
+# `font-size` CSS Property <sup>standard name</sup>
 
 ## Summary
 

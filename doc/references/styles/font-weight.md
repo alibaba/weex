@@ -1,4 +1,4 @@
-# `font-weight` CSS Property <sup>standard</sup>
+# `font-weight` CSS Property <sup>standard name</sup>
 
 ## Summary
 

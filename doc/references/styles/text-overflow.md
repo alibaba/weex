@@ -1,4 +1,4 @@
-# `text-overflow` CSS Property <sup>standard</sup>
+# `text-overflow` CSS Property <sup>standard name</sup>
 
 ## Summary
 

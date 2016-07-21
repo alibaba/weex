@@ -1,4 +1,4 @@
-# `opacity` CSS Property <sup>standard</sup>
+# `opacity` CSS Property <sup>standard name</sup>
 
 ## Summary
 

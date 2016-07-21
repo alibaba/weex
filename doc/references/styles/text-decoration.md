@@ -1,4 +1,4 @@
-# `text-decoration` CSS Property <sup>standard</sup>
+# `text-decoration` CSS Property <sup>standard name</sup>
 
 ## Summary
 

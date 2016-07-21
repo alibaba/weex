@@ -1,4 +1,4 @@
-# `text-align` CSS Property <sup>standard</sup>
+# `text-align` CSS Property <sup>standard name</sup>
 
 ## Summary
 
