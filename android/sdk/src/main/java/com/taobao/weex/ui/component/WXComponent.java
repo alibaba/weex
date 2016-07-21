@@ -524,6 +524,12 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
         @Override
         public void onClick(View v) {
           Map<String, Object> params = new HashMap<>();
+          int[] location = new int[2];
+          mHost.getLocationOnScreen(location);
+          params.put("x",location[0]);
+          params.put("y",location[1]);
+          params.put("width",mDomObj.getCSSLayoutWidth());
+          params.put("height",mDomObj.getCSSLayoutHeight());
           WXSDKManager.getInstance().fireEvent(mInstanceId,
                                                mDomObj.ref,
                                                WXEventType.CLICK,
