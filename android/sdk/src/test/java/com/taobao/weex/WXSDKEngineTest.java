@@ -205,162 +205,93 @@
 package com.taobao.weex;
 
 import android.app.Application;
-import android.content.Context;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.telephony.TelephonyManager;
+import android.test.mock.MockApplication;
+import com.taobao.weex.adapter.IWXHttpAdapter;
+import com.taobao.weex.http.WXStreamModule;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
-import com.taobao.weex.common.WXConfig;
-import com.taobao.weex.utils.LogLevel;
-import com.taobao.weex.utils.WXLogUtils;
-import com.taobao.weex.utils.WXSoInstallMgrSdk;
-import com.taobao.weex.utils.WXUtils;
+import static org.junit.Assert.*;
 
-import java.util.HashMap;
-import java.util.Map;
+/**
+ * Created by sospartan on 7/20/16.
+ */
+@RunWith(RobolectricTestRunner.class)
+@PrepareForTest({})
+public class WXSDKEngineTest {
 
-public class WXEnvironment {
+   static class TestApplication extends MockApplication{
 
-  public static final String OS = "android";
-  public static final String SYS_VERSION = android.os.Build.VERSION.RELEASE;
-  public static final String SYS_MODEL = android.os.Build.MODEL;
-  /*********************
-   * Global config
-   ***************************/
+    ApplicationInfo mInfo = new ApplicationInfo();
 
-  public static String JS_LIB_SDK_VERSION = "v0.14.7";
 
-  public static String WXSDK_VERSION = "0.6.2.2";
-  public static Application sApplication;
-  public static final String DEV_Id = getDevId();
-  public static int sDefaultWidth = 750;
-  public volatile static boolean JsFrameworkInit = false;
+    @Override
+    public ApplicationInfo getApplicationInfo() {
 
-  public static final String SETTING_EXCLUDE_X86SUPPORT = "env_exclude_x86";
-
-  public static boolean SETTING_FORCE_VERTICAL_SCREEN = false;
-  /**
-   * Debug model
-   */
-  public static boolean sDebugMode = false;
-  public static String sDebugWsUrl = "";
-  public static boolean sRemoteDebugMode = false;
-  public static String sRemoteDebugProxyUrl = "";
-  public static long sJSLibInitTime = 0;
-
-  public static long sSDKInitInvokeTime = 0;//调用SDK初始化的耗时
-  public static long sSDKInitExecuteTime = 0;//SDK初始化执行耗时
-
-  public static LogLevel sLogLevel= LogLevel.DEBUG;
-  private static boolean isApkDebug = true;
-  private static boolean isPerf = false;
-
-  public static boolean sShow3DLayer=true;
-
-  private static Map<String, String> options = new HashMap<>();
-
-  /**
-   * dynamic
-   */
-  public static boolean sDynamicMode = false;
-  public static String sDynamicUrl = "";
-
-  /**
-   * Fetch system information.
-   * @return map contains system information.
-   */
-  public static Map<String, String> getConfig() {
-    Map<String, String> configs = new HashMap<>();
-    configs.put(WXConfig.os, OS);
-    configs.put(WXConfig.appVersion, getAppVersionName());
-    configs.put(WXConfig.devId, DEV_Id);
-    configs.put(WXConfig.sysVersion, SYS_VERSION);
-    configs.put(WXConfig.sysModel, SYS_MODEL);
-    configs.put(WXConfig.weexVersion, String.valueOf(WXSDK_VERSION));
-    configs.put(WXConfig.logLevel,sLogLevel.getName());
-    configs.putAll(options);
-    if(configs!=null&&configs.get(WXConfig.appName)==null && sApplication!=null){
-       configs.put(WXConfig.appName, sApplication.getPackageName());
+      return mInfo;
     }
-    return configs;
+  };
+  TestApplication mApp = new TestApplication();
+
+  @Before
+  public void setUp() throws Exception {
+    WXSDKEngine.initialize(mApp,null);
+
+    assert WXSDKEngine.isInitialized();
   }
 
-  /**
-   * Get the version of the current app.
-   */
-  private static String getAppVersionName() {
-    String versionName = "";
-    PackageManager manager;
-    PackageInfo info = null;
-    try {
-      manager = sApplication.getPackageManager();
-      info = manager.getPackageInfo(sApplication.getPackageName(), 0);
-      versionName = info.versionName;
-    } catch (Exception e) {
-      WXLogUtils.e("WXEnvironment getAppVersionName Exception: " + WXLogUtils.getStackTrace(e));
-    }
-    return versionName;
+  @Test
+  public void testInitialize() throws Exception {
+
   }
 
-  public static void addCustomOptions(String key, String value) {
-    options.put(key, value);
+  @Test
+  public void testInit() throws Exception {
+
   }
 
-  public static boolean isSupport() {
-    boolean excludeX86 = "true".equals(options.get(SETTING_EXCLUDE_X86SUPPORT));
-    boolean isX86AndExcluded = WXSoInstallMgrSdk.isX86()&&excludeX86;
-    boolean isCPUSupport = WXSoInstallMgrSdk.isCPUSupport()&&!isX86AndExcluded;
-    if (WXEnvironment.isApkDebugable()) {
-      WXLogUtils.d("WXEnvironment.sSupport:" + isCPUSupport
-                   + " WXSDKEngine.isInitialized():" + WXSDKEngine.isInitialized()
-                   + " !WXUtils.isTabletDevice():" + !WXUtils.isTabletDevice());
-    }
-    return isCPUSupport && WXSDKEngine.isInitialized() && !WXUtils.isTabletDevice();
+  @Test
+  public void testRegisterComponent() throws Exception {
+
   }
 
-  public static boolean isApkDebugable() {
-    if (sApplication == null) {
-      return false;
-    }
+  @Test
+  public void testRegisterComponent1() throws Exception {
 
-    if (isPerf) {
-      return false;
-    }
-
-    if (!isApkDebug) {
-      return false;
-    }
-    try {
-      ApplicationInfo info = sApplication.getApplicationInfo();
-      isApkDebug = (info.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
-      return isApkDebug;
-    } catch (Exception e) {
-      /**
-       * Don't call WXLogUtils.e here,will cause stackoverflow
-       */
-      e.printStackTrace();
-    }
-    return false;
   }
 
-  public static boolean isPerf() {
-    return isPerf;
+  @Test
+  public void testRegisterModule() throws Exception {
+
   }
 
-  private static String getDevId() {
-    return sApplication == null ? "" : ((TelephonyManager) sApplication
-        .getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+  @Test
+  public void testRegisterModuleWithFactory() throws Exception {
+
   }
 
-  public static Application getApplication() {
-    return sApplication;
+  @Test
+  public void testRegisterModule1() throws Exception {
+
   }
 
-  public void initMetrics() {
-    if (sApplication == null) {
-      return;
-    }
+  @Test
+  public void testRegisterDomObject() throws Exception {
+
   }
 
+  @Test
+  public void testRegisterComponent2() throws Exception {
+
+  }
+
+  @Test
+  public void testRegisterComponent3() throws Exception {
+
+  }
 }
