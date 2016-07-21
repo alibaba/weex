@@ -298,6 +298,8 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
         default:
             break;
     }
+    
+    return @"";
 }
 
 @end
