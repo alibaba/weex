@@ -299,7 +299,7 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
             break;
     }
     
-    return @"";
+    return @"unknown status";
 }
 
 @end
