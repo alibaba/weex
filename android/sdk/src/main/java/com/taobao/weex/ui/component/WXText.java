@@ -206,7 +206,6 @@ package com.taobao.weex.ui.component;
 
 import android.content.Context;
 import android.text.Layout;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.taobao.weex.WXSDKInstance;
@@ -243,10 +242,10 @@ public class WXText extends WXComponent<WXTextView>{
   @Override
   public void updateExtra(Object extra) {
     if(extra instanceof Layout &&
-       getView()!=null && !extra.equals(getView().getTextLayout())) {
+       getHostView()!=null && !extra.equals(getHostView().getTextLayout())) {
       final Layout layout = (Layout) extra;
-      getView().setTextLayout(layout);
-      getView().invalidate();
+      getHostView().setTextLayout(layout);
+      getHostView().invalidate();
     }
   }
 
@@ -256,19 +255,19 @@ public class WXText extends WXComponent<WXTextView>{
    */
   private void flushView(Object extra){
     if(extra instanceof Layout &&
-       getView()!=null && !extra.equals(getView().getTextLayout())){
+       getHostView()!=null && !extra.equals(getHostView().getTextLayout())){
       final Layout layout = (Layout) extra;
       /**The following if block change the height of the width of the textView.
        * other part of the code is the same to updateExtra
        */
-      ViewGroup.LayoutParams layoutParams=getView().getLayoutParams();
+      ViewGroup.LayoutParams layoutParams= getHostView().getLayoutParams();
       if(layoutParams!=null){
         layoutParams.height=layout.getHeight();
         layoutParams.width=layout.getWidth();
-        getView().setLayoutParams(layoutParams);
+        getHostView().setLayoutParams(layoutParams);
       }
-      getView().setTextLayout(layout);
-      getView().invalidate();
+      getHostView().setTextLayout(layout);
+      getHostView().invalidate();
     }
   }
 }

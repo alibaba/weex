@@ -300,7 +300,7 @@ public class WXImage extends WXComponent<ImageView> {
 
     @WXComponentProp(name = WXDomPropConstant.WX_RESIZE_MODE)
     public void setResizeMode(String resizeMode) {
-        ((ImageView) getView()).setScaleType(getResizeMode(resizeMode));
+        ((ImageView) getHostView()).setScaleType(getResizeMode(resizeMode));
     }
 
     private ScaleType getResizeMode(String resizeMode) {
@@ -327,7 +327,7 @@ public class WXImage extends WXComponent<ImageView> {
 
     @WXComponentProp(name = WXDomPropConstant.WX_RESIZE)
     public void setResize(String resize) {
-        ((ImageView) getView()).setScaleType(getResizeMode(resize));
+        ((ImageView) getHostView()).setScaleType(getResizeMode(resize));
     }
 
     @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SRC)
@@ -341,7 +341,7 @@ public class WXImage extends WXComponent<ImageView> {
 
         IWXImgLoaderAdapter imgLoaderAdapter = mInstance.getImgLoaderAdapter();
         if (imgLoaderAdapter != null) {
-            imgLoaderAdapter.setImage(src, ((ImageView) getView()),
+            imgLoaderAdapter.setImage(src, ((ImageView) getHostView()),
                     mDomObj.attr.getImageQuality(), imageStrategy);
         }
     }

@@ -278,9 +278,9 @@ public class WXIndicator extends WXComponent<WXCircleIndicator> {
     if (!TextUtils.isEmpty(itemColor)) {
       int colorInt = WXResourceUtils.getColor(itemColor);
       if (colorInt != Integer.MIN_VALUE) {
-        getView().setPageColor(colorInt);
-        getView().forceLayout();
-        getView().requestLayout();
+        getHostView().setPageColor(colorInt);
+        getHostView().forceLayout();
+        getHostView().requestLayout();
       }
     }
   }
@@ -290,9 +290,9 @@ public class WXIndicator extends WXComponent<WXCircleIndicator> {
     if (!TextUtils.isEmpty(itemSelectedColor)) {
       int colorInt = WXResourceUtils.getColor(itemSelectedColor);
       if (colorInt != Integer.MIN_VALUE) {
-        getView().setFillColor(colorInt);
-        getView().forceLayout();
-        getView().requestLayout();
+        getHostView().setFillColor(colorInt);
+        getHostView().forceLayout();
+        getHostView().requestLayout();
       }
     }
   }
@@ -302,9 +302,9 @@ public class WXIndicator extends WXComponent<WXCircleIndicator> {
     if (itemSize < 0) {
       return;
     }
-    getView().setRadius(WXViewUtils.getRealPxByWidth(itemSize) / 2.0f);
-    getView().forceLayout();
-    getView().requestLayout();
+    getHostView().setRadius(WXViewUtils.getRealPxByWidth(itemSize) / 2.0f);
+    getHostView().forceLayout();
+    getHostView().requestLayout();
   }
 
   public void setShowIndicators(boolean show) {

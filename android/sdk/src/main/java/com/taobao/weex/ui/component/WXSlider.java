@@ -306,8 +306,8 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
     mAdapter.addPageView(view);
     mAdapter.notifyDataSetChanged();
     if (mIndicator != null) {
-      mIndicator.getView().forceLayout();
-      mIndicator.getView().requestLayout();
+      mIndicator.getHostView().forceLayout();
+      mIndicator.getHostView().requestLayout();
     }
   }
 
@@ -318,11 +318,11 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
 
   @Override
   public void remove(WXComponent child, boolean destroy) {
-    if (child == null || child.getView() == null || mAdapter == null) {
+    if (child == null || child.getHostView() == null || mAdapter == null) {
       return;
     }
 
-    mAdapter.removePageView(child.getView());
+    mAdapter.removePageView(child.getHostView());
     mAdapter.notifyDataSetChanged();
   }
 
@@ -351,12 +351,12 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
   }
 
   public void addIndicator(WXIndicator indicator) {
-    FrameLayout root = getView();
+    FrameLayout root = getHostView();
     if (root == null) {
       return;
     }
     mIndicator = indicator;
-    WXCircleIndicator indicatorView = indicator.getView();
+    WXCircleIndicator indicatorView = indicator.getHostView();
     if(indicatorView != null){
       indicatorView.setCircleViewPager(mViewPager);
       indicatorView.setOnPageChangeListener(this);

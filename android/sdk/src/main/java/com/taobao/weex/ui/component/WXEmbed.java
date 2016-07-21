@@ -269,8 +269,8 @@ public class WXEmbed extends WXDiv implements WXSDKInstance.OnInstanceVisibleLis
     sdkInstance.registerRenderListener(new IWXRenderListener() {
       @Override
       public void onViewCreated(WXSDKInstance instance, View view) {
-        getView().removeAllViews();
-        getView().addView(view);
+        getHostView().removeAllViews();
+        getHostView().addView(view);
       }
 
       @Override
@@ -301,13 +301,13 @@ public class WXEmbed extends WXDiv implements WXSDKInstance.OnInstanceVisibleLis
               WXEmbed.this.instance = createInstance();
             }
           });
-          getView().removeAllViews();
-          getView().addView(imageView);
+          getHostView().removeAllViews();
+          getHostView().addView(imageView);
           WXLogUtils.e("WXEmbed", "NetWork failure :" + errCode + ",\n error message :" + msg);
         }
       }
     });
-    ViewGroup.LayoutParams layoutParams = getView().getLayoutParams();
+    ViewGroup.LayoutParams layoutParams = getHostView().getLayoutParams();
     sdkInstance.renderByUrl(WXPerformance.DEFAULT,
                             src,
                             null, null, layoutParams.width,

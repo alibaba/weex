@@ -258,26 +258,26 @@ public class WXCell extends WXVContainer<WXFrameLayout> {
     }
 
     public void removeSticky() {
-        mHeadView = getView().getChildAt(0);
+        mHeadView = getHostView().getChildAt(0);
         int[] location = new int[2];
         int[] parentLocation = new int[2];
-        getView().getLocationOnScreen(location);
+        getHostView().getLocationOnScreen(location);
         getParentScroller().getView().getLocationOnScreen(parentLocation);
         int headerViewOffsetX = location[0] - parentLocation[0];
-        int headerViewOffsetY = getParent().getView().getTop();
-        getView().removeView(mHeadView);
+        int headerViewOffsetY = getParent().getHostView().getTop();
+        getHostView().removeView(mHeadView);
         mRealView = (ViewGroup) mHeadView;
         mTempStickyView = new FrameLayout(mContext);
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams((int) getDomObject().csslayout.dimensions[CSSLayout.DIMENSION_WIDTH],
                 (int) getDomObject().csslayout.dimensions[CSSLayout.DIMENSION_HEIGHT]);
-        getView().addView(mTempStickyView, lp);
+        getHostView().addView(mTempStickyView, lp);
         mHeadView.setTranslationX(headerViewOffsetX);
         mHeadView.setTranslationY(headerViewOffsetY);
     }
 
     public void recoverySticky() {
-        getView().removeView(mTempStickyView);
-        getView().addView(mHeadView);
+        getHostView().removeView(mTempStickyView);
+        getHostView().addView(mHeadView);
         mHeadView.setTranslationX(0);
         mHeadView.setTranslationY(0);
     }
