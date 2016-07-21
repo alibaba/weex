@@ -281,7 +281,7 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
 
     if (this instanceof WXRefresh && mParent instanceof WXScroller &&
             hasScrollParent(mParent)) {
-      mInstance.setRefreshMargin(mDomObj.csslayout.dimensions[CSSLayout.DIMENSION_HEIGHT]);
+      mInstance.setRefreshMargin(mDomObj.getCSSLayoutHeight());
     }
     if ((this instanceof WXBaseRefresh && mParent instanceof WXScroller)) {
       return;
@@ -291,8 +291,7 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
       if (!(this instanceof WXBaseRefresh)) {
           CSSLayout newLayout = new CSSLayout();
           newLayout.copy(mDomObj.csslayout);
-          newLayout.position[CSSLayout.POSITION_TOP] = mDomObj.csslayout.position[CSSLayout
-              .POSITION_TOP] - mInstance.getRefreshMargin();
+          newLayout.position[CSSLayout.POSITION_TOP] = mDomObj.getCSSLayoutTop() - mInstance.getRefreshMargin();
           mDomObj.csslayout.copy(newLayout);
       }
     }
