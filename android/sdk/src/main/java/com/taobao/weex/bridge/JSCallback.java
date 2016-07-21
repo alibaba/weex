@@ -214,11 +214,11 @@ public interface JSCallback {
    * invoke javascript callback method, this method will destoryed after invoke.
    * @param data
    */
-  void invoke(Map<String,Object> data);
+  void invoke(Object data);
 
   /**
    * invoke javascript callback method and keep callback alive for later use.
    * @param data
    */
-  void invokeAndKeepAlive(Map<String,Object> data);
+  void invokeAndKeepAlive(Object data);
 }

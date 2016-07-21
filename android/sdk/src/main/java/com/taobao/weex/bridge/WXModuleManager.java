@@ -446,12 +446,12 @@ public class WXModuleManager {
 
 
     @Override
-    public void invoke(Map<String, Object> data) {
+    public void invoke(Object data) {
       WXBridgeManager.getInstance().callback(mInstanceId,mCallbackId,data,false);
     }
 
     @Override
-    public void invokeAndKeepAlive(Map<String, Object> data) {
+    public void invokeAndKeepAlive(Object data) {
       WXBridgeManager.getInstance().callback(mInstanceId,mCallbackId,data,true);
     }
   }

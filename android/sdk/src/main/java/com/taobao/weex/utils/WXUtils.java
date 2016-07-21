@@ -204,6 +204,8 @@
  */
 package com.taobao.weex.utils;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -353,5 +355,15 @@ public class WXUtils {
       WXLogUtils.e("[WXUtils] isTabletDevice:" + WXLogUtils.getStackTrace(e));
     }
     return false;
+  }
+
+  public static long getAvailMemory(Context context){
+    ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+    ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
+    am.getMemoryInfo(mi);
+    //mi.availMem; 当前系统的可用内存
+    //return Formatter.formatFileSize(context, mi.availMem);// 将获取的内存大小规格化
+    WXLogUtils.w("app AvailMemory ---->>>"+mi.availMem/(1024*1024));
+    return mi.availMem/(1024*1024);
   }
 }
