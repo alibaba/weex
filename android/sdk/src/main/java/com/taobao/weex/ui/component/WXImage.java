@@ -206,7 +206,6 @@ package com.taobao.weex.ui.component;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
@@ -245,7 +244,6 @@ public class WXImage extends WXComponent<ImageView> {
     }
 
     @Override
-    @WXComponentProp(name = WXDomPropConstant.WX_BACKGROUNDCOLOR)
     public void setBackgroundColor(String color) {
         if (!TextUtils.isEmpty(color)) {
             int colorInt = WXResourceUtils.getColor(color);
@@ -255,30 +253,50 @@ public class WXImage extends WXComponent<ImageView> {
         }
     }
 
-    @Override
-    @WXComponentProp(name = WXDomPropConstant.WX_BORDERRADIUS)
-    public void setBorderRadius(float borderRadius) {
 
+    /**
+     * Image is not support border.
+     */
+    @Override
+    public void setBorderRadius(String key, float borderRadius) {
     }
 
+    /**
+     * Image is not support border.
+     */
     @Override
-    @WXComponentProp(name = WXDomPropConstant.WX_BORDERWIDTH)
-    public void setBorderWidth(float borderWidth) {
-
+    public void setBorderWidth(String key, float borderWidth) {
     }
 
+    /**
+     * Image is not support border.
+     */
     @Override
-    @WXComponentProp(name = WXDomPropConstant.WX_BORDERSTYLE)
     public void setBorderStyle(String borderStyle) {
+    }
 
+    /**
+     * Image is not support border.
+     */
+    @Override
+    public void setBorderColor(String key, String borderColor) {
     }
 
     @Override
-    @WXComponentProp(name = WXDomPropConstant.WX_BORDERCOLOR)
-    public void setBorderColor(String borderColor) {
-
+    protected boolean setProperty(String key, Object param) {
+        switch (key) {
+            case WXDomPropConstant.WX_RESIZE_MODE:
+                setResizeMode((String) param);
+                return true;
+            case WXDomPropConstant.WX_RESIZE:
+                setResize((String) param);
+                return true;
+            case WXDomPropConstant.WX_ATTR_SRC:
+                setSrc((String) param);
+                return true;
+        }
+        return super.setProperty(key, param);
     }
-
 
     @WXComponentProp(name = WXDomPropConstant.WX_RESIZE_MODE)
     public void setResizeMode(String resizeMode) {

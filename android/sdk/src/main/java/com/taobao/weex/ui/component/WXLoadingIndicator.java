@@ -226,6 +226,16 @@ public class WXLoadingIndicator extends WXComponent<CircleProgressBar> {
         return new CircleProgressBar(context);
     }
 
+    @Override
+    protected boolean setProperty(String key, Object param) {
+        switch (key) {
+            case WXDomPropConstant.WX_ATTR_DISPLAY:
+                setColor((String) param);
+                return true;
+        }
+        return super.setProperty(key, param);
+    }
+
     @WXComponentProp(name = WXDomPropConstant.WX_COLOR)
     public void setColor(String color) {
         if (color != null && !color.equals("")) {

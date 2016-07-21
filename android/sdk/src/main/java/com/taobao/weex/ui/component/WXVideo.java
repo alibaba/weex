@@ -217,10 +217,12 @@ import android.widget.ProgressBar;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.view.WXVideoView;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXResourceUtils;
+import com.taobao.weex.utils.WXUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -373,7 +375,25 @@ public class WXVideo extends WXComponent<FrameLayout> {
     super.destroy();
   }
 
-  @WXComponentProp(name = "src")
+  @Override
+  protected boolean setProperty(String key, Object param) {
+    switch (key) {
+      case WXDomPropConstant.WX_ATTR_SRC:
+        setSrc((String) param);
+        return true;
+      case WXDomPropConstant.WX_ATTR_AUTOPLAY:
+        Boolean result = WXUtils.getBoolean(param,null);
+        if (result !=  null)
+          setAutoPlay(result);
+        return true;
+      case PLAY_STATUS:
+        setPlaystatus((String) param);
+        return true;
+    }
+    return super.setProperty(key,param);
+  }
+
+  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SRC)
   public void setSrc(String src) {
     if (TextUtils.isEmpty(src) || getView() == null) {
       return;
@@ -386,7 +406,7 @@ public class WXVideo extends WXComponent<FrameLayout> {
     }
   }
 
-  @WXComponentProp(name = "autoPlay")
+  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_AUTOPLAY)
   public void setAutoPlay(boolean autoPlay) {
     mAutoPlay = autoPlay;
   }

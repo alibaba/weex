@@ -205,7 +205,11 @@
 package com.taobao.weex.ui.component;
 
 import android.content.Context;
-import android.text.*;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.InputType;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -213,6 +217,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.WXDomPropConstant;
@@ -221,6 +226,7 @@ import com.taobao.weex.dom.WXStyle;
 import com.taobao.weex.dom.WXTextDomObject;
 import com.taobao.weex.ui.view.WXEditText;
 import com.taobao.weex.utils.WXResourceUtils;
+import com.taobao.weex.utils.WXUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -334,6 +340,46 @@ public abstract class AbstractEditComponent extends WXComponent<WXEditText> {
     }
   }
 
+  @Override
+  protected boolean setProperty(String key, Object param) {
+    switch (key) {
+      case WXDomPropConstant.WX_ATTR_INPUT_PLACEHOLDER:
+        setPlaceholder((String) param);
+        return true;
+      case WXDomPropConstant.WX_INPUT_PLACEHOLDER_COLOR:
+        setPlaceholderColor((String) param);
+        return true;
+      case WXDomPropConstant.WX_ATTR_INPUT_TYPE:
+        setType((String) param);
+        return true;
+      case WXDomPropConstant.WX_ATTR_INPUT_AUTOFOCUS:
+        Boolean result = WXUtils.getBoolean(param, null);
+        if (result != null)
+          setAutofocus(result);
+        return true;
+      case WXDomPropConstant.WX_COLOR:
+        setColor((String) param);
+        return true;
+      case WXDomPropConstant.WX_FONTSIZE:
+        setFontSize((String) param);
+        return true;
+      case WXDomPropConstant.WX_TEXTALIGN:
+        setTextAlign((String) param);
+        return true;
+      case WXDomPropConstant.WX_ATTR_INPUT_SINGLELINE:
+        Boolean singLineResult = WXUtils.getBoolean(param, null);
+        if (singLineResult != null)
+          setSingleLine(singLineResult);
+        return true;
+      case WXDomPropConstant.WX_ATTR_INPUT_LINES:
+        setLines((Integer) param);
+        return true;
+      case WXDomPropConstant.WX_ATTR_INPUT_MAXLENGTH:
+        setMaxLength((Integer) param);
+        return true;
+    }
+    return super.setProperty(key, param);
+  }
 
   @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_PLACEHOLDER)
   public void setPlaceholder(String placeholder) {

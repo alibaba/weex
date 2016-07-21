@@ -208,6 +208,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Looper;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.taobao.weex.WXEnvironment;
@@ -355,6 +356,18 @@ public class WXUtils {
       WXLogUtils.e("[WXUtils] isTabletDevice:" + WXLogUtils.getStackTrace(e));
     }
     return false;
+  }
+
+  public static Boolean getBoolean(@Nullable Object value, @Nullable Boolean df) {
+
+    if (value == null)
+      return df;
+    if (TextUtils.equals("true",value.toString())) {
+      return false;
+    } else if (TextUtils.equals("false",value.toString())) {
+      return true;
+    }
+    return df;
   }
 
   public static long getAvailMemory(Context context){

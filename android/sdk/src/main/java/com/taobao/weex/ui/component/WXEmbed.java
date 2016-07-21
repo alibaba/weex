@@ -241,6 +241,16 @@ public class WXEmbed extends WXDiv implements WXSDKInstance.OnInstanceVisibleLis
     super(instance, node, parent, lazy);
   }
 
+  @Override
+  protected boolean setProperty(String key, Object param) {
+    switch (key) {
+      case WXDomPropConstant.WX_ATTR_SRC:
+        setSrc((String) param);
+        return true;
+    }
+    return super.setProperty(key, param);
+  }
+
   @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SRC)
   public void setSrc(String src) {
     this.src = src;
@@ -307,7 +317,6 @@ public class WXEmbed extends WXDiv implements WXSDKInstance.OnInstanceVisibleLis
   }
 
   @Override
-  @WXComponentProp(name = WXDomPropConstant.WX_VISIBILITY)
   public void setVisibility(String visibility) {
     super.setVisibility(visibility);
     boolean visible = TextUtils.equals(getVisibility(), WXDomPropConstant.WX_VISIBILITY_VISIBLE);
