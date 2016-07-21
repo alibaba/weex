@@ -244,13 +244,13 @@ public class WXRefresh extends WXBaseRefresh implements WXSwipeLayout.WXOnRefres
   }
 
   @Override
-  protected boolean setProperties(Object param, String key) {
+  protected boolean setProperty(String key, Object param) {
     switch (key) {
       case WXDomPropConstant.WX_ATTR_DISPLAY:
         setDisplay((String) param);
         return true;
     }
-    return super.setProperties(param, key);
+    return super.setProperty(key,param);
   }
 
   @WXComponentProp(name = WXDomPropConstant.WX_ATTR_DISPLAY)

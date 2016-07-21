@@ -447,7 +447,7 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
     while (iterator.hasNext()) {
       String key = iterator.next().getKey();
       Object param = props.get(key);
-      if (!setProperties(param,key)) {
+      if (!setProperty(key, param)) {
         Invoker invoker = mHolder.getMethod(key);
         if (invoker != null) {
           try {
@@ -466,7 +466,7 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
     }
   }
 
-  protected boolean setProperties(Object param, String key) {
+  protected boolean setProperty(String key, Object param) {
     switch (key) {
       case WXDomPropConstant.WX_ATTR_DISABLED:
         Boolean result = WXUtils.getBoolean(param,null);

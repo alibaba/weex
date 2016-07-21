@@ -286,7 +286,7 @@ public class WXWeb extends WXComponent {
     }
 
     @Override
-    protected boolean setProperties(Object param, String key) {
+    protected boolean setProperty(String key, Object param) {
         switch (key) {
             case WXDomPropConstant.WX_ATTR_SHOW_LOADING:
                 Boolean result = WXUtils.getBoolean(param,null);
@@ -297,7 +297,7 @@ public class WXWeb extends WXComponent {
                 setUrl((String) param);
                 return true;
         }
-        return super.setProperties(param, key);
+        return super.setProperty(key,param);
     }
 
     @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SHOW_LOADING)

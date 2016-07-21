@@ -254,26 +254,36 @@ public class WXImage extends WXComponent<ImageView> {
     }
 
 
-    /** Image is not support border. **/
-
+    /**
+     * Image is not support border.
+     */
     @Override
     public void setBorderRadius(String key, float borderRadius) {
     }
 
+    /**
+     * Image is not support border.
+     */
     @Override
     public void setBorderWidth(String key, float borderWidth) {
     }
 
+    /**
+     * Image is not support border.
+     */
     @Override
     public void setBorderStyle(String borderStyle) {
     }
 
+    /**
+     * Image is not support border.
+     */
     @Override
     public void setBorderColor(String key, String borderColor) {
     }
 
     @Override
-    protected boolean setProperties(Object param, String key) {
+    protected boolean setProperty(String key, Object param) {
         switch (key) {
             case WXDomPropConstant.WX_RESIZE_MODE:
                 setResizeMode((String) param);
@@ -285,7 +295,7 @@ public class WXImage extends WXComponent<ImageView> {
                 setSrc((String) param);
                 return true;
         }
-        return super.setProperties(param, key);
+        return super.setProperty(key, param);
     }
 
     @WXComponentProp(name = WXDomPropConstant.WX_RESIZE_MODE)

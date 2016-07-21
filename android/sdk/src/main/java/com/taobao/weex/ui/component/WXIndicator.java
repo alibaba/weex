@@ -257,7 +257,7 @@ public class WXIndicator extends WXComponent<WXCircleIndicator> {
   }
 
   @Override
-  protected boolean setProperties(Object param, String key) {
+  protected boolean setProperty(String key, Object param) {
     switch (key) {
       case WXDomPropConstant.WX_ATTR_ITEM_COLOR:
         setItemColor((String) param);
@@ -269,7 +269,7 @@ public class WXIndicator extends WXComponent<WXCircleIndicator> {
         setItemSize((Integer) param);
         return true;
     }
-    return super.setProperties(param, key);
+    return super.setProperty(key, param);
   }
 
 

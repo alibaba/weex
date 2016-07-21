@@ -376,7 +376,7 @@ public class WXVideo extends WXComponent<FrameLayout> {
   }
 
   @Override
-  protected boolean setProperties(Object param, String key) {
+  protected boolean setProperty(String key, Object param) {
     switch (key) {
       case WXDomPropConstant.WX_ATTR_SRC:
         setSrc((String) param);
@@ -390,7 +390,7 @@ public class WXVideo extends WXComponent<FrameLayout> {
         setPlaystatus((String) param);
         return true;
     }
-    return super.setProperties(param, key);
+    return super.setProperty(key,param);
   }
 
   @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SRC)
