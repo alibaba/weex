@@ -220,7 +220,6 @@ import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.IWXBridge;
 import com.taobao.weex.common.IWXDebugProxy;
-import com.taobao.weex.common.TypeModuleFactory;
 import com.taobao.weex.common.WXConfig;
 import com.taobao.weex.common.WXErrorCode;
 import com.taobao.weex.common.WXException;
@@ -291,7 +290,7 @@ public class WXBridgeManager implements Callback {
 
   private static WXBridgeManager mBridgeManager;
 
-  private static WXModule sDomModule;
+  private WXModule sDomModule;
 
   /**
    * next tick tasks, can set priority
@@ -1102,20 +1101,12 @@ public class WXBridgeManager implements Callback {
     public String instanceId;
   }
 
-  private static void registerDomModule() throws WXException {
-
-    final ModuleFactory factory = new TypeModuleFactory(WXDomModule.class);
-
-    try {
-      sDomModule = new TypeModuleFactory(WXDomModule.class).buildInstance();
-    } catch (Exception e) {
-      WXLogUtils.e("Dom class must have a default constructor without params. " + WXLogUtils.getStackTrace(e));
-    }
-
-    WXModuleManager.registerJSModule(WXDomModule.WXDOM, factory);
+  private void registerDomModule() throws WXException {
+    if (sDomModule == null)
+      sDomModule = new WXDomModule();
   }
 
-  private static WXDomModule getDomModule(String instanceId) {
+  private WXDomModule getDomModule(String instanceId) {
     sDomModule.mWXSDKInstance = WXSDKManager.getInstance().getSDKInstance(instanceId);
     return (WXDomModule) sDomModule;
   }
