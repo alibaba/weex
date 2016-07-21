@@ -481,10 +481,10 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
         @Override
         public void run() {
           if(mOrientation == VERTICAL){
-            int scrollY = cellComp.getView().getTop()+offset;
+            int scrollY = cellComp.getHostView().getTop()+offset;
             view.smoothScrollBy(0,scrollY );
           }else{
-            int  scrollX = cellComp.getView().getLeft()+offset;
+            int  scrollX = cellComp.getHostView().getLeft()+offset;
             view.smoothScrollBy(scrollX,0);
           }
         }
@@ -514,7 +514,7 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
       for (int i = 0; i <= position; i++) {
           WXComponent component = getChild(i);
           if (component.isSticky() && component instanceof WXCell) {
-              if (component.getView() == null) {
+              if (component.getHostView() == null) {
                   return;
               }
               bounceRecyclerView.notifyStickyShow((WXCell) component);
@@ -540,12 +540,12 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
 
             if (stickyComponent != null && stickyComponent.getDomObject() != null
                     && stickyComponent instanceof WXCell) {
-                if (stickyComponent.getView() == null) {
+                if (stickyComponent.getHostView() == null) {
                     return;
                 }
 
                 int[] location = new int[2];
-                stickyComponent.getView().getLocationOnScreen(location);
+                stickyComponent.getHostView().getLocationOnScreen(location);
                 int[] parentLocation = new int[2];
                 stickyComponent.getParentScroller().getView().getLocationOnScreen(parentLocation);
 
@@ -596,7 +596,7 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
     super.addChild(child, index);
 
     int adapterPosition = index == -1 ? mChildren.size() - 1 : index;
-    BounceRecyclerView view =  getView();
+    BounceRecyclerView view =  getHostView();
     if(view != null) {
       view.getAdapter().notifyItemInserted(adapterPosition);
     }
@@ -632,7 +632,7 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
      */
     @Override
     protected void addSubView(View child, int index) {
-      BounceRecyclerView view =  getView();
+      BounceRecyclerView view =  getHostView();
       if(view == null){
         return;
       }
@@ -657,7 +657,7 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
         if (destroy) {
             child.detachViewAndClearPreInfo();
         }
-        getView().getAdapter().notifyItemRemoved(index);
+        getHostView().getAdapter().notifyItemRemoved(index);
         if (WXEnvironment.isApkDebugable()) {
             WXLogUtils.d(TAG, "removeChild child at " + index);
         }
@@ -666,7 +666,7 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
 
     @Override
     public void computeVisiblePointInViewCoordinate(PointF pointF) {
-      RecyclerView view = getView().getInnerView();
+      RecyclerView view = getHostView().getInnerView();
       pointF.set(view.computeHorizontalScrollOffset(), view.computeVerticalScrollOffset());
     }
 
@@ -734,11 +734,11 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
                     continue;
                 if (component instanceof WXRefresh) {
                     if (getOrientation() == VERTICAL)
-                      bounceRecyclerView.setHeaderView(component.getView());
+                      bounceRecyclerView.setHeaderView(component.getHostView());
                     return createVHForWXRefresh(component, viewType);
                 } else if (component instanceof WXLoading) {
                     if (getOrientation() == VERTICAL)
-                      bounceRecyclerView.setFooterView(component.getView());
+                      bounceRecyclerView.setFooterView(component.getHostView());
                     return createVHForWXLoading(component, viewType);
                 } else if (component.mDomObj!=null && component.mDomObj.isFixed()) {
                     return createVHForFakeComponent(viewType);
