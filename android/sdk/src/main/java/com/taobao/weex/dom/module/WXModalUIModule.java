@@ -213,6 +213,7 @@ import android.view.Gravity;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.common.WXModule;
 import com.taobao.weex.common.WXModuleAnno;
@@ -270,7 +271,7 @@ public class WXModalUIModule extends WXModule {
   }
 
   @WXModuleAnno
-  public void alert(String param, final String callbackId) {
+  public void alert(String param, final JSCallback callback) {
 
     if (mWXSDKInstance.getContext() instanceof Activity) {
 
@@ -296,8 +297,7 @@ public class WXModalUIModule extends WXModule {
       builder.setPositiveButton(okTitle_f, new OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-          WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId, okTitle_f);
-
+          callback.invoke(okTitle_f);
         }
       });
       AlertDialog alertDialog = builder.create();
