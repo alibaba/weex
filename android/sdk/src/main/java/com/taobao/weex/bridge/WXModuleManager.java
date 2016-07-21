@@ -204,6 +204,8 @@
  */
 package com.taobao.weex.bridge;
 
+import android.text.TextUtils;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXSDKManager;
@@ -246,6 +248,11 @@ public class WXModuleManager {
    */
   public static boolean registerModule(final String moduleName, final ModuleFactory factory, final boolean global) throws WXException {
     if (moduleName == null || factory == null) {
+      return false;
+    }
+
+    if (TextUtils.equals(moduleName,WXDomModule.WXDOM)) {
+      WXLogUtils.e("Connot registered module name is dom.");
       return false;
     }
 
@@ -372,6 +379,8 @@ public class WXModuleManager {
     }
     return true;
   }
+
+
 
   private static WXModule findModule(String instanceId, String moduleStr,ModuleFactory factory) {
     // find WXModule

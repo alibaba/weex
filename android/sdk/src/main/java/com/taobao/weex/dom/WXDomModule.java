@@ -207,10 +207,11 @@ package com.taobao.weex.dom;
 import android.os.Message;
 import android.text.TextUtils;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.WXModule;
-import com.taobao.weex.common.WXModuleAnno;
+import com.taobao.weex.utils.WXLogUtils;
 
 import java.util.ArrayList;
 
@@ -223,12 +224,82 @@ import java.util.ArrayList;
  */
 public final class WXDomModule extends WXModule {
 
+  // method
+  private static final String CREATE_BODY = "createBody";
+  private static final String UPDATE_ATTRS = "updateAttrs";
+  private static final String  UPDATE_STYLE = "updateStyle";
+  private static final String REMOVE_ELEMENT = "removeElement";
+  private static final String  ADD_ELEMENT = "addElement";
+  private static final String MOVE_ELEMENT = "moveElement";
+  private static final String ADD_EVENT = "addEvent";
+  private static final String  REMOVE_EVENT = "removeEvent";
+  private static final String  CREATE_FINISH = "createFinish";
+  private static final String  REFRESH_FINISH = "refreshFinish";
+  private static final String  UPDATE_FINISH = "updateFinish";
+  private static final String SCROLL_TO_ELEMENT  = "scrollToElement";
+
+  // args
+  public static final String MODULE = "module";
+  public static final String WXDOM = "dom";
+  public static final String METHOD = "method";
+  public static final String ARGS = "args";
+
+  public void callDomMethod(JSONObject task) {
+    String method = (String) task.get(METHOD);
+    JSONArray args = (JSONArray) task.get(ARGS);
+
+    try {
+      switch (method) {
+        case CREATE_BODY:
+          createBody((JSONObject) args.get(0));
+          break;
+        case UPDATE_ATTRS:
+          updateAttrs((String) args.get(0), (JSONObject) args.get(1));
+          break;
+        case UPDATE_STYLE:
+          updateStyle((String) args.get(0), (JSONObject) args.get(1));
+          break;
+        case REMOVE_ELEMENT:
+          removeElement((String) args.get(0));
+          break;
+        case ADD_ELEMENT:
+          addElement((String) args.get(0), (JSONObject) args.get(1), (Integer) args.get(2));
+          break;
+        case MOVE_ELEMENT:
+          moveElement((String) args.get(0), (String) args.get(1), (Integer) args.get(2));
+          break;
+        case ADD_EVENT:
+          addEvent((String) args.get(0), (String) args.get(1));
+          break;
+        case REMOVE_EVENT:
+          removeEvent((String) args.get(0), (String) args.get(1));
+          break;
+        case CREATE_FINISH:
+          createFinish();
+          break;
+        case REFRESH_FINISH:
+          refreshFinish();
+          break;
+        case UPDATE_FINISH:
+          updateFinish();
+          break;
+        case SCROLL_TO_ELEMENT:
+          scrollToElement((String) args.get(0), (JSONObject) args.get(1));
+          break;
+      }
+
+    }catch (IndexOutOfBoundsException e){
+      // no enougn args
+      e.printStackTrace();
+      WXLogUtils.e("Dom module call miss arguments.");
+    }
+  }
+
   /**
    * Create a body for the current {@link com.taobao.weex.WXSDKInstance} according to given
    * parameter.
    * @param element info about how to create a body
    */
-  @WXModuleAnno(moduleMethod = true, runOnUIThread = false)
   public void createBody(JSONObject element) {
     if (element == null) {
       return;
@@ -248,7 +319,6 @@ public final class WXDomModule extends WXModule {
    * @param ref {@link WXDomObject#ref}
    * @param attr the expected attr
    */
-  @WXModuleAnno(moduleMethod = true, runOnUIThread = false)
   public void updateAttrs(String ref, JSONObject attr) {
     if (TextUtils.isEmpty(ref) || attr == null || attr.size() < 1) {
       return;
@@ -269,7 +339,6 @@ public final class WXDomModule extends WXModule {
    * @param ref {@link WXDomObject#ref}
    * @param style the expected style
    */
-  @WXModuleAnno(moduleMethod = true, runOnUIThread = false)
   public void updateStyle(String ref, JSONObject style) {
     if (TextUtils.isEmpty(ref) || style == null || style.size() < 1) {
       return;
@@ -289,7 +358,6 @@ public final class WXDomModule extends WXModule {
    * Remove a node for the node tree.
    * @param ref {@link WXDomObject#ref} of the node to be removed.
    */
-  @WXModuleAnno(moduleMethod = true, runOnUIThread = false)
   public void removeElement(String ref) {
     if (TextUtils.isEmpty(ref)) {
       return;
@@ -310,7 +378,6 @@ public final class WXDomModule extends WXModule {
    * @param element the node to be added
    * @param index the expected index that the new dom in its new parent
    */
-  @WXModuleAnno(moduleMethod = true, runOnUIThread = false)
   public void addElement(String parentRef, JSONObject element, Integer index) {
     if (element == null
         || TextUtils.isEmpty(parentRef)) {
@@ -334,7 +401,6 @@ public final class WXDomModule extends WXModule {
    * @param parentRef {@link WXDomObject#ref} of the parent.
    * @param index the expected index that the dom in its new parent
    */
-  @WXModuleAnno(moduleMethod = true, runOnUIThread = false)
   public void moveElement(String ref, String parentRef, Integer index) {
     if (TextUtils.isEmpty(ref)
         || TextUtils.isEmpty(parentRef)) {
@@ -357,7 +423,6 @@ public final class WXDomModule extends WXModule {
    * @param ref {@link WXDomObject#ref} of the node
    * @param type the type of the event listener to be added.
    */
-  @WXModuleAnno(moduleMethod = true, runOnUIThread = false)
   public void addEvent(String ref, String type) {
     if (TextUtils.isEmpty(ref) || TextUtils.isEmpty(type)) {
       return;
@@ -378,7 +443,6 @@ public final class WXDomModule extends WXModule {
    * @param ref {@link WXDomObject#ref} of the node
    * @param type the type of the event listener to be removed.
    */
-  @WXModuleAnno(moduleMethod = true, runOnUIThread = false)
   public void removeEvent(String ref, String type) {
     if (TextUtils.isEmpty(ref) || TextUtils.isEmpty(type)) {
       return;
@@ -398,7 +462,6 @@ public final class WXDomModule extends WXModule {
    * Notify the {@link WXDomManager} that creation of dom tree is finished.
    * This notify is given by JS.
    */
-  @WXModuleAnno(moduleMethod = true, runOnUIThread = false)
   public void createFinish() {
     Message msg = Message.obtain();
     WXDomTask task = new WXDomTask();
@@ -412,7 +475,6 @@ public final class WXDomModule extends WXModule {
    * Notify the {@link WXDomManager} that refreshing of dom tree is finished.
    * This notify is given by JS.
    */
-  @WXModuleAnno(moduleMethod = true, runOnUIThread = false)
   public void refreshFinish() {
     Message msg = Message.obtain();
     WXDomTask task = new WXDomTask();
@@ -422,7 +484,6 @@ public final class WXDomModule extends WXModule {
     WXSDKManager.getInstance().getWXDomManager().sendMessage(msg);
   }
 
-  @WXModuleAnno(moduleMethod = true, runOnUIThread = false)
   public void updateFinish() {
     Message msg = Message.obtain();
     WXDomTask task = new WXDomTask();
@@ -438,7 +499,6 @@ public final class WXDomModule extends WXModule {
    * @param ref {@link WXDomObject#ref} of specified dom object
    * @param options scroll option, like {offset:0, duration:300}
    */
-  @WXModuleAnno(moduleMethod = true, runOnUIThread = false)
   public void scrollToElement(String ref, JSONObject options) {
     if (TextUtils.isEmpty(ref) || options == null) {
       return;
