@@ -101,6 +101,8 @@
 
     pthread_mutex_destroy(&_propertyMutex);
     pthread_mutexattr_destroy(&_propertMutexAttr);
+    
+    [self _removeAllEvents];
 }
 
 - (NSDictionary *)styles
