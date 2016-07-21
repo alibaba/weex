@@ -259,10 +259,10 @@ public class WXAnimationModule extends WXModule {
   public static void startAnimation(WXSDKInstance mWXSDKInstance, WXComponent component,
                                     @NonNull WXAnimationBean animationBean, @Nullable String callback) {
     try {
-      Animator animator = createAnimator(animationBean, component.getView());
+      Animator animator = createAnimator(animationBean, component.getHostView());
       if (animator != null) {
         Animator.AnimatorListener animatorCallback = createAnimatorListener(mWXSDKInstance, callback);
-        component.getView().setLayerType(View.LAYER_TYPE_HARDWARE,null);
+        component.getHostView().setLayerType(View.LAYER_TYPE_HARDWARE,null);
         Interpolator interpolator = createTimeInterpolator(animationBean);
         if (animatorCallback != null) {
           animator.addListener(animatorCallback);

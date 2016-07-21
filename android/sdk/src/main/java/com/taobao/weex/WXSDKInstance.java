@@ -706,7 +706,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
           if (mRenderListener != null && mContext != null) {
             mGodCom = component;
             onViewAppear();
-            View wxView=component.getView();
+            View wxView=component.getHostView();
             if(WXEnvironment.isApkDebugable() && WXSDKManager.getInstance().getIWXDebugAdapter()!=null){
               wxView=WXSDKManager.getInstance().getIWXDebugAdapter().wrapContainer(WXSDKInstance.this,wxView);
             }
@@ -919,9 +919,9 @@ public class WXSDKInstance implements IWXActivityStateListener {
   public void destroy() {
     WXSDKManager.getInstance().destroyInstance(mInstanceId);
 
-    if (mGodCom != null && mGodCom.getView() != null) {
+    if (mGodCom != null && mGodCom.getHostView() != null) {
       mGodCom.destroy();
-      destroyView(mGodCom.getView());
+      destroyView(mGodCom.getHostView());
       mGodCom = null;
     }
 

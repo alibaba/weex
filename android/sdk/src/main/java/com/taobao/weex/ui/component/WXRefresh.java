@@ -258,9 +258,9 @@ public class WXRefresh extends WXBaseRefresh implements WXSwipeLayout.WXOnRefres
     if (!TextUtils.isEmpty(display)) {
       if (display.equals("hide")) {
         if (getParent() instanceof WXListComponent || getParent() instanceof WXScroller) {
-          if (((BaseBounceView)getParent().getView()).getSwipeLayout().isRefreshing()) {
-            ((BaseBounceView) getParent().getView()).finishPullRefresh();
-            ((BaseBounceView) getParent().getView()).onRefreshingComplete();
+          if (((BaseBounceView)getParent().getHostView()).getSwipeLayout().isRefreshing()) {
+            ((BaseBounceView) getParent().getHostView()).finishPullRefresh();
+            ((BaseBounceView) getParent().getHostView()).onRefreshingComplete();
           }
         }
       }

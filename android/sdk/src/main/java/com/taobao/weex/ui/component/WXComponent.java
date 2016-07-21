@@ -689,7 +689,16 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
 
   }
 
-  public T getView() {
+  public T getHostView() {
+    return mHost;
+  }
+
+  /**
+   * use {@link #getHostView()} instead
+   * @return
+   */
+  @Deprecated
+  public View getView(){
     return mHost;
   }
 
@@ -949,7 +958,7 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
 
   /**
    * Detach view from its component. Components,
-   * which have difference between getView and getRealView or have temp calculation results,
+   * which have difference between getHostView and getRealView or have temp calculation results,
    * must<strong> override</strong>  this method with their own implementation.
    *
    * @return the original View

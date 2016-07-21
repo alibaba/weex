@@ -395,7 +395,7 @@ public class WXVideo extends WXComponent<FrameLayout> {
 
   @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SRC)
   public void setSrc(String src) {
-    if (TextUtils.isEmpty(src) || getView() == null) {
+    if (TextUtils.isEmpty(src) || getHostView() == null) {
       return;
     }
 
