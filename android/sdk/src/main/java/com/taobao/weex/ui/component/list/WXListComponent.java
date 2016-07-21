@@ -618,7 +618,7 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
       view.getAdapter().notifyItemInserted(adapterPosition);
     }
 
-    if(hasAppearAndDisAppearEvent(child)){
+    if(hasAppearAndDisappearEvent(child)){
       mAppearComponents.add(child);
       child.registerAppearEvent = true;
     }
@@ -658,7 +658,7 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
     }
 
 
-    private boolean hasAppearAndDisAppearEvent(WXComponent child) {
+    private boolean hasAppearAndDisappearEvent(WXComponent child) {
 
     if(child.getDomObject().containsEvent(WXEventType.APPEAR) || child.getDomObject().containsEvent(WXEventType.DISAPPEAR)){
       return true;
@@ -666,7 +666,7 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
       WXVContainer container=(WXVContainer)child;
       for(int i=0;i<container.childCount();i++){
         WXComponent component=container.getChild(i);
-        if(hasAppearAndDisAppearEvent(component)){
+        if(hasAppearAndDisappearEvent(component)){
           return true;
         }
       }
