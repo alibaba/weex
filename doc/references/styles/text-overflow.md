@@ -15,6 +15,7 @@ Determines how overflowed content that is not displayed.
 ## Compares with CSS Standard
 
 * The effect not apply to all elements, just `<text>`. In another way, it's not inherited.
+* The string unit is not supported.
 
 ## Example
 

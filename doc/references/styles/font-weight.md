@@ -12,6 +12,7 @@ The weight of the font for an element.
 
 ## Compares with CSS Standard
 
+* Some standard values like `lighter`, `bolder`, number unit are not supported.
 * The effect not apply to all elements, just `<text>` and `<input>`. In another way, it's not inherited.
 
 ## Example

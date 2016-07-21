@@ -12,6 +12,7 @@ Describes how text content is aligned.
 
 ## Compares with CSS Standard
 
+* Some standard values like `justify`, `justify-all` are not supported.
 * The effect not apply to all elements, just `<text>` and `<input>`. In another way, it's not inherited.
 
 ## Example

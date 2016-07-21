@@ -17,6 +17,8 @@ The size of the font for an element.
 
 * The effect not apply to all elements, just `<text>` and `<input>`. In another way, it's not inherited.
 * The length unit definition is different with CSS Standard. See [more](units/length.md).
+* Some standard values like `small`, `large`, `xx-large`, `larger` are not supported.
+* The percentage unit is not supported.
 
 ## Example
 

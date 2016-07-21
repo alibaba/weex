@@ -12,6 +12,7 @@ Draw text decoration (underline, line-through) for an element.
 
 ## Compares with CSS Standard
 
+* Some standard values like `overline` are not supported.
 * The effect not apply to all elements, just `<text>` and `<input>`. In another way, it's not inherited.
 
 ## Example
