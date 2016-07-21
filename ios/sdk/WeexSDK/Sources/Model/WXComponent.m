@@ -98,7 +98,13 @@
 - (void)dealloc
 {
     free_css_node(_cssNode);
-
+    
+    if ([self isViewLoaded]) {
+        WXPerformBlockOnMainThread(^{
+            [self _unloadView];
+        });
+    }
+    
     pthread_mutex_destroy(&_propertyMutex);
     pthread_mutexattr_destroy(&_propertMutexAttr);
 }
