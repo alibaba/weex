@@ -8,8 +8,8 @@ global.callNative = function () {}
 
 import * as bundle from '../../../../default/app/bundle'
 import * as register from '../../../../default/app/register'
-import { Document }
-from '../../../../vdom'
+import { removeWeexPrefix } from '../../../../default/util'
+import { Document } from '../../../../vdom'
 
 describe('parsing a bundle file', () => {
   const componentTemplate = {
@@ -66,14 +66,32 @@ describe('parsing a bundle file', () => {
     })
 
     describe('define', () => {
-      it('a weex component', () => {
-        bundle.define(app, '@weex-component/a', (require, exports, module) => {
+      it('a weex component with factory and deps', () => {
+        bundle.defineFn(app, '@weex-component/a', (require, exports, module) => {
+          module.exports = {
+            template: componentTemplate
+          }
+        })
+        bundle.defineFn(app, '@weex-component/aa', [], (require, exports, module) => {
           module.exports = {
             template: componentTemplate
           }
         })
 
         expect(app.customComponentMap['a'].template).to.deep.equal(componentTemplate)
+        expect(app.customComponentMap['aa'].template).to.deep.equal(componentTemplate)
+      })
+
+      it('a weex component with definition object and deps', () => {
+        bundle.defineFn(app, '@weex-component/aaa', {
+          template: componentTemplate
+        })
+        bundle.defineFn(app, '@weex-component/aaaa', [], {
+          template: componentTemplate
+        })
+
+        expect(app.customComponentMap['aaa'].template).to.deep.equal(componentTemplate)
+        expect(app.customComponentMap['aaaa'].template).to.deep.equal(componentTemplate)
       })
 
       it('a weex module', () => {
@@ -82,26 +100,25 @@ describe('parsing a bundle file', () => {
           args: []
         }]
 
-        bundle.define(app, '@weex-module/dom', (require, exports, module) => {
+        bundle.defineFn(app, '@weex-module/dom', (require, exports, module) => {
           module.exports = methods
         })
-        // todo
       })
 
       it('a normal module', () => {
-        bundle.define(app, './a', (require, exports, module) => {
+        bundle.defineFn(app, './a', (require, exports, module) => {
           exports.version = '0.1'
         })
       })
 
       it('a npm module', () => {
-        bundle.define(app, 'lib-httpurl', (require, exports, module) => {
+        bundle.defineFn(app, 'lib-httpurl', (require, exports, module) => {
           exports.version = '0.2'
         })
       })
 
       it('a CMD module', () => {
-        bundle.define(app, 'kg/base', [], (require, exports, module) => {
+        bundle.defineFn(app, 'kg/base', [], (require, exports, module) => {
           exports.version = '0.3'
         })
       })
@@ -109,7 +126,7 @@ describe('parsing a bundle file', () => {
 
     describe('require', () => {
       it('a weex component', (done) => {
-        bundle.define(app, '@weex-component/b', (require, exports, module) => {
+        bundle.defineFn(app, '@weex-component/b', (require, exports, module) => {
           const componentA = require('@weex-component/a')
 
           expect(componentA.template).to.be.equal(componentTemplate)
@@ -118,16 +135,21 @@ describe('parsing a bundle file', () => {
       })
 
       it('a weex module', (done) => {
-        bundle.define(app, '@weex-component/c', (require, exports, module) => {
+        // eslint-disable-next-line camelcase
+        const __weex_require__ = name => register.requireModule(app, removeWeexPrefix(name))
+        bundle.defineFn(app, '@weex-component/c', (require, exports, module) => {
           const dom = require('@weex-module/dom')
-
           expect(dom.createBody).to.be.a('function')
+          const dom2 = __weex_require__('dom')
+          expect(dom2.createBody).to.be.a('function')
+          const dom3 = __weex_require__('@weex-module/dom')
+          expect(dom3.createBody).to.be.a('function')
           done()
         })
       })
 
       it('a normal module', (done) => {
-        bundle.define(app, '@weex-component/d', (require, exports, module) => {
+        bundle.defineFn(app, '@weex-component/d', (require, exports, module) => {
           const a = require('./a')
 
           expect(a.version).to.be.equal('0.1')
@@ -136,7 +158,7 @@ describe('parsing a bundle file', () => {
       })
 
       it('a npm module', (done) => {
-        bundle.define(app, '@weex-component/e', (require, exports, module) => {
+        bundle.defineFn(app, '@weex-component/e', (require, exports, module) => {
           const HttpUrl = require('lib-httpurl')
 
           expect(HttpUrl.version).to.be.equal('0.2')
@@ -145,7 +167,7 @@ describe('parsing a bundle file', () => {
       })
 
       it('a CMD module', (done) => {
-        bundle.define(app, 'kg/sample', ['kg/base'], (require, exports, module) => {
+        bundle.defineFn(app, 'kg/sample', ['kg/base'], (require, exports, module) => {
           const base = require('kg/base')
 
           expect(base.version).to.be.equal('0.3')
@@ -159,7 +181,7 @@ describe('parsing a bundle file', () => {
 
       before(() => {
         global.transformerVersion = '>=0.1 <1.0'
-        bundle.define(app, '@weex-component/main', (require, exports, module) => {
+        bundle.defineFn(app, '@weex-component/main', (require, exports, module) => {
           module.exports = {
             template: componentTemplate,
             ready: ready
@@ -408,7 +430,7 @@ describe('parsing a bundle file', () => {
 
     describe('define(old)', () => {
       it('a component', () => {
-        bundle.define(app, 'main', (require, exports, module) => {
+        bundle.defineFn(app, 'main', (require, exports, module) => {
           module.exports = {
             template: componentTemplate
           }

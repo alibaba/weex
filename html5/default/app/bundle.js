@@ -13,7 +13,15 @@
  */
 
 import semver from 'semver'
-import { isPlainObject } from '../util'
+import {
+  isPlainObject,
+  isWeexComponent,
+  isWeexModule,
+  isNormalModule,
+  isNpmModule,
+  removeWeexPrefix,
+  removeJSSurfix
+} from '../util'
 import Vm from '../vm'
 import {
   registerCustomComponent,
@@ -21,24 +29,6 @@ import {
   initModules
 } from './register'
 import * as downgrade from './downgrade'
-
-const WEEX_COMPONENT_REG = /^@weex-component\//
-const WEEX_MODULE_REG = /^@weex-module\//
-const NORMAL_MODULE_REG = /^\.{1,2}\//
-const JS_SURFIX_REG = /\.js$/
-
-const isWeexComponent = name => !!name.match(WEEX_COMPONENT_REG)
-const isWeexModule = name => !!name.match(WEEX_MODULE_REG)
-const isNormalModule = name => !!name.match(NORMAL_MODULE_REG)
-const isNpmModule = name => !isWeexComponent(name) && !isWeexModule(name) && !isNormalModule(name)
-
-function removeWeexPrefix (str) {
-  return str.replace(WEEX_COMPONENT_REG, '').replace(WEEX_MODULE_REG, '')
-}
-
-function removeJSSurfix (str) {
-  return str.replace(JS_SURFIX_REG, '')
-}
 
 /**
  * @deprecated

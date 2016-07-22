@@ -10,7 +10,7 @@
  * corresponded with the API of instance manager (framework.js)
  */
 
-import { extend, typof } from '../util'
+import { extend, typof, removeWeexPrefix } from '../util'
 import renderer from '../config'
 import {
   defineFn,
@@ -38,7 +38,7 @@ export function init (app, code, data) {
     result = bootstrap(app, name, {}, _data)
   }
   const bundleDocument = app.doc
-  const bundleRequireModule = name => app.requireModule(name)
+  const bundleRequireModule = name => app.requireModule(removeWeexPrefix(name))
 
   // prepare code
   let functionBody
