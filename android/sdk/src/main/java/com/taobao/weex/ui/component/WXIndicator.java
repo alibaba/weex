@@ -261,10 +261,14 @@ public class WXIndicator extends WXComponent<WXCircleIndicator> {
   protected boolean setProperty(String key, Object param) {
     switch (key) {
       case WXDomPropConstant.WX_ATTR_ITEM_COLOR:
-        setItemColor((String) param);
+        String item_color = WXUtils.getString(param,null);
+        if (item_color != null)
+          setItemColor(item_color);
         return true;
       case WXDomPropConstant.WX_ATTR_ITEM_SELECTED_COLOR:
-        setItemSelectedColor((String) param);
+        String selected_color = WXUtils.getString(param,null);
+        if (selected_color != null)
+          setItemSelectedColor(selected_color);
         return true;
       case WXDomPropConstant.WX_ATTR_ITEM_SIZE:
         Integer item_size = WXUtils.getInteger(param,null);

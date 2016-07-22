@@ -218,6 +218,7 @@ import com.taobao.weex.common.WXImageStrategy;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.view.WXImageView;
 import com.taobao.weex.utils.WXResourceUtils;
+import com.taobao.weex.utils.WXUtils;
 
 
 /**
@@ -286,13 +287,19 @@ public class WXImage extends WXComponent<ImageView> {
     protected boolean setProperty(String key, Object param) {
         switch (key) {
             case WXDomPropConstant.WX_RESIZE_MODE:
-                setResizeMode((String) param);
+                String resize_mode = WXUtils.getString(param,null);
+                if (resize_mode != null)
+                    setResizeMode(resize_mode);
                 return true;
             case WXDomPropConstant.WX_RESIZE:
-                setResize((String) param);
+                String resize = WXUtils.getString(param,null);
+                if (resize != null)
+                    setResize(resize);
                 return true;
             case WXDomPropConstant.WX_ATTR_SRC:
-                setSrc((String) param);
+                String src = WXUtils.getString(param,null);
+                if (src != null)
+                    setSrc(src);
                 return true;
         }
         return super.setProperty(key, param);

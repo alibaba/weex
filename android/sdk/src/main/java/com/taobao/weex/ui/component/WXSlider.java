@@ -370,13 +370,19 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
   protected boolean setProperty(String key, Object param) {
     switch (key) {
       case WXDomPropConstant.WX_ATTR_SLIDER_VALUE:
-        setValue((String) param);
+        String value = WXUtils.getString(param,null);
+        if (value != null)
+          setValue(value);
         return true;
       case AUTO_PLAY:
-        setAutoPlay((String) param);
+        String aotu_play = WXUtils.getString(param,null);
+        if (aotu_play != null)
+          setAutoPlay(aotu_play);
         return true;
       case SHOW_INDICATORS:
-        setShowIndicators((String) param);
+        String indicators = WXUtils.getString(param,null);
+        if (indicators != null)
+          setShowIndicators(indicators);
         return true;
       case INTERVAL:
         Integer interval = WXUtils.getInteger(param,null);

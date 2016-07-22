@@ -294,7 +294,9 @@ public class WXWeb extends WXComponent {
                     setShowLoading((Boolean) param);
                 return true;
             case WXDomPropConstant.WX_ATTR_SRC:
-                setUrl((String) param);
+                String src = WXUtils.getString(param,null);
+                if (src != null)
+                    setUrl(src);
                 return true;
         }
         return super.setProperty(key,param);

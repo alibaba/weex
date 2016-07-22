@@ -216,6 +216,7 @@ import com.taobao.weex.ui.view.WXBaseRefreshLayout;
 import com.taobao.weex.ui.view.WXFrameLayout;
 import com.taobao.weex.ui.view.refresh.core.WXSwipeLayout;
 import com.taobao.weex.ui.view.refresh.wrapper.BaseBounceView;
+import com.taobao.weex.utils.WXUtils;
 
 /**
  * div component
@@ -242,7 +243,9 @@ public class WXLoading extends WXBaseRefresh implements WXSwipeLayout.WXOnLoadin
   protected boolean setProperty(String key, Object param) {
     switch (key) {
       case WXDomPropConstant.WX_ATTR_DISPLAY:
-        setDisplay((String) param);
+        String display = WXUtils.getString(param,null);
+        if (display != null)
+          setDisplay(display);
         return true;
     }
     return super.setProperty(key, param);

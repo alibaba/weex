@@ -475,15 +475,18 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
     switch (key) {
       case WXDomPropConstant.WX_ATTR_DISABLED:
         Boolean disabled = WXUtils.getBoolean(param,null);
-        if (disabled != null) {
+        if (disabled != null)
           setDisabled(disabled);
-        }
         return true;
       case WXDomPropConstant.WX_POSITION:
-        setSticky((String) param);
+        String position = WXUtils.getString(param,null);
+        if (position != null)
+          setSticky(position);
         return true;
       case WXDomPropConstant.WX_BACKGROUNDCOLOR:
-        setBackgroundColor((String) param);
+        String bgColor = WXUtils.getString(param,null);
+        if (bgColor != null)
+          setBackgroundColor(bgColor);
         return true;
       case WXDomPropConstant.WX_OPACITY:
         Float opacity = WXUtils.getFloat(param,null);
@@ -509,17 +512,23 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
           setBorderWidth(key,width);
         return true;
       case WXDomPropConstant.WX_BORDERSTYLE:
-        setBorderStyle((String) param);
+        String border_style = WXUtils.getString(param,null);
+        if (border_style != null)
+          setBorderStyle(border_style);
         return true;
       case WXDomPropConstant.WX_BORDERCOLOR:
       case WXDomPropConstant.WX_BORDER_TOP_COLOR:
       case WXDomPropConstant.WX_BORDER_RIGHT_COLOR:
       case WXDomPropConstant.WX_BORDER_BOTTOM_COLOR:
       case WXDomPropConstant.WX_BORDER_LEFT_COLOR:
-        setBorderColor(key, (String) param);
+        String border_color = WXUtils.getString(param,null);
+        if (border_color != null)
+          setBorderColor(key, border_color);
         return true;
       case WXDomPropConstant.WX_VISIBILITY:
-        setVisibility((String) param);
+        String visibility = WXUtils.getString(param,null);
+        if (visibility != null)
+          setVisibility(visibility);
         return true;
       default:
         return false;

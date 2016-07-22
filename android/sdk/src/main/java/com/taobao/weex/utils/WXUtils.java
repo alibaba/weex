@@ -430,4 +430,19 @@ public class WXUtils {
     WXLogUtils.w("app AvailMemory ---->>>"+mi.availMem/(1024*1024));
     return mi.availMem/(1024*1024);
   }
+
+  public static String getString(@Nullable Object value,@Nullable String df) {
+
+    if (value == null)
+      return df;
+
+    String originValue;
+    if (value instanceof String) {
+      originValue = (String) value;
+    } else {
+      originValue = value.toString();
+    }
+
+    return originValue;
+  }
 }

@@ -344,13 +344,19 @@ public abstract class AbstractEditComponent extends WXComponent<WXEditText> {
   protected boolean setProperty(String key, Object param) {
     switch (key) {
       case WXDomPropConstant.WX_ATTR_INPUT_PLACEHOLDER:
-        setPlaceholder((String) param);
+        String placeholder = WXUtils.getString(param,null);
+        if (placeholder != null)
+          setPlaceholder(placeholder);
         return true;
       case WXDomPropConstant.WX_INPUT_PLACEHOLDER_COLOR:
-        setPlaceholderColor((String) param);
+        String placeholder_color = WXUtils.getString(param,null);
+        if (placeholder_color != null)
+          setPlaceholderColor(placeholder_color);
         return true;
       case WXDomPropConstant.WX_ATTR_INPUT_TYPE:
-        setType((String) param);
+        String input_type = WXUtils.getString(param,null);
+        if (input_type != null)
+          setType(input_type);
         return true;
       case WXDomPropConstant.WX_ATTR_INPUT_AUTOFOCUS:
         Boolean result = WXUtils.getBoolean(param, null);
@@ -358,13 +364,19 @@ public abstract class AbstractEditComponent extends WXComponent<WXEditText> {
           setAutofocus(result);
         return true;
       case WXDomPropConstant.WX_COLOR:
-        setColor((String) param);
+        String color = WXUtils.getString(param,null);
+        if (color != null)
+          setColor(color);
         return true;
       case WXDomPropConstant.WX_FONTSIZE:
-        setFontSize((String) param);
+        String fontsize = WXUtils.getString(param,null);
+        if (fontsize != null)
+          setFontSize(fontsize);
         return true;
       case WXDomPropConstant.WX_TEXTALIGN:
-        setTextAlign((String) param);
+        String text_align = WXUtils.getString(param,null);
+        if (text_align != null)
+          setTextAlign(text_align);
         return true;
       case WXDomPropConstant.WX_ATTR_INPUT_SINGLELINE:
         Boolean singLineResult = WXUtils.getBoolean(param, null);
