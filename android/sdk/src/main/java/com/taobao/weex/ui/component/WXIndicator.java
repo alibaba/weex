@@ -215,6 +215,7 @@ import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.view.WXCircleIndicator;
 import com.taobao.weex.utils.WXResourceUtils;
+import com.taobao.weex.utils.WXUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
 import java.util.HashMap;
@@ -266,7 +267,9 @@ public class WXIndicator extends WXComponent<WXCircleIndicator> {
         setItemSelectedColor((String) param);
         return true;
       case WXDomPropConstant.WX_ATTR_ITEM_SIZE:
-        setItemSize((Integer) param);
+        Integer item_size = WXUtils.getInteger(param,null);
+        if (item_size != null)
+          setItemSize((Integer) param);
         return true;
     }
     return super.setProperty(key, param);

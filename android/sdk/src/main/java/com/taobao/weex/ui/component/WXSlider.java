@@ -222,6 +222,7 @@ import com.taobao.weex.ui.view.WXCircleIndicator;
 import com.taobao.weex.ui.view.WXCirclePageAdapter;
 import com.taobao.weex.ui.view.WXCircleViewPager;
 import com.taobao.weex.utils.WXLogUtils;
+import com.taobao.weex.utils.WXUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
 import java.util.HashMap;
@@ -378,10 +379,14 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
         setShowIndicators((String) param);
         return true;
       case INTERVAL:
-        setInterval((Integer) param);
+        Integer interval = WXUtils.getInteger(param,null);
+        if (interval != null)
+          setInterval((Integer) param);
         return true;
       case INDEX:
-        setIndex((Integer) param);
+        Integer index = WXUtils.getInteger(param,null);
+        if (index != null)
+          setIndex((Integer) param);
         return true;
     }
     return super.setProperty(key, param);

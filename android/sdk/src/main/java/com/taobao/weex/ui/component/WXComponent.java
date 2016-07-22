@@ -465,12 +465,18 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
     }
   }
 
+  /**
+   * SetProperty to hostview
+   * @param key name of argument
+   * @param param value of argument
+   * @return true means that the property is consumed
+     */
   protected boolean setProperty(String key, Object param) {
     switch (key) {
       case WXDomPropConstant.WX_ATTR_DISABLED:
-        Boolean result = WXUtils.getBoolean(param,null);
-        if (result != null) {
-          setDisabled(result);
+        Boolean disabled = WXUtils.getBoolean(param,null);
+        if (disabled != null) {
+          setDisabled(disabled);
         }
         return true;
       case WXDomPropConstant.WX_POSITION:
@@ -480,21 +486,27 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
         setBackgroundColor((String) param);
         return true;
       case WXDomPropConstant.WX_OPACITY:
-        setOpacity(WXUtils.getFloat(param));
+        Float opacity = WXUtils.getFloat(param,null);
+        if (opacity != null)
+          setOpacity(opacity);
         return true;
       case WXDomPropConstant.WX_BORDERRADIUS:
       case WXDomPropConstant.WX_BORDER_TOP_LEFT_RADIUS:
       case WXDomPropConstant.WX_BORDER_TOP_RIGHT_RADIUS:
       case WXDomPropConstant.WX_BORDER_BOTTOM_RIGHT_RADIUS:
       case WXDomPropConstant.WX_BORDER_BOTTOM_LEFT_RADIUS:
-        setBorderRadius(key,WXUtils.getFloat(param));
+        Float radius = WXUtils.getFloat(param,null);
+        if (radius != null)
+          setBorderRadius(key,radius);
         return true;
       case WXDomPropConstant.WX_BORDERWIDTH:
       case WXDomPropConstant.WX_BORDER_TOP_WIDTH:
       case WXDomPropConstant.WX_BORDER_RIGHT_WIDTH:
       case WXDomPropConstant.WX_BORDER_BOTTOM_WIDTH:
       case WXDomPropConstant.WX_BORDER_LEFT_WIDTH:
-        setBorderWidth(key,WXUtils.getFloat(param));
+        Float width = WXUtils.getFloat(param,null);
+        if (width != null)
+          setBorderWidth(key,width);
         return true;
       case WXDomPropConstant.WX_BORDERSTYLE:
         setBorderStyle((String) param);

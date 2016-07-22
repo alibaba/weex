@@ -239,8 +239,34 @@ public class WXUtils {
     try {
       result = Float.parseFloat(temp);
     } catch (NumberFormatException e) {
+      WXLogUtils.e("Argument format error!");
     }
     return result;
+  }
+
+  public static Float getFloat(Object value, @Nullable Float df) {
+
+    if (value == null) {
+      return df;
+    }
+
+    try {
+      return (Float) value;
+    } catch (ClassCastException cce) {
+      String temp = value.toString().trim();
+      if (temp.endsWith("px")) {
+        temp = temp.substring(0, temp.indexOf("px"));
+      }
+      try {
+        return Float.parseFloat(temp);
+      } catch (NumberFormatException nfe) {
+        WXLogUtils.e("Argument format error!");
+      } catch (Exception e) {
+        WXLogUtils.e("Argument error!");
+      }
+    }
+
+    return df;
   }
 
   public static float fastGetFloat(String raw, int precision){
@@ -313,6 +339,31 @@ public class WXUtils {
 
     }
     return result;
+  }
+
+  public static Integer getInteger(@Nullable Object value, @Nullable Integer df) {
+
+    if (value == null) {
+      return df;
+    }
+
+    try {
+      return (Integer) value;
+    } catch (ClassCastException cce) {
+      String temp = value.toString().trim();
+      if (temp.endsWith("px")) {
+        temp = temp.substring(0, temp.indexOf("px"));
+      }
+      try {
+        return Integer.parseInt(temp);
+      } catch (NumberFormatException nfe) {
+        WXLogUtils.e("Argument format error!");
+      } catch (Exception e) {
+        WXLogUtils.e("Argument error!");
+      }
+    }
+
+    return df;
   }
 
   public static long getLong(Object value) {

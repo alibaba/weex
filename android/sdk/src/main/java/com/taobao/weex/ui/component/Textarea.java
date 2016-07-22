@@ -210,6 +210,7 @@ import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.dom.TextAreaEditTextDomObject;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.view.WXEditText;
+import com.taobao.weex.utils.WXUtils;
 
 /**
  * Created by sospartan on 7/11/16.
@@ -242,7 +243,9 @@ public class Textarea extends AbstractEditComponent {
   protected boolean setProperty(String key, Object param) {
     switch (key) {
       case WXDomPropConstant.WX_ATTR_TEXTAREA_ROWS:
-        setRows((Integer) param);
+        Integer rows = WXUtils.getInteger(param,null);
+        if (rows != null)
+          setRows(rows);
         return true;
     }
     return super.setProperty(key, param);

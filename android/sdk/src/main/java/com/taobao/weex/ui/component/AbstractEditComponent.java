@@ -372,10 +372,14 @@ public abstract class AbstractEditComponent extends WXComponent<WXEditText> {
           setSingleLine(singLineResult);
         return true;
       case WXDomPropConstant.WX_ATTR_INPUT_LINES:
-        setLines((Integer) param);
+        Integer lines = WXUtils.getInteger(param, null);
+        if (lines != null)
+          setLines(lines);
         return true;
       case WXDomPropConstant.WX_ATTR_INPUT_MAXLENGTH:
-        setMaxLength((Integer) param);
+        Integer maxlength = WXUtils.getInteger(param, null);
+        if (maxlength != null)
+          setMaxLength(maxlength);
         return true;
     }
     return super.setProperty(key, param);
