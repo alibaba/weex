@@ -205,47 +205,89 @@
 package com.taobao.weex.utils;
 
 import android.content.Context;
+import android.os.Environment;
+import android.text.TextUtils;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class WXFileUtils {
 
-  /**
-   * Load file in asset directory.
-   * @param path FilePath
-   * @param context Weex Context
-   * @return the Content of the file
-   */
-  public static String loadFileContent(String path, Context context) {
-    StringBuilder builder ;
-    try {
-      InputStream in = context.getAssets().open(path);
-
-      builder = new StringBuilder(in.available()+10);
-
-      BufferedReader localBufferedReader = new BufferedReader(new InputStreamReader(in));
-      char[] data = new char[2048];
-      int len = -1;
-      while ((len = localBufferedReader.read(data)) > 0) {
-        builder.append(data, 0, len);
-      }
-      localBufferedReader.close();
-      if (in != null) {
+    /**
+     * Load file in asset directory.
+     *
+     * @param path    FilePath
+     * @param context Weex Context
+     * @return the Content of the file
+     */
+    public static String loadFileContent(String path, Context context) {
+        StringBuilder builder;
         try {
-          in.close();
+            InputStream in = context.getAssets().open(path);
+
+            builder = new StringBuilder(in.available() + 10);
+
+            BufferedReader localBufferedReader = new BufferedReader(new InputStreamReader(in));
+            char[] data = new char[2048];
+            int len = -1;
+            while ((len = localBufferedReader.read(data)) > 0) {
+                builder.append(data, 0, len);
+            }
+            localBufferedReader.close();
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    WXLogUtils.e("WXFileUtils loadFileContent: " + WXLogUtils.getStackTrace(e));
+                }
+            }
+            return builder.toString();
+
         } catch (IOException e) {
-          WXLogUtils.e("WXFileUtils loadFileContent: " + WXLogUtils.getStackTrace(e));
+            e.printStackTrace();
         }
-      }
-      return builder.toString();
-      
-    } catch (IOException e) {
-      e.printStackTrace();
+
+        return "";
     }
 
-    return "";
-  }
+    public static boolean saveFile(String path, byte[] content, Context context) {
+        if (TextUtils.isEmpty(path) || content == null || context == null) {
+            return false;
+        }
+        FileOutputStream outStream = null;
+        try {
+            outStream = new FileOutputStream(path);
+            outStream.write(content);
+            outStream.close();
+            return true;
+        } catch (Exception e) {
+            WXLogUtils.e("WXFileUtils saveFile: " + WXLogUtils.getStackTrace(e));
+        } finally {
+            if (outStream != null) {
+                try {
+                    outStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return false;
+    }
+
+    public static String getDiskCacheDir(Context context) {
+        if (context == null) {
+            return null;
+        }
+        String cachePath;
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
+                || !Environment.isExternalStorageRemovable()) {
+            cachePath = context.getExternalCacheDir().getPath();
+        } else {
+            cachePath = context.getCacheDir().getPath();
+        }
+        return cachePath;
+    }
 }
