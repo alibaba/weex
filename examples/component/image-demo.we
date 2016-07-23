@@ -1,27 +1,41 @@
 <template>
   <scroller>
-    <wxc-panel title="width x height" type="primary">
+    <wxc-panel title="width, height" type="primary">
       <wxc-tip type="warning" value="Weex screen width is 750" style="margin-bottom: 20px;"></wxc-tip>
-      <wxc-panel title="400 X 400">
-        <image class="img" style=" width: 400px; height: 400px;" src="{{img}}"></image>
-      </wxc-panel>
-      
-      <wxc-panel title="200 x 200">
-        <image class="img" style=" width: 200px; height: 200px;" src="{{img}}"></image>
-      </wxc-panel>
+      <div style="flex-direction: row">
+        <image class="" style=" width: 200px; height: 200px;" src="{{img}}"></image>
+        <image class="" style=" width: 100px; height: 100px;margin-left: 20px;" src="{{img}}"></image>
+      </div>
+    </wxc-panel>
+
+    <wxc-panel title="radius" type="primary">
+      <div style="flex-direction: row">
+        <image class=""
+               style="border-radius:100px;width:200px;height:200px;border-width: 10px;border-color: #ddd;border-style: solid;"
+               src="{{img}}"></image>
+        <image class=""
+               style="border-radius:50px;width:200px;height:200px;border-width: 10px;border-color: #ddd;border-style: solid;margin-left: 20px;"
+               src="{{img}}"></image>
+      </div>
     </wxc-panel>
 
     <wxc-panel title="resize" type="primary">
       <wxc-panel title="resize=stretch(default) 600 X 200 ">
-        <image class="img" style=" width: 600px; height: 200px;border-style: solid;border-width: 1px;border-color: #333;" src="{{img}}" resize="stretch"></image>
+        <image class="img"
+               style=" width: 600px; height: 200px;border-style: solid;border-width: 1px;border-color: #333;"
+               src="{{img}}" resize="stretch"></image>
       </wxc-panel>
-      
+
       <wxc-panel title="resize=contain 600 X 200 ">
-        <image class="img" style=" width: 600px; height: 200px;border-style: solid;border-width: 1px;border-color: #333;" src="{{img}}" resize="contain"></image>
+        <image class="img"
+               style=" width: 600px; height: 200px;border-style: solid;border-width: 1px;border-color: #333;"
+               src="{{img}}" resize="contain"></image>
       </wxc-panel>
-      
+
       <wxc-panel title="resize=cover 600 X 200">
-        <image class="img" style=" width: 600px; height: 200px;border-style: solid;border-width: 1px;border-color: #333;" src="{{img}}" resize="cover"></image>
+        <image class="img"
+               style=" width: 600px; height: 200px;border-style: solid;border-width: 1px;border-color: #333;"
+               src="{{img}}" resize="cover"></image>
       </wxc-panel>
     </wxc-panel>
   </scroller>
