@@ -277,7 +277,7 @@ public class WXSoInstallMgrSdk {
       return false;
     }
 
-    boolean InitSuc = false;
+    boolean InitSuc;
 
     //        if (checkSoIsInValid(libName, weexSoSize)) {
 
