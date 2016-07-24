@@ -209,6 +209,7 @@ import android.support.annotation.Nullable;
 
 import com.taobao.weex.bridge.JSCallback;
 
+import java.util.ArrayList;
 import java.util.List;
 
 class WXStorageWrapper implements IWXStorage {
@@ -249,6 +250,9 @@ class WXStorageWrapper implements IWXStorage {
     @Override
     public void getAllKeys(@Nullable JSCallback callback) {
         List<String> keys = mStorageAdapter.getAllKeys();
+        if(keys == null){
+            keys = new ArrayList<>();
+        }
         StorageResultHandler.handleResult(callback,StorageResultHandler.RESULT_OK,keys);
     }
 }
