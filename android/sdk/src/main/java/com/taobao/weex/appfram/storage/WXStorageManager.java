@@ -204,137 +204,100 @@
  */
 package com.taobao.weex.appfram.storage;
 
-import android.support.annotation.Nullable;
-import android.text.TextUtils;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.IntDef;
 
-import com.taobao.weex.WXEnvironment;
-import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.bridge.JSCallback;
-import com.taobao.weex.common.WXModule;
-import com.taobao.weex.common.WXModuleAnno;
-import com.taobao.weex.utils.WXLogUtils;
+import com.taobao.weex.common.WXThread;
 
-/**
- * Created by rowandjj(chuyi)<br/>
- */
-public class WXStorageModule extends WXModule implements IWXStorage {
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-    private static IWXStorage mStorageAdapter;
+public class WXStorageManager implements Handler.Callback{
 
-    private static IWXStorage ability() {
-        if (mStorageAdapter != null) {
-            return mStorageAdapter;
-        }
+    private WXThread mStorageThread;
+    private Handler mStorageHandler;
 
-        IWXStorageAdapter adapter = WXSDKEngine.getIWXStorageAdapter();
-        if (adapter != null) {
-            mStorageAdapter = new WXStorageWrapper(adapter);
-            return mStorageAdapter;
-        }
+    private static WXStorageManager sStorageManager;
 
-        if (WXEnvironment.sApplication == null) {
-            WXLogUtils.e("WXStorageModule", "No Application context found,you must call WXSDKEngine#initialize method in your application");
-            return null;
-        }
-
-        adapter = new DefaultWXStorage(WXEnvironment.sApplication);
-        mStorageAdapter = new WXStorageWrapper(adapter);
-        return mStorageAdapter;
+    private WXStorageManager(){
+        mStorageThread = new WXThread("weexStorageThread",this);
+        mStorageHandler = mStorageThread.getHandler();
     }
 
+    public static WXStorageManager getInstance(){
+        if(sStorageManager == null){
+            synchronized (WXStorageManager.class){
+                if(sStorageManager == null){
+                    sStorageManager = new WXStorageManager();
+                }
+            }
+        }
+        return sStorageManager;
+    }
 
-    @Override
-    @WXModuleAnno
-    public void setItem(String key, String value, @Nullable JSCallback callback) {
-        WXStorageManager.getInstance().sendMessage(WXStorageManager.StorageMessage.MESSAGE_SET_ITEM, callback, key, value);
+    public void destroy() {
+        if (mStorageThread != null) {
+            mStorageThread.quit();
+        }
+        sStorageManager = null;
     }
 
     @Override
-    @WXModuleAnno
-    public void getItem(String key, @Nullable JSCallback callback) {
-        WXStorageManager.getInstance().sendMessage(WXStorageManager.StorageMessage.MESSAGE_GET_ITEM, callback, key);
-    }
+    public boolean handleMessage(Message msg) {
+        JSCallback callback = (JSCallback) msg.obj;
+        Bundle bundle = msg.getData();
+        String arg1 = bundle.getString("arg1");
+        String arg2 = bundle.getString("arg2");
 
-    @Override
-    @WXModuleAnno
-    public void removeItem(String key, @Nullable JSCallback callback) {
-        WXStorageManager.getInstance().sendMessage(WXStorageManager.StorageMessage.MESSAGE_REMOVE_ITEM, callback, key);
-    }
+        switch (msg.what){
+            case StorageMessage.MESSAGE_SET_ITEM:
+                WXStorageModule.performSetItem(arg1,arg2,callback);
+                break;
+            case StorageMessage.MESSAGE_GET_ITEM:
+                WXStorageModule.performGetItem(arg1,callback);
+                break;
+            case StorageMessage.MESSAGE_REMOVE_ITEM:
+                WXStorageModule.performRemoveItem(arg1,callback);
+                break;
+            case StorageMessage.MESSAGE_LENGTH:
+                WXStorageModule.performGetLength(callback);
+                break;
+            case StorageMessage.MESSAGE_GET_ALL_KEYS:
+                WXStorageModule.performGetAllKeys(callback);
+                break;
 
-    @Override
-    @WXModuleAnno
-    public void length(@Nullable JSCallback callback) {
-        WXStorageManager.getInstance().sendMessage(WXStorageManager.StorageMessage.MESSAGE_LENGTH, callback);
-    }
-
-    @Override
-    @WXModuleAnno
-    public void getAllKeys(@Nullable JSCallback callback) {
-        WXStorageManager.getInstance().sendMessage(WXStorageManager.StorageMessage.MESSAGE_GET_ALL_KEYS, callback);
-    }
-
-    static void performSetItem(String key, String value, JSCallback callback) {
-        if (TextUtils.isEmpty(key) || TextUtils.isEmpty(value)) {
-            StorageResultHandler.handleInvalidParam(callback);
-            return;
         }
 
-        IWXStorage adapter = ability();
-        if (adapter == null) {
-            StorageResultHandler.handleNoHandlerError(callback);
-            return;
-        }
-        adapter.setItem(key, value, callback);
+
+        return false;
     }
 
 
-    static void performGetItem(String key, JSCallback callback) {
-        if (TextUtils.isEmpty(key)) {
-            StorageResultHandler.handleInvalidParam(callback);
-            return;
+    void sendMessage(@StorageMessage int what, JSCallback callback, String ...objs){
+        Message message = Message.obtain(mStorageHandler);
+        message.what = what;
+        message.obj = callback;
+        Bundle bundle = new Bundle();
+        message.setData(bundle);
+        if(objs.length == 1){
+            bundle.putString("arg1",objs[0]);
+        }else if(objs.length == 2){
+            bundle.putString("arg1",objs[0]);
+            bundle.putString("arg2",objs[1]);
         }
-
-        IWXStorage adapter = ability();
-        if (adapter == null) {
-            StorageResultHandler.handleNoHandlerError(callback);
-            return;
-        }
-        adapter.getItem(key, callback);
+        message.sendToTarget();
     }
 
-
-    static void performRemoveItem(String key, JSCallback callback) {
-        if (TextUtils.isEmpty(key)) {
-            StorageResultHandler.handleInvalidParam(callback);
-            return;
-        }
-
-        IWXStorage adapter = ability();
-        if (adapter == null) {
-            StorageResultHandler.handleNoHandlerError(callback);
-            return;
-        }
-        adapter.removeItem(key, callback);
+    @IntDef({StorageMessage.MESSAGE_SET_ITEM,StorageMessage.MESSAGE_GET_ITEM,StorageMessage.MESSAGE_REMOVE_ITEM,StorageMessage.MESSAGE_LENGTH,StorageMessage.MESSAGE_GET_ALL_KEYS})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface StorageMessage{
+        int MESSAGE_SET_ITEM = 1;
+        int MESSAGE_GET_ITEM = 2;
+        int MESSAGE_REMOVE_ITEM = 3;
+        int MESSAGE_LENGTH = 4;
+        int MESSAGE_GET_ALL_KEYS = 5;
     }
-
-
-    static void performGetLength(JSCallback callback) {
-        IWXStorage adapter = ability();
-        if (adapter == null) {
-            StorageResultHandler.handleNoHandlerError(callback);
-            return;
-        }
-        adapter.length(callback);
-    }
-
-
-    static void performGetAllKeys(JSCallback callback) {
-        IWXStorage adapter = ability();
-        if (adapter == null) {
-            StorageResultHandler.handleNoHandlerError(callback);
-            return;
-        }
-        adapter.getAllKeys(callback);
-    }
-
 }

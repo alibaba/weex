@@ -208,7 +208,7 @@ import android.support.annotation.Nullable;
 
 import com.taobao.weex.bridge.JSCallback;
 
-public interface IWXStorage {
+interface IWXStorage {
     public void setItem(String key, String value,@Nullable JSCallback callback);
     public void getItem(String key,@Nullable JSCallback callback);
     public void removeItem(String key,@Nullable JSCallback callback);

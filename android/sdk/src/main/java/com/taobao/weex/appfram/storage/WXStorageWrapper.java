@@ -211,7 +211,7 @@ import com.taobao.weex.bridge.JSCallback;
 
 import java.util.List;
 
-public class WXStorageWrapper implements IWXStorage {
+class WXStorageWrapper implements IWXStorage {
 
     private IWXStorageAdapter mStorageAdapter;
     public WXStorageWrapper(@NonNull IWXStorageAdapter adapter){

@@ -213,7 +213,7 @@ import com.taobao.weex.utils.WXLogUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DefaultWXStorage implements IWXStorageAdapter {
+class DefaultWXStorage implements IWXStorageAdapter {
 
     private WXDatabaseSupplier mDatabaseSupplier;
 

@@ -137,6 +137,7 @@ import com.taobao.weex.adapter.IWXImgLoaderAdapter;
 import com.taobao.weex.adapter.IWXUserTrackAdapter;
 import com.taobao.weex.appfram.navigator.IActivityNavBarSetter;
 import com.taobao.weex.appfram.storage.IWXStorageAdapter;
+import com.taobao.weex.appfram.storage.WXStorageManager;
 import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.bridge.WXModuleManager;
 import com.taobao.weex.common.WXRefreshData;
@@ -160,6 +161,7 @@ public class WXSDKManager {
   private final WXDomManager mWXDomManager;
   private WXBridgeManager mBridgeManager;
   private WXRenderManager mWXRenderManager;
+  private WXStorageManager mWXStorageManager;
 
   private IWXUserTrackAdapter mIWXUserTrackAdapter;
   private IWXImgLoaderAdapter mIWXImgLoaderAdapter;
@@ -173,6 +175,7 @@ public class WXSDKManager {
     mWXRenderManager = new WXRenderManager();
     mWXDomManager = new WXDomManager(mWXRenderManager);
     mBridgeManager = WXBridgeManager.getInstance();
+    mWXStorageManager = WXStorageManager.getInstance();
   }
 
   public static WXSDKManager getInstance() {
@@ -221,6 +224,10 @@ public class WXSDKManager {
   public void destroy() {
     if (mWXDomManager != null) {
       mWXDomManager.destroy();
+    }
+
+    if(mWXStorageManager != null){
+      mWXStorageManager.destroy();
     }
   }
 
