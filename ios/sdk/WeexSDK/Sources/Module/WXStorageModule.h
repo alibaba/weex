@@ -11,8 +11,11 @@
 @interface WXStorageModule : NSObject <WXModuleProtocol>
 
 - (void)getAllKeys:(WXModuleCallback)callback;
-- (void)removeItem:(NSString *)key callback:(WXModuleCallback)callback;
+
 - (void)setItem:(NSString *)key value:(NSString *)value callback:(WXModuleCallback)callback;
+
 - (void)getItem:(NSString *)key callback:(WXModuleCallback)callback;
+
+- (void)removeItem:(NSString *)key callback:(WXModuleCallback)callback;
 
 @end

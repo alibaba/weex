@@ -16,21 +16,15 @@ static NSString * const WXStorageDirectory            = @"wxstorage_v1";
 static NSString * const WXStorageFileName             = @"wxstorage.json";
 static NSUInteger const WXStorageInlineValueThreshold = 1024;
 static NSString * const WXStorageThreadName           = @"com.taobao.weex.storage";
-//static BOOL             WXStorageHasCreatedDirectory  = NO;
-/**
- *  @abstract macro for asserting that we are running on the storage thread.
- */
-#define WXAssertStorageThread() \
-WXAssert([[NSThread currentThread].name isEqualToString:WXStorageThreadName], @"must be called on the storage thread")
 
-//static dispatch_queue_t WXStorageGetMethodQueue() {
-//    static dispatch_queue_t storageQueue;
-//    static dispatch_once_t onceToken;
-//    dispatch_once(&onceToken, ^{
-//        storageQueue = dispatch_queue_create("com.taobao.weex.storage", DISPATCH_QUEUE_SERIAL);
-//    });
-//    return storageQueue;
-//}
+static dispatch_queue_t WXStorageGetMethodQueue() {
+    static dispatch_queue_t storageQueue;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        storageQueue = dispatch_queue_create("com.taobao.weex.storage", DISPATCH_QUEUE_SERIAL);
+    });
+    return storageQueue;
+}
 
 static NSString * WXStorageGetDirectory() {
     static NSString *storageDirectory = nil;
@@ -41,12 +35,6 @@ static NSString * WXStorageGetDirectory() {
     });
     return storageDirectory;
 }
-
-//static void  WXStorageDeleteDirectory()
-//{
-//    [[NSFileManager defaultManager] removeItemAtPath:WXStorageGetDirectory() error:NULL];
-//    WXStorageHasCreatedDirectory = NO;
-//}
 
 static NSString * WXStorageGetFilePath() {
     static NSString *storageFilePath = nil;
@@ -167,25 +155,30 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
         callback(@{@"result":@"failed",@"data":error.description});
         return ;
     }
-    NSString *value = _storage[key];
-    if (value == (id)kCFNull) {
-        value = [[WXUtility globalCache] objectForKey:key];
-        if (!value) {
-            NSString *filePath = [self filePathForKey:key];
-            NSError *error;
-            value = WXStorageReadFile(filePath, key, &error);
-            if (value) {
-                [[WXUtility globalCache] setObject:value forKey:key cost:value.length];
-            } else {
-                [_storage removeObjectForKey:key];
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(WXStorageGetMethodQueue(), ^{
+        WXStorageModule *strongSelf = weakSelf;
+        NSString *value = strongSelf->_storage[key];
+        if (value == (id)kCFNull) {
+            value = [[WXUtility globalCache] objectForKey:key];
+            if (!value) {
+                NSString *filePath = [strongSelf filePathForKey:key];
+                NSError *error;
+                value = WXStorageReadFile(filePath, key, &error);
+                if (value) {
+                    [[WXUtility globalCache] setObject:value forKey:key cost:value.length];
+                } else {
+                    [strongSelf->_storage removeObjectForKey:key];
+                }
             }
         }
-    }
-    if (!value) { // nil
-        callback(@{@"result":@"failed"});
-        return ;
-    }
-    callback(@{@"result":@"success",@"data":value});
+        if (!value) { // nil
+            callback(@{@"result":@"failed"});
+            return ;
+        }
+        callback(@{@"result":@"success",@"data":value});
+    });
 }
 
 - (void)setItem:(NSString *)key value:(NSString *)value callback:(WXModuleCallback)callback
@@ -197,18 +190,21 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
         callback(@{@"result":@"failed",@"data":error.description});
         return ;
     }
-
-    BOOL changedStorage = NO;
-    [self writeEntry:@[key,value] changedStorage:&changedStorage errorOut:&error];
-    if (error) {
-        callback(@{@"result":@"failed",@"data":error.description});
-        return ;
-    }
-    
-    if (changedStorage) {
-        [self writeStorage];
-    }
-    callback(@{@"result":@"success"});
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(WXStorageGetMethodQueue(), ^{
+        NSError *errorOut = nil;
+        BOOL changedStorage = NO;
+        [weakSelf writeEntry:@[key,value] changedStorage:&changedStorage errorOut:&errorOut];
+        if (error) {
+            callback(@{@"result":@"failed",@"data":error.description});
+            return ;
+        }
+        
+        if (changedStorage) {
+            [weakSelf writeStorage];
+        }
+        callback(@{@"result":@"success"});
+    });
 }
 
 - (void)removeItem:(NSString *)key callback:(WXModuleCallback)callback
@@ -220,16 +216,21 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
         callback(@{@"result":@"failed",@"data":error.userInfo});
         return ;
     }
-    if (_storage[key] == (id)kCFNull) {
-        NSString *filePath = [self filePathForKey:key];
-        [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
-        [[WXUtility globalCache] removeObjectForKey:key];
-        [_storage removeObjectForKey:key];
-    } else if (_storage[key]) {
-        [_storage removeObjectForKey:key];
-        [self writeStorage];
-    }
-    callback(@{@"result":@"success"});
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(WXStorageGetMethodQueue(), ^{
+        WXStorageModule *strongSelf = weakSelf;
+        if (strongSelf->_storage[key] == (id)kCFNull) {
+            NSString *filePath = [weakSelf filePathForKey:key];
+            [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+            [[WXUtility globalCache] removeObjectForKey:key];
+            [strongSelf->_storage removeObjectForKey:key];
+        } else if (strongSelf->_storage[key]) {
+            [strongSelf->_storage removeObjectForKey:key];
+            [strongSelf writeStorage];
+        }
+        callback(@{@"result":@"success"});
+    });
 }
 
 #pragma mark - Utils
