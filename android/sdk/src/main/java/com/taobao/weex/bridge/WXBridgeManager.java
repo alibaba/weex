@@ -506,27 +506,32 @@ public class WXBridgeManager implements Callback {
   }
 
 
-  private void addJSTask(String method,String instanceId, Object... args) {
-    if (args == null || args.length == 0) {
-      return;
-    }
+  private void addJSTask(final String method, final String instanceId, final Object... args) {
+    mJSHandler.post(new Runnable() {
+      @Override
+      public void run() {
+        if (args == null || args.length == 0) {
+          return;
+        }
 
-    ArrayList<Object> argsList = new ArrayList<>();
-    for (Object arg : args) {
-      argsList.add(arg);
-    }
+        ArrayList<Object> argsList = new ArrayList<>();
+        for (Object arg : args) {
+          argsList.add(arg);
+        }
 
-    WXHashMap<String, Object> task = new WXHashMap<>();
-    task.put(WXConst.KEY_METHOD, method);
-    task.put(WXConst.KEY_ARGS, argsList);
+        WXHashMap<String, Object> task = new WXHashMap<>();
+        task.put(WXConst.KEY_METHOD, method);
+        task.put(WXConst.KEY_ARGS, argsList);
 
-    if (mNextTickTasks.get(instanceId) == null) {
-      ArrayList<WXHashMap<String, Object>> list = new ArrayList<>();
-      list.add(task);
-      mNextTickTasks.put(instanceId, list);
-    } else {
-      mNextTickTasks.get(instanceId).add(task);
-    }
+        if (mNextTickTasks.get(instanceId) == null) {
+          ArrayList<WXHashMap<String, Object>> list = new ArrayList<>();
+          list.add(task);
+          mNextTickTasks.put(instanceId, list);
+        } else {
+          mNextTickTasks.get(instanceId).add(task);
+        }
+      }
+    });
   }
 
   private void sendMessage(String instanceId, int what) {
