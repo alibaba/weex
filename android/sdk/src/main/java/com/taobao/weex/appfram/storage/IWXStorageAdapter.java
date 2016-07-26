@@ -214,21 +214,21 @@ import java.util.Map;
  * storage implementation.
  * */
 public interface IWXStorageAdapter {
-    void setItem(String key, String value,OnStorageListener listener);
+    void setItem(String key, String value,OnResultReceivedListener listener);
 
-    void getItem(String key,OnStorageListener listener);
+    void getItem(String key,OnResultReceivedListener listener);
 
-    void removeItem(String key,OnStorageListener listener);
+    void removeItem(String key,OnResultReceivedListener listener);
 
-    void length(OnStorageListener listener);
+    void length(OnResultReceivedListener listener);
 
-    void getAllKeys(OnStorageListener listener);
+    void getAllKeys(OnResultReceivedListener listener);
 
     /**
      * the callback of storage operation.
      * */
-    interface OnStorageListener {
-        void onReceivedStorageResult(Map<String,Object> data);
+    interface OnResultReceivedListener {
+        void onReceived(Map<String,Object> data);
     }
 
 }

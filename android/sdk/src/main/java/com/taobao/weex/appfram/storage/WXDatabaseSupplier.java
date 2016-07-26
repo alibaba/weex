@@ -223,11 +223,11 @@ public class WXDatabaseSupplier extends SQLiteOpenHelper {
     private SQLiteDatabase mDb;
 
 
-    static final String TABLE_STORAGE = "default_storage";
+    static final String TABLE_STORAGE = "default_wx_storage";
     static final String COLUMN_KEY = "key";
     static final String COLUMN_VALUE = "value";
 
-    private static final String STATEMENT_CREATE_TABLE = "CREATE TABLE " + TABLE_STORAGE + " ("
+    private static final String STATEMENT_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_STORAGE + " ("
             + COLUMN_KEY
             + " TEXT PRIMARY KEY,"
             + COLUMN_VALUE
@@ -253,7 +253,7 @@ public class WXDatabaseSupplier extends SQLiteOpenHelper {
         return sInstance;
     }
 
-    SQLiteDatabase get() {
+    SQLiteDatabase getDatabase() {
         ensureDatabase();
         return mDb;
     }
