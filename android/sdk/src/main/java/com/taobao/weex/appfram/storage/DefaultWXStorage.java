@@ -212,101 +212,165 @@ import com.taobao.weex.utils.WXLogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-class DefaultWXStorage implements IWXStorageAdapter {
+public class DefaultWXStorage implements IWXStorageAdapter {
 
     private WXDatabaseSupplier mDatabaseSupplier;
 
-    public DefaultWXStorage(Context context){
+    private ExecutorService mExecutorService;
+
+    private void execute(Runnable runnable) {
+        if (mExecutorService == null) {
+            mExecutorService = Executors.newSingleThreadExecutor();
+        }
+        mExecutorService.execute(runnable);
+    }
+
+    public DefaultWXStorage(Context context) {
         this.mDatabaseSupplier = WXDatabaseSupplier.getInstance(context);
     }
 
 
     @Override
-    public boolean setItem(String key, String value) {
-        String sql = "INSERT OR REPLACE INTO "+WXDatabaseSupplier.TABLE_STORAGE+" VALUES (?,?);";
+    public void setItem(final String key, final String value, final OnStorageListener listener) {
+        execute(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, Object> data = StorageResultHandler.setItemResult(performSetItem(key, value));
+                listener.onReceivedStorageResult(data);
+            }
+        });
+    }
+
+    @Override
+    public void getItem(final String key, final OnStorageListener listener) {
+        execute(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, Object> data = StorageResultHandler.getItemResult(performGetItem(key));
+                listener.onReceivedStorageResult(data);
+            }
+        });
+    }
+
+    @Override
+    public void removeItem(final String key, final OnStorageListener listener) {
+        execute(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, Object> data = StorageResultHandler.removeItemResult(performRemoveItem(key));
+                listener.onReceivedStorageResult(data);
+            }
+        });
+    }
+
+    @Override
+    public void length(final OnStorageListener listener) {
+        execute(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, Object> data = StorageResultHandler.getLengthResult(performGetLength());
+                listener.onReceivedStorageResult(data);
+            }
+        });
+    }
+
+    @Override
+    public void getAllKeys(final OnStorageListener listener) {
+        execute(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, Object> data = StorageResultHandler.getAllkeysResult(performGetAllKeys());
+                listener.onReceivedStorageResult(data);
+            }
+        });
+    }
+
+
+    private boolean performSetItem(String key, String value) {
+        String sql = "INSERT OR REPLACE INTO " + WXDatabaseSupplier.TABLE_STORAGE + " VALUES (?,?);";
         SQLiteStatement statement = mDatabaseSupplier.get().compileStatement(sql);
         try {
             statement.clearBindings();
-            statement.bindString(1,key);
-            statement.bindString(2,value);
+            statement.bindString(1, key);
+            statement.bindString(2, value);
             statement.execute();
             return true;
-        }catch (Exception e){
-            WXLogUtils.e("DefaultWXStorage",e.getMessage());
+        } catch (Exception e) {
+            WXLogUtils.e("DefaultWXStorage", e.getMessage());
             return false;
-        }finally {
+        } finally {
             statement.close();
             mDatabaseSupplier.closeDatabase();
         }
     }
 
-    @Override
-    public String getItem(String key) {
+    private String performGetItem(String key) {
         Cursor c = mDatabaseSupplier.get().query(WXDatabaseSupplier.TABLE_STORAGE,
                 new String[]{WXDatabaseSupplier.COLUMN_VALUE},
-                WXDatabaseSupplier.COLUMN_KEY+"=?",
+                WXDatabaseSupplier.COLUMN_KEY + "=?",
                 new String[]{key},
-                null,null,null);
+                null, null, null);
         try {
-            if(c.moveToNext()){
-               return c.getString(c.getColumnIndex(WXDatabaseSupplier.COLUMN_VALUE));
-            }else{
+            if (c.moveToNext()) {
+                return c.getString(c.getColumnIndex(WXDatabaseSupplier.COLUMN_VALUE));
+            } else {
                 return null;
             }
-        }catch (Exception e){
-            WXLogUtils.e("DefaultWXStorage",e.getMessage());
+        } catch (Exception e) {
+            WXLogUtils.e("DefaultWXStorage", e.getMessage());
             return null;
-        }finally {
+        } finally {
             c.close();
             mDatabaseSupplier.closeDatabase();
         }
     }
 
-    @Override
-    public boolean removeItem(String key) {
+    private boolean performRemoveItem(String key) {
         int count = 0;
         try {
             count = mDatabaseSupplier.get().delete(WXDatabaseSupplier.TABLE_STORAGE,
-                    WXDatabaseSupplier.COLUMN_KEY+"=?",
+                    WXDatabaseSupplier.COLUMN_KEY + "=?",
                     new String[]{key});
-        }finally{
+        } finally {
             mDatabaseSupplier.closeDatabase();
         }
-        return count==1;
+        return count == 1;
     }
 
-    @Override
-    public long length() {
-        String sql = "SELECT count("+WXDatabaseSupplier.COLUMN_KEY+") FROM "+WXDatabaseSupplier.TABLE_STORAGE;
+    private long performGetLength() {
+        String sql = "SELECT count(" + WXDatabaseSupplier.COLUMN_KEY + ") FROM " + WXDatabaseSupplier.TABLE_STORAGE;
         SQLiteStatement statement = mDatabaseSupplier.get().compileStatement(sql);
         try {
             return statement.simpleQueryForLong();
-        }catch (Exception e){
-            WXLogUtils.e("DefaultWXStorage",e.getMessage());
+        } catch (Exception e) {
+            WXLogUtils.e("DefaultWXStorage", e.getMessage());
             return 0;
-        }finally {
+        } finally {
             statement.close();
             mDatabaseSupplier.closeDatabase();
         }
     }
 
-    @Override
-    public List<String> getAllKeys() {
+    private List<String> performGetAllKeys() {
         List<String> result = new ArrayList<>();
-        Cursor c = mDatabaseSupplier.get().query(WXDatabaseSupplier.TABLE_STORAGE,new String[]{WXDatabaseSupplier.COLUMN_KEY},null,null,null,null,null);
+        Cursor c = mDatabaseSupplier.get().query(WXDatabaseSupplier.TABLE_STORAGE, new String[]{WXDatabaseSupplier.COLUMN_KEY}, null, null, null, null, null);
         try {
-            while (c.moveToNext()){
+            while (c.moveToNext()) {
                 result.add(c.getString(c.getColumnIndex(WXDatabaseSupplier.COLUMN_KEY)));
             }
             return result;
-        }catch (Exception e){
-            WXLogUtils.e("DefaultWXStorage",e.getMessage());
+        } catch (Exception e) {
+            WXLogUtils.e("DefaultWXStorage", e.getMessage());
             return result;
-        }finally {
+        } finally {
             c.close();
             mDatabaseSupplier.closeDatabase();
         }
-
     }
+
+
 }

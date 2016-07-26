@@ -208,44 +208,86 @@ import android.support.annotation.Nullable;
 
 import com.taobao.weex.bridge.JSCallback;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-/*package*/ class StorageResultHandler {
-    private StorageResultHandler(){}
+public class StorageResultHandler {
 
-    static final String RESULT = "result";
-    static final String DATA = "data";
+    private StorageResultHandler() {
+    }
 
-
-    static final String UNDEFINED = "undefined";
-    static final String RESULT_FAILED_NO_HANDLER = "no_handler";
-    static final String RESULT_FAILED_INVALID_PARAM = "invalid_param";
+    private static final String RESULT = "result";
+    private static final String DATA = "data";
 
 
+    private static final String UNDEFINED = "undefined";
+    private static final String RESULT_FAILED_NO_HANDLER = "no_handler";
+    private static final String RESULT_FAILED_INVALID_PARAM = "invalid_param";
 
-    static final String RESULT_OK = "success";
-    static final String RESULT_FAILED = "failed";
+
+    private static final String RESULT_OK = "success";
+    private static final String RESULT_FAILED = "failed";
 
 
-    public static void handleResult(@Nullable JSCallback callback,String result,Object data){
-        if(callback == null){
+    public static Map<String, Object> getItemResult(String result) {
+        Map<String, Object> map = new HashMap<>(4);
+        map.put(RESULT, result != null ? RESULT_OK : RESULT_FAILED);
+        map.put(DATA, result != null ? result : UNDEFINED);
+        return map;
+    }
+
+    public static Map<String, Object> setItemResult(boolean result) {
+        Map<String, Object> map = new HashMap<>(4);
+        map.put(RESULT, result ? RESULT_OK : RESULT_FAILED);
+        map.put(DATA, UNDEFINED);
+        return map;
+    }
+
+
+    public static Map<String, Object> removeItemResult(boolean result) {
+        Map<String, Object> map = new HashMap<>(4);
+        map.put(RESULT, result ? RESULT_OK : RESULT_FAILED);
+        map.put(DATA, UNDEFINED);
+        return map;
+    }
+
+    public static Map<String, Object> getLengthResult(long result) {
+        Map<String, Object> map = new HashMap<>(4);
+        map.put(RESULT, RESULT_OK);
+        map.put(DATA, result);
+        return map;
+    }
+
+    public static Map<String, Object> getAllkeysResult(List<String> result) {
+        if (result == null) {
+            result = new ArrayList<>(1);
+        }
+        Map<String, Object> map = new HashMap<>(4);
+        map.put(RESULT, RESULT_OK);
+        map.put(DATA, result);
+        return map;
+    }
+
+
+    private static void handleResult(@Nullable JSCallback callback, String result, Object data) {
+        if (callback == null) {
             return;
         }
-        Map<String,Object> retVal = new HashMap<>(4);
-        retVal.put(RESULT,result);
-        retVal.put(DATA,data);
+        Map<String, Object> retVal = new HashMap<>(4);
+        retVal.put(RESULT, result);
+        retVal.put(DATA, data);
         callback.invoke(retVal);
     }
 
-    public static void handleNoHandlerError(@Nullable JSCallback callback){
-        handleResult(callback,RESULT_FAILED,RESULT_FAILED_NO_HANDLER);
+    public static void handleNoHandlerError(@Nullable JSCallback callback) {
+        handleResult(callback, RESULT_FAILED, RESULT_FAILED_NO_HANDLER);
     }
 
-    public static void handleInvalidParam(@Nullable JSCallback callback){
-        handleResult(callback,RESULT_FAILED,RESULT_FAILED_INVALID_PARAM);
+    public static void handleInvalidParam(@Nullable JSCallback callback) {
+        handleResult(callback, RESULT_FAILED, RESULT_FAILED_INVALID_PARAM);
     }
-
 
 
 }

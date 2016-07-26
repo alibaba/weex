@@ -136,14 +136,15 @@ import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
 import com.taobao.weex.adapter.IWXUserTrackAdapter;
 import com.taobao.weex.appfram.navigator.IActivityNavBarSetter;
+import com.taobao.weex.appfram.storage.DefaultWXStorage;
 import com.taobao.weex.appfram.storage.IWXStorageAdapter;
-import com.taobao.weex.appfram.storage.WXStorageManager;
 import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.bridge.WXModuleManager;
 import com.taobao.weex.common.WXRefreshData;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomManager;
 import com.taobao.weex.ui.WXRenderManager;
+import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXUtils;
 
 import java.util.ArrayList;
@@ -161,7 +162,6 @@ public class WXSDKManager {
   private final WXDomManager mWXDomManager;
   private WXBridgeManager mBridgeManager;
   private WXRenderManager mWXRenderManager;
-  private WXStorageManager mWXStorageManager;
 
   private IWXUserTrackAdapter mIWXUserTrackAdapter;
   private IWXImgLoaderAdapter mIWXImgLoaderAdapter;
@@ -175,7 +175,6 @@ public class WXSDKManager {
     mWXRenderManager = new WXRenderManager();
     mWXDomManager = new WXDomManager(mWXRenderManager);
     mBridgeManager = WXBridgeManager.getInstance();
-    mWXStorageManager = WXStorageManager.getInstance();
   }
 
   public static WXSDKManager getInstance() {
@@ -224,10 +223,6 @@ public class WXSDKManager {
   public void destroy() {
     if (mWXDomManager != null) {
       mWXDomManager.destroy();
-    }
-
-    if(mWXStorageManager != null){
-      mWXStorageManager.destroy();
     }
   }
 
@@ -333,6 +328,13 @@ public class WXSDKManager {
   }
 
   public IWXStorageAdapter getIWXStorageAdapter(){
+    if(mIWXStorageAdapter == null){
+      if(WXEnvironment.sApplication != null){
+        mIWXStorageAdapter = new DefaultWXStorage(WXEnvironment.sApplication);
+      }else{
+        WXLogUtils.e("WXStorageModule", "No Application context found,you should call WXSDKEngine#initialize() method in your application");
+      }
+    }
     return mIWXStorageAdapter;
   }
 

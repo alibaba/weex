@@ -204,7 +204,7 @@
  */
 package com.taobao.weex.appfram.storage;
 
-import java.util.List;
+import java.util.Map;
 
 /**
  * interface for {@link WXStorageModule} class.
@@ -214,9 +214,21 @@ import java.util.List;
  * storage implementation.
  * */
 public interface IWXStorageAdapter {
-    public boolean setItem(String key, String value);
-    public String getItem(String key);
-    public boolean removeItem(String key);
-    public long length();
-    public List<String> getAllKeys();
+    void setItem(String key, String value,OnStorageListener listener);
+
+    void getItem(String key,OnStorageListener listener);
+
+    void removeItem(String key,OnStorageListener listener);
+
+    void length(OnStorageListener listener);
+
+    void getAllKeys(OnStorageListener listener);
+
+    /**
+     * the callback of storage operation.
+     * */
+    interface OnStorageListener {
+        void onReceivedStorageResult(Map<String,Object> data);
+    }
+
 }
