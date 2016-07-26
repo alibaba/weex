@@ -310,9 +310,13 @@ static NSArray *prettyStringPrinters = nil;
         NSAssert(originalImp, @"Must find imp");
 
         BOOL success = class_addMethod(cfURLSessionConnectionClass, sourceMethod, originalImp, encoding);
-        NSAssert(success, @"Should be successful");
+        if (!success) {
+            NSAssert(success, @"Should be successful");
+        }
         IMP replacedImp = class_replaceMethod(cfURLSessionConnectionClass, originalMethod, sourceImp, encoding);
-        NSAssert(replacedImp, @"Expected originam method to have been replaced");
+        if (!replacedImp) {
+            NSAssert(replacedImp, @"Expected originam method to have been replaced");
+        }
     }
     
     if (methods) {

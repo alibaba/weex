@@ -9,7 +9,7 @@
 #import "PDDynamicDebuggerDomain.h"
 #import "PDObject.h"
 #import "PDDebugger.h"
-#import <WXDevtool/WXDevtool.h>
+#import "WXDevtool.h"
 
 @interface WXDebugDomain : PDDynamicDebuggerDomain
 

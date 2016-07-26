@@ -7,8 +7,8 @@
  */
 
 #import "WXDevTool.h"
-#import "WXDebugTool.h"
-#import "WXSDKEngine.h"
+#import <WeexSDK/WXDebugTool.h>
+#import <WeexSDK/WXSDKEngine.h>
 #import "PDDebugger.h"
 
 static BOOL WXDebug;
@@ -17,7 +17,7 @@ static BOOL WXDebug;
 
 + (void)setDebug:(BOOL)isDebug {
     WXDebug = isDebug;
-    [WXDebugTool setDevToolDebug:YES];
+    [WXDebugTool setDevToolDebug:isDebug];
 }
 
 + (BOOL)isDebug {

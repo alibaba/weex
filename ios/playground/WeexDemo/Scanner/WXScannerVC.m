@@ -81,7 +81,18 @@
 
 - (void)openURL:(NSString*)URL
 {
-    NSURL *url = [NSURL URLWithString:URL];
+    NSString *transformURL = URL;
+    NSArray* elts = [URL componentsSeparatedByString:@"?"];
+    if (elts.count >= 2) {
+        NSArray *urls = [elts.lastObject componentsSeparatedByString:@"="];
+        for (NSString *param in urls) {
+            if ([param isEqualToString:@"_wx_tpl"]) {
+                transformURL = [[urls lastObject]  stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                return;
+            }
+        }
+    }
+    NSURL *url = [NSURL URLWithString:transformURL];
     if ([self remoteDebug:url]) {
         return;
     }
@@ -101,6 +112,7 @@
 }
 
 #pragma mark - Replace JS
+
 - (void)jsReplace:(NSURL *)url
 {
     if ([[url host] isEqualToString:@"weex-remote-debugger"]){
