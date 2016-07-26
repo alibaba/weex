@@ -243,9 +243,9 @@ public class WXStorageModule extends WXModule implements IWXStorage {
             StorageResultHandler.handleNoHandlerError(callback);
             return;
         }
-        adapter.setItem(key, value, new IWXStorageAdapter.OnStorageListener() {
+        adapter.setItem(key, value, new IWXStorageAdapter.OnResultReceivedListener() {
             @Override
-            public void onReceivedStorageResult(Map<String, Object> data) {
+            public void onReceived(Map<String, Object> data) {
                 if(callback != null){
                     callback.invoke(data);
                 }
@@ -268,9 +268,9 @@ public class WXStorageModule extends WXModule implements IWXStorage {
             StorageResultHandler.handleNoHandlerError(callback);
             return;
         }
-        adapter.getItem(key, new IWXStorageAdapter.OnStorageListener() {
+        adapter.getItem(key, new IWXStorageAdapter.OnResultReceivedListener() {
             @Override
-            public void onReceivedStorageResult(Map<String, Object> data) {
+            public void onReceived(Map<String, Object> data) {
                 if(callback != null){
                     callback.invoke(data);
                 }
@@ -291,9 +291,9 @@ public class WXStorageModule extends WXModule implements IWXStorage {
             StorageResultHandler.handleNoHandlerError(callback);
             return;
         }
-        adapter.removeItem(key, new IWXStorageAdapter.OnStorageListener() {
+        adapter.removeItem(key, new IWXStorageAdapter.OnResultReceivedListener() {
             @Override
-            public void onReceivedStorageResult(Map<String, Object> data) {
+            public void onReceived(Map<String, Object> data) {
                 if(callback != null){
                     callback.invoke(data);
                 }
@@ -309,9 +309,9 @@ public class WXStorageModule extends WXModule implements IWXStorage {
             StorageResultHandler.handleNoHandlerError(callback);
             return;
         }
-        adapter.length(new IWXStorageAdapter.OnStorageListener() {
+        adapter.length(new IWXStorageAdapter.OnResultReceivedListener() {
             @Override
-            public void onReceivedStorageResult(Map<String, Object> data) {
+            public void onReceived(Map<String, Object> data) {
                 if(callback != null){
                     callback.invoke(data);
                 }
@@ -327,9 +327,9 @@ public class WXStorageModule extends WXModule implements IWXStorage {
             StorageResultHandler.handleNoHandlerError(callback);
             return;
         }
-        adapter.getAllKeys(new IWXStorageAdapter.OnStorageListener() {
+        adapter.getAllKeys(new IWXStorageAdapter.OnResultReceivedListener() {
             @Override
-            public void onReceivedStorageResult(Map<String, Object> data) {
+            public void onReceived(Map<String, Object> data) {
                 if(callback != null){
                     callback.invoke(data);
                 }

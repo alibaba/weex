@@ -235,56 +235,56 @@ public class DefaultWXStorage implements IWXStorageAdapter {
 
 
     @Override
-    public void setItem(final String key, final String value, final OnStorageListener listener) {
+    public void setItem(final String key, final String value, final OnResultReceivedListener listener) {
         execute(new Runnable() {
             @Override
             public void run() {
                 Map<String, Object> data = StorageResultHandler.setItemResult(performSetItem(key, value));
-                listener.onReceivedStorageResult(data);
+                listener.onReceived(data);
             }
         });
     }
 
     @Override
-    public void getItem(final String key, final OnStorageListener listener) {
+    public void getItem(final String key, final OnResultReceivedListener listener) {
         execute(new Runnable() {
             @Override
             public void run() {
                 Map<String, Object> data = StorageResultHandler.getItemResult(performGetItem(key));
-                listener.onReceivedStorageResult(data);
+                listener.onReceived(data);
             }
         });
     }
 
     @Override
-    public void removeItem(final String key, final OnStorageListener listener) {
+    public void removeItem(final String key, final OnResultReceivedListener listener) {
         execute(new Runnable() {
             @Override
             public void run() {
                 Map<String, Object> data = StorageResultHandler.removeItemResult(performRemoveItem(key));
-                listener.onReceivedStorageResult(data);
+                listener.onReceived(data);
             }
         });
     }
 
     @Override
-    public void length(final OnStorageListener listener) {
+    public void length(final OnResultReceivedListener listener) {
         execute(new Runnable() {
             @Override
             public void run() {
                 Map<String, Object> data = StorageResultHandler.getLengthResult(performGetLength());
-                listener.onReceivedStorageResult(data);
+                listener.onReceived(data);
             }
         });
     }
 
     @Override
-    public void getAllKeys(final OnStorageListener listener) {
+    public void getAllKeys(final OnResultReceivedListener listener) {
         execute(new Runnable() {
             @Override
             public void run() {
                 Map<String, Object> data = StorageResultHandler.getAllkeysResult(performGetAllKeys());
-                listener.onReceivedStorageResult(data);
+                listener.onReceived(data);
             }
         });
     }
@@ -292,7 +292,7 @@ public class DefaultWXStorage implements IWXStorageAdapter {
 
     private boolean performSetItem(String key, String value) {
         String sql = "INSERT OR REPLACE INTO " + WXDatabaseSupplier.TABLE_STORAGE + " VALUES (?,?);";
-        SQLiteStatement statement = mDatabaseSupplier.get().compileStatement(sql);
+        SQLiteStatement statement = mDatabaseSupplier.getDatabase().compileStatement(sql);
         try {
             statement.clearBindings();
             statement.bindString(1, key);
@@ -309,7 +309,7 @@ public class DefaultWXStorage implements IWXStorageAdapter {
     }
 
     private String performGetItem(String key) {
-        Cursor c = mDatabaseSupplier.get().query(WXDatabaseSupplier.TABLE_STORAGE,
+        Cursor c = mDatabaseSupplier.getDatabase().query(WXDatabaseSupplier.TABLE_STORAGE,
                 new String[]{WXDatabaseSupplier.COLUMN_VALUE},
                 WXDatabaseSupplier.COLUMN_KEY + "=?",
                 new String[]{key},
@@ -332,7 +332,7 @@ public class DefaultWXStorage implements IWXStorageAdapter {
     private boolean performRemoveItem(String key) {
         int count = 0;
         try {
-            count = mDatabaseSupplier.get().delete(WXDatabaseSupplier.TABLE_STORAGE,
+            count = mDatabaseSupplier.getDatabase().delete(WXDatabaseSupplier.TABLE_STORAGE,
                     WXDatabaseSupplier.COLUMN_KEY + "=?",
                     new String[]{key});
         } finally {
@@ -343,7 +343,7 @@ public class DefaultWXStorage implements IWXStorageAdapter {
 
     private long performGetLength() {
         String sql = "SELECT count(" + WXDatabaseSupplier.COLUMN_KEY + ") FROM " + WXDatabaseSupplier.TABLE_STORAGE;
-        SQLiteStatement statement = mDatabaseSupplier.get().compileStatement(sql);
+        SQLiteStatement statement = mDatabaseSupplier.getDatabase().compileStatement(sql);
         try {
             return statement.simpleQueryForLong();
         } catch (Exception e) {
@@ -357,7 +357,7 @@ public class DefaultWXStorage implements IWXStorageAdapter {
 
     private List<String> performGetAllKeys() {
         List<String> result = new ArrayList<>();
-        Cursor c = mDatabaseSupplier.get().query(WXDatabaseSupplier.TABLE_STORAGE, new String[]{WXDatabaseSupplier.COLUMN_KEY}, null, null, null, null, null);
+        Cursor c = mDatabaseSupplier.getDatabase().query(WXDatabaseSupplier.TABLE_STORAGE, new String[]{WXDatabaseSupplier.COLUMN_KEY}, null, null, null, null, null);
         try {
             while (c.moveToNext()) {
                 result.add(c.getString(c.getColumnIndex(WXDatabaseSupplier.COLUMN_KEY)));
