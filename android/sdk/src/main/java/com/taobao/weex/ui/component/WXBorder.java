@@ -281,7 +281,7 @@ public class WXBorder {
     getOrCreateViewBackground().setBorderWidth(position, width);
   }
 
-  public void setBorderColor(int position, float color) {
+  public void setBorderColor(int position, int color) {
     if (mHost == null) {
       return;
     }
