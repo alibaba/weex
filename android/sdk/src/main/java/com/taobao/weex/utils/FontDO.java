@@ -204,74 +204,77 @@
  */
 package com.taobao.weex.utils;
 
-import android.content.Context;
+import android.graphics.Typeface;
 import android.text.TextUtils;
 
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+public class FontDO {
+  private String mFontFamilyName;
+  private String mSrc;
+  private String mUrl;
+  private int mSrcType = TYPE_NETWORK;
+  private Typeface mTypeface;
+  private int mState = STATE_INIT;
 
-public class WXFileUtils {
+  public final static int STATE_INIT = 0;
+  public final static int STATE_LOADING = 1;
+  public final static int STATE_SUCCESS = 2;
+  public final static int STATE_FAILED = 3;
 
-  /**
-   * Load file in asset directory.
-   * @param path FilePath
-   * @param context Weex Context
-   * @return the Content of the file
-   */
-  public static String loadFileContent(String path, Context context) {
-    StringBuilder builder ;
-    try {
-      InputStream in = context.getAssets().open(path);
+  public final static int TYPE_LOCAL = 0;
+  public final static int TYPE_NETWORK = 1;
 
-      builder = new StringBuilder(in.available()+10);
-
-      BufferedReader localBufferedReader = new BufferedReader(new InputStreamReader(in));
-      char[] data = new char[2048];
-      int len = -1;
-      while ((len = localBufferedReader.read(data)) > 0) {
-        builder.append(data, 0, len);
-      }
-      localBufferedReader.close();
-      if (in != null) {
-        try {
-          in.close();
-        } catch (IOException e) {
-          WXLogUtils.e("WXFileUtils loadFileContent: " + WXLogUtils.getStackTrace(e));
-        }
-      }
-      return builder.toString();
-
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    return "";
+  public String getFontFamilyName() {
+    return mFontFamilyName;
   }
 
-  public static boolean saveFile(String path, byte[] content, Context context) {
-    if (TextUtils.isEmpty(path) || content == null || context == null) {
-      return false;
-    }
-    FileOutputStream outStream = null;
-    try {
-      outStream = new FileOutputStream(path);
-      outStream.write(content);
-      outStream.close();
-      return true;
-    } catch (Exception e) {
-      WXLogUtils.e("WXFileUtils saveFile: " + WXLogUtils.getStackTrace(e));
-    } finally {
-      if (outStream != null) {
-        try {
-          outStream.close();
-        } catch (IOException e) {
-          e.printStackTrace();
+  public void setFontFamilyName(String fontFamilyName) {
+    this.mFontFamilyName = fontFamilyName;
+  }
+
+  public String getSrc() {
+    return mSrc;
+  }
+
+  public void setSrc(String src) {
+    this.mSrc = src;
+    if (!TextUtils.isEmpty(this.mSrc)) {
+      if (src.matches("^url\\('.*'\\)$")) {
+        mUrl = src.substring(5, src.length() - 2);
+        if(mUrl.startsWith("http") || mUrl.startsWith("https")) {
+          mSrcType = TYPE_NETWORK;
+        } else {
+          mSrcType = TYPE_LOCAL;
         }
+      } else {
+        mUrl = src;
+        mSrcType = TYPE_NETWORK;
       }
     }
-    return false;
+
+    WXLogUtils.d("TypefaceUtil", "src:" + src + ", mUrl:" + mUrl + ", mSrcType:" + mSrcType);
+  }
+
+  public String getUrl() {
+    return mUrl;
+  }
+
+  public int getSrcType() {
+    return mSrcType;
+  }
+
+  public Typeface getTypeface() {
+    return mTypeface;
+  }
+
+  public void setTypeface(Typeface typeface) {
+    this.mTypeface = typeface;
+  }
+
+  public int getState() {
+    return mState;
+  }
+
+  public void setState(int state) {
+    this.mState = state;
   }
 }

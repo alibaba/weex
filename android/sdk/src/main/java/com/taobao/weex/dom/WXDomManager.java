@@ -208,6 +208,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXEnvironment;
@@ -215,6 +216,8 @@ import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.common.WXThread;
 import com.taobao.weex.ui.WXRenderManager;
+import com.taobao.weex.utils.FontDO;
+import com.taobao.weex.utils.TypefaceUtil;
 import com.taobao.weex.utils.WXUtils;
 
 import java.util.Iterator;
@@ -547,5 +550,34 @@ public final class WXDomManager {
       return;
     }
     statement.startAnimation(ref,animation,callBack);
+  }
+
+  public void addRule(final String type,final JSONObject jsonObject) {
+    if ("font-face".equals(type)) {
+      FontDO fontDO = parseFontDO(jsonObject);
+      if (fontDO != null && !TextUtils.isEmpty(fontDO.getFontFamilyName())) {
+        FontDO cacheFontDO = TypefaceUtil.getFontDO(fontDO.getFontFamilyName());
+        if (cacheFontDO == null || !TextUtils.equals(cacheFontDO.getSrc(), fontDO.getSrc())) {
+          TypefaceUtil.putFontDO(fontDO);
+          cacheFontDO = fontDO;
+        }
+        if (cacheFontDO.getState() == FontDO.STATE_INIT ||
+                cacheFontDO.getState() == FontDO.STATE_FAILED) {
+          TypefaceUtil.loadTypeface(cacheFontDO);
+        }
+      }
+    }
+  }
+
+  private FontDO parseFontDO(JSONObject jsonObject) {
+    if(jsonObject == null) {
+      return null;
+    }
+    String src = jsonObject.getString("src");
+    String name = jsonObject.getString("font-family");
+    FontDO fontDO = new FontDO();
+    fontDO.setFontFamilyName(name);
+    fontDO.setSrc(src);
+    return fontDO;
   }
 }

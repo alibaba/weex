@@ -204,73 +204,194 @@
  */
 package com.taobao.weex.utils;
 
-import android.content.Context;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.text.TextUtils;
 
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import com.taobao.weex.WXEnvironment;
+import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.adapter.IWXHttpAdapter;
+import com.taobao.weex.common.WXRequest;
+import com.taobao.weex.common.WXResponse;
+import com.taobao.weex.dom.WXStyle;
 
-public class WXFileUtils {
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-  /**
-   * Load file in asset directory.
-   * @param path FilePath
-   * @param context Weex Context
-   * @return the Content of the file
-   */
-  public static String loadFileContent(String path, Context context) {
-    StringBuilder builder ;
-    try {
-      InputStream in = context.getAssets().open(path);
+/**
+ * Created by sospartan on 7/13/16.
+ */
+public class TypefaceUtil {
+  private final static String TAG = "TypefaceUtil";
+  private final static HashMap<String, FontDO> sCacheMap = new HashMap<>(); //Key: fontFamilyName
 
-      builder = new StringBuilder(in.available()+10);
-
-      BufferedReader localBufferedReader = new BufferedReader(new InputStreamReader(in));
-      char[] data = new char[2048];
-      int len = -1;
-      while ((len = localBufferedReader.read(data)) > 0) {
-        builder.append(data, 0, len);
-      }
-      localBufferedReader.close();
-      if (in != null) {
-        try {
-          in.close();
-        } catch (IOException e) {
-          WXLogUtils.e("WXFileUtils loadFileContent: " + WXLogUtils.getStackTrace(e));
-        }
-      }
-      return builder.toString();
-
-    } catch (IOException e) {
-      e.printStackTrace();
+  public static void putFontDO(FontDO fontDO) {
+    if (fontDO != null && !TextUtils.isEmpty(fontDO.getFontFamilyName())) {
+      sCacheMap.put(fontDO.getFontFamilyName(), fontDO);
     }
-
-    return "";
   }
 
-  public static boolean saveFile(String path, byte[] content, Context context) {
-    if (TextUtils.isEmpty(path) || content == null || context == null) {
-      return false;
+  public static FontDO getFontDO(String fontFamilyName) {
+    return sCacheMap.get(fontFamilyName);
+  }
+
+  public static void applyFontStyle(Paint paint, int style, int weight, String family) {
+    int oldStyle;
+    Typeface typeface = paint.getTypeface();
+    if (typeface == null) {
+      oldStyle = 0;
+    } else {
+      oldStyle = typeface.getStyle();
     }
-    FileOutputStream outStream = null;
-    try {
-      outStream = new FileOutputStream(path);
-      outStream.write(content);
-      outStream.close();
-      return true;
-    } catch (Exception e) {
-      WXLogUtils.e("WXFileUtils saveFile: " + WXLogUtils.getStackTrace(e));
-    } finally {
-      if (outStream != null) {
+
+    int want = 0;
+    if ((weight == Typeface.BOLD)
+            || ((oldStyle & Typeface.BOLD) != 0 && weight == WXStyle.UNSET)) {
+      want |= Typeface.BOLD;
+    }
+
+    if ((style == Typeface.ITALIC)
+            || ((oldStyle & Typeface.ITALIC) != 0 && style == WXStyle.UNSET)) {
+      want |= Typeface.ITALIC;
+    }
+
+    if (family != null) {
+      typeface = getOrCreateTypeface(family, style);
+    }
+
+    if (typeface != null) {
+      paint.setTypeface(Typeface.create(typeface, want));
+    } else {
+      paint.setTypeface(Typeface.defaultFromStyle(want));
+    }
+  }
+
+  public static Typeface getOrCreateTypeface(String family, int style) {
+    FontDO fontDo = sCacheMap.get(family);
+    if (fontDo != null && fontDo.getTypeface() != null) {
+      return fontDo.getTypeface();
+    }
+
+    return Typeface.create(family, style);
+  }
+
+  public static void loadTypeface(final FontDO fontDo) {
+    if (fontDo != null && fontDo.getTypeface() == null && fontDo.getState() != FontDO.STATE_LOADING) {
+      fontDo.setState(FontDO.STATE_LOADING);
+      if (fontDo.getSrcType() == FontDO.TYPE_LOCAL) {
         try {
-          outStream.close();
-        } catch (IOException e) {
-          e.printStackTrace();
+          Typeface typeface = Typeface.createFromAsset(WXEnvironment.getApplication().getAssets(), fontDo.getUrl());
+          if (typeface != null) {
+            WXLogUtils.d(TAG, "load asset file success");
+            fontDo.setState(FontDO.STATE_SUCCESS);
+            fontDo.setTypeface(typeface);
+          } else {
+            WXLogUtils.e(TAG, "Font asset file not found " + fontDo.getUrl());
+          }
+        } catch (Exception e) {
+          WXLogUtils.e(TAG, e.toString());
+        }
+      } else if (fontDo.getSrcType() == FontDO.TYPE_NETWORK) {
+        final String url = fontDo.getUrl();
+        final String fontFamily = fontDo.getFontFamilyName();
+        final String fileName = url.replace('/', '_');
+        final String path = WXEnvironment.getDiskCacheDir(WXEnvironment.getApplication());
+        final String fullPath = path + "/" + fileName;
+        if (!loadLocalFontFile(fullPath, fontFamily)) {
+          downloadFontByNetwork(url, fullPath, fontFamily);
         }
       }
+    }
+  }
+
+  private static void downloadFontByNetwork(final String url, final String fullPath, final String fontFamily) {
+    IWXHttpAdapter adapter = WXSDKManager.getInstance().getIWXHttpAdapter();
+    if (adapter == null) {
+      WXLogUtils.e(TAG, "downloadFontByNetwork() IWXHttpAdapter == null");
+      return;
+    }
+    WXRequest request = new WXRequest();
+    request.url = url;
+    request.method = "GET";
+    adapter.sendRequest(request, new IWXHttpAdapter.OnHttpListener() {
+      @Override
+      public void onHttpStart() {
+        WXLogUtils.d(TAG, "downloadFontByNetwork begin url:" + url);
+      }
+
+      @Override
+      public void onHeadersReceived(int statusCode, Map<String, List<String>> headers) {
+
+      }
+
+      @Override
+      public void onHttpUploadProgress(int uploadProgress) {
+
+      }
+
+      @Override
+      public void onHttpResponseProgress(int loadedLength) {
+
+      }
+
+      @Override
+      public void onHttpFinish(WXResponse response) {
+        int statusCode = 0;
+        if (!TextUtils.isEmpty(response.statusCode)) {
+          try {
+            statusCode = Integer.parseInt(response.statusCode);
+          } catch (NumberFormatException e) {
+            statusCode = 0;
+            WXLogUtils.e(TAG, "IWXHttpAdapter onHttpFinish statusCode:" + response.statusCode);
+          }
+        }
+        boolean result;
+        if (statusCode >= 200 && statusCode <= 299 && response.originalData != null) {
+          result = WXFileUtils.saveFile(fullPath, response.originalData, WXEnvironment.getApplication());
+          if (result) {
+            result = loadLocalFontFile(fullPath, fontFamily);
+          } else {
+            WXLogUtils.d(TAG, "downloadFontByNetwork() onHttpFinish success, but save file failed.");
+          }
+        } else {
+          result = false;
+        }
+
+        if (!result) {
+          FontDO fontDO = sCacheMap.get(fontFamily);
+          if (fontDO != null) {
+            fontDO.setState(FontDO.STATE_FAILED);
+          }
+        }
+      }
+    });
+  }
+
+  private static boolean loadLocalFontFile(String path, String fontFamily) {
+    if (TextUtils.isEmpty(path) || TextUtils.isEmpty(fontFamily)) {
+      return false;
+    }
+    try {
+      File file = new File(path);
+      if (!file.exists()) {
+        return false;
+      }
+      Typeface typeface = Typeface.createFromFile(path);
+      if (typeface != null) {
+        FontDO fontDo = sCacheMap.get(fontFamily);
+        if (fontDo != null) {
+          fontDo.setState(FontDO.STATE_SUCCESS);
+          fontDo.setTypeface(typeface);
+          WXLogUtils.d(TAG, "load local font file success");
+          return true;
+        }
+      } else {
+        WXLogUtils.e(TAG, "load local font file failed, can't create font.");
+      }
+    } catch (Exception e) {
+      WXLogUtils.e(TAG, e.toString());
     }
     return false;
   }

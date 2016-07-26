@@ -1,0 +1,28 @@
+<template>
+  <div>
+    <text class="title">&#xe606;&#xe605;&#xe604;&#xe603;&#xe602;&#xe601;&#xe600;</text>
+  </div>
+
+</template>
+<style>
+  .title {
+    color: red;
+    font-size: 36;
+    font-family: iconfont;
+  }
+</style>
+
+<script>
+  module.exports = {
+    created: function() {
+      var domModule = require('@weex-module/dom');
+      //目前支持ttf、woff文件，不支持svg、eot类型
+      domModule.addRule('font-face', {
+        'font-family': "iconfont",
+        // 'src' : "url('iconfont.ttf')"
+        'src': "url('http://at.alicdn.com/t/font_1468842683_3772445.ttf')"
+        // 'src': "url('http://at.alicdn.com/t/font_1468842683_3772445.woff')"
+      });
+    }
+  }
+</script>
