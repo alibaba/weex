@@ -292,6 +292,8 @@ public final class WXDomModule extends WXModule {
       // no enougn args
       e.printStackTrace();
       WXLogUtils.e("Dom module call miss arguments.");
+    } catch (ClassCastException cce) {
+      WXLogUtils.e("Dom module call arguments format error!!");
     }
   }
 
