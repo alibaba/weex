@@ -413,9 +413,9 @@ public class WXUtils {
 
     if (value == null)
       return df;
-    if (TextUtils.equals("true",value.toString())) {
+    if (TextUtils.equals("false",value.toString())) {
       return false;
-    } else if (TextUtils.equals("false",value.toString())) {
+    } else if (TextUtils.equals("true",value.toString())) {
       return true;
     }
     return df;
