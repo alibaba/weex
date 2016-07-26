@@ -445,7 +445,7 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
 
   @WXComponentProp(name = INTERVAL)
   public void setInterval(int intervalMS){
-    if(mViewPager != null){
+    if(mViewPager != null && intervalMS>0){
       mViewPager.setIntervalTime(intervalMS);
     }
   }
