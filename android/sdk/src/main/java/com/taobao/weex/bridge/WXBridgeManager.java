@@ -224,7 +224,6 @@ import com.taobao.weex.common.WXConfig;
 import com.taobao.weex.common.WXErrorCode;
 import com.taobao.weex.common.WXException;
 import com.taobao.weex.common.WXJSBridgeMsgType;
-import com.taobao.weex.common.WXModule;
 import com.taobao.weex.common.WXRefreshData;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.common.WXThread;
@@ -290,7 +289,7 @@ public class WXBridgeManager implements Callback {
 
   private static WXBridgeManager mBridgeManager;
 
-  private WXModule sDomModule;
+  private WXDomModule sDomModule;
 
   /**
    * next tick tasks, can set priority
@@ -480,8 +479,8 @@ public class WXBridgeManager implements Callback {
           task = (JSONObject) array.get(i);
           if (task != null && WXSDKManager.getInstance().getSDKInstance(instanceId) != null) {
             if (TextUtils.equals(WXDomModule.WXDOM, (String) task.get(WXDomModule.MODULE))) {
-              WXDomModule domModule = getDomModule(instanceId);
-              domModule.callDomMethod(task);
+              sDomModule = getDomModule(instanceId);
+              sDomModule.callDomMethod(task);
             } else {
               WXModuleManager.callModuleMethod(instanceId, (String) task.get(WXDomModule.MODULE),
                       (String) task.get(WXDomModule.METHOD), (JSONArray) task.get(WXDomModule.ARGS));
@@ -1108,7 +1107,7 @@ public class WXBridgeManager implements Callback {
 
   private WXDomModule getDomModule(String instanceId) {
     sDomModule.mWXSDKInstance = WXSDKManager.getInstance().getSDKInstance(instanceId);
-    return (WXDomModule) sDomModule;
+    return sDomModule;
   }
 
 }
