@@ -234,8 +234,6 @@ public class WXDatabaseSupplier extends SQLiteOpenHelper {
             + " TEXT NOT NULL"
             + ")";
 
-    private static final int SLEEP_TIME_MS = 30;
-
 
     private WXDatabaseSupplier(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
