@@ -206,7 +206,6 @@ package com.taobao.weex.appfram.storage;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.taobao.weex.utils.WXLogUtils;
@@ -274,32 +273,12 @@ public class WXDatabaseSupplier extends SQLiteOpenHelper {
 
 
 
-    synchronized boolean ensureDatabase() {
+    synchronized void ensureDatabase() {
         if (mDb != null && mDb.isOpen()) {
-            return true;
+            return;
         }
-        SQLiteException lastSQLiteException = null;
-        for (int tries = 0; tries < 2; tries++) {
-            try {
-                if (tries > 0) {
-                    deleteDB();
-                }
-                mDb = getWritableDatabase();
-                break;
-            } catch (SQLiteException e) {
-                lastSQLiteException = e;
-            }
-            try {
-                Thread.sleep(SLEEP_TIME_MS);
-            } catch (InterruptedException ie) {
-                Thread.currentThread().interrupt();
-            }
-        }
-        if (mDb == null) {
-            throw lastSQLiteException;
-        }
+        mDb = getWritableDatabase();
         mDb.setMaximumSize(mMaximumDatabaseSize);
-        return true;
     }
 
     public synchronized void setMaximumSize(long size) {
