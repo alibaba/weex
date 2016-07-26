@@ -236,18 +236,18 @@ public class WXSDKEngineTest {
       return mInfo;
     }
   };
-  TestApplication mApp = new TestApplication();
+  TestApplication mApp ;
 
   @Before
   public void setUp() throws Exception {
-    WXSDKEngine.initialize(mApp,null);
-
-    assert WXSDKEngine.isInitialized();
+    mApp = new TestApplication();
   }
 
   @Test
   public void testInitialize() throws Exception {
-
+    assert !WXSDKEngine.isInitialized();
+    WXSDKEngine.initialize(mApp,null);
+    assert WXSDKEngine.isInitialized();
   }
 
   @Test
