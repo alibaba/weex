@@ -387,12 +387,12 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
       case INTERVAL:
         Integer interval = WXUtils.getInteger(param,null);
         if (interval != null)
-          setInterval((Integer) param);
+          setInterval(interval);
         return true;
       case INDEX:
         Integer index = WXUtils.getInteger(param,null);
         if (index != null)
-          setIndex((Integer) param);
+          setIndex(index);
         return true;
     }
     return super.setProperty(key, param);

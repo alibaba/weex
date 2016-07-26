@@ -291,7 +291,7 @@ public class WXWeb extends WXComponent {
             case WXDomPropConstant.WX_ATTR_SHOW_LOADING:
                 Boolean result = WXUtils.getBoolean(param,null);
                 if (result != null)
-                    setShowLoading((Boolean) param);
+                    setShowLoading(result);
                 return true;
             case WXDomPropConstant.WX_ATTR_SRC:
                 String src = WXUtils.getString(param,null);

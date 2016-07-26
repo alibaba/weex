@@ -273,7 +273,7 @@ public class WXIndicator extends WXComponent<WXCircleIndicator> {
       case WXDomPropConstant.WX_ATTR_ITEM_SIZE:
         Integer item_size = WXUtils.getInteger(param,null);
         if (item_size != null)
-          setItemSize((Integer) param);
+          setItemSize(item_size);
         return true;
     }
     return super.setProperty(key, param);
