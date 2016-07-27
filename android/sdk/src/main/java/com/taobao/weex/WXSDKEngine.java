@@ -345,7 +345,7 @@ public class WXSDKEngine {
    * {@link WXModuleManager#registerModule(String, ModuleFactory, boolean)}
    */
   public static <T extends WXModule> boolean registerModule(String moduleName, Class<T> moduleClass,boolean global) throws WXException {
-    return registerModule(moduleName, new TypeModuleFactory(moduleClass),global);
+    return moduleClass != null && registerModule(moduleName, new TypeModuleFactory<>(moduleClass), global);
   }
 
   /**
