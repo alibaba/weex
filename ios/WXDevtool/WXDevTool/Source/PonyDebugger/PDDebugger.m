@@ -505,7 +505,6 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
 
 - (void)registerCallNative:(WXJSCallNative)callNative
 {
-    WXLogInfo(@"======yangshengtao 0:jsThread:%@,currentThread:%@",_bridgeThread,[NSThread currentThread]);
     [self _initBridgeThread];
     _nativeCallBlock = callNative;
 }
