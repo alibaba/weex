@@ -58,7 +58,7 @@
 
 - (void)updateAttributes:(NSDictionary *)attributes
 {
-    if (attributes[@""]) {
+    if (attributes[@"href"]) {
         _href = attributes[@"href"];
     }
 }

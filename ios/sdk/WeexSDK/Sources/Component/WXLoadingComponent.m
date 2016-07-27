@@ -54,7 +54,6 @@
     if (attributes[@"display"]) {
         if ([attributes[@"display"] isEqualToString:@"show"]) {
             _displayState = YES;
-            
         } else if ([attributes[@"display"] isEqualToString:@"hide"]) {
             _displayState = NO;
         } else {
@@ -67,6 +66,9 @@
 - (void)viewDidLoad
 {
     _initFinished = YES;
+    if (!_displayState) {
+        [self.view setHidden:YES];
+    }
 }
 
 - (void)addEvent:(NSString *)eventName
@@ -93,30 +95,21 @@
 
 - (void)setDisplay
 {
-    id<WXScrollerProtocol> scrollerProtocol = self.ancestorScroller;
+    id<WXScrollerProtocol> scrollerProtocol = [self ancestorScroller];
     if (scrollerProtocol == nil || !_initFinished)
         return;
-    
     WXComponent *scroller = (WXComponent*)scrollerProtocol;
     CGPoint contentOffset = [scrollerProtocol contentOffset];
     NSInteger screen = [scrollerProtocol contentSize].height/([UIScreen mainScreen].bounds.size.height);
     if (_displayState) {
-        if (screen) {
-            contentOffset.y = [scrollerProtocol contentSize].height - scroller.calculatedFrame.size.height + self.view.frame.size.height;
-        } else {
-            contentOffset.y = self.view.frame.size.height;
-        }
-        
+        contentOffset.y = [scrollerProtocol contentSize].height - scroller.calculatedFrame.size.height + self.calculatedFrame.size.height;
         [scrollerProtocol setContentOffset:contentOffset animated:YES];
         [_indicator start];
     } else {
-        UIEdgeInsets insets = [scrollerProtocol contentInset];
-        insets.bottom = 0;
-        if (!screen) {
-            contentOffset.y = 0;
-            [scrollerProtocol setContentOffset:contentOffset animated:YES];
-        }
-        [scrollerProtocol setContentInset:insets];
+        [self.view setHidden:YES];
+        _displayState = NO;
+        contentOffset.y = contentOffset.y - self.calculatedFrame.size.height;
+        [scrollerProtocol setContentOffset:contentOffset animated:YES];
         [_indicator stop];
     }
 }
@@ -131,9 +124,14 @@
     }
 }
 
+- (BOOL)displayState
+{
+    return _displayState;
+}
+
 - (void)resizeFrame
 {
-    CGRect rect = self.view.frame;
+    CGRect rect = self.calculatedFrame;
     
     id<WXScrollerProtocol> scrollerProtocol = self.ancestorScroller;
     WXComponent *scroller = (WXComponent*)scrollerProtocol;

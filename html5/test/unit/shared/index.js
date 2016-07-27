@@ -7,7 +7,7 @@ chai.use(sinonChai)
 import '../../../shared'
 
 describe('a polyfill of', () => {
-  it('Promise', () => {
+  it.skip('Promise', () => {
     sinon.spy(global, 'Promise')
     sinon.stub(console, 'warn')
     expect(typeof Promise).to.be.equal('function')

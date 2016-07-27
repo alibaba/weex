@@ -1,17 +1,40 @@
 'use strict'
 
+const funcIdToTimerIdMap = {}
+const funcIdToIntervalIdMap = {}
+
 const timer = {
 
-  setTimeout: function (timeoutCallbackId, delay) {
+  setTimeout (funcId, delay) {
     const sender = this.sender
+    delay < 0 && (delay = 0)
     const timerId = setTimeout(function () {
-      sender.performCallback(timeoutCallbackId)
+      delete funcIdToTimerIdMap[funcId]
+      sender.performCallback(funcId)
     }, delay)
-    return timerId
+    funcIdToTimerIdMap[funcId] = timerId
+    return funcId
   },
 
-  clearTimeout: function (timerId) {
-    clearTimeout(timerId)
+  clearTimeout (funcId) {
+    clearTimeout(funcIdToTimerIdMap[funcId])
+    delete funcIdToTimerIdMap[funcId]
+  },
+
+  setInterval (funcId, interval) {
+    const sender = this.sender
+    interval < 0 && (interval = 0)
+    const timerId = setInterval(function () {
+      delete funcIdToIntervalIdMap[funcId]
+      sender.performCallback(funcId, null, true)
+    })
+    funcIdToIntervalIdMap[funcId] = timerId
+    return funcId
+  },
+
+  clearInterval (funcId) {
+    clearInterval(funcIdToIntervalIdMap[funcId])
+    delete funcIdToIntervalIdMap[funcId]
   }
 
 }
@@ -22,6 +45,12 @@ timer._meta = {
     args: ['function', 'number']
   }, {
     name: 'clearTimeout',
+    args: ['number']
+  }, {
+    name: 'setInterval',
+    args: ['function', 'number']
+  }, {
+    name: 'clearInterval',
     args: ['number']
   }]
 }

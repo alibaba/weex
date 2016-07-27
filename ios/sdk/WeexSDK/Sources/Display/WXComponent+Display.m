@@ -443,7 +443,11 @@ do {\
     }\
 } while (0);
     
-    WX_CHECK_BORDER_PROP(Style, Top, Left, Bottom, Right, WXBorderStyle,)
+    WX_CHECK_BORDER_PROP(Style, Top, Left, Bottom, Right, WXBorderStyle,
+                         _layer.borderWidth = _borderTopWidth;
+                         _layer.borderColor = _borderTopColor.CGColor;
+                         _layer.cornerRadius = _borderTopLeftRadius;
+                         _layer.backgroundColor = _backgroundColor.CGColor)
     WX_CHECK_BORDER_PROP(Color, Top, Left, Bottom, Right, UIColor,
                          _layer.borderColor = _borderTopColor.CGColor)
     WX_CHECK_BORDER_PROP(Width, Top, Left, Bottom, Right, WXPixelType,

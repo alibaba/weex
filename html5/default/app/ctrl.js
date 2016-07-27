@@ -10,7 +10,12 @@
  * corresponded with the API of instance manager (framework.js)
  */
 
-import * as _ from '../util'
+import { extend, bind } from '../util'
+import {
+  define,
+  bootstrap,
+  register
+} from './bundle'
 
 export function updateActions () {
   this.differ.flush()
@@ -20,35 +25,34 @@ export function updateActions () {
     this.doc.listener.updates = []
   }
   if (tasks.length) {
-    this.callTasks(tasks)
+    return this.callTasks(tasks)
   }
 }
 
 export function init (code, data) {
-  _.debug('Intialize an instance with:\n', code, data)
+  console.debug('[JS Framework] Intialize an instance with:\n', data)
 
   let result
   // @see: lib/app/bundle.js
-  const define = _.bind(this.define, this)
-  const bootstrap = (name, config, _data) => {
-    result = this.bootstrap(name, config, _data || data)
+  const bundleDefine = bind(define, this)
+  const bundleBootstrap = (name, config, _data) => {
+    result = bootstrap(this, name, config, _data || data)
     this.updateActions()
     this.doc.listener.createFinish()
-    this.doc.close()
-    _.debug(`After intialized an instance(${this.id})`)
+    console.debug(`[JS Framework] After intialized an instance(${this.id})`)
   }
 
   // backward(register/render)
-  const register = _.bind(this.register, this)
-  const render = (name, _data) => {
-    result = this.bootstrap(name, {}, _data)
+  const bundleRegister = bind(register, this)
+  const bundleRender = (name, _data) => {
+    result = bootstrap(this, name, {}, _data)
   }
 
-  const require = name => _data => {
-    result = this.bootstrap(name, {}, _data)
+  const bundleRequire = name => _data => {
+    result = bootstrap(this, name, {}, _data)
   }
 
-  const document = this.doc
+  const bundleDocument = this.doc
 
   let functionBody
   /* istanbul ignore if */
@@ -61,33 +65,91 @@ export function init (code, data) {
     functionBody = code.toString()
   }
 
-  const fn = new Function(
-    'define',
-    'require',
-    'document',
-    'bootstrap',
-    'register',
-    'render',
-    '__weex_define__', // alias for define
-    '__weex_bootstrap__', // alias for bootstrap
-    functionBody
-  )
+  const { WXEnvironment } = global
+  if (WXEnvironment && WXEnvironment.platform !== 'Web') {
+    const timer = this.requireModule('timer')
+    const timerAPIs = {
+      setTimeout: (...args) => {
+        const handler = function () {
+          args[0](...args.slice(2))
+        }
+        timer.setTimeout(handler, args[1])
+        return this.uid.toString()
+      },
+      setInterval: (...args) => {
+        const handler = function () {
+          args[0](...args.slice(2))
+        }
+        timer.setInterval(handler, args[1])
+        return this.uid.toString()
+      },
+      clearTimeout: (n) => {
+        timer.clearTimeout(n)
+      },
+      clearInterval: (n) => {
+        timer.clearInterval(n)
+      }
+    }
 
-  fn(
-    define,
-    require,
-    document,
-    bootstrap,
-    register,
-    render,
-    define,
-    bootstrap)
+    const fn = new Function(
+      'define',
+      'require',
+      'document',
+      'bootstrap',
+      'register',
+      'render',
+      '__weex_define__', // alias for define
+      '__weex_bootstrap__', // alias for bootstrap
+      'setTimeout',
+      'setInterval',
+      'clearTimeout',
+      'clearInterval',
+      functionBody
+    )
+
+    fn(
+      bundleDefine,
+      bundleRequire,
+      bundleDocument,
+      bundleBootstrap,
+      bundleRegister,
+      bundleRender,
+      bundleDefine,
+      bundleBootstrap,
+      timerAPIs.setTimeout,
+      timerAPIs.setInterval,
+      timerAPIs.clearTimeout,
+      timerAPIs.clearInterval)
+  }
+  else {
+    const fn = new Function(
+      'define',
+      'require',
+      'document',
+      'bootstrap',
+      'register',
+      'render',
+      '__weex_define__', // alias for define
+      '__weex_bootstrap__', // alias for bootstrap
+      functionBody
+    )
+
+    fn(
+      bundleDefine,
+      bundleRequire,
+      bundleDocument,
+      bundleBootstrap,
+      bundleRegister,
+      bundleRender,
+      bundleDefine,
+      bundleBootstrap)
+  }
 
   return result
 }
 
 export function destroy () {
-  _.debug(`Destory an instance(${this.id})`)
+  console.debug(`[JS Framework] Destory an instance(${this.id})`)
 
   this.id = ''
   this.options = null
@@ -105,9 +167,7 @@ export function getRootElement () {
 }
 
 export function fireEvent (ref, type, e, domChanges) {
-  _.debug(`Fire a "${type}" event on an element(${ref})`,
-            `in instance(${this.id})`)
-
+  console.debug(`[JS Framework] Fire a "${type}" event on an element(${ref}) in instance(${this.id})`)
   if (Array.isArray(ref)) {
     ref.some((ref) => {
       return this.fireEvent(ref, type, e) !== false
@@ -118,9 +178,11 @@ export function fireEvent (ref, type, e, domChanges) {
   const el = this.doc.getRef(ref)
 
   if (el) {
+    this.doc.close()
     const result = this.doc.fireEvent(el, type, e, domChanges)
     this.updateActions()
     this.doc.listener.updateFinish()
+    this.doc.open()
     return result
   }
 
@@ -128,12 +190,13 @@ export function fireEvent (ref, type, e, domChanges) {
 }
 
 export function callback (callbackId, data, ifKeepAlive) {
-  _.debug(`Invoke a callback(${callbackId}) with`, data,
+  console.debug(`[JS Framework] Invoke a callback(${callbackId}) with`, data,
             `in instance(${this.id})`)
 
   const callback = this.callbacks[callbackId]
 
   if (typeof callback === 'function') {
+    this.doc.close()
     callback(data) // data is already a object, @see: lib/runtime/index.js
 
     if (typeof ifKeepAlive === 'undefined' || ifKeepAlive === false) {
@@ -142,6 +205,7 @@ export function callback (callbackId, data, ifKeepAlive) {
 
     this.updateActions()
     this.doc.listener.updateFinish()
+    this.doc.open()
     return
   }
 
@@ -149,20 +213,22 @@ export function callback (callbackId, data, ifKeepAlive) {
 }
 
 export function refreshData (data) {
-  _.debug(`Refresh with`, data,
+  console.debug(`[JS Framework] Refresh with`, data,
             `in instance[${this.id}]`)
 
   const vm = this.vm
 
   if (vm && data) {
+    this.doc.close()
     if (typeof vm.refreshData === 'function') {
       vm.refreshData(data)
     }
     else {
-      _.extend(vm, data)
+      extend(vm, data)
     }
     this.updateActions()
     this.doc.listener.refreshFinish()
+    this.doc.open()
     return
   }
 

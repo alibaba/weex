@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/12a7eb18ddb56294ee0721456b8a5cd6", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/39027633fbb6e00f21ae5924dc876f25", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __weex_module__.exports = {
@@ -55,8 +55,8 @@
 	      row: [],
 	      vector: [[-1, 0], [-1, -1], [0, -1], [1, -1], [1, 0], [1, 1], [0, 1], [-1, 1]],
 	      strings: {
-	        mine: "💣",
-	        flag: "🚩",
+	        mine: "❎",
+	        flag: "✅",
 	        win: "YOU WIN!",
 	        lose: "YOU LOSE~"
 	      },
@@ -305,7 +305,7 @@
 	  }
 	})
 	})
-	;__weex_bootstrap__("@weex-component/12a7eb18ddb56294ee0721456b8a5cd6", {
+	;__weex_bootstrap__("@weex-component/39027633fbb6e00f21ae5924dc876f25", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
