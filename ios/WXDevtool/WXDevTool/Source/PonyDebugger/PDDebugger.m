@@ -318,6 +318,7 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
 - (void)connectToURL:(NSURL *)url;
 {
     NSLog(@"Connecting to %@", url);
+    [WXDevTool setDebug:NO];
     _msgAry = nil;
     _msgAry = [NSMutableArray array];
     _debugAry = nil;
@@ -659,7 +660,6 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
     
     NSData *data = [NSJSONSerialization dataWithJSONObject:obj options:0 error:nil];
     NSString *encodedData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    //WXLogInfo(@"======yangshengtao 1:jsThread:%@,currentThread:%@",_bridgeThread,[NSThread currentThread]);
     if (_bridgeThread) {
         [self _executeBridgeThead:^{
             _registerData = encodedData;
