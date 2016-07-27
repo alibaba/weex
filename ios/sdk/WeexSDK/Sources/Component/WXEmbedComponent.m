@@ -99,7 +99,11 @@
 {
     if (_visible == WXVisibilityShow) {
         [self _updateState:WeexInstanceAppear];
+<<<<<<< HEAD
         if (!_createFinished && !CGRectEqualToRect(CGRectZero, self.calculatedFrame)) {
+=======
+        if (!_renderFinished && !CGRectEqualToRect(CGRectZero, self.calculatedFrame)) {
+>>>>>>> dev
             [self _renderWithURL:_sourceURL];
         }
     }
@@ -164,14 +168,21 @@
     };
     
     _embedInstance.renderFinish = ^(UIView *view) {
+<<<<<<< HEAD
          weakSelf.renderFinished = YES;
+=======
+>>>>>>> dev
         [weakSelf _updateState:WeexInstanceAppear];
     };
 }
 
 - (void)_updateState:(WXState)state
 {
+<<<<<<< HEAD
     if (_renderFinished && _embedInstance && _embedInstance.state != state) {
+=======
+    if (_embedInstance && _embedInstance.state != state) {
+>>>>>>> dev
         _embedInstance.state = state;
         
         if (state == WeexInstanceAppear) {

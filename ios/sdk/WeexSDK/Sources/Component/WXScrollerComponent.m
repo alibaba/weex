@@ -332,12 +332,27 @@
 
 - (CGPoint)contentOffset
 {
+<<<<<<< HEAD
     CGPoint rtv = CGPointZero;
     UIScrollView *scrollView = (UIScrollView *)self.view;
     if (scrollView) {
         rtv = scrollView.contentOffset;
     }
     return rtv;
+=======
+    //refresh
+        if (_refreshComponent && scrollView.contentOffset.y + _refreshComponent.calculatedFrame.size.height < _refreshComponent.calculatedFrame.origin.y) {
+    
+            [_refreshComponent refresh];
+        }
+    
+    //loading
+        if (_loadingComponent &&
+            scrollView.contentOffset.y + scrollView.frame.size.height > _loadingComponent.view.frame.origin.y + _loadingComponent.view.frame.size.height) {
+    
+            [_loadingComponent loading];
+        }
+>>>>>>> dev
 }
 
 - (void)setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated

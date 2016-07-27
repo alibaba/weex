@@ -4,7 +4,6 @@
  */
 
 import { extend, typof } from '../util'
-import * as bundle from './bundle'
 import * as ctrl from './ctrl'
 import Differ from './differ'
 
@@ -62,10 +61,10 @@ AppInstance.prototype.callTasks = function (tasks) {
     task.args = task.args.map(arg => normalize(this, arg))
   })
 
-  renderer.sendTasks(this.id, tasks, '-1')
+  return renderer.sendTasks(this.id, tasks, '-1')
 }
 
-extend(AppInstance.prototype, bundle, ctrl, {
+extend(AppInstance.prototype, ctrl, {
   registerComponent,
   requireComponent,
   requireModule

@@ -4,13 +4,36 @@
  *
  * required:
  * index.js: Vm
- * dom-helper.js: _createElement, _createBlock
- * dom-helper.js: _attachTarget, _moveTarget, _removeTarget
- * directive.js: _bindElement, _bindSubVm, _watch
+ * dom-helper.js: createElement, createBlock
+ * dom-helper.js: attachTarget, moveTarget, removeTarget
+ * directive.js: bindElement, bindSubVm, setId, watch
  * events.js: $on
  */
 
-import * as _ from '../util'
+import {
+  extend,
+  bind
+} from '../util'
+import {
+  initData,
+  initComputed
+} from '../core/state'
+import {
+  bindElement,
+  setId,
+  bindSubVm,
+  bindSubVmAfterInitialized,
+  applyNaitveComponentOptions,
+  watch
+} from './directive'
+import {
+  createBlock,
+  createBody,
+  createElement,
+  attachTarget,
+  moveTarget,
+  removeTarget
+} from './dom-helper'
 
 /**
  * build(externalDirs)
@@ -22,34 +45,36 @@ import * as _ from '../util'
  *       -> compile(templateWithoutFor, parentNode): diff(list) onchange
  *     else if (dirs have v-if) assert
  *       -> compile(templateWithoutIf, parentNode): toggle(shown) onchange
- *     else if (type is native)
- *       set(dirs): update(id/attr/style/class) onchange
- *       append(template, parentNode)
- *       foreach childNodes -> compile(childNode, template)
+ *     else if (type is dynamic)
+ *       -> compile(templateWithoutDynamicType, parentNode): watch(type) onchange
  *     else if (type is custom)
  *       addChildVm(vm, parentVm)
  *       build(externalDirs)
  *       foreach childNodes -> compile(childNode, template)
+ *     else if (type is native)
+ *       set(dirs): update(id/attr/style/class) onchange
+ *       append(template, parentNode)
+ *       foreach childNodes -> compile(childNode, template)
  */
-export function _build () {
-  const opt = this._options || {}
+export function build (vm) {
+  const opt = vm._options || {}
   const template = opt.template || {}
 
   if (opt.replace) {
     if (template.children && template.children.length === 1) {
-      this._compile(template.children[0], this._parentEl)
+      compile(vm, template.children[0], vm._parentEl)
     }
     else {
-      this._compile(template.children, this._parentEl)
+      compile(vm, template.children, vm._parentEl)
     }
   }
   else {
-    this._compile(template, this._parentEl)
+    compile(vm, template, vm._parentEl)
   }
 
-  _.debug(`"ready" lifecycle in Vm(${this._type})`)
-  this.$emit('hook:ready')
-  this._ready = true
+  console.debug(`[JS Framework] "ready" lifecycle in Vm(${vm._type})`)
+  vm.$emit('hook:ready')
+  vm._ready = true
 }
 
 /**
@@ -61,43 +86,48 @@ export function _build () {
  * @param {object}       dest
  * @param {object}       meta
  */
-export function _compile (target, dest, meta) {
-  const context = this
-  if (context._targetIsFragment(target)) {
-    context._compileFragment(target, dest, meta)
-    return
-  }
-  meta = meta || {}
-  if (context._targetIsContent(target)) {
-    _.debug('compile "content" block by', target)
-    context._content = context._createBlock(dest)
+function compile (vm, target, dest, meta) {
+  const app = vm._app || {}
+
+  if (app.lastSignal === -1) {
     return
   }
 
-  if (context._targetNeedCheckRepeat(target, meta)) {
-    _.debug('compile "repeat" logic by', target)
-    context._compileRepeat(target, dest)
+  if (targetIsFragment(target)) {
+    compileFragment(vm, target, dest, meta)
     return
   }
-  if (context._targetNeedCheckShown(target, meta)) {
-    _.debug('compile "if" logic by', target)
-    context._compileShown(target, dest, meta)
+  meta = meta || {}
+  if (targetIsContent(target)) {
+    console.debug('[JS Framework] compile "content" block by', target)
+    vm._content = createBlock(vm, dest)
+    return
+  }
+
+  if (targetNeedCheckRepeat(target, meta)) {
+    console.debug('[JS Framework] compile "repeat" logic by', target)
+    compileRepeat(vm, target, dest)
+    return
+  }
+  if (targetNeedCheckShown(target, meta)) {
+    console.debug('[JS Framework] compile "if" logic by', target)
+    compileShown(vm, target, dest, meta)
     return
   }
   const typeGetter = meta.type || target.type
-  if (context._targetNeedCheckType(typeGetter, meta)) {
-    context._compileType(target, dest, typeGetter, meta)
+  if (targetNeedCheckType(typeGetter, meta)) {
+    compileType(vm, target, dest, typeGetter, meta)
     return
   }
   const type = typeGetter
-  const component = context._targetIsComposed(target, type)
+  const component = targetIsComposed(vm, target, type)
   if (component) {
-    _.debug('compile composed component by', target)
-    context._compileCustomComponent(component, target, dest, type, meta)
+    console.debug('[JS Framework] compile composed component by', target)
+    compileCustomComponent(vm, component, target, dest, type, meta)
     return
   }
-  _.debug('compile native component by', target)
-  context._compileNativeComponent(target, dest, type)
+  console.debug('[JS Framework] compile native component by', target)
+  compileNativeComponent(vm, target, dest, type)
 }
 
 /**
@@ -106,7 +136,7 @@ export function _compile (target, dest, meta) {
  * @param  {object}  target
  * @return {boolean}
  */
-export function _targetIsFragment (target) {
+function targetIsFragment (target) {
   return Array.isArray(target)
 }
 
@@ -116,7 +146,7 @@ export function _targetIsFragment (target) {
  * @param  {object}  target
  * @return {boolean}
  */
-export function _targetIsContent (target) {
+function targetIsContent (target) {
   return target.type === 'content' || target.type === 'slot'
 }
 
@@ -127,7 +157,7 @@ export function _targetIsContent (target) {
  * @param  {object}  meta
  * @return {boolean}
  */
-export function _targetNeedCheckRepeat (target, meta) {
+function targetNeedCheckRepeat (target, meta) {
   return !meta.hasOwnProperty('repeat') && target.repeat
 }
 
@@ -138,7 +168,7 @@ export function _targetNeedCheckRepeat (target, meta) {
  * @param  {object}  meta
  * @return {boolean}
  */
-export function _targetNeedCheckShown (target, meta) {
+function targetNeedCheckShown (target, meta) {
   return !meta.hasOwnProperty('shown') && target.shown
 }
 
@@ -149,7 +179,7 @@ export function _targetNeedCheckShown (target, meta) {
  * @param  {object}          meta
  * @return {boolean}
  */
-export function _targetNeedCheckType (typeGetter, meta) {
+function targetNeedCheckType (typeGetter, meta) {
   return (typeof typeGetter === 'function') && !meta.hasOwnProperty('type')
 }
 
@@ -159,13 +189,13 @@ export function _targetNeedCheckType (typeGetter, meta) {
  * @param  {string}  type
  * @return {boolean}
  */
-export function _targetIsComposed (target, type) {
+function targetIsComposed (vm, target, type) {
   let component
-  if (this._app && this._app.customComponentMap) {
-    component = this._app.customComponentMap[type]
+  if (vm._app && vm._app.customComponentMap) {
+    component = vm._app.customComponentMap[type]
   }
-  if (this._options && this._options.components) {
-    component = this._options.components[type]
+  if (vm._options && vm._options.components) {
+    component = vm._options.components[type]
   }
   if (target.component) {
     component = component || {}
@@ -180,10 +210,10 @@ export function _targetIsComposed (target, type) {
  * @param {object} dest
  * @param {object} meta
  */
-export function _compileFragment (target, dest, meta) {
-  const fragBlock = this._createBlock(dest)
+function compileFragment (vm, target, dest, meta) {
+  const fragBlock = createBlock(vm, dest)
   target.forEach((child) => {
-    this._compile(child, fragBlock, meta)
+    compile(vm, child, fragBlock, meta)
   })
 }
 
@@ -193,7 +223,7 @@ export function _compileFragment (target, dest, meta) {
  * @param {object} target
  * @param {object} dest
  */
-export function _compileRepeat (target, dest) {
+function compileRepeat (vm, target, dest) {
   const repeat = target.repeat
   const oldStyle = typeof repeat === 'function'
   let getter = repeat.getter || repeat.expression || repeat
@@ -203,14 +233,14 @@ export function _compileRepeat (target, dest) {
   const key = repeat.key || '$index'
   const value = repeat.value || '$value'
   const trackBy = repeat.trackBy || target.trackBy ||
-    (target.attr && target.attr.trackBy) || key
+    (target.attr && target.attr.trackBy)
 
-  const fragBlock = this._createBlock(dest)
+  const fragBlock = createBlock(vm, dest)
   fragBlock.children = []
   fragBlock.data = []
   fragBlock.vms = []
 
-  this._bindRepeat(target, fragBlock, { getter, key, value, trackBy, oldStyle })
+  bindRepeat(vm, target, fragBlock, { getter, key, value, trackBy, oldStyle })
 }
 
 /**
@@ -220,9 +250,9 @@ export function _compileRepeat (target, dest) {
  * @param {object} dest
  * @param {object} meta
  */
-export function _compileShown (target, dest, meta) {
+function compileShown (vm, target, dest, meta) {
   const newMeta = { shown: true }
-  const fragBlock = this._createBlock(dest)
+  const fragBlock = createBlock(vm, dest)
 
   if (dest.element && dest.children) {
     dest.children.push(fragBlock)
@@ -232,7 +262,7 @@ export function _compileShown (target, dest, meta) {
     newMeta.repeat = meta.repeat
   }
 
-  this._bindShown(target, fragBlock, newMeta)
+  bindShown(vm, target, fragBlock, newMeta)
 }
 
 /**
@@ -242,22 +272,22 @@ export function _compileShown (target, dest, meta) {
  * @param {object}   dest
  * @param {function} typeGetter
  */
-export function _compileType (target, dest, typeGetter, meta) {
-  const type = typeGetter.call(this)
-  const newMeta = Object.assign({ type }, meta)
-  const fragBlock = this._createBlock(dest)
+function compileType (vm, target, dest, typeGetter, meta) {
+  const type = typeGetter.call(vm)
+  const newMeta = extend({ type }, meta)
+  const fragBlock = createBlock(vm, dest)
 
   if (dest.element && dest.children) {
     dest.children.push(fragBlock)
   }
 
-  this._watch(typeGetter, (value) => {
-    const newMeta = Object.assign({ type: value }, meta)
-    this._removeBlock(fragBlock, true)
-    this._compile(target, fragBlock, newMeta)
+  watch(vm, typeGetter, (value) => {
+    const newMeta = extend({ type: value }, meta)
+    removeTarget(vm, fragBlock, true)
+    compile(vm, target, fragBlock, newMeta)
   })
 
-  this._compile(target, fragBlock, newMeta)
+  compile(vm, target, fragBlock, newMeta)
 }
 
 /**
@@ -267,23 +297,27 @@ export function _compileType (target, dest, typeGetter, meta) {
  * @param {object} dest
  * @param {string} type
  */
-export function _compileCustomComponent (component, target, dest, type, meta) {
-  const Vm = this.constructor
-  const context = this
-  const subVm = new Vm(type, component, context, dest, undefined, {
+function compileCustomComponent (vm, component, target, dest, type, meta) {
+  const Ctor = vm.constructor
+  const subVm = new Ctor(type, component, vm, dest, undefined, {
     'hook:init': function () {
-      context._setId(target.id, null, this)
+      setId(vm, null, target.id, this)
+      // bind template earlier because of lifecycle issues
+      this._externalBinding = {
+        parent: vm,
+        template: target
+      }
     },
     'hook:created': function () {
-      context._bindSubVm(this, target, meta.repeat)
+      bindSubVm(vm, this, target, meta.repeat)
     },
     'hook:ready': function () {
       if (this._content) {
-        context._compileChildren(target, this._content)
+        compileChildren(vm, target, this._content)
       }
     }
   })
-  this._bindSubVmAfterInitialized(subVm, target)
+  bindSubVmAfterInitialized(vm, subVm, target)
 }
 
 /**
@@ -294,25 +328,37 @@ export function _compileCustomComponent (component, target, dest, type, meta) {
  * @param {object} dest
  * @param {string} type
  */
-export function _compileNativeComponent (template, dest, type) {
-  this._applyNaitveComponentOptions(template)
+function compileNativeComponent (vm, template, dest, type) {
+  applyNaitveComponentOptions(template)
 
   let element
   if (dest.ref === '_documentElement') {
     // if its parent is documentElement then it's a body
-    _.debug('compile to create body for', type)
-    element = this._createBody(type)
+    console.debug(`[JS Framework] compile to create body for ${type}`)
+    element = createBody(vm, type)
   }
   else {
-    _.debug('compile to create element for', type)
-    element = this._createElement(type)
-  }
-  // TODO it was a root element when not in a fragment
-  if (!this._rootEl) {
-    this._rootEl = element
+    console.debug(`[JS Framework] compile to create element for ${type}`)
+    element = createElement(vm, type)
   }
 
-  this._bindElement(element, template)
+  if (!vm._rootEl) {
+    vm._rootEl = element
+    // bind event earlier because of lifecycle issues
+    const binding = vm._externalBinding || {}
+    const target = binding.template
+    const parentVm = binding.parent
+    if (target && target.events && parentVm && element) {
+      for (const type in target.events) {
+        const handler = parentVm[target.events[type]]
+        if (handler) {
+          element.addEvent(type, bind(handler, parentVm))
+        }
+      }
+    }
+  }
+
+  bindElement(vm, element, template)
 
   if (template.attr && template.attr.append) { // backward, append prop in attr
     template.append = template.attr.append
@@ -324,14 +370,17 @@ export function _compileNativeComponent (template, dest, type) {
   }
 
   const treeMode = template.append === 'tree'
-  if (!treeMode) {
-    _.debug('compile to append single node for', element)
-    this._attachTarget(element, dest)
+  const app = vm._app || {}
+  if (app.lastSignal !== -1 && !treeMode) {
+    console.debug('[JS Framework] compile to append single node for', element)
+    app.lastSignal = attachTarget(vm, element, dest)
   }
-  this._compileChildren(template, element)
-  if (treeMode) {
-    _.debug('compile to append whole tree for', element)
-    this._attachTarget(element, dest)
+  if (app.lastSignal !== -1) {
+    compileChildren(vm, template, element)
+  }
+  if (app.lastSignal !== -1 && treeMode) {
+    console.debug('[JS Framework] compile to append whole tree for', element)
+    app.lastSignal = attachTarget(vm, element, dest)
   }
 }
 
@@ -341,11 +390,13 @@ export function _compileNativeComponent (template, dest, type) {
  * @param {object} template
  * @param {object} dest
  */
-export function _compileChildren (template, dest) {
+function compileChildren (vm, template, dest) {
+  const app = vm._app || {}
   const children = template.children
   if (children && children.length) {
-    children.forEach((child) => {
-      this._compile(child, dest)
+    children.every((child) => {
+      compile(vm, child, dest)
+      return app.lastSignal !== -1
     })
   }
 }
@@ -357,7 +408,7 @@ export function _compileChildren (template, dest) {
  * @param {object} fragBlock {vms, data, children}
  * @param {object} info      {getter, key, value, trackBy, oldStyle}
  */
-export function _bindRepeat (target, fragBlock, info) {
+function bindRepeat (vm, target, fragBlock, info) {
   const vms = fragBlock.vms
   const children = fragBlock.children
   const { getter, trackBy, oldStyle } = info
@@ -373,8 +424,8 @@ export function _bindRepeat (target, fragBlock, info) {
         if (!mergedData.hasOwnProperty('INDEX')) {
           Object.defineProperty(mergedData, 'INDEX', {
             value: () => {
-              _.warn('"INDEX" in repeat is deprecated,' +
-                ' please use "$index" instead')
+              console.warn('[JS Framework] "INDEX" in repeat is deprecated, ' +
+                'please use "$index" instead')
             }
           })
         }
@@ -385,15 +436,14 @@ export function _bindRepeat (target, fragBlock, info) {
       mergedData[keyName] = index
       mergedData[valueName] = item
     }
-    context = context._mergeContext(mergedData)
-    vms.push(context)
-    context._compile(target, fragBlock, { repeat: item })
+    const newContext = mergeContext(context, mergedData)
+    vms.push(newContext)
+    compile(newContext, target, fragBlock, { repeat: item })
   }
 
-  const list = this._watchBlock(fragBlock, getter, 'repeat',
+  const list = watchBlock(vm, fragBlock, getter, 'repeat',
     (data) => {
-      _.debug('the "repeat" item has changed', data)
-
+      console.debug('[JS Framework] the "repeat" item has changed', data)
       if (!fragBlock) {
         return
       }
@@ -405,7 +455,7 @@ export function _bindRepeat (target, fragBlock, info) {
       const trackMap = {}
       const reusedMap = {}
       data.forEach((item, index) => {
-        const key = trackBy ? item[trackBy] : index
+        const key = trackBy ? item[trackBy] : (oldStyle ? item[keyName] : index)
         /* istanbul ignore if */
         if (key == null || key === '') {
           return
@@ -416,7 +466,7 @@ export function _bindRepeat (target, fragBlock, info) {
       // 2. remove unused element foreach old item
       const reusedList = []
       oldData.forEach((item, index) => {
-        const key = trackBy ? item[trackBy] : index
+        const key = trackBy ? item[trackBy] : (oldStyle ? item[keyName] : index)
         if (trackMap.hasOwnProperty(key)) {
           reusedMap[key] = {
             item, index, key,
@@ -426,7 +476,7 @@ export function _bindRepeat (target, fragBlock, info) {
           reusedList.push(item)
         }
         else {
-          this._removeTarget(oldChildren[index])
+          removeTarget(vm, oldChildren[index])
         }
       })
 
@@ -437,7 +487,7 @@ export function _bindRepeat (target, fragBlock, info) {
       fragBlock.updateMark = fragBlock.start
 
       data.forEach((item, index) => {
-        const key = trackBy ? item[trackBy] : index
+        const key = trackBy ? item[trackBy] : (oldStyle ? item[keyName] : index)
         const reused = reusedMap[key]
         if (reused) {
           if (reused.item === reusedList[0]) {
@@ -445,15 +495,21 @@ export function _bindRepeat (target, fragBlock, info) {
           }
           else {
             reusedList.$remove(reused.item)
-            this._moveTarget(reused.target, fragBlock.updateMark, true)
+            moveTarget(vm, reused.target, fragBlock.updateMark, true)
           }
           children.push(reused.target)
           vms.push(reused.vm)
+          if (oldStyle) {
+            reused.vm = item
+          }
+          else {
+            reused.vm[valueName] = item
+          }
           reused.vm[keyName] = index
           fragBlock.updateMark = reused.target
         }
         else {
-          compileItem(item, index, this)
+          compileItem(item, index, vm)
         }
       })
 
@@ -463,7 +519,7 @@ export function _bindRepeat (target, fragBlock, info) {
 
   fragBlock.data = list.slice(0)
   list.forEach((item, index) => {
-    compileItem(item, index, this)
+    compileItem(item, index, vm)
   })
 }
 
@@ -474,27 +530,27 @@ export function _bindRepeat (target, fragBlock, info) {
  * @param  {object} fragBlock
  * @param  {object} context
  */
-export function _bindShown (target, fragBlock, meta) {
-  const display = this._watchBlock(fragBlock, target.shown, 'shown',
+function bindShown (vm, target, fragBlock, meta) {
+  const display = watchBlock(vm, fragBlock, target.shown, 'shown',
     (display) => {
-      _.debug('the "if" item was changed', display)
+      console.debug('[JS Framework] the "if" item was changed', display)
 
       if (!fragBlock || !!fragBlock.display === !!display) {
         return
       }
       fragBlock.display = !!display
       if (display) {
-        this._compile(target, fragBlock, meta)
+        compile(vm, target, fragBlock, meta)
       }
       else {
-        this._removeBlock(fragBlock, true)
+        removeTarget(vm, fragBlock, true)
       }
     }
   )
 
   fragBlock.display = !!display
   if (display) {
-    this._compile(target, fragBlock, meta)
+    compile(vm, target, fragBlock, meta)
   }
 }
 
@@ -508,12 +564,12 @@ export function _bindShown (target, fragBlock, meta) {
  * @param  {function} handler
  * @return {any}      init value of calc
  */
-export function _watchBlock (fragBlock, calc, type, handler) {
-  const differ = this && this._app && this._app.differ
+function watchBlock (vm, fragBlock, calc, type, handler) {
+  const differ = vm && vm._app && vm._app.differ
   const config = {}
   const depth = (fragBlock.element.depth || 0) + 1
 
-  return this._watch(calc, (value) => {
+  return watch(vm, calc, (value) => {
     config.latestValue = value
     if (differ && !config.recorded) {
       differ.append(type, depth, fragBlock.blockId, () => {
@@ -533,11 +589,11 @@ export function _watchBlock (fragBlock, calc, type, handler) {
  * @param  {object} mergedData
  * @return {object}
  */
-export function _mergeContext (mergedData) {
-  const context = Object.create(this)
-  context._data = mergedData
-  context._initData()
-  context._initComputed()
-  context._realParent = this
-  return context
+function mergeContext (context, mergedData) {
+  const newContext = Object.create(context)
+  newContext._data = mergedData
+  initData(newContext)
+  initComputed(newContext)
+  newContext._realParent = context
+  return newContext
 }

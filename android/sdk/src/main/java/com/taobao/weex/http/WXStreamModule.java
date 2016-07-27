@@ -240,7 +240,7 @@ public class WXStreamModule extends WXModule {
   /**
    * send HTTP request
    *
-   * @param params   {method:POST/GET,url:http://xxx,header:{key:value},
+   * @param params   {method:POST/GET/PUT/DELETE/HEAD/PATCH,url:http://xxx,header:{key:value},
    *                 body:{key:value}}
    * @param callback formate：handler(err, response)
    */
@@ -253,11 +253,18 @@ public class WXStreamModule extends WXModule {
     String url = paramsObj.getString("url");
     JSONObject headers = paramsObj.getJSONObject("header");
     String body = paramsObj.getString("body");
+    int timeout = paramsObj.getIntValue("timeout");
 
     Options.Builder builder = new Options.Builder()
-            .setMethod(!"GET".equals(method)&&!"POST".equals(method)?"GET":method)
+            .setMethod(!"GET".equals(method)
+                    &&!"POST".equals(method)
+                    &&!"PUT".equals(method)
+                    &&!"DELETE".equals(method)
+                    &&!"HEAD".equals(method)
+                    &&!"PATCH".equals(method)?"GET":method)
             .setUrl(url)
-            .setBody(body);
+            .setBody(body)
+            .setTimeout(timeout);
 
     extractHeaders(headers,builder);
     sendRequest(builder.createOptions(), new ResponseCallback() {
@@ -276,7 +283,7 @@ public class WXStreamModule extends WXModule {
   /**
    *
    * @param optionsStr request options include:
-   *  method: GET 、POST
+   *  method: GET 、POST、PUT、DELETE、HEAD、PATCH
    *  headers：object，请求header
    *  url:
    *  body: "Any body that you want to add to your request"
@@ -320,12 +327,19 @@ public class WXStreamModule extends WXModule {
     JSONObject headers = optionsObj.getJSONObject("headers");
     String body = optionsObj.getString("body");
     String type = optionsObj.getString("type");
+    int timeout = optionsObj.getIntValue("timeout");
 
     Options.Builder builder = new Options.Builder()
-            .setMethod(!"GET".equals(method)&&!"POST".equals(method)?"GET":method)
+            .setMethod(!"GET".equals(method)
+                    &&!"POST".equals(method)
+                    &&!"PUT".equals(method)
+                    &&!"DELETE".equals(method)
+                    &&!"HEAD".equals(method)
+                    &&!"PATCH".equals(method)?"GET":method)
             .setUrl(url)
             .setBody(body)
-            .setType(type);
+            .setType(type)
+            .setTimeout(timeout);
 
     extractHeaders(headers,builder);
     final Options options = builder.createOptions();
@@ -391,6 +405,7 @@ public class WXStreamModule extends WXModule {
     wxRequest.method = options.getMethod();
     wxRequest.url = options.getUrl();
     wxRequest.body = options.getBody();
+    wxRequest.timeoutMs = options.getTimeout();
 
     if(options.getHeaders()!=null)
     if (wxRequest.paramMap == null) {

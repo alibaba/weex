@@ -6,7 +6,6 @@ import {
   warn,
   remove,
   extend,
-  isArray,
   isObject,
   parsePath,
   _Set as Set
@@ -256,7 +255,7 @@ function traverse (val, seen) {
     seen = seenObjects
     seen.clear()
   }
-  isA = isArray(val)
+  isA = Array.isArray(val)
   isO = isObject(val)
   if (isA || isO) {
     if (val.__ob__) {

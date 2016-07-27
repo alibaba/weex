@@ -168,7 +168,12 @@
         
         if (state == WeexInstanceAppear) {
             [[WXSDKManager bridgeMgr] fireEvent:_instance.instanceId ref:WX_SDK_ROOT_REF type:@"viewappear" params:nil domChanges:nil];
+<<<<<<< HEAD
         } else if (state == WeexInstanceDisappear) {
+=======
+        }
+        else if (state == WeexInstanceDisappear) {
+>>>>>>> dev
             [[WXSDKManager bridgeMgr] fireEvent:_instance.instanceId ref:WX_SDK_ROOT_REF type:@"viewdisappear" params:nil domChanges:nil];
         }
     }

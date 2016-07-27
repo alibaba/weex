@@ -580,7 +580,6 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
     NSInteger dotPosition = [fullMethodName rangeOfString:@"."].location;
     NSString *method = [fullMethodName substringFromIndex:dotPosition + 1];
     
-//    NSString *method = [[dict objectForKey:@"method"] substringFromIndex:8];
     NSDictionary *args = [dict objectForKey:@"params"];
     
     if ([method isEqualToString:@"callNative"]) {

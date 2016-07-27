@@ -42,7 +42,11 @@
 
 - (CGPoint)contentOffset;
 
+<<<<<<< HEAD
 - (void)setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated;
+=======
+- (CGPoint)contentOffset;
+>>>>>>> dev
 
 - (CGSize)contentSize;
 

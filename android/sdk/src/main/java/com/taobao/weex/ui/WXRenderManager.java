@@ -279,8 +279,8 @@ public class WXRenderManager {
     });
   }
 
-  public void createInstance(WXSDKInstance instance, String instanceId) {
-    mRegistries.put(instanceId, new WXRenderStatement(instance, instanceId));
+  public void createInstance(WXSDKInstance instance) {
+    mRegistries.put(instance.getInstanceId(), new WXRenderStatement(instance));
   }
 
   public void createBody(String instanceId, WXComponent component) {

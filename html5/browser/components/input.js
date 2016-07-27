@@ -1,7 +1,10 @@
 'use strict'
 
 const Atomic = require('./atomic')
-const utils = require('../utils')
+import { appendStyle, extend } from '../utils'
+
+const availableTypes = ['text', 'password', 'tel', 'email', 'url']
+const DEFAULT_TYPE = 'text'
 
 // attrs:
 //   - type: text|password|tel|email|url
@@ -10,11 +13,6 @@ const utils = require('../utils')
 //   - disabled
 //   - autofocus
 function Input (data) {
-  const attrs = data.attr || {}
-  this.type = attrs.type || 'text'
-  this.value = attrs.value
-  this.placeholder = attrs.placeholder
-  this.autofocus = attrs.autofocus && (attrs.autofocus !== 'false')
   Atomic.call(this, data)
 }
 
@@ -26,31 +24,45 @@ Input.prototype.create = function () {
   this.className = 'weex-ipt-' + uuid
   this.styleId = 'weex-style-' + uuid
   node.classList.add(this.className)
-  node.setAttribute('type', this.type)
-  node.type = this.type
-  // For the consistency of input component's width.
-  // The date and time type of input will have a bigger width
-  // when the 'box-sizing' is not set to 'border-box'
   node.classList.add('weex-element')
-  this.value && (node.value = this.value)
   this.placeholder && (node.placeholder = this.placeholder)
   return node
 }
 
-Input.prototype.updateStyle = function (style) {
-  Atomic.prototype.updateStyle.call(this, style)
-  if (style && style.placeholderColor) {
-    this.placeholderColor = style.placeholderColor
-    this.setPlaceholderColor()
-  }
-}
-
+// updatable attributes
 Input.prototype.attr = {
-  disabled: function (val) {
-    this.node.disabled = val && val !== 'false'
+  disabled (val) {
+    this.node.disabled = !!val
+  },
+
+  placeholder (val) {
+    this.node.placeholder = val || ''
+  },
+
+  value (val) {
+    this.node.value = val || ''
+  },
+
+  autofocus (val) {
+    this.node.autofocus = !!val
+  },
+
+  type (val) {
+    this.node.type = availableTypes.indexOf(val) !== -1
+      ? val
+      : DEFAULT_TYPE
   }
 }
 
+// updatable styles
+Input.prototype.style = extend(
+  Object.create(Atomic.prototype.style, {
+    placeholderColor: function (val) {
+      this.setPlaceholderColor(val)
+    }
+  }))
+
+// events configurations
 Input.prototype.event = {
   input: {
     updator () {
@@ -85,8 +97,8 @@ Input.prototype.event = {
   }
 }
 
-Input.prototype.setPlaceholderColor = function () {
-  if (!this.placeholderColor) {
+Input.prototype.setPlaceholderColor = function (placeholderColor) {
+  if (!placeholderColor) {
     return
   }
   const vendors = [
@@ -97,12 +109,12 @@ Input.prototype.setPlaceholderColor = function () {
     ':placeholder-shown'
   ]
   let css = ''
-  const cssRule = 'color: ' + this.placeholderColor + ';'
+  const cssRule = 'color: ' + placeholderColor + ';'
   for (let i = 0, l = vendors.length; i < l; i++) {
     css += '.' + this.className + vendors[i] + '{'
            + cssRule + '}'
   }
-  utils.appendStyle(css, this.styleId, true)
+  appendStyle(css, this.styleId, true)
 }
 
 module.exports = Input
