@@ -202,373 +202,175 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.utils;
+package com.taobao.weex.appfram.storage;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.os.Build;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteStatement;
 
-import com.taobao.weex.adapter.IWXUserTrackAdapter;
-import com.taobao.weex.common.WXErrorCode;
-import com.taobao.weex.common.WXPerformance;
+import com.taobao.weex.utils.WXLogUtils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.util.Enumeration;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
-import java.util.zip.ZipFile;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import dalvik.system.PathClassLoader;
+public class DefaultWXStorage implements IWXStorageAdapter {
 
+    private WXDatabaseSupplier mDatabaseSupplier;
 
-/**
- * Utility class for managing so library, including load native library and version management.
- * <ol>
- *   <li>Load library<br>
- *     It Will try to use {@link System#loadLibrary(String)} to load native library. If it successes,
- *     the Android Framework will be responsible for managing library and library version.
- *     If it fails in case of some ceratin armebi-v7a architecture device, it will try to extract
- *     native library from apk and copy it the data directory of the app. Then load it using
- *     {@link System#load(String)}.
- *     </li>
- *  <li>
- *       Version control for extracting native library from apk.
- *  </li>
- * </ol>
- */
-public class WXSoInstallMgrSdk {
+    private ExecutorService mExecutorService;
 
-  final static String LOGTAG = "INIT_SO";
-  //below is the CPU string types
-  private final static String ARMEABI = "armeabi"; //default
-  private final static String X86 = "x86";
-  private final static String MIPS = "mips";
-  private final static int ARMEABI_Size = 3559244;
-  private final static int X86_Size = 4304032;
-
-  static Context mContext = null;
-
-  public static void init(Context c) {
-    mContext = c;
-  }
-
-  public static boolean isX86(){
-    String cpuType = _cpuType();
-    return cpuType.equalsIgnoreCase(X86);
-  }
-
-  public static boolean isCPUSupport(){
-    String cpuType = _cpuType();
-    return !cpuType.equalsIgnoreCase(MIPS);
-  }
-
-  /**
-   * Load so library.
-   * First, it will try use {@link System#loadLibrary(String)} to load library.
-   * If it fails, then it will try to extract the so library and load it from arembi in the .apk
-   *
-   * @param libName library name, like webp, not necessary to be libwep.so
-   * @param version the version of the so library
-   */
-  public static boolean initSo(String libName, int version, IWXUserTrackAdapter utAdapter) {
-    String cpuType = _cpuType();
-    if (cpuType.equalsIgnoreCase(MIPS) ) {
-      return false;
-    }
-
-    boolean InitSuc = false;
-
-    if (checkSoIsInValid(libName, ARMEABI_Size) ||checkSoIsInValid(libName, X86_Size)) {
-
-      /**
-       * Load library with {@link System#loadLibrary(String)}
-       */
-      try {
-        System.loadLibrary(libName);
-        commit(utAdapter, null, null);
-
-      InitSuc = true;
-    } catch (Exception | Error e2) {
-      if (cpuType.contains(ARMEABI)||cpuType.contains(X86)) {
-        commit(utAdapter, WXErrorCode.WX_ERR_LOAD_SO.getErrorCode(), WXErrorCode.WX_ERR_LOAD_SO.getErrorMsg() + ":" + e2.getMessage());
-      }
-      InitSuc = false;
-    }
-
-    try {
-
-      if (!InitSuc) {
-
-        //File extracted from apk already exists.
-        if (isExist(libName, version)) {
-          boolean res = _loadUnzipSo(libName, version, utAdapter);
-          if (res) {
-            return res;
-          } else {
-            //Delete the corrupt so library, and extract it again.
-            removeSoIfExit(libName, version);
-          }
+    private void execute(Runnable runnable) {
+        if (mExecutorService == null) {
+            mExecutorService = Executors.newSingleThreadExecutor();
         }
-
-        //Fail for loading file from libs, extract so library from so and load it.
-        if (cpuType.equalsIgnoreCase(MIPS)) {
-          return false;
-        } else {
-          try {
-            InitSuc = unZipSelectedFiles(libName, version, utAdapter);
-          } catch (IOException e2) {
-            e2.printStackTrace();
-          }
-        }
-
-      }
-    } catch (Exception | Error e) {
-      InitSuc = false;
-      e.printStackTrace();
-    }
-      return InitSuc;
-
-  }
-
-  private static String _getFieldReflectively(Build build, String fieldName) {
-    try {
-      final Field field = Build.class.getField(fieldName);
-      return field.get(build).toString();
-    } catch (Exception ex) {
-      return "Unknown";
-    }
-  }
-
-  private static String _cpuType() {
-
-    String abi = _getFieldReflectively(new Build(), "CPU_ABI");
-    if (abi == null || abi.length() == 0 || abi.equals("Unknown")) {
-      abi = ARMEABI;
-    }
-    abi = abi.toLowerCase();
-    return abi;
-  }
-
-  static boolean checkSoIsInValid(String libName, int size) {
-    Context context = mContext;
-    if (null == context) {
-      return false;
-    }
-    try{
-      long start=System.currentTimeMillis();
-      if(WXSoInstallMgrSdk.class.getClassLoader() instanceof PathClassLoader ) {
-
-        String path = ((PathClassLoader) (WXSoInstallMgrSdk.class.getClassLoader())).findLibrary(libName);
-        File file = new File(path);
-
-        if (!file.exists() || size == file.length()) {
-          WXLogUtils.w("weex so size check path :" + path+"   "+(System.currentTimeMillis() - start));
-          return true;
-        } else {
-          return false;
-        }
-      }
-    }catch(Throwable e ){
-      WXLogUtils.e("weex so size check fail exception :"+e.getMessage());
+        mExecutorService.execute(runnable);
     }
 
-    return true;
-  }
-
-  /**
-   * Concatenate the path of the so library, including directory.
-   * @param libName the raw name of the lib
-   * @param version the version of the so library
-   * @return the path of the so library
-   */
-  static String _targetSoFile(String libName, int version) {
-    Context context = mContext;
-    if (null == context) {
-      return "";
+    public DefaultWXStorage(Context context) {
+        this.mDatabaseSupplier = WXDatabaseSupplier.getInstance(context);
     }
 
-    String path = "/data/data/" + context.getPackageName() + "/files";
 
-    File f = context.getFilesDir();
-    if (f != null) {
-      path = f.getPath();
-    }
-    return path + "/lib" + libName + "bk" + version + ".so";
-
-  }
-
-  /**
-   * Remove the so library if it had been extracted.
-   * @param libName
-   * @param version
-   */
-  static void removeSoIfExit(String libName, int version) {
-
-    String file = _targetSoFile(libName, version);
-    File a = new File(file);
-    if (a.exists()) {
-      a.delete();
-    }
-
-  }
-
-  /**
-   * Tell whether the so is extracted.
-   */
-  static boolean isExist(String libName, int version) {
-
-    String file = _targetSoFile(libName, version);
-    File a = new File(file);
-    return a.exists();
-
-  }
-
-
-  /**
-   * Load .so library
-   */
-  static boolean _loadUnzipSo(String libName, int version, IWXUserTrackAdapter utAdapter) {
-    boolean initSuc = false;
-    try {
-      if (isExist(libName, version)) {
-        System.load(_targetSoFile(libName, version));
-        commit(utAdapter, "2000", "Load file extract from apk successfully.");
-      }
-      initSuc = true;
-    } catch (Exception e) {
-      commit(utAdapter, WXErrorCode.WX_ERR_COPY_FROM_APK.getErrorCode(), WXErrorCode.WX_ERR_COPY_FROM_APK.getErrorMsg() + ":" + e.getMessage());
-      initSuc = false;
-      e.printStackTrace();
-    } catch (java.lang.UnsatisfiedLinkError e2) {
-      commit(utAdapter, WXErrorCode.WX_ERR_COPY_FROM_APK.getErrorCode(), WXErrorCode.WX_ERR_COPY_FROM_APK.getErrorMsg() + ":" + e2.getMessage());
-      initSuc = false;
-      e2.printStackTrace();
-
-    } catch (java.lang.Error e3) {
-      commit(utAdapter, WXErrorCode.WX_ERR_COPY_FROM_APK.getErrorCode(), WXErrorCode.WX_ERR_COPY_FROM_APK.getErrorMsg() + ":" + e3.getMessage());
-      initSuc = false;
-      e3.printStackTrace();
-    }
-    return initSuc;
-  }
-
-  static boolean unZipSelectedFiles(String libName, int version, IWXUserTrackAdapter utAdapter) throws ZipException, IOException {
-
-    String sourcePath = "lib/armeabi/lib" + libName + ".so";
-
-    String zipPath = "";
-    Context context = mContext;
-    if (context == null) {
-      return false;
-    }
-
-    ApplicationInfo aInfo = context.getApplicationInfo();
-    if (null != aInfo) {
-      zipPath = aInfo.sourceDir;
-    }
-
-    ZipFile zf;
-    zf = new ZipFile(zipPath);
-    try {
-
-      for (Enumeration<?> entries = zf.entries(); entries.hasMoreElements(); ) {
-        ZipEntry entry = ((ZipEntry) entries.nextElement());
-        if (entry.getName().startsWith(sourcePath)) {
-
-          InputStream in = null;
-          FileOutputStream os = null;
-          FileChannel channel = null;
-          int total = 0;
-          try {
-
-            //Make sure the old library is deleted.
-            removeSoIfExit(libName, version);
-
-            //Copy file
-            in = zf.getInputStream(entry);
-            os = context.openFileOutput("lib" + libName + "bk" + version + ".so",
-                                        Context.MODE_PRIVATE);
-            channel = os.getChannel();
-
-            byte[] buffers = new byte[1024];
-            int realLength;
-
-            while ((realLength = in.read(buffers)) > 0) {
-              //os.write(buffers);
-              channel.write(ByteBuffer.wrap(buffers, 0, realLength));
-              total += realLength;
-
+    @Override
+    public void setItem(final String key, final String value, final OnResultReceivedListener listener) {
+        execute(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, Object> data = StorageResultHandler.setItemResult(performSetItem(key, value));
+                listener.onReceived(data);
             }
-          } finally {
-            if (in != null) {
-              try {
-                in.close();
-              } catch (Exception e) {
-                e.printStackTrace();
-              }
-            }
+        });
+    }
 
-            if (channel != null) {
-              try {
-                channel.close();
-              } catch (Exception e) {
-                e.printStackTrace();
-              }
+    @Override
+    public void getItem(final String key, final OnResultReceivedListener listener) {
+        execute(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, Object> data = StorageResultHandler.getItemResult(performGetItem(key));
+                listener.onReceived(data);
             }
+        });
+    }
 
-            if (os != null) {
-              try {
-                os.close();
-              } catch (Exception e) {
-                e.printStackTrace();
-              }
+    @Override
+    public void removeItem(final String key, final OnResultReceivedListener listener) {
+        execute(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, Object> data = StorageResultHandler.removeItemResult(performRemoveItem(key));
+                listener.onReceived(data);
             }
+        });
+    }
 
-            if (zf != null) {
-              zf.close();
-              zf = null;
+    @Override
+    public void length(final OnResultReceivedListener listener) {
+        execute(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, Object> data = StorageResultHandler.getLengthResult(performGetLength());
+                listener.onReceived(data);
             }
-          }
+        });
+    }
 
-          if (total > 0) {
-            return _loadUnzipSo(libName, version, utAdapter);
-          } else {
+    @Override
+    public void getAllKeys(final OnResultReceivedListener listener) {
+        execute(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, Object> data = StorageResultHandler.getAllkeysResult(performGetAllKeys());
+                listener.onReceived(data);
+            }
+        });
+    }
+
+
+    private boolean performSetItem(String key, String value) {
+        String sql = "INSERT OR REPLACE INTO " + WXDatabaseSupplier.TABLE_STORAGE + " VALUES (?,?);";
+        SQLiteStatement statement = mDatabaseSupplier.getDatabase().compileStatement(sql);
+        try {
+            statement.clearBindings();
+            statement.bindString(1, key);
+            statement.bindString(2, value);
+            statement.execute();
+            return true;
+        } catch (Exception e) {
+            WXLogUtils.e("DefaultWXStorage", e.getMessage());
             return false;
-          }
+        } finally {
+            statement.close();
+            mDatabaseSupplier.closeDatabase();
         }
-      }
-    } catch (java.io.IOException e) {
-      e.printStackTrace();
-
-    } finally {
-
-      if (zf != null) {
-        zf.close();
-        zf = null;
-      }
     }
-    return false;
-  }
 
-  static void commit(IWXUserTrackAdapter utAdapter, String errCode, String errMsg) {
-    if (utAdapter == null) {
-      return;
+    private String performGetItem(String key) {
+        Cursor c = mDatabaseSupplier.getDatabase().query(WXDatabaseSupplier.TABLE_STORAGE,
+                new String[]{WXDatabaseSupplier.COLUMN_VALUE},
+                WXDatabaseSupplier.COLUMN_KEY + "=?",
+                new String[]{key},
+                null, null, null);
+        try {
+            if (c.moveToNext()) {
+                return c.getString(c.getColumnIndex(WXDatabaseSupplier.COLUMN_VALUE));
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            WXLogUtils.e("DefaultWXStorage", e.getMessage());
+            return null;
+        } finally {
+            c.close();
+            mDatabaseSupplier.closeDatabase();
+        }
     }
-    if (errCode != null && errMsg != null) {
-      WXPerformance p = new WXPerformance();
-      p.errCode = errCode;
-      p.errMsg = errMsg;
-      utAdapter.commit(null, null, WXConst.ENVIRONMENT, p, null);
-    } else {
-      utAdapter.commit(null, null, WXConst.ENVIRONMENT, null, null);
 
+    private boolean performRemoveItem(String key) {
+        int count = 0;
+        try {
+            count = mDatabaseSupplier.getDatabase().delete(WXDatabaseSupplier.TABLE_STORAGE,
+                    WXDatabaseSupplier.COLUMN_KEY + "=?",
+                    new String[]{key});
+        } finally {
+            mDatabaseSupplier.closeDatabase();
+        }
+        return count == 1;
     }
-  }
+
+    private long performGetLength() {
+        String sql = "SELECT count(" + WXDatabaseSupplier.COLUMN_KEY + ") FROM " + WXDatabaseSupplier.TABLE_STORAGE;
+        SQLiteStatement statement = mDatabaseSupplier.getDatabase().compileStatement(sql);
+        try {
+            return statement.simpleQueryForLong();
+        } catch (Exception e) {
+            WXLogUtils.e("DefaultWXStorage", e.getMessage());
+            return 0;
+        } finally {
+            statement.close();
+            mDatabaseSupplier.closeDatabase();
+        }
+    }
+
+    private List<String> performGetAllKeys() {
+        List<String> result = new ArrayList<>();
+        Cursor c = mDatabaseSupplier.getDatabase().query(WXDatabaseSupplier.TABLE_STORAGE, new String[]{WXDatabaseSupplier.COLUMN_KEY}, null, null, null, null, null);
+        try {
+            while (c.moveToNext()) {
+                result.add(c.getString(c.getColumnIndex(WXDatabaseSupplier.COLUMN_KEY)));
+            }
+            return result;
+        } catch (Exception e) {
+            WXLogUtils.e("DefaultWXStorage", e.getMessage());
+            return result;
+        } finally {
+            c.close();
+            mDatabaseSupplier.closeDatabase();
+        }
+    }
+
 
 }
