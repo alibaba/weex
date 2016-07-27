@@ -302,6 +302,11 @@ public class TypefaceUtil {
         if (!loadLocalFontFile(fullPath, fontFamily)) {
           downloadFontByNetwork(url, fullPath, fontFamily);
         }
+      } else if (fontDo.getSrcType() == FontDO.TYPE_FILE) {
+        boolean result = loadLocalFontFile(fontDo.getUrl(), fontDo.getFontFamilyName());
+        if (!result) {
+          fontDo.setState(FontDO.STATE_FAILED);
+        }
       }
     }
   }

@@ -245,7 +245,8 @@ public class WXConst {
   public static final String FONT_FACE = "font-face";
   public static final String FONT_SRC = "src";
   public static final String FONT_FAMILY = "font-family";
-
-
+  public static final java.lang.String SCHEME_FILE = "file";
+  public static final java.lang.String SCHEME_HTTPS = "https";
+  public static final java.lang.String SCHEME_HTTP = "http";
 }
 

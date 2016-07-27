@@ -20,7 +20,8 @@
       domModule.addRule('font-face', {
         'font-family': "iconfont",
         // 'src' : "url('iconfont.ttf')"
-        'src': "url('http://at.alicdn.com/t/font_1468842683_3772445.ttf')"
+        //'src': "url('http://at.alicdn.com/t/font_1468842683_3772445.ttf')"
+        'src': "url('file:///storage/emulated/0/Android/data/com.alibaba.weex/cache/http:__at.alicdn.com_t_font_1468842683_3772445.ttf')"
         // 'src': "url('http://at.alicdn.com/t/font_1468842683_3772445.woff')"
       });
     }

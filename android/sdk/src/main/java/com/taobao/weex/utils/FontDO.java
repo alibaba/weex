@@ -207,6 +207,9 @@ package com.taobao.weex.utils;
 import android.graphics.Typeface;
 import android.text.TextUtils;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 public class FontDO {
   private String mFontFamilyName;
   private String mSrc;
@@ -222,6 +225,7 @@ public class FontDO {
 
   public final static int TYPE_LOCAL = 0;
   public final static int TYPE_NETWORK = 1;
+  public final static int TYPE_FILE = 2;
 
   public String getFontFamilyName() {
     return mFontFamilyName;
@@ -240,10 +244,20 @@ public class FontDO {
     if (!TextUtils.isEmpty(this.mSrc)) {
       if (src.matches("^url\\('.*'\\)$")) {
         mUrl = src.substring(5, src.length() - 2);
-        if(mUrl.startsWith("http") || mUrl.startsWith("https")) {
-          mSrcType = TYPE_NETWORK;
-        } else {
-          mSrcType = TYPE_LOCAL;
+        try {
+          URI uri = URI.create(mUrl);
+          String scheme = uri.getScheme();
+          if (WXConst.SCHEME_HTTP.equals(scheme) ||
+                  WXConst.SCHEME_HTTPS.equals(scheme)) {
+            mSrcType = TYPE_NETWORK;
+          } else if (WXConst.SCHEME_FILE.equals(scheme)) {
+            mSrcType = TYPE_FILE;
+            mUrl = uri.getPath();
+          } else {
+            mSrcType = TYPE_LOCAL;
+          }
+        } catch (Exception e) {
+          WXLogUtils.e("TypefaceUtil", "URI.create(mUrl) failed mUrl: " + mUrl);
         }
       } else {
         mUrl = src;
