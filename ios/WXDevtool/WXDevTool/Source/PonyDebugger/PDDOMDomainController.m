@@ -172,7 +172,7 @@ static NSString *const kPDDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
 {
     self.objectsForNodeIds = [[NSMutableDictionary alloc] init];
     self.nodeIdsForObjects = [[NSMutableDictionary alloc] init];
-    self.nodeIdCounter = 2;
+    self.nodeIdCounter = 3;
     callback([self rootNode], nil);
 }
 
@@ -623,7 +623,7 @@ static NSString *const kPDDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
 - (PDDOMNode *)rootNode;
 {
     PDDOMNode *rootNode = [[PDDOMNode alloc] init];
-    rootNode.nodeId = [NSNumber numberWithInt:0];//[self getAndIncrementNodeIdCount];
+    rootNode.nodeId = [NSNumber numberWithInt:1];//[self getAndIncrementNodeIdCount];
     rootNode.nodeType = @(kPDDOMNodeTypeDocument);
     rootNode.nodeName = @"#document";
     rootNode.children = @[ [self rootElement] ];
@@ -634,7 +634,7 @@ static NSString *const kPDDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
 - (PDDOMNode *)rootElement;
 {
     PDDOMNode *rootElement = [[PDDOMNode alloc] init];
-    rootElement.nodeId = [NSNumber numberWithInt:1];//[self getAndIncrementNodeIdCount];
+    rootElement.nodeId = [NSNumber numberWithInt:2];//[self getAndIncrementNodeIdCount];
     rootElement.nodeType = @(kPDDOMNodeTypeElement);
     rootElement.nodeName = @"iosml";
     rootElement.children = [self windowNodes];
