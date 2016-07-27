@@ -420,6 +420,7 @@ public class WXSDKEngine {
     return WXSDKManager.getInstance().getIWXUserTrackAdapter();
   }
 
+  @Deprecated
   public static void setIWXUserTrackAdapter(IWXUserTrackAdapter IWXUserTrackAdapter) {
     WXSDKManager.getInstance().setIWXUserTrackAdapter(IWXUserTrackAdapter);
   }
@@ -428,6 +429,7 @@ public class WXSDKEngine {
     return WXSDKManager.getInstance().getIWXImgLoaderAdapter();
   }
 
+  @Deprecated
   public static void setIWXImgLoaderAdapter(IWXImgLoaderAdapter IWXImgLoaderAdapter) {
     if(IWXImgLoaderAdapter==null){
       if(WXEnvironment.isApkDebugable()){
@@ -442,6 +444,7 @@ public class WXSDKEngine {
     return WXSDKManager.getInstance().getIWXHttpAdapter();
   }
 
+  @Deprecated
   public static void setIWXHttpAdapter(IWXHttpAdapter IWXHttpAdapter) {
     WXSDKManager.getInstance().setIWXHttpAdapter(IWXHttpAdapter);
   }
