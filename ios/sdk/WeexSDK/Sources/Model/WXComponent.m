@@ -99,8 +99,11 @@
 {
     free_css_node(_cssNode);
 
+    [self _removeAllEvents];
+
     pthread_mutex_destroy(&_propertyMutex);
     pthread_mutexattr_destroy(&_propertMutexAttr);
+
 }
 
 - (NSDictionary *)styles
@@ -279,7 +282,6 @@
     
     [self _recomputeCSSNodeChildren];
     [self setNeedsLayout];
-    
 }
 
 - (void)_removeFromSupercomponent

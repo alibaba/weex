@@ -40,9 +40,9 @@
 
 - (void)loadMore;
 
-- (void)setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated;
-
 - (CGPoint)contentOffset;
+
+- (void)setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated;
 
 - (CGSize)contentSize;
 
