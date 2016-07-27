@@ -31,7 +31,7 @@ Of course you can reuse the code of playground to build your own app, that is th
              compile project(:inspector)
      }
      ````
-    * include the inspector in your project's settings.gradle 
+    * include the inspector in your project's settings.gradle. 
     ```
     include ':app', ':inspector'
     ```
