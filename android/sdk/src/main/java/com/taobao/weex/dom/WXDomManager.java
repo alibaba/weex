@@ -218,6 +218,7 @@ import com.taobao.weex.common.WXThread;
 import com.taobao.weex.ui.WXRenderManager;
 import com.taobao.weex.utils.FontDO;
 import com.taobao.weex.utils.TypefaceUtil;
+import com.taobao.weex.utils.WXConst;
 import com.taobao.weex.utils.WXUtils;
 
 import java.util.Iterator;
@@ -553,7 +554,7 @@ public final class WXDomManager {
   }
 
   public void addRule(final String type,final JSONObject jsonObject) {
-    if ("font-face".equals(type)) {
+    if (WXConst.FONT_FACE.equals(type)) {
       FontDO fontDO = parseFontDO(jsonObject);
       if (fontDO != null && !TextUtils.isEmpty(fontDO.getFontFamilyName())) {
         FontDO cacheFontDO = TypefaceUtil.getFontDO(fontDO.getFontFamilyName());
@@ -573,8 +574,8 @@ public final class WXDomManager {
     if(jsonObject == null) {
       return null;
     }
-    String src = jsonObject.getString("src");
-    String name = jsonObject.getString("font-family");
+    String src = jsonObject.getString(WXConst.FONT_SRC);
+    String name = jsonObject.getString(WXConst.FONT_FAMILY);
     FontDO fontDO = new FontDO();
     fontDO.setFontFamilyName(name);
     fontDO.setSrc(src);

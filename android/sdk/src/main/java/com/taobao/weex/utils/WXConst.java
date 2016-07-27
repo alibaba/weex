@@ -241,6 +241,11 @@ public class WXConst {
 
   public static final String MSG_PARAM_ERR = "MSG_PARAM_ERR";
 
+  //font
+  public static final String FONT_FACE = "font-face";
+  public static final String FONT_SRC = "src";
+  public static final String FONT_FAMILY = "font-family";
+
 
 }
 

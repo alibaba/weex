@@ -259,7 +259,6 @@ public class WXFileUtils {
     try {
       outStream = new FileOutputStream(path);
       outStream.write(content);
-      outStream.close();
       return true;
     } catch (Exception e) {
       WXLogUtils.e("WXFileUtils saveFile: " + WXLogUtils.getStackTrace(e));
