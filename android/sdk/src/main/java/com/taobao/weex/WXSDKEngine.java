@@ -154,7 +154,7 @@ public class WXSDKEngine {
   public static final String JS_FRAMEWORK_RELOAD="js_framework_reload";
 
   private static final String V8_SO_NAME = "weexv8";
-  private volatile static boolean init;
+  private volatile static boolean mIsInit = false;
   private static final Object mLock = new Object();
   private static final String TAG = "WXSDKEngine";
 
@@ -189,7 +189,7 @@ public class WXSDKEngine {
 
   public static boolean isInitialized(){
     synchronized(mLock) {
-      return init;
+      return mIsInit;
     }
   }
 
@@ -200,14 +200,14 @@ public class WXSDKEngine {
    */
   public static void initialize(Application application,InitConfig config){
     synchronized (mLock) {
-      if (init) {
+      if (mIsInit) {
         return;
       }
       long start = System.currentTimeMillis();
       doInitInternal(application,config);
       WXEnvironment.sSDKInitInvokeTime = System.currentTimeMillis()-start;
       WXLogUtils.renderPerformanceLog("SDKInitInvokeTime", WXEnvironment.sSDKInitInvokeTime);
-      init = true;
+      mIsInit = true;
     }
   }
 
