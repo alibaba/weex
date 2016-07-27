@@ -88,7 +88,7 @@
         for (NSString *param in urls) {
             if ([param isEqualToString:@"_wx_tpl"]) {
                 transformURL = [[urls lastObject]  stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-                return;
+                break;
             }
         }
     }
