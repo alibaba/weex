@@ -293,47 +293,47 @@ public class WXSoInstallMgrSdk {
         System.loadLibrary(libName);
         commit(utAdapter, null, null);
 
-      InitSuc = true;
-    } catch (Exception | Error e2) {
-      if (cpuType.contains(ARMEABI)||cpuType.contains(X86)) {
-        commit(utAdapter, WXErrorCode.WX_ERR_LOAD_SO.getErrorCode(), WXErrorCode.WX_ERR_LOAD_SO.getErrorMsg() + ":" + e2.getMessage());
+        InitSuc = true;
+      } catch (Exception | Error e2) {
+        if (cpuType.contains(ARMEABI) || cpuType.contains(X86)) {
+          commit(utAdapter, WXErrorCode.WX_ERR_LOAD_SO.getErrorCode(), WXErrorCode.WX_ERR_LOAD_SO.getErrorMsg() + ":" + e2.getMessage());
+        }
+        InitSuc = false;
       }
-      InitSuc = false;
-    }
 
-    try {
+      try {
 
-      if (!InitSuc) {
+        if (!InitSuc) {
 
-        //File extracted from apk already exists.
-        if (isExist(libName, version)) {
-          boolean res = _loadUnzipSo(libName, version, utAdapter);
-          if (res) {
-            return res;
+          //File extracted from apk already exists.
+          if (isExist(libName, version)) {
+            boolean res = _loadUnzipSo(libName, version, utAdapter);
+            if (res) {
+              return res;
+            } else {
+              //Delete the corrupt so library, and extract it again.
+              removeSoIfExit(libName, version);
+            }
+          }
+
+          //Fail for loading file from libs, extract so library from so and load it.
+          if (cpuType.equalsIgnoreCase(MIPS)) {
+            return false;
           } else {
-            //Delete the corrupt so library, and extract it again.
-            removeSoIfExit(libName, version);
+            try {
+              InitSuc = unZipSelectedFiles(libName, version, utAdapter);
+            } catch (IOException e2) {
+              e2.printStackTrace();
+            }
           }
-        }
 
-        //Fail for loading file from libs, extract so library from so and load it.
-        if (cpuType.equalsIgnoreCase(MIPS)) {
-          return false;
-        } else {
-          try {
-            InitSuc = unZipSelectedFiles(libName, version, utAdapter);
-          } catch (IOException e2) {
-            e2.printStackTrace();
-          }
         }
-
+      } catch (Exception | Error e) {
+        InitSuc = false;
+        e.printStackTrace();
       }
-    } catch (Exception | Error e) {
-      InitSuc = false;
-      e.printStackTrace();
     }
-      return InitSuc;
-
+    return InitSuc;
   }
 
   private static String _getFieldReflectively(Build build, String fieldName) {
