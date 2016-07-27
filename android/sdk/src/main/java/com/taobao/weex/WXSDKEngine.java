@@ -206,6 +206,7 @@ public class WXSDKEngine {
       long start = System.currentTimeMillis();
       doInitInternal(application,config);
       WXEnvironment.sSDKInitInvokeTime = System.currentTimeMillis()-start;
+      WXLogUtils.renderPerformanceLog("SDKInitInvokeTime", WXEnvironment.sSDKInitInvokeTime);
       init = true;
     }
   }
@@ -236,7 +237,6 @@ public class WXSDKEngine {
         sm.initScriptsFramework(null);
 
         WXEnvironment.sSDKInitExecuteTime = System.currentTimeMillis() - start;
-        WXLogUtils.renderPerformanceLog("SDKInitInvokeTime", WXEnvironment.sSDKInitInvokeTime);
         WXLogUtils.renderPerformanceLog("SDKInitExecuteTime", WXEnvironment.sSDKInitExecuteTime);
       }
     });
