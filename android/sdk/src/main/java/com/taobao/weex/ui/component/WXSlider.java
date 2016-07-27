@@ -222,6 +222,7 @@ import com.taobao.weex.ui.view.WXCircleIndicator;
 import com.taobao.weex.ui.view.WXCirclePageAdapter;
 import com.taobao.weex.ui.view.WXCircleViewPager;
 import com.taobao.weex.utils.WXLogUtils;
+import com.taobao.weex.utils.WXUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
 import java.util.HashMap;
@@ -369,19 +370,29 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
   protected boolean setProperty(String key, Object param) {
     switch (key) {
       case WXDomPropConstant.WX_ATTR_SLIDER_VALUE:
-        setValue((String) param);
+        String value = WXUtils.getString(param,null);
+        if (value != null)
+          setValue(value);
         return true;
       case AUTO_PLAY:
-        setAutoPlay((String) param);
+        String aotu_play = WXUtils.getString(param,null);
+        if (aotu_play != null)
+          setAutoPlay(aotu_play);
         return true;
       case SHOW_INDICATORS:
-        setShowIndicators((String) param);
+        String indicators = WXUtils.getString(param,null);
+        if (indicators != null)
+          setShowIndicators(indicators);
         return true;
       case INTERVAL:
-        setInterval((Integer) param);
+        Integer interval = WXUtils.getInteger(param,null);
+        if (interval != null)
+          setInterval(interval);
         return true;
       case INDEX:
-        setIndex((Integer) param);
+        Integer index = WXUtils.getInteger(param,null);
+        if (index != null)
+          setIndex(index);
         return true;
     }
     return super.setProperty(key, param);
@@ -434,7 +445,7 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
 
   @WXComponentProp(name = INTERVAL)
   public void setInterval(int intervalMS){
-    if(mViewPager != null){
+    if(mViewPager != null && intervalMS>0){
       mViewPager.setIntervalTime(intervalMS);
     }
   }

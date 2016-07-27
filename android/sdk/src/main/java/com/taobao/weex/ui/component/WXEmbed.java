@@ -221,6 +221,7 @@ import com.taobao.weex.common.WXPerformance;
 import com.taobao.weex.common.WXRenderStrategy;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.utils.WXLogUtils;
+import com.taobao.weex.utils.WXUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
 public class WXEmbed extends WXDiv implements WXSDKInstance.OnInstanceVisibleListener {
@@ -245,7 +246,9 @@ public class WXEmbed extends WXDiv implements WXSDKInstance.OnInstanceVisibleLis
   protected boolean setProperty(String key, Object param) {
     switch (key) {
       case WXDomPropConstant.WX_ATTR_SRC:
-        setSrc((String) param);
+        String src = WXUtils.getString(param,null);
+        if (src != null)
+          setSrc(src);
         return true;
     }
     return super.setProperty(key, param);

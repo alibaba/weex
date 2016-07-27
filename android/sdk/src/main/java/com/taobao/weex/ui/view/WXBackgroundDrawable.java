@@ -20,11 +20,11 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.SparseIntArray;
 
 import com.taobao.weex.dom.flex.CSSConstants;
 import com.taobao.weex.dom.flex.FloatUtil;
 import com.taobao.weex.dom.flex.Spacing;
-import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
 import java.util.Arrays;
@@ -56,7 +56,7 @@ public class WXBackgroundDrawable extends Drawable {
   Spacing mBorderWidth;
   private
   @Nullable
-  Spacing mBorderColor;
+  SparseIntArray mBorderColor;
   private
   @Nullable
   BorderStyle mBorderStyle;
@@ -335,8 +335,12 @@ public class WXBackgroundDrawable extends Drawable {
    * {@link #getFullBorderWidth}.
    */
   private int getFullBorderColor() {
-    return (mBorderColor != null && !CSSConstants.isUndefined(mBorderColor.getRaw(Spacing.ALL))) ?
-           (int) (long) mBorderColor.getRaw(Spacing.ALL) : DEFAULT_BORDER_COLOR;
+    if(mBorderColor!=null){
+      return mBorderColor.get(Spacing.ALL,DEFAULT_BORDER_COLOR);
+    }
+    else{
+      return DEFAULT_BORDER_COLOR;
+    }
   }
 
   @Override
@@ -356,7 +360,9 @@ public class WXBackgroundDrawable extends Drawable {
 
   private int getBorderColor(int position) {
     // Check ReactStylesDiffMap#getColorInt() to see why this is needed
-    return mBorderColor != null ? (int) (long) mBorderColor.get(position) : DEFAULT_BORDER_COLOR;
+    return mBorderColor != null ?
+           mBorderColor.get(position,mBorderColor.get(Spacing.ALL)) :
+           DEFAULT_BORDER_COLOR;
   }
 
   /* Android's elevation implementation requires this to be implemented to know where to draw the shadow. */
@@ -389,16 +395,13 @@ public class WXBackgroundDrawable extends Drawable {
     }
   }
 
-  public void setBorderColor(int position, float color) {
+  public void setBorderColor(int position, int color) {
     if (mBorderColor == null) {
-      mBorderColor = new Spacing();
-      mBorderColor.setDefault(Spacing.LEFT, DEFAULT_BORDER_COLOR);
-      mBorderColor.setDefault(Spacing.TOP, DEFAULT_BORDER_COLOR);
-      mBorderColor.setDefault(Spacing.RIGHT, DEFAULT_BORDER_COLOR);
-      mBorderColor.setDefault(Spacing.BOTTOM, DEFAULT_BORDER_COLOR);
+      mBorderColor = new SparseIntArray(9);
+      mBorderColor.put(Spacing.ALL, DEFAULT_BORDER_COLOR);
     }
-    if (!FloatUtil.floatsEqual(mBorderColor.getRaw(position), color)) {
-      mBorderColor.set(position, color);
+    if (mBorderColor.get(position)!=color) {
+      mBorderColor.put(position,color);
       invalidateSelf();
     }
   }

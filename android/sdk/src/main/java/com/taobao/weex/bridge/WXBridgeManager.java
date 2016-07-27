@@ -220,12 +220,10 @@ import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.IWXBridge;
 import com.taobao.weex.common.IWXDebugProxy;
-import com.taobao.weex.common.TypeModuleFactory;
 import com.taobao.weex.common.WXConfig;
 import com.taobao.weex.common.WXErrorCode;
 import com.taobao.weex.common.WXException;
 import com.taobao.weex.common.WXJSBridgeMsgType;
-import com.taobao.weex.common.WXModule;
 import com.taobao.weex.common.WXRefreshData;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.common.WXThread;
@@ -291,7 +289,7 @@ public class WXBridgeManager implements Callback {
 
   private static WXBridgeManager mBridgeManager;
 
-  private static WXModule sDomModule;
+  private WXDomModule sDomModule;
 
   /**
    * next tick tasks, can set priority
@@ -481,8 +479,8 @@ public class WXBridgeManager implements Callback {
           task = (JSONObject) array.get(i);
           if (task != null && WXSDKManager.getInstance().getSDKInstance(instanceId) != null) {
             if (TextUtils.equals(WXDomModule.WXDOM, (String) task.get(WXDomModule.MODULE))) {
-              WXDomModule domModule = getDomModule(instanceId);
-              domModule.callDomMethod(task);
+              sDomModule = getDomModule(instanceId);
+              sDomModule.callDomMethod(task);
             } else {
               WXModuleManager.callModuleMethod(instanceId, (String) task.get(WXDomModule.MODULE),
                       (String) task.get(WXDomModule.METHOD), (JSONArray) task.get(WXDomModule.ARGS));
@@ -508,27 +506,32 @@ public class WXBridgeManager implements Callback {
   }
 
 
-  private void addJSTask(String method,String instanceId, Object... args) {
-    if (args == null || args.length == 0) {
-      return;
-    }
+  private void addJSTask(final String method, final String instanceId, final Object... args) {
+    mJSHandler.post(new Runnable() {
+      @Override
+      public void run() {
+        if (args == null || args.length == 0) {
+          return;
+        }
 
-    ArrayList<Object> argsList = new ArrayList<>();
-    for (Object arg : args) {
-      argsList.add(arg);
-    }
+        ArrayList<Object> argsList = new ArrayList<>();
+        for (Object arg : args) {
+          argsList.add(arg);
+        }
 
-    WXHashMap<String, Object> task = new WXHashMap<>();
-    task.put(WXConst.KEY_METHOD, method);
-    task.put(WXConst.KEY_ARGS, argsList);
+        WXHashMap<String, Object> task = new WXHashMap<>();
+        task.put(WXConst.KEY_METHOD, method);
+        task.put(WXConst.KEY_ARGS, argsList);
 
-    if (mNextTickTasks.get(instanceId) == null) {
-      ArrayList<WXHashMap<String, Object>> list = new ArrayList<>();
-      list.add(task);
-      mNextTickTasks.put(instanceId, list);
-    } else {
-      mNextTickTasks.get(instanceId).add(task);
-    }
+        if (mNextTickTasks.get(instanceId) == null) {
+          ArrayList<WXHashMap<String, Object>> list = new ArrayList<>();
+          list.add(task);
+          mNextTickTasks.put(instanceId, list);
+        } else {
+          mNextTickTasks.get(instanceId).add(task);
+        }
+      }
+    });
   }
 
   private void sendMessage(String instanceId, int what) {
@@ -1102,22 +1105,14 @@ public class WXBridgeManager implements Callback {
     public String instanceId;
   }
 
-  private static void registerDomModule() throws WXException {
-
-    final ModuleFactory factory = new TypeModuleFactory(WXDomModule.class);
-
-    try {
-      sDomModule = new TypeModuleFactory(WXDomModule.class).buildInstance();
-    } catch (Exception e) {
-      WXLogUtils.e("Dom class must have a default constructor without params. " + WXLogUtils.getStackTrace(e));
-    }
-
-    WXModuleManager.registerJSModule(WXDomModule.WXDOM, factory);
+  private void registerDomModule() throws WXException {
+    if (sDomModule == null)
+      sDomModule = new WXDomModule();
   }
 
-  private static WXDomModule getDomModule(String instanceId) {
+  private WXDomModule getDomModule(String instanceId) {
     sDomModule.mWXSDKInstance = WXSDKManager.getInstance().getSDKInstance(instanceId);
-    return (WXDomModule) sDomModule;
+    return sDomModule;
   }
 
 }

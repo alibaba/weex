@@ -379,7 +379,9 @@ public class WXVideo extends WXComponent<FrameLayout> {
   protected boolean setProperty(String key, Object param) {
     switch (key) {
       case WXDomPropConstant.WX_ATTR_SRC:
-        setSrc((String) param);
+        String src = WXUtils.getString(param,null);
+        if (src != null)
+          setSrc(src);
         return true;
       case WXDomPropConstant.WX_ATTR_AUTOPLAY:
         Boolean result = WXUtils.getBoolean(param,null);
@@ -387,7 +389,9 @@ public class WXVideo extends WXComponent<FrameLayout> {
           setAutoPlay(result);
         return true;
       case PLAY_STATUS:
-        setPlaystatus((String) param);
+        String status = WXUtils.getString(param,null);
+        if (status != null)
+          setPlaystatus(status);
         return true;
     }
     return super.setProperty(key,param);

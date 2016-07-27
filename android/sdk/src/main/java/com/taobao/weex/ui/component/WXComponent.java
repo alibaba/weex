@@ -281,7 +281,7 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
 
     if (this instanceof WXRefresh && mParent instanceof WXScroller &&
             hasScrollParent(mParent)) {
-      mInstance.setRefreshMargin(mDomObj.csslayout.dimensions[CSSLayout.DIMENSION_HEIGHT]);
+      mInstance.setRefreshMargin(mDomObj.getCSSLayoutHeight());
     }
     if ((this instanceof WXBaseRefresh && mParent instanceof WXScroller)) {
       return;
@@ -291,8 +291,7 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
       if (!(this instanceof WXBaseRefresh)) {
           CSSLayout newLayout = new CSSLayout();
           newLayout.copy(mDomObj.csslayout);
-          newLayout.position[CSSLayout.POSITION_TOP] = mDomObj.csslayout.position[CSSLayout
-              .POSITION_TOP] - mInstance.getRefreshMargin();
+          newLayout.position[CSSLayout.POSITION_TOP] = mDomObj.getCSSLayoutTop() - mInstance.getRefreshMargin();
           mDomObj.csslayout.copy(newLayout);
       }
     }
@@ -466,49 +465,70 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
     }
   }
 
+  /**
+   * SetProperty to hostview
+   * @param key name of argument
+   * @param param value of argument
+   * @return true means that the property is consumed
+     */
   protected boolean setProperty(String key, Object param) {
     switch (key) {
       case WXDomPropConstant.WX_ATTR_DISABLED:
-        Boolean result = WXUtils.getBoolean(param,null);
-        if (result != null) {
-          setDisabled(result);
-        }
+        Boolean disabled = WXUtils.getBoolean(param,null);
+        if (disabled != null)
+          setDisabled(disabled);
         return true;
       case WXDomPropConstant.WX_POSITION:
-        setSticky((String) param);
+        String position = WXUtils.getString(param,null);
+        if (position != null)
+          setSticky(position);
         return true;
       case WXDomPropConstant.WX_BACKGROUNDCOLOR:
-        setBackgroundColor((String) param);
+        String bgColor = WXUtils.getString(param,null);
+        if (bgColor != null)
+          setBackgroundColor(bgColor);
         return true;
       case WXDomPropConstant.WX_OPACITY:
-        setOpacity(WXUtils.getFloat(param));
+        Float opacity = WXUtils.getFloat(param,null);
+        if (opacity != null)
+          setOpacity(opacity);
         return true;
       case WXDomPropConstant.WX_BORDERRADIUS:
       case WXDomPropConstant.WX_BORDER_TOP_LEFT_RADIUS:
       case WXDomPropConstant.WX_BORDER_TOP_RIGHT_RADIUS:
       case WXDomPropConstant.WX_BORDER_BOTTOM_RIGHT_RADIUS:
       case WXDomPropConstant.WX_BORDER_BOTTOM_LEFT_RADIUS:
-        setBorderRadius(key,WXUtils.getFloat(param));
+        Float radius = WXUtils.getFloat(param,null);
+        if (radius != null)
+          setBorderRadius(key,radius);
         return true;
       case WXDomPropConstant.WX_BORDERWIDTH:
       case WXDomPropConstant.WX_BORDER_TOP_WIDTH:
       case WXDomPropConstant.WX_BORDER_RIGHT_WIDTH:
       case WXDomPropConstant.WX_BORDER_BOTTOM_WIDTH:
       case WXDomPropConstant.WX_BORDER_LEFT_WIDTH:
-        setBorderWidth(key,WXUtils.getFloat(param));
+        Float width = WXUtils.getFloat(param,null);
+        if (width != null)
+          setBorderWidth(key,width);
         return true;
       case WXDomPropConstant.WX_BORDERSTYLE:
-        setBorderStyle((String) param);
+        String border_style = WXUtils.getString(param,null);
+        if (border_style != null)
+          setBorderStyle(border_style);
         return true;
       case WXDomPropConstant.WX_BORDERCOLOR:
       case WXDomPropConstant.WX_BORDER_TOP_COLOR:
       case WXDomPropConstant.WX_BORDER_RIGHT_COLOR:
       case WXDomPropConstant.WX_BORDER_BOTTOM_COLOR:
       case WXDomPropConstant.WX_BORDER_LEFT_COLOR:
-        setBorderColor(key, (String) param);
+        String border_color = WXUtils.getString(param,null);
+        if (border_color != null)
+          setBorderColor(key, border_color);
         return true;
       case WXDomPropConstant.WX_VISIBILITY:
-        setVisibility((String) param);
+        String visibility = WXUtils.getString(param,null);
+        if (visibility != null)
+          setVisibility(visibility);
         return true;
       default:
         return false;
@@ -525,6 +545,12 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
         @Override
         public void onClick(View v) {
           Map<String, Object> params = new HashMap<>();
+          int[] location = new int[2];
+          mHost.getLocationOnScreen(location);
+          params.put("x",location[0]);
+          params.put("y",location[1]);
+          params.put("width",mDomObj.getCSSLayoutWidth());
+          params.put("height",mDomObj.getCSSLayoutHeight());
           WXSDKManager.getInstance().fireEvent(mInstanceId,
                                                mDomObj.ref,
                                                WXEventType.CLICK,
