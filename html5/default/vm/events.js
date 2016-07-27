@@ -80,16 +80,24 @@ export function $off (type, handler) {
 
 const LIFE_CYCLE_TYPES = ['init', 'created', 'ready']
 
-export function _initEvents (externalEvents) {
-  const options = this._options || {}
+export function initEvents (vm, externalEvents) {
+  const options = vm._options || {}
   const events = options.events || {}
   for (const type1 in events) {
-    this.$on(type1, events[type1])
+    vm.$on(type1, events[type1])
   }
   for (const type2 in externalEvents) {
-    this.$on(type2, externalEvents[type2])
+    vm.$on(type2, externalEvents[type2])
   }
   LIFE_CYCLE_TYPES.forEach((type) => {
-    this.$on(`hook:${type}`, options[type])
+    vm.$on(`hook:${type}`, options[type])
   })
+}
+
+export function mixinEvents (vm) {
+  vm.$emit = $emit
+  vm.$dispatch = $dispatch
+  vm.$broadcast = $broadcast
+  vm.$on = $on
+  vm.$off = $off
 }

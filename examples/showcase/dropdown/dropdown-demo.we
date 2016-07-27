@@ -1,0 +1,133 @@
+<template>
+    <div class="wrapper" >
+        <we-dropdown class="dropdown" status-id="{{status}}">
+            <div style="height: {{screenHeight}}">
+                <list class="list"  if={{list.length}}>
+                    <cell repeat="{{list}}" class="cell"  append="tree" vid="{{vid}}" index="{{vid}}" >
+                        <text class="title">{{title}}</text>
+                        <div class="info">
+                            <text class="txt status status-{{questionStatus}}">{{questionStatusValue}}</text>
+                            <text class="txt"> , id: {{vid}} , </text>
+                            <text class="txt"> time: {{addTime}}</text>
+                        </div>
+                    </cell>
+                </list>
+            </div>
+        </we-dropdown>
+    </div>
+
+</template>
+
+<style>
+    .dropdown{
+        justify-content: center;
+        align-content: stretch;
+        position: relative;
+        z-index: 100;
+    }
+    .wrapper{
+        justify-content:flex-start;
+        flex-direction: column;
+        position: relative;
+    }
+    .list {
+        flex: 1;
+        width: 750;
+    }
+    .refresh-view {
+        height: 120;
+        width: 750;
+        margin-top: 10;
+        margin-bottom: 10;
+        align-items: center;
+        justify-content: center;
+     }
+     .refresh-arrow {
+        font-size: 30px;
+        color: #45b5f0;
+     }
+     .indicator {
+        height: 40px;
+        width: 40px;
+        color:#45b5f0;
+     }
+    .cell {
+        width: 750;
+        padding-top: 15;
+        padding-bottom: 5;
+        padding-left:20;
+        padding-right:20;
+        border-bottom-width: 1;
+        border-style: solid;
+        border-color: #999;
+    }
+    .title{
+        font-size:32;
+        padding-top:5 ;
+        padding-bottom: 5;
+        color:#333;
+    }
+    .info {
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items:stretch;
+    }
+    .txt {
+        font-size:28;
+         padding-top:5;
+         padding-bottom:5;
+         color: #999;
+     }
+    .status {   }
+
+    .status-1 { color: #090; }
+    .status-2 { color: #f00; }
+
+</style>
+
+<script>
+    require('./we-dropdown.we');
+
+    var initData = '[{\"addTime\":\"2016-07-14\",\"questionStatus\":\"2\",\"questionStatusValue\":\"Closed\",\"title\":\"This is a demo\",\"vid\":\"AW5PMSC\"},{\"addTime\":\"2016-07-14\",\"questionStatus\":\"1\",\"questionStatusValue\":\"Waiting\",\"title\":\"This is a demo\",\"vid\":\"AW5PMSM\"},{\"addTime\":\"2016-07-14\",\"questionStatus\":\"2\",\"questionStatusValue\":\"Confirmed\",\"title\":\"This is a demo\",\"vid\":\"AW5PMSA\"}]';
+
+    module.exports = {
+        data: {
+            screenHeight: 0,
+            // biz
+            status: '1',
+            list: []
+        },
+        ready: function () {
+            this.screenHeight = this.$getConfig().env.deviceHeight ;
+            this.$on('statuschange', function (e) {
+                var detail = e.detail;
+                this.toast({
+                    message: JSON.stringify(detail)
+                });
+                this.status = detail.id;
+                this.filter();
+            }.bind(this));
+            this.filter();
+        },
+
+        methods: {
+            toast: function (params) {
+                var modal = require('@weex-module/modal');
+                modal.toast(params);
+            },
+
+            filter: function () {
+                var status = this.status;
+                this.list = [];
+                var allList = JSON.parse(initData);
+                if(status == '0') {
+                    this.list = allList;
+                }else {
+                    this.list = allList.filter(function(item){
+                        return item.questionStatus == status;
+                    });
+                }
+            }
+        }
+    }
+</script>

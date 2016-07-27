@@ -38,7 +38,8 @@
         {name: 'showcase/new-fashion/index', title: 'Activity'},
         {name: 'showcase/calculator', title: 'Calculator'},
         {name: 'showcase/minesweeper', title: 'Minesweeper'},
-        {name: 'showcase/ui', title: 'UI Gallery'}
+        {name: 'showcase/ui', title: 'UI Gallery'},
+        {name: 'showcase/dropdown/dropdown-demo', title: 'Dropdown'}
       ]
     }
   }
