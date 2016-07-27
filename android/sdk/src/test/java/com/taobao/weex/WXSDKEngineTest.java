@@ -233,18 +233,6 @@ import static org.junit.Assert.*;
 @PrepareForTest({})
 public class WXSDKEngineTest {
 
-   static class TestApplication extends MockApplication{
-
-    ApplicationInfo mInfo = new ApplicationInfo();
-
-
-    @Override
-    public ApplicationInfo getApplicationInfo() {
-
-      return mInfo;
-    }
-  };
-
   @Before
   public void setUp() throws Exception {
 
