@@ -202,92 +202,10 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex;
-
-import android.app.Application;
-import android.content.pm.ApplicationInfo;
-import android.test.mock.MockApplication;
-import com.taobao.weex.adapter.IWXHttpAdapter;
-import com.taobao.weex.common.TestModule;
-import com.taobao.weex.common.TestModuleFactory;
-import com.taobao.weex.dom.TestDomObject;
-import com.taobao.weex.http.WXStreamModule;
-import com.taobao.weex.ui.component.TestComponent;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.robolectric.Robolectric;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.junit.Assert.*;
+package com.taobao.weex.dom;
 
 /**
- * Created by sospartan on 7/20/16.
+ * Created by sospartan on 7/27/16.
  */
-@RunWith(RobolectricTestRunner.class)
-@PrepareForTest({})
-public class WXSDKEngineTest {
-
-   static class TestApplication extends MockApplication{
-
-    ApplicationInfo mInfo = new ApplicationInfo();
-
-
-    @Override
-    public ApplicationInfo getApplicationInfo() {
-
-      return mInfo;
-    }
-  };
-
-  @Before
-  public void setUp() throws Exception {
-
-  }
-
-  @Test
-  public void testInit() throws Exception {
-    assertFalse(WXSDKEngine.isInitialized());
-    WXSDKEngine.initialize(RuntimeEnvironment.application,null);
-    assertTrue(WXSDKEngine.isInitialized());
-    //keep compatible
-    WXSDKEngine.init(RuntimeEnvironment.application);
-    WXSDKEngine.init(RuntimeEnvironment.application,null);
-    WXSDKEngine.init(RuntimeEnvironment.application,null,null);
-    WXSDKEngine.init(RuntimeEnvironment.application,null,null,null,null);
-  }
-
-  @Test
-  public void testRegisterComponent() throws Exception {
-    assertFalse(WXSDKEngine.registerComponent(null,null,true));
-    assertTrue(WXSDKEngine.registerComponent("test", TestComponent.class,true));
-    assertTrue(WXSDKEngine.registerComponent("test1",TestComponent.class));
-    assertTrue(WXSDKEngine.registerComponent(TestComponent.class,false,"testA","testB","testC"));
-    Map<String,String> compInfo = new HashMap<>();
-    assertFalse(WXSDKEngine.registerComponent(compInfo,TestComponent.class));
-  }
-
-  @Test
-  public void testRegisterModule() throws Exception {
-    assertTrue(WXSDKEngine.registerModule("test", TestModule.class));
-    assertFalse(WXSDKEngine.registerModule(null,TestModule.class));
-    assertFalse(WXSDKEngine.registerModule("test",null));
-
-    assertFalse(WXSDKEngine.registerModuleWithFactory(null,new TestModuleFactory(TestModule.class),true));
-    assertTrue(WXSDKEngine.registerModuleWithFactory("test1",new TestModuleFactory(TestModule.class),true));
-    assertFalse(WXSDKEngine.registerModuleWithFactory("test1",null,true));
-  }
-
-
-  @Test
-  public void testRegisterDomObject() throws Exception {
-    assertFalse(WXSDKEngine.registerDomObject("test",null));
-    assertFalse(WXSDKEngine.registerDomObject("", TestDomObject.class));
-    assertTrue(WXSDKEngine.registerDomObject("test",TestDomObject.class));
-  }
+public class TestDomObject extends WXDomObject {
 }
