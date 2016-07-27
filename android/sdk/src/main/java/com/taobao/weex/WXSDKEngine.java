@@ -246,6 +246,7 @@ public class WXSDKEngine {
           sm.setIWXImgLoaderAdapter(config.getImgAdapter());
           sm.setIWXUserTrackAdapter(config.getUtAdapter());
           sm.setIWXDebugAdapter(config.getDebugAdapter());
+          sm.setIWXStorageAdapter(config.getStorageAdapter());
           if(config.getDebugAdapter()!=null){
             config.getDebugAdapter().initDebug(application);
           }
@@ -466,11 +467,6 @@ public class WXSDKEngine {
   public static IWXStorageAdapter getIWXStorageAdapter() {
     return WXSDKManager.getInstance().getIWXStorageAdapter();
   }
-
-  public static void setIWXStorageAdapter(IWXStorageAdapter adapter) {
-    WXSDKManager.getInstance().setIWXStorageAdapter(adapter);
-  }
-
 
 
   public static IActivityNavBarSetter getActivityNavBarSetter() {
