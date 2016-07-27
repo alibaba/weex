@@ -100,7 +100,6 @@
         return;
     WXComponent *scroller = (WXComponent*)scrollerProtocol;
     CGPoint contentOffset = [scrollerProtocol contentOffset];
-    NSInteger screen = [scrollerProtocol contentSize].height/([UIScreen mainScreen].bounds.size.height);
     if (_displayState) {
         contentOffset.y = [scrollerProtocol contentSize].height - scroller.calculatedFrame.size.height + self.calculatedFrame.size.height;
         [scrollerProtocol setContentOffset:contentOffset animated:YES];
