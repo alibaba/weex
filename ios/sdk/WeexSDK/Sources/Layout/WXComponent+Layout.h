@@ -6,7 +6,9 @@
  * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
  */
 
-#import <WeexSDK/WeexSDK.h>
+#import "WXComponent.h"
+#import "WXSDKInstance.h"
+#import "WXUtility.h"
 
 @interface WXComponent (Layout)
 
