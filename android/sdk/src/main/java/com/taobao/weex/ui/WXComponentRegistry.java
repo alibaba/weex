@@ -252,6 +252,7 @@ public class WXComponentRegistry {
 
   private static boolean registerNativeComponent(String type, IFComponentHolder holder) throws WXException {
     try {
+      holder.loadIfNonLazy();
       sTypeComponentMap.put(type, holder);
     }catch (ArrayStoreException e){
       e.printStackTrace();

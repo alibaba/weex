@@ -233,7 +233,11 @@ public class SimpleComponentHolder implements IFComponentHolder{
 
   public SimpleComponentHolder(Class<? extends WXComponent> clz) {
     this.mClz = clz;
-    Annotation[] annotations = clz.getDeclaredAnnotations();
+  }
+
+  @Override
+  public void loadIfNonLazy() {
+    Annotation[] annotations = mClz.getDeclaredAnnotations();
     for (Annotation annotation :
       annotations) {
       if (annotation instanceof Component){
