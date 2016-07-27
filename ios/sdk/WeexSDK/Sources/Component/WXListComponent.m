@@ -209,11 +209,7 @@
         
         [self.weexInstance.componentManager _addUITask:^{
             [_completedSections addObject:completedSection];
-<<<<<<< HEAD
             WXLogDebug(@"Insert section:%ld",  (unsigned long)[_completedSections indexOfObject:completedSection]);
-=======
-            WXLogDebug(@"Insert section:%ld",  [_completedSections indexOfObject:completedSection]);
->>>>>>> dev
             [UIView performWithoutAnimation:^{
                 [_tableView insertSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
             }];
@@ -409,11 +405,7 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     WXHeaderComponent *header = ((WXSection *)_completedSections[section]).header;
-<<<<<<< HEAD
     WXLogDebug(@"header view for section %ld:%@", (long)section, header.view);
-=======
-    WXLogDebug(@"header view for section %ld:%@", section, header.view);
->>>>>>> dev
     return header.view;
 }
 
@@ -502,21 +494,13 @@
 {
     WXSection *section = [_completedSections wx_safeObjectAtIndex:indexPath.section];
     if (!section) {
-<<<<<<< HEAD
         WXLogError(@"No section found for num:%ld, completed sections:%ld", (long)indexPath.section, (unsigned long)_completedSections.count);
-=======
-        WXLogError(@"No section found for num:%ld, completed sections:%ld", indexPath.section, _completedSections.count);
->>>>>>> dev
         return nil;
     }
     
     WXCellComponent *cell = [section.rows wx_safeObjectAtIndex:indexPath.row];
     if (!cell) {
-<<<<<<< HEAD
         WXLogError(@"No cell found for num:%ld, completed rows:%ld", (long)indexPath.row, (unsigned long)section.rows.count);
-=======
-        WXLogError(@"No cell found for num:%ld, completed rows:%ld", indexPath.row, section.rows.count);
->>>>>>> dev
         return nil;
     }
     

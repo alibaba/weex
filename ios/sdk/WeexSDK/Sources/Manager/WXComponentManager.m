@@ -537,10 +537,7 @@ static css_node_t * rootNodeGetChild(void *context, int i)
     
     NSMutableSet<WXComponent *> *dirtyComponents = [NSMutableSet set];
     [_rootComponent _calculateFrameWithSuperAbsolutePosition:CGPointZero gatherDirtyComponents:dirtyComponents];
-<<<<<<< HEAD
     [self _calculateRootFrame];
-=======
->>>>>>> dev
   
     for (WXComponent *dirtyComponent in dirtyComponents) {
         [self _addUITask:^{

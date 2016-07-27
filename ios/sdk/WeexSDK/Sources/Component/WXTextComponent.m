@@ -316,11 +316,7 @@ do {\
     return textStorage;
 }
 
-<<<<<<< HEAD
 - (void)syncTextStorageForView
-=======
-- (void)_frameDidCalculated:(BOOL)isChanged
->>>>>>> dev
 {
     CGFloat width = self.calculatedFrame.size.width - (_padding.left + _padding.right);
     NSTextStorage *textStorage = [self textStorageWithWidth:width];

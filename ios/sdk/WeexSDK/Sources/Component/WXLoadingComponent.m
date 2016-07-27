@@ -102,7 +102,6 @@
     CGPoint contentOffset = [scrollerProtocol contentOffset];
     NSInteger screen = [scrollerProtocol contentSize].height/([UIScreen mainScreen].bounds.size.height);
     if (_displayState) {
-<<<<<<< HEAD
         contentOffset.y = [scrollerProtocol contentSize].height - scroller.calculatedFrame.size.height + self.calculatedFrame.size.height;
         [scrollerProtocol setContentOffset:contentOffset animated:YES];
         [_indicator start];
@@ -111,24 +110,6 @@
         _displayState = NO;
         contentOffset.y = contentOffset.y - self.calculatedFrame.size.height;
         [scrollerProtocol setContentOffset:contentOffset animated:YES];
-=======
-        if (screen) {
-            contentOffset.y = [scrollerProtocol contentSize].height - scroller.calculatedFrame.size.height + self.view.frame.size.height;
-        } else {
-            contentOffset.y = self.view.frame.size.height;
-        }
-        
-        [scrollerProtocol setContentOffset:contentOffset animated:YES];
-        [_indicator start];
-    } else {
-        UIEdgeInsets insets = [scrollerProtocol contentInset];
-        insets.bottom = 0;
-        if (!screen) {
-            contentOffset.y = 0;
-            [scrollerProtocol setContentOffset:contentOffset animated:YES];
-        }
-        [scrollerProtocol setContentInset:insets];
->>>>>>> dev
         [_indicator stop];
     }
 }
