@@ -208,7 +208,6 @@ import android.graphics.Typeface;
 import android.text.TextUtils;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 public class FontDO {
   private String mFontFamilyName;
