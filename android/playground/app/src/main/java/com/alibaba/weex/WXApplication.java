@@ -8,7 +8,6 @@ import com.alibaba.weex.extend.component.RichText;
 import com.alibaba.weex.extend.module.MyModule;
 import com.alibaba.weex.extend.module.RenderModule;
 import com.alibaba.weex.extend.module.WXEventModule;
-import com.alibaba.weex.https.WXHttpAdapter;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.taobao.weex.InitConfig;
 import com.taobao.weex.WXEnvironment;
@@ -27,7 +26,6 @@ public class WXApplication extends Application {
                            new InitConfig.Builder()
                                .setImgAdapter(new ImageAdapter())
                                .setDebugAdapter(new PlayDebugAdapter())
-                               .setHttpAdapter(new WXHttpAdapter())
                                .build()
                           );
 
