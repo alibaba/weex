@@ -1026,12 +1026,14 @@ function Scroll(element, options) {
           setTransitionStyle(that, '0.4s', 'ease-in-out')
           setTransformStyle(that, offset)
 
-          lib.animation.requestFrame(function () {
+          function _cancelScroll() {
             if (isScrolling && that.enabled) {
               fireEvent(that, 'scrolling')
-              lib.animation.requestFrame(arguments.callee)
+              lib.animation.requestFrame(_cancelScroll)
             }
-          })
+          }
+
+          lib.animation.requestFrame(_cancelScroll)
         }
       } else {
         if (!this.options.useFrameAnimation) {
@@ -1198,4 +1200,3 @@ lib.scroll.plugin = function (name, constructor) {
     return plugins[name]
   }
 }
-
