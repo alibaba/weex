@@ -11,6 +11,7 @@
 #import "WXHandlerFactory.h"
 #import "WXLog.h"
 
+NSString * const kMonitorAlarmJsDownload = @"jsDownload";
 NSString * const kMonitorAlarmJsBridge = @"jsBridge";
 NSString * const kMonitorAlarmDomModule = @"domModule";
 
@@ -18,8 +19,6 @@ NSString * const kMonitorAlarmDomModule = @"domModule";
 
 + (void)monitorAlarm:(BOOL)success errorCode:(WXSDKErrCode)errorCode msg:(NSString *)format, ... NS_FORMAT_FUNCTION(3,4)
 {
-    if (success) return;
-    
     va_list args;
     va_start(args, format);
     NSString *errorMsg = [[NSString alloc] initWithFormat:format arguments:args];
@@ -30,10 +29,6 @@ NSString * const kMonitorAlarmDomModule = @"domModule";
 
 + (void)monitorAlarm:(BOOL)success errorCode:(WXSDKErrCode)errorCode errorMessage:(NSString *)errorMsg withURL:(NSURL *)url
 {
-    if (success) {
-        return;
-    }
-    
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if (!success) {
             WXLogError(@"%@", errorMsg);
@@ -49,13 +44,19 @@ NSString * const kMonitorAlarmDomModule = @"domModule";
             else if (errorCode <= WX_ERROR_DOMMODULE_START &&
                      errorCode >= WX_ERROR_DOMMODULE_END) {
                 pointKey = kMonitorAlarmDomModule;
-            } else {
+            }
+            else if (errorCode <= WX_ERR_JSDOWNLOAD_START &&
+                     errorCode >= WX_ERR_JSDOWNLOAD_END) {
+                pointKey = kMonitorAlarmJsDownload;
+            }
+            else {
                 WXLogError(@"");
             }
             
             NSString *errorCodeStr = [NSString stringWithFormat:@"%d", errorCode];
+            NSString *arg = url.absoluteString ?: @"";
 
-            [appMonitorHandler commitAppMonitorAlarm:@"weex" monitorPoint:pointKey success:success errorCode:errorCodeStr errorMsg:errorMsg arg:@""];
+            [appMonitorHandler commitAppMonitorAlarm:@"weex" monitorPoint:pointKey success:success errorCode:errorCodeStr errorMsg:errorMsg arg:arg];
         }
     });
 }

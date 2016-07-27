@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "WXSDkInstance.h"
 
+extern NSString* const kMonitorAlarmJsDownload;
 extern NSString* const kMonitorAlarmJsBridge;
 extern NSString* const kMonitorAlarmDomModule;
 
@@ -35,6 +36,10 @@ typedef NS_ENUM(int, WXSDKErrCode)
 //    WX_ERR_DOM_RENDERFINISH = -2109,
     WX_ERR_DOM_SCROLLTOELEMENT = -2110,
     WX_ERROR_DOMMODULE_END = -2199,
+    
+    WX_ERR_JSDOWNLOAD_START = -2201,
+    WX_ERR_JSBUNDLE_DOWNLOAD = -2202,
+    WX_ERR_JSDOWNLOAD_END = -2299,
 };
 
 @interface WXSDKError : NSObject
@@ -42,4 +47,5 @@ typedef NS_ENUM(int, WXSDKErrCode)
 + (void)monitorAlarm:(BOOL)success errorCode:(WXSDKErrCode)errorCode msg:(NSString *)format, ... NS_FORMAT_FUNCTION(3,4);
 
 + (void) monitorAlarm:(BOOL)success errorCode:(WXSDKErrCode)errorCode errorMessage:(NSString *)message withURL:(NSURL *)url;
+
 @end

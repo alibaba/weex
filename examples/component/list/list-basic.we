@@ -6,10 +6,6 @@
           <text class="item-title">row {{id}}</text>
         </div>
       </cell>
-      <loading class="refresh-view" display="{{loading_display}}" onloading="onloading">
-        <text class="refresh-arrow" style="text-align: center; color:rgb(238, 162, 54)" if="{{(refresh_display==='hide')}}">Load more</text>
-        <loading-indicator style="height:60;width:60;color:#3192e1"></loading-indicator>
-      </loading>
     </list>
     <text class="count" value="Appear items:{{appearMin}} - {{appearMax}}"></text>
   </div>

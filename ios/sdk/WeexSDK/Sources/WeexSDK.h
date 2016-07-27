@@ -14,6 +14,7 @@
 #import "WXScrollerComponent.h"
 #import "WXSDKManager.h"
 #import "WXSDKInstance.h"
+#import "WXSDKError.h"
 #import "WXSDKEngine.h"
 #import "WXRootViewController.h"
 #import "WXNetworkProtocol.h"

@@ -19,5 +19,6 @@
 + (id)wx_mutableArrayUsingWeakReferences;
 
 + (id)wx_mutableArrayUsingWeakReferencesWithCapacity:(NSUInteger)capacity;
++ (void)wx_releaseArray:(id)array;
 
 @end

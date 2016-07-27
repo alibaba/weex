@@ -260,10 +260,7 @@ public class WXSoInstallMgrSdk {
 
   public static boolean isCPUSupport(){
     String cpuType = _cpuType();
-    if (cpuType.equalsIgnoreCase(MIPS) ) {
-      return false;
-    }
-    return true;
+    return !cpuType.equalsIgnoreCase(MIPS);
   }
 
   /**
@@ -292,19 +289,9 @@ public class WXSoInstallMgrSdk {
       commit(utAdapter, null, null);
 
       InitSuc = true;
-    } catch (Exception e) {
-      if (cpuType.contains(ARMEABI)||cpuType.contains(X86)) {
-        commit(utAdapter, WXErrorCode.WX_ERR_LOAD_SO.getErrorCode(), WXErrorCode.WX_ERR_LOAD_SO.getErrorMsg() + ":" + e.getMessage());
-      }
-      InitSuc = false;
-    } catch (java.lang.UnsatisfiedLinkError e2) {
+    } catch (Exception | Error e2) {
       if (cpuType.contains(ARMEABI)||cpuType.contains(X86)) {
         commit(utAdapter, WXErrorCode.WX_ERR_LOAD_SO.getErrorCode(), WXErrorCode.WX_ERR_LOAD_SO.getErrorMsg() + ":" + e2.getMessage());
-      }
-      InitSuc = false;
-    } catch (java.lang.Error e3) {
-      if (cpuType.contains(ARMEABI)||cpuType.contains(X86)) {
-        commit(utAdapter, WXErrorCode.WX_ERR_LOAD_SO.getErrorCode(), WXErrorCode.WX_ERR_LOAD_SO.getErrorMsg() + ":" + e3.getMessage());
       }
       InitSuc = false;
     }
@@ -337,26 +324,17 @@ public class WXSoInstallMgrSdk {
         } else {
           try {
             InitSuc = unZipSelectedFiles(libName, version, utAdapter);
-          } catch (ZipException e) {
-            e.printStackTrace();
           } catch (IOException e2) {
             e2.printStackTrace();
           }
         }
 
       }
-    } catch (Exception e) {
+    } catch (Exception | Error e) {
       InitSuc = false;
       e.printStackTrace();
-    } catch (java.lang.UnsatisfiedLinkError e2) {
-      InitSuc = false;
-      e2.printStackTrace();
-
-    } catch (java.lang.Error e3) {
-      InitSuc = false;
-      e3.printStackTrace();
     }
-    return InitSuc;
+      return InitSuc;
 
   }
 

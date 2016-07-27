@@ -9,6 +9,7 @@
 #import "WXSDKInstance.h"
 #import "WXSDKInstance_private.h"
 #import "WXSDKManager.h"
+#import "WXSDKError.h"
 #import "WXAppMonitorProtocol.h"
 #import "WXNetworkProtocol.h"
 #import "WXModuleFactory.h"
@@ -124,6 +125,8 @@ NSTimeInterval JSLibInitTime = 0;
             
             if (error) {
                 WXLogError(@"Connection to %@ occurs an error:%@", request.URL, error);
+                [WXSDKError monitorAlarm:NO errorCode:WX_ERR_JSBUNDLE_DOWNLOAD errorMessage:error.description withURL:[WXUtility urlByDeletingParameters:url]];
+                
                 if (weakSelf.onFailed) {
                     weakSelf.onFailed(error);
                 }
@@ -132,12 +135,16 @@ NSTimeInterval JSLibInitTime = 0;
                        
             if (!totalData) {
                 WXLogError(@"Connection to %@ but no data return", request.URL);
+                [WXSDKError monitorAlarm:NO errorCode:WX_ERR_JSBUNDLE_DOWNLOAD errorMessage:@"Template data is empty." withURL:[WXUtility urlByDeletingParameters:url]];
+                
                 if (weakSelf.onFailed) {
                     weakSelf.onFailed(error);
                 }
                 return;
             }
-                   
+                
+            [WXSDKError monitorAlarm:YES errorCode:WX_ERR_JSBUNDLE_DOWNLOAD msg:@""];
+                       
             NSString *script = [[NSString alloc] initWithData:totalData encoding:NSUTF8StringEncoding];
             weakSelf.networkTime = -[networkStart timeIntervalSinceNow];
             [weakSelf renderView:script options:newOptions data:data];
@@ -180,8 +187,17 @@ NSTimeInterval JSLibInitTime = 0;
 
 - (void)setFrame:(CGRect)frame
 {
-    _frame = frame;
-//    [self.componentManager changeRootFrame];
+    if (!CGRectEqualToRect(frame, _frame)) {
+        _frame = frame;
+        WXPerformBlockOnMainThread(^{
+            if (self.rootView) {
+                self.rootView.frame = frame;
+                WXPerformBlockOnComponentThread(^{
+                    [self.componentManager rootViewFrameDidChange:frame];
+                });
+            }
+        });
+    }
 }
 
 - (void)reloadData:(id)data

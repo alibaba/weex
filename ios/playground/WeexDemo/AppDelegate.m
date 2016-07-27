@@ -21,6 +21,7 @@
 #import <WeexSDK/WXAppConfiguration.h>
 #import <AVFoundation/AVFoundation.h>
 #import <ATSDK/ATManager.h>
+#import <WeexSDK/WXRootViewController.h>
 
 @interface AppDelegate ()
 @end
@@ -37,7 +38,7 @@
     
     [self initWeexSDK];
     
-    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:[self demoController]];
+    self.window.rootViewController = [[WXRootViewController alloc] initWithRootViewController:[self demoController]];
     [self.window makeKeyAndVisible];
     
     // Override point for customization after application launch.
@@ -50,7 +51,7 @@
 {
     if ([shortcutItem.type isEqualToString:QRSCAN]) {
         WXScannerVC * scanViewController = [[WXScannerVC alloc] init];
-        [(UINavigationController*)self.window.rootViewController pushViewController:scanViewController animated:YES];
+        [(WXRootViewController*)self.window.rootViewController pushViewController:scanViewController animated:YES];
     }
 }
 

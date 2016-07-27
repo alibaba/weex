@@ -19,6 +19,7 @@
 
 @property (nonatomic, strong) WXSDKInstance *embedInstance;
 @property (nonatomic, strong) UIView *embedView;
+@property (nonatomic, assign) BOOL createFinished;
 @property (nonatomic, assign) BOOL renderFinished;
 @property (nonatomic, assign) WXVisibility visible;
 @property (nonatomic, strong) NSURL *sourceURL;
@@ -42,6 +43,10 @@
 - (instancetype)initWithRef:(NSString *)ref type:(NSString *)type styles:(NSDictionary *)styles attributes:(NSDictionary *)attributes events:(NSArray *)events weexInstance:(WXSDKInstance *)weexInstance
 {
     if (self = [super initWithRef:ref type:type styles:styles attributes:attributes events:events weexInstance:weexInstance]) {
+        
+        _createFinished = NO;
+        _renderFinished = NO;
+        
         _sourceURL = [NSURL URLWithString: attributes[@"src"]];
         _visible =  [WXConvert WXVisibility:styles[@"visibility"]];
         
@@ -79,6 +84,7 @@
         NSURL *sourceURL = [NSURL URLWithString:attributes[@"src"]];
         if (!sourceURL|| ![[sourceURL absoluteString] isEqualToString:[_sourceURL absoluteString]]) {
             _sourceURL = sourceURL;
+            _createFinished = NO;
             [self _layoutEmbedView];
         }
     }
@@ -93,7 +99,7 @@
 {
     if (_visible == WXVisibilityShow) {
         [self _updateState:WeexInstanceAppear];
-        if (!_renderFinished && !CGRectEqualToRect(CGRectZero, self.calculatedFrame)) {
+        if (!_createFinished && !CGRectEqualToRect(CGRectZero, self.calculatedFrame)) {
             [self _renderWithURL:_sourceURL];
         }
     }
@@ -138,8 +144,9 @@
         
             [weakSelf.embedView removeFromSuperview];
             weakSelf.embedView = view;
-            weakSelf.renderFinished = YES;
             [weakSelf.view addSubview:weakSelf.embedView];
+            
+            weakSelf.createFinished = YES;
         });
     };
     
@@ -157,13 +164,14 @@
     };
     
     _embedInstance.renderFinish = ^(UIView *view) {
+         weakSelf.renderFinished = YES;
         [weakSelf _updateState:WeexInstanceAppear];
     };
 }
 
 - (void)_updateState:(WXState)state
 {
-    if (_embedInstance && _embedInstance.state != state) {
+    if (_renderFinished && _embedInstance && _embedInstance.state != state) {
         _embedInstance.state = state;
         
         if (state == WeexInstanceAppear) {

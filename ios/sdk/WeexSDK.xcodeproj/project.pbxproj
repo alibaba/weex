@@ -23,7 +23,7 @@
 		2A837AB71CD9DE9200AEDF03 /* WXRefreshComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A837AB11CD9DE9200AEDF03 /* WXRefreshComponent.m */; };
 		2A8E658A1C7C7AA20025C7B7 /* WXVideoComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A8E65881C7C7AA20025C7B7 /* WXVideoComponent.h */; };
 		2A8E658B1C7C7AA20025C7B7 /* WXVideoComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A8E65891C7C7AA20025C7B7 /* WXVideoComponent.m */; };
-		2AAFC1B61C48DFF70026D2FE /* WXSDKError.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AAFC1B41C48DFF70026D2FE /* WXSDKError.h */; };
+		2AAFC1B61C48DFF70026D2FE /* WXSDKError.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AAFC1B41C48DFF70026D2FE /* WXSDKError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2AAFC1B71C48DFF70026D2FE /* WXSDKError.m in Sources */ = {isa = PBXBuildFile; fileRef = 2AAFC1B51C48DFF70026D2FE /* WXSDKError.m */; };
 		2AC750241C7565690041D390 /* WXIndicatorComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC750221C7565690041D390 /* WXIndicatorComponent.h */; };
 		2AC750251C7565690041D390 /* WXIndicatorComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2AC750231C7565690041D390 /* WXIndicatorComponent.m */; };

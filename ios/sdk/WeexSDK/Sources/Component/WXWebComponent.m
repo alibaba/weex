@@ -17,6 +17,13 @@
 
 @implementation WXWebView
 
+- (void)dealloc
+{
+    if (self) {
+        self.delegate = nil;
+    }
+}
+
 @end
 
 @interface WXWebComponent ()

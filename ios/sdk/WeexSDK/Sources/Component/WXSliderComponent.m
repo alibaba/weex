@@ -63,6 +63,13 @@
     return self;
 }
 
+- (void)dealloc
+{
+    if (_scrollView) {
+        _scrollView.delegate = nil;
+    }
+}
+
 - (void)setIndicator:(WXIndicatorView *)indicator
 {
     _indicator = indicator;

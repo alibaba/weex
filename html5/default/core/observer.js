@@ -5,7 +5,6 @@ import { arrayMethods } from './array'
 import {
   def,
   remove,
-  isArray,
   isObject,
   isPlainObject,
   hasProto,
@@ -29,7 +28,7 @@ export function Observer (value) {
   this.value = value
   this.dep = new Dep()
   def(value, '__ob__', this)
-  if (isArray(value)) {
+  if (Array.isArray(value)) {
     const augment = hasProto
       ? protoAugment
       : copyAugment
@@ -154,7 +153,7 @@ export function observe (value, vm) {
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__
   } else if (
-    (isArray(value) || isPlainObject(value)) &&
+    (Array.isArray(value) || isPlainObject(value)) &&
     Object.isExtensible(value) &&
     !value._isVue
   ) {
@@ -197,7 +196,7 @@ export function defineReactive (obj, key, val) {
         if (childOb) {
           childOb.dep.depend()
         }
-        if (isArray(value)) {
+        if (Array.isArray(value)) {
           for (let e, i = 0, l = value.length; i < l; i++) {
             e = value[i]
             e && e.__ob__ && e.__ob__.dep.depend()
@@ -234,7 +233,7 @@ export function defineReactive (obj, key, val) {
  */
 
 export function set (obj, key, val) {
-  if (isArray(obj)) {
+  if (Array.isArray(obj)) {
     return obj.splice(key, 1, val)
   }
   if (hasOwn(obj, key)) {
