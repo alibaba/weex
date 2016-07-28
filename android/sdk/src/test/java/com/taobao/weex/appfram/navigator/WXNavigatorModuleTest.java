@@ -202,27 +202,26 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.dom.module;
+package com.taobao.weex.appfram.navigator;
 
-import android.app.AlertDialog;
 import com.taobao.weappplus_sdk.BuildConfig;
+import com.taobao.weex.WXSDKEngine;
+import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKInstanceTest;
-import com.taobao.weex.appfram.storage.WXDatabaseSupplier;
-import com.taobao.weex.bridge.JSCallback;
+import com.taobao.weex.bridge.WXBridgeManager;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.ShadowAlertDialog;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.*;
 import static org.mockito.Mockito.*;
 
@@ -232,42 +231,126 @@ import static org.mockito.Mockito.*;
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 19)
 @PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*","org.json.*" })
-@PrepareForTest()
-public class WXModalUIModuleTest {
+@PrepareForTest(WXSDKEngine.class)
+public class WXNavigatorModuleTest {
+
+  WXNavigatorModule module;
 
   @Rule
   public PowerMockRule rule = new PowerMockRule();
 
-  WXModalUIModule module;
-
   @Before
   public void setUp() throws Exception {
-    module = new WXModalUIModule();
+    mockStatic(WXSDKEngine.class);
+
+
+    module = new WXNavigatorModule();
     module.mWXSDKInstance = WXSDKInstanceTest.createInstance();
+  }
 
+  private void mockSetter(){
+    when(WXSDKEngine.getActivityNavBarSetter()).thenReturn(new IActivityNavBarSetter() {
+      @Override
+      public boolean push(String param) {
+        return true;
+      }
+
+      @Override
+      public boolean pop(String param) {
+        return true;
+      }
+
+      @Override
+      public boolean setNavBarRightItem(String param) {
+        return true;
+      }
+
+      @Override
+      public boolean clearNavBarRightItem(String param) {
+        return true;
+      }
+
+      @Override
+      public boolean setNavBarLeftItem(String param) {
+        return true;
+      }
+
+      @Override
+      public boolean clearNavBarLeftItem(String param) {
+        return true;
+      }
+
+      @Override
+      public boolean setNavBarMoreItem(String param) {
+        return true;
+      }
+
+      @Override
+      public boolean clearNavBarMoreItem(String param) {
+        return true;
+      }
+
+      @Override
+      public boolean setNavBarTitle(String param) {
+        return true;
+      }
+    });
   }
 
   @Test
-  public void testToast() throws Exception {
-    module.toast("{}");
+  public void testPush() throws Exception {
+    module.push("{}","");
+    module.push("{'url':'kdkdkdkdkd'}","");
+    mockSetter();
+    module.push("{}","");
+  }
+
+
+  @Test
+  public void testPop() throws Exception {
+    mockSetter();
+    module.pop("{}","");
   }
 
   @Test
-  public void testAlert() throws Exception {
-    JSCallback callback = Mockito.mock(JSCallback.class);
-    module.alert("{}",callback);
-
+  public void testSetNavBarRightItem() throws Exception {
+    mockSetter();
+    module.setNavBarRightItem("{}","");
   }
 
   @Test
-  public void testConfirm() throws Exception {
-    JSCallback callback = Mockito.mock(JSCallback.class);
-    module.confirm("{}",callback);
+  public void testClearNavBarRightItem() throws Exception {
+    mockSetter();
+    module.clearNavBarRightItem("{}","");
   }
 
   @Test
-  public void testPrompt() throws Exception {
-    JSCallback callback = Mockito.mock(JSCallback.class);
-    module.prompt("{}",callback);
+  public void testSetNavBarLeftItem() throws Exception {
+    mockSetter();
+    module.setNavBarLeftItem("{}","");
+  }
+
+  @Test
+  public void testClearNavBarLeftItem() throws Exception {
+    mockSetter();
+    module.clearNavBarLeftItem("{}","");
+  }
+
+  @Test
+  public void testSetNavBarMoreItem() throws Exception {
+    mockSetter();
+    module.setNavBarMoreItem("{}","");
+  }
+
+  @Test
+  public void testClearNavBarMoreItem() throws Exception {
+    mockSetter();
+    module.clearNavBarMoreItem("{}","");
+  }
+
+  @Test
+  public void testSetNavBarTitle() throws Exception {
+    mockSetter();
+    module.setNavBarTitle("{}","");
   }
 }
