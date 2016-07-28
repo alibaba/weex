@@ -206,11 +206,13 @@ package com.taobao.weex;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.adapter.DefaultWXHttpAdapter;
 import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
@@ -224,6 +226,9 @@ import com.taobao.weex.common.WXRenderStrategy;
 import com.taobao.weex.common.WXRequest;
 import com.taobao.weex.common.WXResponse;
 import com.taobao.weex.common.WXRuntimeException;
+import com.taobao.weex.dom.WXDomHandler;
+import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.dom.WXDomTask;
 import com.taobao.weex.http.WXHttpUtil;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXEventType;
@@ -959,6 +964,20 @@ public class WXSDKInstance implements IWXActivityStateListener {
 
   public void setRefreshMargin(float refreshMargin) {
     this.refreshMargin = refreshMargin;
+  }
+
+  public void updateInstanceStyle(JSONObject style){
+    Message message=Message.obtain();
+    WXDomTask task=new WXDomTask();
+    task.instanceId=getInstanceId();
+    if(task.args==null){
+      task.args=new ArrayList<>();
+    }
+    task.args.add(WXDomObject.ROOT);
+    task.args.add(style);
+    message.obj=task;
+    message.what= WXDomHandler.MsgType.WX_DOM_UPDATE_STYLE;
+    WXSDKManager.getInstance().getWXDomManager().sendMessage(message);
   }
 
   /**
