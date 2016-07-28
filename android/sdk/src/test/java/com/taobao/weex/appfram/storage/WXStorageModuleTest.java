@@ -202,32 +202,27 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.ui.module;
+package com.taobao.weex.appfram.storage;
 
-import android.os.Message;
 import com.taobao.weappplus_sdk.BuildConfig;
-import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKInstanceTest;
+import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.bridge.WXBridgeManager;
-import com.taobao.weex.bridge.WXBridgeManagerTest;
-import com.taobao.weex.common.WXJSBridgeMsgType;
-import com.taobao.weex.utils.WXFileUtils;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
+import static org.mockito.Mockito.*;
 import org.powermock.api.mockito.PowerMockito;
+import static org.powermock.api.mockito.PowerMockito.*;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.Map;
+
 import static org.junit.Assert.*;
-import static org.powermock.api.mockito.PowerMockito.*;
-import static org.mockito.Mockito.*;
 
 /**
  * Created by sospartan on 7/28/16.
@@ -236,67 +231,78 @@ import static org.mockito.Mockito.*;
 @Config(constants = BuildConfig.class, sdk = 19)
 @PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
 @PrepareForTest(WXBridgeManager.class)
-public class WXTimerModuleTest {
+public class WXStorageModuleTest {
 
-  @Rule
-  public PowerMockRule rule = new PowerMockRule();
 
-  WXTimerModule module;
-  WXBridgeManager bridge;
+  WXStorageModule module;
+  JSCallback callback;
 
   @Before
-  public void setup() throws Exception{
-    module = new WXTimerModule();
+  public void setUp() throws Exception {
+    module = new WXStorageModule();
     module.mWXSDKInstance = WXSDKInstanceTest.createInstance();
+    module.mStorageAdapter = new IWXStorageAdapter() {
+      @Override
+      public void setItem(String key, String value, OnResultReceivedListener listener) {
+        Map<String, Object> data = StorageResultHandler.setItemResult(true);
+        listener.onReceived(data);
+      }
 
-    bridge = Mockito.mock(WXBridgeManager.class);
-    WXBridgeManagerTest.setBridgeManager(bridge);
+      @Override
+      public void getItem(String key, OnResultReceivedListener listener) {
+        Map<String, Object> data = StorageResultHandler.setItemResult(true);
+        listener.onReceived(data);
+      }
+
+      @Override
+      public void removeItem(String key, OnResultReceivedListener listener) {
+        Map<String, Object> data = StorageResultHandler.setItemResult(true);
+        listener.onReceived(data);
+      }
+
+      @Override
+      public void length(OnResultReceivedListener listener) {
+        Map<String, Object> data = StorageResultHandler.setItemResult(true);
+        listener.onReceived(data);
+      }
+
+      @Override
+      public void getAllKeys(OnResultReceivedListener listener) {
+        Map<String, Object> data = StorageResultHandler.setItemResult(true);
+        listener.onReceived(data);
+      }
+    };
+    callback = Mockito.mock(JSCallback.class);
+  }
+
+  @Test
+  public void testSetItem() throws Exception {
+    module.setItem("","",callback);
+    verify(callback,times(1)).invoke(any());
 
   }
 
   @Test
-  public void testSetTimeout() throws Exception {
-    module.setTimeout(1,2);
-    Mockito.verify(bridge,times(1)).sendMessageDelayed(any(Message.class),eq((long)2));
-
-    reset(bridge);
-    module.setTimeout(0,0);
-    Mockito.verify(bridge,never()).sendMessageDelayed(any(Message.class),anyLong());
-
-
+  public void testGetItem() throws Exception {
+    module.getItem("",callback);
+    verify(callback,times(1)).invoke(any());
   }
 
   @Test
-  public void testSetInterval() throws Exception {
-    module.setInterval(0,1);
-    Mockito.verify(bridge,never()).sendMessageDelayed(any(Message.class),anyLong());
-
-    reset(bridge);
-    module.setInterval(1,-1);
-    Mockito.verify(bridge,times(1)).sendMessageDelayed(any(Message.class),eq((long)0));
-
-    reset(bridge);
-    module.setInterval(1,2);
-    Mockito.verify(bridge,times(1)).sendMessageDelayed(any(Message.class),eq((long)2));
+  public void testRemoveItem() throws Exception {
+    module.removeItem("",callback);
+    verify(callback,times(1)).invoke(any());
   }
 
   @Test
-  public void testClearTimeout() throws Exception {
-    module.clearTimeout(0);
-    Mockito.verify(bridge,never()).removeMessage(anyInt(),anyInt());
-
-    reset(bridge);
-    module.clearTimeout(1);
-    Mockito.verify(bridge,times(1)).removeMessage(eq(WXJSBridgeMsgType.MODULE_TIMEOUT),eq(1));
+  public void testLength() throws Exception {
+    module.length(callback);
+    verify(callback,times(1)).invoke(any());
   }
 
   @Test
-  public void testClearInterval() throws Exception {
-    module.clearInterval(0);
-    Mockito.verify(bridge,never()).removeMessage(anyInt(),anyInt());
-
-    reset(bridge);
-    module.clearInterval(1);
-    Mockito.verify(bridge,times(1)).removeMessage(eq(WXJSBridgeMsgType.MODULE_INTERVAL),eq(1));
+  public void testGetAllKeys() throws Exception {
+    module.getAllKeys(callback);
+    verify(callback,times(1)).invoke(any());
   }
 }

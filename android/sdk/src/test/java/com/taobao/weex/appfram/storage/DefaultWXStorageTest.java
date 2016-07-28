@@ -202,27 +202,21 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.ui.module;
+package com.taobao.weex.appfram.storage;
 
-import android.os.Message;
 import com.taobao.weappplus_sdk.BuildConfig;
-import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.WXSDKInstanceTest;
 import com.taobao.weex.bridge.WXBridgeManager;
-import com.taobao.weex.bridge.WXBridgeManagerTest;
-import com.taobao.weex.common.WXJSBridgeMsgType;
-import com.taobao.weex.utils.WXFileUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.*;
@@ -235,68 +229,60 @@ import static org.mockito.Mockito.*;
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 19)
 @PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
-@PrepareForTest(WXBridgeManager.class)
-public class WXTimerModuleTest {
+@PrepareForTest(WXDatabaseSupplier.class)
+public class DefaultWXStorageTest {
+
+  WXDatabaseSupplier supplier;
+  DefaultWXStorage storage;
+  IWXStorageAdapter.OnResultReceivedListener listener;
 
   @Rule
   public PowerMockRule rule = new PowerMockRule();
 
-  WXTimerModule module;
-  WXBridgeManager bridge;
-
   @Before
-  public void setup() throws Exception{
-    module = new WXTimerModule();
-    module.mWXSDKInstance = WXSDKInstanceTest.createInstance();
+  public void setup(){
+    supplier = Mockito.mock(WXDatabaseSupplier.class);
+    listener = Mockito.mock(IWXStorageAdapter.OnResultReceivedListener.class);
+    storage = new DefaultWXStorage(RuntimeEnvironment.application);
 
-    bridge = Mockito.mock(WXBridgeManager.class);
-    WXBridgeManagerTest.setBridgeManager(bridge);
+    mockStatic(WXDatabaseSupplier.class);
 
+    PowerMockito.when(WXDatabaseSupplier.getInstance(RuntimeEnvironment.application)).thenReturn(supplier);
+  }
+
+
+  @Test
+  public void testSetItem() throws Exception {
+    storage.setItem("","",listener);
+
+    verify(listener,timeout(3000).times(1)).onReceived(anyMapOf(String.class,Object.class));
   }
 
   @Test
-  public void testSetTimeout() throws Exception {
-    module.setTimeout(1,2);
-    Mockito.verify(bridge,times(1)).sendMessageDelayed(any(Message.class),eq((long)2));
+  public void testGetItem() throws Exception {
+    storage.getItem("",listener);
 
-    reset(bridge);
-    module.setTimeout(0,0);
-    Mockito.verify(bridge,never()).sendMessageDelayed(any(Message.class),anyLong());
-
-
+    verify(listener,timeout(3000).times(1)).onReceived(anyMapOf(String.class,Object.class));
   }
 
   @Test
-  public void testSetInterval() throws Exception {
-    module.setInterval(0,1);
-    Mockito.verify(bridge,never()).sendMessageDelayed(any(Message.class),anyLong());
+  public void testRemoveItem() throws Exception {
+    storage.removeItem("",listener);
 
-    reset(bridge);
-    module.setInterval(1,-1);
-    Mockito.verify(bridge,times(1)).sendMessageDelayed(any(Message.class),eq((long)0));
-
-    reset(bridge);
-    module.setInterval(1,2);
-    Mockito.verify(bridge,times(1)).sendMessageDelayed(any(Message.class),eq((long)2));
+    verify(listener,timeout(3000).times(1)).onReceived(anyMapOf(String.class,Object.class));
   }
 
   @Test
-  public void testClearTimeout() throws Exception {
-    module.clearTimeout(0);
-    Mockito.verify(bridge,never()).removeMessage(anyInt(),anyInt());
+  public void testLength() throws Exception {
+    storage.length(listener);
 
-    reset(bridge);
-    module.clearTimeout(1);
-    Mockito.verify(bridge,times(1)).removeMessage(eq(WXJSBridgeMsgType.MODULE_TIMEOUT),eq(1));
+    verify(listener,timeout(3000).times(1)).onReceived(anyMapOf(String.class,Object.class));
   }
 
   @Test
-  public void testClearInterval() throws Exception {
-    module.clearInterval(0);
-    Mockito.verify(bridge,never()).removeMessage(anyInt(),anyInt());
+  public void testGetAllKeys() throws Exception {
+    storage.getAllKeys(listener);
 
-    reset(bridge);
-    module.clearInterval(1);
-    Mockito.verify(bridge,times(1)).removeMessage(eq(WXJSBridgeMsgType.MODULE_INTERVAL),eq(1));
+    verify(listener,timeout(3000).times(1)).onReceived(anyMapOf(String.class,Object.class));
   }
 }
