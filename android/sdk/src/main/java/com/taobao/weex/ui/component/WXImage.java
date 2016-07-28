@@ -223,6 +223,8 @@ import com.taobao.weex.utils.WXUtils;
 
 import java.lang.reflect.InvocationTargetException;
 
+import java.util.Map;
+
 
 /**
  * Image component
@@ -355,6 +357,15 @@ public class WXImage extends WXComponent<ImageView> {
 
         WXImageSharpen imageSharpen = mDomObj.attr.getImageSharpen();
         imageStrategy.isSharpen = imageSharpen == WXImageSharpen.SHARPEN;
+
+        imageStrategy.setImageListener(new WXImageStrategy.ImageListener() {
+            @Override
+            public void onImageFinish(String url,ImageView imageView, boolean result, Map extra) {
+                if(!result && imageView!=null){
+                    imageView.setImageDrawable(null);
+                }
+            }
+        });
 
         IWXImgLoaderAdapter imgLoaderAdapter = mInstance.getImgLoaderAdapter();
         if (imgLoaderAdapter != null) {
