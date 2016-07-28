@@ -91,6 +91,8 @@ dependencies {
     testCompile 'org.powermock:powermock-module-junit4:1.6.4'
     testCompile 'org.powermock:powermock-module-junit4-legacy:1.6.4'
     testCompile 'org.powermock:powermock-module-testng:1.6.4'
+    testCompile 'org.powermock:powermock-classloading-xstream:1.6.4'
+    testCompile "org.powermock:powermock-module-junit4-rule:1.6.4"
     testCompile 'org.robolectric:robolectric:3.0-rc3'
 }
 
