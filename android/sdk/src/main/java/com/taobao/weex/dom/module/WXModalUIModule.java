@@ -309,7 +309,7 @@ public class WXModalUIModule extends WXModule {
   }
 
   @WXModuleAnno
-  public void confirm(String param, final String callbackId) {
+  public void confirm(String param, final JSCallback callback) {
 
     if (mWXSDKInstance.getContext() instanceof Activity) {
       String message = "";
@@ -339,14 +339,13 @@ public class WXModalUIModule extends WXModule {
       builder.setPositiveButton(okTitle_f, new OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-          WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId, okTitle_f);
-
+          callback.invoke(okTitle_f);
         }
       });
       builder.setNegativeButton(cancelTitle_f, new OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-          WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId, cancelTitle_f);
+          callback.invoke(cancelTitle_f);
 
         }
       });
@@ -359,7 +358,7 @@ public class WXModalUIModule extends WXModule {
   }
 
   @WXModuleAnno
-  public void prompt(String param, final String callbackId) {
+  public void prompt(String param, final JSCallback callback) {
     if (mWXSDKInstance.getContext() instanceof Activity) {
       String message = "";
       String defaultValue = "";
@@ -396,7 +395,7 @@ public class WXModalUIModule extends WXModule {
           Map<String, Object> result = new HashMap<String, Object>();
           result.put(WXConst.RESULT, okTitle_f);
           result.put(WXConst.DATA, editText.getText().toString());
-          WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId, result);
+          callback.invoke( result);
 
         }
       });
@@ -406,7 +405,7 @@ public class WXModalUIModule extends WXModule {
           Map<String, Object> result = new HashMap<String, Object>();
           result.put(WXConst.RESULT, cancelTitle_f);
           result.put(WXConst.DATA, editText.getText().toString());
-          WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId, result);
+          callback.invoke( result);
         }
       });
       AlertDialog alertDialog = builder.create();
