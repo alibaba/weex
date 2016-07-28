@@ -15,7 +15,8 @@
 #import "WXUtility.h"
 #import "NSObject+WXSwizzle.h"
 #import "WXSDKInstance_private.h"
-
+#import "WXRefreshComponent.h"
+#import "WXLoadingComponent.h"
 
 @interface WXTableView : UITableView
 
@@ -193,6 +194,11 @@
         ((WXCellComponent *)subcomponent).list = self;
     } else if ([subcomponent isKindOfClass:[WXHeaderComponent class]]) {
         ((WXHeaderComponent *)subcomponent).list = self;
+    } else if (![subcomponent isKindOfClass:[WXRefreshComponent class]]
+               && ![subcomponent isKindOfClass:[WXLoadingComponent class]]
+               && subcomponent->_positionType != WXPositionTypeFixed) {
+        WXLogError(@"list only support cell/header/refresh/loading/fixed-component as child.");
+        return;
     }
     
     NSIndexPath *indexPath = [self indexPathForSubIndex:index];
