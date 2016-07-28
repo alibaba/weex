@@ -210,7 +210,10 @@ import android.view.ViewGroup;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.Component;
 import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.ComponentCreator;
 import com.taobao.weex.ui.view.WXFrameLayout;
+
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * div component
@@ -218,6 +221,11 @@ import com.taobao.weex.ui.view.WXFrameLayout;
 @Component(lazyload = false)
 public class WXDiv extends WXVContainer<WXFrameLayout> {
 
+  public static class Ceator implements ComponentCreator {
+    public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+      return new WXDiv(instance,node,parent,lazy);
+    }
+  }
 
   @Deprecated
   public WXDiv(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {

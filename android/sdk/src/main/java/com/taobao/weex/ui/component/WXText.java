@@ -211,7 +211,10 @@ import android.view.ViewGroup;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.Component;
 import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.ComponentCreator;
 import com.taobao.weex.ui.view.WXTextView;
+
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Text component
@@ -223,6 +226,12 @@ public class WXText extends WXComponent<WXTextView>{
    * The default text size
    **/
   public static final int sDEFAULT_SIZE = 32;
+
+  public static class Ceator implements ComponentCreator{
+    public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+      return new WXText(instance,node,parent,lazy);
+    }
+  }
 
   @Deprecated
   public WXText(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
