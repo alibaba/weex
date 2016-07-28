@@ -367,9 +367,14 @@ public class WXImage extends WXComponent<ImageView> {
             }
         });
 
+        if(mDomObj.attr!=null && mDomObj.attr.containsKey(WXDomPropConstant.WX_ATTR_PLACE_HOLDER)){
+            String placeHolder= (String) mDomObj.attr.get(WXDomPropConstant.WX_ATTR_PLACE_HOLDER);
+            imageStrategy.placeHolder=placeHolder;
+        }
+
         IWXImgLoaderAdapter imgLoaderAdapter = mInstance.getImgLoaderAdapter();
         if (imgLoaderAdapter != null) {
-            imgLoaderAdapter.setImage(src, ((ImageView) getHostView()),
+            imgLoaderAdapter.setImage(src, getHostView(),
                     mDomObj.attr.getImageQuality(), imageStrategy);
         }
     }

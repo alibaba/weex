@@ -220,6 +220,8 @@ public class WXImageStrategy {
    */
   public boolean isSharpen;
 
+  public String placeHolder;
+
   public ImageListener getImageListener() {
     return imageListener;
   }
