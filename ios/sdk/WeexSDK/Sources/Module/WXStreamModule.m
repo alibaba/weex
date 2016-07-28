@@ -70,7 +70,7 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
         [callbackRsp setObject:@(-1) forKey:@"status"];
         [callbackRsp setObject:@false forKey:@"ok"];
         
-        callback([WXUtility JSONString:callbackRsp]);
+        callback(callbackRsp);
         
         return;
     }
@@ -92,10 +92,9 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
     }
     [request setHTTPBody:[body dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValue:[WXUtility userAgent] forHTTPHeaderField:@"User-Agent"];
-   
     [callbackRsp setObject:@{ @"OPENED": @1 } forKey:@"readyState"];
     
-    [[WXSDKManager bridgeMgr] callBack:self.weexInstance.instanceId funcId:progressCallback params:[WXUtility JSONString:callbackRsp] keepAlive:true];
+    [[WXSDKManager bridgeMgr] callBack:self.weexInstance.instanceId funcId:progressCallback params:callbackRsp keepAlive:true];
     
     id<WXNetworkProtocol> networkHandler = [WXHandlerFactory handlerForProtocol:@protocol(WXNetworkProtocol)];
     __block NSString *respEncode = nil;
@@ -112,14 +111,14 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
                     [callbackRsp setObject:statusText forKey:@"statusText"];
                     [callbackRsp setObject:[NSNumber numberWithInteger:received] forKey:@"length"];
                     
-                    [[WXSDKManager bridgeMgr] callBack:weakSelf.weexInstance.instanceId funcId:progressCallback params:[WXUtility JSONString:callbackRsp] keepAlive:true];
+                    [[WXSDKManager bridgeMgr] callBack:weakSelf.weexInstance.instanceId funcId:progressCallback params:callbackRsp keepAlive:true];
                     
                 } withReceiveData:^(NSData *data) {
                     [callbackRsp setObject:@{ @"LOADING" : @3  } forKey:@"readyState"];
                     received += [data length];
                     [callbackRsp setObject:[NSNumber numberWithInteger:received] forKey:@"length"];
                     
-                    [[WXSDKManager bridgeMgr] callBack:weakSelf.weexInstance.instanceId funcId:progressCallback params:[WXUtility JSONString:callbackRsp] keepAlive:true];
+                    [[WXSDKManager bridgeMgr] callBack:weakSelf.weexInstance.instanceId funcId:progressCallback params:callbackRsp keepAlive:true];
                     
                 } withCompeletion:^(NSData *totalData, NSError *error) {
                     
@@ -160,7 +159,7 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
                             }
                         }
                     }
-                    callback([WXUtility JSONString:callbackRsp]);
+                    callback(callbackRsp);
                 }];
 }
 
