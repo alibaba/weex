@@ -1,16 +1,5 @@
 /**
- * @fileOverview Main entry, instance manager
- *
- * - createInstance(id, code, options, data)
- * - refreshInstance(id, data)
- * - destroyInstance(id)
- * - registerComponents(components)
- * - registerModules(modules)
- * - getRoot(id)
- * - instanceMap
- * - callJS(id, tasks)
- *   - fireEvent(ref, type, data)
- *   - callback(funcId, data)
+ * @fileOverview Weex framework entry.
  */
 
 import config from './config'
@@ -34,6 +23,10 @@ const {
 } = config
 const instanceMap = {}
 
+/**
+ * Init config informations for Weex framework
+ * @param  {object} cfg
+ */
 export function init (cfg) {
   config.Document = cfg.Document
   config.Element = cfg.Element
@@ -42,7 +35,7 @@ export function init (cfg) {
 }
 
 /**
- * create a Weex instance
+ * Create a Weex instance.
  *
  * @param  {string} id
  * @param  {string} code
@@ -65,7 +58,7 @@ export function createInstance (id, code, options, data) {
 }
 
 /**
- * refresh a Weex instance
+ * Refresh a Weex instance with data.
  *
  * @param  {string} id
  * @param  {object} data
@@ -83,7 +76,7 @@ export function refreshInstance (id, data) {
 }
 
 /**
- * destroy a Weex instance
+ * Destroy a Weex instance.
  * @param  {string} id
  */
 export function destroyInstance (id) {
@@ -97,7 +90,7 @@ export function destroyInstance (id) {
 }
 
 /**
- * register the name of each native component
+ * Register the name of each native component.
  * @param  {array} components array of name
  */
 export function registerComponents (components) {
@@ -118,7 +111,7 @@ export function registerComponents (components) {
 }
 
 /**
- * register the name and methods of each module
+ * Register the name and methods of each module.
  * @param  {object} modules a object of modules
  */
 export function registerModules (modules) {
@@ -128,7 +121,7 @@ export function registerModules (modules) {
 }
 
 /**
- * register the name and methods of each api
+ * Register the name and methods of each api.
  * @param  {object} apis a object of apis
  */
 export function registerMethods (methods) {
@@ -137,11 +130,11 @@ export function registerMethods (methods) {
   }
 }
 
+// @todo: Hack for this framework only. Will be re-designed or removed later.
 global.registerMethods = registerMethods
 
 /**
- * get a whole element tree of an instance
- * for debugging
+ * Get a whole element tree of an instance for debugging.
  * @param  {string} id
  * @return {object} a virtual dom tree
  */
@@ -167,7 +160,7 @@ const jsHandlers = {
 }
 
 /**
- * accept calls from native (event or callback)
+ * Accept calls from native (event or callback).
  *
  * @param  {string} id
  * @param  {array} tasks list with `method` and `args`

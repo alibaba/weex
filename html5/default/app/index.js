@@ -9,6 +9,11 @@ import renderer from '../config'
 import { requireModule } from './register'
 import { updateActions, callTasks } from './ctrl'
 
+/**
+ * App constructor for Weex framework.
+ * @param {string} id
+ * @param {object} options
+ */
 export default function App (id, options) {
   this.id = id
   this.options = options || {}
