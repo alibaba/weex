@@ -229,6 +229,7 @@ List.prototype.removeChild = function (child) {
 }
 
 List.prototype.onAppend = function () {
+  Component.prototype.onAppend.call(this)
   this._refreshWhenDomRenderend()
 }
 
