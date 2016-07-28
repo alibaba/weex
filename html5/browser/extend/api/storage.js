@@ -115,7 +115,7 @@ const storage = {
   },
 
   /**
-   * Returns a array that contains all k-v pairs stored in Storage object.
+   * Returns an array that contains all keys stored in Storage object.
    * @param {function} callbackId
    */
   getAllKeys: function (callbackId) {
