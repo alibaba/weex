@@ -753,7 +753,7 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
                             return new ListBaseViewHolder(component, viewType);
                         }
                     } else {
-                        WXLogUtils.e(TAG, "Cannot find request viewType: " + viewType);
+                        WXLogUtils.e(TAG, "List cannot include element except cell、header、fixed、refresh and loading");
                         return createVHForFakeComponent(viewType);
                     }
                 }
