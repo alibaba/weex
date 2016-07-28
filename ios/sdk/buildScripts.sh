@@ -46,7 +46,8 @@ function generateImport() {
 	projectFilePath=$1
 	searchPattern=$2
 	headerFilePath=$3
-	externalHeader=$4
+	sdkName=$4
+	externalHeader=$5
 
 	if [[ $externalHeader ]]; then
 		if [ "$searchPattern" = 'Private' ]; then
@@ -61,6 +62,9 @@ function generateImport() {
 		if [ "$searchPattern" = 'Private' ]; then
 			echo "#import <${PRODUCT_NAME}/$header>" >> $headerFilePath
 		else
+			if [ "$header" = "${sdkName}.h" ];then
+				continue
+			fi
 			echo "#import \"$header\"" >> $headerFilePath
 		fi
 	done
@@ -76,9 +80,10 @@ function generateHeader() {
 	projectPath=$1
 	headerFilePath=$2
 	searchPattern=$3
-	externalHeader=$4
+	sdkName=$4
+	externalHeader=$5
 	generateFileHeader $headerFilePath
-	generateImport $projectPath $searchPattern $headerFilePath $externalHeader
+	generateImport $projectPath $searchPattern $headerFilePath $sdkName $externalHeader
 	generateFileFooter $headerFilePath
 	return 0
 }
@@ -95,5 +100,5 @@ function generateSDKHeader() {
 	if [ -f "$publicHeaderFilePath" ]; then
 		rm $publicHeaderFilePath
 	fi
-	generateHeader "${PROJECT_DIR}/${PROJECT_NAME}.xcodeproj" "${publicHeaderFilePath}" 'Public'
+	generateHeader "${PROJECT_DIR}/${PROJECT_NAME}.xcodeproj" "${publicHeaderFilePath}" 'Public' $sdkName
 }
