@@ -63,6 +63,7 @@ const storage = {
         result: FAILED,
         data: INVALID_PARAM
       })
+      return
     }
     const val = localStorage.getItem(key)
     sender.performCallback(callbackId, {
@@ -87,6 +88,7 @@ const storage = {
         result: FAILED,
         data: INVALID_PARAM
       })
+      return
     }
     localStorage.removeItem(key)
     sender.performCallback(callbackId, {
