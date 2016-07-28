@@ -37,7 +37,8 @@ const storage = {
         result: SUCCESS,
         data: UNDEFINED
       })
-    } catch(e) {
+    }
+    catch (e) {
       // accept any exception thrown during a storage attempt as a quota error
       sender.performCallback(callbackId, {
         result: FAILED,
@@ -65,8 +66,8 @@ const storage = {
     }
     const val = localStorage.getItem(key)
     sender.performCallback(callbackId, {
-        result: val ? SUCCESS:FAILED,
-        data: val ? val:UNDEFINED
+      result: val ? SUCCESS : FAILED,
+      data: val || UNDEFINED
     })
   },
 
@@ -107,7 +108,7 @@ const storage = {
     const len = localStorage.length
     sender.performCallback(callbackId, {
       result: SUCCESS,
-      data:len
+      data: len
     })
   },
 
@@ -127,7 +128,7 @@ const storage = {
     }
     sender.performCallback(callbackId, {
       result: SUCCESS,
-      data:_arr
+      data: _arr
     })
   }
 }
