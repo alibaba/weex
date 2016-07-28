@@ -202,103 +202,175 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex;
+package com.taobao.weex.appfram.storage;
 
-import com.taobao.weex.adapter.IWXDebugAdapter;
-import com.taobao.weex.adapter.IWXHttpAdapter;
-import com.taobao.weex.adapter.IWXImgLoaderAdapter;
-import com.taobao.weex.adapter.IWXUserTrackAdapter;
-import com.taobao.weex.appfram.storage.IWXStorageAdapter;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteStatement;
 
-/**
- * Created by sospartan on 5/31/16.
- */
-public class InitConfig {
-  private IWXHttpAdapter httpAdapter;
-  private IWXImgLoaderAdapter imgAdapter;
-  private IWXUserTrackAdapter utAdapter;
-  private IWXDebugAdapter debugAdapter;
-  private IWXStorageAdapter storageAdapter;
-  private String framework;
+import com.taobao.weex.utils.WXLogUtils;
 
-  public IWXHttpAdapter getHttpAdapter() {
-    return httpAdapter;
-  }
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-  public IWXImgLoaderAdapter getImgAdapter() {
-    return imgAdapter;
-  }
+public class DefaultWXStorage implements IWXStorageAdapter {
 
-  public IWXUserTrackAdapter getUtAdapter() {
-    return utAdapter;
-  }
+    private WXDatabaseSupplier mDatabaseSupplier;
 
-  public IWXDebugAdapter getDebugAdapter(){
-    return debugAdapter;
-  }
-  public String getFramework() {
-    return framework;
-  }
+    private ExecutorService mExecutorService;
 
-  public IWXStorageAdapter getStorageAdapter() {
-    return storageAdapter;
-  }
-
-
-
-  private InitConfig() {
-  }
-
-  public static class Builder{
-    IWXHttpAdapter httpAdapter;
-    IWXImgLoaderAdapter imgAdapter;
-    IWXUserTrackAdapter utAdapter;
-    IWXDebugAdapter debugAdapter;
-    IWXStorageAdapter storageAdapter;
-    String framework;
-    public Builder(){
-
+    private void execute(Runnable runnable) {
+        if (mExecutorService == null) {
+            mExecutorService = Executors.newSingleThreadExecutor();
+        }
+        mExecutorService.execute(runnable);
     }
 
-    public Builder setHttpAdapter(IWXHttpAdapter httpAdapter) {
-      this.httpAdapter = httpAdapter;
-      return this;
+    public DefaultWXStorage(Context context) {
+        this.mDatabaseSupplier = WXDatabaseSupplier.getInstance(context);
     }
 
-    public Builder setImgAdapter(IWXImgLoaderAdapter imgAdapter) {
-      this.imgAdapter = imgAdapter;
-      return this;
+
+    @Override
+    public void setItem(final String key, final String value, final OnResultReceivedListener listener) {
+        execute(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, Object> data = StorageResultHandler.setItemResult(performSetItem(key, value));
+                listener.onReceived(data);
+            }
+        });
     }
 
-    public Builder setUtAdapter(IWXUserTrackAdapter utAdapter) {
-      this.utAdapter = utAdapter;
-      return this;
+    @Override
+    public void getItem(final String key, final OnResultReceivedListener listener) {
+        execute(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, Object> data = StorageResultHandler.getItemResult(performGetItem(key));
+                listener.onReceived(data);
+            }
+        });
     }
 
-    public Builder setDebugAdapter(IWXDebugAdapter debugAdapter){
-      this.debugAdapter=debugAdapter;
-      return this;
+    @Override
+    public void removeItem(final String key, final OnResultReceivedListener listener) {
+        execute(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, Object> data = StorageResultHandler.removeItemResult(performRemoveItem(key));
+                listener.onReceived(data);
+            }
+        });
     }
 
-    public Builder setStorageAdapter(IWXStorageAdapter storageAdapter) {
-      this.storageAdapter = storageAdapter;
-      return this;
+    @Override
+    public void length(final OnResultReceivedListener listener) {
+        execute(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, Object> data = StorageResultHandler.getLengthResult(performGetLength());
+                listener.onReceived(data);
+            }
+        });
     }
 
-    public Builder setFramework(String framework){
-      this.framework=framework;
-      return this;
+    @Override
+    public void getAllKeys(final OnResultReceivedListener listener) {
+        execute(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, Object> data = StorageResultHandler.getAllkeysResult(performGetAllKeys());
+                listener.onReceived(data);
+            }
+        });
     }
 
-    public InitConfig build(){
-      InitConfig config =  new InitConfig();
-      config.httpAdapter = this.httpAdapter;
-      config.imgAdapter = this.imgAdapter;
-      config.utAdapter = this.utAdapter;
-      config.debugAdapter=this.debugAdapter;
-      config.storageAdapter = this.storageAdapter;
-      config.framework=this.framework;
-      return config;
+
+    private boolean performSetItem(String key, String value) {
+        String sql = "INSERT OR REPLACE INTO " + WXDatabaseSupplier.TABLE_STORAGE + " VALUES (?,?);";
+        SQLiteStatement statement = mDatabaseSupplier.getDatabase().compileStatement(sql);
+        try {
+            statement.clearBindings();
+            statement.bindString(1, key);
+            statement.bindString(2, value);
+            statement.execute();
+            return true;
+        } catch (Exception e) {
+            WXLogUtils.e("DefaultWXStorage", e.getMessage());
+            return false;
+        } finally {
+            statement.close();
+            mDatabaseSupplier.closeDatabase();
+        }
     }
-  }
+
+    private String performGetItem(String key) {
+        Cursor c = mDatabaseSupplier.getDatabase().query(WXDatabaseSupplier.TABLE_STORAGE,
+                new String[]{WXDatabaseSupplier.COLUMN_VALUE},
+                WXDatabaseSupplier.COLUMN_KEY + "=?",
+                new String[]{key},
+                null, null, null);
+        try {
+            if (c.moveToNext()) {
+                return c.getString(c.getColumnIndex(WXDatabaseSupplier.COLUMN_VALUE));
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            WXLogUtils.e("DefaultWXStorage", e.getMessage());
+            return null;
+        } finally {
+            c.close();
+            mDatabaseSupplier.closeDatabase();
+        }
+    }
+
+    private boolean performRemoveItem(String key) {
+        int count = 0;
+        try {
+            count = mDatabaseSupplier.getDatabase().delete(WXDatabaseSupplier.TABLE_STORAGE,
+                    WXDatabaseSupplier.COLUMN_KEY + "=?",
+                    new String[]{key});
+        } finally {
+            mDatabaseSupplier.closeDatabase();
+        }
+        return count == 1;
+    }
+
+    private long performGetLength() {
+        String sql = "SELECT count(" + WXDatabaseSupplier.COLUMN_KEY + ") FROM " + WXDatabaseSupplier.TABLE_STORAGE;
+        SQLiteStatement statement = mDatabaseSupplier.getDatabase().compileStatement(sql);
+        try {
+            return statement.simpleQueryForLong();
+        } catch (Exception e) {
+            WXLogUtils.e("DefaultWXStorage", e.getMessage());
+            return 0;
+        } finally {
+            statement.close();
+            mDatabaseSupplier.closeDatabase();
+        }
+    }
+
+    private List<String> performGetAllKeys() {
+        List<String> result = new ArrayList<>();
+        Cursor c = mDatabaseSupplier.getDatabase().query(WXDatabaseSupplier.TABLE_STORAGE, new String[]{WXDatabaseSupplier.COLUMN_KEY}, null, null, null, null, null);
+        try {
+            while (c.moveToNext()) {
+                result.add(c.getString(c.getColumnIndex(WXDatabaseSupplier.COLUMN_KEY)));
+            }
+            return result;
+        } catch (Exception e) {
+            WXLogUtils.e("DefaultWXStorage", e.getMessage());
+            return result;
+        } finally {
+            c.close();
+            mDatabaseSupplier.closeDatabase();
+        }
+    }
+
+
 }

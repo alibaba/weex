@@ -202,103 +202,101 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex;
+package com.taobao.weex.appfram.storage;
 
-import com.taobao.weex.adapter.IWXDebugAdapter;
-import com.taobao.weex.adapter.IWXHttpAdapter;
-import com.taobao.weex.adapter.IWXImgLoaderAdapter;
-import com.taobao.weex.adapter.IWXUserTrackAdapter;
-import com.taobao.weex.appfram.storage.IWXStorageAdapter;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 
-/**
- * Created by sospartan on 5/31/16.
- */
-public class InitConfig {
-  private IWXHttpAdapter httpAdapter;
-  private IWXImgLoaderAdapter imgAdapter;
-  private IWXUserTrackAdapter utAdapter;
-  private IWXDebugAdapter debugAdapter;
-  private IWXStorageAdapter storageAdapter;
-  private String framework;
+import com.taobao.weex.utils.WXLogUtils;
 
-  public IWXHttpAdapter getHttpAdapter() {
-    return httpAdapter;
-  }
+public class WXDatabaseSupplier extends SQLiteOpenHelper {
 
-  public IWXImgLoaderAdapter getImgAdapter() {
-    return imgAdapter;
-  }
+    private static final String DATABASE_NAME = "WXStorage";
+    private static final int DATABASE_VERSION = 1;
 
-  public IWXUserTrackAdapter getUtAdapter() {
-    return utAdapter;
-  }
+    private long mMaximumDatabaseSize = 5L * 1024L * 1024L;
 
-  public IWXDebugAdapter getDebugAdapter(){
-    return debugAdapter;
-  }
-  public String getFramework() {
-    return framework;
-  }
+    private static WXDatabaseSupplier sInstance;
 
-  public IWXStorageAdapter getStorageAdapter() {
-    return storageAdapter;
-  }
+    private Context mContext;
+    private SQLiteDatabase mDb;
 
 
+    static final String TABLE_STORAGE = "default_wx_storage";
+    static final String COLUMN_KEY = "key";
+    static final String COLUMN_VALUE = "value";
 
-  private InitConfig() {
-  }
+    private static final String STATEMENT_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_STORAGE + " ("
+            + COLUMN_KEY
+            + " TEXT PRIMARY KEY,"
+            + COLUMN_VALUE
+            + " TEXT NOT NULL"
+            + ")";
 
-  public static class Builder{
-    IWXHttpAdapter httpAdapter;
-    IWXImgLoaderAdapter imgAdapter;
-    IWXUserTrackAdapter utAdapter;
-    IWXDebugAdapter debugAdapter;
-    IWXStorageAdapter storageAdapter;
-    String framework;
-    public Builder(){
 
+    private WXDatabaseSupplier(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.mContext = context;
     }
 
-    public Builder setHttpAdapter(IWXHttpAdapter httpAdapter) {
-      this.httpAdapter = httpAdapter;
-      return this;
+    public static WXDatabaseSupplier getInstance(Context context) {
+        if (context == null) {
+            WXLogUtils.e("can not get context instance...");
+            return null;
+        }
+        if (sInstance == null) {
+            sInstance = new WXDatabaseSupplier(context);
+        }
+        return sInstance;
     }
 
-    public Builder setImgAdapter(IWXImgLoaderAdapter imgAdapter) {
-      this.imgAdapter = imgAdapter;
-      return this;
+    SQLiteDatabase getDatabase() {
+        ensureDatabase();
+        return mDb;
     }
 
-    public Builder setUtAdapter(IWXUserTrackAdapter utAdapter) {
-      this.utAdapter = utAdapter;
-      return this;
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(STATEMENT_CREATE_TABLE);
     }
 
-    public Builder setDebugAdapter(IWXDebugAdapter debugAdapter){
-      this.debugAdapter=debugAdapter;
-      return this;
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (oldVersion != newVersion) {
+            deleteDB();
+            onCreate(db);
+        }
     }
 
-    public Builder setStorageAdapter(IWXStorageAdapter storageAdapter) {
-      this.storageAdapter = storageAdapter;
-      return this;
+
+
+    synchronized void ensureDatabase() {
+        if (mDb != null && mDb.isOpen()) {
+            return;
+        }
+        mDb = getWritableDatabase();
+        mDb.setMaximumSize(mMaximumDatabaseSize);
     }
 
-    public Builder setFramework(String framework){
-      this.framework=framework;
-      return this;
+    public synchronized void setMaximumSize(long size) {
+        mMaximumDatabaseSize = size;
+        if (mDb != null) {
+            mDb.setMaximumSize(mMaximumDatabaseSize);
+        }
     }
 
-    public InitConfig build(){
-      InitConfig config =  new InitConfig();
-      config.httpAdapter = this.httpAdapter;
-      config.imgAdapter = this.imgAdapter;
-      config.utAdapter = this.utAdapter;
-      config.debugAdapter=this.debugAdapter;
-      config.storageAdapter = this.storageAdapter;
-      config.framework=this.framework;
-      return config;
+    private boolean deleteDB() {
+        closeDatabase();
+        return mContext.deleteDatabase(DATABASE_NAME);
     }
-  }
+
+    public void closeDatabase() {
+        if (mDb != null && mDb.isOpen()) {
+            mDb.close();
+            mDb = null;
+        }
+    }
+
+
 }
