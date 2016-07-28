@@ -135,6 +135,8 @@ import com.taobao.weex.common.WXModule;
 import com.taobao.weex.dom.*;
 import com.taobao.weex.dom.module.WXModalUIModule;
 import com.taobao.weex.http.WXStreamModule;
+import com.taobao.weex.ui.ComponentCreator;
+import com.taobao.weex.ui.IFComponentHolder;
 import com.taobao.weex.ui.SimpleComponentHolder;
 import com.taobao.weex.ui.WXComponentRegistry;
 import com.taobao.weex.ui.animation.WXAnimationModule;
@@ -147,6 +149,7 @@ import com.taobao.weex.ui.module.WXWebViewModule;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXSoInstallMgrSdk;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -259,11 +262,40 @@ public class WXSDKEngine {
 
   private static void register() {
     try {
-      registerComponent(WXBasicComponentType.TEXT, WXText.class, false);
-      registerComponent(WXDiv.class, false,WXBasicComponentType.CONTAINER,WXBasicComponentType.DIV,WXBasicComponentType.HEADER,WXBasicComponentType.FOOTER);
-      registerComponent(WXImage.class, false,WXBasicComponentType.IMAGE,WXBasicComponentType.IMG);
-      registerComponent(WXBasicComponentType.SCROLLER, WXScroller.class, false);
-      registerComponent(WXBasicComponentType.SLIDER, WXSlider.class, true);
+      registerComponent(WXText.class,new SimpleComponentHolder(WXText.class, new ComponentCreator() {
+        @Override
+        public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+          return new WXText(instance,node,parent,lazy);
+        }
+      }), false,WXBasicComponentType.TEXT);
+
+      registerComponent(WXDiv.class, new SimpleComponentHolder(WXDiv.class, new ComponentCreator() {
+        @Override
+        public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+          return new WXDiv(instance,node,parent,lazy);
+        }
+      }), false,WXBasicComponentType.CONTAINER,WXBasicComponentType.DIV,WXBasicComponentType.HEADER,WXBasicComponentType.FOOTER);
+
+      registerComponent(WXImage.class, new SimpleComponentHolder(WXImage.class, new ComponentCreator() {
+        @Override
+        public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+          return new WXImage(instance,node,parent,lazy);
+        }
+      }), false,WXBasicComponentType.IMAGE,WXBasicComponentType.IMG);
+
+      registerComponent( WXScroller.class, new SimpleComponentHolder(WXScroller.class, new ComponentCreator() {
+        @Override
+        public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+          return new WXScroller(instance,node,parent,lazy);
+        }
+      }),false,WXBasicComponentType.SCROLLER);
+
+      registerComponent( WXSlider.class, new SimpleComponentHolder(WXSlider.class, new ComponentCreator() {
+        @Override
+        public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+          return new WXSlider(instance,node,parent,lazy);
+        }
+      }), true,WXBasicComponentType.SLIDER);
 
       registerComponent(WXListComponent.class, false,WXBasicComponentType.LIST,WXBasicComponentType.VLIST);
       registerComponent(HorizontalListComponent.class,false,WXBasicComponentType.HLIST);
@@ -327,8 +359,12 @@ public class WXSDKEngine {
    * @throws WXException Throws exception if type conflicts.
    */
   public static boolean registerComponent(Class<? extends WXComponent> clazz, boolean appendTree,String ... names) throws WXException {
-    boolean result =  true;
     SimpleComponentHolder holder = new SimpleComponentHolder(clazz);
+    return registerComponent(clazz,holder,appendTree,names);
+  }
+
+  static boolean registerComponent(Class<? extends WXComponent> clazz, IFComponentHolder holder, boolean appendTree, String ... names) throws WXException {
+    boolean result =  true;
     Map<String, String> componentInfo = new HashMap<>();
     if (appendTree) {
       componentInfo.put("append", "tree");
