@@ -5,6 +5,7 @@
  * - init bundle
  * - fire event
  * - callback
+ * - refresh
  * - destroy
  *
  * corresponded with the API of instance manager (framework.js)
@@ -18,6 +19,12 @@ import {
   register
 } from './bundle'
 
+/**
+ * Init an app by run code witgh data
+ * @param  {object} app
+ * @param  {string} code
+ * @param  {object} data
+ */
 export function init (app, code, data) {
   console.debug('[JS Framework] Intialize an instance with:\n', data)
   let result
@@ -145,6 +152,11 @@ export function init (app, code, data) {
   return result
 }
 
+/**
+ * Refresh an app with data to its root component options.
+ * @param  {object} app
+ * @param  {any}    data
+ */
 export function refresh (app, data) {
   console.debug(`[JS Framework] Refresh with`, data,
             `in instance[${app.id}]`)
@@ -165,6 +177,10 @@ export function refresh (app, data) {
   return new Error(`invalid data "${data}"`)
 }
 
+/**
+ * Destroy an app.
+ * @param  {object} app
+ */
 export function destroy (app) {
   console.debug(`[JS Framework] Destory an instance(${app.id})`)
 
@@ -177,12 +193,27 @@ export function destroy (app) {
   app.callbacks = null
 }
 
+/**
+ * Get a JSON object to describe the document body.
+ * @param  {object} app
+ * @return {object}
+ */
 export function getRootElement (app) {
   const doc = app.doc || {}
   const body = doc.body || {}
   return body.toJSON ? body.toJSON() : {}
 }
 
+/**
+ * Fire an event from renderer. The event has type, an event object and an
+ * element ref. If the event comes with some virtual-DOM changes, it should
+ * have one more parameter to describe the changes.
+ * @param  {object} app
+ * @param  {string} ref
+ * @param  {type}   type
+ * @param  {object} e
+ * @param  {object} domChanges
+ */
 export function fireEvent (app, ref, type, e, domChanges) {
   console.debug(`[JS Framework] Fire a "${type}" event on an element(${ref}) in instance(${app.id})`)
   if (Array.isArray(ref)) {
@@ -203,6 +234,13 @@ export function fireEvent (app, ref, type, e, domChanges) {
   return new Error(`invalid element reference "${ref}"`)
 }
 
+/**
+ * Make a callback for a certain app.
+ * @param  {object}   app
+ * @param  {number}   callbackId
+ * @param  {any}      data
+ * @param  {boolean}  ifKeepAlive
+ */
 export function callback (app, callbackId, data, ifKeepAlive) {
   console.debug(`[JS Framework] Invoke a callback(${callbackId}) with`, data,
             `in instance(${app.id})`)
@@ -221,6 +259,10 @@ export function callback (app, callbackId, data, ifKeepAlive) {
   return new Error(`invalid callback id "${callbackId}"`)
 }
 
+/**
+ * Collect all virtual-DOM mutations together and send them to renderer.
+ * @param  {object} app
+ */
 export function updateActions (app) {
   app.differ.flush()
   const tasks = []
@@ -233,6 +275,11 @@ export function updateActions (app) {
   }
 }
 
+/**
+ * Call all tasks from an app to renderer (native).
+ * @param  {object} app
+ * @param  {array}  tasks
+ */
 export function callTasks (app, tasks) {
   if (typof(tasks) !== 'array') {
     tasks = [tasks]
@@ -245,6 +292,13 @@ export function callTasks (app, tasks) {
   return renderer.sendTasks(app.id, tasks, '-1')
 }
 
+/**
+ * Normalize a value. Specially, if the value is a function, then generate a function id
+ * and save it to `app.callbacks`, at last return the function id.
+ * @param  {any}        v
+ * @param  {object}     app
+ * @return {primitive}
+ */
 function normalize (v, app) {
   const type = typof(v)
 
