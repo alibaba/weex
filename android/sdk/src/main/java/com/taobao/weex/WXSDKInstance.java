@@ -260,7 +260,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
   protected IWXHttpAdapter mWXHttpAdapter;
   private IWXRenderListener mRenderListener;
   private Context mContext;
-  private volatile String mInstanceId;
+  volatile String mInstanceId;
   private WXComponent mGodCom;
   private boolean mRendered;
   private WXRefreshData mLastRefreshData;

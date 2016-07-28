@@ -287,7 +287,7 @@ public class WXBridgeManager implements Callback {
 
   private static long LOW_MEM_VALUE = 80;
 
-  private static WXBridgeManager mBridgeManager;
+  static WXBridgeManager mBridgeManager;
 
   private WXDomModule sDomModule;
 
