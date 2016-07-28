@@ -216,9 +216,12 @@ import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.common.WXImageSharpen;
 import com.taobao.weex.common.WXImageStrategy;
 import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.ComponentCreator;
 import com.taobao.weex.ui.view.WXImageView;
 import com.taobao.weex.utils.WXResourceUtils;
 import com.taobao.weex.utils.WXUtils;
+
+import java.lang.reflect.InvocationTargetException;
 
 
 /**
@@ -226,6 +229,13 @@ import com.taobao.weex.utils.WXUtils;
  */
 @Component(lazyload = false)
 public class WXImage extends WXComponent<ImageView> {
+
+    public static class Ceator implements ComponentCreator {
+        public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+            return new WXImage(instance,node,parent,lazy);
+        }
+    }
+
 
     @Deprecated
     public WXImage(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {

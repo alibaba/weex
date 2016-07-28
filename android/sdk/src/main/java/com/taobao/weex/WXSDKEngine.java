@@ -259,41 +259,53 @@ public class WXSDKEngine {
 
   private static void register() {
     try {
-      registerComponent(WXText.class,new SimpleComponentHolder(WXText.class, new ComponentCreator() {
-        @Override
-        public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-          return new WXText(instance,node,parent,lazy);
-        }
-      }), false,WXBasicComponentType.TEXT);
-
-      registerComponent(WXDiv.class, new SimpleComponentHolder(WXDiv.class, new ComponentCreator() {
-        @Override
-        public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-          return new WXDiv(instance,node,parent,lazy);
-        }
-      }), false,WXBasicComponentType.CONTAINER,WXBasicComponentType.DIV,WXBasicComponentType.HEADER,WXBasicComponentType.FOOTER);
-
-      registerComponent(WXImage.class, new SimpleComponentHolder(WXImage.class, new ComponentCreator() {
-        @Override
-        public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-          return new WXImage(instance,node,parent,lazy);
-        }
-      }), false,WXBasicComponentType.IMAGE,WXBasicComponentType.IMG);
-
-      registerComponent( WXScroller.class, new SimpleComponentHolder(WXScroller.class, new ComponentCreator() {
-        @Override
-        public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-          return new WXScroller(instance,node,parent,lazy);
-        }
-      }),false,WXBasicComponentType.SCROLLER);
-
-      registerComponent( WXSlider.class, new SimpleComponentHolder(WXSlider.class, new ComponentCreator() {
-        @Override
-        public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-          return new WXSlider(instance,node,parent,lazy);
-        }
-      }), true,WXBasicComponentType.SLIDER);
-
+      registerComponent(
+        WXText.class,
+        new SimpleComponentHolder(
+          WXText.class,
+          new WXText.Ceator()
+        ),
+        false,
+        WXBasicComponentType.TEXT
+      );
+      registerComponent(
+        WXDiv.class,
+        new SimpleComponentHolder(
+          WXDiv.class,
+          new WXDiv.Ceator()
+        ),
+        false,
+        WXBasicComponentType.CONTAINER,
+        WXBasicComponentType.DIV,
+        WXBasicComponentType.HEADER,
+        WXBasicComponentType.FOOTER
+      );
+      registerComponent(
+        WXImage.class,
+        new SimpleComponentHolder(
+          WXImage.class,
+          new WXImage.Ceator()
+        ),
+        false,
+        WXBasicComponentType.IMAGE,
+        WXBasicComponentType.IMG
+      );
+      registerComponent( WXScroller.class,
+        new SimpleComponentHolder(
+          WXScroller.class,
+          new WXScroller.Ceator()
+        ),
+        false,
+        WXBasicComponentType.SCROLLER
+      );
+      registerComponent( WXSlider.class,
+        new SimpleComponentHolder(
+          WXSlider.class,
+          new WXSlider.Ceator()
+        ),
+        true,
+        WXBasicComponentType.SLIDER
+      );
       registerComponent(WXListComponent.class, false,WXBasicComponentType.LIST,WXBasicComponentType.VLIST);
       registerComponent(HorizontalListComponent.class,false,WXBasicComponentType.HLIST);
       registerComponent(WXBasicComponentType.CELL, WXCell.class, true);

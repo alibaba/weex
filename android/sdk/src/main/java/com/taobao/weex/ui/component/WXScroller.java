@@ -219,6 +219,7 @@ import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.OnWXScrollListener;
 import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.ComponentCreator;
 import com.taobao.weex.ui.component.helper.WXStickyHelper;
 import com.taobao.weex.ui.view.IWXScroller;
 import com.taobao.weex.ui.view.WXBaseRefreshLayout;
@@ -231,6 +232,7 @@ import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -247,6 +249,11 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class WXScroller extends WXVContainer<ViewGroup> implements WXScrollViewListener,Scrollable {
 
+  public static class Ceator implements ComponentCreator {
+    public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+      return new WXScroller(instance,node,parent,lazy);
+    }
+  }
   /**
    * Map for storing appear information
    **/
