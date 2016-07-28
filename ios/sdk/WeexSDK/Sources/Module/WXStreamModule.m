@@ -82,7 +82,8 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
     [request setHTTPMethod:method];
     
     if ([options valueForKey:@"timeout"]){
-        [request setTimeoutInterval:[[options valueForKey:@"timeout"] floatValue]];
+        //ms
+        [request setTimeoutInterval:([[options valueForKey:@"timeout"] floatValue])/1000];
     }
     
     for (NSString *header in headers) {
