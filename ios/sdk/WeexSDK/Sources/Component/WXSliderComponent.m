@@ -417,6 +417,12 @@
     
     if (attributes[@"interval"]) {
         _interval = [attributes[@"interval"] integerValue];
+        
+        [self _stopAutoPlayTimer];
+        
+        if (_autoPlay) {
+            [self _startAutoPlayTimer];
+        } 
     }
     
     if (attributes[@"index"]) {
