@@ -293,6 +293,8 @@
     if (!UIEdgeInsetsEqualToEdgeInsets(border, _border)) {
         [self setBorder:border];
     }
+    
+    [self setTextFont];
 }
 
 - (CGSize (^)(CGSize))measureBlock
