@@ -19,34 +19,32 @@ const storage = {
    * @param {function} callbackId
    */
   setItem: function (key, value, callbackId) {
-      if (!supportLocalStorage) {
-        logger.error('your browser is not support localStorage yet.')
-        return
-      }
-      const sender = this.sender
-      if (!key || !value) {
-        sender.performCallback(callbackId, {
-          result:'failed',
-          data:INVALID_PARAM
-        })
-        return
-      }
-      try {
-        localStorage.setItem(key, value)
-        sender.performCallback(callbackId, {
-          result:SUCCESS,
-          data:UNDEFINED
-        })
-      }catch(e) {
-        //accept any exception thrown during a storage attempt as a quota error
-        sender.performCallback(callbackId, {
-          result:FAILED,
-          data:UNDEFINED
-        })
-      }
-
+    if (!supportLocalStorage) {
+      logger.error('your browser is not support localStorage yet.')
+      return
+    }
+    const sender = this.sender
+    if (!key || !value) {
+      sender.performCallback(callbackId, {
+        result: 'failed',
+        data: INVALID_PARAM
+      })
+      return
+    }
+    try {
+      localStorage.setItem(key, value)
+      sender.performCallback(callbackId, {
+        result: SUCCESS,
+        data: UNDEFINED
+      })
+    } catch(e) {
+      // accept any exception thrown during a storage attempt as a quota error
+      sender.performCallback(callbackId, {
+        result: FAILED,
+        data: UNDEFINED
+      })
+    }
   },
-
 
   /**
    * When passed a key name, will return that key's value.
@@ -61,17 +59,16 @@ const storage = {
     const sender = this.sender
     if (!key) {
       sender.performCallback(callbackId, {
-        result:FAILED,
-        data:INVALID_PARAM
+        result: FAILED,
+        data: INVALID_PARAM
       })
     }
     const val = localStorage.getItem(key)
     sender.performCallback(callbackId, {
-        result:val ? SUCCESS:FAILED,
-        data:val ? val:UNDEFINED
+        result: val ? SUCCESS:FAILED,
+        data: val ? val:UNDEFINED
     })
   },
-
 
   /**
    *When passed a key name, will remove that key from the storage.
@@ -86,17 +83,16 @@ const storage = {
     const sender = this.sender
     if (!key) {
       sender.performCallback(callbackId, {
-        result:FAILED,
-        data:INVALID_PARAM
+        result: FAILED,
+        data: INVALID_PARAM
       })
     }
     localStorage.removeItem(key)
     sender.performCallback(callbackId, {
-      result:SUCCESS,
-      data:UNDEFINED
+      result: SUCCESS,
+      data: UNDEFINED
     })
   },
-
 
   /**
    * Returns an integer representing the number of data items stored in the Storage object.
@@ -110,11 +106,10 @@ const storage = {
     const sender = this.sender
     const len = localStorage.length
     sender.performCallback(callbackId, {
-      result:SUCCESS,
+      result: SUCCESS,
       data:len
     })
   },
-
 
   /**
    * Returns a array that contains all k-v pairs stored in Storage object.
@@ -127,18 +122,18 @@ const storage = {
     }
     const sender = this.sender
     const _arr = []
-    for(let i = 0; i < localStorage.length; i++) {
+    for (let i = 0; i < localStorage.length; i++) {
       _arr.push(localStorage.key(i))
     }
     sender.performCallback(callbackId, {
-      result:SUCCESS,
+      result: SUCCESS,
       data:_arr
     })
   }
 }
 
 storage._meta = {
-  storage: [ {
+  storage: [{
     name: 'setItem',
     args: ['string', 'string', 'function']
   }, {
