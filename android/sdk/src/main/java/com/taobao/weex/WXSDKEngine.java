@@ -371,6 +371,9 @@ public class WXSDKEngine {
    * @throws WXException Throws exception if type conflicts.
    */
   public static boolean registerComponent(Class<? extends WXComponent> clazz, boolean appendTree,String ... names) throws WXException {
+    if(clazz == null){
+      return false;
+    }
     SimpleComponentHolder holder = new SimpleComponentHolder(clazz);
     return registerComponent(clazz,holder,appendTree,names);
   }
