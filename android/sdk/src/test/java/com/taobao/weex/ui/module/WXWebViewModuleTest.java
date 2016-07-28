@@ -202,18 +202,50 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.ui;
+package com.taobao.weex.ui.module;
 
+import com.taobao.weappplus_sdk.BuildConfig;
 import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.ui.component.WXComponent;
-import com.taobao.weex.ui.component.WXVContainer;
+import com.taobao.weex.WXSDKInstanceTest;
+import com.taobao.weex.bridge.WXBridgeManager;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.annotation.Config;
 
-import java.lang.reflect.InvocationTargetException;
+import static org.junit.Assert.*;
 
 /**
- * Created by sospartan on 7/27/16.
+ * Created by sospartan on 7/28/16.
  */
-public interface ComponentCreator {
-  WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException;
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 19)
+@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
+@PrepareForTest(WXBridgeManager.class)
+public class WXWebViewModuleTest {
+  WXWebViewModule module;
+
+  @Before
+  public void setUp() throws Exception {
+    module = new WXWebViewModule();
+    module.mWXSDKInstance = WXSDKInstanceTest.createInstance();
+  }
+
+  @Test
+  public void testGoBack() throws Exception {
+    module.goBack("");
+  }
+
+  @Test
+  public void testGoForward() throws Exception {
+    module.goForward("");
+  }
+
+  @Test
+  public void testReload() throws Exception {
+    module.reload("");
+  }
 }

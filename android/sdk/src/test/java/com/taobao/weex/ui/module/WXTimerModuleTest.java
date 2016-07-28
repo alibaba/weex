@@ -202,18 +202,100 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.ui;
+package com.taobao.weex.ui.module;
 
+import android.os.Message;
+import com.taobao.weappplus_sdk.BuildConfig;
 import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.ui.component.WXComponent;
-import com.taobao.weex.ui.component.WXVContainer;
+import com.taobao.weex.WXSDKInstanceTest;
+import com.taobao.weex.bridge.WXBridgeManager;
+import com.taobao.weex.bridge.WXBridgeManagerTest;
+import com.taobao.weex.common.WXJSBridgeMsgType;
+import com.taobao.weex.utils.WXFileUtils;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.annotation.Config;
 
-import java.lang.reflect.InvocationTargetException;
+import static org.junit.Assert.*;
+import static org.powermock.api.mockito.PowerMockito.*;
+import static org.mockito.Mockito.*;
 
 /**
- * Created by sospartan on 7/27/16.
+ * Created by sospartan on 7/28/16.
  */
-public interface ComponentCreator {
-  WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException;
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 19)
+@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
+@PrepareForTest(WXBridgeManager.class)
+public class WXTimerModuleTest {
+
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
+
+  WXTimerModule module;
+  WXBridgeManager bridge;
+
+  @Before
+  public void setup() throws Exception{
+    module = new WXTimerModule();
+    module.mWXSDKInstance = WXSDKInstanceTest.createInstance();
+
+    bridge = PowerMockito.mock(WXBridgeManager.class);
+    WXBridgeManagerTest.setBridgeManager(bridge);
+
+  }
+
+  @Test
+  public void testSetTimeout() throws Exception {
+    module.setTimeout(1,2);
+    Mockito.verify(bridge,times(1)).sendMessageDelayed(any(Message.class),eq((long)2));
+
+    reset(bridge);
+    module.setTimeout(0,0);
+    Mockito.verify(bridge,never()).sendMessageDelayed(any(Message.class),anyLong());
+
+
+  }
+
+  @Test
+  public void testSetInterval() throws Exception {
+    module.setInterval(0,1);
+    Mockito.verify(bridge,never()).sendMessageDelayed(any(Message.class),anyLong());
+
+    reset(bridge);
+    module.setInterval(1,-1);
+    Mockito.verify(bridge,times(1)).sendMessageDelayed(any(Message.class),eq((long)0));
+
+    reset(bridge);
+    module.setInterval(1,2);
+    Mockito.verify(bridge,times(1)).sendMessageDelayed(any(Message.class),eq((long)2));
+  }
+
+  @Test
+  public void testClearTimeout() throws Exception {
+    module.clearTimeout(0);
+    Mockito.verify(bridge,never()).removeMessage(anyInt(),anyInt());
+
+    reset(bridge);
+    module.clearTimeout(1);
+    Mockito.verify(bridge,times(1)).removeMessage(eq(WXJSBridgeMsgType.MODULE_TIMEOUT),eq(1));
+  }
+
+  @Test
+  public void testClearInterval() throws Exception {
+    module.clearInterval(0);
+    Mockito.verify(bridge,never()).removeMessage(anyInt(),anyInt());
+
+    reset(bridge);
+    module.clearInterval(1);
+    Mockito.verify(bridge,times(1)).removeMessage(eq(WXJSBridgeMsgType.MODULE_INTERVAL),eq(1));
+  }
 }

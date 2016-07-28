@@ -260,7 +260,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
   protected IWXHttpAdapter mWXHttpAdapter;
   private IWXRenderListener mRenderListener;
   private Context mContext;
-  private volatile String mInstanceId;
+  volatile String mInstanceId;
   private WXComponent mGodCom;
   private boolean mRendered;
   private WXRefreshData mLastRefreshData;
@@ -485,9 +485,6 @@ public class WXSDKInstance implements IWXActivityStateListener {
     }
 
     IWXHttpAdapter adapter=WXSDKManager.getInstance().getIWXHttpAdapter();
-    if (adapter == null) {
-      adapter = new DefaultWXHttpAdapter();
-    }
 
     WXRequest wxRequest = new WXRequest();
     wxRequest.url = url;

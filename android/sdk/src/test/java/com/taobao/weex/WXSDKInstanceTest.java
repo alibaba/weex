@@ -205,39 +205,68 @@
 package com.taobao.weex;
 
 import android.content.Context;
+import com.taobao.weappplus_sdk.BuildConfig;
 import com.taobao.weex.common.WXPerformance;
 import com.taobao.weex.common.WXRenderStrategy;
 import com.taobao.weex.utils.WXFileUtils;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.Robolectric;
+import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
-import static org.mockito.Mockito.*;
+import org.robolectric.annotation.Config;
 
+import static org.mockito.Mockito.*;
+import static org.powermock.api.mockito.PowerMockito.*;
 import static org.junit.Assert.*;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.spy;
+import static org.powermock.api.mockito.PowerMockito.when;
+
 
 /**
  * Created by sospartan on 7/27/16.
  */
-@RunWith(RobolectricTestRunner.class)
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 19)
+@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
 @PrepareForTest(WXFileUtils.class)
 public class WXSDKInstanceTest {
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
+
+  public static WXSDKInstance createInstance(){
+    WXSDKInstance instance =  new WXSDKInstance(Robolectric.setupActivity(TestActivity.class));
+    instance.mInstanceId = "1";
+    return instance;
+  }
+
   WXSDKInstance mInstance;
   @Before
   public void setup() throws Exception {
     WXSDKEngine.initialize(RuntimeEnvironment.application,new InitConfig.Builder().build());
     mInstance = new WXSDKInstance(Robolectric.setupActivity(TestActivity.class));
-    when(WXFileUtils.loadFileContent(anyString(),any(Context.class)).
+
+    mockStatic(WXFileUtils.class);
+    when(WXFileUtils.loadFileContent(null,null)).thenReturn("{}");
   }
 
 
   @Test
   public void testRender() throws Exception {
-      mInstance.render("{}",null,null,null);
-      mInstance.render("{}",100,100);
+    assertEquals(WXFileUtils.loadFileContent(null,null),"{}");
+
+    mInstance.render("{}",null,null,null);
   }
 
 
@@ -245,16 +274,6 @@ public class WXSDKInstanceTest {
   @Test
   public void testRenderByUrl() throws Exception {
     mInstance.renderByUrl(WXPerformance.DEFAULT,"file:///test",null,null,100,100, WXRenderStrategy.APPEND_ASYNC);
-    mInstance.renderByUrl(WXPerformance.DEFAULT,"http://",null,null,100,100, WXRenderStrategy.APPEND_ASYNC);
-  }
-
-  @Test
-  public void testRefreshInstance() throws Exception {
-
-  }
-
-  @Test
-  public void testRefreshInstance1() throws Exception {
-
+    mInstance.renderByUrl(WXPerformance.DEFAULT,"http://taobao.com",null,null,100,100, WXRenderStrategy.APPEND_ASYNC);
   }
 }

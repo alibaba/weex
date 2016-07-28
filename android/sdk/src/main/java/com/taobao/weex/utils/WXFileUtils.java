@@ -220,6 +220,9 @@ public class WXFileUtils {
    * @return the Content of the file
    */
   public static String loadFileContent(String path, Context context) {
+    if(path == null || context == null){
+      return null;
+    }
     StringBuilder builder ;
     try {
       InputStream in = context.getAssets().open(path);

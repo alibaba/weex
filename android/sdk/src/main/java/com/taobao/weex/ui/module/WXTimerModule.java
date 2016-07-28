@@ -218,6 +218,9 @@ public class WXTimerModule extends WXModule {
     if(delay<0){
       delay = 0;
     }
+    if(funcId <= 0){
+      return;
+    }
     Message message = Message.obtain();
     message.what = WXJSBridgeMsgType.MODULE_TIMEOUT;
     message.arg1 = Integer.parseInt(mWXSDKInstance.getInstanceId());
@@ -232,17 +235,26 @@ public class WXTimerModule extends WXModule {
 
   @WXModuleAnno(runOnUIThread = false)
   public void clearTimeout(int funcId) {
+    if(funcId <= 0){
+      return;
+    }
     WXBridgeManager.getInstance().removeMessage(WXJSBridgeMsgType.MODULE_TIMEOUT, funcId);
   }
 
   @WXModuleAnno(runOnUIThread = false)
   public void clearInterval(int funcId) {
+    if(funcId <= 0){
+      return;
+    }
     WXBridgeManager.getInstance().removeMessage(WXJSBridgeMsgType.MODULE_INTERVAL, funcId);
   }
 
   public static void setInterval(int funcId, int interval, int instanceId) {
     if(interval<0){
       interval = 0;
+    }
+    if(funcId <= 0){
+      return;
     }
     Message message = Message.obtain();
     message.what = WXJSBridgeMsgType.MODULE_INTERVAL;
