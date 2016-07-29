@@ -786,6 +786,7 @@ class WXDomStatement {
     }
     clearRegistryForDom(domObject);
     parent.remove(domObject);
+    mRegistry.remove(ref);
 
     mNormalTasks.add(new IWXRenderTask() {
 

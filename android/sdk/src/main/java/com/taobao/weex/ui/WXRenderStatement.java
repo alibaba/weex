@@ -394,6 +394,7 @@ class WXRenderStatement {
     WXVContainer parent = component.getParent();
     clearRegistryForComponent(component);
     parent.remove(component);
+    mRegistry.remove(ref);
     component.destroy();
     return component;
   }
