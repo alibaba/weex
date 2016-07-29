@@ -23,11 +23,19 @@ If you are a green hand to the debug of weex, we recommend you to try your first
 Of course you can reuse the code of playground to build your own app, that is the simplest way to let your app's js code debuggable. On the other hand QR code is not necessary, if your review the source code you can draw a conclusion that QR CODE is just a way to set `devtools server` address. following those steps you can do the same thing.
 
 - gradle dependency on inspector.
-````
-dependencies {
-        compile(:inspector)
-}
-````
+  * *source code dependency*. you can set the dependency just like `playground` have done.
+    * copy project dir `android/inspect` to the same dir of your app. 
+    * add dependency in your app's build.gradle. 
+     ````
+     dependencies {
+             compile project(:inspector)
+     }
+     ````
+    * include the inspector in your project's settings.gradle. 
+    ```
+    include ':app', ':inspector'
+    ```
+
 
 - initialize in your XXXApplication file.
 ````
