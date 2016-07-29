@@ -216,6 +216,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -248,7 +249,7 @@ public class WXTimerModuleTest {
     module = new WXTimerModule();
     module.mWXSDKInstance = WXSDKInstanceTest.createInstance();
 
-    bridge = PowerMockito.mock(WXBridgeManager.class);
+    bridge = Mockito.mock(WXBridgeManager.class);
     WXBridgeManagerTest.setBridgeManager(bridge);
 
   }

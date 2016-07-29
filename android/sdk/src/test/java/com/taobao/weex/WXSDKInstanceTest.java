@@ -248,6 +248,7 @@ public class WXSDKInstanceTest {
   public static WXSDKInstance createInstance(){
     WXSDKInstance instance =  new WXSDKInstance(Robolectric.setupActivity(TestActivity.class));
     instance.mInstanceId = "1";
+    instance.mContext = Robolectric.setupActivity(TestActivity.class);
     return instance;
   }
 

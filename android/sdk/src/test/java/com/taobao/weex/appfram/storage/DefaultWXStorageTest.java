@@ -202,179 +202,87 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.ui.component;
+package com.taobao.weex.appfram.storage;
 
-import android.content.Context;
-import android.text.TextUtils;
-import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
+import com.taobao.weappplus_sdk.BuildConfig;
+import com.taobao.weex.bridge.WXBridgeManager;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
 
-import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.adapter.IWXImgLoaderAdapter;
-import com.taobao.weex.common.Component;
-import com.taobao.weex.common.WXDomPropConstant;
-import com.taobao.weex.common.WXImageSharpen;
-import com.taobao.weex.common.WXImageStrategy;
-import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.ui.ComponentCreator;
-import com.taobao.weex.ui.view.WXImageView;
-import com.taobao.weex.utils.WXResourceUtils;
-import com.taobao.weex.utils.WXUtils;
-
-import java.lang.reflect.InvocationTargetException;
-
-import java.util.Map;
+import static org.junit.Assert.*;
+import static org.powermock.api.mockito.PowerMockito.*;
+import static org.mockito.Mockito.*;
 
 /**
- * Image component
+ * Created by sospartan on 7/28/16.
  */
-@Component(lazyload = false)
-public class WXImage extends WXComponent<ImageView> {
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 19)
+@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
+@PrepareForTest(WXDatabaseSupplier.class)
+public class DefaultWXStorageTest {
 
-    public static class Ceator implements ComponentCreator {
-        public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-            return new WXImage(instance,node,parent,lazy);
-        }
-    }
+  WXDatabaseSupplier supplier;
+  DefaultWXStorage storage;
+  IWXStorageAdapter.OnResultReceivedListener listener;
 
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
-    @Deprecated
-    public WXImage(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
-        this(instance,dom,parent,isLazy);
-    }
+  @Before
+  public void setup(){
+    supplier = Mockito.mock(WXDatabaseSupplier.class);
+    listener = Mockito.mock(IWXStorageAdapter.OnResultReceivedListener.class);
+    storage = new DefaultWXStorage(RuntimeEnvironment.application);
 
-    public WXImage(WXSDKInstance instance, WXDomObject node,
-                   WXVContainer parent, boolean lazy) {
-        super(instance, node, parent, lazy);
-    }
+    mockStatic(WXDatabaseSupplier.class);
 
-    @Override
-    protected WXImageView initComponentHostView(Context context) {
-        WXImageView view = new WXImageView(mContext, mDomObj);
-        view.setScaleType(ScaleType.FIT_XY);
-        return view;
-    }
-
-    @Override
-    public void setBackgroundColor(String color) {
-        if (!TextUtils.isEmpty(color)) {
-            int colorInt = WXResourceUtils.getColor(color);
-            if (colorInt != Integer.MIN_VALUE) {
-                mHost.setBackgroundColor(colorInt);
-            }
-        }
-    }
+    PowerMockito.when(WXDatabaseSupplier.getInstance(RuntimeEnvironment.application)).thenReturn(supplier);
+  }
 
 
-    /**
-     * Image is not support border.
-     */
-    @Override
-    public void setBorderRadius(String key, float borderRadius) {
-    }
+  @Test
+  public void testSetItem() throws Exception {
+    storage.setItem("","",listener);
 
-    /**
-     * Image is not support border.
-     */
-    @Override
-    public void setBorderWidth(String key, float borderWidth) {
-    }
+    verify(listener,timeout(3000).times(1)).onReceived(anyMapOf(String.class,Object.class));
+  }
 
-    /**
-     * Image is not support border.
-     */
-    @Override
-    public void setBorderStyle(String borderStyle) {
-    }
+  @Test
+  public void testGetItem() throws Exception {
+    storage.getItem("",listener);
 
-    /**
-     * Image is not support border.
-     */
-    @Override
-    public void setBorderColor(String key, String borderColor) {
-    }
+    verify(listener,timeout(3000).times(1)).onReceived(anyMapOf(String.class,Object.class));
+  }
 
-    @Override
-    protected boolean setProperty(String key, Object param) {
-        switch (key) {
-            case WXDomPropConstant.WX_RESIZE_MODE:
-                String resize_mode = WXUtils.getString(param,null);
-                if (resize_mode != null)
-                    setResizeMode(resize_mode);
-                return true;
-            case WXDomPropConstant.WX_RESIZE:
-                String resize = WXUtils.getString(param,null);
-                if (resize != null)
-                    setResize(resize);
-                return true;
-            case WXDomPropConstant.WX_ATTR_SRC:
-                String src = WXUtils.getString(param,null);
-                if (src != null)
-                    setSrc(src);
-                return true;
-        }
-        return super.setProperty(key, param);
-    }
+  @Test
+  public void testRemoveItem() throws Exception {
+    storage.removeItem("",listener);
 
-    @WXComponentProp(name = WXDomPropConstant.WX_RESIZE_MODE)
-    public void setResizeMode(String resizeMode) {
-        ((ImageView) getHostView()).setScaleType(getResizeMode(resizeMode));
-    }
+    verify(listener,timeout(3000).times(1)).onReceived(anyMapOf(String.class,Object.class));
+  }
 
-    private ScaleType getResizeMode(String resizeMode) {
-        ScaleType scaleType = ScaleType.FIT_XY;
-        if (TextUtils.isEmpty(resizeMode)) {
-            return scaleType;
-        }
+  @Test
+  public void testLength() throws Exception {
+    storage.length(listener);
 
-        if (resizeMode.equals("cover")) {
-            scaleType = ScaleType.CENTER_CROP;
-        } else if (resizeMode.equals("contain")) {
-            scaleType = ScaleType.FIT_CENTER;
-        } else if (resizeMode.equals("stretch")) {
-            scaleType = ScaleType.FIT_XY;
-        } else if (resizeMode.equals("center")) {
-            scaleType = ScaleType.CENTER;
-        } else if (resizeMode.equals("start")) {
-            scaleType = ScaleType.MATRIX;
-        } else if (resizeMode.equals("end")) {
-            scaleType = ScaleType.FIT_END;
-        }
-        return scaleType;
-    }
+    verify(listener,timeout(3000).times(1)).onReceived(anyMapOf(String.class,Object.class));
+  }
 
-    @WXComponentProp(name = WXDomPropConstant.WX_RESIZE)
-    public void setResize(String resize) {
-        ((ImageView) getHostView()).setScaleType(getResizeMode(resize));
-    }
+  @Test
+  public void testGetAllKeys() throws Exception {
+    storage.getAllKeys(listener);
 
-    @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SRC)
-    public void setSrc(String src) {
-
-        WXImageStrategy imageStrategy = new WXImageStrategy();
-        imageStrategy.isClipping = true;
-
-        WXImageSharpen imageSharpen = mDomObj.attr.getImageSharpen();
-        imageStrategy.isSharpen = imageSharpen == WXImageSharpen.SHARPEN;
-
-        imageStrategy.setImageListener(new WXImageStrategy.ImageListener() {
-            @Override
-            public void onImageFinish(String url,ImageView imageView, boolean result, Map extra) {
-                if(!result && imageView!=null){
-                    imageView.setImageDrawable(null);
-                }
-            }
-        });
-
-        if(mDomObj.attr!=null && mDomObj.attr.containsKey(WXDomPropConstant.WX_ATTR_PLACE_HOLDER)){
-            String placeHolder= (String) mDomObj.attr.get(WXDomPropConstant.WX_ATTR_PLACE_HOLDER);
-            imageStrategy.placeHolder=placeHolder;
-        }
-
-        IWXImgLoaderAdapter imgLoaderAdapter = mInstance.getImgLoaderAdapter();
-        if (imgLoaderAdapter != null) {
-            imgLoaderAdapter.setImage(src, getHostView(),
-                    mDomObj.attr.getImageQuality(), imageStrategy);
-        }
-    }
+    verify(listener,timeout(3000).times(1)).onReceived(anyMapOf(String.class,Object.class));
+  }
 }

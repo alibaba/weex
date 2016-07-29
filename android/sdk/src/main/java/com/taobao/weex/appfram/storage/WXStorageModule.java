@@ -219,7 +219,7 @@ import java.util.Map;
  */
 public class WXStorageModule extends WXModule implements IWXStorage {
 
-    private IWXStorageAdapter mStorageAdapter;
+    IWXStorageAdapter mStorageAdapter;
 
     private IWXStorageAdapter ability() {
         if (mStorageAdapter != null) {

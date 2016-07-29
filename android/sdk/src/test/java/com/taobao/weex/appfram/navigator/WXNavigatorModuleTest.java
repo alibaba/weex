@@ -202,179 +202,155 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.ui.component;
+package com.taobao.weex.appfram.navigator;
 
-import android.content.Context;
-import android.text.TextUtils;
-import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
-
+import com.taobao.weappplus_sdk.BuildConfig;
+import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.adapter.IWXImgLoaderAdapter;
-import com.taobao.weex.common.Component;
-import com.taobao.weex.common.WXDomPropConstant;
-import com.taobao.weex.common.WXImageSharpen;
-import com.taobao.weex.common.WXImageStrategy;
-import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.ui.ComponentCreator;
-import com.taobao.weex.ui.view.WXImageView;
-import com.taobao.weex.utils.WXResourceUtils;
-import com.taobao.weex.utils.WXUtils;
+import com.taobao.weex.WXSDKInstanceTest;
+import com.taobao.weex.bridge.WXBridgeManager;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.annotation.Config;
 
-import java.lang.reflect.InvocationTargetException;
-
-import java.util.Map;
+import static org.junit.Assert.*;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.*;
+import static org.mockito.Mockito.*;
 
 /**
- * Image component
+ * Created by sospartan on 7/28/16.
  */
-@Component(lazyload = false)
-public class WXImage extends WXComponent<ImageView> {
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 19)
+@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*","org.json.*" })
+@PrepareForTest(WXSDKEngine.class)
+public class WXNavigatorModuleTest {
 
-    public static class Ceator implements ComponentCreator {
-        public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-            return new WXImage(instance,node,parent,lazy);
-        }
-    }
+  WXNavigatorModule module;
 
+  @Rule
+  public PowerMockRule rule = new PowerMockRule();
 
-    @Deprecated
-    public WXImage(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
-        this(instance,dom,parent,isLazy);
-    }
-
-    public WXImage(WXSDKInstance instance, WXDomObject node,
-                   WXVContainer parent, boolean lazy) {
-        super(instance, node, parent, lazy);
-    }
-
-    @Override
-    protected WXImageView initComponentHostView(Context context) {
-        WXImageView view = new WXImageView(mContext, mDomObj);
-        view.setScaleType(ScaleType.FIT_XY);
-        return view;
-    }
-
-    @Override
-    public void setBackgroundColor(String color) {
-        if (!TextUtils.isEmpty(color)) {
-            int colorInt = WXResourceUtils.getColor(color);
-            if (colorInt != Integer.MIN_VALUE) {
-                mHost.setBackgroundColor(colorInt);
-            }
-        }
-    }
+  @Before
+  public void setUp() throws Exception {
+    mockStatic(WXSDKEngine.class);
 
 
-    /**
-     * Image is not support border.
-     */
-    @Override
-    public void setBorderRadius(String key, float borderRadius) {
-    }
+    module = new WXNavigatorModule();
+    module.mWXSDKInstance = WXSDKInstanceTest.createInstance();
+  }
 
-    /**
-     * Image is not support border.
-     */
-    @Override
-    public void setBorderWidth(String key, float borderWidth) {
-    }
+  private void mockSetter(){
+    when(WXSDKEngine.getActivityNavBarSetter()).thenReturn(new IActivityNavBarSetter() {
+      @Override
+      public boolean push(String param) {
+        return true;
+      }
 
-    /**
-     * Image is not support border.
-     */
-    @Override
-    public void setBorderStyle(String borderStyle) {
-    }
+      @Override
+      public boolean pop(String param) {
+        return true;
+      }
 
-    /**
-     * Image is not support border.
-     */
-    @Override
-    public void setBorderColor(String key, String borderColor) {
-    }
+      @Override
+      public boolean setNavBarRightItem(String param) {
+        return true;
+      }
 
-    @Override
-    protected boolean setProperty(String key, Object param) {
-        switch (key) {
-            case WXDomPropConstant.WX_RESIZE_MODE:
-                String resize_mode = WXUtils.getString(param,null);
-                if (resize_mode != null)
-                    setResizeMode(resize_mode);
-                return true;
-            case WXDomPropConstant.WX_RESIZE:
-                String resize = WXUtils.getString(param,null);
-                if (resize != null)
-                    setResize(resize);
-                return true;
-            case WXDomPropConstant.WX_ATTR_SRC:
-                String src = WXUtils.getString(param,null);
-                if (src != null)
-                    setSrc(src);
-                return true;
-        }
-        return super.setProperty(key, param);
-    }
+      @Override
+      public boolean clearNavBarRightItem(String param) {
+        return true;
+      }
 
-    @WXComponentProp(name = WXDomPropConstant.WX_RESIZE_MODE)
-    public void setResizeMode(String resizeMode) {
-        ((ImageView) getHostView()).setScaleType(getResizeMode(resizeMode));
-    }
+      @Override
+      public boolean setNavBarLeftItem(String param) {
+        return true;
+      }
 
-    private ScaleType getResizeMode(String resizeMode) {
-        ScaleType scaleType = ScaleType.FIT_XY;
-        if (TextUtils.isEmpty(resizeMode)) {
-            return scaleType;
-        }
+      @Override
+      public boolean clearNavBarLeftItem(String param) {
+        return true;
+      }
 
-        if (resizeMode.equals("cover")) {
-            scaleType = ScaleType.CENTER_CROP;
-        } else if (resizeMode.equals("contain")) {
-            scaleType = ScaleType.FIT_CENTER;
-        } else if (resizeMode.equals("stretch")) {
-            scaleType = ScaleType.FIT_XY;
-        } else if (resizeMode.equals("center")) {
-            scaleType = ScaleType.CENTER;
-        } else if (resizeMode.equals("start")) {
-            scaleType = ScaleType.MATRIX;
-        } else if (resizeMode.equals("end")) {
-            scaleType = ScaleType.FIT_END;
-        }
-        return scaleType;
-    }
+      @Override
+      public boolean setNavBarMoreItem(String param) {
+        return true;
+      }
 
-    @WXComponentProp(name = WXDomPropConstant.WX_RESIZE)
-    public void setResize(String resize) {
-        ((ImageView) getHostView()).setScaleType(getResizeMode(resize));
-    }
+      @Override
+      public boolean clearNavBarMoreItem(String param) {
+        return true;
+      }
 
-    @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SRC)
-    public void setSrc(String src) {
+      @Override
+      public boolean setNavBarTitle(String param) {
+        return true;
+      }
+    });
+  }
 
-        WXImageStrategy imageStrategy = new WXImageStrategy();
-        imageStrategy.isClipping = true;
+  @Test
+  public void testPush() throws Exception {
+    module.push("{}","");
+    module.push("{'url':'kdkdkdkdkd'}","");
+    mockSetter();
+    module.push("{}","");
+  }
 
-        WXImageSharpen imageSharpen = mDomObj.attr.getImageSharpen();
-        imageStrategy.isSharpen = imageSharpen == WXImageSharpen.SHARPEN;
 
-        imageStrategy.setImageListener(new WXImageStrategy.ImageListener() {
-            @Override
-            public void onImageFinish(String url,ImageView imageView, boolean result, Map extra) {
-                if(!result && imageView!=null){
-                    imageView.setImageDrawable(null);
-                }
-            }
-        });
+  @Test
+  public void testPop() throws Exception {
+    mockSetter();
+    module.pop("{}","");
+  }
 
-        if(mDomObj.attr!=null && mDomObj.attr.containsKey(WXDomPropConstant.WX_ATTR_PLACE_HOLDER)){
-            String placeHolder= (String) mDomObj.attr.get(WXDomPropConstant.WX_ATTR_PLACE_HOLDER);
-            imageStrategy.placeHolder=placeHolder;
-        }
+  @Test
+  public void testSetNavBarRightItem() throws Exception {
+    mockSetter();
+    module.setNavBarRightItem("{}","");
+  }
 
-        IWXImgLoaderAdapter imgLoaderAdapter = mInstance.getImgLoaderAdapter();
-        if (imgLoaderAdapter != null) {
-            imgLoaderAdapter.setImage(src, getHostView(),
-                    mDomObj.attr.getImageQuality(), imageStrategy);
-        }
-    }
+  @Test
+  public void testClearNavBarRightItem() throws Exception {
+    mockSetter();
+    module.clearNavBarRightItem("{}","");
+  }
+
+  @Test
+  public void testSetNavBarLeftItem() throws Exception {
+    mockSetter();
+    module.setNavBarLeftItem("{}","");
+  }
+
+  @Test
+  public void testClearNavBarLeftItem() throws Exception {
+    mockSetter();
+    module.clearNavBarLeftItem("{}","");
+  }
+
+  @Test
+  public void testSetNavBarMoreItem() throws Exception {
+    mockSetter();
+    module.setNavBarMoreItem("{}","");
+  }
+
+  @Test
+  public void testClearNavBarMoreItem() throws Exception {
+    mockSetter();
+    module.clearNavBarMoreItem("{}","");
+  }
+
+  @Test
+  public void testSetNavBarTitle() throws Exception {
+    mockSetter();
+    module.setNavBarTitle("{}","");
+  }
 }

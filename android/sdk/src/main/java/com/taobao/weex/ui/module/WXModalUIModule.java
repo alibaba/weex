@@ -202,179 +202,218 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.ui.component;
+package com.taobao.weex.ui.module;
 
-import android.content.Context;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.text.TextUtils;
-import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
+import android.view.Gravity;
+import android.widget.EditText;
+import android.widget.Toast;
 
-import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.adapter.IWXImgLoaderAdapter;
-import com.taobao.weex.common.Component;
-import com.taobao.weex.common.WXDomPropConstant;
-import com.taobao.weex.common.WXImageSharpen;
-import com.taobao.weex.common.WXImageStrategy;
-import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.ui.ComponentCreator;
-import com.taobao.weex.ui.view.WXImageView;
-import com.taobao.weex.utils.WXResourceUtils;
-import com.taobao.weex.utils.WXUtils;
+import com.taobao.weex.bridge.JSCallback;
+import com.taobao.weex.bridge.WXBridgeManager;
+import com.taobao.weex.common.WXModule;
+import com.taobao.weex.common.WXModuleAnno;
+import com.taobao.weex.utils.WXConst;
+import com.taobao.weex.utils.WXLogUtils;
 
-import java.lang.reflect.InvocationTargetException;
+import org.json.JSONObject;
 
+import java.net.URLDecoder;
+import java.util.HashMap;
 import java.util.Map;
 
+
 /**
- * Image component
+ * WXModalUIModule module provide toast、alert、confirm、prompt to display the message.
+ * for example(weex JS):
+ * this.$call('modal','toast',{'message':'test toast','duration': 2.0});
  */
-@Component(lazyload = false)
-public class WXImage extends WXComponent<ImageView> {
+public class WXModalUIModule extends WXModule {
 
-    public static class Ceator implements ComponentCreator {
-        public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-            return new WXImage(instance,node,parent,lazy);
+  private Toast toast;
+  @WXModuleAnno
+  public void toast(String param) {
+
+    String message = "";
+    int duration = Toast.LENGTH_SHORT;
+    if (!TextUtils.isEmpty(param)) {
+      try {
+        param = URLDecoder.decode(param, "utf-8");
+        JSONObject jsObj = new JSONObject(param);
+        message = jsObj.optString(WXConst.MESSAGE);
+        duration = jsObj.optInt(WXConst.DURATION);
+      } catch (Exception e) {
+        WXLogUtils.e("[WXModalUIModule] alert param parse error " + WXLogUtils.getStackTrace(e));
+      }
+    }
+    if (TextUtils.isEmpty(message)) {
+      WXLogUtils.e("[WXModalUIModule] toast param parse is null ");
+      return;
+    }
+
+    if (duration > 3) {
+      duration = Toast.LENGTH_LONG;
+    } else {
+      duration = Toast.LENGTH_SHORT;
+    }
+    if(toast== null){
+      toast =Toast.makeText(mWXSDKInstance.getContext(), message, duration);
+    } else {
+      toast.setDuration(duration);
+      toast.setText(message);
+    }
+    toast.setGravity(Gravity.CENTER, 0, 0);
+    toast.show();
+  }
+
+  @WXModuleAnno
+  public void alert(String param, final JSCallback callback) {
+
+    if (mWXSDKInstance.getContext() instanceof Activity) {
+
+      String message = "";
+      String okTitle = WXConst.OK;
+      if (!TextUtils.isEmpty(param)) {
+        try {
+          param = URLDecoder.decode(param, "utf-8");
+          JSONObject jsObj = new JSONObject(param);
+          message = jsObj.optString(WXConst.MESSAGE);
+          okTitle = jsObj.optString(WXConst.OK_TITLE);
+        } catch (Exception e) {
+          WXLogUtils.e("[WXModalUIModule] alert param parse error " + WXLogUtils.getStackTrace(e));
         }
-    }
+      }
+      if (TextUtils.isEmpty(message)) {
+        message="";
+      }
+      AlertDialog.Builder builder = new AlertDialog.Builder(mWXSDKInstance.getContext());
+      builder.setMessage(message);
 
-
-    @Deprecated
-    public WXImage(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
-        this(instance,dom,parent,isLazy);
-    }
-
-    public WXImage(WXSDKInstance instance, WXDomObject node,
-                   WXVContainer parent, boolean lazy) {
-        super(instance, node, parent, lazy);
-    }
-
-    @Override
-    protected WXImageView initComponentHostView(Context context) {
-        WXImageView view = new WXImageView(mContext, mDomObj);
-        view.setScaleType(ScaleType.FIT_XY);
-        return view;
-    }
-
-    @Override
-    public void setBackgroundColor(String color) {
-        if (!TextUtils.isEmpty(color)) {
-            int colorInt = WXResourceUtils.getColor(color);
-            if (colorInt != Integer.MIN_VALUE) {
-                mHost.setBackgroundColor(colorInt);
-            }
+      final String okTitle_f = TextUtils.isEmpty(okTitle) ? WXConst.OK : okTitle;
+      builder.setPositiveButton(okTitle_f, new OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+          callback.invoke(okTitle_f);
         }
+      });
+      AlertDialog alertDialog = builder.create();
+      alertDialog.setCanceledOnTouchOutside(false);
+      alertDialog.show();
+    } else {
+      WXLogUtils.e("[WXModalUIModule] when call alert mWXSDKInstance.getContext() must instanceof Activity");
     }
+  }
 
+  @WXModuleAnno
+  public void confirm(String param, final JSCallback callback) {
 
-    /**
-     * Image is not support border.
-     */
-    @Override
-    public void setBorderRadius(String key, float borderRadius) {
-    }
+    if (mWXSDKInstance.getContext() instanceof Activity) {
+      String message = "";
+      String okTitle = WXConst.OK;
+      String cancelTitle = WXConst.CANCEL;
 
-    /**
-     * Image is not support border.
-     */
-    @Override
-    public void setBorderWidth(String key, float borderWidth) {
-    }
-
-    /**
-     * Image is not support border.
-     */
-    @Override
-    public void setBorderStyle(String borderStyle) {
-    }
-
-    /**
-     * Image is not support border.
-     */
-    @Override
-    public void setBorderColor(String key, String borderColor) {
-    }
-
-    @Override
-    protected boolean setProperty(String key, Object param) {
-        switch (key) {
-            case WXDomPropConstant.WX_RESIZE_MODE:
-                String resize_mode = WXUtils.getString(param,null);
-                if (resize_mode != null)
-                    setResizeMode(resize_mode);
-                return true;
-            case WXDomPropConstant.WX_RESIZE:
-                String resize = WXUtils.getString(param,null);
-                if (resize != null)
-                    setResize(resize);
-                return true;
-            case WXDomPropConstant.WX_ATTR_SRC:
-                String src = WXUtils.getString(param,null);
-                if (src != null)
-                    setSrc(src);
-                return true;
+      if (!TextUtils.isEmpty(param)) {
+        try {
+          param = URLDecoder.decode(param, "utf-8");
+          JSONObject jsObj = new JSONObject(param);
+          message = jsObj.optString(WXConst.MESSAGE);
+          okTitle = jsObj.optString(WXConst.OK_TITLE);
+          cancelTitle = jsObj.optString(WXConst.CANCEL_TITLE);
+        } catch (Exception e) {
+          WXLogUtils.e("[WXModalUIModule] confirm param parse error " + WXLogUtils.getStackTrace(e));
         }
-        return super.setProperty(key, param);
-    }
+      }
+      if (TextUtils.isEmpty(message)) {
+        message="";
+      }
+      AlertDialog.Builder builder = new AlertDialog.Builder(mWXSDKInstance.getContext());
+      builder.setMessage(message);
 
-    @WXComponentProp(name = WXDomPropConstant.WX_RESIZE_MODE)
-    public void setResizeMode(String resizeMode) {
-        ((ImageView) getHostView()).setScaleType(getResizeMode(resizeMode));
-    }
+      final String okTitle_f = TextUtils.isEmpty(okTitle) ? WXConst.OK : okTitle;
+      final String cancelTitle_f = TextUtils.isEmpty(cancelTitle) ? WXConst.CANCEL : cancelTitle;
 
-    private ScaleType getResizeMode(String resizeMode) {
-        ScaleType scaleType = ScaleType.FIT_XY;
-        if (TextUtils.isEmpty(resizeMode)) {
-            return scaleType;
+      builder.setPositiveButton(okTitle_f, new OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+          callback.invoke(okTitle_f);
         }
+      });
+      builder.setNegativeButton(cancelTitle_f, new OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+          callback.invoke(cancelTitle_f);
 
-        if (resizeMode.equals("cover")) {
-            scaleType = ScaleType.CENTER_CROP;
-        } else if (resizeMode.equals("contain")) {
-            scaleType = ScaleType.FIT_CENTER;
-        } else if (resizeMode.equals("stretch")) {
-            scaleType = ScaleType.FIT_XY;
-        } else if (resizeMode.equals("center")) {
-            scaleType = ScaleType.CENTER;
-        } else if (resizeMode.equals("start")) {
-            scaleType = ScaleType.MATRIX;
-        } else if (resizeMode.equals("end")) {
-            scaleType = ScaleType.FIT_END;
         }
-        return scaleType;
+      });
+      AlertDialog alertDialog = builder.create();
+      alertDialog.setCanceledOnTouchOutside(false);
+      alertDialog.show();
+    } else {
+      WXLogUtils.e("[WXModalUIModule] when call confirm mWXSDKInstance.getContext() must instanceof Activity");
     }
+  }
 
-    @WXComponentProp(name = WXDomPropConstant.WX_RESIZE)
-    public void setResize(String resize) {
-        ((ImageView) getHostView()).setScaleType(getResizeMode(resize));
-    }
+  @WXModuleAnno
+  public void prompt(String param, final JSCallback callback) {
+    if (mWXSDKInstance.getContext() instanceof Activity) {
+      String message = "";
+      String defaultValue = "";
+      String okTitle = WXConst.OK;
+      String cancelTitle = WXConst.CANCEL;
 
-    @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SRC)
-    public void setSrc(String src) {
-
-        WXImageStrategy imageStrategy = new WXImageStrategy();
-        imageStrategy.isClipping = true;
-
-        WXImageSharpen imageSharpen = mDomObj.attr.getImageSharpen();
-        imageStrategy.isSharpen = imageSharpen == WXImageSharpen.SHARPEN;
-
-        imageStrategy.setImageListener(new WXImageStrategy.ImageListener() {
-            @Override
-            public void onImageFinish(String url,ImageView imageView, boolean result, Map extra) {
-                if(!result && imageView!=null){
-                    imageView.setImageDrawable(null);
-                }
-            }
-        });
-
-        if(mDomObj.attr!=null && mDomObj.attr.containsKey(WXDomPropConstant.WX_ATTR_PLACE_HOLDER)){
-            String placeHolder= (String) mDomObj.attr.get(WXDomPropConstant.WX_ATTR_PLACE_HOLDER);
-            imageStrategy.placeHolder=placeHolder;
+      if (!TextUtils.isEmpty(param)) {
+        try {
+          param = URLDecoder.decode(param, "utf-8");
+          JSONObject jsObj = new JSONObject(param);
+          message = jsObj.optString("message");
+          okTitle = jsObj.optString("okTitle");
+          cancelTitle = jsObj.optString("cancelTitle");
+          defaultValue = jsObj.optString("default");
+        } catch (Exception e) {
+          WXLogUtils.e("[WXModalUIModule] confirm param parse error " + WXLogUtils.getStackTrace(e));
         }
+      }
 
-        IWXImgLoaderAdapter imgLoaderAdapter = mInstance.getImgLoaderAdapter();
-        if (imgLoaderAdapter != null) {
-            imgLoaderAdapter.setImage(src, getHostView(),
-                    mDomObj.attr.getImageQuality(), imageStrategy);
+      if (TextUtils.isEmpty(message)) {
+        message="";
+      }
+      AlertDialog.Builder builder = new AlertDialog.Builder(mWXSDKInstance.getContext());
+      builder.setMessage(message);
+
+      final EditText editText = new EditText(mWXSDKInstance.getContext());
+      editText.setText(defaultValue);
+      builder.setView(editText);
+      final String okTitle_f = TextUtils.isEmpty(okTitle) ? WXConst.OK : okTitle;
+      final String cancelTitle_f = TextUtils.isEmpty(cancelTitle) ? WXConst.CANCEL : cancelTitle;
+      builder.setPositiveButton(okTitle_f, new OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+          Map<String, Object> result = new HashMap<String, Object>();
+          result.put(WXConst.RESULT, okTitle_f);
+          result.put(WXConst.DATA, editText.getText().toString());
+          callback.invoke( result);
+
         }
+      });
+      builder.setNegativeButton(cancelTitle_f, new OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+          Map<String, Object> result = new HashMap<String, Object>();
+          result.put(WXConst.RESULT, cancelTitle_f);
+          result.put(WXConst.DATA, editText.getText().toString());
+          callback.invoke( result);
+        }
+      });
+      AlertDialog alertDialog = builder.create();
+      alertDialog.setCanceledOnTouchOutside(false);
+      alertDialog.show();
+    } else {
+      WXLogUtils.e("when call prompt mWXSDKInstance.getContext() must instanceof Activity");
     }
+  }
+
 }
