@@ -76,11 +76,17 @@ export function bindSubVm (vm, subVm, template, repeatItem) {
   mergeProps(template.attr, props, vm, subVm)
 }
 
+/**
+ * merge class and styles from vm to sub vm.
+ */
 export function bindSubVmAfterInitialized (vm, subVm, template) {
   mergeClassStyle(template.classList, vm, subVm)
   mergeStyle(template.style, vm, subVm)
 }
 
+/**
+ * Bind props from vm to sub vm and watch their updates.
+ */
 function mergeProps (target, props, vm, subVm) {
   if (!target) {
     return
@@ -101,6 +107,9 @@ function mergeProps (target, props, vm, subVm) {
   }
 }
 
+/**
+ * Bind style from vm to sub vm and watch their updates.
+ */
 function mergeStyle (target, vm, subVm) {
   for (const key in target) {
     const value = target[key]
@@ -120,6 +129,9 @@ function mergeStyle (target, vm, subVm) {
   }
 }
 
+/**
+ * Bind class & style from vm to sub vm and watch their updates.
+ */
 function mergeClassStyle (target, vm, subVm) {
   const css = vm._options && vm._options.style || {}
 

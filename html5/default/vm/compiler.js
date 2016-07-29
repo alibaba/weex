@@ -1,13 +1,6 @@
 /**
  * @fileOverview
  * ViewModel template parser & data-binding process
- *
- * required:
- * index.js: Vm
- * dom-helper.js: createElement, createBlock
- * dom-helper.js: attachTarget, moveTarget, removeTarget
- * directive.js: bindElement, bindSubVm, setId, watch
- * events.js: $on
  */
 
 import {
@@ -36,9 +29,7 @@ import {
 } from './dom-helper'
 
 /**
- * build(externalDirs)
- *   createVm()
- *   merge(externalDirs, dirs)
+ * build()
  *   compile(template, parentNode)
  *     if (type is content) create contentNode
  *     else if (dirs have v-for) foreach -> create context

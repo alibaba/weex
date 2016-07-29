@@ -8,9 +8,8 @@ global.callNative = function () {}
 
 import * as bundle from '../../../../default/app/bundle'
 import * as register from '../../../../default/app/register'
-import { Document }
-from '../../../../vdom'
-import Vm from '../../../../default/vm'
+import { removeWeexPrefix } from '../../../../default/util'
+import { Document } from '../../../../vdom'
 
 describe('parsing a bundle file', () => {
   const componentTemplate = {
@@ -55,42 +54,44 @@ describe('parsing a bundle file', () => {
         callTasks: (tasks, callback) => {
           callTasksSpy(tasks)
           callback && callback()
+        },
+        requireModule: function (name) {
+          return register.requireModule(this, name)
         }
       }
-
-      Object.assign(app, bundle)
-    })
-
-    beforeEach(() => {
-      app.registerComponent = sinon.spy(register, 'registerComponent')
-      app.requireComponent = sinon.spy(register, 'requireComponent')
-      app.requireModule = sinon.spy(register, 'requireModule')
-      Vm.registerModules = sinon.spy(register, 'registerModules')
     })
 
     afterEach(() => {
       callTasksSpy.reset()
-      register.registerComponent.restore()
-      register.requireComponent.restore()
-      register.requireModule.restore()
-      register.registerModules.restore()
     })
 
     describe('define', () => {
-      it('a weex component', () => {
-        app.define('@weex-component/a', (require, exports, module) => {
+      it('a weex component with factory and deps', () => {
+        bundle.defineFn(app, '@weex-component/a', (require, exports, module) => {
+          module.exports = {
+            template: componentTemplate
+          }
+        })
+        bundle.defineFn(app, '@weex-component/aa', [], (require, exports, module) => {
           module.exports = {
             template: componentTemplate
           }
         })
 
-        expect(app.registerComponent.calledOnce).to.be.true
-        expect(app.registerComponent.firstCall.args[0]).to.be.equal('a')
-        expect(app.registerComponent.firstCall.args[1]).to.deep.equal({
+        expect(app.customComponentMap['a'].template).to.deep.equal(componentTemplate)
+        expect(app.customComponentMap['aa'].template).to.deep.equal(componentTemplate)
+      })
+
+      it('a weex component with definition object and deps', () => {
+        bundle.defineFn(app, '@weex-component/aaa', {
           template: componentTemplate
         })
-        expect(app.customComponentMap['a'].template)
-          .to.deep.equal(componentTemplate)
+        bundle.defineFn(app, '@weex-component/aaaa', [], {
+          template: componentTemplate
+        })
+
+        expect(app.customComponentMap['aaa'].template).to.deep.equal(componentTemplate)
+        expect(app.customComponentMap['aaaa'].template).to.deep.equal(componentTemplate)
       })
 
       it('a weex module', () => {
@@ -99,29 +100,25 @@ describe('parsing a bundle file', () => {
           args: []
         }]
 
-        app.define('@weex-module/dom', (require, exports, module) => {
+        bundle.defineFn(app, '@weex-module/dom', (require, exports, module) => {
           module.exports = methods
         })
-
-        expect(Vm.registerModules.calledOnce).to.be.true
-        expect(Vm.registerModules.firstCall.args[0].dom)
-          .to.deep.equal(methods)
       })
 
       it('a normal module', () => {
-        app.define('./a', (require, exports, module) => {
+        bundle.defineFn(app, './a', (require, exports, module) => {
           exports.version = '0.1'
         })
       })
 
       it('a npm module', () => {
-        app.define('lib-httpurl', (require, exports, module) => {
+        bundle.defineFn(app, 'lib-httpurl', (require, exports, module) => {
           exports.version = '0.2'
         })
       })
 
       it('a CMD module', () => {
-        app.define('kg/base', [], (require, exports, module) => {
+        bundle.defineFn(app, 'kg/base', [], (require, exports, module) => {
           exports.version = '0.3'
         })
       })
@@ -129,29 +126,30 @@ describe('parsing a bundle file', () => {
 
     describe('require', () => {
       it('a weex component', (done) => {
-        app.define('@weex-component/b', (require, exports, module) => {
+        bundle.defineFn(app, '@weex-component/b', (require, exports, module) => {
           const componentA = require('@weex-component/a')
 
-          expect(app.requireComponent.calledOnce).to.be.true
-          expect(app.requireComponent.firstCall.args[0]).to.be.equal('a')
           expect(componentA.template).to.be.equal(componentTemplate)
           done()
         })
       })
 
       it('a weex module', (done) => {
-        app.define('@weex-component/c', (require, exports, module) => {
+        // eslint-disable-next-line camelcase
+        const __weex_require__ = name => register.requireModule(app, removeWeexPrefix(name))
+        bundle.defineFn(app, '@weex-component/c', (require, exports, module) => {
           const dom = require('@weex-module/dom')
-
-          expect(app.requireModule.calledOnce).to.be.true
-          expect(app.requireModule.firstCall.args[0]).to.be.equal('dom')
           expect(dom.createBody).to.be.a('function')
+          const dom2 = __weex_require__('dom')
+          expect(dom2.createBody).to.be.a('function')
+          const dom3 = __weex_require__('@weex-module/dom')
+          expect(dom3.createBody).to.be.a('function')
           done()
         })
       })
 
       it('a normal module', (done) => {
-        app.define('@weex-component/d', (require, exports, module) => {
+        bundle.defineFn(app, '@weex-component/d', (require, exports, module) => {
           const a = require('./a')
 
           expect(a.version).to.be.equal('0.1')
@@ -160,7 +158,7 @@ describe('parsing a bundle file', () => {
       })
 
       it('a npm module', (done) => {
-        app.define('@weex-component/e', (require, exports, module) => {
+        bundle.defineFn(app, '@weex-component/e', (require, exports, module) => {
           const HttpUrl = require('lib-httpurl')
 
           expect(HttpUrl.version).to.be.equal('0.2')
@@ -169,7 +167,7 @@ describe('parsing a bundle file', () => {
       })
 
       it('a CMD module', (done) => {
-        app.define('kg/sample', ['kg/base'], (require, exports, module) => {
+        bundle.defineFn(app, 'kg/sample', ['kg/base'], (require, exports, module) => {
           const base = require('kg/base')
 
           expect(base.version).to.be.equal('0.3')
@@ -183,7 +181,7 @@ describe('parsing a bundle file', () => {
 
       before(() => {
         global.transformerVersion = '>=0.1 <1.0'
-        app.define('@weex-component/main', (require, exports, module) => {
+        bundle.defineFn(app, '@weex-component/main', (require, exports, module) => {
           module.exports = {
             template: componentTemplate,
             ready: ready
@@ -289,25 +287,17 @@ describe('parsing a bundle file', () => {
         callTasks: (tasks, callback) => {
           callTasksSpy(tasks)
           callback && callback()
+        },
+        requireModule: function (name) {
+          return register.requireModule(this, name)
         }
       }
 
       Object.assign(app, bundle)
     })
 
-    beforeEach(() => {
-      app.registerComponent = sinon.spy(register, 'registerComponent')
-      app.requireComponent = sinon.spy(register, 'requireComponent')
-      app.requireModule = sinon.spy(register, 'requireModule')
-      Vm.registerModules = sinon.spy(register, 'registerModules')
-    })
-
     afterEach(() => {
       callTasksSpy.reset()
-      register.registerComponent.restore()
-      register.requireComponent.restore()
-      register.requireModule.restore()
-      register.registerModules.restore()
     })
 
     describe('register', () => {
@@ -316,7 +306,7 @@ describe('parsing a bundle file', () => {
       }
 
       it('a component', () => {
-        app.register('custom', {
+        bundle.register(app, 'custom', {
           template: componentTemplate,
           data: {
             b: 'c'
@@ -326,7 +316,7 @@ describe('parsing a bundle file', () => {
           }
         })
 
-        app.register('main', {
+        bundle.register(app, 'main', {
           template: template,
           data: {
             a: 'b'
@@ -336,33 +326,8 @@ describe('parsing a bundle file', () => {
           }
         })
 
-        expect(app.registerComponent.calledTwice).to.be.true
-
-        expect(app.registerComponent.firstCall.args[0])
-          .to.be.equal('custom')
-        expect(app.registerComponent.firstCall.args[1]).to.deep.equal({
-          template: componentTemplate,
-          data: {
-            b: 'c'
-          },
-          methods: {
-            ready: readyfn
-          }
-        })
         expect(app.customComponentMap['custom'].template)
           .to.deep.equal(componentTemplate)
-
-        expect(app.registerComponent.secondCall.args[0])
-          .to.be.equal('main')
-        expect(app.registerComponent.secondCall.args[1]).to.deep.equal({
-          template: template,
-          data: {
-            a: 'b'
-          },
-          methods: {
-            ready: readyfn
-          }
-        })
         expect(app.customComponentMap['main'].template)
           .to.deep.equal(template)
       })
@@ -452,40 +417,23 @@ describe('parsing a bundle file', () => {
         callTasks: (tasks, callback) => {
           callTasksSpy(tasks)
           callback && callback()
+        },
+        requireModule: function (name) {
+          return register.requireModule(this, name)
         }
       }
-
-      Object.assign(app, bundle)
-    })
-
-    beforeEach(() => {
-      app.registerComponent = sinon.spy(register, 'registerComponent')
-      app.requireComponent = sinon.spy(register, 'requireComponent')
-      app.requireModule = sinon.spy(register, 'requireModule')
-      Vm.registerModules = sinon.spy(register, 'registerModules')
     })
 
     afterEach(() => {
       callTasksSpy.reset()
-      register.registerComponent.restore()
-      register.requireComponent.restore()
-      register.requireModule.restore()
-      register.registerModules.restore()
     })
 
     describe('define(old)', () => {
       it('a component', () => {
-        app.define('main', (require, exports, module) => {
+        bundle.defineFn(app, 'main', (require, exports, module) => {
           module.exports = {
             template: componentTemplate
           }
-        })
-
-        expect(app.registerComponent.calledOnce).to.be.true
-        expect(app.registerComponent.firstCall.args[0])
-          .to.be.equal('main')
-        expect(app.registerComponent.firstCall.args[1]).to.deep.equal({
-          template: componentTemplate
         })
         expect(app.customComponentMap['main'].template)
           .to.deep.equal(componentTemplate)
