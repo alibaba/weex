@@ -16,16 +16,26 @@
 #pragma mark - Preprocessor
 
 // Remote logging definitions. Use preprocessor hackery to make this work nicely.
+#ifdef DEBUG
 #define PDLog(...)                  _PDLog(@"log", ##__VA_ARGS__)
 #define PDLogD(...)                 _PDLog(@"debug", ##__VA_ARGS__)
 #define PDLogW(...)                 _PDLog(@"warning", ##__VA_ARGS__)
 #define PDLogI(...)                 _PDLog(@"info", ##__VA_ARGS__)
 #define PDLogE(...)                 _PDLog(@"error", ##__VA_ARGS__)
-
 #define PDLogObjects(...)           _PDLogObjects(@"log", ##__VA_ARGS__)
-
 #define _PDLog(sev, ...)            _PDLogObjectsImpl(sev, @[[NSString stringWithFormat:__VA_ARGS__]]);
 #define _PDLogObjects(sev, ...)     _PDLogObjectsImpl(sev, @[__VA_ARGS__]);
+#else
+#define PDLog(...)
+#define PDLogD(...)
+#define PDLogW(...)
+#define PDLogI(...)
+#define PDLogE(...)
+#define PDLogObjects(...)
+#define _PDLog(sev, ...)
+#define _PDLogObjects(sev, ...)
+#endif
+
 
 
 #pragma mark - Definitions

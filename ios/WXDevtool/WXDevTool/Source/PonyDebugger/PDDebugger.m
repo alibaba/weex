@@ -526,9 +526,6 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
 
 - (void)_initBridgeThread {
     _bridgeThread = [NSThread currentThread];
-    if (_debugAry.count == 0 && _registerData) {
-        [_debugAry insertObject:_registerData atIndex:0];
-    }
 }
 
 - (void)_executeBridgeThead:(dispatch_block_t)block
