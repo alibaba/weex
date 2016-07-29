@@ -210,6 +210,7 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
 import com.taobao.weex.common.Component;
 import com.taobao.weex.common.WXDomPropConstant;
@@ -222,7 +223,7 @@ import com.taobao.weex.utils.WXResourceUtils;
 import com.taobao.weex.utils.WXUtils;
 
 import java.lang.reflect.InvocationTargetException;
-
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -363,6 +364,11 @@ public class WXImage extends WXComponent<ImageView> {
             public void onImageFinish(String url,ImageView imageView, boolean result, Map extra) {
                 if(!result && imageView!=null){
                     imageView.setImageDrawable(null);
+                }
+                if(getDomObject()!=null && getDomObject().containsEvent(WXEventType.ONLOAD)){
+                    Map<String,Object> params=new HashMap<String, Object>();
+                    params.put("success",result);
+                    WXSDKManager.getInstance().fireEvent(mInstanceId,getRef(),WXEventType.ONLOAD,params);
                 }
             }
         });
