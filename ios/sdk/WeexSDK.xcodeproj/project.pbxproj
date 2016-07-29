@@ -64,7 +64,7 @@
 		59D3CA471CFC3CC0008835DC /* WXSliderComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 59D3CA461CFC3CC0008835DC /* WXSliderComponent.m */; };
 		59D3CA4A1CFC3CE1008835DC /* NSTimer+Weex.h in Headers */ = {isa = PBXBuildFile; fileRef = 59D3CA481CFC3CE1008835DC /* NSTimer+Weex.h */; };
 		59D3CA4B1CFC3CE1008835DC /* NSTimer+Weex.m in Sources */ = {isa = PBXBuildFile; fileRef = 59D3CA491CFC3CE1008835DC /* NSTimer+Weex.m */; };
-		59D3CA681D00544B008835DC /* WeexSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 59D3CA671D00544B008835DC /* WeexSDK.h */; };
+		59D3CA681D00544B008835DC /* WeexSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 59D3CA671D00544B008835DC /* WeexSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7408C48E1CFB345D000BCCD0 /* WXComponent+Events.h in Headers */ = {isa = PBXBuildFile; fileRef = 7408C48C1CFB345D000BCCD0 /* WXComponent+Events.h */; };
 		7408C48F1CFB345D000BCCD0 /* WXComponent+Events.m in Sources */ = {isa = PBXBuildFile; fileRef = 7408C48D1CFB345D000BCCD0 /* WXComponent+Events.m */; };
 		7410811F1CED585A001BC6E5 /* WXComponentManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 7410811D1CED585A001BC6E5 /* WXComponentManager.h */; };
