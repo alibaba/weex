@@ -205,18 +205,17 @@
 package com.taobao.weex.utils;
 
 import android.graphics.Typeface;
-import android.text.TextUtils;
 
 import java.net.URI;
 
 public class FontDO {
-  private String mFontFamilyName;
-  private String mSrc;
-  private String mUrl;
-  private int mSrcType = TYPE_NETWORK;
+  private final String mFontFamilyName;
+  private String mUrl = "";
+  private int mType = TYPE_NETWORK;
   private Typeface mTypeface;
-  private int mState = STATE_INIT;
+  private int mState = STATE_INVALID;
 
+  public final static int STATE_INVALID = -1;
   public final static int STATE_INIT = 0;
   public final static int STATE_LOADING = 1;
   public final static int STATE_SUCCESS = 2;
@@ -226,53 +225,56 @@ public class FontDO {
   public final static int TYPE_NETWORK = 1;
   public final static int TYPE_FILE = 2;
 
+  public FontDO (String fontFamilyName, String src) {
+    this.mFontFamilyName = fontFamilyName;
+    parseSrc(src);
+  }
   public String getFontFamilyName() {
     return mFontFamilyName;
   }
 
-  public void setFontFamilyName(String fontFamilyName) {
-    this.mFontFamilyName = fontFamilyName;
-  }
-
-  public String getSrc() {
-    return mSrc;
-  }
-
-  public void setSrc(String src) {
-    this.mSrc = src;
-    if (!TextUtils.isEmpty(this.mSrc)) {
-      if (src.matches("^url\\('.*'\\)$")) {
-        mUrl = src.substring(5, src.length() - 2);
-        try {
-          URI uri = URI.create(mUrl);
-          String scheme = uri.getScheme();
-          if (WXConst.SCHEME_HTTP.equals(scheme) ||
-                  WXConst.SCHEME_HTTPS.equals(scheme)) {
-            mSrcType = TYPE_NETWORK;
-          } else if (WXConst.SCHEME_FILE.equals(scheme)) {
-            mSrcType = TYPE_FILE;
-            mUrl = uri.getPath();
-          } else {
-            mSrcType = TYPE_LOCAL;
-          }
-        } catch (Exception e) {
-          WXLogUtils.e("TypefaceUtil", "URI.create(mUrl) failed mUrl: " + mUrl);
-        }
-      } else {
-        mUrl = src;
-        mSrcType = TYPE_NETWORK;
-      }
+  private void parseSrc(String src) {
+    src = (src != null )? src.trim() : "";
+    if (src.isEmpty()) {
+      mState = STATE_INVALID;
+      WXLogUtils.e("TypefaceUtil", "font src is empty.");
+      return;
     }
 
-    WXLogUtils.d("TypefaceUtil", "src:" + src + ", mUrl:" + mUrl + ", mSrcType:" + mSrcType);
+    if (src.matches("^url\\('.*'\\)$")) {
+      mUrl = src.substring(5, src.length() - 2);
+      try {
+        URI uri = URI.create(mUrl);
+        String scheme = uri.getScheme();
+        //TODO: use bundle url to process relative path. see #497
+        if (WXConst.SCHEME_HTTP.equals(scheme) ||
+                WXConst.SCHEME_HTTPS.equals(scheme)) {
+          mType = TYPE_NETWORK;
+        } else if (WXConst.SCHEME_FILE.equals(scheme)) {
+          mType = TYPE_FILE;
+          mUrl = uri.getPath();
+        } else {
+          mType = TYPE_LOCAL;
+        }
+        mState = STATE_INIT;
+      } catch (Exception e) {
+        mType = STATE_INVALID;
+        WXLogUtils.e("TypefaceUtil", "URI.create(mUrl) failed mUrl: " + mUrl);
+      }
+    } else {
+      mUrl = src;
+      mState = STATE_INVALID;
+    }
+
+    WXLogUtils.d("TypefaceUtil", "src:" + src + ", mUrl:" + mUrl + ", mType:" + mType);
   }
 
   public String getUrl() {
     return mUrl;
   }
 
-  public int getSrcType() {
-    return mSrcType;
+  public int getType() {
+    return mType;
   }
 
   public Typeface getTypeface() {

@@ -278,9 +278,10 @@ public class TypefaceUtil {
   }
 
   public static void loadTypeface(final FontDO fontDo) {
-    if (fontDo != null && fontDo.getTypeface() == null && fontDo.getState() != FontDO.STATE_LOADING) {
+    if (fontDo != null && fontDo.getTypeface() == null &&
+            (fontDo.getState() == FontDO.STATE_FAILED || fontDo.getState() == FontDO.STATE_INIT)) {
       fontDo.setState(FontDO.STATE_LOADING);
-      if (fontDo.getSrcType() == FontDO.TYPE_LOCAL) {
+      if (fontDo.getType() == FontDO.TYPE_LOCAL) {
         try {
           Typeface typeface = Typeface.createFromAsset(WXEnvironment.getApplication().getAssets(), fontDo.getUrl());
           if (typeface != null) {
@@ -293,16 +294,15 @@ public class TypefaceUtil {
         } catch (Exception e) {
           WXLogUtils.e(TAG, e.toString());
         }
-      } else if (fontDo.getSrcType() == FontDO.TYPE_NETWORK) {
+      } else if (fontDo.getType() == FontDO.TYPE_NETWORK) {
         final String url = fontDo.getUrl();
         final String fontFamily = fontDo.getFontFamilyName();
         final String fileName = url.replace('/', '_');
-        final String path = WXEnvironment.getDiskCacheDir(WXEnvironment.getApplication());
-        final String fullPath = path + "/" + fileName;
+        final String fullPath = getFontCacheDir() + fileName;
         if (!loadLocalFontFile(fullPath, fontFamily)) {
           downloadFontByNetwork(url, fullPath, fontFamily);
         }
-      } else if (fontDo.getSrcType() == FontDO.TYPE_FILE) {
+      } else if (fontDo.getType() == FontDO.TYPE_FILE) {
         boolean result = loadLocalFontFile(fontDo.getUrl(), fontDo.getFontFamilyName());
         if (!result) {
           fontDo.setState(FontDO.STATE_FAILED);
@@ -399,5 +399,9 @@ public class TypefaceUtil {
       WXLogUtils.e(TAG, e.toString());
     }
     return false;
+  }
+
+  private static String getFontCacheDir() {
+    return WXEnvironment.getDiskCacheDir(WXEnvironment.getApplication()) + "/" + WXConst.FONT_CACHE_DIR_NAME;
   }
 }

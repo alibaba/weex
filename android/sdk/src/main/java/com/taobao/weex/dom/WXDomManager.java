@@ -558,12 +558,10 @@ public final class WXDomManager {
       FontDO fontDO = parseFontDO(jsonObject);
       if (fontDO != null && !TextUtils.isEmpty(fontDO.getFontFamilyName())) {
         FontDO cacheFontDO = TypefaceUtil.getFontDO(fontDO.getFontFamilyName());
-        if (cacheFontDO == null || !TextUtils.equals(cacheFontDO.getSrc(), fontDO.getSrc())) {
+        if (cacheFontDO == null || !TextUtils.equals(cacheFontDO.getUrl(), fontDO.getUrl())) {
           TypefaceUtil.putFontDO(fontDO);
-          cacheFontDO = fontDO;
-        }
-        if (cacheFontDO.getState() == FontDO.STATE_INIT ||
-                cacheFontDO.getState() == FontDO.STATE_FAILED) {
+          TypefaceUtil.loadTypeface(fontDO);
+        } else {
           TypefaceUtil.loadTypeface(cacheFontDO);
         }
       }
@@ -576,9 +574,6 @@ public final class WXDomManager {
     }
     String src = jsonObject.getString(WXConst.FONT_SRC);
     String name = jsonObject.getString(WXConst.FONT_FAMILY);
-    FontDO fontDO = new FontDO();
-    fontDO.setFontFamilyName(name);
-    fontDO.setSrc(src);
-    return fontDO;
+    return new FontDO(name, src);
   }
 }
