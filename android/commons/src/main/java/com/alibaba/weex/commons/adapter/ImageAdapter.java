@@ -204,6 +204,7 @@
  */
 package com.alibaba.weex.commons.adapter;
 
+import android.net.Uri;
 import android.text.TextUtils;
 import android.widget.ImageView;
 
@@ -242,6 +243,17 @@ public class ImageAdapter implements IWXImgLoaderAdapter {
         if (view.getLayoutParams().width <= 0 || view.getLayoutParams().height <= 0) {
           return;
         }
+
+
+        if(!TextUtils.isEmpty(strategy.placeHolder)){
+          Picasso.Builder builder=new Picasso.Builder(WXEnvironment.getApplication());
+          Picasso picasso=builder.build();
+          picasso.load(Uri.parse(strategy.placeHolder)).into(view);
+
+          view.setTag(strategy.placeHolder.hashCode(),picasso);
+        }
+
+
         Picasso.with(WXEnvironment.getApplication())
             .load(temp)
             .into(view, new Callback() {
@@ -249,6 +261,10 @@ public class ImageAdapter implements IWXImgLoaderAdapter {
               public void onSuccess() {
                 if(strategy.getImageListener()!=null){
                   strategy.getImageListener().onImageFinish(url,view,true,null);
+                }
+
+                if(!TextUtils.isEmpty(strategy.placeHolder)){
+                  ((Picasso) view.getTag(strategy.placeHolder.hashCode())).cancelRequest(view);
                 }
               }
 
