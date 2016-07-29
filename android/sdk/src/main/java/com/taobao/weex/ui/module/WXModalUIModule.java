@@ -202,7 +202,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.dom.module;
+package com.taobao.weex.ui.module;
 
 import android.app.Activity;
 import android.app.AlertDialog;

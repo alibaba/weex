@@ -133,9 +133,8 @@ import com.taobao.weex.common.WXException;
 import com.taobao.weex.common.WXInstanceWrap;
 import com.taobao.weex.common.WXModule;
 import com.taobao.weex.dom.*;
-import com.taobao.weex.dom.module.WXModalUIModule;
+import com.taobao.weex.ui.module.WXModalUIModule;
 import com.taobao.weex.http.WXStreamModule;
-import com.taobao.weex.ui.ComponentCreator;
 import com.taobao.weex.ui.IFComponentHolder;
 import com.taobao.weex.ui.SimpleComponentHolder;
 import com.taobao.weex.ui.WXComponentRegistry;
@@ -149,7 +148,6 @@ import com.taobao.weex.ui.module.WXWebViewModule;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXSoInstallMgrSdk;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;

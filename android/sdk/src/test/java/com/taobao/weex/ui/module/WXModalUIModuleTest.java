@@ -202,13 +202,12 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.dom.module;
+package com.taobao.weex.ui.module;
 
-import android.app.AlertDialog;
 import com.taobao.weappplus_sdk.BuildConfig;
 import com.taobao.weex.WXSDKInstanceTest;
-import com.taobao.weex.appfram.storage.WXDatabaseSupplier;
 import com.taobao.weex.bridge.JSCallback;
+import com.taobao.weex.ui.module.WXModalUIModule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -217,14 +216,8 @@ import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.ShadowAlertDialog;
-
-import static org.junit.Assert.*;
-import static org.powermock.api.mockito.PowerMockito.*;
-import static org.mockito.Mockito.*;
 
 /**
  * Created by sospartan on 7/28/16.
