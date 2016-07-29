@@ -13,7 +13,7 @@ const Loader = require('./loader')
 const utils = require('./utils')
 const protocol = require('./protocol')
 const ComponentManager = require('./componentManager')
-const Component = require('./components/component')
+import Component from './components/component'
 const Sender = require('./bridge/sender')
 const receiver = require('./bridge/receiver')
 

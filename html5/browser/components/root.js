@@ -1,7 +1,7 @@
 'use strict'
 
 const ComponentManager = require('../componentManager')
-const Component = require('./component')
+import Component from './component'
 // const utils = require('../utils')
 const logger = require('../logger')
 

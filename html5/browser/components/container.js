@@ -2,7 +2,7 @@
 
 require('../styles/container.css')
 
-const Component = require('./component')
+import Component from './component'
 
 function Container (data, nodeType) {
   Component.call(this, data, nodeType)
