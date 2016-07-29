@@ -28,7 +28,7 @@
 #import "WXTimelineDomainController.h"
 #import "WXCSSDomainController.h"
 #import "WXDebugDomainController.h"
-#import "WXDevTool.h"
+#import "WXDevToolType.h"
 
 #import <WeexSDK/WXAppConfiguration.h>
 #import "WXDeviceInfo.h"
@@ -123,17 +123,12 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
         [WXSDKEngine SDKEngineVersion],@"weexVersion",
         appName, @"name",
         nil];
-//    __weak __typeof__(self) weakSelf = self;
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        [weakSelf _registerDeviceWithParams:parameters];
-//    });
-    
     [self _registerDeviceWithParams:parameters];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(NSString *)message;
 {
-    if ([WXDevTool isDebug]) {
+    if ([WXDevToolType isDebug]) {
         [self _changeToDebugLogicMessage:message];
     }
     
@@ -153,7 +148,7 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
             NSMutableDictionary *newResult = [[NSMutableDictionary alloc] initWithCapacity:result.count];
             [result enumerateKeysAndObjectsUsingBlock:^(id key, id val, BOOL *stop) {
                 if ([key isEqualToString:@"WXDebug_result"]) {
-                    [WXDevTool setDebug:YES];
+                    [WXDevToolType setDebug:YES];
                     [WXSDKEngine restart];
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshInstance" object:nil];
                     return;
@@ -318,7 +313,7 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
 - (void)connectToURL:(NSURL *)url;
 {
     NSLog(@"Connecting to %@", url);
-    [WXDevTool setDebug:NO];
+    [WXDevToolType setDebug:NO];
     _msgAry = nil;
     _msgAry = [NSMutableArray array];
     _debugAry = nil;
@@ -531,16 +526,11 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
 
 - (void)_initBridgeThread {
     _bridgeThread = [NSThread currentThread];
-    if (_debugAry.count > 0 && _registerData) {
-        if (![_registerData isEqualToString:_debugAry[0]]) {
-            [_debugAry insertObject:_registerData atIndex:0];
-        }
-    }
 }
 
 - (void)_executeBridgeThead:(dispatch_block_t)block
 {
-    if ([WXDevTool isDebug]) {
+    if ([WXDevToolType isDebug]) {
         if([NSThread currentThread] == _bridgeThread) {
             block();
         } else if (_bridgeThread){
@@ -658,15 +648,14 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
     
     NSData *data = [NSJSONSerialization dataWithJSONObject:obj options:0 error:nil];
     NSString *encodedData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    _registerData = encodedData;
     if (_bridgeThread) {
         [self _executeBridgeThead:^{
-            _registerData = encodedData;
             [_debugAry insertObject:encodedData atIndex:0];
             [self _executionDebugAry];
         }];
-    }else if(![WXDevTool isDebug]) {
+    }else if(![WXDevToolType isDebug]) {
         [self _executeBridgeThead:^{
-            _registerData = encodedData;
             [_msgAry insertObject:encodedData atIndex:0];
             [self _executionMsgAry];
         }];
