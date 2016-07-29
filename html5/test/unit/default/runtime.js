@@ -10,6 +10,7 @@ import framework from '../../../runtime'
 import frameworks from '../../../runtime/config'
 import config from '../../../default/config'
 import Vm from '../../../default/vm'
+import { clearModules, getModule } from '../../../default/app/register'
 
 function clearRefs (json) {
   delete json.ref
@@ -24,9 +25,6 @@ describe('framework entry', () => {
   const instanceId = Date.now() + ''
 
   before(() => {
-    sinon.stub(Vm, 'registerModules')
-    sinon.stub(Vm, 'registerMethods')
-
     global.callNative = (id, tasks, callbackId) => {
       callNativeSpy(id, tasks, callbackId)
       /* istanbul ignore if */
@@ -40,14 +38,10 @@ describe('framework entry', () => {
   })
 
   afterEach(() => {
-    Vm.registerModules.reset()
-    Vm.registerMethods.reset()
     callNativeSpy.reset()
   })
 
   after(() => {
-    Vm.registerModules.restore()
-    Vm.registerMethods.restore()
     global.callNative = oriCallNative
   })
 
@@ -283,6 +277,7 @@ describe('framework entry', () => {
 
   describe('register modules', () => {
     it('with object of modules', () => {
+      clearModules()
       const modules = {
         a: [{
           name: 'b',
@@ -291,12 +286,8 @@ describe('framework entry', () => {
       }
 
       framework.registerModules(modules)
-      expect(Vm.registerModules.firstCall.args[0]).to.be.deep.equal(modules)
-    })
-
-    it('with non-object', () => {
-      framework.registerModules(1)
-      expect(Vm.registerModules.callCount).to.be.equal(0)
+      expect(getModule('b')).an.object
+      clearModules()
     })
   })
 
@@ -307,12 +298,8 @@ describe('framework entry', () => {
       }
 
       framework.registerMethods(methods)
-      expect(Vm.registerMethods.firstCall.args[0]).to.be.deep.equal(methods)
-    })
-
-    it('with non-object', () => {
-      framework.registerMethods(1)
-      expect(Vm.registerMethods.callCount).to.be.equal(0)
+      expect(Vm.prototype.a).a.function
+      delete Vm.prototype.a
     })
   })
 })

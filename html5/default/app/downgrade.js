@@ -2,7 +2,7 @@ import semver from 'semver'
 import { isPlainObject, typof } from '../util'
 
 /**
- * [normalizeVersion description]
+ * Normalize a version string.
  * @param  {String} Version. ie: 1, 1.0, 1.0.0
  * @return {String} Version
  */
@@ -26,6 +26,17 @@ export function normalizeVersion (v) {
   return result.join('.')
 }
 
+/**
+ * Get informations from different error key. Like:
+ * - code
+ * - errorMessage
+ * - errorType
+ * - isDowngrade
+ * @param  {string} key
+ * @param  {string} val
+ * @param  {string} criteria
+ * @return {object}
+ */
 export function getError (key, val, criteria) {
   const result = {
     isDowngrade: true,
