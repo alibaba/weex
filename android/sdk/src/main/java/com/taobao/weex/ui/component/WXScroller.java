@@ -328,11 +328,11 @@ public class WXScroller extends WXRefreshableContainer implements WXScrollViewLi
 //      mInstance.getRecycleImageManager().setIfRecycleImage(mDomObj.attr.getIsRecycleImage());
 //    }
     if (mDomObj == null || mDomObj.attr == null) {
-      scroll = "vertical";
+      scroll = WXDomPropConstant.WX_ATTR_DIRECTION_VERTICAL;
     } else {
       scroll = mDomObj.attr.getScrollDirection();
     }
-    if(("horizontal").equals(scroll)){
+    if(WXDomPropConstant.WX_ATTR_DIRECTION_HORIZONTAL.equals(scroll)){
       mOrientation = HORIZONTAL;
       mHost = new WXHorizontalScrollView(mContext);
       mRealView = new FrameLayout(mContext);
@@ -409,7 +409,7 @@ public class WXScroller extends WXRefreshableContainer implements WXScrollViewLi
     return mStickyMap;
   }
 
-  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SHOWSCROLLBAR)
+  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SHOW_SCROLLBAR)
   public void setShowScrollbar(boolean show) {
     if (show) {
       if (mOrientation == VERTICAL) {

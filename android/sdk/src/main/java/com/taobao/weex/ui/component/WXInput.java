@@ -208,7 +208,6 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.text.Layout;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
@@ -346,7 +345,7 @@ public class WXInput extends WXComponent {
     ((WXEditText) mHost).setHint(placeholder);
   }
 
-  @WXComponentProp(name = WXDomPropConstant.WX_INPUT_PLACEHOLDER_COLOR)
+  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_PLACEHOLDER_COLOR)
   public void setPlaceholderColor(String color) {
     if (mHost != null && !TextUtils.isEmpty(color)) {
       int colorInt = WXResourceUtils.getColor(color);
@@ -365,7 +364,7 @@ public class WXInput extends WXComponent {
     ((EditText) mHost).setRawInputType(getInputType(mType));
   }
 
-  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_AUTOFOCUS)
+  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_AUTO_FOCUS)
   public void setAutofocus(boolean autofocus) {
     if (mHost == null) {
       return;
@@ -402,14 +401,14 @@ public class WXInput extends WXComponent {
     }
   }
 
-  @WXComponentProp(name = WXDomPropConstant.WX_FONTSIZE)
+  @WXComponentProp(name = WXDomPropConstant.WX_FONT_SIZE)
   public void setFontSize(String fontSize) {
     if (mHost != null && fontSize != null && mDomObj.style != null) {
       ((WXEditText) mHost).setTextSize(TypedValue.COMPLEX_UNIT_PX, WXStyle.getFontSize(mDomObj.style));
     }
   }
 
-  @WXComponentProp(name = WXDomPropConstant.WX_TEXTALIGN)
+  @WXComponentProp(name = WXDomPropConstant.WX_TEXT_ALIGN)
   public void setTextAlign(String textAlign) {
     mTextAlign = getTextAlign(textAlign);
     if (mTextAlign > 0) {
@@ -417,7 +416,7 @@ public class WXInput extends WXComponent {
     }
   }
 
-  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_SINGLELINE)
+  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_SINGLE_LINE)
   public void setSingleLine(boolean singleLine) {
     if (mHost == null) {
       return;
@@ -425,7 +424,7 @@ public class WXInput extends WXComponent {
     ((WXEditText) mHost).setSingleLine(singleLine);
   }
 
-  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_LINES)
+  @WXComponentProp(name = WXDomPropConstant.WX_LINES)
   public void setLines(int lines) {
     if (mHost == null) {
       return;
@@ -433,7 +432,7 @@ public class WXInput extends WXComponent {
     ((WXEditText) mHost).setLines(lines);
   }
 
-  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_MAXLENGTH)
+  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_MAX_LENGTH)
   public void setMaxLength(int maxLength) {
     if (mHost == null) {
     }
@@ -497,11 +496,11 @@ public class WXInput extends WXComponent {
     if (TextUtils.isEmpty(textAlign)) {
       return align;
     }
-    if (textAlign.equals(WXDomPropConstant.WX_TEXTALIGN_LEFT)) {
+    if (textAlign.equals(WXDomPropConstant.WX_TEXT_ALIGN_LEFT)) {
       align = Gravity.LEFT;
-    } else if (textAlign.equals(WXDomPropConstant.WX_TEXTALIGN_CENTER)) {
+    } else if (textAlign.equals(WXDomPropConstant.WX_TEXT_ALIGN_CENTER)) {
       align = Gravity.CENTER;
-    } else if (textAlign.equals(WXDomPropConstant.WX_TEXTALIGN_RIGHT)) {
+    } else if (textAlign.equals(WXDomPropConstant.WX_TEXT_ALIGN_RIGHT)) {
       align = Gravity.RIGHT;
     }
     return align;
