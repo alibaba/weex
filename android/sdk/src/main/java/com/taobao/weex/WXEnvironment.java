@@ -251,6 +251,8 @@ public class WXEnvironment {
 
   public static long sSDKInitInvokeTime = 0;//调用SDK初始化的耗时
   public static long sSDKInitExecuteTime = 0;//SDK初始化执行耗时
+  /** from init to sdk-ready **/
+  public static long sSDKInitTime =0;
 
   public static LogLevel sLogLevel= LogLevel.DEBUG;
   private static boolean isApkDebug = true;

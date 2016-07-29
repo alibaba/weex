@@ -214,6 +214,7 @@ public class WXSDKEngine {
   private static void doInitInternal(final Application application,final InitConfig config){
     WXEnvironment.sApplication = application;
     WXEnvironment.JsFrameworkInit = false;
+    final long initStart = System.currentTimeMillis();
 
     WXBridgeManager.getInstance().getJSHandler().post(new Runnable() {
       @Override
@@ -238,6 +239,8 @@ public class WXSDKEngine {
 
         WXEnvironment.sSDKInitExecuteTime = System.currentTimeMillis() - start;
         WXLogUtils.renderPerformanceLog("SDKInitExecuteTime", WXEnvironment.sSDKInitExecuteTime);
+        WXEnvironment.sSDKInitTime = System.currentTimeMillis() - initStart;
+        WXLogUtils.renderPerformanceLog("SDKInitTime", WXEnvironment.sSDKInitTime);
       }
     });
     register();
