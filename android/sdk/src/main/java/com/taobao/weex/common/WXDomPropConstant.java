@@ -207,26 +207,29 @@ package com.taobao.weex.common;
 public class WXDomPropConstant {
 
   public static final String WX_WIDTH = "width";
-  public static final String WX_MINWIDTH = "minWidth";
-  public static final String WX_MAXWIDTH = "maxWidth";
+  public static final String WX_MIN_WIDTH = "minWidth";
+  public static final String WX_MAX_WIDTH = "maxWidth";
   public static final String WX_HEIGHT = "height";
-  public static final String WX_MINHEIGHT = "minHeight";
-  public static final String WX_MAXHEIGHT = "maxHeight";
+  public static final String WX_MIN_HEIGHT = "minHeight";
+  public static final String WX_MAX_HEIGHT = "maxHeight";
 
-  public static final String WX_ALIGNITEMS = "alignItems";
-  public static final String WX_ALIGNSELF = "alignSelf";
+  public static final String WX_ALIGN_ITEMS = "alignItems";
+  public static final String WX_ALIGN_SELF = "alignSelf";
   public static final String WX_FLEX = "flex";
-  public static final String WX_FLEXDIRECTION = "flexDirection";
-  public static final String WX_JUSTIFYCONTENT = "justifyContent";
-  public static final String WX_FLEXWRAP = "flexWrap";
+  public static final String WX_FLEX_DIRECTION = "flexDirection";
+  public static final String WX_JUSTIFY_CONTENT = "justifyContent";
+  public static final String WX_FLEX_WRAP = "flexWrap";
 
-  public static final String WX_BACKGROUNDCOLOR = "backgroundColor";
+  public static final String WX_BACKGROUND_COLOR = "backgroundColor";
   public static final String WX_OPACITY = "opacity";
+  public static final String WX_OVERFLOW = "overflow";
+  public static final String WX_OVERFLOW_VISIBLE = "visible";
+  public static final String WX_OVERFLOW_HIDDEN = "hidden";
 
-  public static final String WX_BORDERRADIUS = "borderRadius";
-  public static final String WX_BORDERWIDTH = "borderWidth";
-  public static final String WX_BORDERCOLOR = "borderColor";
-  public static final String WX_BORDERSTYLE = "borderStyle";
+  public static final String WX_BORDER_RADIUS = "borderRadius";
+  public static final String WX_BORDER_WIDTH = "borderWidth";
+  public static final String WX_BORDER_COLOR = "borderColor";
+  public static final String WX_BORDER_STYLE = "borderStyle";
 
   public static final String WX_BORDER_TOP_WIDTH = "borderTopWidth";
   public static final String WX_BORDER_RIGHT_WIDTH = "borderRightWidth";
@@ -244,72 +247,77 @@ public class WXDomPropConstant {
   public static final String WX_BORDER_BOTTOM_LEFT_RADIUS = "borderBottomLeftRadius";
 
   public static final String WX_MARGIN = "margin";
-  public static final String WX_MARGINTOP = "marginTop";
-  public static final String WX_MARGINLEFT = "marginLeft";
-  public static final String WX_MARGINRIGHT = "marginRight";
-  public static final String WX_MARGINBOTTOM = "marginBottom";
+  public static final String WX_MARGIN_TOP = "marginTop";
+  public static final String WX_MARGIN_LEFT = "marginLeft";
+  public static final String WX_MARGIN_RIGHT = "marginRight";
+  public static final String WX_MARGIN_BOTTOM = "marginBottom";
 
   public static final String WX_PADDING = "padding";
-  public static final String WX_PADDINGTOP = "paddingTop";
-  public static final String WX_PADDINGLEFT = "paddingLeft";
-  public static final String WX_PADDINGRIGHT = "paddingRight";
-  public static final String WX_PADDINGBOTTOM = "paddingBottom";
+  public static final String WX_PADDING_TOP = "paddingTop";
+  public static final String WX_PADDING_LEFT = "paddingLeft";
+  public static final String WX_PADDING_RIGHT = "paddingRight";
+  public static final String WX_PADDING_BOTTOM = "paddingBottom";
 
   public static final String WX_POSITION = "position";
+  public static final String WX_POSITION_RELATIVE = "relative"; //default
   public static final String WX_POSITION_STICKY = "sticky";
+  public static final String WX_POSITION_ABSOLUTE = "absolute";
   public static final String WX_POSITION_FIXED = "fixed";
-  public static final String WX_POSITION_LFET = "left";
+  public static final String WX_POSITION_LEFT = "left";
   public static final String WX_POSITION_TOP = "top";
   public static final String WX_POSITION_RIGHT = "right";
   public static final String WX_POSITION_BOTTOM = "bottom";
 
-  public static final String WX_TEXTDECORATION = "textDecoration";
-  public static final String WX_TEXTALIGN = "textAlign";
-  public static final String WX_TEXTALIGN_LEFT = "left";
-  public static final String WX_TEXTALIGN_RIGHT = "right";
-  public static final String WX_TEXTALIGN_CENTER = "center";
-  public static final String WX_FONTWEIGHT = "fontWeight";
-  public static final String WX_FONTWEIGHT_BOLD = "bold";
-  public static final String WX_FONTSTYLE = "fontStyle";
-  public static final String WX_FONTSTYLE_ITALIC = "italic";
-  public static final String WX_FONTSIZE = "fontSize";
+  public static final String WX_TEXT_DECORATION = "textDecoration";
+  public static final String WX_TEXT_DECORATION_UNDERLINE = "underline";
+  public static final String WX_TEXT_DECORATION_LINE_THROUGH = "line-through";
+  public static final String WX_TEXT_ALIGN = "textAlign";
+  public static final String WX_TEXT_ALIGN_LEFT = "left";
+  public static final String WX_TEXT_ALIGN_RIGHT = "right";
+  public static final String WX_TEXT_ALIGN_CENTER = "center";
+  public static final String WX_FONT_WEIGHT = "fontWeight";
+  public static final String WX_FONT_WEIGHT_BOLD = "bold";
+  public static final String WX_FONT_STYLE = "fontStyle";
+  public static final String WX_FONT_STYLE_ITALIC = "italic";
+  public static final String WX_FONT_SIZE = "fontSize";
   public static final String WX_COLOR = "color";
   public static final String WX_LINES = "lines";
-  public static final String WX_FONTFAMILY = "fontFamily";
+  public static final String WX_FONT_FAMILY = "fontFamily";
 
   public static final String WX_TEXT_OVERFLOW = "textOverflow";
   public static final String WX_TEXT_ELLIPSIS = "ellipsis";
-  public static final String WX_TEXT_CLIP = "clip";
-
+//  public static final String WX_TEXT_CLIP = "clip";
   public static final String WX_TEXT_LINE_HEIGHT="lineHeight";
 
   public static final String WX_ATTR_DISABLED = "disabled";
 
-  public static final String WX_ATTR_PREFIX = "prefix";
-  public static final String WX_ATTR_SUFFIX = "suffix";
+//  public static final String WX_ATTR_PREFIX = "prefix";
+//  public static final String WX_ATTR_SUFFIX = "suffix";
   public static final String WX_ATTR_VALUE = "value";
 
+  //image
   public static final String WX_ATTR_IMAGE_QUALITY = "imageQuality";
   public static final String WX_ATTR_QUALITY = "quality";
-
   public static final String WX_ATTR_IMAGE_QUALITY_ORIGINAL = "original";
   public static final String WX_ATTR_IMAGE_QUALITY_LOW = "low";
   public static final String WX_ATTR_IMAGE_QUALITY_NORMAL = "normal";
   public static final String WX_ATTR_IMAGE_QUALITY_HIGH = "high";
-
   public static final String WX_ATTR_SRC = "src";
+  public static final String WX_ATTR_RESIZE_MODE = "resizeMode";
+  public static final String WX_ATTR_RESIZE = "resize";
+  public static final String WX_ATTR_IMAGE_SHARPEN = "imageSharpen";
+  public static final String WX_ATTR_SHARPEN = "sharpen";
 
-  public static final String WX_RESIZE_MODE = "resizeMode";
-  public static final String WX_RESIZE = "resize";
-
-  public static final String WX_IMAGE_SHARPEN = "imageSharpen";
-  public static final String WX_SHARPEN = "sharpen";
-
-  public static final String WX_ATTR_SHOWINDICATORS = "showIndicators";
-  public static final String WX_ATTR_AUTOPLAY = "autoPlay";
-
-  public static final String WX_ATTR_SHOWSCROLLBAR = "showScrollbar";
+  //scroller
+  public static final String WX_ATTR_SHOW_SCROLLBAR = "showScrollbar";
   public static final String WX_ATTR_SCROLL_DIRECTION = "scrollDirection";
+  public static final String WX_ATTR_DIRECTION_VERTICAL = "vertical";
+  public static final String WX_ATTR_DIRECTION_HORIZONTAL = "horizontal";
+
+  //slider
+  public static final String WX_ATTR_SHOW_INDICATORS = "showIndicators";
+  public static final String WX_ATTR_AUTO_PLAY = "autoPlay";
+//  public static final String WX_ATTR_SLIDER_VALUE = "value";
 
   //ListView attrs
   public static final String WX_ATTR_SCOPE = "scope";
@@ -317,11 +325,7 @@ public class WXDomPropConstant {
   public static final String WX_ATTR_LOAD_MORE_OFFSET = "loadmoreoffset";
 
   //Image recycle attrs
-  public static final String WX_ATTR_RECYCLE_IMG = "recycleImage";
-
-  public static final String WX_OVERFLOW = "overflow";
-  public static final String WX_OVERFLOW_VISIBLE = "visible";
-  public static final String WX_OVERFLOW_HIDDEN = "hidden";
+//  public static final String WX_ATTR_RECYCLE_IMG = "recycleImage";
 
   //input
   public static final String WX_ATTR_INPUT_TYPE = "type";
@@ -333,23 +337,22 @@ public class WXDomPropConstant {
   public static final String WX_ATTR_INPUT_TYPE_DATE = "date";
   public static final String WX_ATTR_INPUT_TYPE_TIME = "time";
   public static final String WX_ATTR_INPUT_TYPE_DATETIME = "datetime";
-  public static final String WX_ATTR_INPUT_VALUE = "value";
+//  public static final String WX_ATTR_INPUT_VALUE = "value";
   public static final String WX_ATTR_INPUT_PLACEHOLDER = "placeholder";
-  public static final String WX_INPUT_PLACEHOLDER_COLOR = "placeholderColor";
-  public static final String WX_ATTR_INPUT_AUTOFOCUS = "autofocus";
-  public static final String WX_ATTR_INPUT_LINES = "lines";
-  public static final String WX_ATTR_INPUT_SINGLELINE = "singleline";
-  public static final String WX_ATTR_INPUT_MAXLENGTH = "maxlength";
+  public static final String WX_ATTR_INPUT_PLACEHOLDER_COLOR = "placeholderColor";
+  public static final String WX_ATTR_INPUT_AUTO_FOCUS = "autofocus";
+//  public static final String WX_ATTR_INPUT_LINES = "lines";
+  public static final String WX_ATTR_INPUT_SINGLE_LINE = "singleline";
+  public static final String WX_ATTR_INPUT_MAX_LENGTH = "maxlength";
 
   //switch
   public static final String WX_ATTR_SWITCH_CHECKED = "checked";
-
-  //slider
-  public static final String WX_ATTR_SLIDER_VALUE = "value";
 
   //visibility
   public static final String WX_VISIBILITY = "visibility";
   public static final String WX_VISIBILITY_VISIBLE = WX_OVERFLOW_VISIBLE;
   public static final String WX_VISIBILITY_HIDDEN = WX_OVERFLOW_HIDDEN;
 
+  public static final String WX_TRANSFORM = "transform";
+  public static final String WX_TRANSFORM_ORIGIN = "transformOrigin";
 }

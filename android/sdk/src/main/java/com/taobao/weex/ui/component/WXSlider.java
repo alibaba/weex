@@ -220,7 +220,6 @@ import com.taobao.weex.dom.WXEvent;
 import com.taobao.weex.ui.view.WXCircleIndicator;
 import com.taobao.weex.ui.view.WXCirclePageAdapter;
 import com.taobao.weex.ui.view.WXCircleViewPager;
-import com.taobao.weex.ui.view.WXEditText;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
@@ -363,7 +362,7 @@ public class WXSlider extends WXVContainer implements OnPageChangeListener {
     mRoot.addView(mIndicator.getView());
   }
 
-  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SLIDER_VALUE)
+  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_VALUE)
   public void setValue(String value) {
     if (value == null || mHost == null) {
       return;
@@ -379,7 +378,7 @@ public class WXSlider extends WXVContainer implements OnPageChangeListener {
     mViewPager.setCurrentItem(i);
   }
 
-  @WXComponentProp(name = "autoPlay")
+  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_AUTO_PLAY)
   public void setAutoPlay(String autoPlay) {
     if (TextUtils.isEmpty(autoPlay) || autoPlay.equals("false")) {
       mViewPager.stopAutoScroll();
@@ -389,7 +388,7 @@ public class WXSlider extends WXVContainer implements OnPageChangeListener {
     }
   }
 
-  @WXComponentProp(name = "showIndicators")
+  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SHOW_INDICATORS)
   public void setShowIndicators(String show) {
     if (TextUtils.isEmpty(show) || show.equals("false")) {
       mShowIndicators = false;

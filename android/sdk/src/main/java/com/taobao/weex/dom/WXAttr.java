@@ -219,7 +219,7 @@ public class WXAttr extends ConcurrentHashMap<String, Object> {
 
   private static final long serialVersionUID = -2619357510079360946L;
 
-  public static String getPrefix(Map<String, Object> attr) {
+/*  public static String getPrefix(Map<String, Object> attr) {
     if (attr == null) {
       return null;
     }
@@ -239,7 +239,7 @@ public class WXAttr extends ConcurrentHashMap<String, Object> {
       return null;
     }
     return src.toString();
-  }
+  }*/
 
   /**
    * Compatible with value、content
@@ -285,9 +285,9 @@ public class WXAttr extends ConcurrentHashMap<String, Object> {
   }
 
   public WXImageSharpen getImageSharpen() {
-    Object obj = get(WXDomPropConstant.WX_SHARPEN);
+    Object obj = get(WXDomPropConstant.WX_ATTR_SHARPEN);
     if (obj == null) {
-      obj = get(WXDomPropConstant.WX_IMAGE_SHARPEN);
+      obj = get(WXDomPropConstant.WX_ATTR_IMAGE_SHARPEN);
     }
     if (obj == null) {
       return WXImageSharpen.UNSHARPEN;
@@ -309,8 +309,8 @@ public class WXAttr extends ConcurrentHashMap<String, Object> {
     return src.toString();
   }
 
-  public boolean showIndicators() {
-    Object obj = get(WXDomPropConstant.WX_ATTR_SHOWINDICATORS);
+/*  public boolean showIndicators() {
+    Object obj = get(WXDomPropConstant.WX_ATTR_SHOW_INDICATORS);
     if (obj == null) {
       return true;
     }
@@ -321,10 +321,10 @@ public class WXAttr extends ConcurrentHashMap<String, Object> {
       WXLogUtils.e("[WXAttr] showIndicators:" + WXLogUtils.getStackTrace(e));
     }
     return true;
-  }
+  }*/
 
-  public boolean autoPlay() {
-    Object obj = get(WXDomPropConstant.WX_ATTR_AUTOPLAY);
+ /* public boolean autoPlay() {
+    Object obj = get(WXDomPropConstant.WX_ATTR_AUTO_PLAY);
     if (obj == null) {
       return false;
     }
@@ -335,7 +335,7 @@ public class WXAttr extends ConcurrentHashMap<String, Object> {
       WXLogUtils.e("[WXAttr] autoPlay:" + WXLogUtils.getStackTrace(e));
     }
     return false;
-  }
+  }*/
 
   public String getScope() {
     Object src = get(WXDomPropConstant.WX_ATTR_SCOPE);
@@ -360,7 +360,7 @@ public class WXAttr extends ConcurrentHashMap<String, Object> {
     return src.toString();
   }
 
-  public boolean getIsRecycleImage() {
+/*  public boolean getIsRecycleImage() {
     Object obj = get(WXDomPropConstant.WX_ATTR_RECYCLE_IMG);
     if (obj == null) {
       return true;
@@ -372,11 +372,11 @@ public class WXAttr extends ConcurrentHashMap<String, Object> {
       WXLogUtils.e("[WXAttr] recycleImage:" + WXLogUtils.getStackTrace(e));
     }
     return false;
-  }
+  }*/
   public String getScrollDirection() {
-    Object scrollDirection = get("scrollDirection");
+    Object scrollDirection = get(WXDomPropConstant.WX_ATTR_SCROLL_DIRECTION);
     if (scrollDirection == null) {
-      return "vertical";
+      return WXDomPropConstant.WX_ATTR_DIRECTION_VERTICAL;
     }
     return scrollDirection.toString();
   }
