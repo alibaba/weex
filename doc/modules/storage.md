@@ -4,7 +4,7 @@
 
 ## Summary
 
-`storage` is a series of apis,allowing you to for example add,modify or delete stored data items.
+`storage` is a series of apis, allowing you to for example add, modify or delete stored data items.
 
 ## API
 
@@ -23,9 +23,9 @@ or update that key's value if it already exists.
 
 ```js
 var storage = require('@weex-module/storage');
-storage.setItem('foo','foo-value');
+storage.setItem('foo', 'foo-value');
 //or
-storage.setItem('bar','bar-value',function(e){
+storage.setItem('bar', 'bar-value', function(e) {
   // callback.
 });
 ```
@@ -43,7 +43,7 @@ When passed a key name, will return that key's value.
 
 ```js
 var storage = require('@weex-module/storage');
-storage.getItem('foo',function(e){
+storage.getItem('foo', function(e) {
   //callback.'e' is an object that contains 'result' and 'data'.
   // use 'e.data' to fetch the value of the key,if not found,'undefined' will return.
 });
@@ -62,7 +62,7 @@ When passed a key name, will remove that key from the storage.
 
 ```js
 var storage = require('@weex-module/storage');
-storage.removeItem('foo',function(e){
+storage.removeItem('foo', function(e) {
   // callback. 'e' is an object that contains 'result' and 'data'.
   // e.result will return 'success' or 'failed' according to the executing result.
   // 'data' is always return 'undefined' in this function.
@@ -81,7 +81,7 @@ Returns an integer representing the number of data items stored in the Storage o
 
 ```js
 var storage = require('@weex-module/storage');
-storage.length(function(e){
+storage.length(function(e) {
   // callback. 'e' is an object that contains 'result' and 'data'.
   //e.data will return that number.
 });
@@ -99,7 +99,7 @@ Returns an array that contains all keys stored in Storage object.
 
 ```js
 var storage = require('@weex-module/storage');
-storage.getAllKeys(function(e){
+storage.getAllKeys(function(e) {
   // callback. 'e' is an object that contains 'result' and 'data'.
   //e.data will return that array of keys.
 });
