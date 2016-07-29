@@ -7,6 +7,7 @@ const animation = require('./animation')
 const webview = require('./webview')
 const timer = require('./timer')
 const navigator = require('./navigator')
+const storage = require('./storage')
 
 const api = {
   init: function (Weex) {
@@ -19,6 +20,7 @@ const api = {
     Weex.registerApiModule('webview', webview, webview._meta)
     Weex.registerApiModule('timer', timer, timer._meta)
     Weex.registerApiModule('navigator', navigator, navigator._meta)
+    Weex.registerApiModule('storage', storage, storage._meta)
   }
 }
 
