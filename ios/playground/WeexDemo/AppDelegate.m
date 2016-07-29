@@ -15,13 +15,9 @@
 #import "WXImgLoaderDefaultImpl.h"
 #import "DemoDefine.h"
 #import "WXScannerVC.h"
-#import <WeexSDK/WXSDKEngine.h>
-#import <WeexSDK/WXLog.h>
-#import <WeexSDK/WXDebugTool.h>
-#import <WeexSDK/WXAppConfiguration.h>
+#import <WeexSDK/WeexSDK.h>
 #import <AVFoundation/AVFoundation.h>
 #import <ATSDK/ATManager.h>
-#import <WeexSDK/WXRootViewController.h>
 
 @interface AppDelegate ()
 @end
@@ -185,5 +181,55 @@
     [[ATManager shareInstance] addSubPluginWithParentId:@"weex" andSubId:@"test2" andName:@"test" andIconName:@"at_arr_refresh" andEntry:@"" andArgs:@[]];
     [[ATManager shareInstance] addSubPluginWithParentId:@"weex" andSubId:@"test3" andName:@"test" andIconName:@"at_arr_refresh" andEntry:@"" andArgs:@[]];
 }
+
+- (void)checkUpdate {
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSDictionary *infoDic = [[NSBundle mainBundle] infoDictionary];
+        NSString *currentVersion = [infoDic objectForKey:@"CFBundleVersion"];
+        NSString *URL = @"http://itunes.apple.com/lookup?id=1130862662";
+        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+        [request setURL:[NSURL URLWithString:URL]];
+        [request setHTTPMethod:@"POST"];
+        
+        NSHTTPURLResponse *urlResponse = nil;
+        NSError *error = nil;
+        NSData *recervedData = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&error];
+        NSString *results = [[NSString alloc] initWithBytes:[recervedData bytes] length:[recervedData length] encoding:NSUTF8StringEncoding];
+        
+        NSDictionary *dic = [WXUtility objectFromJSON:results];
+        NSArray *infoArray = [dic objectForKey:@"results"];
+        
+        if ([infoArray count]) {
+            NSDictionary *releaseInfo = [infoArray objectAtIndex:0];
+            weakSelf.latestVer = [releaseInfo objectForKey:@"version"];
+            if ([weakSelf.latestVer floatValue] > [currentVersion floatValue]) {
+                if (![[NSUserDefaults standardUserDefaults] boolForKey: weakSelf.latestVer]) {
+                    [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:weakSelf.latestVer];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"New Version" message:@"Will update to a new version" delegate:self cancelButtonTitle:@"cancel" otherButtonTitles:@"update", nil];
+                        alert.tag = 1000;
+                        [alert show];
+                    });
+                }
+                
+            }
+        }
+    });
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    switch (buttonIndex) {
+        case 0:
+            [[NSUserDefaults standardUserDefaults] setBool:TRUE forKey:self.latestVer];
+            break;
+        case 1:
+            [[UIApplication sharedApplication]openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/cn/app/weex-playground/id1130862662?mt=8"]];
+        default:
+            break;
+    }
+    [alertView dismissWithClickedButtonIndex:buttonIndex animated:YES];
+}
+
 
 @end
