@@ -204,173 +204,67 @@
  */
 package com.taobao.weex.ui.animation;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
-import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.text.TextUtils;
-import android.util.Pair;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.Interpolator;
-import android.view.animation.LinearInterpolator;
+import com.taobao.weappplus_sdk.BuildConfig;
+import com.taobao.weex.WXSDKInstanceTest;
+import com.taobao.weex.common.Component;
+import com.taobao.weex.dom.TestDomObject;
+import com.taobao.weex.ui.component.TestComponent;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.annotation.Config;
 
-import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.WXSDKManager;
-import com.taobao.weex.common.WXModule;
-import com.taobao.weex.common.WXModuleAnno;
-import com.taobao.weex.dom.WXDomHandler;
-import com.taobao.weex.dom.WXDomTask;
-import com.taobao.weex.ui.component.WXComponent;
-import com.taobao.weex.ui.view.WXBackgroundDrawable;
-import com.taobao.weex.utils.WXLogUtils;
-import com.taobao.weex.utils.WXResourceUtils;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+/**
+ * Created by sospartan on 7/29/16.
+ */
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 19)
+@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*","org.json.*" })
+@PrepareForTest()
+public class WXAnimationModuleTest {
 
-public class WXAnimationModule extends WXModule {
 
-  @WXModuleAnno
-  public void transition(@Nullable String ref, @Nullable String animation, @Nullable String callBack) {
-    if(!TextUtils.isEmpty(ref)&&!TextUtils.isEmpty(animation)) {
-      Message msg = Message.obtain();
-      WXDomTask task = new WXDomTask();
-      task.instanceId = mWXSDKInstance.getInstanceId();
-      task.args = new ArrayList<>();
-      task.args.add(ref);
-      task.args.add(animation);
-      task.args.add(callBack);
-      msg.what = WXDomHandler.MsgType.WX_ANIMATION;
-      msg.obj = task;
-      WXSDKManager.getInstance().getWXDomManager().sendMessage(msg);
-    }
+  WXAnimationModule module;
+  @Before
+  public void setUp() throws Exception {
+    module = new WXAnimationModule();
+    module.mWXSDKInstance = WXSDKInstanceTest.createInstance();
+
+
   }
 
-  public static void startAnimation(WXSDKInstance mWXSDKInstance, WXComponent component,
-                                    @NonNull WXAnimationBean animationBean, @Nullable String callback) {
-    if(component == null){
-      return;
-    }
-    try {
-      Animator animator = createAnimator(animationBean, component.getHostView());
-      if (animator != null) {
-        Animator.AnimatorListener animatorCallback = createAnimatorListener(mWXSDKInstance, callback);
-        component.getHostView().setLayerType(View.LAYER_TYPE_HARDWARE,null);
-        Interpolator interpolator = createTimeInterpolator(animationBean);
-        if (animatorCallback != null) {
-          animator.addListener(animatorCallback);
-        }
-        if (interpolator != null) {
-          animator.setInterpolator(interpolator);
-        }
-        animator.setDuration(animationBean.duration);
-        animator.start();
-      }
-    } catch (RuntimeException e) {
-      e.printStackTrace();
-      WXLogUtils.e(WXLogUtils.getStackTrace(e));
-    }
+  @Test
+  public void testTransition() throws Exception {
+    module.transition("","","");
+    module.transition("test","test","");
   }
 
-  private static @Nullable
-  ObjectAnimator createAnimator(@NonNull WXAnimationBean animation, @NonNull View target) {
-    if(animation == null || target == null){
-      return null;
-    }
-    WXAnimationBean.Style style = animation.styles;
-    if (style != null) {
-      ObjectAnimator animator;
-      List<PropertyValuesHolder> holders =style.getHolders();
-      if (!TextUtils.isEmpty(style.backgroundColor)) {
-        if (target.getBackground() instanceof WXBackgroundDrawable) {
-          holders.add(PropertyValuesHolder.ofObject(
-              WXAnimationBean.Style.BACKGROUND_COLOR, new ArgbEvaluator(),
-              ((WXBackgroundDrawable) target.getBackground()).getColor(),
-              WXResourceUtils.getColor(style.backgroundColor)));
-        } else if (target.getBackground() instanceof ColorDrawable) {
-          holders.add(PropertyValuesHolder.ofObject(
-              WXAnimationBean.Style.BACKGROUND_COLOR, new ArgbEvaluator(),
-              ((ColorDrawable) target.getBackground()).getColor(),
-              WXResourceUtils.getColor(style.backgroundColor)));
-        }
-      }
-      if (style.getPivot() != null) {
-        Pair<Float, Float> pair = style.getPivot();
-        target.setPivotX(pair.first);
-        target.setPivotY(pair.second);
-      }
-      animator = ObjectAnimator.ofPropertyValuesHolder(
-          target, holders.toArray(new PropertyValuesHolder[holders.size()]));
-      animator.setStartDelay(animation.delay);
-      return animator;
-    } else {
-      return null;
-    }
+  @Test
+  public void testStartAnimation() throws Exception {
+    module.startAnimation(module.mWXSDKInstance,null,null,null);
+
+    TestComponent comp = new TestComponent(module.mWXSDKInstance,new TestDomObject(),null,false);
+    module.startAnimation(module.mWXSDKInstance,comp,null,null);
+
+    WXAnimationBean animation = new WXAnimationBean();
+    module.startAnimation(module.mWXSDKInstance,comp,animation,null);
+
+    comp.mHost = new View(module.mWXSDKInstance.getContext());
+    animation.styles = new WXAnimationBean.Style();
+    module.startAnimation(module.mWXSDKInstance,comp,animation,null);
+
   }
 
-  public static
-  @Nullable
-  Animator.AnimatorListener createAnimatorListener(final WXSDKInstance mWXSDKInstance, @Nullable final String callBack) {
-    if (!TextUtils.isEmpty(callBack)) {
-      return new AnimatorListenerAdapter() {
-        @Override
-        public void onAnimationEnd(Animator animation) {
-          if (mWXSDKInstance == null) {
-            WXLogUtils.e("WXRenderStatement-onAnimationEnd mWXSDKInstance == null NPE");
-          } else {
-            WXSDKManager.getInstance().callback(mWXSDKInstance.getInstanceId(),
-                                                callBack,
-                                                new HashMap<String, Object>());
-          }
-        }
-      };
-    } else {
-      return null;
-    }
-  }
+  @Test
+  public void testCreateAnimatorListener() throws Exception {
 
-  private static Animator.AnimatorListener prepareLayerType(final View target){
-    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
-      final int originalLayerType=target.getLayerType();
-      target.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-      return new AnimatorListenerAdapter() {
-        @Override
-        public void onAnimationEnd(Animator animation) {
-          target.setLayerType(originalLayerType, null);
-        }
-      };
-    }
-    else{
-      return null;
-    }
   }
-
-  private static @Nullable
-  Interpolator createTimeInterpolator(@NonNull WXAnimationBean animation) {
-    String interpolator = animation.timingFunction;
-    if (!TextUtils.isEmpty(interpolator)) {
-      switch (interpolator) {
-        case WXAnimationBean.EASE_IN:
-          return new AccelerateInterpolator();
-        case WXAnimationBean.EASE_OUT:
-          return new DecelerateInterpolator();
-        case WXAnimationBean.EASE_IN_OUT:
-          return new AccelerateDecelerateInterpolator();
-        case WXAnimationBean.LINEAR:
-          return new LinearInterpolator();
-      }
-    }
-    return null;
-  }
-
 }
