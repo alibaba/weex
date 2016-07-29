@@ -219,6 +219,7 @@ import com.taobao.weex.adapter.IWXImgLoaderAdapter;
 import com.taobao.weex.adapter.IWXUserTrackAdapter;
 import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.common.OnWXScrollListener;
+import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.common.WXErrorCode;
 import com.taobao.weex.common.WXPerformance;
 import com.taobao.weex.common.WXRefreshData;
@@ -240,6 +241,7 @@ import com.taobao.weex.utils.WXFileUtils;
 import com.taobao.weex.utils.WXJsonUtils;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXReflectionUtils;
+import com.taobao.weex.utils.WXViewUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -967,6 +969,17 @@ public class WXSDKInstance implements IWXActivityStateListener {
   }
 
   public void updateInstanceStyle(JSONObject style){
+
+    if(style.containsKey(WXDomPropConstant.WX_HEIGHT)){
+      float height=style.getFloat(WXDomPropConstant.WX_HEIGHT);
+      style.put(WXDomPropConstant.WX_HEIGHT, WXViewUtils.getWebPxByWidth(height));
+    }
+
+    if(style.containsKey(WXDomPropConstant.WX_WIDTH)){
+      float height=style.getFloat(WXDomPropConstant.WX_WIDTH);
+      style.put(WXDomPropConstant.WX_WIDTH, WXViewUtils.getWebPxByWidth(height));
+    }
+
     Message message=Message.obtain();
     WXDomTask task=new WXDomTask();
     task.instanceId=getInstanceId();
