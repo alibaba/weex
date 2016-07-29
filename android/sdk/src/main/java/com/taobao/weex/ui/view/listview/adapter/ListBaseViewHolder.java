@@ -209,6 +209,8 @@ import android.view.View;
 
 import com.taobao.weex.ui.component.WXComponent;
 
+import java.lang.ref.WeakReference;
+
 
 /**
  * There are bi-directional association between ViewHolder and View.
@@ -217,12 +219,12 @@ import com.taobao.weex.ui.component.WXComponent;
  */
 public class ListBaseViewHolder extends RecyclerView.ViewHolder {
   private int mViewType;
-  private WXComponent mComponent;
+  private WeakReference<WXComponent> mComponent;
 
   public ListBaseViewHolder(WXComponent component, int viewType) {
     super(component.getHostView());
     mViewType = viewType;
-    mComponent = component;
+    mComponent = new WeakReference(component);
   }
   public ListBaseViewHolder(View view, int viewType) {
     super(view);
@@ -238,10 +240,10 @@ public class ListBaseViewHolder extends RecyclerView.ViewHolder {
   }
   public void setComponentUsing(boolean using){
     if(mComponent!=null) {
-      mComponent.setUsing(using);
+      mComponent.get().setUsing(using);
     }
   }
   public WXComponent getComponent(){
-    return mComponent;
+    return mComponent.get();
   }
 }
