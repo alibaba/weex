@@ -246,12 +246,7 @@ public class WXComponentFactory {
     try {
       return holder.createInstance(instance, node, parent, lazy);
     } catch (Exception e) {
-      if (WXEnvironment.isApkDebugable()) {
-        StringBuilder builder = new StringBuilder("WXComponentFactory Exception type:[");
-        builder.append(node.type).append("] ");
-        builder.append(WXLogUtils.getStackTrace(e));
-        WXLogUtils.e(builder.toString());
-      }
+        WXLogUtils.e("WXComponentFactory Exception type:[" + node.type + "] ", e);
     }
 
     return null;

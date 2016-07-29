@@ -493,7 +493,7 @@ public class WXDomObject extends CSSNode implements Cloneable {
 
     } catch (Exception e) {
       if (WXEnvironment.isApkDebugable()) {
-        WXLogUtils.e("WXDomObject clone error: " + WXLogUtils.getStackTrace(e));
+        WXLogUtils.e("WXDomObject clone error: ", e);
       }
     }
 

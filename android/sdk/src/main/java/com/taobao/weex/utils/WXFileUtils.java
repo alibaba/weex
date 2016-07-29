@@ -233,12 +233,10 @@ public class WXFileUtils {
         builder.append(data, 0, len);
       }
       localBufferedReader.close();
-      if (in != null) {
-        try {
-          in.close();
-        } catch (IOException e) {
-          WXLogUtils.e("WXFileUtils loadFileContent: " + WXLogUtils.getStackTrace(e));
-        }
+      try {
+        in.close();
+      } catch (IOException e) {
+        WXLogUtils.e("WXFileUtils loadFileContent: ", e);
       }
       return builder.toString();
       

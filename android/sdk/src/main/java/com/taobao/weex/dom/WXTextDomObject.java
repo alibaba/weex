@@ -208,7 +208,7 @@ public class WXTextDomObject extends WXDomObject {
       }
     } catch (Exception e) {
       if (WXEnvironment.isApkDebugable()) {
-        WXLogUtils.e("WXTextDomObject clone error: " + WXLogUtils.getStackTrace(e));
+        WXLogUtils.e("WXTextDomObject clone error: ", e);
       }
     }
     if (dom != null) {
@@ -411,7 +411,7 @@ public class WXTextDomObject extends WXDomObject {
       layout.draw(DUMMY_CANVAS);
       result = true;
     } catch (Exception e) {
-      WXLogUtils.e(TAG, WXLogUtils.getStackTrace(e));
+      WXLogUtils.eTag(TAG, e);
       result = false;
     }
     return result;

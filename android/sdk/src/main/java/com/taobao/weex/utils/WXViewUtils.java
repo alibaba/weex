@@ -379,7 +379,7 @@ public class WXViewUtils {
       scale = WXEnvironment.getApplication().getResources()
           .getDisplayMetrics().density;
     } catch (Exception e) {
-      WXLogUtils.e("[WXViewUtils] dip2px:" + WXLogUtils.getStackTrace(e));
+      WXLogUtils.e("[WXViewUtils] dip2px:", e);
     }
     float finalPx = (dpValue * scale + 0.5f);
     return finalPx > 0 && finalPx < 1 ? 1 : (int) finalPx;

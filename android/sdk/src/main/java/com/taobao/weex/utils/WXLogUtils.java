@@ -222,7 +222,49 @@ public class WXLogUtils {
     }
   }
 
-  public static String getStackTrace(Exception e) {
+  public static void d(String prefix, Throwable e) {
+    if (WXEnvironment.isApkDebugable() && e != null) {
+      WXLogUtils.d(prefix + WXLogUtils.getStackTrace(e));
+    }
+  }
+
+  public static void i(String prefix, Throwable e) {
+    if (WXEnvironment.isApkDebugable() && e != null) {
+      WXLogUtils.info(prefix + WXLogUtils.getStackTrace(e));
+    }
+  }
+
+  public static void v(String prefix, Throwable e) {
+    if (WXEnvironment.isApkDebugable() && e != null) {
+      WXLogUtils.v(prefix + WXLogUtils.getStackTrace(e));
+    }
+  }
+
+  public static void w(String prefix, Throwable e) {
+    if (WXEnvironment.isApkDebugable() && e != null) {
+      WXLogUtils.w(prefix + WXLogUtils.getStackTrace(e));
+    }
+  }
+
+  public static void e(String prefix, Throwable e) {
+    if (WXEnvironment.isApkDebugable() && e != null) {
+      WXLogUtils.e(prefix + WXLogUtils.getStackTrace(e));
+    }
+  }
+
+  public static void p(String prefix, Throwable e) {
+    if (WXEnvironment.isApkDebugable() && e != null) {
+      WXLogUtils.p(prefix + WXLogUtils.getStackTrace(e));
+    }
+  }
+
+  public static void eTag(String tag, Throwable e) {
+    if (WXEnvironment.isApkDebugable() && e != null) {
+      WXLogUtils.e(tag, WXLogUtils.getStackTrace(e));
+    }
+  }
+
+  public static String getStackTrace(Throwable e) {
     if (e == null) {
       return "";
     }

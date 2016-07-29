@@ -453,7 +453,7 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
           param = WXReflectionUtils.parseArgument(paramClazzs[0],props.get(key));
           invoker.invoke(this, param);
         } catch (Exception e) {
-          WXLogUtils.e("[WXComponent] updateProperties :" + "class:" + getClass() + "method:" + invoker.toString() + " function " + WXLogUtils.getStackTrace(e));
+          WXLogUtils.e("[WXComponent] updateProperties :" + "class:" + getClass() + "method:" + invoker.toString() + " function ", e);
         }
       }
     }

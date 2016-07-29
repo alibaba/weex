@@ -310,7 +310,7 @@ public class WXSDKEngine {
       registerDomObject(WXBasicComponentType.INPUT, WXTextDomObject.class);
       registerDomObject(WXBasicComponentType.SWITCH, WXSwitchDomObject.class);
     } catch (WXException e) {
-      WXLogUtils.e("[WXSDKEngine] register:" + WXLogUtils.getStackTrace(e));
+      WXLogUtils.e("[WXSDKEngine] register:", e);
     }
   }
 

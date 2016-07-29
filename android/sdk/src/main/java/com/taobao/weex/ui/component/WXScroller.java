@@ -679,7 +679,9 @@ public class WXScroller extends WXRefreshableContainer implements WXScrollViewLi
         }
       }
     } catch (Exception e) {
-      WXLogUtils.d("[WXScroller-onScroll] " + WXLogUtils.getStackTrace(e));
+      if (WXEnvironment.isApkDebugable()) {
+        WXLogUtils.d("[WXScroller-onScroll] ", e);
+      }
     }
 
   }
