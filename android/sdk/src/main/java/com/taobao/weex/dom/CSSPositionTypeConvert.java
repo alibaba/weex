@@ -1,14 +1,18 @@
 package com.taobao.weex.dom;
 
-import com.taobao.weex.common.WXDomPropConstant;
+import android.text.TextUtils;
+
 import com.taobao.weex.dom.flex.CSSPositionType;
 
 class CSSPositionTypeConvert {
 
   public static CSSPositionType convert(String s) {
-    if (WXDomPropConstant.WX_POSITION_ABSOLUTE.equals(s) || WXDomPropConstant.WX_POSITION_FIXED.equals(s)) {
-      return CSSPositionType.ABSOLUTE;
+    CSSPositionType position = CSSPositionType.RELATIVE;
+    if (TextUtils.isEmpty(s) || s.equals("relative") || s.equals("sticky")) {
+      position = CSSPositionType.RELATIVE;
+    } else if (s.equals("absolute") || s.equals("fixed")) {
+      position = CSSPositionType.ABSOLUTE;
     }
-    return CSSPositionType.RELATIVE;
+    return position;
   }
 }

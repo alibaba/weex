@@ -300,11 +300,11 @@ public class WXDomObject extends CSSNode implements Cloneable {
 
 
   public boolean isSticky() {
-    return style != null && style.isSticky();
+    return style == null ? false : style.isSticky();
   }
 
   public boolean isFixed() {
-    return style != null && style.isFixed();
+    return style == null ? false : style.isFixed();
   }
 
   public Object getExtra() {

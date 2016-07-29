@@ -514,11 +514,11 @@ class WXDomStatement {
       return;
     }
     Map<String, Object> style = new HashMap<>(5);
-    if (domObject.style == null || !domObject.style.containsKey(WXDomPropConstant.WX_FLEX_DIRECTION)) {
-      style.put(WXDomPropConstant.WX_FLEX_DIRECTION, "column");
+    if (domObject.style == null || !domObject.style.containsKey(WXDomPropConstant.WX_FLEXDIRECTION)) {
+      style.put(WXDomPropConstant.WX_FLEXDIRECTION, "column");
     }
-    if (domObject.style == null || !domObject.style.containsKey(WXDomPropConstant.WX_BACKGROUND_COLOR)) {
-      style.put(WXDomPropConstant.WX_BACKGROUND_COLOR, "#ffffff");
+    if (domObject.style == null || !domObject.style.containsKey(WXDomPropConstant.WX_BACKGROUNDCOLOR)) {
+      style.put(WXDomPropConstant.WX_BACKGROUNDCOLOR, "#ffffff");
     }
     //If there is height or width in JS, then that value will override value here.
     if (domObject.style == null || !domObject.style.containsKey(WXDomPropConstant.WX_WIDTH)) {
@@ -1150,9 +1150,9 @@ class WXDomStatement {
   private WXAnimationBean createAnimationBean(String ref,Map<String, Object> style){
     if (style != null) {
       try {
-        Object transform = style.get(WXDomPropConstant.WX_TRANSFORM);
+        Object transform = style.get(WXStyle.TRANSFORM);
         if (transform instanceof String && !TextUtils.isEmpty((String) transform)) {
-          String transformOrigin = (String) style.get(WXDomPropConstant.WX_TRANSFORM_ORIGIN);
+          String transformOrigin = (String) style.get(WXStyle.TRANSFORM_ORIGIN);
           WXAnimationBean animationBean = new WXAnimationBean();
           WXDomObject domObject = mRegistry.get(ref);
           int width = (int) domObject.getLayoutWidth();

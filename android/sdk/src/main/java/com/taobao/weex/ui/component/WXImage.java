@@ -244,7 +244,7 @@ public class WXImage extends WXComponent {
 
 
     @Override
-    @WXComponentProp(name = WXDomPropConstant.WX_BACKGROUND_COLOR)
+    @WXComponentProp(name = WXDomPropConstant.WX_BACKGROUNDCOLOR)
     public void setBackgroundColor(String color) {
         if (!TextUtils.isEmpty(color)) {
             int colorInt = WXResourceUtils.getColor(color);
@@ -255,31 +255,31 @@ public class WXImage extends WXComponent {
     }
 
     @Override
-    @WXComponentProp(name = WXDomPropConstant.WX_BORDER_RADIUS)
+    @WXComponentProp(name = WXDomPropConstant.WX_BORDERRADIUS)
     public void setBorderRadius(float borderRadius) {
 
     }
 
     @Override
-    @WXComponentProp(name = WXDomPropConstant.WX_BORDER_WIDTH)
+    @WXComponentProp(name = WXDomPropConstant.WX_BORDERWIDTH)
     public void setBorderWidth(float borderWidth) {
 
     }
 
     @Override
-    @WXComponentProp(name = WXDomPropConstant.WX_BORDER_STYLE)
+    @WXComponentProp(name = WXDomPropConstant.WX_BORDERSTYLE)
     public void setBorderStyle(String borderStyle) {
 
     }
 
     @Override
-    @WXComponentProp(name = WXDomPropConstant.WX_BORDER_COLOR)
+    @WXComponentProp(name = WXDomPropConstant.WX_BORDERCOLOR)
     public void setBorderColor(String borderColor) {
 
     }
 
 
-    @WXComponentProp(name = WXDomPropConstant.WX_ATTR_RESIZE_MODE)
+    @WXComponentProp(name = WXDomPropConstant.WX_RESIZE_MODE)
     public void setResizeMode(String resizeMode) {
         ((ImageView) getView()).setScaleType(getResizeMode(resizeMode));
     }
@@ -306,7 +306,7 @@ public class WXImage extends WXComponent {
         return scaleType;
     }
 
-    @WXComponentProp(name = WXDomPropConstant.WX_ATTR_RESIZE)
+    @WXComponentProp(name = WXDomPropConstant.WX_RESIZE)
     public void setResize(String resize) {
         ((ImageView) getView()).setScaleType(getResizeMode(resize));
     }

@@ -257,23 +257,23 @@ public class WXTextDomObject extends WXDomObject {
           mNumberOfLines = lines;
         }
       }
-      if (style.containsKey(WXDomPropConstant.WX_FONT_SIZE)) {
+      if (style.containsKey(WXDomPropConstant.WX_FONTSIZE)) {
         mFontSize = WXStyle.getFontSize(style);
       }
-      if (style.containsKey(WXDomPropConstant.WX_FONT_WEIGHT)) {
+      if (style.containsKey(WXDomPropConstant.WX_FONTWEIGHT)) {
         mFontWeight = WXStyle.getFontWeight(style);
       }
-      if (style.containsKey(WXDomPropConstant.WX_FONT_STYLE)) {
+      if (style.containsKey(WXDomPropConstant.WX_FONTSTYLE)) {
         mFontStyle = WXStyle.getFontStyle(style);
       }
       if (style.containsKey(WXDomPropConstant.WX_COLOR)) {
         mColor = WXResourceUtils.getColor(WXStyle.getTextColor(style));
         mIsColorSet = mColor != Integer.MIN_VALUE;
       }
-      if (style.containsKey(WXDomPropConstant.WX_TEXT_DECORATION)) {
+      if (style.containsKey(WXDomPropConstant.WX_TEXTDECORATION)) {
         mTextDecoration = WXStyle.getTextDecoration(style);
       }
-      if (style.containsKey(WXDomPropConstant.WX_FONT_FAMILY)) {
+      if (style.containsKey(WXDomPropConstant.WX_FONTFAMILY)) {
         mFontFamily = WXStyle.getFontFamily(style);
       }
       mAlignment = WXStyle.getTextAlignment(style);
