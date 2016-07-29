@@ -218,6 +218,7 @@ import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.WXEvent;
+import com.taobao.weex.ui.ComponentCreator;
 import com.taobao.weex.ui.view.WXCircleIndicator;
 import com.taobao.weex.ui.view.WXCirclePageAdapter;
 import com.taobao.weex.ui.view.WXCircleViewPager;
@@ -225,6 +226,7 @@ import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -235,6 +237,13 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
   public static final String AUTO_PLAY = "autoPlay";
   public static final String INTERVAL = "interval";
   Map<String, Object> params = new HashMap<>();
+
+  public static class Ceator implements ComponentCreator {
+    public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+      return new WXSlider(instance,node,parent,lazy);
+    }
+  }
+
   /**
    * Scrollable sliderview
    */

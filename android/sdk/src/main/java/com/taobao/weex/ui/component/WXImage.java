@@ -216,9 +216,14 @@ import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.common.WXImageSharpen;
 import com.taobao.weex.common.WXImageStrategy;
 import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.ComponentCreator;
 import com.taobao.weex.ui.view.WXImageView;
 import com.taobao.weex.utils.WXResourceUtils;
 import com.taobao.weex.utils.WXUtils;
+
+import java.lang.reflect.InvocationTargetException;
+
+import java.util.Map;
 
 
 /**
@@ -226,6 +231,13 @@ import com.taobao.weex.utils.WXUtils;
  */
 @Component(lazyload = false)
 public class WXImage extends WXComponent<ImageView> {
+
+    public static class Ceator implements ComponentCreator {
+        public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+            return new WXImage(instance,node,parent,lazy);
+        }
+    }
+
 
     @Deprecated
     public WXImage(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
@@ -346,9 +358,23 @@ public class WXImage extends WXComponent<ImageView> {
         WXImageSharpen imageSharpen = mDomObj.attr.getImageSharpen();
         imageStrategy.isSharpen = imageSharpen == WXImageSharpen.SHARPEN;
 
+        imageStrategy.setImageListener(new WXImageStrategy.ImageListener() {
+            @Override
+            public void onImageFinish(String url,ImageView imageView, boolean result, Map extra) {
+                if(!result && imageView!=null){
+                    imageView.setImageDrawable(null);
+                }
+            }
+        });
+
+        if(mDomObj.attr!=null && mDomObj.attr.containsKey(WXDomPropConstant.WX_ATTR_PLACE_HOLDER)){
+            String placeHolder= (String) mDomObj.attr.get(WXDomPropConstant.WX_ATTR_PLACE_HOLDER);
+            imageStrategy.placeHolder=placeHolder;
+        }
+
         IWXImgLoaderAdapter imgLoaderAdapter = mInstance.getImgLoaderAdapter();
         if (imgLoaderAdapter != null) {
-            imgLoaderAdapter.setImage(src, ((ImageView) getHostView()),
+            imgLoaderAdapter.setImage(src, getHostView(),
                     mDomObj.attr.getImageQuality(), imageStrategy);
         }
     }
