@@ -206,8 +206,15 @@ package com.taobao.weex.utils;
 
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import com.taobao.weex.dom.WXStyle;
+import android.text.TextUtils;
 
+import com.taobao.weex.WXEnvironment;
+import com.taobao.weex.WXSDKEngine;
+import com.taobao.weex.bridge.JSCallback;
+import com.taobao.weex.dom.WXStyle;
+import com.taobao.weex.http.WXStreamModule;
+
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -215,46 +222,127 @@ import java.util.Map;
  * Created by sospartan on 7/13/16.
  */
 public class TypefaceUtil {
-  private static final Map<String, Typeface> sTypefaceCache = new HashMap<String, Typeface>();
+    private final static HashMap<String, FontDO> sCacheMap = new HashMap<>(); //Key: fontFamilyName
 
-  public static void applyFontStyle(Paint paint, int style, int weight, String family) {
-    int oldStyle;
-    Typeface typeface = paint.getTypeface();
-    if (typeface == null) {
-      oldStyle = 0;
-    } else {
-      oldStyle = typeface.getStyle();
+    public static void putFontDO(FontDO fontDO) {
+        if (fontDO != null && !TextUtils.isEmpty(fontDO.getFontFamilyName())) {
+            sCacheMap.put(fontDO.getFontFamilyName(), fontDO);
+        }
     }
 
-    int want = 0;
-    if ((weight == Typeface.BOLD)
-      || ((oldStyle & Typeface.BOLD) != 0 && weight == WXStyle.UNSET)) {
-      want |= Typeface.BOLD;
+    public static FontDO getFontDO(String fontFamilyName) {
+        return sCacheMap.get(fontFamilyName);
     }
 
-    if ((style == Typeface.ITALIC)
-      || ((oldStyle & Typeface.ITALIC) != 0 && style == WXStyle.UNSET)) {
-      want |= Typeface.ITALIC;
+    public static void applyFontStyle(Paint paint, int style, int weight, String family) {
+        int oldStyle;
+        Typeface typeface = paint.getTypeface();
+        if (typeface == null) {
+            oldStyle = 0;
+        } else {
+            oldStyle = typeface.getStyle();
+        }
+
+        int want = 0;
+        if ((weight == Typeface.BOLD)
+                || ((oldStyle & Typeface.BOLD) != 0 && weight == WXStyle.UNSET)) {
+            want |= Typeface.BOLD;
+        }
+
+        if ((style == Typeface.ITALIC)
+                || ((oldStyle & Typeface.ITALIC) != 0 && style == WXStyle.UNSET)) {
+            want |= Typeface.ITALIC;
+        }
+
+        if (family != null) {
+            typeface = getOrCreateTypeface(family, style);
+        }
+
+        if (typeface != null) {
+            paint.setTypeface(Typeface.create(typeface, want));
+        } else {
+            paint.setTypeface(Typeface.defaultFromStyle(want));
+        }
     }
 
-    if (family != null) {
-      typeface = getOrCreateTypeface(family, want);
+    public static Typeface getOrCreateTypeface(String family, int style) {
+        FontDO fontDo = sCacheMap.get(family);
+        if (fontDo != null && fontDo.getTypeface() != null) {
+            return fontDo.getTypeface();
+        }
+
+        return Typeface.create(family, style);
     }
 
-    if (typeface != null) {
-      paint.setTypeface(Typeface.create(typeface, want));
-    } else {
-      paint.setTypeface(Typeface.defaultFromStyle(want));
+    public static boolean loadLocalFontFile(String path, String fontFamily) {
+        if (TextUtils.isEmpty(path) || TextUtils.isEmpty(fontFamily)) {
+            return false;
+        }
+        try {
+            File file = new File(path);
+            if (!file.exists()) {
+                return false;
+            }
+            Typeface typeface = Typeface.createFromFile(path);
+            if (typeface != null) {
+                FontDO fontDo = sCacheMap.get(fontFamily);
+                if (fontDo != null) {
+                    fontDo.setState(FontDO.STATE_SUCCESS);
+                    fontDo.setTypeface(typeface);
+                    WXLogUtils.d("TypefaceUtil", "load local font file success");
+                    return true;
+                }
+            } else {
+                WXLogUtils.e("TypefaceUtil", "load local font file failed, can't create font.");
+            }
+        } catch (Exception e) {
+            WXLogUtils.e("TypefaceUtil", e.toString());
+        }
+        return false;
     }
-  }
 
-  public static Typeface getOrCreateTypeface(String family, int style) {
-    if (sTypefaceCache.get(family) != null) {
-      return sTypefaceCache.get(family);
+    public static void downloadFont(final FontDO fontDo) {
+        if (fontDo != null && fontDo.getTypeface() == null && fontDo.getState() != FontDO.STATE_LOADING) {
+            fontDo.setState(FontDO.STATE_LOADING);
+            if (fontDo.getSrcType() == FontDO.TYPE_LOCAL) {
+                try {
+                    Typeface typeface = Typeface.createFromAsset(WXEnvironment.getApplication().getAssets(), fontDo.getUrl());
+                    if (typeface != null) {
+                        WXLogUtils.d("TypefaceUtil", "load asset file success");
+                        fontDo.setState(FontDO.STATE_SUCCESS);
+                        fontDo.setTypeface(typeface);
+                    } else {
+                        WXLogUtils.e("TypefaceUtil", "Font asset not found " + fontDo.getUrl());
+                    }
+                } catch (Exception e) {
+                    WXLogUtils.e("TypefaceUtil", e.toString());
+                }
+            } else if (fontDo.getSrcType() == FontDO.TYPE_NET) {
+                final String url = fontDo.getUrl();
+                final String fontFamily = fontDo.getFontFamilyName();
+                final String fileName = url.replace('/', '_');
+                final String path = WXFileUtils.getDiskCacheDir(WXEnvironment.getApplication());
+                final String fullPath = path + "/" + fileName;
+                if (!loadLocalFontFile(path, fontFamily)) {
+                    WXStreamModule module = new WXStreamModule(WXSDKEngine.getIWXHttpAdapter());
+                    module.fetch("{\"method\": \"GET\",\"url\": \"" + url + "\", \"timeout\": 3000}", new JSCallback() {
+                        @Override
+                        public void invoke(Map<String, Object> data) {
+                            if (data != null && (Boolean) data.get("ok") &&
+                                    data.get("data") != null) {
+                                boolean result = WXFileUtils.saveFile(fullPath, (byte[]) data.get("data"), WXEnvironment.getApplication());
+                                if (result) {
+                                    loadLocalFontFile(fullPath, fontFamily);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void invokeAndKeepAlive(Map<String, Object> data) {
+                        }
+                    }, null);
+                }
+            }
+        }
     }
-
-    Typeface typeface = Typeface.create(family, style);
-    sTypefaceCache.put(family, typeface);
-    return typeface;
-  }
 }
