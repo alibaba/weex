@@ -35,13 +35,6 @@ Sender.prototype = {
   },
 
   fireEvent: function (ref, type, func, event) {
-    if (event._alreadyFired) {
-      // stop bubbling up in virtual dom tree.
-      return
-    }
-    // do not prevent default, otherwise the touchstart
-    // event will no longer trigger a click event
-    event._alreadyFired = true
     func.extra && utils.extend(event, func.extra())
     _send(this.instanceId, {
       method: 'fireEvent',
