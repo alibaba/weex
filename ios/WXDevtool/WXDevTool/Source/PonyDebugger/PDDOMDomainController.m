@@ -170,6 +170,7 @@ static NSString *const kPDDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
 
 - (void)domain:(PDDOMDomain *)domain getDocumentWithCallback:(void (^)(PDDOMNode *root, id error))callback;
 {
+    [self stopTrackingAllViews];
     self.objectsForNodeIds = [[NSMutableDictionary alloc] init];
     self.nodeIdsForObjects = [[NSMutableDictionary alloc] init];
     self.nodeIdCounter = 3;
