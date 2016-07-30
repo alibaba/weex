@@ -303,7 +303,7 @@ public class WXCirclePageAdapter extends PagerAdapter {
         container.addView(pageView);
       }
     } catch (Exception e) {
-      WXLogUtils.e("[CirclePageAdapter] instantiateItem: " + WXLogUtils.getStackTrace(e));
+      WXLogUtils.e("[CirclePageAdapter] instantiateItem: ", e);
     }
     return pageView;
   }

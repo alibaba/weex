@@ -331,7 +331,7 @@ public class WXDomObject extends CSSNode implements Cloneable {
     int index = children.indexOf(child);
     if (index == -1) {
       if (WXEnvironment.isApkDebugable()) {
-        WXLogUtils.e("[WXDomObject]" + "remove function error");
+        WXLogUtils.e("[WXDomObject] remove function error");
       }
       return;
     }
@@ -493,7 +493,7 @@ public class WXDomObject extends CSSNode implements Cloneable {
 
     } catch (Exception e) {
       if (WXEnvironment.isApkDebugable()) {
-        WXLogUtils.e("WXDomObject clone error: " + WXLogUtils.getStackTrace(e));
+        WXLogUtils.e("WXDomObject clone error: ", e);
       }
     }
 
