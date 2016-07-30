@@ -313,7 +313,11 @@ void _PDLogObjectsImpl(NSString *severity, NSArray *arguments)
 - (void)connectToURL:(NSURL *)url;
 {
     NSLog(@"Connecting to %@", url);
-    [WXDevToolType setDebug:NO];
+    if ([WXDevToolType isDebug]) {
+        [WXDevToolType setDebug:NO];
+        [WXSDKEngine restart];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshInstance" object:nil];
+    }
     _msgAry = nil;
     _msgAry = [NSMutableArray array];
     _debugAry = nil;
