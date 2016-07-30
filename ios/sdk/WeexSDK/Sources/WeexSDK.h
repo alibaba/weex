@@ -19,6 +19,7 @@
 #import "WXRootViewController.h"
 #import "WXNetworkProtocol.h"
 #import "WXNavigationProtocol.h"
+#import "WXMonitor.h"
 #import "WXModuleProtocol.h"
 #import "WXLog.h"
 #import "WXListComponent.h"
