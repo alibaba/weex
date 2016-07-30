@@ -73,7 +73,7 @@ android {
     }
     testOptions {
         unitTests.all {
-            jvmArgs '-XX:-UseSplitVerifier'/* fix VerifyError  */
+            jvmArgs += ['-XX:-UseSplitVerifier', '-noverify','-Xverify:none']/* fix VerifyError  */
         }
     }
 }
