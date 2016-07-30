@@ -12,13 +12,6 @@
 
 @interface WXSDKInstance ()
 
-//performance
-@property (nonatomic, strong) NSDate *renderStartDate;
-@property (nonatomic, assign) NSTimeInterval communicateTime;
-extern NSTimeInterval JSLibInitTime;
-@property (nonatomic, assign) NSTimeInterval screenRenderTime;
-@property (nonatomic, assign) NSUInteger JSTemplateSize;
-
 @property (nonatomic, strong) NSMutableDictionary *moduleInstances;
 @property (nonatomic, strong) NSMutableDictionary *naviBarStyles;
 @property (nonatomic, strong) NSMutableDictionary *styleConfigs;

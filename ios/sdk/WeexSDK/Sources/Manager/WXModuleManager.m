@@ -11,6 +11,7 @@
 #import "WXUtility.h"
 #import "WXModuleFactory.h"
 #import "WXSDKError.h"
+#import "WXMonitor.h"
 #import "WXSDKManager.h"
 #import "WXThreadSafeMutableDictionary.h"
 #import <objc/message.h>
@@ -62,14 +63,17 @@
     
     NSMethodSignature *signature = [module methodSignatureForSelector:selector];
     if (!signature) {
-        [WXSDKError monitorAlarm:NO errorCode:WA_ERR_INVOKE_NATIVE msg:@"Module:%@, method：%@ doesn't exist ！", method.module, method.method];
+        NSString *errorMessage = [NSString stringWithFormat:@"Module:%@, method：%@ doesn't exist", method.module, method.method];
+        WX_MONITOR_FAIL(WXMTJSBridge, WX_ERR_INVOKE_NATIVE, errorMessage);
         return;
     }
     
     if (signature.numberOfArguments - 2 != method.arguments.count) {
-        [WXSDKError monitorAlarm:NO errorCode:WA_ERR_INVOKE_NATIVE msg:@"Module:%@, the parameters in calling method [%@] and registered method [%@] are not consistent！", method.module, method.method, NSStringFromSelector(selector)];
+        NSString *errorMessage = [NSString stringWithFormat:@"Module:%@, the parameters in calling method [%@] and registered method [%@] are not consistent！", method.module, method.method, NSStringFromSelector(selector)];
+        WX_MONITOR_FAIL(WXMTJSBridge, WX_ERR_INVOKE_NATIVE, errorMessage);
         return;
     }
+    
     NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
     invocation.target = module;
     invocation.selector = selector;
@@ -99,8 +103,6 @@
     [invocation invoke];
     
     WX_FREE_FLIST(freeList, arguments.count);
-    
-    [WXSDKError monitorAlarm:YES errorCode:WA_ERR_INVOKE_NATIVE msg:@""];
 }
 
 #pragma mark Public Methods
@@ -111,7 +113,8 @@
     
     Class module =  [WXModuleFactory classWithModuleName:method.module];
     if (!module) {
-        [WXSDKError monitorAlarm:NO errorCode:WA_ERR_INVOKE_NATIVE msg:@"Module：%@ doesn't exist！", method.module];
+        NSString *errorMessage = [NSString stringWithFormat:@"Module：%@ doesn't exist！", method.module];
+        WX_MONITOR_FAIL(WXMTJSBridge, WX_ERR_INVOKE_NATIVE, errorMessage);
         return;
     }
     

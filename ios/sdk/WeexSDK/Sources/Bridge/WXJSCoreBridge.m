@@ -13,6 +13,7 @@
 #import "WXUtility.h"
 #import "WXSDKEngine.h"
 #import "WXSDKError.h"
+#import "WXMonitor.h"
 #import <sys/utsname.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 
@@ -79,7 +80,7 @@
             context.exception = exception;
             NSString *message = [NSString stringWithFormat:@"[%@:%@:%@] %@\n%@", exception[@"sourceURL"], exception[@"line"], exception[@"column"], exception, [exception[@"stack"] toObject]];
             
-            [[NSNotificationCenter defaultCenter] postNotificationName:WX_JS_ERROR_NOTIFICATION_NAME object:weakSelf userInfo:message ? @{@"message":message} : nil];
+            WX_MONITOR_FAIL(WXMTJSBridge, WX_ERR_JS_EXECUTE, message);
         };
     }
     return self;
@@ -90,7 +91,6 @@
 - (void)executeJSFramework:(NSString *)frameworkScript
 {
     WXAssertParam(frameworkScript);
-    
     [_jsContext evaluateScript:frameworkScript];
 }
 

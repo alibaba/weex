@@ -17,6 +17,7 @@
 #import "WXWeakObjectWrapper.h"
 #import "WXUtility.h"
 #import "WXConvert.h"
+#import "WXMonitor.h"
 #import "WXAssert.h"
 #import "WXThreadSafeMutableDictionary.h"
 #import "WXThreadSafeMutableArray.h"
@@ -223,9 +224,7 @@
 - (void)handleFirstScreenTime
 {
     if (self.absolutePosition.y > self.weexInstance.rootView.frame.size.height) {
-        if (self.weexInstance.screenRenderTime == 0) {
-            self.weexInstance.screenRenderTime = [[NSDate new] timeIntervalSinceDate:self.weexInstance.renderStartDate];
-        }
+        WX_MONITOR_INSTANCE_PERF_END(WXPTFirstScreenRender, self.weexInstance);
     }
 }
 

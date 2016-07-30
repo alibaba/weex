@@ -43,6 +43,11 @@ static NSThread *WXBridgeThread;
     return self;
 }
 
+- (WXSDKInstance *)topInstance
+{
+    return _bridgeCtx.topInstance;
+}
+
 - (void)unload
 {
     _bridgeCtx = nil;

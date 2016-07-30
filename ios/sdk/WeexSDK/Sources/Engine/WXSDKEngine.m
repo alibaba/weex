@@ -16,6 +16,7 @@
 #import "WXNavigationDefaultImpl.h"
 #import "WXSDKManager.h"
 #import "WXSDKError.h"
+#import "WXMonitor.h"
 #import "WXSimulatorShortcutMananger.h"
 #import "WXAssert.h"
 #import "WXLog.h"
@@ -122,9 +123,14 @@
 
 + (void)initSDKEnviroment
 {
+    WX_MONITOR_PERF_START(WXPTInitalize)
+    WX_MONITOR_PERF_START(WXPTInitalizeSync)
+    
     NSString *filePath = [[NSBundle mainBundle] pathForResource:@"main" ofType:@"js"];
     NSString *script = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
     [WXSDKEngine initSDKEnviroment:script];
+    
+    WX_MONITOR_PERF_END(WXPTInitalizeSync)
     
 #if TARGET_OS_SIMULATOR
     static dispatch_once_t onceToken;
@@ -155,7 +161,7 @@
 + (void)initSDKEnviroment:(NSString *)script
 {
     if (!script || script.length <= 0) {
-        [WXSDKError monitorAlarm:NO errorCode:WX_ERR_LOAD_JSLIB msg:@"framework loading is failure!"];
+        WX_MONITOR_FAIL(WXMTJSFramework, WX_ERR_JSFRAMEWORK_LOAD, @"framework loading is failure!");
         return;
     }
     
@@ -169,6 +175,11 @@
 + (NSString*)SDKEngineVersion
 {
     return WX_SDK_VERSION;
+}
+
++ (WXSDKInstance *)topInstance
+{
+    return [WXSDKManager bridgeMgr].topInstance;
 }
 
 # pragma mark Debug
@@ -188,10 +199,6 @@
     [WXComponentFactory unregisterAllComponents];
     NSString *filePath = [[NSBundle mainBundle] pathForResource:@"main" ofType:@"js"];
     NSString *script = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-    if (!script || script.length <= 0) {
-        [WXSDKError monitorAlarm:NO errorCode:WX_ERR_LOAD_JSLIB msg:@"framework loading is failure!"];
-        return;
-    }
     
     [self _originalRegisterComponents:components];
     [self _originalRegisterModules:modules];

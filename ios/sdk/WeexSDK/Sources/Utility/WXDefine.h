@@ -63,8 +63,6 @@ parts = [parts subarrayWithRange:(NSRange){0, parts.count - 1}];\
 
 #define WX_ERROR_DOMAIN @"WXErrorDomain"
 
-#define WX_JS_ERROR_NOTIFICATION_NAME @"WXJSErrorNotification"
-
 #define WX_INSTANCE_NOTIFICATION_UPDATE_STATE @"WXInstUpdateState"
 
 #define WX_COMPONENT_THREAD_NAME @"com.taobao.weex.component"

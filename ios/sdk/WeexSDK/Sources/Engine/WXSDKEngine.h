@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class WXSDKInstance;
+
 @interface WXSDKEngine : NSObject
 
 /**
@@ -82,6 +84,12 @@
  *
  **/
 + (NSString*)SDKEngineVersion;
+
+/**
+ * @abstract The Instance at the top of the rendering stack. 
+ *
+ **/
++ (WXSDKInstance *)topInstance;
 
 /**
  * @abstract Connects to websocket for collecting log

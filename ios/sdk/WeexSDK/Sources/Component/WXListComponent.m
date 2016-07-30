@@ -12,6 +12,7 @@
 #import "WXComponent_internal.h"
 #import "NSArray+Weex.h"
 #import "WXAssert.h"
+#import "WXMonitor.h"
 #import "WXUtility.h"
 #import "NSObject+WXSwizzle.h"
 #import "WXSDKInstance_private.h"
@@ -333,9 +334,7 @@
     
     CGRect cellRect = [_tableView rectForRowAtIndexPath:indexPath];
     if (cellRect.origin.y + cellRect.size.height >= _tableView.frame.size.height) {
-        if (self.weexInstance.screenRenderTime == 0) {
-            self.weexInstance.screenRenderTime = [[NSDate new] timeIntervalSinceDate:self.weexInstance.renderStartDate];
-        }
+        WX_MONITOR_INSTANCE_PERF_END(WXPTFirstScreenRender, self.weexInstance);
     }
     
     if (self.weexInstance.onRenderProgress) {
