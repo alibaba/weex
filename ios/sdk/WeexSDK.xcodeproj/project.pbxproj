@@ -108,7 +108,7 @@
 		748B25181C44A6F9005D491E /* WXSDKInstance_private.h in Headers */ = {isa = PBXBuildFile; fileRef = 748B25161C44A6F9005D491E /* WXSDKInstance_private.h */; };
 		74915F471C8EB02B00BEBCC0 /* WXAssert.h in Headers */ = {isa = PBXBuildFile; fileRef = 74915F451C8EB02B00BEBCC0 /* WXAssert.h */; };
 		74915F481C8EB02B00BEBCC0 /* WXAssert.m in Sources */ = {isa = PBXBuildFile; fileRef = 74915F461C8EB02B00BEBCC0 /* WXAssert.m */; };
-		749DC27B1D40827B009E1C91 /* WXMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = 749DC2791D40827B009E1C91 /* WXMonitor.h */; };
+		749DC27B1D40827B009E1C91 /* WXMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = 749DC2791D40827B009E1C91 /* WXMonitor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		749DC27C1D40827B009E1C91 /* WXMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 749DC27A1D40827B009E1C91 /* WXMonitor.m */; };
 		74A4BA5B1CABBBD000195969 /* WXDebugTool.h in Headers */ = {isa = PBXBuildFile; fileRef = 74A4BA591CABBBD000195969 /* WXDebugTool.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		74A4BA5C1CABBBD000195969 /* WXDebugTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 74A4BA5A1CABBBD000195969 /* WXDebugTool.m */; };
