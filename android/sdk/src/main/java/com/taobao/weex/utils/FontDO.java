@@ -202,52 +202,94 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-/**
- *
- */
 package com.taobao.weex.utils;
 
+import android.graphics.Typeface;
 
-public class WXConst {
+import java.net.URI;
 
-  public static final String MODULE_NAME = "weex";
+public class FontDO {
+  private final String mFontFamilyName;
+  private String mUrl = "";
+  private int mType = TYPE_NETWORK;
+  private Typeface mTypeface;
+  private int mState = STATE_INVALID;
 
-  //Performance
-  public static final String LOAD = "load";
+  public final static int STATE_INVALID = -1;
+  public final static int STATE_INIT = 0;
+  public final static int STATE_LOADING = 1;
+  public final static int STATE_SUCCESS = 2;
+  public final static int STATE_FAILED = 3;
 
-  //Alert
-  public static final String DOM_MODULE = "domModule";
-  public static final String JS_BRIDGE = "jsBridge";
-  public static final String ENVIRONMENT = "environment";
-  public static final String STREAM_MODULE = "streamModule";
+  public final static int TYPE_LOCAL = 0;
+  public final static int TYPE_NETWORK = 1;
+  public final static int TYPE_FILE = 2;
 
-  public static final String KEY_MODULE = "module";
-  public static final String KEY_METHOD = "method";
-  public static final String KEY_ARGS = "args";
-  public static final String KEY_PRIORITY = "priority";
+  public FontDO (String fontFamilyName, String src) {
+    this.mFontFamilyName = fontFamilyName;
+    parseSrc(src);
+  }
+  public String getFontFamilyName() {
+    return mFontFamilyName;
+  }
 
-  public static final String OK = "OK";
-  public static final String CANCEL = "Cancel";
-  public static final String RESULT = "result";
-  public static final String DATA = "data";
-  public static final String MESSAGE = "message";
-  public static final String DURATION = "duration";
-  public static final String OK_TITLE = "okTitle";
-  public static final String CANCEL_TITLE = "cancelTitle";
+  private void parseSrc(String src) {
+    src = (src != null )? src.trim() : "";
+    if (src.isEmpty()) {
+      mState = STATE_INVALID;
+      WXLogUtils.e("TypefaceUtil", "font src is empty.");
+      return;
+    }
 
-  public static final String MSG_SUCCESS = "WX_SUCCESS";
+    if (src.matches("^url\\('.*'\\)$")) {
+      mUrl = src.substring(5, src.length() - 2);
+      try {
+        URI uri = URI.create(mUrl);
+        String scheme = uri.getScheme();
+        //TODO: use bundle url to process relative path. see #497
+        if (WXConst.SCHEME_HTTP.equals(scheme) ||
+                WXConst.SCHEME_HTTPS.equals(scheme)) {
+          mType = TYPE_NETWORK;
+        } else if (WXConst.SCHEME_FILE.equals(scheme)) {
+          mType = TYPE_FILE;
+          mUrl = uri.getPath();
+        } else {
+          mType = TYPE_LOCAL;
+        }
+        mState = STATE_INIT;
+      } catch (Exception e) {
+        mType = STATE_INVALID;
+        WXLogUtils.e("TypefaceUtil", "URI.create(mUrl) failed mUrl: " + mUrl);
+      }
+    } else {
+      mUrl = src;
+      mState = STATE_INVALID;
+    }
 
-  public static final String MSG_FAILED = "MSG_FAILED";
+    WXLogUtils.d("TypefaceUtil", "src:" + src + ", mUrl:" + mUrl + ", mType:" + mType);
+  }
 
-  public static final String MSG_PARAM_ERR = "MSG_PARAM_ERR";
+  public String getUrl() {
+    return mUrl;
+  }
 
-  //font
-  public static final String FONT_FACE = "font-face";
-  public static final String FONT_SRC = "src";
-  public static final String FONT_FAMILY = "font-family";
-  public static final String SCHEME_FILE = "file";
-  public static final String SCHEME_HTTPS = "https";
-  public static final String SCHEME_HTTP = "http";
-  public static final String FONT_CACHE_DIR_NAME = "font-family";
+  public int getType() {
+    return mType;
+  }
+
+  public Typeface getTypeface() {
+    return mTypeface;
+  }
+
+  public void setTypeface(Typeface typeface) {
+    this.mTypeface = typeface;
+  }
+
+  public int getState() {
+    return mState;
+  }
+
+  public void setState(int state) {
+    this.mState = state;
+  }
 }
-

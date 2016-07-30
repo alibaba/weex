@@ -209,6 +209,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Environment;
 import android.telephony.TelephonyManager;
 
 import com.taobao.weex.common.WXConfig;
@@ -358,6 +359,20 @@ public class WXEnvironment {
     if (sApplication == null) {
       return;
     }
+  }
+
+  public static String getDiskCacheDir(Context context) {
+    if (context == null) {
+      return null;
+    }
+    String cachePath;
+    if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
+            || !Environment.isExternalStorageRemovable()) {
+      cachePath = context.getExternalCacheDir().getPath();
+    } else {
+      cachePath = context.getCacheDir().getPath();
+    }
+    return cachePath;
   }
 
 }
