@@ -750,7 +750,7 @@ public class WXListComponent extends WXVContainer implements
 
             }
         } catch (RuntimeException e) {
-            WXLogUtils.eTag(TAG, e);
+            WXLogUtils.e(TAG, WXLogUtils.getStackTrace(e));
             id = RecyclerView.NO_ID;
             WXLogUtils.e(TAG, "getItemViewType: NO ID, this will crash the whole render system of WXListRecyclerView");
 
@@ -802,7 +802,7 @@ public class WXListComponent extends WXVContainer implements
           }
         }
       } catch (Exception e) {
-        WXLogUtils.d(TAG + "onLoadMore :", e);
+        WXLogUtils.d(TAG, "onLoadMore :" + WXLogUtils.getStackTrace(e));
       }
     }
 

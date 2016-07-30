@@ -1142,7 +1142,7 @@ class WXDomStatement {
       }
       return animationBean;
     } catch (RuntimeException e) {
-      WXLogUtils.e("", e);
+      WXLogUtils.e(WXLogUtils.getStackTrace(e));
       return null;
     }
   }
@@ -1162,7 +1162,7 @@ class WXDomStatement {
           return animationBean;
         }
       }catch (RuntimeException e){
-        WXLogUtils.e("", e);
+        WXLogUtils.e(WXLogUtils.getStackTrace(e));
         return null;
       }
     }

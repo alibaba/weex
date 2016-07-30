@@ -236,7 +236,12 @@ public class WXDomObjectFactory {
         return domObject;
       }
     } catch (Exception e) {
-        WXLogUtils.e("WXDomObjectFactory Exception type:[" + type + "] ", e);
+      if (WXEnvironment.isApkDebugable()) {
+        StringBuilder builder = new StringBuilder("WXDomObjectFactory Exception type:[");
+        builder.append(type).append("] ");
+        builder.append(WXLogUtils.getStackTrace(e));
+        WXLogUtils.e(builder.toString());
+      }
     }
 
     return null;

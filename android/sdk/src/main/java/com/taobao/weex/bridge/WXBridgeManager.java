@@ -476,7 +476,7 @@ public class WXBridgeManager implements Callback {
           }
         }
       } catch (Exception e) {
-        WXLogUtils.e("[WXBridgeManager] callNative exception: ", e);
+        WXLogUtils.e("[WXBridgeManager] callNative exception: " + WXLogUtils.getStackTrace(e));
       }
     }
 
