@@ -204,76 +204,92 @@
  */
 package com.taobao.weex.utils;
 
-import android.content.Context;
-import android.text.TextUtils;
+import android.graphics.Typeface;
 
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.net.URI;
 
-public class WXFileUtils {
+public class FontDO {
+  private final String mFontFamilyName;
+  private String mUrl = "";
+  private int mType = TYPE_NETWORK;
+  private Typeface mTypeface;
+  private int mState = STATE_INVALID;
 
-  /**
-   * Load file in asset directory.
-   * @param path FilePath
-   * @param context Weex Context
-   * @return the Content of the file
-   */
-  public static String loadFileContent(String path, Context context) {
-    if(path == null || context == null){
-      return null;
-    }
-    StringBuilder builder ;
-    try {
-      InputStream in = context.getAssets().open(path);
+  public final static int STATE_INVALID = -1;
+  public final static int STATE_INIT = 0;
+  public final static int STATE_LOADING = 1;
+  public final static int STATE_SUCCESS = 2;
+  public final static int STATE_FAILED = 3;
 
-      builder = new StringBuilder(in.available()+10);
+  public final static int TYPE_LOCAL = 0;
+  public final static int TYPE_NETWORK = 1;
+  public final static int TYPE_FILE = 2;
 
-      BufferedReader localBufferedReader = new BufferedReader(new InputStreamReader(in));
-      char[] data = new char[2048];
-      int len = -1;
-      while ((len = localBufferedReader.read(data)) > 0) {
-        builder.append(data, 0, len);
-      }
-      localBufferedReader.close();
-      if (in != null) {
-        try {
-          in.close();
-        } catch (IOException e) {
-          WXLogUtils.e("WXFileUtils loadFileContent: " + WXLogUtils.getStackTrace(e));
-        }
-      }
-      return builder.toString();
-
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    return "";
+  public FontDO (String fontFamilyName, String src) {
+    this.mFontFamilyName = fontFamilyName;
+    parseSrc(src);
+  }
+  public String getFontFamilyName() {
+    return mFontFamilyName;
   }
 
-  public static boolean saveFile(String path, byte[] content, Context context) {
-    if (TextUtils.isEmpty(path) || content == null || context == null) {
-      return false;
+  private void parseSrc(String src) {
+    src = (src != null )? src.trim() : "";
+    if (src.isEmpty()) {
+      mState = STATE_INVALID;
+      WXLogUtils.e("TypefaceUtil", "font src is empty.");
+      return;
     }
-    FileOutputStream outStream = null;
-    try {
-      outStream = new FileOutputStream(path);
-      outStream.write(content);
-      return true;
-    } catch (Exception e) {
-      WXLogUtils.e("WXFileUtils saveFile: " + WXLogUtils.getStackTrace(e));
-    } finally {
-      if (outStream != null) {
-        try {
-          outStream.close();
-        } catch (IOException e) {
-          e.printStackTrace();
+
+    if (src.matches("^url\\('.*'\\)$")) {
+      mUrl = src.substring(5, src.length() - 2);
+      try {
+        URI uri = URI.create(mUrl);
+        String scheme = uri.getScheme();
+        //TODO: use bundle url to process relative path. see #497
+        if (WXConst.SCHEME_HTTP.equals(scheme) ||
+                WXConst.SCHEME_HTTPS.equals(scheme)) {
+          mType = TYPE_NETWORK;
+        } else if (WXConst.SCHEME_FILE.equals(scheme)) {
+          mType = TYPE_FILE;
+          mUrl = uri.getPath();
+        } else {
+          mType = TYPE_LOCAL;
         }
+        mState = STATE_INIT;
+      } catch (Exception e) {
+        mType = STATE_INVALID;
+        WXLogUtils.e("TypefaceUtil", "URI.create(mUrl) failed mUrl: " + mUrl);
       }
+    } else {
+      mUrl = src;
+      mState = STATE_INVALID;
     }
-    return false;
+
+    WXLogUtils.d("TypefaceUtil", "src:" + src + ", mUrl:" + mUrl + ", mType:" + mType);
+  }
+
+  public String getUrl() {
+    return mUrl;
+  }
+
+  public int getType() {
+    return mType;
+  }
+
+  public Typeface getTypeface() {
+    return mTypeface;
+  }
+
+  public void setTypeface(Typeface typeface) {
+    this.mTypeface = typeface;
+  }
+
+  public int getState() {
+    return mState;
+  }
+
+  public void setState(int state) {
+    this.mState = state;
   }
 }
