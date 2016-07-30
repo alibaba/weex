@@ -12,6 +12,7 @@
 #import "WXAppMonitorProtocol.h"
 #import "WXHandlerFactory.h"
 #import "WXLog.h"
+#import "WXThreadSafeMutableDictionary.h"
 
 NSString *const kStartKey = @"start";
 NSString *const kEndKey = @"end";
@@ -20,7 +21,7 @@ NSString *const kEndKey = @"end";
 
 #pragma mark - Performance Monitor
 
-static NSMutableDictionary *globalPerformanceDict;
+static WXThreadSafeMutableDictionary *globalPerformanceDict;
 
 + (void)performancePoint:(WXPerformanceTag)tag willStartWithInstance:(WXSDKInstance *)instance
 {
@@ -120,7 +121,7 @@ static NSMutableDictionary *globalPerformanceDict;
     NSMutableDictionary *performanceDict;
     if (!instance) {
         if (!globalPerformanceDict) {
-            globalPerformanceDict = [NSMutableDictionary dictionary];
+            globalPerformanceDict = [WXThreadSafeMutableDictionary dictionary];
         }
         performanceDict = globalPerformanceDict;
     } else {

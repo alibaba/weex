@@ -19,6 +19,7 @@
 #import "WXUtility.h"
 #import "WXLog.h"
 #import "WXView.h"
+#import "WXThreadSafeMutableDictionary.h"
 
 NSString *const bundleUrlOptionKey = @"bundleUrl";
 
@@ -53,7 +54,7 @@ NSTimeInterval JSLibInitTime = 0;
         _bizType = @"";
         _pageName = @"";
 
-        _performanceDict = [NSMutableDictionary new];
+        _performanceDict = [WXThreadSafeMutableDictionary new];
         _moduleInstances = [NSMutableDictionary new];
         _styleConfigs = [NSMutableDictionary new];
         _attrConfigs = [NSMutableDictionary new];
