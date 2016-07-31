@@ -33,7 +33,7 @@ public class CSSNode {
   /*package*/ CSSNode nextAbsoluteChild;
   /*package*/ CSSNode nextFlexChild;
   private ArrayList<CSSNode> mChildren;
-  private CSSNode mParent;
+  protected CSSNode mParent;
   private MeasureFunction mMeasureFunction = null;
   private LayoutState mLayoutState = LayoutState.DIRTY;
   private boolean mShow = true;
@@ -78,32 +78,64 @@ public class CSSNode {
   }
 
   public CSSNode getChildAt(int i) {
-    //    Assertions.assertNotNull(mChildren);
+    if (mChildren == null) {
+      return null;
+    }
+    if (i < 0 || i >= mChildren.size()) {
+      return null;
+    }
     return mChildren.get(i);
   }
 
-  public void addChildAt(CSSNode child, int i) {
+  public boolean addChildAt(CSSNode child, int index) {
+    if (child == null || index < -1) {
+      return false;
+    }
     if (child.mParent != null) {
       throw new IllegalStateException("Child already has a parent, it must be removed first.");
     }
+
     if (mChildren == null) {
       // 4 is kinda arbitrary, but the default of 10 seems really high for an average View.
       mChildren = new ArrayList<CSSNode>(4);
     }
 
-    mChildren.add(i, child);
+    int count = mChildren.size();
+    index = index >= count ? -1 : index;
+    if (index == -1) {
+      mChildren.add(child);
+    } else {
+      mChildren.add(index, child);
+    }
+
     child.mParent = this;
     dirty();
+    return true;
   }
 
   public CSSNode removeChildAt(int i) {
-    //    Assertions.assertNotNull(mChildren);
+    if (mChildren == null || i < 0 || i >= mChildren.size()) {
+      return null;
+    }
     CSSNode removed = mChildren.remove(i);
     removed.mParent = null;
     dirty();
     return removed;
   }
 
+  public boolean removeChild(CSSNode child) {
+    if (mChildren == null || child == null) {
+      return false;
+    }
+    boolean result = mChildren.remove(child);
+    if (result) {
+      child.mParent = null;
+      dirty();
+    }
+    return result;
+  }
+
+  @Deprecated
   public void setParentNull() {
     mParent = null;
   }
@@ -116,8 +148,7 @@ public class CSSNode {
    * @return the index of the given child, or -1 if the child doesn't exist in this node.
    */
   public int indexOf(CSSNode child) {
-    //    Assertions.assertNotNull(mChildren);
-    return mChildren.indexOf(child);
+    return mChildren == null ? -1 : mChildren.indexOf(child);
   }
 
   public void setMeasureFunction(MeasureFunction measureFunction) {
@@ -547,7 +578,7 @@ public class CSSNode {
     mLayoutState = LayoutState.DIRTY;
   }
 
-  private static enum LayoutState {
+  private enum LayoutState {
     /**
      * Some property of this node or its children has changes and the current values in {@link
      * #csslayout} are not valid.
@@ -567,12 +598,12 @@ public class CSSNode {
     UP_TO_DATE,
   }
 
-  public static interface MeasureFunction {
+  public interface MeasureFunction {
 
     /**
      * Should measure the given node and put the result in the given MeasureOutput.
      * NB: measure is NOT guaranteed to be threadsafe/re-entrant safe!
      */
-    public void measure(CSSNode node, float width, MeasureOutput measureOutput);
+    void measure(CSSNode node, float width, MeasureOutput measureOutput);
   }
 }
