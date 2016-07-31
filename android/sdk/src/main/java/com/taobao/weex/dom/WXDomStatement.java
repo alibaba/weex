@@ -256,15 +256,16 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 class WXDomStatement {
 
-  private final ConcurrentHashMap<String, WXDomObject> mRegistry;
-  private String mInstanceId;
-  private WXRenderManager mWXRenderManager;
-  private ArrayList<IWXRenderTask> mNormalTasks;
-  private Set <Pair<String, Map<String, Object>>> animations;
-  private CSSLayoutContext mLayoutContext;
+  private final ConcurrentHashMap<String, WXDomObject> mRegistry = new ConcurrentHashMap<>();
+  private final String mInstanceId;
+  private final WXRenderManager mWXRenderManager;
+  private final ArrayList<IWXRenderTask> mNormalTasks = new ArrayList<>();
+  private final Set <Pair<String, Map<String, Object>>> animations = new HashSet<>();
+  private final CSSLayoutContext mLayoutContext = new CSSLayoutContext();
   private volatile boolean mDirty;
   private boolean mDestroy;
   private Map<String, AddDomInfo> mAddDom = new HashMap<>();
+  private ArrayList<String> mFixedStyleRefs;
 
   /**
    * Create an instance of {@link WXDomStatement},
@@ -276,12 +277,7 @@ class WXDomStatement {
    * @param renderManager This acts as the Receiver of the command pattern
    */
   public WXDomStatement(String instanceId, WXRenderManager renderManager) {
-    mDestroy = false;
     mInstanceId = instanceId;
-    mLayoutContext = new CSSLayoutContext();
-    mRegistry = new ConcurrentHashMap<>();
-    mNormalTasks = new ArrayList<>();
-    animations = new HashSet<>();
     mWXRenderManager = renderManager;
   }
 
@@ -321,17 +317,18 @@ class WXDomStatement {
    * This method will be called when {@link #batch()} is executed.
    * @param root root dom
    */
-  void rebuildingDomTree(WXDomObject root) {
-    if (root != null && root.getFixedStyleRefs() != null) {
-      int size = root.getFixedStyleRefs().size();
+  private void rebuildingDomTree(WXDomObject root) {
+    if (mFixedStyleRefs != null && !mFixedStyleRefs.isEmpty()) {
+      int size = mFixedStyleRefs.size();
       for (int i = 0; i < size; i++) {
-        String fixedRef = root.getFixedStyleRefs().get(i);
+        String fixedRef = mFixedStyleRefs.get(i);
         WXDomObject wxDomObject = mRegistry.get(fixedRef);
-        if (wxDomObject!=null && wxDomObject.parent != null) {
-          wxDomObject.parent.remove(wxDomObject);
+        if (wxDomObject!=null && wxDomObject.getParent() != null && wxDomObject.getParent() != root) {
+          wxDomObject.getParent().remove(wxDomObject);
           root.add(wxDomObject, -1);
         }
       }
+      mFixedStyleRefs.clear();
     }
 
   }
@@ -529,7 +526,7 @@ class WXDomStatement {
     }
     domObject.ref = WXDomObject.ROOT;
     domObject.updateStyle(style);
-    transformStyle(domObject, true);
+    transformStyle(domObject);
 
     try {
       final WXComponent component = mWXRenderManager.createBodyOnDomThread(mInstanceId, domObject);
@@ -629,7 +626,7 @@ class WXDomStatement {
     }
     WXDomObject domObject = parseInner(dom);
 
-    if (domObject == null || mRegistry.containsKey(domObject.ref)) {
+    if (domObject == null) {
       if (WXEnvironment.isApkDebugable()) {
         WXLogUtils.e("[WXDomStatement] addDom error!!");
       }
@@ -639,15 +636,17 @@ class WXDomStatement {
       return;
     }
 
-    transformStyle(domObject, true);
+    transformStyle(domObject);
 
     if (domObject.isFixed()) {
       WXDomObject rootDom = mRegistry.get(WXDomObject.ROOT);
       if (rootDom == null) {
         return;
       }
-      rootDom.add2FixedDomList(domObject.ref);
-
+      if (mFixedStyleRefs == null) {
+        mFixedStyleRefs = new ArrayList<>(2);
+      }
+      mFixedStyleRefs.add(domObject.ref);
     }
     parent.add(domObject, index);
 
@@ -669,7 +668,6 @@ class WXDomStatement {
         try {
           mWXRenderManager.addComponent(mInstanceId, component, parentRef, index);
         }catch (Exception e){
-          e.printStackTrace();
           WXLogUtils.e("add component failed."+e.getMessage());
         }
       }
@@ -703,14 +701,14 @@ class WXDomStatement {
     WXSDKInstance instance = WXSDKManager.getInstance().getSDKInstance(mInstanceId);
     WXDomObject domObject = mRegistry.get(ref);
     WXDomObject parentObject = mRegistry.get(parentRef);
-    if (domObject == null || domObject.parent == null
+    if (domObject == null || domObject.getParent() == null
         || parentObject == null || parentObject.hasNewLayout()) {
       if (instance != null) {
         instance.commitUTStab(WXConst.DOM_MODULE, WXErrorCode.WX_ERR_DOM_MOVEELEMENT);
       }
       return;
     }
-    domObject.parent.remove(domObject);
+    domObject.getParent().remove(domObject);
     parentObject.add(domObject, index);
 
     mNormalTasks.add(new IWXRenderTask() {
@@ -745,7 +743,7 @@ class WXDomStatement {
       }
       return;
     }
-    WXDomObject parent = domObject.parent;
+    WXDomObject parent = domObject.getParent();
     if (parent == null) {
       if (instance != null) {
         instance.commitUTStab(WXConst.DOM_MODULE, WXErrorCode.WX_ERR_DOM_REMOVEELEMENT);
@@ -841,7 +839,7 @@ class WXDomStatement {
     }
 
     domObject.updateStyle(style);
-    transformStyle(domObject, false);
+    transformStyle(domObject);
 
     updateStyle(domObject, style);
     animations.add(new Pair<String, Map<String, Object>>(ref,style));
@@ -1053,18 +1051,21 @@ class WXDomStatement {
 
     domObject.type = type;
     domObject.ref = (String) map.get("ref");
+    domObject.young();
+    mRegistry.put(domObject.ref, domObject);
+
     Object style = map.get("style");
-    if (style != null && style instanceof JSONObject) {
+    if (style instanceof JSONObject) {
       domObject.style = new WXStyle();
       putAll(domObject.style, (JSONObject) style);
     }
     Object attr = map.get("attr");
-    if (attr != null && attr instanceof JSONObject) {
+    if (attr instanceof JSONObject) {
       domObject.attr = new WXAttr();
       putAll(domObject.attr, (JSONObject) attr);
     }
     Object event = map.get("event");
-    if (event != null && event instanceof JSONArray) {
+    if (event instanceof JSONArray) {
       domObject.event = new WXEvent();
       JSONArray eventArray = (JSONArray) event;
       int count = eventArray.size();
@@ -1073,12 +1074,11 @@ class WXDomStatement {
       }
     }
     Object children = map.get("children");
-    if (children != null && children instanceof JSONArray) {
-      domObject.children = new ArrayList<>();
+    if (children instanceof JSONArray) {
       JSONArray childrenArray = (JSONArray) children;
       int count = childrenArray.size();
       for (int i = 0; i < count; ++i) {
-        domObject.children.add(parseInner(childrenArray.getJSONObject(i)));
+        domObject.add(parseInner(childrenArray.getJSONObject(i)), -1);
       }
     }
 
@@ -1171,25 +1171,13 @@ class WXDomStatement {
 
   /**
    * Creating the mapping between {@link WXDomObject#ref} to {@link WXDomObject}
-   * and store the mapping in {@link #mRegistry}.
-   * Then, parse and copy style
-   * from {@link WXDomObject#style} to {@link com.taobao.weex.dom.flex.CSSNode}.
-   * Finally, {@link WXDomObject#children} is also added to
-   * {@link com.taobao.weex.dom.flex.CSSNode#mChildren} if added is true.
-   * The above procedure will be done recursively.
    * @param dom the original DOM Object
-   * @param isAdd true for adding children of
    * {@link WXDomObject} {@link com.taobao.weex.dom.flex.CSSNode#mChildren} and parsing style,
    *              false for only parsing style.
    */
-  private void transformStyle(WXDomObject dom, boolean isAdd) {
+  private void transformStyle(WXDomObject dom) {
     if (dom == null) {
       return;
-    }
-
-    if (isAdd) {
-      dom.young();
-      mRegistry.put(dom.ref, dom);
     }
 
     if (dom.style != null && dom.style.size() > 0) {
@@ -1200,10 +1188,7 @@ class WXDomStatement {
     WXDomObject child;
     for (int i = 0; i < count; ++i) {
       child = dom.getChild(i);
-      if (isAdd) {
-        dom.add2Dom(child, i);
-      }
-      transformStyle(child, isAdd);
+      transformStyle(child);
     }
   }
 

@@ -212,8 +212,6 @@ import com.taobao.weex.dom.flex.CSSNode;
 import com.taobao.weex.ui.component.WXBasicComponentType;
 import com.taobao.weex.utils.WXLogUtils;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -228,16 +226,12 @@ public class WXDomObject extends CSSNode implements Cloneable {
 
   public static final String TAG = WXDomObject.class.getSimpleName();
   public static final String ROOT = "_root";
-  public AtomicBoolean sDestroy = new AtomicBoolean();
+  private final AtomicBoolean sDestroy = new AtomicBoolean();
   public String ref = ROOT;
   public String type = WXBasicComponentType.SCROLLER;
   public WXStyle style;
   public WXAttr attr;
   public WXEvent event;
-  public List<WXDomObject> children;
-  public WXDomObject parent;
-
-  private ArrayList<String> fixedStyleRefs;
 
   private boolean mYoung = false;
 
@@ -269,14 +263,14 @@ public class WXDomObject extends CSSNode implements Cloneable {
   /**
    * Mark the current node is young and unconsumed.
    */
-  void young() {
+  final void young() {
     mYoung = true;
   }
 
   /**
    * Mark the current node is old and consumed.
    */
-  void old() {
+  final void old() {
     mYoung = false;
   }
 
@@ -284,7 +278,7 @@ public class WXDomObject extends CSSNode implements Cloneable {
    * Tell whether this node is consumed since last layout.
    * @return true for consumed, false for not.
    */
-  boolean isYoung() {
+  final boolean isYoung() {
     return mYoung;
   }
 
@@ -299,50 +293,33 @@ public class WXDomObject extends CSSNode implements Cloneable {
   }
 
 
-  public boolean isSticky() {
-    return style == null ? false : style.isSticky();
+  public final boolean isSticky() {
+    return style != null && style.isSticky();
   }
 
-  public boolean isFixed() {
-    return style == null ? false : style.isFixed();
+  public final boolean isFixed() {
+    return style != null && style.isFixed();
   }
 
   public Object getExtra() {
     return null;
   }
 
-  public void remove(WXDomObject child) {
-    if (child == null || children == null || sDestroy.get()) {
-      return;
-    }
-
-    int index = children.indexOf(child);
-    removeFromDom(child);
-    if (index != -1) {
-      super.removeChildAt(index);
-    }
+  @Override
+  public WXDomObject getParent() {
+    return (WXDomObject) mParent;
   }
 
-  public void removeFromDom(WXDomObject child) {
-    if (child == null || children == null || sDestroy.get()) {
-      return;
-    }
+  public final boolean remove(WXDomObject child) {
+    return !sDestroy.get() && super.removeChild(child);
 
-    int index = children.indexOf(child);
-    if (index == -1) {
-      if (WXEnvironment.isApkDebugable()) {
-        WXLogUtils.e("[WXDomObject]" + "remove function error");
-      }
-      return;
-    }
-    children.remove(index).parent = null;
   }
 
-  public int index(WXDomObject child) {
-    if (child == null || children == null || sDestroy.get()) {
+  public final int index(WXDomObject child) {
+    if (sDestroy.get()) {
       return -1;
     }
-    return children.indexOf(child);
+    return super.indexOf(child);
   }
 
   /**
@@ -351,80 +328,37 @@ public class WXDomObject extends CSSNode implements Cloneable {
    * @param index the index of child to be added. If the index is -1, the child will be added
    *              as the last child of current dom object.
    */
-  public void add(WXDomObject child, int index) {
-    if (child == null || index < -1 || sDestroy.get()) {
-      return;
-    }
-    if (children == null) {
-      children = new ArrayList<>();
-    }
-
-    int count = children.size();
-    index = index >= count ? -1 : index;
-    if (index == -1) {
-      children.add(child);
-      super.addChildAt(child, super.getChildCount());
-    } else {
-      children.add(index, child);
-      super.addChildAt(child, index);
-    }
-    child.parent = this;
+  public final boolean add(WXDomObject child, int index) {
+    return !sDestroy.get() && super.addChildAt(child, index);
   }
 
-  public void add2Dom(WXDomObject child, int index) {
-    if (child == null || index < -1 || sDestroy.get()) {
-      return;
-    }
-
-    int count = super.getChildCount();
-    index = index >= count ? -1 : index;
-    if (index == -1) {
-      super.addChildAt(child, super.getChildCount());
-    } else {
-      super.addChildAt(child, index);
-    }
-    child.parent = this;
-  }
-
-  public WXDomObject getChild(int index) {
-    if (children == null || sDestroy.get()) {
+  public final WXDomObject getChild(int index) {
+    if (sDestroy.get()) {
       return null;
     }
-    return children.get(index);
+    return (WXDomObject) super.getChildAt(index);
   }
 
   /**
    * Add the given event for current object.
    * @param e
    */
-  public void addEvent(String e) {
+  public final boolean addEvent(String e) {
     if (TextUtils.isEmpty(e)) {
-      return;
+      return false;
     }
     if (event == null) {
       event = new WXEvent();
     }
-    if (containsEvent(e)) {
-      return;
-    }
-    event.add(e);
+    return !event.contains(e) && event.add(e);
   }
 
-  public boolean containsEvent(String e) {
-    if (event == null) {
-      return false;
-    }
-    return event.contains(e);
+  public final boolean containsEvent(String e) {
+    return event != null && event.contains(e);
   }
 
-  public void removeEvent(String e) {
-    if (TextUtils.isEmpty(e)) {
-      return;
-    }
-    if (event == null) {
-      return;
-    }
-    event.remove(e);
+  public final boolean removeEvent(String e) {
+    return !TextUtils.isEmpty(e) && event != null && event.remove(e);
   }
 
   public void updateAttr(Map<String, Object> attrs) {
@@ -449,19 +383,19 @@ public class WXDomObject extends CSSNode implements Cloneable {
     super.dirty();
   }
 
-  public int childCount() {
-    return children == null ? 0 : children.size();
+  public final int childCount() {
+    return super.getChildCount();
   }
 
-  public void hide() {
+  public final void hide() {
     setVisible(false);
   }
 
-  public void show() {
+  public final void show() {
     setVisible(true);
   }
 
-  public boolean isVisible() {
+  public final boolean isVisible() {
     return super.isShow();
   }
 
@@ -477,20 +411,14 @@ public class WXDomObject extends CSSNode implements Cloneable {
     WXDomObject dom = null;
     try {
       dom = new WXDomObject();
-      if (this.cssstyle != null) {
-        dom.cssstyle.copy(this.cssstyle);
-      }
 
+      dom.cssstyle.copy(this.cssstyle);
       dom.ref = ref;
       dom.type = type;
       dom.style = style;//style == null ? null : style.clone();
       dom.attr = attr;//attr == null ? null : attr.clone();
       dom.event = event == null ? null : event.clone();
-      if (this.csslayout != null) {
-        dom.csslayout.copy(this.csslayout);
-      }
-
-
+      dom.csslayout.copy(this.csslayout);
     } catch (Exception e) {
       if (WXEnvironment.isApkDebugable()) {
         WXLogUtils.e("WXDomObject clone error: " + WXLogUtils.getStackTrace(e));
@@ -511,24 +439,6 @@ public class WXDomObject extends CSSNode implements Cloneable {
     if (event != null) {
       event.clear();
     }
-    if (children != null) {
-      int count = children.size();
-      for (int i = 0; i < count; ++i) {
-        children.get(i).destroy();
-      }
-      children.clear();
-    }
-  }
-
-  public ArrayList<String> getFixedStyleRefs() {
-    return fixedStyleRefs;
-  }
-
-  public void add2FixedDomList(String ref) {
-    if (fixedStyleRefs == null) {
-      fixedStyleRefs = new ArrayList<>();
-    }
-    fixedStyleRefs.add(ref);
   }
 
   public String dumpDomTree() {
