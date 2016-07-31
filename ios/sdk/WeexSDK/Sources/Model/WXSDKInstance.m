@@ -121,8 +121,8 @@ NSTimeInterval JSLibInitTime = 0;
             //TODO 304
             if (!error && [urlResponse isKindOfClass:[NSHTTPURLResponse class]] && ((NSHTTPURLResponse *)urlResponse).statusCode != 200) {
                 error = [NSError errorWithDomain:WX_ERROR_DOMAIN
-                                                     code:((NSHTTPURLResponse *)urlResponse).statusCode
-                                                 userInfo:@{@"message":@"status code error."}];
+                                            code:((NSHTTPURLResponse *)urlResponse).statusCode
+                                        userInfo:@{@"message":@"status code error."}];
             }
             
             if (error) {

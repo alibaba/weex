@@ -11,4 +11,6 @@
 
 @interface WXAnimationModule : NSObject <WXModuleProtocol>
 
+- (void)animation:(WXComponent *)targetComponent args:(NSDictionary *)args callback:(WXModuleCallback)callback;
+
 @end

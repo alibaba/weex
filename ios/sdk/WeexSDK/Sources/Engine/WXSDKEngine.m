@@ -194,7 +194,7 @@
 {
     NSDictionary *components = [WXComponentFactory componentConfigs];
     NSDictionary *modules = [WXModuleFactory moduleConfigs];
-    NSDictionary *handlers = [WXHandlerFactory handlerConfs];
+    NSDictionary *handlers = [WXHandlerFactory handlerConfigs];
     [WXSDKManager unload];
     [WXComponentFactory unregisterAllComponents];
     NSString *filePath = [[NSBundle mainBundle] pathForResource:@"main" ofType:@"js"];

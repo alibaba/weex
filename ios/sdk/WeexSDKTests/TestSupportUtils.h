@@ -6,10 +6,12 @@
  * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
  */
 
-#import "WXModuleProtocol.h"
+#import <Foundation/Foundation.h>
 
-@interface WXInstanceWrap : NSObject <WXModuleProtocol>
-
-- (void)error:(NSInteger)type code:(NSInteger)code info:(NSString *)info;
+@interface TestSupportUtils : NSObject
+/**
+ *设置等待时间
+ */
++(void)waitSecs:(NSTimeInterval)secs;
 
 @end
