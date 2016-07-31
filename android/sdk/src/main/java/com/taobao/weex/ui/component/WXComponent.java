@@ -703,7 +703,7 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     }
   }
 
-  @WXComponentProp(name = WXDomPropConstant.WX_BACKGROUNDCOLOR)
+  @WXComponentProp(name = WXDomPropConstant.WX_BACKGROUND_COLOR)
   public void setBackgroundColor(String color) {
     if (!TextUtils.isEmpty(color)) {
       int colorInt = WXResourceUtils.getColor(color);
@@ -720,7 +720,7 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     }
   }
 
-  @WXComponentProp(name = WXDomPropConstant.WX_BORDERRADIUS)
+  @WXComponentProp(name = WXDomPropConstant.WX_BORDER_RADIUS)
   public void setBorderRadius(float borderRadius) {
     if (borderRadius >= 0) {
       getOrCreateBorder().setBorderRadius(WXViewUtils.getRealPxByWidth(borderRadius));
@@ -753,7 +753,7 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     setBorderRadius(WXBackgroundDrawable.BORDER_BOTTOM_LEFT_RADIUS, borderRadius);
   }
 
-  @WXComponentProp(name = WXDomPropConstant.WX_BORDERWIDTH)
+  @WXComponentProp(name = WXDomPropConstant.WX_BORDER_WIDTH)
   public void setBorderWidth(float borderWidth) {
     setBorderWidth(Spacing.ALL, borderWidth);
   }
@@ -784,12 +784,12 @@ public abstract class WXComponent implements IWXObject, IWXActivityStateListener
     setBorderWidth(Spacing.LEFT, borderWidth);
   }
 
-  @WXComponentProp(name = WXDomPropConstant.WX_BORDERSTYLE)
+  @WXComponentProp(name = WXDomPropConstant.WX_BORDER_STYLE)
   public void setBorderStyle(String borderStyle) {
     getOrCreateBorder().setBorderStyle(borderStyle);
   }
 
-  @WXComponentProp(name = WXDomPropConstant.WX_BORDERCOLOR)
+  @WXComponentProp(name = WXDomPropConstant.WX_BORDER_COLOR)
   public void setBorderColor(String borderColor) {
     setBorderColor(Spacing.ALL, borderColor);
   }
