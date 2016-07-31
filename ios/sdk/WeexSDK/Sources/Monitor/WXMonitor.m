@@ -59,7 +59,7 @@ static WXThreadSafeMutableDictionary *globalPerformanceDict;
         return;
     }
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithCapacity:2];
-    dict[kStartKey] = 0;
+    dict[kStartKey] = @(0);
     dict[kEndKey] = @(value);
     performanceDict[@(tag)] = dict;
 }
