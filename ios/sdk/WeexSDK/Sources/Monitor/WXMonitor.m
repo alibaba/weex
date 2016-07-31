@@ -137,7 +137,7 @@ static WXThreadSafeMutableDictionary *globalPerformanceDict;
         return;
     }
     
-    NSMutableString *performanceString = [NSMutableString string];
+    NSMutableString *performanceString = [NSMutableString stringWithString:@"Performance:"];
     for (NSString *commitKey in commitDict) {
         [performanceString appendFormat:@"\n    %@: %@", commitKey, commitDict[commitKey]];
     }

@@ -23,6 +23,7 @@
 #import "WXDebugTool.h"
 #import "WXModuleManager.h"
 #import "WXSDKInstance_private.h"
+#import "WXThreadSafeMutableArray.h"
 
 #define SuppressPerformSelectorLeakWarning(Stuff) \
 do { \
@@ -40,7 +41,7 @@ _Pragma("clang diagnostic pop") \
 //store the methods which will be executed from native to js
 @property (nonatomic, strong) NSMutableDictionary   *sendQueue;
 //the instance stack
-@property (nonatomic, strong) NSMutableArray    *insStack;
+@property (nonatomic, strong) WXThreadSafeMutableArray    *insStack;
 //identify if the JSFramework has been loaded
 @property (nonatomic) BOOL frameworkLoadFinished;
 //store some methods temporarily before JSFramework is loaded
@@ -87,11 +88,9 @@ _Pragma("clang diagnostic pop") \
 
 - (NSMutableArray *)insStack
 {
-    WXAssertBridgeThread();
-
     if (_insStack) return _insStack;
 
-    _insStack = [NSMutableArray array];
+    _insStack = [WXThreadSafeMutableArray array];
     
     return _insStack;
 }
