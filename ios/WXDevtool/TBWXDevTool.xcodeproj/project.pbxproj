@@ -157,6 +157,7 @@
 		0A0103221D35E27000F0D592 /* TBWXDevTool.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AFA0ECE1D2CE79E006E30BB /* TBWXDevTool.h */; };
 		0A0298541D4B402400B4BC95 /* WXDevToolType.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0298521D4B402400B4BC95 /* WXDevToolType.h */; };
 		0A0298551D4B402400B4BC95 /* WXDevToolType.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0298531D4B402400B4BC95 /* WXDevToolType.m */; };
+		0A1DCE3A1D4F004C005E87C7 /* TBWXDevTool.pch in Headers */ = {isa = PBXBuildFile; fileRef = 0A1DCE391D4F004C005E87C7 /* TBWXDevTool.pch */; };
 		0ABB39F11D3F37700091332E /* TBWXDevTool_MTL.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0ABB39F01D3F37700091332E /* TBWXDevTool_MTL.h */; };
 		0ABB39F31D3F37700091332E /* TBWXDevTool_MTL.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ABB39F21D3F37700091332E /* TBWXDevTool_MTL.m */; };
 		0ABDFC6F1D3C7B6900206418 /* WXDebugDomain.h in Headers */ = {isa = PBXBuildFile; fileRef = 0ABDFC6D1D3C7B6900206418 /* WXDebugDomain.h */; };
@@ -321,6 +322,7 @@
 		0A01029C1D35E25300F0D592 /* WXDevTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXDevTool.m; sourceTree = "<group>"; };
 		0A0298521D4B402400B4BC95 /* WXDevToolType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXDevToolType.h; sourceTree = "<group>"; };
 		0A0298531D4B402400B4BC95 /* WXDevToolType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXDevToolType.m; sourceTree = "<group>"; };
+		0A1DCE391D4F004C005E87C7 /* TBWXDevTool.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBWXDevTool.pch; sourceTree = "<group>"; };
 		0ABB39EE1D3F37700091332E /* libTBWXDevTool_MTL.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTBWXDevTool_MTL.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		0ABB39F01D3F37700091332E /* TBWXDevTool_MTL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBWXDevTool_MTL.h; sourceTree = "<group>"; };
 		0ABB39F21D3F37700091332E /* TBWXDevTool_MTL.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBWXDevTool_MTL.m; sourceTree = "<group>"; };
@@ -531,6 +533,15 @@
 			path = Source/WXHeader;
 			sourceTree = "<group>";
 		};
+		0A1DCE341D4EFDD1005E87C7 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				0A1DCE391D4F004C005E87C7 /* TBWXDevTool.pch */,
+			);
+			name = "Supporting Files";
+			path = "Source/Supporting Files";
+			sourceTree = "<group>";
+		};
 		0ABB39EF1D3F37700091332E /* TBWXDevTool_MTL */ = {
 			isa = PBXGroup;
 			children = (
@@ -566,6 +577,7 @@
 				0AFA0ED61D2CEA94006E30BB /* Source */,
 				0AFA0ECE1D2CE79E006E30BB /* TBWXDevTool.h */,
 				0AFA0ED01D2CE79E006E30BB /* Info.plist */,
+				0A1DCE341D4EFDD1005E87C7 /* Supporting Files */,
 			);
 			path = WXDevTool;
 			sourceTree = "<group>";
@@ -654,6 +666,7 @@
 				0A0102ED1D35E25300F0D592 /* NSDate+PD_JSONObject.h in Headers */,
 				0A0102A71D35E25300F0D592 /* PDCSSTypes.h in Headers */,
 				0A0102C91D35E25300F0D592 /* PDNetworkDomain.h in Headers */,
+				0A1DCE3A1D4F004C005E87C7 /* TBWXDevTool.pch in Headers */,
 				0A0102CF1D35E25300F0D592 /* PDPageTypes.h in Headers */,
 				0A01031E1D35E25300F0D592 /* WXDeviceInfo.h in Headers */,
 				0A0102E31D35E25300F0D592 /* WXProfilerDomainController.h in Headers */,
@@ -1057,7 +1070,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/WXDevTool/Source/Supporting Files/TBWXDevTool.pch";
 				INFOPLIST_FILE = WXDevTool/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -1088,7 +1101,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/WXDevTool/Source/Supporting Files/TBWXDevTool.pch";
 				INFOPLIST_FILE = WXDevTool/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
