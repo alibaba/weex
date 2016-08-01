@@ -202,76 +202,101 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.common;
+package com.taobao.weex.appfram.storage;
 
-import com.taobao.weex.bridge.Invoker;
-import com.taobao.weex.bridge.MethodInvoker;
-import com.taobao.weex.bridge.ModuleFactory;
-import com.taobao.weex.common.WXModule;
-import com.taobao.weex.common.WXModuleAnno;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
 import com.taobao.weex.utils.WXLogUtils;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+public class WXDatabaseSupplier extends SQLiteOpenHelper {
 
-/**
- * Use class
- * Created by sospartan on 6/17/16.
- */
-public class TypeModuleFactory<T extends WXModule> implements ModuleFactory<T> {
-  public static final String TAG = "TypeModuleFactory";
-  Class<T> mClazz;
-  ArrayList<String> mMethods;
-  Map<String, Invoker> mMethodMap;
+    private static final String DATABASE_NAME = "WXStorage";
+    private static final int DATABASE_VERSION = 1;
 
-  public TypeModuleFactory(Class<T> clz) {
-    mClazz = clz;
-  }
+    private long mMaximumDatabaseSize = 5L * 1024L * 1024L;
 
-  private void generateMethodMap() {
-    WXLogUtils.d(TAG, "extractMethodNames");
-    ArrayList<String> methods = new ArrayList<>();
-    HashMap<String, Invoker> methodMap = new HashMap<>();
-    try {
-      for (Method method : mClazz.getMethods()) {
-        // iterates all the annotations available in the method
-        for (Annotation anno : method.getDeclaredAnnotations()) {
-          if (anno != null && anno instanceof WXModuleAnno) {
-            methods.add(method.getName());
-            methodMap.put(method.getName(), new MethodInvoker(method));
-            break;
-          }
+    private static WXDatabaseSupplier sInstance;
+
+    private Context mContext;
+    private SQLiteDatabase mDb;
+
+
+    static final String TABLE_STORAGE = "default_wx_storage";
+    static final String COLUMN_KEY = "key";
+    static final String COLUMN_VALUE = "value";
+
+    private static final String STATEMENT_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_STORAGE + " ("
+            + COLUMN_KEY
+            + " TEXT PRIMARY KEY,"
+            + COLUMN_VALUE
+            + " TEXT NOT NULL"
+            + ")";
+
+
+    private WXDatabaseSupplier(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.mContext = context;
+    }
+
+    public static WXDatabaseSupplier getInstance(Context context) {
+        if (context == null) {
+            WXLogUtils.e("can not get context instance...");
+            return null;
         }
-      }
-    } catch (Throwable e) {
-      WXLogUtils.e("[WXModuleManager] extractMethodNames:", e);
+        if (sInstance == null) {
+            sInstance = new WXDatabaseSupplier(context);
+        }
+        return sInstance;
     }
-    mMethods = methods;
-    mMethodMap = methodMap;
-  }
 
-
-  @Override
-  public T buildInstance() throws IllegalAccessException, InstantiationException {
-    return mClazz.newInstance();
-  }
-
-  @Override
-  public ArrayList<String> getMethodNames() {
-    if (mMethods == null) {
-      generateMethodMap();
+    SQLiteDatabase getDatabase() {
+        ensureDatabase();
+        return mDb;
     }
-    return mMethods;
-  }
 
-  @Override
-  public Map<String, Invoker> getMethodMap() {
-    if (mMethodMap == null) {
-      generateMethodMap();
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(STATEMENT_CREATE_TABLE);
     }
-    return mMethodMap;
-  }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (oldVersion != newVersion) {
+            deleteDB();
+            onCreate(db);
+        }
+    }
+
+
+
+    synchronized void ensureDatabase() {
+        if (mDb != null && mDb.isOpen()) {
+            return;
+        }
+        mDb = getWritableDatabase();
+        mDb.setMaximumSize(mMaximumDatabaseSize);
+    }
+
+    public synchronized void setMaximumSize(long size) {
+        mMaximumDatabaseSize = size;
+        if (mDb != null) {
+            mDb.setMaximumSize(mMaximumDatabaseSize);
+        }
+    }
+
+    private boolean deleteDB() {
+        closeDatabase();
+        return mContext.deleteDatabase(DATABASE_NAME);
+    }
+
+    public void closeDatabase() {
+        if (mDb != null && mDb.isOpen()) {
+            mDb.close();
+            mDb = null;
+        }
+    }
+
+
 }

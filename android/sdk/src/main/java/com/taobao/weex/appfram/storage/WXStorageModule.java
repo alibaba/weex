@@ -202,76 +202,138 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.common;
+package com.taobao.weex.appfram.storage;
 
-import com.taobao.weex.bridge.Invoker;
-import com.taobao.weex.bridge.MethodInvoker;
-import com.taobao.weex.bridge.ModuleFactory;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
+
+import com.taobao.weex.WXSDKEngine;
+import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.common.WXModule;
 import com.taobao.weex.common.WXModuleAnno;
-import com.taobao.weex.utils.WXLogUtils;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Use class
- * Created by sospartan on 6/17/16.
+ * Created by rowandjj(chuyi)<br/>
  */
-public class TypeModuleFactory<T extends WXModule> implements ModuleFactory<T> {
-  public static final String TAG = "TypeModuleFactory";
-  Class<T> mClazz;
-  ArrayList<String> mMethods;
-  Map<String, Invoker> mMethodMap;
+public class WXStorageModule extends WXModule implements IWXStorage {
 
-  public TypeModuleFactory(Class<T> clz) {
-    mClazz = clz;
-  }
+    private IWXStorageAdapter mStorageAdapter;
 
-  private void generateMethodMap() {
-    WXLogUtils.d(TAG, "extractMethodNames");
-    ArrayList<String> methods = new ArrayList<>();
-    HashMap<String, Invoker> methodMap = new HashMap<>();
-    try {
-      for (Method method : mClazz.getMethods()) {
-        // iterates all the annotations available in the method
-        for (Annotation anno : method.getDeclaredAnnotations()) {
-          if (anno != null && anno instanceof WXModuleAnno) {
-            methods.add(method.getName());
-            methodMap.put(method.getName(), new MethodInvoker(method));
-            break;
-          }
+    private IWXStorageAdapter ability() {
+        if (mStorageAdapter != null) {
+            return mStorageAdapter;
         }
-      }
-    } catch (Throwable e) {
-      WXLogUtils.e("[WXModuleManager] extractMethodNames:", e);
+        mStorageAdapter = WXSDKEngine.getIWXStorageAdapter();
+        return mStorageAdapter;
     }
-    mMethods = methods;
-    mMethodMap = methodMap;
-  }
 
 
-  @Override
-  public T buildInstance() throws IllegalAccessException, InstantiationException {
-    return mClazz.newInstance();
-  }
+    @Override
+    @WXModuleAnno
+    public void setItem(String key, String value, @Nullable final JSCallback callback) {
+        if (TextUtils.isEmpty(key) || TextUtils.isEmpty(value)) {
+            StorageResultHandler.handleInvalidParam(callback);
+            return;
+        }
 
-  @Override
-  public ArrayList<String> getMethodNames() {
-    if (mMethods == null) {
-      generateMethodMap();
+        IWXStorageAdapter adapter = ability();
+        if (adapter == null) {
+            StorageResultHandler.handleNoHandlerError(callback);
+            return;
+        }
+        adapter.setItem(key, value, new IWXStorageAdapter.OnResultReceivedListener() {
+            @Override
+            public void onReceived(Map<String, Object> data) {
+                if(callback != null){
+                    callback.invoke(data);
+                }
+            }
+        });
+
+
     }
-    return mMethods;
-  }
 
-  @Override
-  public Map<String, Invoker> getMethodMap() {
-    if (mMethodMap == null) {
-      generateMethodMap();
+    @Override
+    @WXModuleAnno
+    public void getItem(String key, @Nullable final JSCallback callback) {
+        if (TextUtils.isEmpty(key)) {
+            StorageResultHandler.handleInvalidParam(callback);
+            return;
+        }
+
+        IWXStorageAdapter adapter = ability();
+        if (adapter == null) {
+            StorageResultHandler.handleNoHandlerError(callback);
+            return;
+        }
+        adapter.getItem(key, new IWXStorageAdapter.OnResultReceivedListener() {
+            @Override
+            public void onReceived(Map<String, Object> data) {
+                if(callback != null){
+                    callback.invoke(data);
+                }
+            }
+        });
     }
-    return mMethodMap;
-  }
+
+    @Override
+    @WXModuleAnno
+    public void removeItem(String key, @Nullable final JSCallback callback) {
+        if (TextUtils.isEmpty(key)) {
+            StorageResultHandler.handleInvalidParam(callback);
+            return;
+        }
+
+        IWXStorageAdapter adapter = ability();
+        if (adapter == null) {
+            StorageResultHandler.handleNoHandlerError(callback);
+            return;
+        }
+        adapter.removeItem(key, new IWXStorageAdapter.OnResultReceivedListener() {
+            @Override
+            public void onReceived(Map<String, Object> data) {
+                if(callback != null){
+                    callback.invoke(data);
+                }
+            }
+        });
+    }
+
+    @Override
+    @WXModuleAnno
+    public void length(@Nullable final JSCallback callback) {
+        IWXStorageAdapter adapter = ability();
+        if (adapter == null) {
+            StorageResultHandler.handleNoHandlerError(callback);
+            return;
+        }
+        adapter.length(new IWXStorageAdapter.OnResultReceivedListener() {
+            @Override
+            public void onReceived(Map<String, Object> data) {
+                if(callback != null){
+                    callback.invoke(data);
+                }
+            }
+        });
+    }
+
+    @Override
+    @WXModuleAnno
+    public void getAllKeys(@Nullable final JSCallback callback) {
+        IWXStorageAdapter adapter = ability();
+        if (adapter == null) {
+            StorageResultHandler.handleNoHandlerError(callback);
+            return;
+        }
+        adapter.getAllKeys(new IWXStorageAdapter.OnResultReceivedListener() {
+            @Override
+            public void onReceived(Map<String, Object> data) {
+                if(callback != null){
+                    callback.invoke(data);
+                }
+            }
+        });
+    }
 }

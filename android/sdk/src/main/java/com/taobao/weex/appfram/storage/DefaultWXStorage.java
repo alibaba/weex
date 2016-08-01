@@ -202,76 +202,175 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.common;
+package com.taobao.weex.appfram.storage;
 
-import com.taobao.weex.bridge.Invoker;
-import com.taobao.weex.bridge.MethodInvoker;
-import com.taobao.weex.bridge.ModuleFactory;
-import com.taobao.weex.common.WXModule;
-import com.taobao.weex.common.WXModuleAnno;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteStatement;
+
 import com.taobao.weex.utils.WXLogUtils;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-/**
- * Use class
- * Created by sospartan on 6/17/16.
- */
-public class TypeModuleFactory<T extends WXModule> implements ModuleFactory<T> {
-  public static final String TAG = "TypeModuleFactory";
-  Class<T> mClazz;
-  ArrayList<String> mMethods;
-  Map<String, Invoker> mMethodMap;
+public class DefaultWXStorage implements IWXStorageAdapter {
 
-  public TypeModuleFactory(Class<T> clz) {
-    mClazz = clz;
-  }
+    private WXDatabaseSupplier mDatabaseSupplier;
 
-  private void generateMethodMap() {
-    WXLogUtils.d(TAG, "extractMethodNames");
-    ArrayList<String> methods = new ArrayList<>();
-    HashMap<String, Invoker> methodMap = new HashMap<>();
-    try {
-      for (Method method : mClazz.getMethods()) {
-        // iterates all the annotations available in the method
-        for (Annotation anno : method.getDeclaredAnnotations()) {
-          if (anno != null && anno instanceof WXModuleAnno) {
-            methods.add(method.getName());
-            methodMap.put(method.getName(), new MethodInvoker(method));
-            break;
-          }
+    private ExecutorService mExecutorService;
+
+    private void execute(Runnable runnable) {
+        if (mExecutorService == null) {
+            mExecutorService = Executors.newSingleThreadExecutor();
         }
-      }
-    } catch (Throwable e) {
-      WXLogUtils.e("[WXModuleManager] extractMethodNames:", e);
+        mExecutorService.execute(runnable);
     }
-    mMethods = methods;
-    mMethodMap = methodMap;
-  }
 
-
-  @Override
-  public T buildInstance() throws IllegalAccessException, InstantiationException {
-    return mClazz.newInstance();
-  }
-
-  @Override
-  public ArrayList<String> getMethodNames() {
-    if (mMethods == null) {
-      generateMethodMap();
+    public DefaultWXStorage(Context context) {
+        this.mDatabaseSupplier = WXDatabaseSupplier.getInstance(context);
     }
-    return mMethods;
-  }
 
-  @Override
-  public Map<String, Invoker> getMethodMap() {
-    if (mMethodMap == null) {
-      generateMethodMap();
+
+    @Override
+    public void setItem(final String key, final String value, final OnResultReceivedListener listener) {
+        execute(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, Object> data = StorageResultHandler.setItemResult(performSetItem(key, value));
+                listener.onReceived(data);
+            }
+        });
     }
-    return mMethodMap;
-  }
+
+    @Override
+    public void getItem(final String key, final OnResultReceivedListener listener) {
+        execute(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, Object> data = StorageResultHandler.getItemResult(performGetItem(key));
+                listener.onReceived(data);
+            }
+        });
+    }
+
+    @Override
+    public void removeItem(final String key, final OnResultReceivedListener listener) {
+        execute(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, Object> data = StorageResultHandler.removeItemResult(performRemoveItem(key));
+                listener.onReceived(data);
+            }
+        });
+    }
+
+    @Override
+    public void length(final OnResultReceivedListener listener) {
+        execute(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, Object> data = StorageResultHandler.getLengthResult(performGetLength());
+                listener.onReceived(data);
+            }
+        });
+    }
+
+    @Override
+    public void getAllKeys(final OnResultReceivedListener listener) {
+        execute(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, Object> data = StorageResultHandler.getAllkeysResult(performGetAllKeys());
+                listener.onReceived(data);
+            }
+        });
+    }
+
+
+    private boolean performSetItem(String key, String value) {
+        String sql = "INSERT OR REPLACE INTO " + WXDatabaseSupplier.TABLE_STORAGE + " VALUES (?,?);";
+        SQLiteStatement statement = mDatabaseSupplier.getDatabase().compileStatement(sql);
+        try {
+            statement.clearBindings();
+            statement.bindString(1, key);
+            statement.bindString(2, value);
+            statement.execute();
+            return true;
+        } catch (Exception e) {
+            WXLogUtils.e("DefaultWXStorage", e.getMessage());
+            return false;
+        } finally {
+            statement.close();
+            mDatabaseSupplier.closeDatabase();
+        }
+    }
+
+    private String performGetItem(String key) {
+        Cursor c = mDatabaseSupplier.getDatabase().query(WXDatabaseSupplier.TABLE_STORAGE,
+                new String[]{WXDatabaseSupplier.COLUMN_VALUE},
+                WXDatabaseSupplier.COLUMN_KEY + "=?",
+                new String[]{key},
+                null, null, null);
+        try {
+            if (c.moveToNext()) {
+                return c.getString(c.getColumnIndex(WXDatabaseSupplier.COLUMN_VALUE));
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            WXLogUtils.e("DefaultWXStorage", e.getMessage());
+            return null;
+        } finally {
+            c.close();
+            mDatabaseSupplier.closeDatabase();
+        }
+    }
+
+    private boolean performRemoveItem(String key) {
+        int count = 0;
+        try {
+            count = mDatabaseSupplier.getDatabase().delete(WXDatabaseSupplier.TABLE_STORAGE,
+                    WXDatabaseSupplier.COLUMN_KEY + "=?",
+                    new String[]{key});
+        } finally {
+            mDatabaseSupplier.closeDatabase();
+        }
+        return count == 1;
+    }
+
+    private long performGetLength() {
+        String sql = "SELECT count(" + WXDatabaseSupplier.COLUMN_KEY + ") FROM " + WXDatabaseSupplier.TABLE_STORAGE;
+        SQLiteStatement statement = mDatabaseSupplier.getDatabase().compileStatement(sql);
+        try {
+            return statement.simpleQueryForLong();
+        } catch (Exception e) {
+            WXLogUtils.e("DefaultWXStorage", e.getMessage());
+            return 0;
+        } finally {
+            statement.close();
+            mDatabaseSupplier.closeDatabase();
+        }
+    }
+
+    private List<String> performGetAllKeys() {
+        List<String> result = new ArrayList<>();
+        Cursor c = mDatabaseSupplier.getDatabase().query(WXDatabaseSupplier.TABLE_STORAGE, new String[]{WXDatabaseSupplier.COLUMN_KEY}, null, null, null, null, null);
+        try {
+            while (c.moveToNext()) {
+                result.add(c.getString(c.getColumnIndex(WXDatabaseSupplier.COLUMN_KEY)));
+            }
+            return result;
+        } catch (Exception e) {
+            WXLogUtils.e("DefaultWXStorage", e.getMessage());
+            return result;
+        } finally {
+            c.close();
+            mDatabaseSupplier.closeDatabase();
+        }
+    }
+
+
 }

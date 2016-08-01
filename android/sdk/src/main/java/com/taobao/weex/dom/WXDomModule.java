@@ -454,4 +454,21 @@ public final class WXDomModule extends WXModule {
     msg.obj = task;
     WXSDKManager.getInstance().getWXDomManager().sendMessage(msg);
   }
+
+  @WXModuleAnno(moduleMethod = true, runOnUIThread = false)
+  public void addRule(String type, JSONObject options) {
+    if (TextUtils.isEmpty(type) || options == null) {
+      return;
+    }
+
+    Message msg = Message.obtain();
+    WXDomTask task = new WXDomTask();
+    task.instanceId = mWXSDKInstance.getInstanceId();
+    task.args = new ArrayList<>();
+    task.args.add(type);
+    task.args.add(options);
+    msg.what = WXDomHandler.MsgType.WX_DOM_ADD_RULE;
+    msg.obj = task;
+    WXSDKManager.getInstance().getWXDomManager().sendMessage(msg);
+  }
 }

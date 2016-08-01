@@ -330,9 +330,9 @@ public class WXSoInstallMgrSdk {
         }
 
       }
-    } catch (Exception | Error e) {
+    } catch (Throwable e) {
       InitSuc = false;
-      e.printStackTrace();
+      WXLogUtils.e("", e);
     }
       return InitSuc;
 
@@ -434,19 +434,10 @@ public class WXSoInstallMgrSdk {
         commit(utAdapter, "2000", "Load file extract from apk successfully.");
       }
       initSuc = true;
-    } catch (Exception e) {
+    } catch (Throwable e) {
       commit(utAdapter, WXErrorCode.WX_ERR_COPY_FROM_APK.getErrorCode(), WXErrorCode.WX_ERR_COPY_FROM_APK.getErrorMsg() + ":" + e.getMessage());
       initSuc = false;
-      e.printStackTrace();
-    } catch (java.lang.UnsatisfiedLinkError e2) {
-      commit(utAdapter, WXErrorCode.WX_ERR_COPY_FROM_APK.getErrorCode(), WXErrorCode.WX_ERR_COPY_FROM_APK.getErrorMsg() + ":" + e2.getMessage());
-      initSuc = false;
-      e2.printStackTrace();
-
-    } catch (java.lang.Error e3) {
-      commit(utAdapter, WXErrorCode.WX_ERR_COPY_FROM_APK.getErrorCode(), WXErrorCode.WX_ERR_COPY_FROM_APK.getErrorMsg() + ":" + e3.getMessage());
-      initSuc = false;
-      e3.printStackTrace();
+      WXLogUtils.e("", e);
     }
     return initSuc;
   }

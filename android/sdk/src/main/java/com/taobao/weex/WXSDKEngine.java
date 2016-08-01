@@ -121,6 +121,8 @@ import com.taobao.weex.adapter.IWXImgLoaderAdapter;
 import com.taobao.weex.adapter.IWXUserTrackAdapter;
 import com.taobao.weex.appfram.navigator.IActivityNavBarSetter;
 import com.taobao.weex.appfram.navigator.WXNavigatorModule;
+import com.taobao.weex.appfram.storage.IWXStorageAdapter;
+import com.taobao.weex.appfram.storage.WXStorageModule;
 import com.taobao.weex.bridge.ModuleFactory;
 import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.bridge.WXModuleManager;
@@ -244,6 +246,7 @@ public class WXSDKEngine {
           sm.setIWXImgLoaderAdapter(config.getImgAdapter());
           sm.setIWXUserTrackAdapter(config.getUtAdapter());
           sm.setIWXDebugAdapter(config.getDebugAdapter());
+          sm.setIWXStorageAdapter(config.getStorageAdapter());
           if(config.getDebugAdapter()!=null){
             config.getDebugAdapter().initDebug(application);
           }
@@ -305,12 +308,13 @@ public class WXSDKEngine {
       registerModule("navigator", WXNavigatorModule.class);
       registerModule("stream", WXStreamModule.class);
       registerModule("timer", WXTimerModule.class, true);
+      registerModule("storage", WXStorageModule.class,true);
 
       registerDomObject(WXBasicComponentType.TEXT, WXTextDomObject.class);
       registerDomObject(WXBasicComponentType.INPUT, WXTextDomObject.class);
       registerDomObject(WXBasicComponentType.SWITCH, WXSwitchDomObject.class);
     } catch (WXException e) {
-      WXLogUtils.e("[WXSDKEngine] register:" + WXLogUtils.getStackTrace(e));
+      WXLogUtils.e("[WXSDKEngine] register:", e);
     }
   }
 
@@ -460,6 +464,11 @@ public class WXSDKEngine {
     WXSDKManager.getInstance().setIWXHttpAdapter(IWXHttpAdapter);
   }
 
+  public static IWXStorageAdapter getIWXStorageAdapter() {
+    return WXSDKManager.getInstance().getIWXStorageAdapter();
+  }
+
+
   public static IActivityNavBarSetter getActivityNavBarSetter() {
     return WXSDKManager.getInstance().getActivityNavBarSetter();
   }
@@ -480,9 +489,9 @@ public class WXSDKEngine {
       WXEnvironment.sDebugMode = true;
       WXEnvironment.sDebugWsUrl = debugUrl;
       try {
-        Class cls = Class.forName("com.taobao.weex.WXDebugTool");
-        Method m = cls.getMethod("connect", new Class[]{String.class});
-        m.invoke(cls, new Object[]{debugUrl});
+        Class<?> cls = Class.forName("com.taobao.weex.WXDebugTool");
+        Method m = cls.getMethod("connect", String.class);
+        m.invoke(cls, debugUrl);
       } catch (Exception e) {
         Log.d("weex","WXDebugTool not found!");
       }
@@ -490,9 +499,9 @@ public class WXSDKEngine {
       WXEnvironment.sDebugMode = false;
       WXEnvironment.sDebugWsUrl = null;
       try {
-        Class cls = Class.forName("com.taobao.weex.WXDebugTool");
-        Method m = cls.getMethod("close", new Class[]{});
-        m.invoke(cls, new Object[]{});
+        Class<?> cls = Class.forName("com.taobao.weex.WXDebugTool");
+        Method m = cls.getMethod("close");
+        m.invoke(cls);
       } catch (Exception e) {
         Log.d("weex","WXDebugTool not found!");
       }

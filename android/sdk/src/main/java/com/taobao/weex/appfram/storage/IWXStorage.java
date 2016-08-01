@@ -202,76 +202,17 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.common;
+package com.taobao.weex.appfram.storage;
 
-import com.taobao.weex.bridge.Invoker;
-import com.taobao.weex.bridge.MethodInvoker;
-import com.taobao.weex.bridge.ModuleFactory;
-import com.taobao.weex.common.WXModule;
-import com.taobao.weex.common.WXModuleAnno;
-import com.taobao.weex.utils.WXLogUtils;
+import android.support.annotation.Nullable;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import com.taobao.weex.bridge.JSCallback;
 
-/**
- * Use class
- * Created by sospartan on 6/17/16.
- */
-public class TypeModuleFactory<T extends WXModule> implements ModuleFactory<T> {
-  public static final String TAG = "TypeModuleFactory";
-  Class<T> mClazz;
-  ArrayList<String> mMethods;
-  Map<String, Invoker> mMethodMap;
+interface IWXStorage {
+    public void setItem(String key, String value,@Nullable JSCallback callback);
+    public void getItem(String key,@Nullable JSCallback callback);
+    public void removeItem(String key,@Nullable JSCallback callback);
+    public void length(@Nullable JSCallback callback);
+    public void getAllKeys(@Nullable JSCallback callback);
 
-  public TypeModuleFactory(Class<T> clz) {
-    mClazz = clz;
-  }
-
-  private void generateMethodMap() {
-    WXLogUtils.d(TAG, "extractMethodNames");
-    ArrayList<String> methods = new ArrayList<>();
-    HashMap<String, Invoker> methodMap = new HashMap<>();
-    try {
-      for (Method method : mClazz.getMethods()) {
-        // iterates all the annotations available in the method
-        for (Annotation anno : method.getDeclaredAnnotations()) {
-          if (anno != null && anno instanceof WXModuleAnno) {
-            methods.add(method.getName());
-            methodMap.put(method.getName(), new MethodInvoker(method));
-            break;
-          }
-        }
-      }
-    } catch (Throwable e) {
-      WXLogUtils.e("[WXModuleManager] extractMethodNames:", e);
-    }
-    mMethods = methods;
-    mMethodMap = methodMap;
-  }
-
-
-  @Override
-  public T buildInstance() throws IllegalAccessException, InstantiationException {
-    return mClazz.newInstance();
-  }
-
-  @Override
-  public ArrayList<String> getMethodNames() {
-    if (mMethods == null) {
-      generateMethodMap();
-    }
-    return mMethods;
-  }
-
-  @Override
-  public Map<String, Invoker> getMethodMap() {
-    if (mMethodMap == null) {
-      generateMethodMap();
-    }
-    return mMethodMap;
-  }
 }

@@ -202,76 +202,206 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.common;
+package com.taobao.weex.utils;
 
-import com.taobao.weex.bridge.Invoker;
-import com.taobao.weex.bridge.MethodInvoker;
-import com.taobao.weex.bridge.ModuleFactory;
-import com.taobao.weex.common.WXModule;
-import com.taobao.weex.common.WXModuleAnno;
-import com.taobao.weex.utils.WXLogUtils;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.text.TextUtils;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
+import com.taobao.weex.WXEnvironment;
+import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.adapter.IWXHttpAdapter;
+import com.taobao.weex.common.WXRequest;
+import com.taobao.weex.common.WXResponse;
+import com.taobao.weex.dom.WXStyle;
+
+import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
- * Use class
- * Created by sospartan on 6/17/16.
+ * Created by sospartan on 7/13/16.
  */
-public class TypeModuleFactory<T extends WXModule> implements ModuleFactory<T> {
-  public static final String TAG = "TypeModuleFactory";
-  Class<T> mClazz;
-  ArrayList<String> mMethods;
-  Map<String, Invoker> mMethodMap;
+public class TypefaceUtil {
+  private final static String TAG = "TypefaceUtil";
+  private final static HashMap<String, FontDO> sCacheMap = new HashMap<>(); //Key: fontFamilyName
 
-  public TypeModuleFactory(Class<T> clz) {
-    mClazz = clz;
+  public static void putFontDO(FontDO fontDO) {
+    if (fontDO != null && !TextUtils.isEmpty(fontDO.getFontFamilyName())) {
+      sCacheMap.put(fontDO.getFontFamilyName(), fontDO);
+    }
   }
 
-  private void generateMethodMap() {
-    WXLogUtils.d(TAG, "extractMethodNames");
-    ArrayList<String> methods = new ArrayList<>();
-    HashMap<String, Invoker> methodMap = new HashMap<>();
-    try {
-      for (Method method : mClazz.getMethods()) {
-        // iterates all the annotations available in the method
-        for (Annotation anno : method.getDeclaredAnnotations()) {
-          if (anno != null && anno instanceof WXModuleAnno) {
-            methods.add(method.getName());
-            methodMap.put(method.getName(), new MethodInvoker(method));
-            break;
+  public static FontDO getFontDO(String fontFamilyName) {
+    return sCacheMap.get(fontFamilyName);
+  }
+
+  public static void applyFontStyle(Paint paint, int style, int weight, String family) {
+    int oldStyle;
+    Typeface typeface = paint.getTypeface();
+    if (typeface == null) {
+      oldStyle = 0;
+    } else {
+      oldStyle = typeface.getStyle();
+    }
+
+    int want = 0;
+    if ((weight == Typeface.BOLD)
+            || ((oldStyle & Typeface.BOLD) != 0 && weight == WXStyle.UNSET)) {
+      want |= Typeface.BOLD;
+    }
+
+    if ((style == Typeface.ITALIC)
+            || ((oldStyle & Typeface.ITALIC) != 0 && style == WXStyle.UNSET)) {
+      want |= Typeface.ITALIC;
+    }
+
+    if (family != null) {
+      typeface = getOrCreateTypeface(family, style);
+    }
+
+    if (typeface != null) {
+      paint.setTypeface(Typeface.create(typeface, want));
+    } else {
+      paint.setTypeface(Typeface.defaultFromStyle(want));
+    }
+  }
+
+  public static Typeface getOrCreateTypeface(String family, int style) {
+    FontDO fontDo = sCacheMap.get(family);
+    if (fontDo != null && fontDo.getTypeface() != null) {
+      return fontDo.getTypeface();
+    }
+
+    return Typeface.create(family, style);
+  }
+
+  public static void loadTypeface(final FontDO fontDo) {
+    if (fontDo != null && fontDo.getTypeface() == null &&
+            (fontDo.getState() == FontDO.STATE_FAILED || fontDo.getState() == FontDO.STATE_INIT)) {
+      fontDo.setState(FontDO.STATE_LOADING);
+      if (fontDo.getType() == FontDO.TYPE_LOCAL) {
+        try {
+          Typeface typeface = Typeface.createFromAsset(WXEnvironment.getApplication().getAssets(), fontDo.getUrl());
+          if (typeface != null) {
+            WXLogUtils.d(TAG, "load asset file success");
+            fontDo.setState(FontDO.STATE_SUCCESS);
+            fontDo.setTypeface(typeface);
+          } else {
+            WXLogUtils.e(TAG, "Font asset file not found " + fontDo.getUrl());
+          }
+        } catch (Exception e) {
+          WXLogUtils.e(TAG, e.toString());
+        }
+      } else if (fontDo.getType() == FontDO.TYPE_NETWORK) {
+        final String url = fontDo.getUrl();
+        final String fontFamily = fontDo.getFontFamilyName();
+        final String fileName = url.replace('/', '_');
+        final String fullPath = getFontCacheDir() + fileName;
+        if (!loadLocalFontFile(fullPath, fontFamily)) {
+          downloadFontByNetwork(url, fullPath, fontFamily);
+        }
+      } else if (fontDo.getType() == FontDO.TYPE_FILE) {
+        boolean result = loadLocalFontFile(fontDo.getUrl(), fontDo.getFontFamilyName());
+        if (!result) {
+          fontDo.setState(FontDO.STATE_FAILED);
+        }
+      }
+    }
+  }
+
+  private static void downloadFontByNetwork(final String url, final String fullPath, final String fontFamily) {
+    IWXHttpAdapter adapter = WXSDKManager.getInstance().getIWXHttpAdapter();
+    if (adapter == null) {
+      WXLogUtils.e(TAG, "downloadFontByNetwork() IWXHttpAdapter == null");
+      return;
+    }
+    WXRequest request = new WXRequest();
+    request.url = url;
+    request.method = "GET";
+    adapter.sendRequest(request, new IWXHttpAdapter.OnHttpListener() {
+      @Override
+      public void onHttpStart() {
+        WXLogUtils.d(TAG, "downloadFontByNetwork begin url:" + url);
+      }
+
+      @Override
+      public void onHeadersReceived(int statusCode, Map<String, List<String>> headers) {
+
+      }
+
+      @Override
+      public void onHttpUploadProgress(int uploadProgress) {
+
+      }
+
+      @Override
+      public void onHttpResponseProgress(int loadedLength) {
+
+      }
+
+      @Override
+      public void onHttpFinish(WXResponse response) {
+        int statusCode = 0;
+        if (!TextUtils.isEmpty(response.statusCode)) {
+          try {
+            statusCode = Integer.parseInt(response.statusCode);
+          } catch (NumberFormatException e) {
+            statusCode = 0;
+            WXLogUtils.e(TAG, "IWXHttpAdapter onHttpFinish statusCode:" + response.statusCode);
+          }
+        }
+        boolean result;
+        if (statusCode >= 200 && statusCode <= 299 && response.originalData != null) {
+          result = WXFileUtils.saveFile(fullPath, response.originalData, WXEnvironment.getApplication());
+          if (result) {
+            result = loadLocalFontFile(fullPath, fontFamily);
+          } else {
+            WXLogUtils.d(TAG, "downloadFontByNetwork() onHttpFinish success, but save file failed.");
+          }
+        } else {
+          result = false;
+        }
+
+        if (!result) {
+          FontDO fontDO = sCacheMap.get(fontFamily);
+          if (fontDO != null) {
+            fontDO.setState(FontDO.STATE_FAILED);
           }
         }
       }
-    } catch (Throwable e) {
-      WXLogUtils.e("[WXModuleManager] extractMethodNames:", e);
-    }
-    mMethods = methods;
-    mMethodMap = methodMap;
+    });
   }
 
-
-  @Override
-  public T buildInstance() throws IllegalAccessException, InstantiationException {
-    return mClazz.newInstance();
+  private static boolean loadLocalFontFile(String path, String fontFamily) {
+    if (TextUtils.isEmpty(path) || TextUtils.isEmpty(fontFamily)) {
+      return false;
+    }
+    try {
+      File file = new File(path);
+      if (!file.exists()) {
+        return false;
+      }
+      Typeface typeface = Typeface.createFromFile(path);
+      if (typeface != null) {
+        FontDO fontDo = sCacheMap.get(fontFamily);
+        if (fontDo != null) {
+          fontDo.setState(FontDO.STATE_SUCCESS);
+          fontDo.setTypeface(typeface);
+          WXLogUtils.d(TAG, "load local font file success");
+          return true;
+        }
+      } else {
+        WXLogUtils.e(TAG, "load local font file failed, can't create font.");
+      }
+    } catch (Exception e) {
+      WXLogUtils.e(TAG, e.toString());
+    }
+    return false;
   }
 
-  @Override
-  public ArrayList<String> getMethodNames() {
-    if (mMethods == null) {
-      generateMethodMap();
-    }
-    return mMethods;
-  }
-
-  @Override
-  public Map<String, Invoker> getMethodMap() {
-    if (mMethodMap == null) {
-      generateMethodMap();
-    }
-    return mMethodMap;
+  private static String getFontCacheDir() {
+    return WXEnvironment.getDiskCacheDir(WXEnvironment.getApplication()) + "/" + WXConst.FONT_CACHE_DIR_NAME;
   }
 }

@@ -202,76 +202,33 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.common;
+package com.taobao.weex.appfram.storage;
 
-import com.taobao.weex.bridge.Invoker;
-import com.taobao.weex.bridge.MethodInvoker;
-import com.taobao.weex.bridge.ModuleFactory;
-import com.taobao.weex.common.WXModule;
-import com.taobao.weex.common.WXModuleAnno;
-import com.taobao.weex.utils.WXLogUtils;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Use class
- * Created by sospartan on 6/17/16.
- */
-public class TypeModuleFactory<T extends WXModule> implements ModuleFactory<T> {
-  public static final String TAG = "TypeModuleFactory";
-  Class<T> mClazz;
-  ArrayList<String> mMethods;
-  Map<String, Invoker> mMethodMap;
+ * interface for {@link WXStorageModule} class.
+ * this interface works as an adapter for different storage strategy.
+ * the default is use {@link android.database.sqlite.SQLiteDatabase} to store k-v pairs.
+ * You can call {@link com.taobao.weex.WXSDKEngine#setIWXStorageAdapter(IWXStorageAdapter)} to inject your own
+ * storage implementation.
+ * */
+public interface IWXStorageAdapter {
+    void setItem(String key, String value,OnResultReceivedListener listener);
 
-  public TypeModuleFactory(Class<T> clz) {
-    mClazz = clz;
-  }
+    void getItem(String key,OnResultReceivedListener listener);
 
-  private void generateMethodMap() {
-    WXLogUtils.d(TAG, "extractMethodNames");
-    ArrayList<String> methods = new ArrayList<>();
-    HashMap<String, Invoker> methodMap = new HashMap<>();
-    try {
-      for (Method method : mClazz.getMethods()) {
-        // iterates all the annotations available in the method
-        for (Annotation anno : method.getDeclaredAnnotations()) {
-          if (anno != null && anno instanceof WXModuleAnno) {
-            methods.add(method.getName());
-            methodMap.put(method.getName(), new MethodInvoker(method));
-            break;
-          }
-        }
-      }
-    } catch (Throwable e) {
-      WXLogUtils.e("[WXModuleManager] extractMethodNames:", e);
+    void removeItem(String key,OnResultReceivedListener listener);
+
+    void length(OnResultReceivedListener listener);
+
+    void getAllKeys(OnResultReceivedListener listener);
+
+    /**
+     * the callback of storage operation.
+     * */
+    interface OnResultReceivedListener {
+        void onReceived(Map<String,Object> data);
     }
-    mMethods = methods;
-    mMethodMap = methodMap;
-  }
 
-
-  @Override
-  public T buildInstance() throws IllegalAccessException, InstantiationException {
-    return mClazz.newInstance();
-  }
-
-  @Override
-  public ArrayList<String> getMethodNames() {
-    if (mMethods == null) {
-      generateMethodMap();
-    }
-    return mMethods;
-  }
-
-  @Override
-  public Map<String, Invoker> getMethodMap() {
-    if (mMethodMap == null) {
-      generateMethodMap();
-    }
-    return mMethodMap;
-  }
 }

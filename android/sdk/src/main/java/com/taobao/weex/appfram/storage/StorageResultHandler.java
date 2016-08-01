@@ -202,76 +202,92 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.common;
+package com.taobao.weex.appfram.storage;
 
-import com.taobao.weex.bridge.Invoker;
-import com.taobao.weex.bridge.MethodInvoker;
-import com.taobao.weex.bridge.ModuleFactory;
-import com.taobao.weex.common.WXModule;
-import com.taobao.weex.common.WXModuleAnno;
-import com.taobao.weex.utils.WXLogUtils;
+import android.support.annotation.Nullable;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
+import com.taobao.weex.bridge.JSCallback;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-/**
- * Use class
- * Created by sospartan on 6/17/16.
- */
-public class TypeModuleFactory<T extends WXModule> implements ModuleFactory<T> {
-  public static final String TAG = "TypeModuleFactory";
-  Class<T> mClazz;
-  ArrayList<String> mMethods;
-  Map<String, Invoker> mMethodMap;
+public class StorageResultHandler {
 
-  public TypeModuleFactory(Class<T> clz) {
-    mClazz = clz;
-  }
+    private StorageResultHandler() {
+    }
 
-  private void generateMethodMap() {
-    WXLogUtils.d(TAG, "extractMethodNames");
-    ArrayList<String> methods = new ArrayList<>();
-    HashMap<String, Invoker> methodMap = new HashMap<>();
-    try {
-      for (Method method : mClazz.getMethods()) {
-        // iterates all the annotations available in the method
-        for (Annotation anno : method.getDeclaredAnnotations()) {
-          if (anno != null && anno instanceof WXModuleAnno) {
-            methods.add(method.getName());
-            methodMap.put(method.getName(), new MethodInvoker(method));
-            break;
-          }
+    private static final String RESULT = "result";
+    private static final String DATA = "data";
+
+
+    private static final String UNDEFINED = "undefined";
+    private static final String RESULT_FAILED_NO_HANDLER = "no_handler";
+    private static final String RESULT_FAILED_INVALID_PARAM = "invalid_param";
+
+
+    private static final String RESULT_OK = "success";
+    private static final String RESULT_FAILED = "failed";
+
+
+    public static Map<String, Object> getItemResult(String result) {
+        Map<String, Object> map = new HashMap<>(4);
+        map.put(RESULT, result != null ? RESULT_OK : RESULT_FAILED);
+        map.put(DATA, result != null ? result : UNDEFINED);
+        return map;
+    }
+
+    public static Map<String, Object> setItemResult(boolean result) {
+        Map<String, Object> map = new HashMap<>(4);
+        map.put(RESULT, result ? RESULT_OK : RESULT_FAILED);
+        map.put(DATA, UNDEFINED);
+        return map;
+    }
+
+
+    public static Map<String, Object> removeItemResult(boolean result) {
+        Map<String, Object> map = new HashMap<>(4);
+        map.put(RESULT, result ? RESULT_OK : RESULT_FAILED);
+        map.put(DATA, UNDEFINED);
+        return map;
+    }
+
+    public static Map<String, Object> getLengthResult(long result) {
+        Map<String, Object> map = new HashMap<>(4);
+        map.put(RESULT, RESULT_OK);
+        map.put(DATA, result);
+        return map;
+    }
+
+    public static Map<String, Object> getAllkeysResult(List<String> result) {
+        if (result == null) {
+            result = new ArrayList<>(1);
         }
-      }
-    } catch (Throwable e) {
-      WXLogUtils.e("[WXModuleManager] extractMethodNames:", e);
+        Map<String, Object> map = new HashMap<>(4);
+        map.put(RESULT, RESULT_OK);
+        map.put(DATA, result);
+        return map;
     }
-    mMethods = methods;
-    mMethodMap = methodMap;
-  }
 
 
-  @Override
-  public T buildInstance() throws IllegalAccessException, InstantiationException {
-    return mClazz.newInstance();
-  }
-
-  @Override
-  public ArrayList<String> getMethodNames() {
-    if (mMethods == null) {
-      generateMethodMap();
+    private static void handleResult(@Nullable JSCallback callback, String result, Object data) {
+        if (callback == null) {
+            return;
+        }
+        Map<String, Object> retVal = new HashMap<>(4);
+        retVal.put(RESULT, result);
+        retVal.put(DATA, data);
+        callback.invoke(retVal);
     }
-    return mMethods;
-  }
 
-  @Override
-  public Map<String, Invoker> getMethodMap() {
-    if (mMethodMap == null) {
-      generateMethodMap();
+    public static void handleNoHandlerError(@Nullable JSCallback callback) {
+        handleResult(callback, RESULT_FAILED, RESULT_FAILED_NO_HANDLER);
     }
-    return mMethodMap;
-  }
+
+    public static void handleInvalidParam(@Nullable JSCallback callback) {
+        handleResult(callback, RESULT_FAILED, RESULT_FAILED_INVALID_PARAM);
+    }
+
+
 }
