@@ -209,6 +209,7 @@ import android.text.TextUtils;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.common.WXException;
+import com.taobao.weex.utils.WXLogUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -242,7 +243,7 @@ public class WXComponentRegistry {
           registerJSComponent(registerInfo);
           sComponentInfos.add(registerInfo);
         } catch (WXException e) {
-          e.printStackTrace();
+          WXLogUtils.e("", e);
         }
 
       }
@@ -281,7 +282,7 @@ public class WXComponentRegistry {
             registerJSComponent(com);
           }
         } catch (WXException e) {
-          e.printStackTrace();
+          WXLogUtils.e("", e);
         }
       }
     });

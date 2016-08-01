@@ -242,13 +242,13 @@ public class WXFileUtils {
         try {
           in.close();
         } catch (IOException e) {
-          WXLogUtils.e("WXFileUtils loadFileContent: " + WXLogUtils.getStackTrace(e));
+          WXLogUtils.e("WXFileUtils loadFileContent: ", e);
         }
       }
       return builder.toString();
 
     } catch (IOException e) {
-      e.printStackTrace();
+      WXLogUtils.e("", e);
     }
 
     return "";

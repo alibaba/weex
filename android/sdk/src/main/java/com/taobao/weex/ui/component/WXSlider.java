@@ -416,7 +416,7 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
     try {
       i = Integer.valueOf(value);
     }catch (NumberFormatException e){
-      e.printStackTrace();
+      WXLogUtils.e("", e);
       return;
     }
 
