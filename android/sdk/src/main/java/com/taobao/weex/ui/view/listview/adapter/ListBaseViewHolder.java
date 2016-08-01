@@ -244,6 +244,6 @@ public class ListBaseViewHolder extends RecyclerView.ViewHolder {
     }
   }
   public WXComponent getComponent(){
-    return mComponent.get();
+    return mComponent != null ? mComponent.get() : null;
   }
 }
