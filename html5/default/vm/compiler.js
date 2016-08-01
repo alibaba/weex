@@ -418,22 +418,24 @@ function bindRepeat (vm, target, fragBlock, info) {
 
   function compileItem (item, index, context) {
     let mergedData
-    if (oldStyle && isObject(item)) {
+    if (oldStyle) {
       mergedData = item
-      mergedData[keyName] = index
-      if (!mergedData.hasOwnProperty('INDEX')) {
-        Object.defineProperty(mergedData, 'INDEX', {
-          value: () => {
-            console.warn('[JS Framework] "INDEX" in repeat is deprecated, ' +
-              'please use "$index" instead')
-          }
-        })
+      if (isObject(item)) {
+        mergedData[keyName] = index
+        if (!mergedData.hasOwnProperty('INDEX')) {
+          Object.defineProperty(mergedData, 'INDEX', {
+            value: () => {
+              console.warn('[JS Framework] "INDEX" in repeat is deprecated, ' +
+                'please use "$index" instead')
+            }
+          })
+        }
       }
-    }
-    else {
-      mergedData = {}
-      mergedData[keyName] = index
-      mergedData[valueName] = item
+      else {
+        mergedData = {}
+        mergedData[keyName] = index
+        mergedData[valueName] = item
+      }
     }
     const newContext = mergeContext(context, mergedData)
     vms.push(newContext)
