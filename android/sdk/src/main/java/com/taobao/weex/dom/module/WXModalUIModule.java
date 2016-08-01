@@ -247,7 +247,7 @@ public class WXModalUIModule extends WXModule {
         message = jsObj.optString(WXConst.MESSAGE);
         duration = jsObj.optInt(WXConst.DURATION);
       } catch (Exception e) {
-        WXLogUtils.e("[WXModalUIModule] alert param parse error " + WXLogUtils.getStackTrace(e));
+        WXLogUtils.e("[WXModalUIModule] alert param parse error ", e);
       }
     }
     if (TextUtils.isEmpty(message)) {
@@ -284,7 +284,7 @@ public class WXModalUIModule extends WXModule {
           message = jsObj.optString(WXConst.MESSAGE);
           okTitle = jsObj.optString(WXConst.OK_TITLE);
         } catch (Exception e) {
-          WXLogUtils.e("[WXModalUIModule] alert param parse error " + WXLogUtils.getStackTrace(e));
+          WXLogUtils.e("[WXModalUIModule] alert param parse error ", e);
         }
       }
       if (TextUtils.isEmpty(message)) {
@@ -324,7 +324,7 @@ public class WXModalUIModule extends WXModule {
           okTitle = jsObj.optString(WXConst.OK_TITLE);
           cancelTitle = jsObj.optString(WXConst.CANCEL_TITLE);
         } catch (Exception e) {
-          WXLogUtils.e("[WXModalUIModule] confirm param parse error " + WXLogUtils.getStackTrace(e));
+          WXLogUtils.e("[WXModalUIModule] confirm param parse error ", e);
         }
       }
       if (TextUtils.isEmpty(message)) {
@@ -374,7 +374,7 @@ public class WXModalUIModule extends WXModule {
           cancelTitle = jsObj.optString("cancelTitle");
           defaultValue = jsObj.optString("default");
         } catch (Exception e) {
-          WXLogUtils.e("[WXModalUIModule] confirm param parse error " + WXLogUtils.getStackTrace(e));
+          WXLogUtils.e("[WXModalUIModule] confirm param parse error ", e);
         }
       }
 

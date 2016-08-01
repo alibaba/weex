@@ -757,7 +757,7 @@ public class WXScroller extends WXVContainer<ViewGroup> implements WXScrollViewL
         }
       }
     } catch (Exception e) {
-      WXLogUtils.d("[WXScroller-onScroll] " + WXLogUtils.getStackTrace(e));
+      WXLogUtils.d("[WXScroller-onScroll] ", e);
     }
 
   }

@@ -208,6 +208,7 @@ import android.text.TextUtils;
 
 import com.taobao.weex.common.WXRequest;
 import com.taobao.weex.common.WXResponse;
+import com.taobao.weex.utils.WXLogUtils;
 
 import java.io.*;
 import java.net.HttpURLConnection;

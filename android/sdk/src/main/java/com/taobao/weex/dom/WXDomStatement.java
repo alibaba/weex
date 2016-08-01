@@ -565,7 +565,7 @@ class WXDomStatement {
           try {
             mWXRenderManager.createBody(mInstanceId, component);
           } catch (Exception e) {
-            WXLogUtils.e("create body failed." + e.getMessage());
+            WXLogUtils.e("create body failed.", e);
           }
         }
 
@@ -691,8 +691,7 @@ class WXDomStatement {
         try {
           mWXRenderManager.addComponent(mInstanceId, component, parentRef, index);
         }catch (Exception e){
-          e.printStackTrace();
-          WXLogUtils.e("add component failed."+e.getMessage());
+          WXLogUtils.e("add component failed.", e);
         }
       }
 
@@ -1233,7 +1232,7 @@ class WXDomStatement {
       }
       return animationBean;
     } catch (RuntimeException e) {
-      WXLogUtils.e(WXLogUtils.getStackTrace(e));
+      WXLogUtils.e("", e);
       return null;
     }
   }
@@ -1253,7 +1252,7 @@ class WXDomStatement {
           return animationBean;
         }
       }catch (RuntimeException e){
-        WXLogUtils.e(WXLogUtils.getStackTrace(e));
+        WXLogUtils.e("", e);
         return null;
       }
     }

@@ -378,7 +378,7 @@ public class WXUtils {
     try {
       result = Long.parseLong(temp);
     } catch (NumberFormatException e) {
-      WXLogUtils.e("[WXUtils] getLong:" + WXLogUtils.getStackTrace(e));
+      WXLogUtils.e("[WXUtils] getLong:", e);
     }
     return result;
   }
@@ -395,7 +395,7 @@ public class WXUtils {
     try {
       result = Double.parseDouble(temp);
     } catch (NumberFormatException e) {
-      WXLogUtils.e("[WXUtils] getDouble:" + WXLogUtils.getStackTrace(e));
+      WXLogUtils.e("[WXUtils] getDouble:", e);
     }
     return result;
   }
@@ -404,7 +404,7 @@ public class WXUtils {
     try{
       return (WXEnvironment.getApplication().getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }catch (Exception e){
-      WXLogUtils.e("[WXUtils] isTabletDevice:" + WXLogUtils.getStackTrace(e));
+      WXLogUtils.e("[WXUtils] isTabletDevice:", e);
     }
     return false;
   }

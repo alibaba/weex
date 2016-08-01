@@ -202,76 +202,94 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.common;
+package com.taobao.weex.utils;
 
-import com.taobao.weex.bridge.Invoker;
-import com.taobao.weex.bridge.MethodInvoker;
-import com.taobao.weex.bridge.ModuleFactory;
-import com.taobao.weex.common.WXModule;
-import com.taobao.weex.common.WXModuleAnno;
-import com.taobao.weex.utils.WXLogUtils;
+import android.graphics.Typeface;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URI;
 
-/**
- * Use class
- * Created by sospartan on 6/17/16.
- */
-public class TypeModuleFactory<T extends WXModule> implements ModuleFactory<T> {
-  public static final String TAG = "TypeModuleFactory";
-  Class<T> mClazz;
-  ArrayList<String> mMethods;
-  Map<String, Invoker> mMethodMap;
+public class FontDO {
+  private final String mFontFamilyName;
+  private String mUrl = "";
+  private int mType = TYPE_NETWORK;
+  private Typeface mTypeface;
+  private int mState = STATE_INVALID;
 
-  public TypeModuleFactory(Class<T> clz) {
-    mClazz = clz;
+  public final static int STATE_INVALID = -1;
+  public final static int STATE_INIT = 0;
+  public final static int STATE_LOADING = 1;
+  public final static int STATE_SUCCESS = 2;
+  public final static int STATE_FAILED = 3;
+
+  public final static int TYPE_LOCAL = 0;
+  public final static int TYPE_NETWORK = 1;
+  public final static int TYPE_FILE = 2;
+
+  public FontDO (String fontFamilyName, String src) {
+    this.mFontFamilyName = fontFamilyName;
+    parseSrc(src);
+  }
+  public String getFontFamilyName() {
+    return mFontFamilyName;
   }
 
-  private void generateMethodMap() {
-    WXLogUtils.d(TAG, "extractMethodNames");
-    ArrayList<String> methods = new ArrayList<>();
-    HashMap<String, Invoker> methodMap = new HashMap<>();
-    try {
-      for (Method method : mClazz.getMethods()) {
-        // iterates all the annotations available in the method
-        for (Annotation anno : method.getDeclaredAnnotations()) {
-          if (anno != null && anno instanceof WXModuleAnno) {
-            methods.add(method.getName());
-            methodMap.put(method.getName(), new MethodInvoker(method));
-            break;
-          }
+  private void parseSrc(String src) {
+    src = (src != null )? src.trim() : "";
+    if (src.isEmpty()) {
+      mState = STATE_INVALID;
+      WXLogUtils.e("TypefaceUtil", "font src is empty.");
+      return;
+    }
+
+    if (src.matches("^url\\('.*'\\)$")) {
+      mUrl = src.substring(5, src.length() - 2);
+      try {
+        URI uri = URI.create(mUrl);
+        String scheme = uri.getScheme();
+        //TODO: use bundle url to process relative path. see #497
+        if (WXConst.SCHEME_HTTP.equals(scheme) ||
+                WXConst.SCHEME_HTTPS.equals(scheme)) {
+          mType = TYPE_NETWORK;
+        } else if (WXConst.SCHEME_FILE.equals(scheme)) {
+          mType = TYPE_FILE;
+          mUrl = uri.getPath();
+        } else {
+          mType = TYPE_LOCAL;
         }
+        mState = STATE_INIT;
+      } catch (Exception e) {
+        mType = STATE_INVALID;
+        WXLogUtils.e("TypefaceUtil", "URI.create(mUrl) failed mUrl: " + mUrl);
       }
-    } catch (Throwable e) {
-      WXLogUtils.e("[WXModuleManager] extractMethodNames:", e);
+    } else {
+      mUrl = src;
+      mState = STATE_INVALID;
     }
-    mMethods = methods;
-    mMethodMap = methodMap;
+
+    WXLogUtils.d("TypefaceUtil", "src:" + src + ", mUrl:" + mUrl + ", mType:" + mType);
   }
 
-
-  @Override
-  public T buildInstance() throws IllegalAccessException, InstantiationException {
-    return mClazz.newInstance();
+  public String getUrl() {
+    return mUrl;
   }
 
-  @Override
-  public ArrayList<String> getMethodNames() {
-    if (mMethods == null) {
-      generateMethodMap();
-    }
-    return mMethods;
+  public int getType() {
+    return mType;
   }
 
-  @Override
-  public Map<String, Invoker> getMethodMap() {
-    if (mMethodMap == null) {
-      generateMethodMap();
-    }
-    return mMethodMap;
+  public Typeface getTypeface() {
+    return mTypeface;
+  }
+
+  public void setTypeface(Typeface typeface) {
+    this.mTypeface = typeface;
+  }
+
+  public int getState() {
+    return mState;
+  }
+
+  public void setState(int state) {
+    this.mState = state;
   }
 }

@@ -211,6 +211,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.WXModule;
+import com.taobao.weex.common.WXModuleAnno;
 import com.taobao.weex.utils.WXLogUtils;
 
 import java.util.ArrayList;
@@ -513,6 +514,23 @@ public final class WXDomModule extends WXModule {
     task.args.add(ref);
     task.args.add(options);
     msg.what = WXDomHandler.MsgType.WX_DOM_SCROLLTO;
+    msg.obj = task;
+    WXSDKManager.getInstance().getWXDomManager().sendMessage(msg);
+  }
+
+  @WXModuleAnno(moduleMethod = true, runOnUIThread = false)
+  public void addRule(String type, JSONObject options) {
+    if (TextUtils.isEmpty(type) || options == null) {
+      return;
+    }
+
+    Message msg = Message.obtain();
+    WXDomTask task = new WXDomTask();
+    task.instanceId = mWXSDKInstance.getInstanceId();
+    task.args = new ArrayList<>();
+    task.args.add(type);
+    task.args.add(options);
+    msg.what = WXDomHandler.MsgType.WX_DOM_ADD_RULE;
     msg.obj = task;
     WXSDKManager.getInstance().getWXDomManager().sendMessage(msg);
   }
