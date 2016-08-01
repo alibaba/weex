@@ -259,7 +259,7 @@ public class TypefaceUtil {
     }
 
     if (family != null) {
-      typeface = getOrCreateTypeface(family, style);
+      typeface = getOrCreateTypeface(family, want);
     }
 
     if (typeface != null) {

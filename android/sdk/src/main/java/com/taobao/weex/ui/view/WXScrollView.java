@@ -278,7 +278,7 @@ public class WXScrollView extends ScrollView implements Callback, IWXScroller,
     try {
       WXReflectionUtils.setValue(this, "mMinimumVelocity", 5);
     } catch (Exception e) {
-      WXLogUtils.e("[WXScrollView] WXScrollView: " + WXLogUtils.getStackTrace(e));
+      WXLogUtils.e("[WXScrollView] WXScrollView: ", e);
     }
   }
 

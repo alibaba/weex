@@ -302,7 +302,7 @@ public class WXEnvironment {
       info = manager.getPackageInfo(sApplication.getPackageName(), 0);
       versionName = info.versionName;
     } catch (Exception e) {
-      WXLogUtils.e("WXEnvironment getAppVersionName Exception: " + WXLogUtils.getStackTrace(e));
+      WXLogUtils.e("WXEnvironment getAppVersionName Exception: ", e);
     }
     return versionName;
   }
