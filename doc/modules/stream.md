@@ -9,7 +9,7 @@ A series of stream api. It provides a network request.
 
 ## API
 
-### fetch(options, callback[,progressCallback])
+### fetch(options, callback,progressCallback)
 
 ### Arguments
 
@@ -44,7 +44,8 @@ stream.fetch({
 }, function(response) {
   //process response
 },function(response){
-  console.log("bytes received:"+response.length);
+  //progress response
+  console.log("current bytes received:"+response.length);
   
 });
 ```
