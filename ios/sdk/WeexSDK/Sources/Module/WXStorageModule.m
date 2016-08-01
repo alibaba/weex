@@ -124,14 +124,8 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
         callback(@{@"result":@"failed",@"data":error.description});
         return ;
     }
-    NSDictionary *fileAttrs = [[NSFileManager defaultManager] attributesOfItemAtPath:WXStorageGetFilePath() error:&error];
-    if (error) {
-        callback(@{@"result":@"failed",@"data":error.description});
-    }else if (fileAttrs){
-        callback(@{@"result":@"success",@"data":@([fileAttrs fileSize])});
-    }else{
-        callback(@{@"result":@"failed",@"data":@"unknown error!"});
-    }
+
+    callback(@{@"result":@"success",@"data":@([_storage count])});
 }
 
 - (void)getAllKeys:(WXModuleCallback)callback
@@ -143,7 +137,7 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
         callback(@{@"result":@"failed",@"data":error.description});
         return ;
     }
-    callback(@{@"result":@"failed",@"data":_storage.allKeys});
+    callback(@{@"result":@"success",@"data":_storage.allKeys});
 }
 
 - (void)getItem:(NSString *)key callback:(WXModuleCallback)callback
@@ -257,7 +251,7 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
     if (!_haveSetup) {
         NSString *serialized = WXStorageReadFile(WXStorageGetFilePath(), nil, error);
         _storage = serialized ? WXStorageJSONParse(serialized,YES, error) : [NSMutableDictionary new];
-        if (error) {
+        if (*error) {
             _storage = [NSMutableDictionary new];
         }
         _haveSetup = YES;
