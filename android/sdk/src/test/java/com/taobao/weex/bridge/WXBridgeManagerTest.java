@@ -223,6 +223,10 @@ import org.robolectric.RuntimeEnvironment;
 @RunWith(RobolectricTestRunner.class)
 public class WXBridgeManagerTest extends TestCase {
 
+    public static void setBridgeManager(WXBridgeManager bridge){
+        WXBridgeManager.mBridgeManager = bridge;
+    }
+
     public void setUp() throws Exception {
         super.setUp();
     }

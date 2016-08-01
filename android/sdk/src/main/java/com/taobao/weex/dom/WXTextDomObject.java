@@ -93,7 +93,6 @@ public class WXTextDomObject extends WXDomObject {
 
   private static final Canvas DUMMY_CANVAS = new Canvas();
   private static final String ELLIPSIS = "\u2026";
-  private final TextPaint mTextPaint = new TextPaint();
   private boolean mIsColorSet = false;
   private boolean hasBeenMeasured = false;
   private int mColor;
@@ -114,12 +113,9 @@ public class WXTextDomObject extends WXDomObject {
   private TextUtils.TruncateAt textOverflow;
   private Layout.Alignment mAlignment;
   private WXTextDecoration mTextDecoration = WXTextDecoration.NONE;
-  private
-  @Nullable
-  Spanned spanned;
-  private
-  @Nullable
-  Layout layout;
+  private TextPaint mTextPaint = new TextPaint();
+  private @Nullable Spanned spanned;
+  private @Nullable Layout layout;
   private AtomicReference<Layout> atomicReference = new AtomicReference<>();
 
   /**
@@ -303,7 +299,7 @@ public class WXTextDomObject extends WXDomObject {
   @NonNull
   Layout createLayout(float width, boolean forceWidth, @Nullable Layout previousLayout) {
     float textWidth;
-    textWidth = getTextWidth(width, forceWidth);
+    textWidth = getTextWidth(mTextPaint, width, forceWidth);
     Layout layout;
     if (!FloatUtil.floatsEqual(previousWidth, textWidth) || previousLayout == null) {
       layout = new StaticLayout(spanned, mTextPaint, (int) Math.ceil(textWidth),
@@ -313,39 +309,57 @@ public class WXTextDomObject extends WXDomObject {
     }
     if (mNumberOfLines != UNSET && mNumberOfLines > 0 && mNumberOfLines < layout.getLineCount()) {
       int lastLineStart, lastLineEnd;
-      CharSequence reminder, main;
       lastLineStart = layout.getLineStart(mNumberOfLines - 1);
       lastLineEnd = layout.getLineEnd(mNumberOfLines - 1);
       if (lastLineStart < lastLineEnd) {
-        main = mText.subSequence(0, lastLineStart);
-        reminder = mText.subSequence(lastLineStart, textOverflow == null ? lastLineEnd : lastLineEnd - 1);
-        StringBuilder stringBuilder = new StringBuilder(main.length() + reminder.length() + 1);
-        stringBuilder.append(main);
-        stringBuilder.append(reminder);
-        if (textOverflow != null) {
-          stringBuilder.append(ELLIPSIS);
-        }
-        spanned = createSpanned(stringBuilder.toString());
-        return createLayout(width, forceWidth, null);
+        String text = mText.subSequence(0, lastLineStart).toString() +
+                               truncate(mText.substring(lastLineStart, lastLineEnd),
+                                        mTextPaint, layout.getWidth(), textOverflow);
+        spanned = createSpanned(text);
+        return new StaticLayout(spanned, mTextPaint, (int) Math.ceil(textWidth),
+                                Layout.Alignment.ALIGN_NORMAL, 1, 0, true);
       }
     }
     return layout;
   }
 
+  public @NonNull String truncate(@Nullable String source, @NonNull TextPaint paint,
+                                  int desired, @Nullable TextUtils.TruncateAt truncateAt){
+    if(!TextUtils.isEmpty(source)){
+      StringBuilder builder;
+      Spanned spanned;
+      StaticLayout layout;
+      for(int i=source.length();i>0;i--){
+        builder=new StringBuilder(i+1);
+        builder.append(source, 0, i);
+        if(truncateAt!=null){
+          builder.append(ELLIPSIS);
+        }
+        spanned = createSpanned(builder.toString());
+        layout = new StaticLayout(spanned, paint, desired, Layout.Alignment.ALIGN_NORMAL, 1, 0, true);
+        if(layout.getLineCount()<=1){
+          return spanned.toString();
+        }
+      }
+    }
+    return "";
+  }
+
   /**
    * Get text width according to constrain of outerWidth with and forceToDesired
+   * @param textPaint paint used to measure text
    * @param outerWidth the width that css-layout desired.
    * @param forceToDesired if set true, the return value will be outerWidth, no matter what the width
    *                   of text is.
    * @return if forceToDesired is false, it will be the minimum value of the width of text and
    * outerWidth in case of outerWidth is defined, in other case, it will be outer width.
    */
-  private float getTextWidth(float outerWidth, boolean forceToDesired) {
+  private float getTextWidth(TextPaint textPaint,float outerWidth, boolean forceToDesired) {
     float textWidth;
     if (forceToDesired) {
       textWidth = outerWidth;
     } else {
-      float desiredWidth = Layout.getDesiredWidth(spanned, mTextPaint);
+      float desiredWidth = Layout.getDesiredWidth(spanned, textPaint);
       if (CSSConstants.isUndefined(outerWidth) || desiredWidth < outerWidth) {
         textWidth = desiredWidth;
       } else {
@@ -367,9 +381,8 @@ public class WXTextDomObject extends WXDomObject {
       SpannableString spannable = new SpannableString(text);
       List<SetSpanOperation> ops = createSetSpanOperation(spannable.length());
       if (mFontSize == UNSET) {
-        spannable.setSpan(
-            new AbsoluteSizeSpan(WXText.sDEFAULT_SIZE), 0, spannable.length(),
-            Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        ops.add(new SetSpanOperation(0, spannable.length(),
+                                     new AbsoluteSizeSpan(WXText.sDEFAULT_SIZE)));
       }
       Collections.reverse(ops);
       for (SetSpanOperation op : ops) {
@@ -427,6 +440,7 @@ public class WXTextDomObject extends WXDomObject {
     if (layout != null) {
       atomicReference.set(layout);
       layout = null;
+      mTextPaint = new TextPaint(mTextPaint);
     }
   }
 

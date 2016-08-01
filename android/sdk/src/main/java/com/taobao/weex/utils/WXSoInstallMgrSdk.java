@@ -265,10 +265,7 @@ public class WXSoInstallMgrSdk {
 
   public static boolean isCPUSupport(){
     String cpuType = _cpuType();
-    if (cpuType.equalsIgnoreCase(MIPS) ) {
-      return false;
-    }
-    return true;
+    return !cpuType.equalsIgnoreCase(MIPS);
   }
 
   /**
@@ -297,72 +294,46 @@ public class WXSoInstallMgrSdk {
         commit(utAdapter, null, null);
 
         InitSuc = true;
-      } catch (Exception e) {
-        if (cpuType.contains(ARMEABI) || cpuType.contains(X86)) {
-          commit(utAdapter, WXErrorCode.WX_ERR_LOAD_SO.getErrorCode(), WXErrorCode.WX_ERR_LOAD_SO.getErrorMsg() + ":" + e.getMessage());
-        }
-        InitSuc = false;
-      } catch (java.lang.UnsatisfiedLinkError e2) {
+      } catch (Exception | Error e2) {
         if (cpuType.contains(ARMEABI) || cpuType.contains(X86)) {
           commit(utAdapter, WXErrorCode.WX_ERR_LOAD_SO.getErrorCode(), WXErrorCode.WX_ERR_LOAD_SO.getErrorMsg() + ":" + e2.getMessage());
         }
         InitSuc = false;
-      } catch (java.lang.Error e3) {
-        if (cpuType.contains(ARMEABI) || cpuType.contains(X86)) {
-          commit(utAdapter, WXErrorCode.WX_ERR_LOAD_SO.getErrorCode(), WXErrorCode.WX_ERR_LOAD_SO.getErrorMsg() + ":" + e3.getMessage());
-        }
-        InitSuc = false;
       }
 
-    }else {
-      if (cpuType.contains(ARMEABI) || cpuType.contains(X86)) {
-        commit(utAdapter, WXErrorCode.WX_ERR_BAD_SO.getErrorCode(), WXErrorCode.WX_ERR_BAD_SO.getErrorMsg());
-      }
-      InitSuc = false;
-    }
+      try {
 
-    try {
+        if (!InitSuc) {
 
-      if (!InitSuc) {
+          //File extracted from apk already exists.
+          if (isExist(libName, version)) {
+            boolean res = _loadUnzipSo(libName, version, utAdapter);
+            if (res) {
+              return res;
+            } else {
+              //Delete the corrupt so library, and extract it again.
+              removeSoIfExit(libName, version);
+            }
+          }
 
-        //File extracted from apk already exists.
-        if (isExist(libName, version)) {
-          boolean res = _loadUnzipSo(libName, version, utAdapter);
-          if (res) {
-            return res;
+          //Fail for loading file from libs, extract so library from so and load it.
+          if (cpuType.equalsIgnoreCase(MIPS)) {
+            return false;
           } else {
-            //Delete the corrupt so library, and extract it again.
-            removeSoIfExit(libName, version);
+            try {
+              InitSuc = unZipSelectedFiles(libName, version, utAdapter);
+            } catch (IOException e2) {
+              e2.printStackTrace();
+            }
           }
-        }
 
-        //Fail for loading file from libs, extract so library from so and load it.
-        if (cpuType.equalsIgnoreCase(MIPS)) {
-          return false;
-        } else {
-          try {
-            InitSuc = unZipSelectedFiles(libName, version, utAdapter);
-          } catch (ZipException e) {
-            e.printStackTrace();
-          } catch (IOException e2) {
-            e2.printStackTrace();
-          }
         }
-
+      } catch (Exception | Error e) {
+        InitSuc = false;
+        e.printStackTrace();
       }
-    } catch (Exception e) {
-      InitSuc = false;
-      e.printStackTrace();
-    } catch (java.lang.UnsatisfiedLinkError e2) {
-      InitSuc = false;
-      e2.printStackTrace();
-
-    } catch (java.lang.Error e3) {
-      InitSuc = false;
-      e3.printStackTrace();
     }
     return InitSuc;
-
   }
 
   private static String _getFieldReflectively(Build build, String fieldName) {

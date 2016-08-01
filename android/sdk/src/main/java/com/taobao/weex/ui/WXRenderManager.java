@@ -207,6 +207,7 @@ package com.taobao.weex.ui;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import android.text.TextUtils;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomObject;
@@ -236,8 +237,12 @@ public class WXRenderManager {
     return mRegistries.get(instanceId);
   }
 
-  public WXComponent getWXComponent(String instanceId, String ref) {
-    return getWXRenderStatement(instanceId).getComponent(ref);
+  public @Nullable WXComponent getWXComponent(String instanceId, String ref) {
+    if(instanceId == null || TextUtils.isEmpty(ref)){
+      return null;
+    }
+    WXRenderStatement stmt = getWXRenderStatement(instanceId);
+    return stmt == null?null:stmt.getComponent(ref);
   }
 
   public WXSDKInstance getWXSDKInstance(String instanceId) {

@@ -219,6 +219,7 @@ import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.OnWXScrollListener;
 import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.ComponentCreator;
 import com.taobao.weex.ui.component.helper.WXStickyHelper;
 import com.taobao.weex.ui.view.IWXScroller;
 import com.taobao.weex.ui.view.WXBaseRefreshLayout;
@@ -228,8 +229,10 @@ import com.taobao.weex.ui.view.WXScrollView.WXScrollViewListener;
 import com.taobao.weex.ui.view.refresh.wrapper.BaseBounceView;
 import com.taobao.weex.ui.view.refresh.wrapper.BounceScrollerView;
 import com.taobao.weex.utils.WXLogUtils;
+import com.taobao.weex.utils.WXUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -246,6 +249,11 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class WXScroller extends WXVContainer<ViewGroup> implements WXScrollViewListener,Scrollable {
 
+  public static class Ceator implements ComponentCreator {
+    public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+      return new WXScroller(instance,node,parent,lazy);
+    }
+  }
   /**
    * Map for storing appear information
    **/
@@ -292,7 +300,7 @@ public class WXScroller extends WXVContainer<ViewGroup> implements WXScrollViewL
     if (mHost instanceof BounceScrollerView) {
       return ((BounceScrollerView) mHost).getInnerView();
     } else {
-      return getView();
+      return getHostView();
     }
   }
 
@@ -355,7 +363,7 @@ public class WXScroller extends WXVContainer<ViewGroup> implements WXScrollViewL
       Runnable runnable=new Runnable(){
         @Override
         public void run() {
-          ((BaseBounceView)mHost).setHeaderView(temp.getView());
+          ((BaseBounceView)mHost).setHeaderView(temp.getHostView());
         }
       };
       handler.postDelayed(runnable,100);
@@ -367,7 +375,7 @@ public class WXScroller extends WXVContainer<ViewGroup> implements WXScrollViewL
       Runnable runnable=new Runnable(){
         @Override
         public void run() {
-          ((BaseBounceView)mHost).setFooterView(temp.getView());
+          ((BaseBounceView)mHost).setFooterView(temp.getHostView());
         }
       };
       handler.postDelayed(runnable,100);
@@ -495,6 +503,18 @@ public class WXScroller extends WXVContainer<ViewGroup> implements WXScrollViewL
 
   public Map<String, HashMap<String, WXComponent>> getStickMap() {
     return mStickyMap;
+  }
+
+  @Override
+  protected boolean setProperty(String key, Object param) {
+    switch (key) {
+      case WXDomPropConstant.WX_ATTR_SHOWSCROLLBAR:
+        Boolean result = WXUtils.getBoolean(param,null);
+        if (result != null)
+          setShowScrollbar(result);
+        return true;
+    }
+    return super.setProperty(key, param);
   }
 
   @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SHOWSCROLLBAR)
@@ -669,7 +689,7 @@ public class WXScroller extends WXVContainer<ViewGroup> implements WXScrollViewL
     while (iterator.hasNext()) {
       entry = iterator.next();
       appearData = entry.getValue();
-      if (!appearData.mAppear && appearData.mAppearComponent.getView().getLocalVisibleRect(mScrollRect)) {
+      if (!appearData.mAppear && appearData.mAppearComponent.getHostView().getLocalVisibleRect(mScrollRect)) {
         appearData.mAppear = true;
         if (appearData.hasAppear) {
           Map<String, Object> params = new HashMap<>();
@@ -677,7 +697,7 @@ public class WXScroller extends WXVContainer<ViewGroup> implements WXScrollViewL
           WXSDKManager.getInstance().fireEvent(mInstanceId, appearData.mAppearComponent.getRef(), WXEventType.APPEAR, params);
         }
 
-      }else if(appearData.mAppear && !appearData.mAppearComponent.getView().getLocalVisibleRect(mScrollRect)){
+      }else if(appearData.mAppear && !appearData.mAppearComponent.getHostView().getLocalVisibleRect(mScrollRect)){
         appearData.mAppear=false;
         if (appearData.hasDisappear) {
           Map<String, Object> params = new HashMap<>();

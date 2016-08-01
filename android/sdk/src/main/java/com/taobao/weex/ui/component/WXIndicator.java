@@ -210,10 +210,12 @@ import android.view.View;
 
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.view.WXCircleIndicator;
 import com.taobao.weex.utils.WXResourceUtils;
+import com.taobao.weex.utils.WXUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
 import java.util.HashMap;
@@ -255,38 +257,61 @@ public class WXIndicator extends WXComponent<WXCircleIndicator> {
     }
   }
 
-  @WXComponentProp(name = "itemColor")
+  @Override
+  protected boolean setProperty(String key, Object param) {
+    switch (key) {
+      case WXDomPropConstant.WX_ATTR_ITEM_COLOR:
+        String item_color = WXUtils.getString(param,null);
+        if (item_color != null)
+          setItemColor(item_color);
+        return true;
+      case WXDomPropConstant.WX_ATTR_ITEM_SELECTED_COLOR:
+        String selected_color = WXUtils.getString(param,null);
+        if (selected_color != null)
+          setItemSelectedColor(selected_color);
+        return true;
+      case WXDomPropConstant.WX_ATTR_ITEM_SIZE:
+        Integer item_size = WXUtils.getInteger(param,null);
+        if (item_size != null)
+          setItemSize(item_size);
+        return true;
+    }
+    return super.setProperty(key, param);
+  }
+
+
+  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_ITEM_COLOR)
   public void setItemColor(String itemColor) {
     if (!TextUtils.isEmpty(itemColor)) {
       int colorInt = WXResourceUtils.getColor(itemColor);
       if (colorInt != Integer.MIN_VALUE) {
-        getView().setPageColor(colorInt);
-        getView().forceLayout();
-        getView().requestLayout();
+        getHostView().setPageColor(colorInt);
+        getHostView().forceLayout();
+        getHostView().requestLayout();
       }
     }
   }
 
-  @WXComponentProp(name = "itemSelectedColor")
+  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_ITEM_SELECTED_COLOR)
   public void setItemSelectedColor(String itemSelectedColor) {
     if (!TextUtils.isEmpty(itemSelectedColor)) {
       int colorInt = WXResourceUtils.getColor(itemSelectedColor);
       if (colorInt != Integer.MIN_VALUE) {
-        getView().setFillColor(colorInt);
-        getView().forceLayout();
-        getView().requestLayout();
+        getHostView().setFillColor(colorInt);
+        getHostView().forceLayout();
+        getHostView().requestLayout();
       }
     }
   }
 
-  @WXComponentProp(name = "itemSize")
+  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_ITEM_SIZE)
   public void setItemSize(int itemSize) {
     if (itemSize < 0) {
       return;
     }
-    getView().setRadius(WXViewUtils.getRealPxByWidth(itemSize) / 2.0f);
-    getView().forceLayout();
-    getView().requestLayout();
+    getHostView().setRadius(WXViewUtils.getRealPxByWidth(itemSize) / 2.0f);
+    getHostView().forceLayout();
+    getHostView().requestLayout();
   }
 
   public void setShowIndicators(boolean show) {

@@ -218,13 +218,15 @@ import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.WXEvent;
+import com.taobao.weex.ui.ComponentCreator;
 import com.taobao.weex.ui.view.WXCircleIndicator;
 import com.taobao.weex.ui.view.WXCirclePageAdapter;
 import com.taobao.weex.ui.view.WXCircleViewPager;
-import com.taobao.weex.ui.view.WXEditText;
 import com.taobao.weex.utils.WXLogUtils;
+import com.taobao.weex.utils.WXUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -235,6 +237,13 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
   public static final String AUTO_PLAY = "autoPlay";
   public static final String INTERVAL = "interval";
   Map<String, Object> params = new HashMap<>();
+
+  public static class Ceator implements ComponentCreator {
+    public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+      return new WXSlider(instance,node,parent,lazy);
+    }
+  }
+
   /**
    * Scrollable sliderview
    */
@@ -307,8 +316,8 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
     mAdapter.addPageView(view);
     mAdapter.notifyDataSetChanged();
     if (mIndicator != null) {
-      mIndicator.getView().forceLayout();
-      mIndicator.getView().requestLayout();
+      mIndicator.getHostView().forceLayout();
+      mIndicator.getHostView().requestLayout();
     }
   }
 
@@ -319,11 +328,11 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
 
   @Override
   public void remove(WXComponent child, boolean destroy) {
-    if (child == null || child.getView() == null || mAdapter == null) {
+    if (child == null || child.getHostView() == null || mAdapter == null) {
       return;
     }
 
-    mAdapter.removePageView(child.getView());
+    mAdapter.removePageView(child.getHostView());
     mAdapter.notifyDataSetChanged();
   }
 
@@ -352,18 +361,50 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
   }
 
   public void addIndicator(WXIndicator indicator) {
-    FrameLayout root = getView();
+    FrameLayout root = getHostView();
     if (root == null) {
       return;
     }
     mIndicator = indicator;
-    WXCircleIndicator indicatorView = indicator.getView();
+    WXCircleIndicator indicatorView = indicator.getHostView();
     if(indicatorView != null){
       indicatorView.setCircleViewPager(mViewPager);
       indicatorView.setOnPageChangeListener(this);
       root.addView(indicatorView);
     }
 
+  }
+
+  @Override
+  protected boolean setProperty(String key, Object param) {
+    switch (key) {
+      case WXDomPropConstant.WX_ATTR_SLIDER_VALUE:
+        String value = WXUtils.getString(param,null);
+        if (value != null)
+          setValue(value);
+        return true;
+      case AUTO_PLAY:
+        String aotu_play = WXUtils.getString(param,null);
+        if (aotu_play != null)
+          setAutoPlay(aotu_play);
+        return true;
+      case SHOW_INDICATORS:
+        String indicators = WXUtils.getString(param,null);
+        if (indicators != null)
+          setShowIndicators(indicators);
+        return true;
+      case INTERVAL:
+        Integer interval = WXUtils.getInteger(param,null);
+        if (interval != null)
+          setInterval(interval);
+        return true;
+      case INDEX:
+        Integer index = WXUtils.getInteger(param,null);
+        if (index != null)
+          setIndex(index);
+        return true;
+    }
+    return super.setProperty(key, param);
   }
 
   @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SLIDER_VALUE)
@@ -413,7 +454,7 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
 
   @WXComponentProp(name = INTERVAL)
   public void setInterval(int intervalMS){
-    if(mViewPager != null){
+    if(mViewPager != null && intervalMS>0){
       mViewPager.setIntervalTime(intervalMS);
     }
   }

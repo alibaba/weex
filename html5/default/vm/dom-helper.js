@@ -12,8 +12,8 @@
  *
  * @param  {string} type
  */
-export function _createBody (type) {
-  const doc = this._app.doc
+export function createBody (vm, type) {
+  const doc = vm._app.doc
   return doc.createBody(type)
 }
 
@@ -23,8 +23,8 @@ export function _createBody (type) {
  *
  * @param  {string} type
  */
-export function _createElement (type) {
-  const doc = this._app.doc
+export function createElement (vm, type) {
+  const doc = vm._app.doc
   return doc.createElement(type)
 }
 
@@ -34,9 +34,9 @@ export function _createElement (type) {
  *
  * @param  {object} element
  */
-export function _createBlock (element) {
-  const start = this._createBlockStart()
-  const end = this._createBlockEnd()
+export function createBlock (vm, element) {
+  const start = createBlockStart(vm)
+  const end = createBlockEnd(vm)
   const blockId = lastestBlockId++
   if (element.element) {
     let updateMark = element.updateMark
@@ -67,8 +67,8 @@ let lastestBlockId = 1
  * Create and return a block starter.
  * Using this._app.doc
  */
-export function _createBlockStart () {
-  const doc = this._app.doc
+function createBlockStart (vm) {
+  const doc = vm._app.doc
   const anchor = doc.createComment('start')
   return anchor
 }
@@ -77,8 +77,8 @@ export function _createBlockStart () {
  * Create and return a block ender.
  * Using this._app.doc
  */
-export function _createBlockEnd () {
-  const doc = this._app.doc
+function createBlockEnd (vm) {
+  const doc = vm._app.doc
   const anchor = doc.createComment('end')
   return anchor
 }
@@ -91,7 +91,7 @@ export function _createBlockEnd () {
  * @param  {object} target
  * @param  {object} dest
  */
-export function _attachTarget (target, dest) {
+export function attachTarget (vm, target, dest) {
   if (dest.element) {
     const before = dest.end
     const after = dest.updateMark
@@ -101,7 +101,7 @@ export function _attachTarget (target, dest) {
     }
     // for check repeat case
     if (after) {
-      const signal = this._moveTarget(target, after)
+      const signal = moveTarget(vm, target, after)
       dest.updateMark = target.element ? target.end : target
       return signal
     }
@@ -130,11 +130,11 @@ export function _attachTarget (target, dest) {
  * @param  {object} target
  * @param  {object} before
  */
-export function _moveTarget (target, after) {
+export function moveTarget (vm, target, after) {
   if (target.element) {
-    return this._moveBlock(target, after)
+    return moveBlock(target, after)
   }
-  return this._moveElement(target, after)
+  return moveElement(target, after)
 }
 
 /**
@@ -143,7 +143,7 @@ export function _moveTarget (target, after) {
  * @param  {object} element
  * @param  {object} before
  */
-export function _moveElement (element, after) {
+function moveElement (element, after) {
   const parent = after.parentNode
   if (parent) {
     return parent.insertAfter(element, after)
@@ -156,7 +156,7 @@ export function _moveElement (element, after) {
  * @param  {object} fragBlock
  * @param  {object} before
  */
-export function _moveBlock (fragBlock, after) {
+function moveBlock (fragBlock, after) {
   const parent = after.parentNode
 
   if (parent) {
@@ -186,12 +186,12 @@ export function _moveBlock (fragBlock, after) {
  *
  * @param  {object} target
  */
-export function _removeTarget (target) {
+export function removeTarget (vm, target, preserveBlock = false) {
   if (target.element) {
-    this._removeBlock(target)
+    removeBlock(target, preserveBlock)
   }
   else {
-    this._removeElement(target)
+    removeElement(target)
   }
 }
 
@@ -201,7 +201,7 @@ export function _removeTarget (target) {
  *
  * @param  {object} target
  */
-export function _removeElement (target) {
+function removeElement (target) {
   const parent = target.parentNode
 
   if (parent) {
@@ -216,7 +216,7 @@ export function _removeElement (target) {
  * @param  {object}  fragBlock
  * @param  {Boolean} preserveBlock=false
  */
-export function _removeBlock (fragBlock, preserveBlock = false) {
+function removeBlock (fragBlock, preserveBlock = false) {
   const result = []
   let el = fragBlock.start.nextSibling
 
@@ -226,13 +226,13 @@ export function _removeBlock (fragBlock, preserveBlock = false) {
   }
 
   if (!preserveBlock) {
-    this._removeElement(fragBlock.start)
+    removeElement(fragBlock.start)
   }
   result.forEach((el) => {
-    this._removeElement(el)
+    removeElement(el)
   })
   if (!preserveBlock) {
-    this._removeElement(fragBlock.end)
+    removeElement(fragBlock.end)
   }
 }
 

@@ -258,11 +258,14 @@ public class WXAnimationModule extends WXModule {
 
   public static void startAnimation(WXSDKInstance mWXSDKInstance, WXComponent component,
                                     @NonNull WXAnimationBean animationBean, @Nullable String callback) {
+    if(component == null){
+      return;
+    }
     try {
-      Animator animator = createAnimator(animationBean, component.getView());
+      Animator animator = createAnimator(animationBean, component.getHostView());
       if (animator != null) {
         Animator.AnimatorListener animatorCallback = createAnimatorListener(mWXSDKInstance, callback);
-        component.getView().setLayerType(View.LAYER_TYPE_HARDWARE,null);
+        component.getHostView().setLayerType(View.LAYER_TYPE_HARDWARE,null);
         Interpolator interpolator = createTimeInterpolator(animationBean);
         if (animatorCallback != null) {
           animator.addListener(animatorCallback);
@@ -274,12 +277,16 @@ public class WXAnimationModule extends WXModule {
         animator.start();
       }
     } catch (RuntimeException e) {
+      e.printStackTrace();
       WXLogUtils.e(WXLogUtils.getStackTrace(e));
     }
   }
 
   private static @Nullable
   ObjectAnimator createAnimator(@NonNull WXAnimationBean animation, @NonNull View target) {
+    if(animation == null || target == null){
+      return null;
+    }
     WXAnimationBean.Style style = animation.styles;
     if (style != null) {
       ObjectAnimator animator;

@@ -7,7 +7,7 @@
 Each instance has a corresponding document with the same id. A document has many nodes which compose a node tree.
 
 * `new Document(id)`
-* `createBody(type, props)` Create body with a certian type and props. The `type` is one of `container`, `list` or `scroller`, and the `props` may contain `attr` and `style`.
+* `createBody(type, props)` Create body with a certain type and props. The `type` is one of `container`, `list` or `scroller`, and the `props` may contain `attr` and `style`.
 * `createElement(tagName, props)` Create a certain type element with props.
 * `createComment(text)` Create a comment node with a certain comment text.
 * `setListener(listener)` Set a dom listener which listens each dom updates and tells the rendering engine
@@ -48,7 +48,7 @@ extends from `Node`
 * `removeEvent(type)`
 * `toJSON()` Format of `{ref, type, attr{string}, style{string}, event[string], children[Element]}`
 * `type` Element type
-* `attr` Several attribuets for this element
+* `attr` Several attributes for this element
 * `style` Several style rules for this element
 * `classStyle` Class style map, each class has several style rules
 * `event` Event type list

@@ -206,11 +206,13 @@ package com.taobao.weex;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.adapter.DefaultWXHttpAdapter;
 import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
@@ -224,6 +226,9 @@ import com.taobao.weex.common.WXRenderStrategy;
 import com.taobao.weex.common.WXRequest;
 import com.taobao.weex.common.WXResponse;
 import com.taobao.weex.common.WXRuntimeException;
+import com.taobao.weex.dom.WXDomHandler;
+import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.dom.WXDomTask;
 import com.taobao.weex.http.WXHttpUtil;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXEventType;
@@ -254,8 +259,8 @@ public class WXSDKInstance implements IWXActivityStateListener {
   protected IWXUserTrackAdapter mUserTrackAdapter;
   protected IWXHttpAdapter mWXHttpAdapter;
   private IWXRenderListener mRenderListener;
-  private Context mContext;
-  private volatile String mInstanceId;
+  Context mContext;
+  volatile String mInstanceId;
   private WXComponent mGodCom;
   private boolean mRendered;
   private WXRefreshData mLastRefreshData;
@@ -480,9 +485,6 @@ public class WXSDKInstance implements IWXActivityStateListener {
     }
 
     IWXHttpAdapter adapter=WXSDKManager.getInstance().getIWXHttpAdapter();
-    if (adapter == null) {
-      adapter = new DefaultWXHttpAdapter();
-    }
 
     WXRequest wxRequest = new WXRequest();
     wxRequest.url = url;
@@ -706,7 +708,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
           if (mRenderListener != null && mContext != null) {
             mGodCom = component;
             onViewAppear();
-            View wxView=component.getView();
+            View wxView=component.getHostView();
             if(WXEnvironment.isApkDebugable() && WXSDKManager.getInstance().getIWXDebugAdapter()!=null){
               wxView=WXSDKManager.getInstance().getIWXDebugAdapter().wrapContainer(WXSDKInstance.this,wxView);
             }
@@ -919,9 +921,9 @@ public class WXSDKInstance implements IWXActivityStateListener {
   public void destroy() {
     WXSDKManager.getInstance().destroyInstance(mInstanceId);
 
-    if (mGodCom != null && mGodCom.getView() != null) {
+    if (mGodCom != null && mGodCom.getHostView() != null) {
       mGodCom.destroy();
-      destroyView(mGodCom.getView());
+      destroyView(mGodCom.getHostView());
       mGodCom = null;
     }
 
@@ -959,6 +961,20 @@ public class WXSDKInstance implements IWXActivityStateListener {
 
   public void setRefreshMargin(float refreshMargin) {
     this.refreshMargin = refreshMargin;
+  }
+
+  public void updateInstanceStyle(JSONObject style){
+    Message message=Message.obtain();
+    WXDomTask task=new WXDomTask();
+    task.instanceId=getInstanceId();
+    if(task.args==null){
+      task.args=new ArrayList<>();
+    }
+    task.args.add(WXDomObject.ROOT);
+    task.args.add(style);
+    message.obj=task;
+    message.what= WXDomHandler.MsgType.WX_DOM_UPDATE_STYLE;
+    WXSDKManager.getInstance().getWXDomManager().sendMessage(message);
   }
 
   /**

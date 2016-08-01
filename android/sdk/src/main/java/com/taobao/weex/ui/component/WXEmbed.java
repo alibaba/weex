@@ -221,6 +221,7 @@ import com.taobao.weex.common.WXPerformance;
 import com.taobao.weex.common.WXRenderStrategy;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.utils.WXLogUtils;
+import com.taobao.weex.utils.WXUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
 public class WXEmbed extends WXDiv implements WXSDKInstance.OnInstanceVisibleListener {
@@ -241,6 +242,18 @@ public class WXEmbed extends WXDiv implements WXSDKInstance.OnInstanceVisibleLis
     super(instance, node, parent, lazy);
   }
 
+  @Override
+  protected boolean setProperty(String key, Object param) {
+    switch (key) {
+      case WXDomPropConstant.WX_ATTR_SRC:
+        String src = WXUtils.getString(param,null);
+        if (src != null)
+          setSrc(src);
+        return true;
+    }
+    return super.setProperty(key, param);
+  }
+
   @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SRC)
   public void setSrc(String src) {
     this.src = src;
@@ -259,8 +272,8 @@ public class WXEmbed extends WXDiv implements WXSDKInstance.OnInstanceVisibleLis
     sdkInstance.registerRenderListener(new IWXRenderListener() {
       @Override
       public void onViewCreated(WXSDKInstance instance, View view) {
-        getView().removeAllViews();
-        getView().addView(view);
+        getHostView().removeAllViews();
+        getHostView().addView(view);
       }
 
       @Override
@@ -291,13 +304,13 @@ public class WXEmbed extends WXDiv implements WXSDKInstance.OnInstanceVisibleLis
               WXEmbed.this.instance = createInstance();
             }
           });
-          getView().removeAllViews();
-          getView().addView(imageView);
+          getHostView().removeAllViews();
+          getHostView().addView(imageView);
           WXLogUtils.e("WXEmbed", "NetWork failure :" + errCode + ",\n error message :" + msg);
         }
       }
     });
-    ViewGroup.LayoutParams layoutParams = getView().getLayoutParams();
+    ViewGroup.LayoutParams layoutParams = getHostView().getLayoutParams();
     sdkInstance.renderByUrl(WXPerformance.DEFAULT,
                             src,
                             null, null, layoutParams.width,
@@ -307,7 +320,6 @@ public class WXEmbed extends WXDiv implements WXSDKInstance.OnInstanceVisibleLis
   }
 
   @Override
-  @WXComponentProp(name = WXDomPropConstant.WX_VISIBILITY)
   public void setVisibility(String visibility) {
     super.setVisibility(visibility);
     boolean visible = TextUtils.equals(getVisibility(), WXDomPropConstant.WX_VISIBILITY_VISIBLE);
