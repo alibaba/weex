@@ -12,6 +12,7 @@
 
 import {
   extend,
+  isObject,
   bind
 } from '../util'
 import {
@@ -419,7 +420,7 @@ function bindRepeat (vm, target, fragBlock, info) {
     let mergedData
     if (oldStyle) {
       mergedData = item
-      if (typeof item === 'object') {
+      if (isObject(item)) {
         mergedData[keyName] = index
         if (!mergedData.hasOwnProperty('INDEX')) {
           Object.defineProperty(mergedData, 'INDEX', {
@@ -430,11 +431,11 @@ function bindRepeat (vm, target, fragBlock, info) {
           })
         }
       }
-    }
-    else {
-      mergedData = {}
-      mergedData[keyName] = index
-      mergedData[valueName] = item
+      else {
+        mergedData = {}
+        mergedData[keyName] = index
+        mergedData[valueName] = item
+      }
     }
     const newContext = mergeContext(context, mergedData)
     vms.push(newContext)
