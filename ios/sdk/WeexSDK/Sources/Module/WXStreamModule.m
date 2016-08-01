@@ -76,7 +76,7 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
     }
     NSDictionary *headers = [options objectForKey:@"headers"];
     NSString *body = [options objectForKey:@"body"];
-    
+    NSString *type = [options objectForKey:@"type"];
     NSURL *url = [NSURL URLWithString:urlStr];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:method];
@@ -144,16 +144,19 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
                         
                     }else {
                         // no error
-                        NSString *responseData = nil;
-                        if (!respEncode) {
-                            respEncode = @"utf-8";
-                        }
-                        CFStringEncoding cfStrEncoding = CFStringConvertIANACharSetNameToEncoding((CFStringRef) respEncode);
-                        if (cfStrEncoding == kCFStringEncodingInvalidId) {
-                            WXLogError(@"not supported encode");
+                        NSString *responseData = [self stringfromData:totalData encode:respEncode];
+                        if ([type isEqualToString:@"json"] || [type isEqualToString:@"jsonp"]) {
+                            if ([type isEqualToString:@"jsonp"]) {
+                                NSUInteger start = [responseData rangeOfString:@"("].location;
+                                NSUInteger end = [responseData rangeOfString:@")" options:NSBackwardsSearch].location;
+                                responseData = [responseData substringWithRange:NSMakeRange(start, end-start+1)];
+                            }
+                            id jsonObj = [self JSONObjFromData:[responseData dataUsingEncoding:NSUTF8StringEncoding]];
+                            if (jsonObj) {
+                                [callbackRsp setObject:jsonObj forKey:@"data"];
+                            }
+                            
                         } else {
-                            NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(cfStrEncoding);
-                            responseData = [[NSString alloc]initWithData:totalData encoding:encoding];
                             if (responseData) {
                                 [callbackRsp setObject:responseData forKey:@"data"];
                             }
@@ -163,7 +166,34 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
                 }];
 }
 
-+ (NSString*)getStatusText:(NSInteger)code {
+- (NSString*)stringfromData:(NSData *)data encode:(NSString *)encoding
+{
+    NSMutableString *responseData = nil;
+    if (!encoding) {
+        encoding = @"utf-8";
+    }
+    CFStringEncoding cfStrEncoding = CFStringConvertIANACharSetNameToEncoding((CFStringRef)encoding);
+    if (cfStrEncoding == kCFStringEncodingInvalidId) {
+        WXLogError(@"not supported encode");
+    } else {
+        NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(cfStrEncoding);
+        responseData = [[NSMutableString alloc]initWithData:data encoding:encoding];
+    }
+    return responseData;
+}
+
+- (id)JSONObjFromData:(NSData *)data
+{
+    NSError * error = nil;
+    id jsonObj = [WXUtility JSONObject:data error:&error];
+    if (error) {
+        WXLogError(@"%@", [error description]);
+    }
+    return jsonObj;
+}
+
++ (NSString*)getStatusText:(NSInteger)code
+{
     
     switch (code) {
         case -1:
