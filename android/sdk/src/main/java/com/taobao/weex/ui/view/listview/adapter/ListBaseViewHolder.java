@@ -239,9 +239,9 @@ public class ListBaseViewHolder extends RecyclerView.ViewHolder {
     return mViewType;
   }
   public void setComponentUsing(boolean using){
-    if(mComponent!=null) {
-      mComponent.get().setUsing(using);
-    }
+    if(mComponent!=null)
+      if (mComponent.get() != null)
+        mComponent.get().setUsing(using);
   }
   public WXComponent getComponent(){
     return mComponent != null ? mComponent.get() : null;
