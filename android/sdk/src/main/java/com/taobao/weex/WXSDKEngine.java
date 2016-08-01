@@ -119,6 +119,7 @@ import android.util.Log;
 import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
 import com.taobao.weex.adapter.IWXUserTrackAdapter;
+import com.taobao.weex.appfram.clipboard.WXClipboardModule;
 import com.taobao.weex.appfram.navigator.IActivityNavBarSetter;
 import com.taobao.weex.appfram.navigator.WXNavigatorModule;
 import com.taobao.weex.appfram.storage.IWXStorageAdapter;
@@ -308,7 +309,8 @@ public class WXSDKEngine {
       registerModule("navigator", WXNavigatorModule.class);
       registerModule("stream", WXStreamModule.class);
       registerModule("timer", WXTimerModule.class, true);
-      registerModule("storage", WXStorageModule.class,true);
+      registerModule("storage", WXStorageModule.class, true);
+      registerModule("clipboard", WXClipboardModule.class, true);
 
       registerDomObject(WXBasicComponentType.TEXT, WXTextDomObject.class);
       registerDomObject(WXBasicComponentType.INPUT, WXTextDomObject.class);
