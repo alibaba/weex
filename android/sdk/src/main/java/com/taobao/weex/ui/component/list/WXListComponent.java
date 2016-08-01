@@ -272,6 +272,10 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
 
     protected BounceRecyclerView bounceRecyclerView;
 
+    private static final int MAX_VIEWTYPE_ALLOW_CACHE = 9;
+    private static boolean mAllowCacheViewHolder = true;
+    private static boolean mDownForBidCacheViewHolder = false;
+
     /**
      * Map for storing component that is sticky.
      **/
@@ -780,6 +784,7 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
             if (mViewTypes == null)
                 return createVHForFakeComponent(viewType);
             ArrayList<WXComponent> mTypes = mViewTypes.get(viewType);
+            checkRecycledViewPool(viewType);
             if (mTypes == null)
                 return createVHForFakeComponent(viewType);
 
@@ -810,6 +815,34 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
         }
         WXLogUtils.e(TAG, "Cannot find request viewType: " + viewType);
         return createVHForFakeComponent(viewType);
+    }
+
+    /**
+     * Forbid ViewHolder cache if viewType > MAX_VIEWTYPE_ALLOW_CACHE
+     * @param viewType
+     */
+    private void checkRecycledViewPool(int viewType) {
+        try {
+            if (mViewTypes.size() > MAX_VIEWTYPE_ALLOW_CACHE)
+                mAllowCacheViewHolder = false;
+
+            if (mDownForBidCacheViewHolder)
+                if (getHostView() != null && getHostView().getInnerView() != null)
+                    getHostView().getInnerView().getRecycledViewPool().setMaxRecycledViews(viewType, 0);
+
+            if (!mDownForBidCacheViewHolder) {
+                if (!mAllowCacheViewHolder) {
+                    if (getHostView() != null && getHostView().getInnerView() != null) {
+                        for (int i = 0; i < mViewTypes.size(); i++) {
+                            getHostView().getInnerView().getRecycledViewPool().setMaxRecycledViews(mViewTypes.keyAt(i), 0);
+                        }
+                        mDownForBidCacheViewHolder = true;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            WXLogUtils.e(TAG, "Clear recycledViewPool error!");
+        }
     }
 
     /**
