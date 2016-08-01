@@ -211,7 +211,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.WXModule;
-import com.taobao.weex.common.WXModuleAnno;
 import com.taobao.weex.utils.WXLogUtils;
 
 import java.util.ArrayList;
@@ -239,6 +238,7 @@ public final class WXDomModule extends WXModule {
   static final String  REFRESH_FINISH = "refreshFinish";
   static final String  UPDATE_FINISH = "updateFinish";
   static final String SCROLL_TO_ELEMENT  = "scrollToElement";
+  static final String ADD_RULE = "addRule";
 
   // args
   public static final String MODULE = "module";
@@ -323,6 +323,10 @@ public final class WXDomModule extends WXModule {
           }
           scrollToElement((String) args.get(0), (JSONObject) args.get(1));
           break;
+        case ADD_RULE:
+          if (args == null)
+            return;
+          addRule((String) args.get(0), (JSONObject) args.get(1));
       }
 
     }catch (IndexOutOfBoundsException e){
@@ -554,7 +558,6 @@ public final class WXDomModule extends WXModule {
     WXSDKManager.getInstance().getWXDomManager().sendMessage(msg);
   }
 
-  @WXModuleAnno(moduleMethod = true, runOnUIThread = false)
   public void addRule(String type, JSONObject options) {
     if (TextUtils.isEmpty(type) || options == null) {
       return;
