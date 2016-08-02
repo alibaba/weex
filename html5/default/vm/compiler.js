@@ -418,7 +418,7 @@ function bindRepeat (vm, target, fragBlock, info) {
 
   function compileItem (item, index, context) {
     let mergedData
-    if (oldStyle && isObject(item)) {
+    if (oldStyle) {
       mergedData = item
       if (isObject(item)) {
         mergedData[keyName] = index
