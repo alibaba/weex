@@ -28,7 +28,7 @@ import { subversion } from '../../../../package.json'
 
 Object.assign(global, framework, {
   frameworkVersion: subversion.native,
-  needTransformerVersion: subversion.transformer
+  transformerVersion: subversion.transformer
 })
 
 /**

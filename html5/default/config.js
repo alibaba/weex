@@ -11,7 +11,5 @@ export default {
       type: 'cell',
       append: 'tree'
     }
-  },
-  customComponentMap: {},
-  debug: false
+  }
 }

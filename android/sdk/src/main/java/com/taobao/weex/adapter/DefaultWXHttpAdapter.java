@@ -208,6 +208,7 @@ import android.text.TextUtils;
 
 import com.taobao.weex.common.WXRequest;
 import com.taobao.weex.common.WXResponse;
+import com.taobao.weex.utils.WXLogUtils;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -257,7 +258,7 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
             listener.onHttpFinish(response);
           }
         } catch (IOException e) {
-          e.printStackTrace();
+          WXLogUtils.e("", e);
           response.statusCode = "-1";
           response.errorCode="-1";
           response.errorMsg=e.getMessage();
@@ -293,8 +294,8 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
       }
     }
 
-    if ("POST".equals(request.method)) {
-      connection.setRequestMethod("POST");
+    if ("POST".equals(request.method) || "PUT".equals(request.method) || "PATCH".equals(request.method)) {
+      connection.setRequestMethod(request.method);
       if (request.body != null) {
         if (listener != null) {
           listener.onHttpUploadProgress(0);

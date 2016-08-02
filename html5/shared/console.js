@@ -60,22 +60,20 @@ function generateLevelMap () {
   })
 }
 
-function normalize (v) {
-  const type = Object.prototype.toString.call(v)
-  if (type.toLowerCase() === '[object object]') {
-    v = JSON.stringify(v)
-  }
-  else {
-    v = String(v)
-  }
-  return v
-}
-
 function checkLevel (type) {
   const logLevel = (global.WXEnvironment && global.WXEnvironment.logLevel) || 'log'
   return levelMap[logLevel] && levelMap[logLevel][type]
 }
 
 function format (args) {
-  return args.map(v => normalize(v))
+  return args.map((v) => {
+    const type = Object.prototype.toString.call(v)
+    if (type.toLowerCase() === '[object object]') {
+      v = JSON.stringify(v)
+    }
+    else {
+      v = String(v)
+    }
+    return v
+  })
 }

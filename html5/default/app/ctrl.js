@@ -10,7 +10,12 @@
  * corresponded with the API of instance manager (framework.js)
  */
 
-import * as _ from '../util'
+import { extend, bind } from '../util'
+import {
+  define,
+  bootstrap,
+  register
+} from './bundle'
 
 export function updateActions () {
   this.differ.flush()
@@ -25,29 +30,29 @@ export function updateActions () {
 }
 
 export function init (code, data) {
-  _.debug('Intialize an instance with:\n', code, data)
+  console.debug('[JS Framework] Intialize an instance with:\n', data)
 
   let result
   // @see: lib/app/bundle.js
-  const define = _.bind(this.define, this)
-  const bootstrap = (name, config, _data) => {
-    result = this.bootstrap(name, config, _data || data)
+  const bundleDefine = bind(define, this)
+  const bundleBootstrap = (name, config, _data) => {
+    result = bootstrap(this, name, config, _data || data)
     this.updateActions()
     this.doc.listener.createFinish()
-    _.debug(`After intialized an instance(${this.id})`)
+    console.debug(`[JS Framework] After intialized an instance(${this.id})`)
   }
 
   // backward(register/render)
-  const register = _.bind(this.register, this)
-  const render = (name, _data) => {
-    result = this.bootstrap(name, {}, _data)
+  const bundleRegister = bind(register, this)
+  const bundleRender = (name, _data) => {
+    result = bootstrap(this, name, {}, _data)
   }
 
-  const require = name => _data => {
-    result = this.bootstrap(name, {}, _data)
+  const bundleRequire = name => _data => {
+    result = bootstrap(this, name, {}, _data)
   }
 
-  const document = this.doc
+  const bundleDocument = this.doc
 
   let functionBody
   /* istanbul ignore if */
@@ -103,14 +108,14 @@ export function init (code, data) {
     )
 
     fn(
-      define,
-      require,
-      document,
-      bootstrap,
-      register,
-      render,
-      define,
-      bootstrap,
+      bundleDefine,
+      bundleRequire,
+      bundleDocument,
+      bundleBootstrap,
+      bundleRegister,
+      bundleRender,
+      bundleDefine,
+      bundleBootstrap,
       timerAPIs.setTimeout,
       timerAPIs.setInterval,
       timerAPIs.clearTimeout,
@@ -130,21 +135,21 @@ export function init (code, data) {
     )
 
     fn(
-      define,
-      require,
-      document,
-      bootstrap,
-      register,
-      render,
-      define,
-      bootstrap)
+      bundleDefine,
+      bundleRequire,
+      bundleDocument,
+      bundleBootstrap,
+      bundleRegister,
+      bundleRender,
+      bundleDefine,
+      bundleBootstrap)
   }
 
   return result
 }
 
 export function destroy () {
-  _.debug(`Destory an instance(${this.id})`)
+  console.debug(`[JS Framework] Destory an instance(${this.id})`)
 
   this.id = ''
   this.options = null
@@ -162,7 +167,7 @@ export function getRootElement () {
 }
 
 export function fireEvent (ref, type, e, domChanges) {
-  _.debug(`Fire a "${type}" event on an element(${ref}) in instance(${this.id})`)
+  console.debug(`[JS Framework] Fire a "${type}" event on an element(${ref}) in instance(${this.id})`)
   if (Array.isArray(ref)) {
     ref.some((ref) => {
       return this.fireEvent(ref, type, e) !== false
@@ -185,7 +190,7 @@ export function fireEvent (ref, type, e, domChanges) {
 }
 
 export function callback (callbackId, data, ifKeepAlive) {
-  _.debug(`Invoke a callback(${callbackId}) with`, data,
+  console.debug(`[JS Framework] Invoke a callback(${callbackId}) with`, data,
             `in instance(${this.id})`)
 
   const callback = this.callbacks[callbackId]
@@ -208,7 +213,7 @@ export function callback (callbackId, data, ifKeepAlive) {
 }
 
 export function refreshData (data) {
-  _.debug(`Refresh with`, data,
+  console.debug(`[JS Framework] Refresh with`, data,
             `in instance[${this.id}]`)
 
   const vm = this.vm
@@ -219,7 +224,7 @@ export function refreshData (data) {
       vm.refreshData(data)
     }
     else {
-      _.extend(vm, data)
+      extend(vm, data)
     }
     this.updateActions()
     this.doc.listener.refreshFinish()
