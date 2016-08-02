@@ -6,18 +6,18 @@
 //  Copyright © 2016 taobao. All rights reserved.
 //
 
-#import "WXTextViewComponent.h"
+#import "WXTextAreaComponent.h"
 #import "WXUtility.h"
 #import "WXConvert.h"
 #import "WXComponent_internal.h"
 #import "WXView.h"
 
-@interface WXTextView : UITextView
+@interface WXTextAreaView : UITextView
 @property (nonatomic, assign) UIEdgeInsets border;
 @property (nonatomic, assign) UIEdgeInsets padding;
 @end
 
-@implementation WXTextView
+@implementation WXTextAreaView
 
 - (instancetype)init
 {
@@ -51,8 +51,8 @@
 
 @end
 
-@interface WXTextViewComponent()
-@property (nonatomic, strong) WXTextView *textView;
+@interface WXTextAreaComponent()
+@property (nonatomic, strong) WXTextAreaView *textView;
 @property (nonatomic, strong) UILabel *placeholder;
 
 //attribute
@@ -80,7 +80,7 @@
 
 @end
 
-@implementation WXTextViewComponent {
+@implementation WXTextAreaComponent {
     UIEdgeInsets _border;
     UIEdgeInsets _padding;
     NSTextStorage* _textStorage;
@@ -162,11 +162,11 @@
 }
 - (UIView *)loadView
 {
-    return [[WXTextView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    return [[WXTextAreaView alloc] initWithFrame:[UIScreen mainScreen].bounds];
 }
 - (void)viewDidLoad
 {
-    _textView = (WXTextView*)self.view;
+    _textView = (WXTextAreaView*)self.view;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textViewEditChanged:)
                                                  name:UITextViewTextDidChangeNotification
                                                object:_textView];

@@ -7,6 +7,7 @@
 //
 
 #import "WXComponent.h"
-@interface WXTextViewComponent : WXComponent<UITextViewDelegate>
+
+@interface WXTextAreaComponent : WXComponent<UITextViewDelegate>
 
 @end
