@@ -217,7 +217,7 @@ import java.util.Map;
 /**
  * Created by rowandjj(chuyi)<br/>
  */
-public class WXStorageModule extends WXModule implements IWXStorage {
+public class WXStorageModule extends WXSDKEngine.DestroyableModule implements IWXStorage {
 
     IWXStorageAdapter mStorageAdapter;
 
@@ -335,5 +335,13 @@ public class WXStorageModule extends WXModule implements IWXStorage {
                 }
             }
         });
+    }
+
+    @Override
+    public void destroy() {
+        IWXStorageAdapter adapter = ability();
+        if (adapter != null) {
+            adapter.close();
+        }
     }
 }

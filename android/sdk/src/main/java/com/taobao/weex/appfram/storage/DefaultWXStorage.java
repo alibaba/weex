@@ -289,6 +289,11 @@ public class DefaultWXStorage implements IWXStorageAdapter {
         });
     }
 
+    @Override
+    public void close() {
+        mDatabaseSupplier.closeDatabase();
+    }
+
 
     private boolean performSetItem(String key, String value) {
         String sql = "INSERT OR REPLACE INTO " + WXSQLiteOpenHelper.TABLE_STORAGE + " VALUES (?,?);";
@@ -304,7 +309,6 @@ public class DefaultWXStorage implements IWXStorageAdapter {
             return false;
         } finally {
             statement.close();
-            mDatabaseSupplier.closeDatabase();
         }
     }
 
@@ -325,7 +329,6 @@ public class DefaultWXStorage implements IWXStorageAdapter {
             return null;
         } finally {
             c.close();
-            mDatabaseSupplier.closeDatabase();
         }
     }
 
@@ -336,7 +339,6 @@ public class DefaultWXStorage implements IWXStorageAdapter {
                     WXSQLiteOpenHelper.COLUMN_KEY + "=?",
                     new String[]{key});
         } finally {
-            mDatabaseSupplier.closeDatabase();
         }
         return count == 1;
     }
@@ -351,7 +353,6 @@ public class DefaultWXStorage implements IWXStorageAdapter {
             return 0;
         } finally {
             statement.close();
-            mDatabaseSupplier.closeDatabase();
         }
     }
 
@@ -368,7 +369,6 @@ public class DefaultWXStorage implements IWXStorageAdapter {
             return result;
         } finally {
             c.close();
-            mDatabaseSupplier.closeDatabase();
         }
     }
 

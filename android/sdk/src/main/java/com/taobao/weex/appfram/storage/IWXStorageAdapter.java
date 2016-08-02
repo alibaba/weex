@@ -224,6 +224,8 @@ public interface IWXStorageAdapter {
 
     void getAllKeys(OnResultReceivedListener listener);
 
+    void close();
+
     /**
      * the callback of storage operation.
      * */
