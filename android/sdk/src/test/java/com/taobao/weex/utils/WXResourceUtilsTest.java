@@ -204,77 +204,29 @@
  */
 package com.taobao.weex.utils;
 
-import android.content.Context;
-import android.text.TextUtils;
+import android.graphics.Color;
+import com.taobao.weappplus_sdk.BuildConfig;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.annotation.Config;
 
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import static org.junit.Assert.*;
 
-public class WXFileUtils {
+/**
+ * Created by sospartan on 8/2/16.
+ */
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 19)
+@PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
+@PrepareForTest()
+public class WXResourceUtilsTest {
 
-  /**
-   * Load file in asset directory.
-   * @param path FilePath
-   * @param context Weex Context
-   * @return the Content of the file
-   */
-  public static String loadAsset(String path, Context context) {
-    if(path == null || context == null){
-      return null;
-    }
-    StringBuilder builder ;
-    try {
-      InputStream in = context.getAssets().open(path);
-
-      builder = new StringBuilder(in.available()+10);
-
-      BufferedReader localBufferedReader = new BufferedReader(new InputStreamReader(in));
-      char[] data = new char[2048];
-      int len = -1;
-      while ((len = localBufferedReader.read(data)) > 0) {
-        builder.append(data, 0, len);
-      }
-      localBufferedReader.close();
-      if (in != null) {
-        try {
-          in.close();
-        } catch (IOException e) {
-          WXLogUtils.e("WXFileUtils loadAsset: ", e);
-        }
-      }
-      return builder.toString();
-
-    } catch (IOException e) {
-      e.printStackTrace();
-      WXLogUtils.e("", e);
-    }
-
-    return "";
-  }
-
-  public static boolean saveFile(String path, byte[] content, Context context) {
-    if (TextUtils.isEmpty(path) || content == null || context == null) {
-      return false;
-    }
-    FileOutputStream outStream = null;
-    try {
-      outStream = new FileOutputStream(path);
-      outStream.write(content);
-      return true;
-    } catch (Exception e) {
-      WXLogUtils.e("WXFileUtils saveFile: " + WXLogUtils.getStackTrace(e));
-    } finally {
-      if (outStream != null) {
-        try {
-          outStream.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
-    }
-    return false;
+  @Test
+  public void testGetColor() throws Exception {
+    assertEquals(WXResourceUtils.getColor("red"), Color.RED);
+    assertEquals(WXResourceUtils.getColor(""), Integer.MIN_VALUE);
   }
 }

@@ -254,6 +254,7 @@ public class DefaultWXStorageTest {
     storage.setItem("","",listener);
 
     verify(listener,timeout(3000).times(1)).onReceived(anyMapOf(String.class,Object.class));
+    storage.close();
   }
 
   @Test
@@ -261,6 +262,7 @@ public class DefaultWXStorageTest {
     storage.getItem("",listener);
 
     verify(listener,timeout(3000).times(1)).onReceived(anyMapOf(String.class,Object.class));
+    storage.close();
   }
 
   @Test
@@ -268,6 +270,7 @@ public class DefaultWXStorageTest {
     storage.removeItem("",listener);
 
     verify(listener,timeout(3000).times(1)).onReceived(anyMapOf(String.class,Object.class));
+    storage.close();
   }
 
   @Test
@@ -275,6 +278,7 @@ public class DefaultWXStorageTest {
     storage.length(listener);
 
     verify(listener,timeout(3000).times(1)).onReceived(anyMapOf(String.class,Object.class));
+    storage.close();
   }
 
   @Test
@@ -282,5 +286,6 @@ public class DefaultWXStorageTest {
     storage.getAllKeys(listener);
 
     verify(listener,timeout(3000).times(1)).onReceived(anyMapOf(String.class,Object.class));
+    storage.close();
   }
 }

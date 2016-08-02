@@ -271,6 +271,11 @@ public class WXStorageModuleTest {
         Map<String, Object> data = StorageResultHandler.setItemResult(true);
         listener.onReceived(data);
       }
+
+      @Override
+      public void close() {
+
+      }
     };
     callback = Mockito.mock(JSCallback.class);
   }

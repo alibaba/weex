@@ -204,7 +204,6 @@
  */
 package com.taobao.weex;
 
-import android.content.Context;
 import com.taobao.weappplus_sdk.BuildConfig;
 import com.taobao.weex.common.WXPerformance;
 import com.taobao.weex.common.WXRenderStrategy;
@@ -214,19 +213,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.*;
 import static org.junit.Assert.*;
 import static org.powermock.api.mockito.PowerMockito.mock;
@@ -259,13 +253,13 @@ public class WXSDKInstanceTest {
     mInstance = new WXSDKInstance(Robolectric.setupActivity(TestActivity.class));
 
     mockStatic(WXFileUtils.class);
-    when(WXFileUtils.loadFileContent(null,null)).thenReturn("{}");
+    when(WXFileUtils.loadAsset(null,null)).thenReturn("{}");
   }
 
 
   @Test
   public void testRender() throws Exception {
-    assertEquals(WXFileUtils.loadFileContent(null,null),"{}");
+    assertEquals(WXFileUtils.loadAsset(null,null),"{}");
 
     mInstance.render("{}",null,null,null);
   }
