@@ -216,6 +216,7 @@ import java.lang.reflect.InvocationTargetException;
  * Created by sospartan on 6/23/16.
  */
 public interface IFComponentHolder extends ComponentCreator{
+
   /** Prepare component if not a lazy load componnet.**/
   void loadIfNonLazy();
   Invoker getMethod(String name);
