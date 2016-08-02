@@ -65,7 +65,7 @@ public class IndexActivity extends AbstractWeexActivity {
     }
 
     if(TextUtils.equals(CURRENT_IP,DEFAULT_IP)){
-      renderPage(WXFileUtils.loadFileContent("index.js", this),WEEX_INDEX_URL);
+      renderPage(WXFileUtils.loadAsset("index.js", this),WEEX_INDEX_URL);
     }else{
       renderPageByURL(WEEX_INDEX_URL);
     }
@@ -76,7 +76,7 @@ public class IndexActivity extends AbstractWeexActivity {
       public void onReceive(Context context, Intent intent) {
         createWeexInstance();
         if(TextUtils.equals(CURRENT_IP,DEFAULT_IP)){
-          renderPage(WXFileUtils.loadFileContent("index.js", IndexActivity.this),WEEX_INDEX_URL);
+          renderPage(WXFileUtils.loadAsset("index.js", IndexActivity.this),WEEX_INDEX_URL);
         }else{
           renderPageByURL(WEEX_INDEX_URL);
         }
@@ -104,7 +104,7 @@ public class IndexActivity extends AbstractWeexActivity {
       if(!TextUtils.equals(CURRENT_IP,DEFAULT_IP)){
         createWeexInstance();
         if(TextUtils.equals(CURRENT_IP,DEFAULT_IP)){
-          renderPage(WXFileUtils.loadFileContent("index.js", this),WEEX_INDEX_URL);
+          renderPage(WXFileUtils.loadAsset("index.js", this),WEEX_INDEX_URL);
         }else{
           renderPageByURL(WEEX_INDEX_URL);
         }
