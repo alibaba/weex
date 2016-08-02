@@ -14,6 +14,8 @@
 #import "WXSDKEngine.h"
 #import "WXSDKError.h"
 #import "WXMonitor.h"
+#import "WXAppMonitorProtocol.h"
+#import "WXHandlerFactory.h"
 #import <sys/utsname.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 
@@ -66,6 +68,12 @@
                 if (idx == args.count - 1) {
                     NSNumber *flag = levelMap[[jsVal toString]];
                     if (flag) {
+                        if ([flag isEqualToNumber:[NSNumber numberWithInteger:WXLogFlagWarning]]) {
+                            id<WXAppMonitorProtocol> appMonitor = [WXHandlerFactory handlerForProtocol:@protocol(WXAppMonitorProtocol)];
+                            if (appMonitor && [appMonitor respondsToSelector:@selector(commitAppMonitorArgs:)]){
+                                [appMonitor commitAppMonitorArgs:@{@"warning": string}];
+                            }
+                        }
                         WX_LOG([flag unsignedIntegerValue], @"%@", string);
                     } else {
                         [string appendFormat:@"%@ ", jsVal];
