@@ -1,6 +1,7 @@
 # stream
 <span class="weex-version">0.4</span>
-<a href="https://github.com/weexteam/article/wiki/%E6%AC%A2%E8%BF%8E%E5%8F%82%E4%B8%8EWeex%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91"  class="weex-translate incomplete">cn</a>
+<a href="https://github.com/weexteam/article/issues/53"  class="weex-translate">cn</a>
+
 
 ## Summary
 
@@ -8,7 +9,7 @@ A series of stream api. It provides a network request.
 
 ## API
 
-### fetch(options, callback[,progressCallback])
+### fetch(options, callback,progressCallback)
 
 ### Arguments
 
@@ -43,7 +44,8 @@ stream.fetch({
 }, function(response) {
   //process response
 },function(response){
-  console.log("bytes received:"+response.length);
+  //progress response
+  console.log("current bytes received:"+response.length);
   
 });
 ```
