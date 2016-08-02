@@ -42,6 +42,10 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
 
 - (void)getItem:(NSString *)key callback:(WXModuleCallback)callback
 {
+    if ([key isKindOfClass:[NSString class]] == NO) {
+        callback(@{@"result":@"failed",@"data":@"key must a string!"});
+        return;
+    }
     NSString *value = [self.memory objectForKey:key];
     if (value == (id)kCFNull) {
         value = [[WXUtility globalCache] objectForKey:key];
@@ -68,12 +72,24 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
 
 - (void)setItem:(NSString *)key value:(NSString *)value callback:(WXModuleCallback)callback
 {
+    if ([key isKindOfClass:[NSString class]] == NO) {
+        callback(@{@"result":@"failed",@"data":@"key must a string!"});
+        return;
+    }
+    if ([value isKindOfClass:[NSString class]] == NO) {
+        callback(@{@"result":@"failed",@"data":@"value must a string!"});
+        return;
+    }
     [self setObject:value forKey:key];
     callback(@{@"result":@"success"});
 }
 
 - (void)removeItem:(NSString *)key callback:(WXModuleCallback)callback
 {
+    if ([key isKindOfClass:[NSString class]] == NO) {
+        callback(@{@"result":@"failed",@"data":@"key must a string!"});
+        return;
+    }
     if (self.memory[key] == (id)kCFNull) {
         [self.memory removeObjectForKey:key];
         dispatch_async([WXStorageModule storageQueue], ^{
