@@ -185,6 +185,11 @@
     // Do Nothing
 }
 
+- (void)_handleFirstScreenTime
+{
+    // Do Nothing， firstScreenTime is set by cellDidRendered:
+}
+
 #pragma mark - Inheritance
 
 - (void)_insertSubcomponent:(WXComponent *)subcomponent atIndex:(NSInteger)index

@@ -160,4 +160,6 @@
 
 - (void)_updateNavBarAttributes:(NSDictionary *)attributes;
 
+- (void)_handleFirstScreenTime;
+
 @end
