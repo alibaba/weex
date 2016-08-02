@@ -107,7 +107,7 @@ function compile (vm, target, dest, meta) {
   if (targetNeedCheckRepeat(target, meta)) {
     console.debug('[JS Framework] compile "repeat" logic by', target)
     if (dest.type === 'document') {
-      console.warn('[JS Framework] Do not use `repeat` directive on the root element!')
+      console.warn('[JS Framework] The root element does\'t support `repeat` directive!')
     }
     else {
       compileRepeat(vm, target, dest)
@@ -117,7 +117,7 @@ function compile (vm, target, dest, meta) {
   if (targetNeedCheckShown(target, meta)) {
     console.debug('[JS Framework] compile "if" logic by', target)
     if (dest.type === 'document') {
-      console.warn('[JS Framework] Do not use `if` directive on the root element!')
+      console.warn('[JS Framework] The root element does\'t support `if` directive!')
     }
     else {
       compileShown(vm, target, dest, meta)
