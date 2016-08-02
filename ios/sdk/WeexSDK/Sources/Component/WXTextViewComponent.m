@@ -166,7 +166,7 @@
 }
 - (void)viewDidLoad
 {
-    _textView = self.view;
+    _textView = (WXTextView*)self.view;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textViewEditChanged:)
                                                  name:UITextViewTextDidChangeNotification
                                                object:_textView];
