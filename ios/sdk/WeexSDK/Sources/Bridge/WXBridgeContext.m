@@ -156,7 +156,7 @@ _Pragma("clang diagnostic pop") \
         return -1;
     }
     
-    if (callback && ![callback isEqualToString:@"-1"]) {
+    if (![callback isEqualToString:@"undefined"] && ![callback isEqualToString:@"-1"] && callback) {
         WXBridgeMethod *method = [self _methodWithCallback:callback];
         method.instance = instance;
         [sendQueue addObject:method];

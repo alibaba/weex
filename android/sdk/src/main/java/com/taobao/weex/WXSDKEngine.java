@@ -314,7 +314,7 @@ public class WXSDKEngine {
       registerDomObject(WXBasicComponentType.INPUT, WXTextDomObject.class);
       registerDomObject(WXBasicComponentType.SWITCH, WXSwitchDomObject.class);
     } catch (WXException e) {
-      WXLogUtils.e("[WXSDKEngine] register:" + WXLogUtils.getStackTrace(e));
+      WXLogUtils.e("[WXSDKEngine] register:", e);
     }
   }
 
@@ -489,9 +489,9 @@ public class WXSDKEngine {
       WXEnvironment.sDebugMode = true;
       WXEnvironment.sDebugWsUrl = debugUrl;
       try {
-        Class cls = Class.forName("com.taobao.weex.WXDebugTool");
-        Method m = cls.getMethod("connect", new Class[]{String.class});
-        m.invoke(cls, new Object[]{debugUrl});
+        Class<?> cls = Class.forName("com.taobao.weex.WXDebugTool");
+        Method m = cls.getMethod("connect", String.class);
+        m.invoke(cls, debugUrl);
       } catch (Exception e) {
         Log.d("weex","WXDebugTool not found!");
       }
@@ -499,9 +499,9 @@ public class WXSDKEngine {
       WXEnvironment.sDebugMode = false;
       WXEnvironment.sDebugWsUrl = null;
       try {
-        Class cls = Class.forName("com.taobao.weex.WXDebugTool");
-        Method m = cls.getMethod("close", new Class[]{});
-        m.invoke(cls, new Object[]{});
+        Class<?> cls = Class.forName("com.taobao.weex.WXDebugTool");
+        Method m = cls.getMethod("close");
+        m.invoke(cls);
       } catch (Exception e) {
         Log.d("weex","WXDebugTool not found!");
       }
