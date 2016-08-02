@@ -64,6 +64,7 @@
         * [animation](/modules/animation.md)
         * [webview](/modules/webview.md)
         * [navigator](/modules/navigator.md)
+        * [clipboard](/modules/clipboard.md)
     * Low-level Specs
         * [JS Bundle Format](/specs/js-bundle-format.md)
         * [JS Framework APIs](/specs/js-framework-apis.md)
