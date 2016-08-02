@@ -245,6 +245,6 @@ public class WXFileUtilsTest {
 
   @Test
   public void testSaveFile() throws Exception {
-    WXFileUtils.saveFile("test","test".getBytes(),RuntimeEnvironment.application);
+    WXFileUtils.saveFile("build/test","test".getBytes(),RuntimeEnvironment.application);
   }
 }
