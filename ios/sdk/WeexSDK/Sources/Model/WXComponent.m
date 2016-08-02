@@ -62,8 +62,8 @@
         pthread_mutexattr_settype(&_propertMutexAttr, PTHREAD_MUTEX_RECURSIVE);
         pthread_mutex_init(&_propertyMutex, &_propertMutexAttr);
         
-        _ref = [ref copy];
-        _type = [type copy];
+        _ref = ref;
+        _type = type;
         _weexInstance = weexInstance;
         _styles = styles ? [NSMutableDictionary dictionaryWithDictionary:styles] : [NSMutableDictionary dictionary];
         _attributes = attributes ? [NSMutableDictionary dictionaryWithDictionary:attributes] : [NSMutableDictionary dictionary];
@@ -115,7 +115,7 @@
     styles = _styles;
     pthread_mutex_unlock(&_propertyMutex);
     
-    return [styles copy];
+    return styles;
 }
 
 - (NSDictionary *)attributes
@@ -125,7 +125,7 @@
     attributes = _attributes;
     pthread_mutex_unlock(&_propertyMutex);
     
-    return [attributes copy];
+    return attributes;
 }
 
 - (NSArray *)events
@@ -215,13 +215,13 @@
             }
         }
         
-        [self handleFirstScreenTime];
+        [self _handleFirstScreenTime];
         
         return _view;
     }
 }
 
-- (void)handleFirstScreenTime
+- (void)_handleFirstScreenTime
 {
     if (self.absolutePosition.y > self.weexInstance.rootView.frame.size.height) {
         WX_MONITOR_INSTANCE_PERF_END(WXPTFirstScreenRender, self.weexInstance);
@@ -257,7 +257,7 @@
     subcomponents = _subcomponents;
     pthread_mutex_unlock(&_propertyMutex);
     
-    return [subcomponents copy];
+    return subcomponents;
 }
 
 - (WXComponent *)supercomponent
