@@ -7,17 +7,12 @@
  */
 package com.taobao.weex.dom;
 
-import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.text.TextPaint;
 import android.text.style.MetricAffectingSpan;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.taobao.weex.utils.TypefaceUtil;
 
 class WXCustomStyleSpan extends MetricAffectingSpan {
-
-  private static final Map<String, Typeface> sTypefaceCache = new HashMap<String, Typeface>();
 
   private final int mStyle;
   private final int mWeight;
@@ -31,53 +26,12 @@ class WXCustomStyleSpan extends MetricAffectingSpan {
 
   @Override
   public void updateDrawState(TextPaint ds) {
-    apply(ds, mStyle, mWeight, mFontFamily);
-  }
-
-  private static void apply(Paint paint, int style, int weight, String family) {
-    int oldStyle;
-    Typeface typeface = paint.getTypeface();
-    if (typeface == null) {
-      oldStyle = 0;
-    } else {
-      oldStyle = typeface.getStyle();
-    }
-
-    int want = 0;
-    if ((weight == Typeface.BOLD)
-        || ((oldStyle & Typeface.BOLD) != 0 && weight == WXStyle.UNSET)) {
-      want |= Typeface.BOLD;
-    }
-
-    if ((style == Typeface.ITALIC)
-        || ((oldStyle & Typeface.ITALIC) != 0 && style == WXStyle.UNSET)) {
-      want |= Typeface.ITALIC;
-    }
-
-    if (family != null) {
-      typeface = getOrCreateTypeface(family, want);
-    }
-
-    if (typeface != null) {
-      paint.setTypeface(Typeface.create(typeface, want));
-    } else {
-      paint.setTypeface(Typeface.defaultFromStyle(want));
-    }
-  }
-
-  private static Typeface getOrCreateTypeface(String family, int style) {
-    if (sTypefaceCache.get(family) != null) {
-      return sTypefaceCache.get(family);
-    }
-
-    Typeface typeface = Typeface.create(family, style);
-    sTypefaceCache.put(family, typeface);
-    return typeface;
+    TypefaceUtil.applyFontStyle(ds, mStyle, mWeight, mFontFamily);
   }
 
   @Override
   public void updateMeasureState(TextPaint paint) {
-    apply(paint, mStyle, mWeight, mFontFamily);
+    TypefaceUtil.applyFontStyle(paint, mStyle, mWeight, mFontFamily);
   }
 
   /**

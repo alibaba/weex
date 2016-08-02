@@ -352,7 +352,7 @@ public class WXBridgeManager implements Callback {
           }
         }
       } catch (HackAssertionException e) {
-        WXLogUtils.e("launchInspector HackAssertionException " + e);
+        WXLogUtils.e("launchInspector HackAssertionException ", e);
       }
     }
   }
@@ -476,7 +476,7 @@ public class WXBridgeManager implements Callback {
           }
         }
       } catch (Exception e) {
-        WXLogUtils.e("[WXBridgeManager] callNative exception: " + WXLogUtils.getStackTrace(e));
+        WXLogUtils.e("[WXBridgeManager] callNative exception: ", e);
       }
     }
 
@@ -881,7 +881,7 @@ public class WXBridgeManager implements Callback {
               WXLogUtils.e("[WXBridgeManager] invokeInitFramework  ExecuteJavaScript fail");
           }
       } catch (Throwable e) {
-        WXLogUtils.e("[WXBridgeManager] invokeInitFramework " + e.getCause());
+        WXLogUtils.e("[WXBridgeManager] invokeInitFramework ", e);
       }
     }
   }
@@ -946,7 +946,7 @@ public class WXBridgeManager implements Callback {
         mJSHandler.sendEmptyMessage(WXJSBridgeMsgType.CALL_JS_BATCH);
       }
     } catch (Throwable e) {
-      WXLogUtils.e("WXBridgeManager" + e.getMessage());
+      WXLogUtils.e("WXBridgeManager", e);
     }
   }
 
@@ -1037,7 +1037,7 @@ public class WXBridgeManager implements Callback {
     try {
       mWXBridge.execJS("", null, METHOD_REGISTER_MODULES, args);
     } catch (Throwable e) {
-      WXLogUtils.e("[WXBridgeManager] invokeRegisterModules:" + (e == null ? "" : e.getStackTrace()));
+      WXLogUtils.e("[WXBridgeManager] invokeRegisterModules:", e);
     }
   }
 
@@ -1055,7 +1055,7 @@ public class WXBridgeManager implements Callback {
     try {
       mWXBridge.execJS("", null, METHOD_REGISTER_COMPONENTS, args);
     } catch (Throwable e) {
-      WXLogUtils.e("[WXBridgeManager] invokeRegisterComponents " + (e == null ? "" : e.getCause()));
+      WXLogUtils.e("[WXBridgeManager] invokeRegisterComponents ", e);
     }
   }
 
