@@ -147,9 +147,9 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
                         NSString *responseData = [self stringfromData:totalData encode:respEncode];
                         if ([type isEqualToString:@"json"] || [type isEqualToString:@"jsonp"]) {
                             if ([type isEqualToString:@"jsonp"]) {
-                                NSUInteger start = [responseData rangeOfString:@"("].location;
+                                NSUInteger start = [responseData rangeOfString:@"("].location + 1 ;
                                 NSUInteger end = [responseData rangeOfString:@")" options:NSBackwardsSearch].location;
-                                responseData = [responseData substringWithRange:NSMakeRange(start, end-start+1)];
+                                responseData = [responseData substringWithRange:NSMakeRange(start, end-start)];
                             }
                             id jsonObj = [self JSONObjFromData:[responseData dataUsingEncoding:NSUTF8StringEncoding]];
                             if (jsonObj) {
