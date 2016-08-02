@@ -97,12 +97,20 @@ function compile (vm, target, dest, meta) {
 
   if (targetNeedCheckRepeat(target, meta)) {
     console.debug('[JS Framework] compile "repeat" logic by', target)
-    compileRepeat(vm, target, dest)
+    if (dest.type === 'document') {
+      console.warn('[JS Framework] Do not use `repeat` directive on the root element!')
+    } else {
+      compileRepeat(vm, target, dest)
+    }
     return
   }
   if (targetNeedCheckShown(target, meta)) {
     console.debug('[JS Framework] compile "if" logic by', target)
-    compileShown(vm, target, dest, meta)
+    if (dest.type === 'document') {
+      console.warn('[JS Framework] Do not use `if` directive on the root element!')
+    } else {
+      compileShown(vm, target, dest, meta)
+    }
     return
   }
   const typeGetter = meta.type || target.type
