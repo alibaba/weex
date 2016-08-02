@@ -204,44 +204,51 @@
  */
 package com.taobao.weex.utils;
 
+import org.junit.Test;
 
-import android.support.annotation.NonNull;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.taobao.weex.WXEnvironment;
-import com.taobao.weex.common.WXRuntimeException;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import static org.junit.Assert.*;
 
 /**
- * Tool for parse JSON
+ * Created by sospartan on 8/2/16.
  */
-public class WXJsonUtils {
+public class WXJsonUtilsTest {
 
 
-  public @NonNull static <T> List<T> getList(String json, Class<T> clazz) {
-    List<T> result = null;
-    try {
-      result = JSONObject.parseArray(json, clazz);
-    } catch (Exception e) {
-      e.printStackTrace();
-      result = new ArrayList<>();
+  static class TestObj{
+    int a;
+
+    public int getA() {
+      return a;
     }
-    return result;
+
+    public void setA(int a) {
+      this.a = a;
+    }
   }
 
-  public @NonNull static String fromObjectToJSONString(Object obj) {
-    try {
-      return JSONObject.toJSONString(obj);
-    }catch(Exception e){
-      if(WXEnvironment.isApkDebugable()){
-        throw new WXRuntimeException("fromObjectToJSONString parse error!");
-      }
-      WXLogUtils.e("fromObjectToJSONString error:", e);
-      return "{}";
-    }
+  @Test
+  public void testGetList() throws Exception {
+    List<TestObj> list = WXJsonUtils.getList("[{'a':1},{'a':2}]",TestObj.class);
 
+    assertEquals(list.size(),2);
+    assertEquals(list.get(0).getA(),1);
+    assertEquals(list.get(1).getA(),2);
+
+    list = WXJsonUtils.getList("{}",TestObj.class);
+
+    assertEquals(list.size(),0);
+  }
+
+  @Test
+  public void testFromObjectToJSONString() throws Exception {
+    TestObj obj = new TestObj();
+    obj.a  = 1;
+    assertEquals(WXJsonUtils.fromObjectToJSONString(obj),"{\"a\":1}");
+    assertEquals(WXJsonUtils.fromObjectToJSONString(null),"null");
+    assertEquals(WXJsonUtils.fromObjectToJSONString(new Object()),"{}");
   }
 
 }
