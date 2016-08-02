@@ -99,7 +99,8 @@ function compile (vm, target, dest, meta) {
     console.debug('[JS Framework] compile "repeat" logic by', target)
     if (dest.type === 'document') {
       console.warn('[JS Framework] Do not use `repeat` directive on the root element!')
-    } else {
+    }
+    else {
       compileRepeat(vm, target, dest)
     }
     return
@@ -108,7 +109,8 @@ function compile (vm, target, dest, meta) {
     console.debug('[JS Framework] compile "if" logic by', target)
     if (dest.type === 'document') {
       console.warn('[JS Framework] Do not use `if` directive on the root element!')
-    } else {
+    }
+    else {
       compileShown(vm, target, dest, meta)
     }
     return
