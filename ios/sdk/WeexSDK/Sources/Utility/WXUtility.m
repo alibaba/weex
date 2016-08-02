@@ -210,6 +210,20 @@ static BOOL WXNotStat;
     return obj;
 }
 
++ (id)JSONObject:(NSData*)data error:(NSError **)error
+{
+    if (!data) return nil;
+    id jsonObj = nil;
+    @try {
+        jsonObj = [NSJSONSerialization JSONObjectWithData:data
+                                                  options:NSJSONReadingAllowFragments | NSJSONReadingMutableContainers | NSJSONReadingMutableLeaves
+                                                    error:error];
+    } @catch (NSException *exception) {
+        *error = [NSError errorWithDomain:WX_ERROR_DOMAIN code:-1 userInfo:@{NSLocalizedDescriptionKey: [exception description]}];
+    }
+    return jsonObj;
+}
+
 + (NSString *)JSONString:(id)object
 {
     if(!object) return nil;
