@@ -28,7 +28,7 @@
       textFromPaste: '',
       tips : '',
     },
-    ready: function() {
+    ready : function() {
       this.tips = "1. Just click COPY button. It will auto generate a string with random text, and copy to system clipboard. \n 2. do copy in another app, then come back and click PASTE button."
     },
     methods: {
@@ -37,28 +37,27 @@
         $modal.toast({'message': 'clicked!', duration: 0.5});
       },
 
-      doCopy : function() {
+      doCopy: function() {
         textToCopy = "autoGenerateTextToCopy" + Math.random();
 
-        // var $modal = require('@weex-module/modal'); aa
-        // $modal.toast({'message': textToCopy, duration: 0.5});
+        var $clipboard = require('@weex-module/clipboard');
+        $clipboard.setString(textToCopy);
 
-        var clipboard = require('@weex-module/clipboard');
-        clipboard.setString(textToCopy);
-
+        this.textToCopy = textToCopy;
         this.tips = "copy done. Now system clipboard has string of '" + textToCopy + "', try PASTE button, or paste in another app." 
       },
 
-      doPaste : function() {
-        var clipboard = require('@weex-module/clipboard');
+      doPaste: function() {
+        var $clipboard = require('@weex-module/clipboard');
         var me = this;
-        clipboard.getString(function(ret) {
+        $clipboard.getString(function(ret) {
           console.log("paste result is " + JSON.stringify(ret));
 
           me.textFromPaste = ret.data;
           me.tips = "Paste done. Only support native(Android/iOS) NOW. according to security reason, paste in html5 is not supported.";
         });
       }
+
     }
 
     
