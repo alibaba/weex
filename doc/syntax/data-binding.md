@@ -81,7 +81,7 @@ e.g.
 <template>
   <container style="flex-direction: row;">
     <text>{{fullName}}</text>
-    <text onclick="changeName"></text>
+    <text onclick="changeName" style="margin-left:10px;">CHANGE NAME</text>
   </container>
 </template>
   
