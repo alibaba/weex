@@ -284,4 +284,10 @@ CGPoint WXPixelPointResize(CGPoint value);
 
 + (NSURL *_Nonnull)urlByDeletingParameters:(NSURL *_Nonnull)url;
 
+/**
+ *  @abstract Returns the contents of file.
+ *
+ */
++ (NSString *_Nullable)stringWithContentsOfFile:(NSString *_Nonnull)filePath;
+
 @end

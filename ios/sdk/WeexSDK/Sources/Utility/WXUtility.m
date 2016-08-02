@@ -479,4 +479,15 @@ CGFloat WXScreenResizeRadio(void)
     return [components URL];
 }
 
++ (NSString *)stringWithContentsOfFile:(NSString *)filePath
+{
+    if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+        NSString *contents = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:NULL];
+        if (contents) {
+            return contents;
+        }
+    }
+    return nil;
+}
+
 @end
