@@ -418,16 +418,25 @@ function bindRepeat (vm, target, fragBlock, info) {
 
   function compileItem (item, index, context) {
     let mergedData
-    if (oldStyle && isObject(item)) {
+    if (oldStyle) {
       mergedData = item
-      mergedData[keyName] = index
-      if (!mergedData.hasOwnProperty('INDEX')) {
-        Object.defineProperty(mergedData, 'INDEX', {
-          value: () => {
-            console.warn('[JS Framework] "INDEX" in repeat is deprecated, ' +
-              'please use "$index" instead')
-          }
-        })
+      if (isObject(item)) {
+        mergedData[keyName] = index
+        if (!mergedData.hasOwnProperty('INDEX')) {
+          Object.defineProperty(mergedData, 'INDEX', {
+            value: () => {
+              console.warn('[JS Framework] "INDEX" in repeat is deprecated, ' +
+                'please use "$index" instead')
+            }
+          })
+        }
+      }
+      else {
+        console.warn('[JS Framework] Each list item must be an object in old-style repeat, '
+          + 'please use `repeat={{v in list}}` instead.')
+        mergedData = {}
+        mergedData[keyName] = index
+        mergedData[valueName] = item
       }
     }
     else {
