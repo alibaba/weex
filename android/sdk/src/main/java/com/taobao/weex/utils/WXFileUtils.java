@@ -221,7 +221,7 @@ public class WXFileUtils {
    * @param context Weex Context
    * @return the Content of the file
    */
-  public static String loadFileContent(String path, Context context) {
+  public static String loadAsset(String path, Context context) {
     if(path == null || context == null){
       return null;
     }
@@ -242,7 +242,7 @@ public class WXFileUtils {
         try {
           in.close();
         } catch (IOException e) {
-          WXLogUtils.e("WXFileUtils loadFileContent: ", e);
+          WXLogUtils.e("WXFileUtils loadAsset: ", e);
         }
       }
       return builder.toString();
