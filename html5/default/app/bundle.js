@@ -13,7 +13,7 @@
  */
 
 import semver from 'semver'
-import * as _ from '../util'
+import { typof, isPlainObject } from '../util'
 import Vm from '../vm'
 import * as downgrade from './downgrade'
 
@@ -50,9 +50,9 @@ export function clearCommonModules () {
 // Notice: DO NOT use function define() {},
 // it will cause error after builded by webpack
 export const define = function (name, deps, factory) {
-  _.debug('define a component', name)
+  console.debug(`[JS Framework] define a component ${name}`)
 
-  if (_.typof(deps) === 'function') {
+  if (typof(deps) === 'function') {
     factory = deps
     deps = []
   }
@@ -123,8 +123,8 @@ export const define = function (name, deps, factory) {
   }
 }
 
-export function bootstrap (name, config, data) {
-  _.debug(`bootstrap for ${name}`)
+export function bootstrap (app, name, config, data) {
+  console.debug(`[JS Framework] bootstrap for ${name}`)
 
   let cleanName
 
@@ -135,7 +135,7 @@ export function bootstrap (name, config, data) {
     cleanName = removeJSSurfix(name)
     // check if define by old 'define' method
     /* istanbul ignore if */
-    if (!this.customComponentMap[cleanName]) {
+    if (!app.customComponentMap[cleanName]) {
       return new Error(`It's not a component: ${name}`)
     }
   }
@@ -143,20 +143,20 @@ export function bootstrap (name, config, data) {
     return new Error(`Wrong component name: ${name}`)
   }
 
-  config = _.isPlainObject(config) ? config : {}
+  config = isPlainObject(config) ? config : {}
 
   if (typeof config.transformerVersion === 'string' &&
-    typeof global.needTransformerVersion === 'string' &&
+    typeof global.transformerVersion === 'string' &&
     !semver.satisfies(config.transformerVersion,
-      global.needTransformerVersion)) {
+      global.transformerVersion)) {
     return new Error(`JS Bundle version: ${config.transformerVersion} ` +
-      `not compatible with ${global.needTransformerVersion}`)
+      `not compatible with ${global.transformerVersion}`)
   }
 
   const _checkDowngrade = downgrade.check(config.downgrade)
   /* istanbul ignore if */
   if (_checkDowngrade.isDowngrade) {
-    this.callTasks([{
+    app.callTasks([{
       module: 'instanceWrap',
       method: 'error',
       args: [
@@ -168,31 +168,13 @@ export function bootstrap (name, config, data) {
     return new Error(`Downgrade[${_checkDowngrade.code}]: ${_checkDowngrade.errorMessage}`)
   }
 
-  this.vm = new Vm(cleanName, null, { _app: this }, null, data)
+  app.vm = new Vm(cleanName, null, { _app: app }, null, data)
 }
 
 /**
  * @deprecated
  */
 export function register (type, options) {
-  _.warn('Register is deprecated, please install lastest transformer.')
+  console.warn('[JS Framework] Register is deprecated, please install lastest transformer.')
   this.registerComponent(type, options)
-}
-
-/**
- * @deprecated
- */
-export function render (type, data) {
-  _.warn('Render is deprecated, please install lastest transformer.')
-  return this.bootstrap(type, {}, data)
-}
-
-/**
- * @deprecated
- */
-export function require (type) {
-  _.warn('Require is deprecated, please install lastest transformer.')
-  return (data) => {
-    return this.bootstrap(type, {}, data)
-  }
 }

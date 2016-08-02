@@ -85,12 +85,13 @@ export function requireComponent (name) {
 /**
  * @context a instance of AppInstance
  */
-export function registerComponent (name, exports) {
+export function registerComponent (name, def) {
   const { customComponentMap } = this
 
   if (customComponentMap[name]) {
-    throw new Error(`define a component(${name}) that already exists`)
+    console.error(`[JS Framework] define a component(${name}) that already exists`)
+    return
   }
 
-  customComponentMap[name] = exports
+  customComponentMap[name] = def
 }

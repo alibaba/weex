@@ -259,7 +259,7 @@ class Options {
   public int getTimeout() { return timeout; }
 
   public enum Type {
-    json, text
+    json, text,jsonp
   }
 
   public static class Builder {
@@ -297,8 +297,10 @@ class Options {
      * @return
        */
     public Builder setType(String type) {
-      if(Type.json.name().equals(type)||"jsonp".equals(type)){
+      if(Type.json.name().equals(type)){
         this.type = Type.json;
+      }else if(Type.jsonp.name().equals(type)){
+        this.type = Type.jsonp;
       }else{
         this.type = Type.text;
       }

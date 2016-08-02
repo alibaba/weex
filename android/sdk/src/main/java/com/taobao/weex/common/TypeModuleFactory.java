@@ -247,7 +247,7 @@ public class TypeModuleFactory<T extends WXModule> implements ModuleFactory<T> {
         }
       }
     } catch (Throwable e) {
-      WXLogUtils.e("[WXModuleManager] extractMethodNames:" + e.getStackTrace());
+      WXLogUtils.e("[WXModuleManager] extractMethodNames:", e);
     }
     mMethods = methods;
     mMethodMap = methodMap;

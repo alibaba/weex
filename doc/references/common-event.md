@@ -36,7 +36,8 @@ If a `disappear` event is bound to a component inside a scroller, the event will
 * `timestamp`: Timestamp when event is triggered.
 * `direction`: The direction in which the scroller is scrolling. Should be `up` or `down`
 
-## Page event
+## Page event 
+<span class="weex-version">0.6.1</span>
 
 Weex provides you with simple management of page status, such as `viewappear` and `viewdisappear`，
 

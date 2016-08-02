@@ -208,6 +208,7 @@ import android.text.TextUtils;
 
 import com.taobao.weex.common.WXRequest;
 import com.taobao.weex.common.WXResponse;
+import com.taobao.weex.utils.WXLogUtils;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -256,7 +257,7 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
           if (listener != null) {
             listener.onHttpFinish(response);
           }
-        } catch (IOException e) {
+        } catch (IOException|IllegalArgumentException e) {
           e.printStackTrace();
           response.statusCode = "-1";
           response.errorCode="-1";

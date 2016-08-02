@@ -40,6 +40,7 @@ export function createInstance (id, code, config, data) {
     instanceMap[id] = info
     config = config || {}
     config.bundleVersion = info.version
+    console.debug(`[JS Framework] create an ${info.framework}@${config.bundleVersion} instance from ${config.bundleVersion}`)
     return frameworks[info.framework].createInstance(id, code, config, data)
   }
   return new Error(`invalid instance id "${id}"`)
@@ -73,8 +74,19 @@ function genInstance (methodName) {
   }
 }
 
-['destroyInstance', 'refreshInstance', 'callJS', 'getRoot'].forEach(genInstance)
+['destroyInstance', 'refreshInstance', 'receiveTasks', 'getRoot'].forEach(genInstance)
 
-methods.receiveTasks = methods.callJS
+function adaptInstance (methodName, nativeMethodName) {
+  methods[nativeMethodName] = function (...args) {
+    const id = args[0]
+    const info = instanceMap[id]
+    if (info && frameworks[info.framework]) {
+      return frameworks[info.framework][methodName](...args)
+    }
+    return new Error(`invalid instance id "${id}"`)
+  }
+}
+
+adaptInstance('receiveTasks', 'callJS')
 
 export default methods

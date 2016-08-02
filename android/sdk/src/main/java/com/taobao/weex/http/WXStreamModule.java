@@ -204,6 +204,7 @@
  */
 package com.taobao.weex.http;
 
+import android.text.TextUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
@@ -309,7 +310,7 @@ public class WXStreamModule extends WXModule {
     try {
       optionsObj = JSON.parseObject(optionsStr);
     }catch (JSONException e){
-      e.printStackTrace();
+      WXLogUtils.e("", e);
     }
 
     boolean invaildOption = optionsObj==null || optionsObj.getString("url")==null;
@@ -361,7 +362,7 @@ public class WXStreamModule extends WXModule {
               String respData = readAsString(response.originalData,
                 headers!=null?headers.get("Content-Type"):""
               );
-              resp.put("data",options.getType() != Options.Type.text? JSONObject.parse(respData):respData);
+              resp.put("data",parseJson(respData,options.getType()));
             }
             resp.put(STATUS_TEXT, Status.getStatusText(response.statusCode));
           }
@@ -371,6 +372,27 @@ public class WXStreamModule extends WXModule {
       }
     }, progressCallback);
   }
+
+  Object parseJson(String data,Options.Type type){
+    if( type == Options.Type.json){
+      return JSONObject.parse(data);
+    }else if( type == Options.Type.jsonp){
+      if(data == null || data.isEmpty()) {
+        return new JSONObject();
+      }
+      int b = data.indexOf("(")+1;
+      int e = data.lastIndexOf(")");
+      if(b ==0 || b >= e || e <= 0){
+        return new JSONObject();
+      }
+
+      data = data.substring(b,e);
+      return JSONObject.parse(data);
+    }else {
+      return data;
+    }
+  }
+
 
   static String readAsString(byte[] data,String cType){
     String charset = "utf-8";
@@ -383,7 +405,7 @@ public class WXStreamModule extends WXModule {
     try {
       return new String(data,charset);
     } catch (UnsupportedEncodingException e) {
-      e.printStackTrace();
+      WXLogUtils.e("", e);
       return new String(data);
     }
   }

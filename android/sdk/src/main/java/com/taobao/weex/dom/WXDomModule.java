@@ -224,19 +224,21 @@ import java.util.ArrayList;
  */
 public final class WXDomModule extends WXModule {
 
+  /** package **/
   // method
-  private static final String CREATE_BODY = "createBody";
-  private static final String UPDATE_ATTRS = "updateAttrs";
-  private static final String  UPDATE_STYLE = "updateStyle";
-  private static final String REMOVE_ELEMENT = "removeElement";
-  private static final String  ADD_ELEMENT = "addElement";
-  private static final String MOVE_ELEMENT = "moveElement";
-  private static final String ADD_EVENT = "addEvent";
-  private static final String  REMOVE_EVENT = "removeEvent";
-  private static final String  CREATE_FINISH = "createFinish";
-  private static final String  REFRESH_FINISH = "refreshFinish";
-  private static final String  UPDATE_FINISH = "updateFinish";
-  private static final String SCROLL_TO_ELEMENT  = "scrollToElement";
+  static final String CREATE_BODY = "createBody";
+  static final String UPDATE_ATTRS = "updateAttrs";
+  static final String  UPDATE_STYLE = "updateStyle";
+  static final String REMOVE_ELEMENT = "removeElement";
+  static final String  ADD_ELEMENT = "addElement";
+  static final String MOVE_ELEMENT = "moveElement";
+  static final String ADD_EVENT = "addEvent";
+  static final String  REMOVE_EVENT = "removeEvent";
+  static final String  CREATE_FINISH = "createFinish";
+  static final String  REFRESH_FINISH = "refreshFinish";
+  static final String  UPDATE_FINISH = "updateFinish";
+  static final String SCROLL_TO_ELEMENT  = "scrollToElement";
+  static final String ADD_RULE = "addRule";
 
   // args
   public static final String MODULE = "module";
@@ -245,33 +247,65 @@ public final class WXDomModule extends WXModule {
   public static final String ARGS = "args";
 
   public void callDomMethod(JSONObject task) {
+    if( task == null ) {
+      return;
+    }
+
     String method = (String) task.get(METHOD);
     JSONArray args = (JSONArray) task.get(ARGS);
+
+    if(method == null){
+      return;
+    }
 
     try {
       switch (method) {
         case CREATE_BODY:
+          if(args == null){
+            return;
+          }
           createBody((JSONObject) args.get(0));
           break;
         case UPDATE_ATTRS:
+          if(args == null){
+            return;
+          }
           updateAttrs((String) args.get(0), (JSONObject) args.get(1));
           break;
         case UPDATE_STYLE:
+          if(args == null){
+            return;
+          }
           updateStyle((String) args.get(0), (JSONObject) args.get(1));
           break;
         case REMOVE_ELEMENT:
+          if(args == null){
+            return;
+          }
           removeElement((String) args.get(0));
           break;
         case ADD_ELEMENT:
+          if(args == null){
+            return;
+          }
           addElement((String) args.get(0), (JSONObject) args.get(1), (Integer) args.get(2));
           break;
         case MOVE_ELEMENT:
+          if(args == null){
+            return;
+          }
           moveElement((String) args.get(0), (String) args.get(1), (Integer) args.get(2));
           break;
         case ADD_EVENT:
+          if(args == null){
+            return;
+          }
           addEvent((String) args.get(0), (String) args.get(1));
           break;
         case REMOVE_EVENT:
+          if(args == null){
+            return;
+          }
           removeEvent((String) args.get(0), (String) args.get(1));
           break;
         case CREATE_FINISH:
@@ -284,8 +318,15 @@ public final class WXDomModule extends WXModule {
           updateFinish();
           break;
         case SCROLL_TO_ELEMENT:
+          if(args == null){
+            return;
+          }
           scrollToElement((String) args.get(0), (JSONObject) args.get(1));
           break;
+        case ADD_RULE:
+          if (args == null)
+            return;
+          addRule((String) args.get(0), (JSONObject) args.get(1));
       }
 
     }catch (IndexOutOfBoundsException e){
@@ -513,6 +554,22 @@ public final class WXDomModule extends WXModule {
     task.args.add(ref);
     task.args.add(options);
     msg.what = WXDomHandler.MsgType.WX_DOM_SCROLLTO;
+    msg.obj = task;
+    WXSDKManager.getInstance().getWXDomManager().sendMessage(msg);
+  }
+
+  public void addRule(String type, JSONObject options) {
+    if (TextUtils.isEmpty(type) || options == null) {
+      return;
+    }
+
+    Message msg = Message.obtain();
+    WXDomTask task = new WXDomTask();
+    task.instanceId = mWXSDKInstance.getInstanceId();
+    task.args = new ArrayList<>();
+    task.args.add(type);
+    task.args.add(options);
+    msg.what = WXDomHandler.MsgType.WX_DOM_ADD_RULE;
     msg.obj = task;
     WXSDKManager.getInstance().getWXDomManager().sendMessage(msg);
   }

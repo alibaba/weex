@@ -71,6 +71,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
+    testOptions {
+        unitTests.all {
+            jvmArgs += ['-XX:-UseSplitVerifier', '-noverify','-Xverify:none']/* fix VerifyError  */
+        }
+    }
 }
 
 dependencies {
@@ -80,6 +85,7 @@ dependencies {
     provided 'com.android.support:appcompat-v7:23.1.1'
     provided 'com.alibaba:fastjson:1.1.46.android'
 
+    testCompile 'com.alibaba:fastjson:1.1.46.android'
     testCompile 'junit:junit:4.12'
     testCompile 'org.hamcrest:hamcrest-core:1.3'
     testCompile 'org.javassist:javassist:3.20.0-GA'
@@ -91,7 +97,10 @@ dependencies {
     testCompile 'org.powermock:powermock-module-junit4:1.6.4'
     testCompile 'org.powermock:powermock-module-junit4-legacy:1.6.4'
     testCompile 'org.powermock:powermock-module-testng:1.6.4'
+    testCompile 'org.powermock:powermock-classloading-xstream:1.6.4'
+    testCompile "org.powermock:powermock-module-junit4-rule:1.6.4"
     testCompile 'org.robolectric:robolectric:3.0-rc3'
+    testCompile 'org.json:json:20160212'
 }
 
 license{

@@ -319,7 +319,6 @@ public class SimpleComponentHolder implements IFComponentHolder{
     }
 
     mMethods = methods;
-
   }
 
 

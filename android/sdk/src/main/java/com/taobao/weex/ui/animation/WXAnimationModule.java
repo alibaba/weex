@@ -258,6 +258,9 @@ public class WXAnimationModule extends WXModule {
 
   public static void startAnimation(WXSDKInstance mWXSDKInstance, WXComponent component,
                                     @NonNull WXAnimationBean animationBean, @Nullable String callback) {
+    if(component == null){
+      return;
+    }
     try {
       Animator animator = createAnimator(animationBean, component.getHostView());
       if (animator != null) {
@@ -274,12 +277,16 @@ public class WXAnimationModule extends WXModule {
         animator.start();
       }
     } catch (RuntimeException e) {
-      WXLogUtils.e(WXLogUtils.getStackTrace(e));
+      e.printStackTrace();
+      WXLogUtils.e("", e);
     }
   }
 
   private static @Nullable
   ObjectAnimator createAnimator(@NonNull WXAnimationBean animation, @NonNull View target) {
+    if(animation == null || target == null){
+      return null;
+    }
     WXAnimationBean.Style style = animation.styles;
     if (style != null) {
       ObjectAnimator animator;

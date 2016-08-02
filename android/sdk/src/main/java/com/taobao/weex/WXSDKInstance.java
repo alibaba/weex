@@ -213,7 +213,6 @@ import android.view.ViewGroup;
 import android.widget.ScrollView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.taobao.weex.adapter.DefaultWXHttpAdapter;
 import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
 import com.taobao.weex.adapter.IWXUserTrackAdapter;
@@ -261,8 +260,8 @@ public class WXSDKInstance implements IWXActivityStateListener {
   protected IWXUserTrackAdapter mUserTrackAdapter;
   protected IWXHttpAdapter mWXHttpAdapter;
   private IWXRenderListener mRenderListener;
-  private Context mContext;
-  private volatile String mInstanceId;
+  Context mContext;
+  volatile String mInstanceId;
   private WXComponent mGodCom;
   private boolean mRendered;
   private WXRefreshData mLastRefreshData;
@@ -482,14 +481,11 @@ public class WXSDKInstance implements IWXActivityStateListener {
 
     Uri uri=Uri.parse(url);
     if(uri!=null && TextUtils.equals(uri.getScheme(),"file")){
-      render(pageName, WXFileUtils.loadFileContent(assembleFilePath(uri), mContext),options,jsonInitData,width,height,flag);
+      render(pageName, WXFileUtils.loadAsset(assembleFilePath(uri), mContext),options,jsonInitData,width,height,flag);
       return;
     }
 
     IWXHttpAdapter adapter=WXSDKManager.getInstance().getIWXHttpAdapter();
-    if (adapter == null) {
-      adapter = new DefaultWXHttpAdapter();
-    }
 
     WXRequest wxRequest = new WXRequest();
     wxRequest.url = url;
@@ -919,7 +915,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
 
       }
     } catch (Exception e) {
-      WXLogUtils.e("WXSDKInstance destroyView Exception: " + WXLogUtils.getStackTrace(e));
+      WXLogUtils.e("WXSDKInstance destroyView Exception: ", e);
     }
   }
 

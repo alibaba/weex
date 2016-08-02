@@ -205,8 +205,10 @@
 package com.taobao.weex.utils;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -219,7 +221,10 @@ public class WXFileUtils {
    * @param context Weex Context
    * @return the Content of the file
    */
-  public static String loadFileContent(String path, Context context) {
+  public static String loadAsset(String path, Context context) {
+    if(path == null || context == null){
+      return null;
+    }
     StringBuilder builder ;
     try {
       InputStream in = context.getAssets().open(path);
@@ -237,15 +242,39 @@ public class WXFileUtils {
         try {
           in.close();
         } catch (IOException e) {
-          WXLogUtils.e("WXFileUtils loadFileContent: " + WXLogUtils.getStackTrace(e));
+          WXLogUtils.e("WXFileUtils loadAsset: ", e);
         }
       }
       return builder.toString();
-      
+
     } catch (IOException e) {
       e.printStackTrace();
+      WXLogUtils.e("", e);
     }
 
     return "";
+  }
+
+  public static boolean saveFile(String path, byte[] content, Context context) {
+    if (TextUtils.isEmpty(path) || content == null || context == null) {
+      return false;
+    }
+    FileOutputStream outStream = null;
+    try {
+      outStream = new FileOutputStream(path);
+      outStream.write(content);
+      return true;
+    } catch (Exception e) {
+      WXLogUtils.e("WXFileUtils saveFile: " + WXLogUtils.getStackTrace(e));
+    } finally {
+      if (outStream != null) {
+        try {
+          outStream.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+    return false;
   }
 }
