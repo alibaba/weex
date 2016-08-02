@@ -443,7 +443,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
 
     if(WXEnvironment.sDynamicMode && !TextUtils.isEmpty(WXEnvironment.sDynamicUrl) && options!=null && options.get("dynamicMode")==null){
       options.put("dynamicMode","true");
-      renderByUrl(pageName,WXEnvironment.sDynamicUrl,options,jsonInitData,width,height,flag);
+      renderByUrl(pageName, WXEnvironment.sDynamicUrl, options, jsonInitData, width, height, flag);
       return;
     }
 
@@ -968,29 +968,51 @@ public class WXSDKInstance implements IWXActivityStateListener {
     this.refreshMargin = refreshMargin;
   }
 
-  public void updateInstanceStyle(JSONObject style){
+  private void updateRootComponentStyle(JSONObject style) {
 
-    if(style.containsKey(WXDomPropConstant.WX_HEIGHT)){
-      float height=style.getFloat(WXDomPropConstant.WX_HEIGHT);
-      style.put(WXDomPropConstant.WX_HEIGHT, WXViewUtils.getWebPxByWidth(height));
-    }
-
-    if(style.containsKey(WXDomPropConstant.WX_WIDTH)){
-      float height=style.getFloat(WXDomPropConstant.WX_WIDTH);
-      style.put(WXDomPropConstant.WX_WIDTH, WXViewUtils.getWebPxByWidth(height));
-    }
-
-    Message message=Message.obtain();
-    WXDomTask task=new WXDomTask();
-    task.instanceId=getInstanceId();
-    if(task.args==null){
-      task.args=new ArrayList<>();
+    Message message = Message.obtain();
+    WXDomTask task = new WXDomTask();
+    task.instanceId = getInstanceId();
+    if (task.args == null) {
+      task.args = new ArrayList<>();
     }
     task.args.add(WXDomObject.ROOT);
     task.args.add(style);
-    message.obj=task;
-    message.what= WXDomHandler.MsgType.WX_DOM_UPDATE_STYLE;
+    message.obj = task;
+    message.what = WXDomHandler.MsgType.WX_DOM_UPDATE_STYLE;
     WXSDKManager.getInstance().getWXDomManager().sendMessage(message);
+  }
+
+  public void setSize(int width, int height) {
+    if (width < 0 || height < 0) {
+      return;
+    }
+    mGodViewWidth = width;
+    mGodViewHeight = height;
+    float realWidth = WXViewUtils.getWebPxByWidth(width);
+    float realHeight = WXViewUtils.getWebPxByWidth(height);
+
+    View godView = mGodCom.getHostView();
+    if (godView != null) {
+      ViewGroup.LayoutParams layoutParams = godView.getLayoutParams();
+      if (layoutParams != null) {
+        layoutParams.width = (int) realWidth;
+        layoutParams.height = (int) realHeight;
+        godView.setLayoutParams(layoutParams);
+
+        JSONObject style = new JSONObject();
+        if (mGodCom instanceof WXVContainer) {
+          WXComponent rootComponent = ((WXVContainer) mGodCom).getChild(0);
+          if (rootComponent != null && rootComponent.getDomObject() != null && rootComponent.getDomObject().isModifyHeight()) {
+            style.put(WXDomPropConstant.WX_HEIGHT, realHeight);
+          }
+          if (rootComponent != null && rootComponent.getDomObject() != null && rootComponent.getDomObject().isModifyWidth()) {
+            style.put(WXDomPropConstant.WX_WIDTH, realWidth);
+          }
+          updateRootComponentStyle(style);
+        }
+      }
+    }
   }
 
   /**

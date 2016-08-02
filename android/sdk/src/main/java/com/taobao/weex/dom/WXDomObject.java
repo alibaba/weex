@@ -243,6 +243,25 @@ public class WXDomObject extends CSSNode implements Cloneable {
 
   private boolean mYoung = false;
 
+  private boolean isModifyHeight;
+  private boolean isModifyWidth;
+
+  public boolean isModifyHeight() {
+    return isModifyHeight;
+  }
+
+  public void setModifyHeight(boolean isModifyHeight) {
+    this.isModifyHeight = isModifyHeight;
+  }
+
+  public boolean isModifyWidth() {
+    return isModifyWidth;
+  }
+
+  public void setModifyWidth(boolean isModifyWidth) {
+    this.isModifyWidth = isModifyWidth;
+  }
+
   /**
    * Do pre-staff before layout. Subclass may provide different implementation.
    */
@@ -478,6 +497,8 @@ public class WXDomObject extends CSSNode implements Cloneable {
         dom.cssstyle.copy(this.cssstyle);
       }
 
+      dom.setModifyHeight(isModifyHeight);
+      dom.setModifyWidth(isModifyWidth);
       dom.ref = ref;
       dom.type = type;
       dom.style = style;//style == null ? null : style.clone();

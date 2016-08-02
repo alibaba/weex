@@ -539,9 +539,11 @@ class WXDomStatement {
     //If there is height or width in JS, then that value will override value here.
     if (domObject.style == null || !domObject.style.containsKey(WXDomPropConstant.WX_WIDTH)) {
       style.put(WXDomPropConstant.WX_WIDTH, WXViewUtils.getWebPxByWidth(WXViewUtils.getWeexWidth(mInstanceId)));
+      domObject.setModifyWidth(true);
     }
     if (domObject.style == null || !domObject.style.containsKey(WXDomPropConstant.WX_HEIGHT)) {
       style.put(WXDomPropConstant.WX_HEIGHT, WXViewUtils.getWebPxByWidth(WXViewUtils.getWeexHeight(mInstanceId)));
+      domObject.setModifyHeight(true);
     }
     domObject.ref = WXDomObject.ROOT;
     domObject.updateStyle(style);
