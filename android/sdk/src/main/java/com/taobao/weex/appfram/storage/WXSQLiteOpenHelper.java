@@ -210,14 +210,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.taobao.weex.utils.WXLogUtils;
 
-public class WXDatabaseSupplier extends SQLiteOpenHelper {
+public class WXSQLiteOpenHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "WXStorage";
     private static final int DATABASE_VERSION = 1;
 
     private long mMaximumDatabaseSize = 5L * 1024L * 1024L;
 
-    private static WXDatabaseSupplier sInstance;
+    private static WXSQLiteOpenHelper sInstance;
 
     private Context mContext;
     private SQLiteDatabase mDb;
@@ -235,18 +235,18 @@ public class WXDatabaseSupplier extends SQLiteOpenHelper {
             + ")";
 
 
-    private WXDatabaseSupplier(Context context) {
+    private WXSQLiteOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.mContext = context;
     }
 
-    public static WXDatabaseSupplier getInstance(Context context) {
+    public static WXSQLiteOpenHelper getInstance(Context context) {
         if (context == null) {
             WXLogUtils.e("can not get context instance...");
             return null;
         }
         if (sInstance == null) {
-            sInstance = new WXDatabaseSupplier(context);
+            sInstance = new WXSQLiteOpenHelper(context);
         }
         return sInstance;
     }
