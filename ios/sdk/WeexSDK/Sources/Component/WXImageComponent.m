@@ -218,27 +218,30 @@ static dispatch_queue_t WXImageUpdateQueue;
         }
         if (weakSelf.imageSrc) {
             NSDictionary *userInfo = @{@"imageQuality":@(weakSelf.imageQuality), @"imageSharp":@(weakSelf.imageSharp)};
-            weakSelf.imageOperation = [[weakSelf imageLoader] downloadImageWithURL:imageSrc imageFrame:weakSelf.calculatedFrame userInfo:userInfo completed:^(UIImage *image, NSError *error, BOOL finished) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    __strong typeof(self) strongSelf = weakSelf;
-                    
-                    if (weakSelf.imageLoadEvent) {
-                        [self fireEvent:@"load" params:@{ @"success": error? @"false" : @"true"}];
-                    }
-                    if (error) {
-                        downloadFailed(imageSrc, error);
-                        return ;
-                    }
-                    
-                    if (![imageSrc isEqualToString:strongSelf.imageSrc]) {
-                        return ;
-                    }
-                    
-                    if ([strongSelf isViewLoaded]) {
-                        ((UIImageView *)strongSelf.view).image = image;
-                    }
-                });
-            }];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                weakSelf.imageOperation = [[weakSelf imageLoader] downloadImageWithURL:imageSrc imageFrame:weakSelf.calculatedFrame userInfo:userInfo completed:^(UIImage *image, NSError *error, BOOL finished) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        __strong typeof(self) strongSelf = weakSelf;
+                        
+                        if (weakSelf.imageLoadEvent) {
+                            [strongSelf fireEvent:@"load" params:@{ @"success": error? @"false" : @"true"}];
+                        }
+                        if (error) {
+                            downloadFailed(imageSrc, error);
+                            return ;
+                        }
+                        
+                        if (![imageSrc isEqualToString:strongSelf.imageSrc]) {
+                            return ;
+                        }
+                        
+                        if ([strongSelf isViewLoaded]) {
+                            ((UIImageView *)strongSelf.view).image = image;
+                        }
+                    });
+                }];
+            });
         }
         if (!weakSelf.imageSrc && !weakSelf.placeholdSrc) {
             dispatch_async(dispatch_get_main_queue(), ^{
