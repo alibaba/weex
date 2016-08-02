@@ -2,12 +2,12 @@
   <scroller>
     <wxc-panel title="Clipboard" type="primary">
       <wxc-panel title="Copy to clipboard5">
-        <text>{{textToCopy}}</text>
+        <text style="line-height:40px;font-size:28px">{{textToCopy}}</text>
         <wxc-button type="info" size="middle" value="Copy" onclick="{{doCopy}}"></wxc-button>
       </wxc-panel>
 
       <wxc-panel title="Paste from clipboard">
-        <text>{{textFromPaste}}</text>
+        <text style="line-height:40px;font-size:28px">{{textFromPaste}}</text>
         <wxc-button type="info" size="middle" value="Paste" onclick="{{doPaste}}"></wxc-button>
       </wxc-panel>
 

@@ -72,6 +72,7 @@
 * Examples
     * [Hello World](demo/hello-world.md)
     * [Modal](demo/modal.md)
+    * [Clipboard](demo/clipboard.md)
     * [List](demo/list.md)
     * [Slider](demo/slider.md)
     * [Animation](demo/animation.md)
