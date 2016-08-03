@@ -104,13 +104,13 @@ ComponentManager.prototype = {
   },
 
   createElement (data, nodeType) {
-    console.log('create element: ', data)
     let ComponentType = typeMap[data.type]
     if (!ComponentType) {
-      ComponentType = typeMap['container']
+      ComponentType = typeMap['div']
     }
 
     data.instanceId = this.id
+    data.scale = this.getWeexInstance().scale
     const component = new ComponentType(data, nodeType)
     const ref = data.ref
     this.componentMap[ref] = component
