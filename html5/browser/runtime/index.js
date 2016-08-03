@@ -1,6 +1,6 @@
 'use strict'
 
-import '../../shared'
+import './shared'
 import init from '../../runtime/init'
 import { Document, Element, Comment } from '../dom'
 import { subversion } from '../../../package.json'
