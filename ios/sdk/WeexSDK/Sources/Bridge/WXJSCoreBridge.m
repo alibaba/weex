@@ -69,9 +69,9 @@
                     NSNumber *flag = levelMap[[jsVal toString]];
                     if (flag) {
                         if ([flag isEqualToNumber:[NSNumber numberWithInteger:WXLogFlagWarning]]) {
-                            id<WXAppMonitorProtocol> appMonitor = [WXHandlerFactory handlerForProtocol:@protocol(WXAppMonitorProtocol)];
-                            if (appMonitor && [appMonitor respondsToSelector:@selector(commitAppMonitorArgs:)]){
-                                [appMonitor commitAppMonitorArgs:@{@"warning": string}];
+                            id<WXAppMonitorProtocol> appMonitorHandler = [WXHandlerFactory handlerForProtocol:@protocol(WXAppMonitorProtocol)];
+                            if ([appMonitorHandler respondsToSelector:@selector(commitAppMonitorAlarm:monitorPoint:success:errorCode:errorMsg:arg:)]) {
+                                [appMonitorHandler commitAppMonitorAlarm:[WXSDKEngine topInstance].pageName monitorPoint:@"jswarning" success:FALSE errorCode:@"99999" errorMsg:string arg:nil];
                             }
                         }
                         WX_LOG([flag unsignedIntegerValue], @"%@", string);
