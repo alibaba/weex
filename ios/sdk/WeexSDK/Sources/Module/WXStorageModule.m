@@ -11,7 +11,6 @@
 #import "WXThreadSafeMutableDictionary.h"
 #import <CommonCrypto/CommonCrypto.h>
 #import "WXUtility.h"
-#import "WXUtility+Hash.h"
 
 static NSString * const WXStorageDirectory            = @"wxstorage";
 static NSString * const WXStorageFileName             = @"wxstorage.json";
