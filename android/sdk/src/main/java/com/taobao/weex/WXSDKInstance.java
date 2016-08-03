@@ -992,8 +992,8 @@ public class WXSDKInstance implements IWXActivityStateListener {
     if (godView != null) {
       ViewGroup.LayoutParams layoutParams = godView.getLayoutParams();
       if (layoutParams != null) {
-        layoutParams.width = (int) realWidth;
-        layoutParams.height = (int) realHeight;
+        layoutParams.width = width;
+        layoutParams.height = height;
         godView.setLayoutParams(layoutParams);
 
         JSONObject style = new JSONObject();
