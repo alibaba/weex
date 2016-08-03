@@ -4,6 +4,8 @@
 
 There are two attributes for display logic control: `if` and `repeat`. We can create Weex page structure and effects more flexible with them.
 
+ > **Notes:** The display logic could't apply on the root element within `<template>`, please don't use `if` or `repeat` directive on it.
+
 ## `if`
 
 `if` attribute can control the display of a component by a truthy/falsy value. If the value is truthy, then the component will generated, otherwise it will be removed.
@@ -97,7 +99,7 @@ The origin data properties which not belongs to the array will also be bound:
 
 #### use default `$index` for the index of array.
 <span class="weex-version">0.5</span>
- 
+
 e.g.
 
 ```html
@@ -125,7 +127,7 @@ e.g.
 
 #### use `track-by` to specify unique attribute
 <span class="weex-version">0.5</span>
- 
+
 By default when replacing an array, `repeat` will cause the entire list to be re-rendered. However you can use `track-by` to specify an unique attribute as a hint, so that weex can reuse existing elements as much as possible.
 
 **NOTE: DO NOT USE DATA-BINDING SYNTAX FOR `track-by`**
