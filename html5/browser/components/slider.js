@@ -273,6 +273,8 @@ Slider.prototype.onAppend = function () {
     }
     return true
   })
+
+  Component.prototype.onAppend.call(this)
 }
 
 Slider.prototype._updateIndicators = function () {

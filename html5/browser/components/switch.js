@@ -46,6 +46,7 @@ Switch.prototype.create = function () {
 Switch.prototype.onAppend = function () {
   this.setSize()
   this.setPosition()
+  Atomic.prototype.onAppend.call(this)
 }
 
 Switch.prototype.attr = {
