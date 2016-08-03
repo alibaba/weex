@@ -281,53 +281,49 @@ public class WXClipboardModule extends WXModule implements IWXClipboard {
     }
 
     private CharSequence coerceToText(Context context, ClipData.Item item) {
-        try {
-            // Condition 1. just a simple text
-            CharSequence text = item.getText();
-            if (text != null) {
-                return text;
-            }
+        // Condition 1. just a simple text
+        CharSequence text = item.getText();
+        if (text != null) {
+            return text;
+        }
 
-            // Condition 2. a URI value
-            Uri uri = item.getUri();
-            if (uri != null) {
-                FileInputStream stream = null;
-                try {
-                    AssetFileDescriptor descr = context.getContentResolver().openTypedAssetFileDescriptor(uri, "text/*", null);
-                    stream = descr.createInputStream();
-                    InputStreamReader reader = new InputStreamReader(stream, "UTF-8");
+        // Condition 2. a URI value
+        Uri uri = item.getUri();
+        if (uri != null) {
+            FileInputStream stream = null;
+            try {
+                AssetFileDescriptor descr = context.getContentResolver().openTypedAssetFileDescriptor(uri, "text/*", null);
+                stream = descr.createInputStream();
+                InputStreamReader reader = new InputStreamReader(stream, "UTF-8");
 
-                    StringBuilder builder = new StringBuilder(128);
-                    char[] buffer = new char[8192];
-                    int len;
-                    while ((len = reader.read(buffer)) > 0) {
-                        builder.append(buffer, 0, len);
-                    }
-                    return builder.toString();
+                StringBuilder builder = new StringBuilder(128);
+                char[] buffer = new char[8192];
+                int len;
+                while ((len = reader.read(buffer)) > 0) {
+                    builder.append(buffer, 0, len);
+                }
+                return builder.toString();
 
-                } catch (FileNotFoundException e) {
-                    //  ignore.
-                } catch (IOException e) {
-                    WXLogUtils.w("ClippedData Failure loading text.", e);
-                } finally {
-                    if (stream != null) {
-                        try {
-                            stream.close();
-                        } catch (IOException e) {
-                        }
+            } catch (FileNotFoundException e) {
+                //  ignore.
+            } catch (IOException e) {
+                WXLogUtils.w("ClippedData Failure loading text.", e);
+            } finally {
+                if (stream != null) {
+                    try {
+                        stream.close();
+                    } catch (IOException e) {
                     }
                 }
-
-                return uri.toString();
             }
 
-            // Condition 3. It is a intent. try with a NO user-friendly thing, but it's something.
-            Intent intent = item.getIntent();
-            if (intent != null) {
-                return intent.toUri(Intent.URI_INTENT_SCHEME);
-            }
-        } catch (Exception e) {
-            // ignore. any exception means return null
+            return uri.toString();
+        }
+
+        // Condition 3. It is a intent. try with a NO user-friendly thing, but it's something.
+        Intent intent = item.getIntent();
+        if (intent != null) {
+            return intent.toUri(Intent.URI_INTENT_SCHEME);
         }
 
         // else case
