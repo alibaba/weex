@@ -39,7 +39,7 @@ const timer = {
 
 }
 
-timer._meta = {
+const meta = {
   timer: [{
     name: 'setTimeout',
     args: ['function', 'number']
@@ -55,4 +55,8 @@ timer._meta = {
   }]
 }
 
-module.exports = timer
+export default {
+  init: function (Weex) {
+    Weex.registerApiModule('timer', timer, meta)
+  }
+}

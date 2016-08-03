@@ -1,36 +1,45 @@
 'use strict'
 
-const Atomic = require('./atomic')
-import { appendStyle, extend } from '../utils'
+let appendStyle
 
 const availableTypes = ['text', 'password', 'tel', 'email', 'url']
 const DEFAULT_TYPE = 'text'
 
-// attrs:
-//   - type: text|password|tel|email|url
-//   - value
-//   - placeholder
-//   - disabled
-//   - autofocus
-function Input (data) {
-  Atomic.call(this, data)
+function setPlaceholderColor (input, placeholderColor) {
+  if (!placeholderColor) {
+    return
+  }
+  const vendors = [
+    '::-webkit-input-placeholder',
+    ':-moz-placeholder',
+    '::-moz-placeholder',
+    ':-ms-input-placeholder',
+    ':placeholder-shown'
+  ]
+  let css = ''
+  const cssRule = 'color: ' + placeholderColor + ';'
+  for (let i = 0, l = vendors.length; i < l; i++) {
+    css += '.' + input.className + vendors[i] + '{'
+           + cssRule + '}'
+  }
+  appendStyle(css, input.styleId, true)
 }
 
-Input.prototype = Object.create(Atomic.prototype)
-
-Input.prototype.create = function () {
-  const node = document.createElement('input')
-  const uuid = Math.floor(10000000000000 * Math.random()) + Date.now()
-  this.className = 'weex-ipt-' + uuid
-  this.styleId = 'weex-style-' + uuid
-  node.classList.add(this.className)
-  node.classList.add('weex-element')
-  this.placeholder && (node.placeholder = this.placeholder)
-  return node
+const proto = {
+  create () {
+    const node = document.createElement('input')
+    const uuid = Math.floor(10000000000000 * Math.random()) + Date.now()
+    this.className = 'weex-ipt-' + uuid
+    this.styleId = 'weex-style-' + uuid
+    node.classList.add(this.className)
+    node.classList.add('weex-element')
+    this.placeholder && (node.placeholder = this.placeholder)
+    return node
+  }
 }
 
 // updatable attributes
-Input.prototype.attr = {
+const attr = {
   disabled (val) {
     this.node.disabled = !!val
   },
@@ -55,15 +64,14 @@ Input.prototype.attr = {
 }
 
 // updatable styles
-Input.prototype.style = extend(
-  Object.create(Atomic.prototype.style, {
-    placeholderColor: function (val) {
-      this.setPlaceholderColor(val)
-    }
-  }))
+const style = {
+  placeholderColor: function (val) {
+    setPlaceholderColor(this, val)
+  }
+}
 
 // events configurations
-Input.prototype.event = {
+const event = {
   input: {
     updator () {
       return {
@@ -97,24 +105,30 @@ Input.prototype.event = {
   }
 }
 
-Input.prototype.setPlaceholderColor = function (placeholderColor) {
-  if (!placeholderColor) {
-    return
+function init (Weex) {
+
+  const Atomic = Weex.Atomic
+  const extend = Weex.utils.extend
+  appendStyle = Weex.utils.appendStyle
+
+  // attrs:
+  //   - type: text|password|tel|email|url
+  //   - value
+  //   - placeholder
+  //   - disabled
+  //   - autofocus
+  function Input (data) {
+    Atomic.call(this, data)
   }
-  const vendors = [
-    '::-webkit-input-placeholder',
-    ':-moz-placeholder',
-    '::-moz-placeholder',
-    ':-ms-input-placeholder',
-    ':placeholder-shown'
-  ]
-  let css = ''
-  const cssRule = 'color: ' + placeholderColor + ';'
-  for (let i = 0, l = vendors.length; i < l; i++) {
-    css += '.' + this.className + vendors[i] + '{'
-           + cssRule + '}'
-  }
-  appendStyle(css, this.styleId, true)
+  Input.prototype = Object.create(Atomic.prototype)
+  extend(Input.prototype, proto)
+  extend(Input.prototype, { attr })
+  extend(Input.prototype, {
+    style: extend(Object.create(Atomic.prototype.style), style)
+  })
+  extend(Input.prototype, { event })
+
+  Weex.registerComponent('input', Input)
 }
 
-module.exports = Input
+export default { init }

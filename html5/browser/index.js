@@ -1,36 +1,14 @@
 'use strict'
 
-// require('../native')
-
-require('../native')
-
-import '../shared'
-import runtime from '../runtime'
-import { subversion } from '../../package.json'
-
-const { native, transformer } = subversion
-
-for (const methodName in runtime) {
-  global[methodName] = function (...args) {
-    const ret = runtime[methodName](...args)
-    if (ret instanceof Error) {
-      console.error(ret.toString())
-    }
-    return ret
-  }
-}
-
-Object.assign(global, {
-  frameworkVersion: native,
-  needTransformerVersion: transformer
-})
+import Weex from './render'
 
 /**
- * register methods
+ * install components and APIs
  */
-const methods = require('../default/api/methods')
-const { registerMethods } = global
-registerMethods(methods)
+import root from './base/root'
+import components from './extend/components'
+import api from './extend/api'
 
-
-require('./weex')
+Weex.install(root)
+Weex.install(components)
+Weex.install(api)

@@ -1,37 +1,31 @@
 'use strict'
 
-const Atomic = require('./atomic')
-const utils = require('../utils')
-
 const DEFAULT_FONT_SIZE = 32
 const DEFAULT_TEXT_OVERFLOW = 'ellipsis'
 
-// attr
-//  - value: text content.
-//  - lines: maximum lines of the text.
-function Text (data) {
-  Atomic.call(this, data)
+const proto = {
+  create () {
+    const node = document.createElement('div')
+    node.classList.add('weex-container')
+    node.style.fontSize = DEFAULT_FONT_SIZE * this.data.scale + 'px'
+    this.textNode = document.createElement('span')
+    // Give the developers the ability to control space
+    // and line-breakers.
+    this.textNode.style.whiteSpace = 'pre-wrap'
+    this.textNode.style.wordWrap = 'break-word'
+    this.textNode.style.display = '-webkit-box'
+    this.textNode.style.webkitBoxOrient = 'vertical'
+    this.style.lines.call(this, this.data.style.lines)
+    node.appendChild(this.textNode)
+    return node
+  },
+
+  clearAttr () {
+    this.node.firstChild.textContent = ''
+  }
 }
 
-Text.prototype = Object.create(Atomic.prototype)
-
-Text.prototype.create = function () {
-  const node = document.createElement('div')
-  node.classList.add('weex-container')
-  node.style.fontSize = DEFAULT_FONT_SIZE * this.data.scale + 'px'
-  this.textNode = document.createElement('span')
-  // Give the developers the ability to control space
-  // and line-breakers.
-  this.textNode.style.whiteSpace = 'pre-wrap'
-  this.textNode.style.wordWrap = 'break-word'
-  this.textNode.style.display = '-webkit-box'
-  this.textNode.style.webkitBoxOrient = 'vertical'
-  this.style.lines.call(this, this.data.style.lines)
-  node.appendChild(this.textNode)
-  return node
-}
-
-Text.prototype.attr = {
+const attr = {
   value: function (value) {
     const span = this.node.firstChild
     span.innerHTML = ''
@@ -63,12 +57,7 @@ Text.prototype.attr = {
   }
 }
 
-Text.prototype.clearAttr = function () {
-  this.node.firstChild.textContent = ''
-}
-
-Text.prototype.style = utils.extend(Object.create(Atomic.prototype.style), {
-
+const style = {
   lines: function (val) {
     val = parseInt(val)
     if (isNaN(val)) {
@@ -92,7 +81,28 @@ Text.prototype.style = utils.extend(Object.create(Atomic.prototype.style), {
   textOverflow: function (val) {
     this.textNode.style.textOverflow = val
   }
+}
 
-})
+function init (Weex) {
 
-module.exports = Text
+  const Atomic = Weex.Atomic
+  const extend = Weex.utils.extend
+
+  // attr
+  //  - value: text content.
+  // style
+  //  - lines: maximum lines of the text.
+  function Text (data) {
+    Atomic.call(this, data)
+  }
+  Text.prototype = Object.create(Atomic.prototype)
+  extend(Text.prototype, proto)
+  extend(Text.prototype, { attr })
+  extend(Text.prototype, {
+    style: extend(Object.create(Atomic.prototype.style), style)
+  })
+
+  Weex.registerComponent('text', Text)
+}
+
+export default { init }

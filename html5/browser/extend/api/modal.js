@@ -46,23 +46,26 @@ const msg = {
     }
     modal.prompt(config)
   }
-
 }
 
-msg._meta = {
+const meta = {
   modal: [{
     name: 'toast',
     args: ['object']
   }, {
     name: 'alert',
-    args: ['object', 'string']
+    args: ['object', 'function']
   }, {
     name: 'confirm',
-    args: ['object', 'string']
+    args: ['object', 'function']
   }, {
     name: 'prompt',
-    args: ['object', 'string']
+    args: ['object', 'function']
   }]
 }
 
-module.exports = msg
+export default {
+  init: function (Weex) {
+    Weex.registerApiModule('modal', modal, meta)
+  }
+}

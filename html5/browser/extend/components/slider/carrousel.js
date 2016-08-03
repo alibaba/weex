@@ -2,10 +2,10 @@
 
 'use strict'
 
-require('./gesture')
+// require('./gesture')
 require('cubicbezier')
 require('animationjs')
-require('./styles/carrousel.css')
+require('./carrousel.css')
 
 var doc = window.document
 var ua = window.navigator.userAgent

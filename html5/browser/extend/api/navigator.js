@@ -21,7 +21,7 @@ const navigator = {
 
 }
 
-navigator._meta = {
+const meta = {
   navigator: [{
     name: 'push',
     args: ['object', 'function']
@@ -31,4 +31,8 @@ navigator._meta = {
   }]
 }
 
-module.exports = navigator
+export default {
+  init: function (Weex) {
+    Weex.registerApiModule('navigator', navigator, meta)
+  }
+}

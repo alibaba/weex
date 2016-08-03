@@ -1,9 +1,9 @@
 /* global lib, XMLHttpRequest */
+/* deps: httpurl */
 
 'use strict'
 
-const utils = require('../utils')
-const logger = require('../logger')
+let utils
 
 require('httpurl')
 
@@ -20,7 +20,7 @@ function _jsonp (config, callback, progressCallback) {
   let url
 
   if (!config.url) {
-    logger.error('config.url should be set in _jsonp for \'fetch\' API.')
+    console.error('[h5-render] config.url should be set in _jsonp for \'fetch\' API.')
   }
 
   global[cbName] = (function (cb) {
@@ -35,7 +35,7 @@ function _jsonp (config, callback, progressCallback) {
     url = lib.httpurl(config.url)
   }
   catch (err) {
-    logger.error('invalid config.url in _jsonp for \'fetch\' API: '
+    console.error('[h5-render] invalid config.url in _jsonp for \'fetch\' API: '
       + config.url)
   }
   url.params.callback = cbName
@@ -45,7 +45,7 @@ function _jsonp (config, callback, progressCallback) {
   // but they are not considered here.
   script.onerror = (function (cb) {
     return function (err) {
-      logger.error('unexpected error in _jsonp for \'fetch\' API', err)
+      console.error('[h5-render] unexpected error in _jsonp for \'fetch\' API', err)
       callback(err)
       delete global[cb]
     }
@@ -102,7 +102,7 @@ function _xhr (config, callback, progressCallback) {
   }
 
   xhr.onerror = function (err) {
-    logger.error('unexpected error in _xhr for \'fetch\' API', err)
+    console.error('[h5-render] unexpected error in _xhr for \'fetch\' API', err)
     callback({
       status: ERROR_STATE,
       ok: false,
@@ -137,8 +137,8 @@ const stream = {
       }
     }
     if (typeof param !== 'object' || !param.url) {
-      return logger.error(
-        'invalid config or invalid config.url for sendHttp API')
+      return console.error(
+        '[h5-render] invalid config or invalid config.url for sendHttp API')
     }
 
     const sender = this.sender
@@ -149,7 +149,7 @@ const stream = {
       sender.performCallback(callbackId, this.responseText)
     }
     xhr.onerror = function (error) {
-      return logger.error('unexpected error in sendHttp API', error)
+      return console.error('[h5-render] unexpected error in sendHttp API', error)
       // sender.performCallback(
       //   callbackId,
       //   new Error('unexpected error in sendHttp API')
@@ -190,12 +190,12 @@ const stream = {
     // validate options.method
     if (typeof config.method === 'undefined') {
       config.method = DEFAULT_METHOD
-      logger.warn('options.method for \'fetch\' API has been set to '
+      console.warn('[h5-render] options.method for \'fetch\' API has been set to '
         + 'default value \'' + config.method + '\'')
     }
     else if (methodOptions.indexOf((config.method + '')
         .toUpperCase()) === -1) {
-      return logger.error('options.method \''
+      return console.error('[h5-render] options.method \''
         + config.method
         + '\' for \'fetch\' API should be one of '
         + methodOptions + '.')
@@ -203,7 +203,7 @@ const stream = {
 
     // validate options.url
     if (!config.url) {
-      return logger.error('options.url should be set for \'fetch\' API.')
+      return console.error('[h5-render] options.url should be set for \'fetch\' API.')
     }
 
     // validate options.mode
@@ -211,7 +211,7 @@ const stream = {
       config.mode = DEFAULT_MODE
     }
     else if (modeOptions.indexOf((config.mode + '').toLowerCase()) === -1) {
-      return logger.error('options.mode \''
+      return console.error('[h5-render] options.mode \''
         + config.mode
         + '\' for \'fetch\' API should be one of '
         + modeOptions + '.')
@@ -220,11 +220,11 @@ const stream = {
     // validate options.type
     if (typeof config.type === 'undefined') {
       config.type = DEFAULT_TYPE
-      logger.warn('options.type for \'fetch\' API has been set to '
+      console.warn('[h5-render] options.type for \'fetch\' API has been set to '
         + 'default value \'' + config.type + '\'.')
     }
     else if (typeOptions.indexOf((config.type + '').toLowerCase()) === -1) {
-      return logger.error('options.type \''
+      return console.error('[h5-render] options.type \''
           + config.type
           + '\' for \'fetch\' API should be one of '
           + typeOptions + '.')
@@ -233,7 +233,7 @@ const stream = {
     // validate options.headers
     config.headers = config.headers || {}
     if (!utils.isPlainObject(config.headers)) {
-      return logger.error('options.headers should be a plain object')
+      return console.error('[h5-render] options.headers should be a plain object')
     }
 
     // validate options.body
@@ -274,7 +274,7 @@ const stream = {
 
 }
 
-stream._meta = {
+const meta = {
   stream: [{
     name: 'sendHttp',
     args: ['object', 'function']
@@ -284,4 +284,9 @@ stream._meta = {
   }]
 }
 
-module.exports = stream
+export default {
+  init: function (Weex) {
+    utils = Weex.utils
+    Weex.registerApiModule('stream', stream, meta)
+  }
+}

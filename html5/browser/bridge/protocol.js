@@ -1,22 +1,22 @@
 'use strict'
 
-// const extend = require('./utils').extend
-const isArray = require('./utils').isArray
+import { isArray } from '../utils'
+const { registerModules } = global
 // const ComponentManager = require('./componentManager')
 
 // for jsframework to register modules.
-const _registerModules = function (config) {
-  if (isArray(config)) {
-    for (let i = 0, l = config.length; i < l; i++) {
-      window.registerModules(config[i])
-    }
-  }
-  else {
-    window.registerModules(config)
-  }
-}
+// const _registerModules = function (config) {
+//   if (isArray(config)) {
+//     for (let i = 0, l = config.length; i < l; i++) {
+//       registerModules(config[i])
+//     }
+//   }
+//   else {
+//     registerModules(config)
+//   }
+// }
 
-const protocol = {
+export default {
 
   // weex instances
   _instances: {},
@@ -26,14 +26,6 @@ const protocol = {
 
   // Weex.registerApiModule used this to register and access apiModules.
   apiModule: {},
-
-  injectWeexInstance: function (instance) {
-    this._instances[instance.instanceId] = instance
-  },
-
-  getWeexInstance: function (instanceId) {
-    return this._instances[instanceId]
-  },
 
   // get the api method meta info array for the module.
   getApiModuleMeta: function (moduleName) {
@@ -114,25 +106,23 @@ const protocol = {
   }
 }
 
-_registerModules([{
-  modal: [{
-    name: 'toast',
-    args: ['object', 'function']
-  }, {
-    name: 'alert',
-    args: ['object', 'function']
-  }, {
-    name: 'confirm',
-    args: ['object', 'function']
-  }, {
-    name: 'prompt',
-    args: ['object', 'function']
-  }]
-}, {
-  animation: [{
-    name: 'transition',
-    args: ['string', 'object', 'function']
-  }]
-}])
-
-module.exports = protocol
+// _registerModules([{
+//   modal: [{
+//     name: 'toast',
+//     args: ['object', 'function']
+//   }, {
+//     name: 'alert',
+//     args: ['object', 'function']
+//   }, {
+//     name: 'confirm',
+//     args: ['object', 'function']
+//   }, {
+//     name: 'prompt',
+//     args: ['object', 'function']
+//   }]
+// }, {
+//   animation: [{
+//     name: 'transition',
+//     args: ['string', 'object', 'function']
+//   }]
+// }])

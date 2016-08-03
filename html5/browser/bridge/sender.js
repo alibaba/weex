@@ -1,10 +1,10 @@
 'use strict'
 
-const utils = require('../utils')
+import { extend } from '../utils'
 
 const _senderMap = {}
 
-function Sender (instance) {
+export default function Sender (instance) {
   if (!(this instanceof Sender)) {
     return new Sender(instance)
   }
@@ -50,5 +50,3 @@ Sender.prototype = {
   }
 
 }
-
-module.exports = Sender

@@ -2,35 +2,12 @@
 
 'use strict'
 
-const Atomic = require('./atomic')
-const utils = require('../utils')
+require('./spinner.css')
 
-require('../styles/spinner.css')
+let loopArray, getRgb
 
-function Spinner (data) {
-  Atomic.call(this, data)
-}
-
-Spinner.prototype = Object.create(Atomic.prototype)
-
-Spinner.prototype.create = function () {
-  const node = document.createElement('div')
-  node.classList.add('weex-container', 'weex-spinner-wrap')
-  this.spinner = document.createElement('div')
-  this.spinner.classList.add('weex-element', 'weex-spinner')
-  node.appendChild(this.spinner)
-  return node
-}
-
-Spinner.prototype.updateStyle = function (style) {
-  Atomic.prototype.updateStyle.call(this, style)
-  if (style && style.color) {
-    this.setKeyframeColor(utils.getRgb(this.node.style.color))
-  }
-}
-
-Spinner.prototype.getStyleSheet = function () {
-  if (this.styleSheet) {
+function getStyleSheet (spinner) {
+  if (spinner.styleSheet) {
     return
   }
   const styles = document.styleSheets
@@ -49,13 +26,13 @@ Spinner.prototype.getStyleSheet = function () {
     }
   }
   /* eslint-enable no-labels */
-  this.styleSheet = styles[i]
+  spinner.styleSheet = styles[i]
 }
 
-Spinner.prototype.setKeyframeColor = function (val) {
-  this.getStyleSheet()
-  const keyframeRules = this.computeKeyFrameRules(val)
-  const rules = this.styleSheet.rules
+function setKeyframeColor (spinner, val) {
+  getStyleSheet(spinner)
+  const keyframeRules = computeKeyFrameRules(val)
+  const rules = spinner.styleSheet.rules
   for (let i = 0, l = rules.length; i < l; i++) {
     const item = rules.item(i)
     if ((item.type === CSSRule.KEYFRAMES_RULE
@@ -73,7 +50,7 @@ Spinner.prototype.setKeyframeColor = function (val) {
   }
 }
 
-Spinner.prototype.computeKeyFrameRules = function (rgb) {
+function computeKeyFrameRules (rgb) {
   if (!rgb) {
     return
   }
@@ -99,7 +76,7 @@ Spinner.prototype.computeKeyFrameRules = function (rgb) {
     })
   const rules = []
   for (let i = 0; i < scaleArr.length; i++) {
-    const tmpColorArr = utils.loopArray(colorArr, i, 'r')
+    const tmpColorArr = loopArray(colorArr, i, 'r')
     rules.push(scaleArr.map(function (scaleStr, i) {
       return scaleStr + ' ' + tmpColorArr[i]
     }).join(', '))
@@ -107,4 +84,53 @@ Spinner.prototype.computeKeyFrameRules = function (rgb) {
   return rules
 }
 
-module.exports = Spinner
+const proto = {
+  create () {
+    const node = document.createElement('div')
+    node.classList.add('weex-container', 'weex-spinner-wrap')
+    this.spinner = document.createElement('div')
+    this.spinner.classList.add('weex-element', 'weex-spinner')
+    node.appendChild(this.spinner)
+    return node
+  }
+}
+
+const style = {
+  color: function (val) {
+    const rgb = getRgb(val)
+    if (!rgb) {
+      return console.error('[web-render] invalid color value:', val)
+    }
+    setKeyframeColor(this, rgb)
+  }
+}
+
+// Spinner.prototype.updateStyle = function (style) {
+//   Atomic.prototype.updateStyle.call(this, style)
+//   if (style && style.color) {
+//     this.setKeyframeColor(global.weex.utils.getRgb(this.node.style.color))
+//   }
+// }
+
+function init (Weex) {
+
+  const Atomic = Weex.Atomic
+  const extend = Weex.utils.extend
+  getRgb = Weex.utils.getRgb
+  loopArray = Weex.utils.loopArray
+
+  function Spinner (data) {
+    this.resize = DEFAULT_RESIZE_MODE
+    Atomic.call(this, data)
+  }
+  Spinner.prototype = Object.create(Atomic.prototype)
+  extend(Spinner.prototype, proto)
+  extend(Spinner.prototype, {
+    style: extend(Object.create(Atomic.prototype.style), style)
+  })
+
+  Weex.registerComponent('spinner', Spinner)
+  Weex.registerComponent('loading-indicator', Spinner)
+}
+
+export default { init }

@@ -1,25 +1,23 @@
-const dom = require('./dom')
-const event = require('./event')
-const pageInfo = require('./pageInfo')
-const stream = require('./stream')
-const modal = require('./modal')
-const animation = require('./animation')
-const webview = require('./webview')
-const timer = require('./timer')
-const navigator = require('./navigator')
+import dom from './dom'
+import event from './event'
+import pageInfo from './pageInfo'
+import stream from './stream'
+import modal from './modal'
+import animation from './animation'
+import webview from './webview'
+import timer from './timer'
+import navigator from './navigator'
 
-const api = {
+export default {
   init: function (Weex) {
-    Weex.registerApiModule('dom', dom, dom._meta)
-    Weex.registerApiModule('event', event, event._meta)
-    Weex.registerApiModule('pageInfo', pageInfo, pageInfo._meta)
-    Weex.registerApiModule('stream', stream, stream._meta)
-    Weex.registerApiModule('modal', modal, modal._meta)
-    Weex.registerApiModule('animation', animation, animation._meta)
-    Weex.registerApiModule('webview', webview, webview._meta)
-    Weex.registerApiModule('timer', timer, timer._meta)
-    Weex.registerApiModule('navigator', navigator, navigator._meta)
+    Weex.install(dom)
+    Weex.install(event)
+    Weex.install(pageInfo)
+    Weex.install(stream)
+    Weex.install(modal)
+    Weex.install(animation)
+    Weex.install(webview)
+    Weex.install(timer)
+    Weex.install(navigator)
   }
 }
-
-module.exports = api

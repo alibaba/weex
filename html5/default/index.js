@@ -53,7 +53,7 @@ export function createInstance (instanceId, code, options, data) {
     result = new Error(`invalid instance id "${instanceId}"`)
   }
 
-  return result
+  return result || instance
 }
 
 /**

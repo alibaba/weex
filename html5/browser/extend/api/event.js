@@ -11,11 +11,15 @@ const event = {
 
 }
 
-event._meta = {
+const meta = {
   event: [{
     name: 'openURL',
     args: ['string']
   }]
 }
 
-module.exports = event
+export default {
+  init: function (Weex) {
+    Weex.registerApiModule('event', event, meta)
+  }
+}

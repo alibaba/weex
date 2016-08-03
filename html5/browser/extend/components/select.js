@@ -1,32 +1,30 @@
 'use strict'
 
-const Atomic = require('./atomic')
-const sender = require('../bridge/sender')
-const utils = require('../utils')
+let isArray
 
-// attrs:
-//   - options: the options to be listed, as a array of strings.
-//   - selectedIndex: the selected options' index number.
-//   - disabled
-function Select (data) {
-  this.options = []
-  this.selectedIndex = 0
-  Atomic.call(this, data)
-}
+const proto = {
+  create () {
+    const node = document.createElement('select')
+    const uuid = Math.floor(10000000000000 * Math.random()) + Date.now()
+    this.className = 'weex-slct-' + uuid
+    this.styleId = 'weex-style-' + uuid
+    node.classList.add(this.className)
+    // For the consistency of input component's width.
+    // The date and time type of input will have a bigger width
+    // when the 'box-sizing' is not set to 'border-box'
+    node.style['box-sizing'] = 'border-box'
+    return node
+  },
 
-Select.prototype = Object.create(Atomic.prototype)
-
-Select.prototype.create = function () {
-  const node = document.createElement('select')
-  const uuid = Math.floor(10000000000000 * Math.random()) + Date.now()
-  this.className = 'weex-slct-' + uuid
-  this.styleId = 'weex-style-' + uuid
-  node.classList.add(this.className)
-  // For the consistency of input component's width.
-  // The date and time type of input will have a bigger width
-  // when the 'box-sizing' is not set to 'border-box'
-  node.style['box-sizing'] = 'border-box'
-  return node
+  createOptions (opts) {
+    const optDoc = document.createDocumentFragment()
+    for (let i = 0, l = opts.length; i < l; i++) {
+      const opt = document.createElement('option')
+      opt.appendChild(document.createTextNode(opts[i]))
+      optDoc.appendChild(opt)
+    }
+    this.node.appendChild(optDoc)
+  }
 }
 
 Select.prototype.attr = {
@@ -50,31 +48,46 @@ Select.prototype.attr = {
   }
 }
 
-Select.prototype.bindEvents = function (evts) {
-  let isListenToChange = false
-  Atomic.prototype.bindEvents.call(
-      this,
-      evts.filter(function (val) {
-        const pass = val !== 'change'
-        !pass && (isListenToChange = true)
-        return pass
-      }))
-  if (isListenToChange) {
-    this.node.addEventListener('change', function (e) {
-      e.index = this.options.indexOf(this.node.value)
-      sender.fireEvent(this.data.ref, 'change', e)
-    }.bind(this))
+const event = {
+  change: {
+    updator: function () {
+      return {
+        attrs: {
+          selectedIndex: this.options.indexOf(this.node.value)
+        }
+      }
+    },
+    extra: function () {
+      return {
+        index: this.options.indexOf(this.node.value),
+        timestamp: Date.now()
+      }
+    }
   }
 }
 
-Select.prototype.createOptions = function (opts) {
-  const optDoc = document.createDocumentFragment()
-  for (let i = 0, l = opts.length; i < l; i++) {
-    const opt = document.createElement('option')
-    opt.appendChild(document.createTextNode(opts[i]))
-    optDoc.appendChild(opt)
+function init (Weex) {
+
+  const Atomic = Weex.Atomic
+  const extend = Weex.utils.extend
+  isArray = Weex.utils.isArray
+
+  // attrs:
+  //   - options: the options to be listed, as a array of strings.
+  //   - selectedIndex: the selected options' index number.
+  //   - disabled
+  function Select (data) {
+    this.options = []
+    this.selectedIndex = 0
+    Atomic.call(this, data)
   }
-  this.node.appendChild(optDoc)
+  Select.prototype = Object.create(Atomic.prototype)
+  extend(Select.prototype, proto)
+  extend(Select.prototype, { attr })
+  extend(Select.prototype, { event })
+
+  Weex.registerComponent('select', Select)
 }
 
-module.exports = Select
+export default { init }
+

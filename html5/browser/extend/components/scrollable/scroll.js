@@ -2,8 +2,6 @@
 
 require('./motion')
 
-var logger = require('./logger')
-
 var doc = window.document
 var ua = window.navigator.userAgent
 var scrollObjs = {}
@@ -31,7 +29,7 @@ var stylePrefix = Firefox ? 'Moz' : IEMobile ? 'ms' : 'webkit'
 
 function debugLog() {
   if (lib.scroll.outputDebugLog) {
-    logger.log.apply(logger, arguments)
+    console.log.apply(console, arguments)
   }
 }
 

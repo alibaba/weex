@@ -1,6 +1,5 @@
 'use strict'
 
-const Atomic = require('./atomic')
 const Kountdown = require('kountdown')
 
 const FORMATTER_REGEXP = /(\\)?(dd*|hh?|mm?|ss?)/gi
@@ -26,36 +25,49 @@ function formatDateTime (data, formatter, timeColor) {
   })
 }
 
-function Countdown (data) {
-  Atomic.call(this, data)
+const proto = {
+  create () {
+    const node = document.createElement('div')
+    node.classList.add('weex-element')
+    const data = this.data
+    const time = Number(data.attr.countdownTime) || 0
+    const endTime = Date.now() / 1000 + time
+    Kountdown({
+      endDate: endTime,
+      onUpdate: function (time) {
+        const timeColor = data.style.timeColor || '#000'
+        const result = formatDateTime(time, data.attr.formatterValue, timeColor)
+        node.innerHTML = result
+      },
+      onEnd: function () {
+      }
+    }).start()
+
+    return node
+  }
 }
 
-Countdown.prototype = Object.create(Atomic.prototype)
-
-Countdown.prototype.create = function () {
-  const node = document.createElement('div')
-  node.classList.add('weex-element')
-  const data = this.data
-  const time = Number(data.attr.countdownTime) || 0
-  const endTime = Date.now() / 1000 + time
-  Kountdown({
-    endDate: endTime,
-    onUpdate: function (time) {
-      const timeColor = data.style.timeColor || '#000'
-      const result = formatDateTime(time, data.attr.formatterValue, timeColor)
-      node.innerHTML = result
-    },
-    onEnd: function () {
-    }
-  }).start()
-
-  return node
-}
-
-Countdown.prototype.style = {
+const style = {
   textColor: function (value) {
     this.node.style.color = value
   }
 }
 
-module.exports = Countdown
+function init (Weex) {
+
+  const Atomic = Weex.Atomic
+  const extend = Weex.utils.extend
+
+  function Countdown (data) {
+    Atomic.call(this, data)
+  }
+  Countdown.prototype = Object.create(Atomic.prototype)
+  extend(Countdown.prototype, proto)
+  extend(Countdown.prototype, {
+    style: extend(Object.create(Atomic.prototype.style), style)
+  })
+
+  Weex.registerComponent('countdown', Countdown)
+}
+
+export default { init }

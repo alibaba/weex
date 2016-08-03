@@ -1,145 +1,105 @@
 'use strict'
 
-const Atomic = require('./atomic')
-// const config = require('../config')
-const utils = require('../utils')
-
 // TODO: refactor this scss code since this is strongly
 // dependent on lib.flexible other than the value of
 // scale.
-require('../styles/tabheader.css')
+require('./tabheader.css')
 
-function TabHeader (data) {
-  Atomic.call(this, data)
-}
-
-const proto = TabHeader.prototype = Object.create(Atomic.prototype)
-
-proto.create = function () {
-  // outside container.
-  const node = document.createElement('div')
-  node.className = 'tab-header'
-  // tip on the top.
-  const bar = document.createElement('div')
-  bar.className = 'header-bar'
-  bar.textContent = 'CHANGE FLOOR'
-  // middle layer.
-  const body = document.createElement('div')
-  body.className = 'header-body'
-  const box = document.createElement('ul')
-  box.className = 'tabheader'
-
-  body.appendChild(box)
-  node.appendChild(bar)
-  node.appendChild(body)
-  this._bar = bar
-  this._body = body
-  this.box = box
-  this.node = node
-  // init events.
-  this._initFoldBtn()
-  this._initEvent()
-  return node
-}
-
-proto._initFoldBtn = function () {
-  const _this = this
-  const node = this.node
+function initFoldBtn (tabheader) {
+  const node = tabheader.node
   const btn = document.createElement('span')
   btn.className = 'fold-toggle iconfont'
   btn.innerHTML = '&#xe661;'
   node.appendChild(btn)
 
   btn.addEventListener('click', function () {
-    if (_this.unfolding) {
-      _this._folding()
+    if (tabheader.unfolding) {
+      folding(tabheader)
     }
     else {
-      _this._unfolding()
+      unfolding(tabheader)
     }
   })
 }
 
-proto._initMask = function () {
+function initMask (tabheader) {
   const mask = document.createElement('div')
   mask.className = 'tabheader-mask'
-  this.mask = mask
+  tabheader.mask = mask
   // stop default behavior: page moving.
   mask.addEventListener('touchmove', function (evt) {
     evt.preventDefault()
   })
   // click to unfold.
-  const _this = this
   mask.addEventListener('click', function () {
-    _this._folding()
+    folding(tabheader)
   })
 
   document.body.appendChild(mask)
 }
 
-proto._unfolding = function () {
+function unfolding (tabheader) {
   // mark the initial posiiton of tabheader
-  if (!this.flag) {
+  if (!tabheader.flag) {
     const flag = document.createComment('tabheader')
-    this.flag = flag
-    this.node.parentNode.insertBefore(flag, this.node)
+    tabheader.flag = flag
+    tabheader.node.parentNode.insertBefore(flag, tabheader.node)
   }
-  if (!this.mask) {
-    this._initMask()
+  if (!tabheader.mask) {
+    initMask(tabheader)
   }
 
   // record the scroll position.
-  this._scrollVal = this._body.scrollLeft
+  tabheader._scrollVal = tabheader._body.scrollLeft
   // record the position in document.
-  this._topVal = this.node.getBoundingClientRect().top
-  this._styleTop = this.node.style.top
+  tabheader._topVal = tabheader.node.getBoundingClientRect().top
+  tabheader._styleTop = tabheader.node.style.top
 
-  document.body.appendChild(this.node)
-  this.node.classList.add('unfold-header')
-  this.node.style.height = 'auto'
+  document.body.appendChild(tabheader.node)
+  tabheader.node.classList.add('unfold-header')
+  tabheader.node.style.height = 'auto'
   // recalc the position when it is unfolded.
-  const thHeight = this.node.getBoundingClientRect().height
-  if (thHeight + this._topVal > window.innerHeight) {
-    this._topVal = this._topVal
-        + (window.innerHeight - thHeight - this._topVal)
+  const thHeight = tabheader.node.getBoundingClientRect().height
+  if (thHeight + tabheader._topVal > window.innerHeight) {
+    tabheader._topVal = tabheader._topVal
+        + (window.innerHeight - thHeight - tabheader._topVal)
   }
 
-  this.node.style.top = this._topVal + 'px'
+  tabheader.node.style.top = tabheader._topVal + 'px'
   // process mask style
-  this.mask.classList.add('unfold-header')
-  this.mask.style.height = window.innerHeight + 'px'
-  this.unfolding = true
+  tabheader.mask.classList.add('unfold-header')
+  tabheader.mask.style.height = window.innerHeight + 'px'
+  tabheader.unfolding = true
 }
 
-proto._folding = function () {
-  if (this.unfolding !== true) {
+function folding (tabheader) {
+  if (tabheader.unfolding !== true) {
     return
   }
 
-  this.mask.classList.remove('unfold-header')
-  this.node.classList.remove('unfold-header')
+  tabheader.mask.classList.remove('unfold-header')
+  tabheader.node.classList.remove('unfold-header')
 
-  this.node.style.height = ''
-  this.node.style.top = this._styleTop
+  tabheader.node.style.height = ''
+  tabheader.node.style.top = tabheader._styleTop
 
   // recover the position of tabheader.
-  this.flag.parentNode.insertBefore(this.node, this.flag)
+  tabheader.flag.parentNode.insertBefore(tabheader.node, tabheader.flag)
   // recover the position of scoller.
-  this._body.scrollLeft = this._scrollVal
+  tabheader._body.scrollLeft = tabheader._scrollVal
 
-  this._scrollToView()
-  this.unfolding = false
+  scrollToView(tabheader)
+  tabheader.unfolding = false
 }
 
-proto._initEvent = function () {
-  this._initClickEvent()
-  this._initSelectEvent()
+function initEvent (tabheader) {
+  initClickEvent(tabheader)
+  initSelectEvent(tabheader)
 }
 
 // init events.
-proto._initClickEvent = function () {
-  const box = this.box
-  const _this = this
+function initClickEvent (tabheader) {
+  const box = tabheader.box
 
   box.addEventListener('click', function (evt) {
     let target = evt.target
@@ -153,7 +113,7 @@ proto._initClickEvent = function () {
 
     const floor = target.getAttribute('data-floor')
     /* eslint-disable eqeqeq */
-    if (_this.data.attr.selectedIndex == floor) {
+    if (tabheader.data.attr.selectedIndex == floor) {
       // Duplicated clicking, not to trigger select event.
       return
     }
@@ -163,9 +123,8 @@ proto._initClickEvent = function () {
   })
 }
 
-proto._initSelectEvent = function () {
-  const node = this.node
-  const _this = this
+function initSelectEvent (tabheader) {
+  const node = tabheader.node
   node.addEventListener('select', function (evt) {
     let index
     if (evt.index !== undefined) {
@@ -179,113 +138,24 @@ proto._initSelectEvent = function () {
       return
     }
 
-    _this.attr.selectedIndex.call(_this, index)
+    tabheader.attr.selectedIndex.call(tabheader, index)
   })
 }
 
-proto.attr = {
-  highlightIcon: function () {
-    return createHighlightIcon()
-  },
-  data: function () {
-    const attr = this.data.attr
-    // Ensure there is a default selected value.
-    if (attr.selectedIndex === undefined) {
-      attr.selectedIndex = 0
-    }
-
-    const list = attr.data || []
-    const curItem = attr.selectedIndex
-
-    const ret = []
-    const itemTmpl = '<li class="th-item" data-floor="{{floor}}">'
-        + '{{hlIcon}}{{floorName}}</li>'
-
-    list.forEach(function (item, idx) {
-      let html = itemTmpl.replace('{{floor}}', idx)
-      /* eslint-disable eqeqeq */
-      if (curItem == idx) {
-        html = html.replace('{{hlIcon}}', createHighlightIcon())
-      }
-      else {
-        html = html.replace('{{hlIcon}}', '')
-      }
-      /* eslint-enable eqeqeq */
-
-      html = html.replace('{{floorName}}', item)
-
-      ret.push(html)
-    }, this)
-
-    this.box.innerHTML = ret.join('')
-  },
-  selectedIndex: function (val) {
-    const attr = this.data.attr
-
-    if (val === undefined) {
-      val = 0
-    }
-
-    // if (val == attr.selectedIndex) {
-    //   return
-    // }
-
-    attr.selectedIndex = val
-
-    this.attr.data.call(this)
-
-    this._folding()
-    this.style.textHighlightColor.call(this, this.textHighlightColor)
-  }
-}
-
-proto.style = Object.create(Atomic.prototype.style)
-
-proto.style.opacity = function (val) {
-  if (val === undefined || val < 0 || val > 1) {
-    val = 1
-  }
-
-  this.node.style.opacity = val
-}
-
-proto.style.textColor = function (val) {
-  if (!isValidColor(val)) {
-    return
-  }
-
-  this.node.style.color = val
-}
-
-proto.style.textHighlightColor = function (val) {
-  if (!isValidColor(val)) {
-    return
-  }
-  this.textHighlightColor = val
-  const attr = this.data.attr
-
-  const node = this.node.querySelector('[data-floor="'
-      + attr.selectedIndex + '"]')
-  if (node) {
-    node.style.color = val
-    this._scrollToView(node)
-  }
-}
-
-proto._scrollToView = function (node) {
+function scrollToView (tabheader, node) {
   if (!node) {
-    const attr = this.data.attr
-    node = this.node.querySelector('[data-floor="' + attr.selectedIndex + '"]')
+    const attr = tabheader.data.attr
+    node = tabheader.node.querySelector('[data-floor="' + attr.selectedIndex + '"]')
   }
   if (!node) {
     return
   }
 
-  // const defaultVal = this._body.scrollLeft
+  // const defaultVal = tabheader._body.scrollLeft
   // const leftVal = defaultVal - node.offsetLeft + 300
 
-  const scrollVal = getScrollVal(this._body.getBoundingClientRect(), node)
-  doScroll(this._body, scrollVal)
+  const scrollVal = getScrollVal(tabheader._body.getBoundingClientRect(), node)
+  doScroll(tabheader._body, scrollVal)
 }
 
 // scroll the tabheader.
@@ -357,7 +227,11 @@ function getScrollVal (rect, node) {
 function fireEvent (element, type, data) {
   const evt = document.createEvent('Event')
   evt.data = data
-  utils.extend(evt, data)
+  for (k in data) {
+    if (data.hasOwnProperty(k)) {
+      evt[k] = data[k]
+    }
+  }
   // need bubble.
   evt.initEvent(type, true, true)
 
@@ -385,4 +259,142 @@ function isValidColor (color) {
   return true
 }
 
-module.exports = TabHeader
+const proto = {
+  create () {
+    // outside container.
+    const node = document.createElement('div')
+    node.className = 'tab-header'
+    // tip on the top.
+    const bar = document.createElement('div')
+    bar.className = 'header-bar'
+    bar.textContent = 'CHANGE FLOOR'
+    // middle layer.
+    const body = document.createElement('div')
+    body.className = 'header-body'
+    const box = document.createElement('ul')
+    box.className = 'tabheader'
+
+    body.appendChild(box)
+    node.appendChild(bar)
+    node.appendChild(body)
+    this._bar = bar
+    this._body = body
+    this.box = box
+    this.node = node
+    // init events.
+    initFoldBtn(this)
+    initEvent(this)
+    return node
+  }
+}
+
+const attr = {
+  highlightIcon () {
+    return createHighlightIcon()
+  },
+
+  data () {
+    const attr = this.data.attr
+    // Ensure there is a default selected value.
+    if (attr.selectedIndex === undefined) {
+      attr.selectedIndex = 0
+    }
+
+    const list = attr.data || []
+    const curItem = attr.selectedIndex
+
+    const ret = []
+    const itemTmpl = '<li class="th-item" data-floor="{{floor}}">'
+        + '{{hlIcon}}{{floorName}}</li>'
+
+    list.forEach(function (item, idx) {
+      let html = itemTmpl.replace('{{floor}}', idx)
+      /* eslint-disable eqeqeq */
+      if (curItem == idx) {
+        html = html.replace('{{hlIcon}}', createHighlightIcon())
+      }
+      else {
+        html = html.replace('{{hlIcon}}', '')
+      }
+      /* eslint-enable eqeqeq */
+
+      html = html.replace('{{floorName}}', item)
+
+      ret.push(html)
+    }, this)
+
+    this.box.innerHTML = ret.join('')
+  },
+
+  selectedIndex (val) {
+    const attr = this.data.attr
+
+    if (val === undefined) {
+      val = 0
+    }
+
+    // if (val == attr.selectedIndex) {
+    //   return
+    // }
+
+    attr.selectedIndex = val
+
+    this.attr.data.call(this)
+
+    folding(this)
+    this.style.textHighlightColor.call(this, this.textHighlightColor)
+  }
+}
+
+const style = {
+  opacity (val) {
+    if (val === undefined || val < 0 || val > 1) {
+      val = 1
+    }
+
+    this.node.style.opacity = val
+  },
+
+  textColor (val) {
+    if (!isValidColor(val)) {
+      return
+    }
+
+    this.node.style.color = val
+  },
+
+  textHighlightColor (val) {
+    if (!isValidColor(val)) {
+      return
+    }
+    this.textHighlightColor = val
+    const attr = this.data.attr
+
+    const node = this.node.querySelector('[data-floor="'
+        + attr.selectedIndex + '"]')
+    if (node) {
+      node.style.color = val
+      scrollToView(this, node)
+    }
+  }
+}
+
+function init (Weex) {
+
+  const Atomic = Weex.Atomic
+  const extend = Weex.utils.extend
+
+  function TabHeader (data) {
+    Atomic.call(this, data)
+  }
+  TabHeader.prototype = Object.create(Atomic.prototype)
+  extend(TabHeader.prototype, proto)
+  extend(TabHeader.prototype, { attr })
+  extend(TabHeader.prototype, {
+    style: extend(Object.create(Atomic.prototype.style), style)
+  })
+
+  Weex.registerComponent('tabHeader', TabHeader)
+}
+
+export default { init }

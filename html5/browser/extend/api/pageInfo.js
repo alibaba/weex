@@ -12,11 +12,15 @@ const pageInfo = {
   }
 }
 
-pageInfo._meta = {
+const meta = {
   pageInfo: [{
     name: 'setTitle',
     args: ['string']
   }]
 }
 
-module.exports = pageInfo
+export default {
+  init: function (Weex) {
+    Weex.registerApiModule('pageInfo', pageInfo, meta)
+  }
+}

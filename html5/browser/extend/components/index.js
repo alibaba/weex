@@ -1,58 +1,54 @@
-const RootComponent = require('./root')
-const Container = require('./container')
-const Image = require('./image')
-const Text = require('./text')
-const Vlist = require('./vlist')
-const Hlist = require('./hlist')
-const Countdown = require('./countdown')
-const Marquee = require('./marquee')
-const Slider = require('./slider')
-const Indicator = require('./indicator')
-const Tabheader = require('./tabheader')
-const Scroller = require('./scroller')
-const Input = require('./input')
-const Select = require('./select')
-const Datepicker = require('./datepicker')
-const Timepicker = require('./timepicker')
-const Video = require('./video')
-const Switch = require('./switch')
-const A = require('./a')
-const Embed = require('./embed')
-const Refresh = require('./refresh')
-const Loading = require('./loading')
-const Spinner = require('./spinner')
-const Web = require('./web')
+import Div from './div'
+import Image from './image'
+import Text from './text'
+// import Vlist from './vlist'
+// import Hlist from './hlist'
+import Scrollable from './scrollable'   // TODO
+// import Countdown from './countdown'
+// import Marquee from './marquee'
+import Slider from './slider'
+import Indicator from './indicator'
+import Tabheader from './tabheader'     // TODO
+// import Scroller from './scroller'
+import Input from './input'
+// import Select from './select'
+// import Datepicker from './datepicker'
+// import Timepicker from './timepicker'
+import Video from './video'
+import Switch from './switch'
+import A from './a'
+import Embed from './embed'
+// import Refresh from './refresh'
+// import Loading from './loading'
+import Spinner from './spinner'
+import Web from './web'
 
-const components = {
+export default {
   init: function (Weex) {
-    Weex.registerComponent('root', RootComponent)
-    Weex.registerComponent('container', Container)
-    Weex.registerComponent('div', Container)
-    Weex.registerComponent('image', Image)
-    Weex.registerComponent('text', Text)
-    Weex.registerComponent('list', Vlist)
-    Weex.registerComponent('vlist', Vlist)
-    Weex.registerComponent('hlist', Hlist)
-    Weex.registerComponent('countdown', Countdown)
-    Weex.registerComponent('marquee', Marquee)
-    Weex.registerComponent('slider', Slider)
-    Weex.registerComponent('indicator', Indicator)
-    Weex.registerComponent('tabheader', Tabheader)
-    Weex.registerComponent('scroller', Scroller)
-    Weex.registerComponent('input', Input)
-    Weex.registerComponent('select', Select)
-    Weex.registerComponent('datepicker', Datepicker)
-    Weex.registerComponent('timepicker', Timepicker)
-    Weex.registerComponent('video', Video)
-    Weex.registerComponent('switch', Switch)
-    Weex.registerComponent('a', A)
-    Weex.registerComponent('embed', Embed)
-    Weex.registerComponent('refresh', Refresh)
-    Weex.registerComponent('loading', Loading)
-    Weex.registerComponent('spinner', Spinner)
-    Weex.registerComponent('loading-indicator', Spinner)
-    Weex.registerComponent('web', Web)
+    Weex.install(Div)
+    Weex.install(Image)
+    Weex.install(Text)
+    Weex.install(Scrollable)    // TODO
+    // Weex.install(Countdown)
+    // Weex.install(Marquee)
+    Weex.install(Slider)
+    Weex.install(Indicator)
+    Weex.install(Tabheader)     // TODO
+    Weex.install(Input)
+    // Weex.registerComponent('list', Vlist)
+    // Weex.registerComponent('vlist', Vlist)
+    // Weex.registerComponent('hlist', Hlist)
+    // Weex.registerComponent('scroller', Scroller)
+    // Weex.registerComponent('select', Select)
+    // Weex.registerComponent('datepicker', Datepicker)
+    // Weex.registerComponent('timepicker', Timepicker)
+    Weex.install(Video)
+    Weex.install(Switch)
+    Weex.install(A)
+    Weex.install(Embed)
+    // Weex.install(Refresh)
+    // Weex.install(Loading)
+    Weex.install(Spinner)
+    Weex.install(Web)
   }
 }
-
-module.exports = components

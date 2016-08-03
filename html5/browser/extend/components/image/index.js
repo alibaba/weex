@@ -2,12 +2,7 @@
 
 'use strict'
 
-const Atomic = require('./atomic')
-const LazyLoad = require('../lazyLoad')
-// const config = require('../config')
-const utils = require('../utils')
-
-require('../styles/image.css')
+import './image.css'
 
 const DEFAULT_SIZE = 200
 const RESIZE_MODES = ['stretch', 'cover', 'contain']
@@ -17,27 +12,26 @@ const DEFAULT_RESIZE_MODE = 'stretch'
  * resize: 'cover' | 'contain' | 'stretch', default is 'stretch'
  * src: url
  */
+const proto = {
+  create () {
+    const node = document.createElement('div')
+    node.classList.add('weex-img', 'weex-element')
+    return node
+  },
 
-function Image (data) {
-  this.resize = DEFAULT_RESIZE_MODE
-  Atomic.call(this, data)
+  clearAttr () {
+    this.src = ''
+    this.node.style.backgroundImage = ''
+  }
 }
 
-Image.prototype = Object.create(Atomic.prototype)
-
-Image.prototype.create = function () {
-  const node = document.createElement('div')
-  node.classList.add('weex-img', 'weex-element')
-  return node
-}
-
-Image.prototype.attr = {
+const attr = {
   src: function (val) {
     if (!this.src) {
       this.src = lib.img.defaultSrc
       this.node.style.backgroundImage = 'url(' + this.src + ')'
     }
-    LazyLoad.makeImageLazy(this.node, val)
+    this.enableLazyload(val)
   },
 
   resize: function (val) {
@@ -50,7 +44,7 @@ Image.prototype.attr = {
   }
 }
 
-Image.prototype.style = utils.extend(Object.create(Atomic.prototype.style), {
+const style = {
   width: function (val) {
     val = parseFloat(val) * this.data.scale
     if (val < 0 || isNaN(val)) {
@@ -66,11 +60,25 @@ Image.prototype.style = utils.extend(Object.create(Atomic.prototype.style), {
     }
     this.node.style.height = val + 'px'
   }
-})
-
-Image.prototype.clearAttr = function () {
-  this.src = ''
-  this.node.style.backgroundImage = ''
 }
 
-module.exports = Image
+function init (Weex) {
+
+  const Atomic = Weex.Atomic
+  const extend = Weex.utils.extend
+
+  function Image (data) {
+    this.resize = DEFAULT_RESIZE_MODE
+    Atomic.call(this, data)
+  }
+  Image.prototype = Object.create(Atomic.prototype)
+  extend(Image.prototype, proto)
+  extend(Image.prototype, { attr })
+  extend(Image.prototype, {
+    style: extend(Object.create(Atomic.prototype.style), style)
+  })
+
+  Weex.registerComponent('image', Image)
+}
+
+export default { init }

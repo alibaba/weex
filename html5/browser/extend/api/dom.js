@@ -1,8 +1,6 @@
 'use strict'
 
 const scroll = require('scroll-to')
-// const config = require('../config')
-const logger = require('../../logger')
 
 const dom = {
 
@@ -85,9 +83,9 @@ const dom = {
     !options && (options = {})
     const offset = (Number(options.offset) || 0) * this.scale
     const componentManager = this.getComponentManager()
-    const elem = componentManager.getElementByRef(ref)
+    const elem = componentManager.getComponent(ref)
     if (!elem) {
-      return logger.error('component of ref ' + ref + ' doesn\'t exist.')
+      return console.error('component of ref ' + ref + ' doesn\'t exist.')
     }
     const parentScroller = elem.getParentScroller()
     if (parentScroller) {
@@ -98,14 +96,13 @@ const dom = {
           + document.body.scrollTop
       const tween = scroll(0, offsetTop + offset, options)
       tween.on('end', function () {
-        logger.log('scroll end.')
+        console.log('scroll end.')
       })
     }
   }
-
 }
 
-dom._meta = {
+const meta = {
   dom: [{
     name: 'createBody',
     args: ['object']
@@ -142,4 +139,8 @@ dom._meta = {
   }]
 }
 
-module.exports = dom
+export default {
+  init: function (Weex) {
+    Weex.registerApiModule('dom', dom, meta)
+  }
+}
