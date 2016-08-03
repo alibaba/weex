@@ -1,4 +1,3 @@
-import Div from './div'
 import Image from './image'
 import Text from './text'
 // import Vlist from './vlist'
@@ -25,7 +24,6 @@ import Web from './web'
 
 export default {
   init: function (Weex) {
-    Weex.install(Div)
     Weex.install(Image)
     Weex.install(Text)
     Weex.install(Scrollable)    // TODO
