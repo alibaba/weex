@@ -69,7 +69,6 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
     if (!options || [WXUtility isBlankString:urlStr]) {
         [callbackRsp setObject:@(-1) forKey:@"status"];
         [callbackRsp setObject:@false forKey:@"ok"];
-        
         callback(callbackRsp);
         
         return;
@@ -114,7 +113,7 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
                     [[WXSDKManager bridgeMgr] callBack:weakSelf.weexInstance.instanceId funcId:progressCallback params:callbackRsp keepAlive:true];
                     
                 } withReceiveData:^(NSData *data) {
-                    [callbackRsp setObject:@{ @"LOADING" : @3  } forKey:@"readyState"];
+                    [callbackRsp setObject:@{ @"LOADING" : @3 } forKey:@"readyState"];
                     received += [data length];
                     [callbackRsp setObject:[NSNumber numberWithInteger:received] forKey:@"length"];
                     
@@ -149,7 +148,9 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
                             if ([type isEqualToString:@"jsonp"]) {
                                 NSUInteger start = [responseData rangeOfString:@"("].location + 1 ;
                                 NSUInteger end = [responseData rangeOfString:@")" options:NSBackwardsSearch].location;
-                                responseData = [responseData substringWithRange:NSMakeRange(start, end-start)];
+                                if (end > start) {
+                                    responseData = [responseData substringWithRange:NSMakeRange(start, end-start)];
+                                }
                             }
                             id jsonObj = [self JSONObjFromData:[responseData dataUsingEncoding:NSUTF8StringEncoding]];
                             if (jsonObj) {
@@ -169,15 +170,17 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
 - (NSString*)stringfromData:(NSData *)data encode:(NSString *)encoding
 {
     NSMutableString *responseData = nil;
-    if (!encoding) {
-        encoding = @"utf-8";
-    }
-    CFStringEncoding cfStrEncoding = CFStringConvertIANACharSetNameToEncoding((CFStringRef)encoding);
-    if (cfStrEncoding == kCFStringEncodingInvalidId) {
-        WXLogError(@"not supported encode");
-    } else {
-        NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(cfStrEncoding);
-        responseData = [[NSMutableString alloc]initWithData:data encoding:encoding];
+    if (data) {
+        if (!encoding) {
+            encoding = @"utf-8";
+        }
+        CFStringEncoding cfStrEncoding = CFStringConvertIANACharSetNameToEncoding((CFStringRef)encoding);
+        if (cfStrEncoding == kCFStringEncodingInvalidId) {
+            WXLogError(@"not supported encode");
+        } else {
+            NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(cfStrEncoding);
+            responseData = [[NSMutableString alloc]initWithData:data encoding:encoding];
+        }
     }
     return responseData;
 }
