@@ -11,7 +11,6 @@
 #import "WXThreadSafeMutableDictionary.h"
 #import <CommonCrypto/CommonCrypto.h>
 #import "WXUtility.h"
-#import "WXUtility+Hash.h"
 
 static NSString * const WXStorageDirectory            = @"wxstorage";
 static NSString * const WXStorageFileName             = @"wxstorage.json";
@@ -46,6 +45,10 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
         callback(@{@"result":@"failed",@"data":@"key must a string!"});
         return;
     }
+    if ([WXUtility isBlankString:key]) {
+        callback(@{@"result":@"failed",@"data":@"invalid_param"});
+        return ;
+    }
     NSString *value = [self.memory objectForKey:key];
     if (value == (id)kCFNull) {
         value = [[WXUtility globalCache] objectForKey:key];
@@ -79,6 +82,10 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
     if ([value isKindOfClass:[NSString class]] == NO) {
         callback(@{@"result":@"failed",@"data":@"value must a string!"});
         return;
+    }
+    if ([WXUtility isBlankString:key]) {
+        callback(@{@"result":@"failed",@"data":@"invalid_param"});
+        return ;
     }
     [self setObject:value forKey:key];
     callback(@{@"result":@"success"});
