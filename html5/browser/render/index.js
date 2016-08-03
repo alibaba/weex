@@ -4,7 +4,7 @@
 
 require('./style/base.css')
 
-import './runtime'
+import '../runtime'
 
 import config from './config'
 import { load, registerLoader } from './loader'

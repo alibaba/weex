@@ -164,7 +164,7 @@ export function bindEvents (evts) {
     const listener = function (e) {
       const event = extend({}, e)
       event.target = self.data
-      sender.fireEvent(ref, evt, {
+      sender.fireEvent(self.data.ref, evt, {
         extra: func.extra && func.extra.bind(self),
         updator: func.updator && func.updator.bind(self)
       }, event)
