@@ -1,4 +1,5 @@
 import ComponentManager from '../dom/componentManager'
+import { registerLoader } from './loader'
 import { protocol } from '../bridge'
 import { extend } from '../utils'
 
@@ -57,7 +58,7 @@ const methods = {
   registerLoader (name, loaderFunc) {
     registerLoader(name, loaderFunc)
   }
-  
+
 }
 
 // To install components and plugins.
@@ -65,7 +66,7 @@ function install (mod) {
   mod.init(this)
 }
 
-export function bind(Weex) {
+export function bind (Weex) {
   Weex.install = install.bind(Weex)
   extend(Weex, methods)
 }

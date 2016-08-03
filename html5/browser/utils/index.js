@@ -7,7 +7,8 @@
 import frameUpdater from './frameUpdater'
 export { frameUpdater }
 
-export { isArray, slice } from './array'
+import { isArray, slice } from './array'
+export { isArray, slice }
 
 export const vendors = ['ms', 'moz', 'webkit', 'o']
 

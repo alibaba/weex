@@ -7,7 +7,7 @@ require('./style/base.css')
 import '../runtime'
 
 import config from './config'
-import { load, registerLoader } from './loader'
+import { load } from './loader'
 import * as utils from '../utils'
 import { Sender, receiver } from '../bridge'
 import Component from '../base/component'
@@ -156,7 +156,7 @@ Weex.prototype = {
 
   getComponentManager: function () {
     if (!this._componentManager) {
-      this._componentManager = ComponentManager.getInstance(this.instanceId);
+      this._componentManager = ComponentManager.getInstance(this.instanceId)
     }
     return this._componentManager
   },

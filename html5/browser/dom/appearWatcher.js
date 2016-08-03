@@ -118,7 +118,7 @@ function fireEvent (component, type) {
   const data = { direction: direction }
   evt.initEvent(type, false, false)
   evt.data = data
-  utils.extend(evt, data)
+  extend(evt, data)
   component.node.dispatchEvent(evt)
 }
 

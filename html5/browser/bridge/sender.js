@@ -42,7 +42,7 @@ Sender.prototype = {
     // do not prevent default, otherwise the touchstart
     // event will no longer trigger a click event
     event._alreadyFired = true
-    func.extra && utils.extend(event, func.extra())
+    func.extra && extend(event, func.extra())
     _send(this.instanceId, {
       method: 'fireEvent',
       args: [ref, type, event, func.updator && func.updator()]

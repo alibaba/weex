@@ -113,14 +113,12 @@ const style = {
 // }
 
 function init (Weex) {
-
   const Atomic = Weex.Atomic
   const extend = Weex.utils.extend
   getRgb = Weex.utils.getRgb
   loopArray = Weex.utils.loopArray
 
   function Spinner (data) {
-    this.resize = DEFAULT_RESIZE_MODE
     Atomic.call(this, data)
   }
   Spinner.prototype = Object.create(Atomic.prototype)

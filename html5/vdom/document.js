@@ -1,4 +1,4 @@
-import { instanceMap, getNextNodeRef } from './helper'
+import { instanceMap } from './helper'
 import Listener from './listener'
 import Element from './element'
 import Comment from './comment'
@@ -105,6 +105,19 @@ function setBody (doc, el) {
   el.ref = '_root'
   doc.nodeMap._root = el
   doc.body = el
+}
+
+function linkParent (node, parent) {
+  node.parentNode = parent
+  if (parent.docId) {
+    node.docId = parent.docId
+    node.ownerDocument = parent.ownerDocument
+    node.ownerDocument.nodeMap[node.nodeId] = node
+    node.depth = parent.depth + 1
+  }
+  node.children.forEach(child => {
+    linkParent(child, node)
+  })
 }
 
 Document.prototype.createBody = function (type, props) {

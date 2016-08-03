@@ -42,7 +42,6 @@ function removeEvents (comp) {
 }
 
 function getProto (Weex) {
-
   const Component = Weex.Component
 
   function create (nodeType) {
@@ -245,7 +244,6 @@ function getProto (Weex) {
       else if (leftDist > this.loadmoreoffset && !this.isAvailableToFireloadmore) {
         this.isAvailableToFireloadmore = true
       }
-
     }.bind(this))
   }
 
@@ -281,7 +279,6 @@ const attr = {
 }
 
 function init (Weex) {
-
   const Component = Weex.Component
   const extend = Weex.utils.extend
 

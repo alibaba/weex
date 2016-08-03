@@ -227,7 +227,7 @@ function getScrollVal (rect, node) {
 function fireEvent (element, type, data) {
   const evt = document.createEvent('Event')
   evt.data = data
-  for (k in data) {
+  for (const k in data) {
     if (data.hasOwnProperty(k)) {
       evt[k] = data[k]
     }
@@ -380,7 +380,6 @@ const style = {
 }
 
 function init (Weex) {
-
   const Atomic = Weex.Atomic
   const extend = Weex.utils.extend
 

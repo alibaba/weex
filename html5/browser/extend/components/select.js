@@ -27,12 +27,12 @@ const proto = {
   }
 }
 
-Select.prototype.attr = {
+const attr = {
   disabled: function (val) {
     this.node.disabled = val && val !== 'false'
   },
   options: function (val) {
-    if (!utils.isArray(val)) {
+    if (!isArray(val)) {
       return
     }
     this.options = val
@@ -67,7 +67,6 @@ const event = {
 }
 
 function init (Weex) {
-
   const Atomic = Weex.Atomic
   const extend = Weex.utils.extend
   isArray = Weex.utils.isArray

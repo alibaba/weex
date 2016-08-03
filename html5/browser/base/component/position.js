@@ -65,7 +65,6 @@ export function unsetPosition (position) {
 
 export const style = {
   position (value) {
-
     // This is a peace of hacking to fix the problem about
     // mixing fixed and transform. See 'http://stackoverflo
     // w.com/questions/15194313/webkit-css-transform3d-posi
@@ -73,7 +72,6 @@ export const style = {
     value !== 'fixed' && this.unsetFixed()
     value !== 'sticky' && this.unsetSticky()
     if (value === 'fixed') {
-
       return this.setFixed()
     }
     if (value === 'sticky') {

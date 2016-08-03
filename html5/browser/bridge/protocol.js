@@ -1,21 +1,5 @@
 'use strict'
 
-import { isArray } from '../utils'
-const { registerModules } = global
-// const ComponentManager = require('./componentManager')
-
-// for jsframework to register modules.
-// const _registerModules = function (config) {
-//   if (isArray(config)) {
-//     for (let i = 0, l = config.length; i < l; i++) {
-//       registerModules(config[i])
-//     }
-//   }
-//   else {
-//     registerModules(config)
-//   }
-// }
-
 export default {
 
   // weex instances

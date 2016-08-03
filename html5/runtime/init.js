@@ -68,7 +68,7 @@ export default function init (config) {
     'registerModules',
     'registerMethods'
   ].forEach(genInit)
-  
+
   ; [
     'destroyInstance',
     'refreshInstance',
@@ -80,7 +80,3 @@ export default function init (config) {
 
   return methods
 }
-
-
-
-

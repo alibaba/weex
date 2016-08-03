@@ -6,10 +6,10 @@ import refresh from './refresh'
 import loading from './loading'
 
 export default {
-	init: function (Weex) {
-		Weex.install(list)
-		Weex.install(scroller)
-		Weex.install(refresh)
-		Weex.install(loading)
-	}
+  init: function (Weex) {
+    Weex.install(list)
+    Weex.install(scroller)
+    Weex.install(refresh)
+    Weex.install(loading)
+  }
 }

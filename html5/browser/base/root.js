@@ -22,9 +22,7 @@ function detectRootHeight (root) {
 }
 
 function init (Weex) {
-
   const Component = Weex.Component
-  const extend = Weex.utils.extend
 
   function RootComponent (data, nodeType) {
     const id = data.rootId + '-root'

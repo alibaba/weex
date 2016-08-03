@@ -105,7 +105,6 @@ const style = {
 }
 
 function init (Weex) {
-
   const Component = Weex.Component
   const extend = Weex.utils.extend
 

@@ -4,8 +4,8 @@
 
 // const FrameUpdater = require('./frameUpdater')
 import { watchIfNeeded } from './appearWatcher'
-import { getType, extend, isArray } from '../utils'
-//const lazyload = require('./lazyload')
+import { isArray } from '../utils'
+// const lazyload = require('./lazyload')
 // const animation = require('./animation')
 
 const RENDERING_INDENT = 800
@@ -182,7 +182,7 @@ ComponentManager.prototype = {
 
   removeElement (ref) {
     if (isArray(ref)) {
-      return ref.map(r => removeElement(r))
+      return ref.map(r => this.removeElement(r))
     }
     const component = this.componentMap[ref]
     // fire event for rendering dom on body elment.
@@ -306,16 +306,6 @@ ComponentManager.prototype = {
     }
   },
 
-  // clearChildren (ref) {
-  //   const component = this.componentMap[ref]
-  //   if (component) {
-  //     component.node.innerHTML = ''
-  //     if (component.data) {
-  //       component.data.children = null
-  //     }
-  //   }
-  // },
-
   addEvent (ref, type) {
     const component = this.componentMap[ref]
     if (!component) {
@@ -332,34 +322,18 @@ ComponentManager.prototype = {
     component.unbindEvents([type])
   },
 
-  // updateAttrs (ref, attr) {
-  //   const component = this.componentMap[ref]
-  //   if (component) {
-  //     component.updateAttrs(attr)
-  //     if (component.data.type === 'image' && attr.src) {
-  //       lazyload.startIfNeeded(component)
-  //     }
-  //   }
-  // },
   setAttr (ref, key, value) {
     const component = this.componentMap[ref]
     if (!component) {
       return console.error(`[h5-render] component of ref '${ref}' does not exist.`)
     }
     component.updateAttrs({ [key]: value })
-    //if (component.data.type === 'image' && key === 'src') {
+    // if (component.data.type === 'image' && key === 'src') {
     //  component.fire
     //  lazyload.startIfNeeded(component)
-    //}
+    // }
   },
 
-  // updateStyle (ref, style) {
-  //   const component = this.componentMap[ref]
-  //   if (component) {
-  //     component.updateStyle(style)
-  //   }
-  // },
-  
   setStyle (ref, key, value) {
     const component = this.componentMap[ref]
     if (!component) {
@@ -375,25 +349,6 @@ ComponentManager.prototype = {
     }
     component.updateStyle(style)
   },
-
-  // updateFullAttrs (ref, attr) {
-  //   const component = this.componentMap[ref]
-  //   if (component) {
-  //     component.clearAttr()
-  //     component.updateAttrs(attr)
-  //     if (component.data.type === 'image' && attr.src) {
-  //       lazyload.startIfNeeded(component)
-  //     }
-  //   }
-  // },
-
-  // updateFullStyle (ref, style) {
-  //   const component = this.componentMap[ref]
-  //   if (component) {
-  //     component.clearStyle()
-  //     component.updateStyle(style)
-  //   }
-  // },
 
   handleAppend (component) {
     component._appended = true
@@ -417,15 +372,6 @@ ComponentManager.prototype = {
     component.fireLazyload()
     // lazyload.startIfNeeded(component);
   },
-
-  // transition (ref, config, callback) {
-  //   const component = this.componentMap[ref]
-  //   animation.transitionOnce(component, config, callback)
-  // },
-
-  // renderFinish () {
-  //   FrameUpdater.pause()
-  // },
 
   createFinish (callback) {
     // TODO

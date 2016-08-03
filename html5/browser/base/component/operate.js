@@ -151,7 +151,6 @@ export function updateStyle (style) {
 
 export function bindEvents (evts) {
   const self = this
-  const componentManager = this.getComponentManager()
   const weexInstance = this.getWeexInstance()
   evts.map(function (evt) {
     const func = self.event[evt] || {}

@@ -1,6 +1,6 @@
 'use strict'
 
-const modal = require('modals')
+import modal from 'modals'
 
 const msg = {
 
@@ -66,6 +66,6 @@ const meta = {
 
 export default {
   init: function (Weex) {
-    Weex.registerApiModule('modal', modal, meta)
+    Weex.registerApiModule('modal', msg, meta)
   }
 }

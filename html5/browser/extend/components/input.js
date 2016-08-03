@@ -106,7 +106,6 @@ const event = {
 }
 
 function init (Weex) {
-
   const Atomic = Weex.Atomic
   const extend = Weex.utils.extend
   appendStyle = Weex.utils.appendStyle

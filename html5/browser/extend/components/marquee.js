@@ -242,7 +242,6 @@ const proto = {
           + 'px,0)'
       next.style.display = ''
       this.fireLazyload(next)
-
     }.bind(this))
   },
 
@@ -266,7 +265,6 @@ const attr = {
 }
 
 function init (Weex) {
-
   const Component = Weex.Component
   const extend = Weex.utils.extend
 

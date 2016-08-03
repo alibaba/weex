@@ -1,10 +1,11 @@
 /* global lib */
-/* global weex */
 
 'use strict'
 
-require('./carrousel')
-require('./slider.css')
+import './carrousel'
+import './slider.css'
+
+const DEFAULT_INTERVAL = 3000
 
 let extend
 
@@ -173,7 +174,7 @@ const proto = {
 
   onAppend () {
     if (this.carrousel) {
-      this.carrousel.removeEventListener('change', getSliderChangeHandler.bind(null, slider))
+      this.carrousel.removeEventListener('change', getSliderChangeHandler.bind(null, this))
       this.carrousel.stop()
       this.carrousel = null
     }
@@ -184,7 +185,7 @@ const proto = {
     })
 
     this.carrousel.playInterval = this.interval
-    this.carrousel.addEventListener('change', getSliderChangeHandler.bind(null, slider))
+    this.carrousel.addEventListener('change', getSliderChangeHandler.bind(null, this))
     this.currentIndex = 0
 
     // preload all images for slider
@@ -246,7 +247,7 @@ const proto = {
     this.carrousel.stop()
   },
 
-  slideTo () {
+  slideTo (index) {
     const offset = index - this.currentIndex
     this.carrousel.items.slide(offset)
   }
@@ -282,7 +283,6 @@ const attr = {
 function init (Weex) {
   const Component = Weex.Component
   extend = Weex.utils.extend
-  const DEFAULT_INTERVAL = 3000
 
   function Slider (data) {
     this.autoPlay = false  // default value is false.

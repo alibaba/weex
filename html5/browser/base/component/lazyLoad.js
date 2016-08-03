@@ -1,4 +1,4 @@
-/* global lib */
+/* global lib, HTMLElement */
 
 'use strict'
 
@@ -59,7 +59,8 @@ export function makeImageLazy (image, src) {
 export function fireLazyload (component) {
   if (component instanceof HTMLElement) {
     loadIfNeeded(component)
-  } else {
+  }
+  else {
     startIfNeeded(component)
   }
 }

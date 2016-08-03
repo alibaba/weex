@@ -1,7 +1,7 @@
 'use strict'
 
-import { isArray, slice, extend } from '../../utils'
-import { ComponentManager, instanceMap } from '../../dom'
+import { extend } from '../../utils'
+import { ComponentManager } from '../../dom'
 import * as operate from './operate'
 import * as position from './position'
 import flexbox from './flexbox'
@@ -113,57 +113,6 @@ Component.prototype = {
     extend(event, data)
     this.node.dispatchEvent(event)
   },
-
-  //updateRecursiveAttr (data) {
-  //  this.updateAttrs(data.attr)
-  //  const componentManager = this.getComponentManager()
-  //  const children = this.data.children
-  //  if (children) {
-  //    for (let i = 0; i < children.length; i++) {
-  //      const child = componentManager.getComponent(children[i].ref)
-  //      if (child) {
-  //        child.updateRecursiveAttr(data.children[i])
-  //      }
-  //    }
-  //  }
-  //},
-
-  //updateRecursiveStyle (data) {
-  //  this.updateStyle(data.style)
-  //  const componentManager = this.getComponentManager()
-  //  const children = this.data.children
-  //  if (children) {
-  //    for (let i = 0; i < children.length; i++) {
-  //      const child = componentManager.getComponent(children[i].ref)
-  //      if (child) {
-  //        child.updateRecursiveStyle(data.children[i])
-  //      }
-  //    }
-  //  }
-  //},
-
-  //updateRecursiveAll (data) {
-  //  this.updateAttrs(data.attr)
-  //  this.updateStyle(data.style)
-  //  const componentManager = this.getComponentManager()
-  //
-  //  // const oldRef = this.data.ref
-  //  // if (componentMap[oldRef]) {
-  //  //   delete componentMap[oldRef]
-  //  // }
-  //  // this.data.ref = data.ref
-  //  // componentMap[data.ref] = this
-  //
-  //  const children = this.data.children
-  //  if (children) {
-  //    for (let i = 0; i < children.length; i++) {
-  //      const child = componentManager.getComponent(children[i].ref)
-  //      if (child) {
-  //        child.updateRecursiveAll(data.children[i])
-  //      }
-  //    }
-  //  }
-  //},
 
   addAppendHandler (cb) {
     let pre

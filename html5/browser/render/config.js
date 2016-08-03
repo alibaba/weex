@@ -1,7 +1,7 @@
 'use strict'
 
 const config = {
-	weexVersion: '0.5.0',
+  weexVersion: '0.5.0',
   debug: false
 }
 

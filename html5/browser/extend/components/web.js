@@ -50,7 +50,7 @@ function getProto (Weex) {
           url: that.web.src
         })
       })
-      window.addEventListener('message', handleMsg.bind(null, web))
+      window.addEventListener('message', handleMsg.bind(null, this))
     },
 
     goBack () {
@@ -77,7 +77,6 @@ const attr = {
 }
 
 function init (Weex) {
-
   const Atomic = Weex.Atomic
   const extend = Weex.utils.extend
   isArray = Weex.utils.isArray

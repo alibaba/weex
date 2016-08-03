@@ -58,7 +58,6 @@ const attr = {
 }
 
 function init (Weex) {
-
   const Component = Weex.Component
   const extend = Weex.utils.extend
   getRandom = Weex.utils.getRandom

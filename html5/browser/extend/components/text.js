@@ -84,7 +84,6 @@ const style = {
 }
 
 function init (Weex) {
-
   const Atomic = Weex.Atomic
   const extend = Weex.utils.extend
 

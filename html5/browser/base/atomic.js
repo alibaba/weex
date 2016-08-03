@@ -12,8 +12,8 @@ export default function Atomic (data) {
 Atomic.prototype = Object.create(Component.prototype)
 
 Atomic.prototype.createChildren = function (data) {
-	// do nonthing
-	return
+  // do nonthing
+  return
 }
 
 Atomic.prototype.appendChild = function (data) {

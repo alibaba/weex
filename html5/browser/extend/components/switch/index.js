@@ -124,7 +124,7 @@ function getClickHandler (comp) {
       comp.dispatchEvent('change', {
         value: comp.checked
       })
-    }.bind(comp)
+    }
   }
   return comp._clickHandler
 }
@@ -209,7 +209,6 @@ const event = {
 }
 
 function init (Weex) {
-
   const Atomic = Weex.Atomic
   const extend = Weex.utils.extend
 
