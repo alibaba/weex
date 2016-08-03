@@ -54,12 +54,15 @@
     }
     
     BOOL animated = YES;
-    NSString *obj = [[param objectForKey:@"animated"] uppercaseString];
+    NSString *obj = [[param objectForKey:@"animated"] lowercaseString];
     if (obj && [obj isEqualToString:@"false"]) {
         animated = NO;
     }
     
-    WXBaseViewController *vc = [[WXBaseViewController alloc]initWithSourceURL:[NSURL URLWithString:param[@"url"]]];
+    NSString *url = param[@"url"] ;
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    WXBaseViewController *vc = [[WXBaseViewController alloc]initWithSourceURL:[NSURL URLWithString:url]];
     vc.hidesBottomBarWhenPushed = YES;
     [container.navigationController pushViewController:vc animated:animated];
     [self callback:block code:MSG_SUCCESS data:nil];
@@ -69,7 +72,7 @@
                      withContainer:(UIViewController *)container
 {
     BOOL animated = YES;
-    NSString *obj = [[param objectForKey:@"animated"] uppercaseString];
+    NSString *obj = [[param objectForKey:@"animated"] lowercaseString];
     if (obj && [obj isEqualToString:@"false"]) {
         animated = NO;
     }
@@ -83,7 +86,7 @@
                            withContainer:(UIViewController *)container
 {
     BOOL animated = YES;
-    NSString *obj = [[param objectForKey:@"animated"] uppercaseString];
+    NSString *obj = [[param objectForKey:@"animated"] lowercaseString];
     if (obj && [obj isEqualToString:@"false"]) {
         animated = NO;
     }
@@ -319,7 +322,7 @@
     if (button.instanceId) {
         if (button.nodeRef)
         {
-            [[WXSDKManager bridgeMgr] fireEvent:button.instanceId ref:button.nodeRef type:@"click" params:nil];
+            [[WXSDKManager bridgeMgr] fireEvent:button.instanceId ref:button.nodeRef type:@"click" params:nil domChanges:nil] ;
         }
         else
         {
@@ -338,7 +341,7 @@
                     break;
             }
             
-           [[WXSDKManager bridgeMgr] fireEvent:button.instanceId ref:WX_SDK_ROOT_REF type:eventType params:nil];
+           [[WXSDKManager bridgeMgr] fireEvent:button.instanceId ref:WX_SDK_ROOT_REF type:eventType params:nil domChanges:nil];
         }
     }
 }

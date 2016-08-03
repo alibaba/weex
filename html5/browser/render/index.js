@@ -12,15 +12,14 @@ import * as utils from '../utils'
 import { Sender, receiver } from '../bridge'
 import Component from '../base/component'
 import Atomic from '../base/atomic'
-const ComponentManager = require('../dom/componentManager')
+import ComponentManager from '../dom/componentManager'
 import { bind as bindRegister } from './register'
-// import * as register from './register'
 
-require('envd')
-require('httpurl')
+import 'envd'
+import 'httpurl'
 
 // gesture
-require('./gesture')
+import './gesture'
 
 const DEFAULT_DESIGN_WIDTH = 750
 const DEFAULT_SCALE = window.innerWidth / DEFAULT_DESIGN_WIDTH

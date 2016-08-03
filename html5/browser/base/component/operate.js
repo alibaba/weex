@@ -161,6 +161,13 @@ export function bindEvents (evts) {
     }
     const sender = weexInstance.sender
     const listener = function (e) {
+      // do stop bubbling.
+      // do not prevent default, otherwise the touchstart
+      // event will no longer trigger a click event
+      if (e._alreadyTriggered) {
+        return
+      }
+      e._alreadyTriggered = true
       const event = extend({}, e)
       event.target = self.data
       sender.fireEvent(self.data.ref, evt, {

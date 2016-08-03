@@ -1,12 +1,13 @@
 # Virtual DOM APIs
 <span class="weex-version">0.4</span>
+<a href="https://github.com/weexteam/article/wiki/%E6%AC%A2%E8%BF%8E%E5%8F%82%E4%B8%8EWeex%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91"  class="weex-translate incomplete">cn</a>
 
 ### `Document`
 
 Each instance has a corresponding document with the same id. A document has many nodes which compose a node tree.
 
 * `new Document(id)`
-* `createBody(type, props)` Create body with a certian type and props. The `type` is one of `container`, `list` or `scroller`, and the `props` may contain `attr` and `style`.
+* `createBody(type, props)` Create body with a certain type and props. The `type` is one of `container`, `list` or `scroller`, and the `props` may contain `attr` and `style`.
 * `createElement(tagName, props)` Create a certain type element with props.
 * `createComment(text)` Create a comment node with a certain comment text.
 * `setListener(listener)` Set a dom listener which listens each dom updates and tells the rendering engine
@@ -47,7 +48,7 @@ extends from `Node`
 * `removeEvent(type)`
 * `toJSON()` Format of `{ref, type, attr{string}, style{string}, event[string], children[Element]}`
 * `type` Element type
-* `attr` Several attribuets for this element
+* `attr` Several attributes for this element
 * `style` Several style rules for this element
 * `classStyle` Class style map, each class has several style rules
 * `event` Event type list

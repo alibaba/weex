@@ -41,8 +41,6 @@ export function createInstance (instanceId, code, options, data) {
   let instance = instanceMap[instanceId]
   options = options || {}
 
-  config.debug = options.debug
-
   let result
   if (!instance) {
     instance = new AppInstance(instanceId, options)
@@ -129,6 +127,7 @@ export function registerMethods (apis) {
     Vm.registerMethods(apis)
   }
 }
+global.registerMethods = registerMethods
 
 /**
  * get a whole element tree of an instance
@@ -166,7 +165,7 @@ const jsHandlers = {
  * @param  {string} instanceId
  * @param  {array} tasks list with `method` and `args`
  */
-export function callJS (instanceId, tasks) {
+export function receiveTasks (instanceId, tasks) {
   const instance = instanceMap[instanceId]
   if (instance && Array.isArray(tasks)) {
     const results = []

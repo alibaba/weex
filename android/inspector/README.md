@@ -13,12 +13,29 @@ Open your terminal then type `npm install -g weex-devtool` and run.Launch it jus
 
 ##### How to use on an android device or emulator
 
+###### Taste of first debug with playground
+If you are a green hand to the debug of weex, we recommend you to try your first debug with `playground`, what you need to do is just launch the playground and scan the QR code shown in the debug page which wound opened if the `devtools server` have been launched. after you scan the QR code, the web page will list your connected devices.
+
+![devtools-main](https://img.alicdn.com/tps/TB13fwSKFXXXXXDaXXXXXXXXXXX-887-828.png "connecting (multiple) devices")
+
+
+###### Enable devtools in your own app
+Of course you can reuse the code of playground to build your own app, that is the simplest way to let your app's js code debuggable. On the other hand QR code is not necessary, if your review the source code you can draw a conclusion that QR CODE is just a way to set `devtools server` address. following those steps you can do the same thing.
+
 - gradle dependency on inspector.
-````
-dependencies {
-        compile(:inspector)
-}
-````
+  * *source code dependency*. you can set the dependency just like `playground` have done.
+    * copy project dir `android/inspect` to the same dir of your app. 
+    * add dependency in your app's build.gradle. 
+     ````
+     dependencies {
+             compile project(:inspector)
+     }
+     ````
+    * include the inspector in your project's settings.gradle. 
+    ```
+    include ':app', ':inspector'
+    ```
+
 
 - initialize in your XXXApplication file.
 ````
@@ -34,14 +51,14 @@ dependencies {
 }
 ````
 
-- set your remote bundle server ip.
+- [**OPTION**] *set your remote bundle server ip.*
 
-    For example, in the playground it is in the `IndexActivity.java`, you need to change the value of `CURRENT_IP` in IndexActivity.java from `DEFAULT_IP` to a server ip like `"30.30.30.150"`:
+    For example, in the playground it is in the `IndexActivity.java`, you need to change the value of `DEFAULT_IP` in IndexActivity.java from `"your_current_IP"` to a server ip like `"30.30.30.150"`:
 ````
-    private static String CURRENT_IP = "30.30.30.150"; // "your_current_IP";
+    private static final String DEFAULT_IP = "30.30.30.150"; // "your_current_IP";
 ````
 
-- enable network inspection.
+- [**OPTION**] *enable network inspection.*
 ````
 OkHttpClient client = new OkHttpClient();
 client.networkInterceptors().add(new OkHttpInterceptor());

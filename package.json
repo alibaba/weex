@@ -32,6 +32,7 @@
   },
   "scripts": {
     "postinstall": "bash ./bin/install-hooks.sh",
+    "build:config": "node build/config.frameworks.js",
     "build:browser": "webpack --config build/webpack.browser.config.js",
     "build:native": "webpack --config build/webpack.native.config.js",
     "build:examples": "webpack --config build/webpack.examples.config.js",
@@ -46,8 +47,8 @@
     "lint": "eslint html5",
     "test:unit": "mocha --compilers js:babel-core/register html5/test/unit/*/*.js html5/test/unit/*/*/*.js",
     "test:cover": "babel-node node_modules/isparta/bin/isparta cover --report text node_modules/mocha/bin/_mocha -- --reporter dot html5/test/unit/*/*.js html5/test/unit/*/*/*.js",
-    "test:e2e": "node html5/test/e2e/runner.js",
-    "test": "npm run lint && npm run test:cover && npm run test:e2e",
+    "test:e2e": "npm run build:browser && node html5/test/e2e/runner.js",
+    "test": "npm run build:config && npm run lint && npm run test:cover && npm run test:e2e",
     "serve": "serve ./ -p 12580",
     "clean:examples": "echo \"\\033[36;1m[Clean]\\033[0m \\033[33mexamples\\033[0m\" && rm -vrf examples/build/*",
     "clean:test": "echo \"\\033[36;1m[Clean]\\033[0m \\033[33mtest\\033[0m\" && rm -vrf test/build/*",
@@ -58,7 +59,7 @@
   },
   "subversion": {
     "browser": "0.2.23",
-    "framework": "0.10.13",
+    "framework": "0.15.1",
     "transformer": ">=0.1.5 <0.4"
   },
   "dependencies": {
@@ -89,7 +90,7 @@
     "mocha": "^2.5.3",
     "nightwatch": "^0.9.4",
     "phantomjs-prebuilt": "^2.1.7",
-    "selenium-server": "^2.53.0",
+    "selenium-server": "2.53.1",
     "serve": "^1.4.0",
     "sinon": "^1.17.4",
     "sinon-chai": "^2.8.0",

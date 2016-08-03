@@ -5,7 +5,7 @@ import init from './init'
 const config = {
   Document, Element, Comment,
   sendTasks (...args) {
-    global.callNative(...args)
+    return global.callNative(...args)
   }
 }
 

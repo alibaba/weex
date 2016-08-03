@@ -1,6 +1,7 @@
 # How to customize native APIs ?
+<a href="https://github.com/weexteam/article/wiki/%E6%AC%A2%E8%BF%8E%E5%8F%82%E4%B8%8EWeex%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91"  class="weex-translate incomplete">cn</a>
 
-Weex SDK provides only rendering capabilities, rather than have other capabilities, such as network, picture, and URL redirection. If you want the these features, you need to implement it.   
+Weex SDK provides only rendering capability, rather than having other capabilities, such as network, picture, and URL redirection. If you want the these features, you need to implement them yourselves.   
 The example below will describe how to extend weex with native logic or 'bridge' your existed native code.
 
 ## A URLHelper Example
@@ -64,10 +65,10 @@ URLHelper.openURL("http://www.taobao.com",function(ts){
 
 
 ## Things you need to note:
-1. Customize components must extend WXModule  
-2. @WXModuleAnno annotation must be added, as it is the only the way to recognized by Weex  
-3. The access levels of mehtod must be **public**  
-4. The module class also can not be an inner class  
-5. Customize can not be obfuscated by tools like ProGuard
-6. Module methods will be invoked in UI thread, do not put time consuming operation there
-7. Weex params can be int, double, float, String, Map, List, self-defined class that implements WXObject interface
+1. Customized components must inherit from `WXModule`;
+2. @WXModuleAnno annotation must be added, as it is the only way to be recognized by Weex;
+3. The access levels of method must be **public**;
+4. The module class also can not be an inner class;
+5. Customized components should not be obfuscated by tools like ProGuard;
+6. Module methods will be invoked on the UI thread, so do not put time-consuming operations there;
+7. Weex parameter's type can be int, double, float, String, Map, List, self-defined class that implements WXObject interface;

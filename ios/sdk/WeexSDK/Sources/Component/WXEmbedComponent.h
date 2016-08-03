@@ -7,8 +7,9 @@
  */
 
 #import "WXComponent.h"
+#import "WXErrorView.h"
 
-@interface WXEmbedComponent : WXComponent
+@interface WXEmbedComponent : WXComponent <WXErrorViewDelegate>
 
 - (void)refreshWeex;
 

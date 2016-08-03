@@ -806,7 +806,7 @@
 					"$(inherited)",
 					"-licucore",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.taobao.WeexDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.taobao.WeexDemo.uitest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
@@ -837,7 +837,7 @@
 					"$(inherited)",
 					"-licucore",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.taobao.WeexDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.taobao.WeexDemo.uitest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};

@@ -1,8 +1,11 @@
-import frameworks from './frameworks'
+import frameworks from './config'
+
+for (const name in frameworks) {
+  const framework = frameworks[name]
+  framework.init(config)
+}
 
 const versionRegExp = /^\/\/ *(\{[^\}]*\}) *\r?\n/
-
-const instanceMap = {}
 
 function checkVersion (code) {
   let info
@@ -16,7 +19,9 @@ function checkVersion (code) {
   return info
 }
 
-function createInstance (id, code, config, data) {
+const instanceMap = {}
+
+export function createInstance (id, code, config, data) {
   let info = instanceMap[id]
   if (!info) {
     info = checkVersion(code) || {}
@@ -26,6 +31,7 @@ function createInstance (id, code, config, data) {
     instanceMap[id] = info
     config = config || {}
     config.bundleVersion = info.version
+    console.debug(`[JS Framework] create an ${info.framework}@${config.bundleVersion} instance from ${config.bundleVersion}`)
     return frameworks[info.framework].createInstance(id, code, config, data)
   }
   return new Error(`invalid instance id "${id}"`)
@@ -46,6 +52,8 @@ function genInit (methodName) {
   }
 }
 
+['registerComponents', 'registerModules', 'registerMethods'].forEach(genInit)
+
 function genInstance (methodName) {
   methods[methodName] = function (...args) {
     const id = args[0]
@@ -57,26 +65,17 @@ function genInstance (methodName) {
   }
 }
 
-export default function init (config) {
-  for (const name in frameworks) {
-    const framework = frameworks[name]
-    framework.init(config)
+['destroyInstance', 'refreshInstance', 'receiveTasks', 'getRoot'].forEach(genInstance)
+
+function adaptInstance (methodName, nativeMethodName) {
+  methods[nativeMethodName] = function (...args) {
+    const id = args[0]
+    const info = instanceMap[id]
+    if (info && frameworks[info.framework]) {
+      return frameworks[info.framework][methodName](...args)
+    }
+    return new Error(`invalid instance id "${id}"`)
   }
-
-  [
-    'registerComponents',
-    'registerModules',
-    'registerMethods'
-  ].forEach(genInit)
-
-  ; [
-    'destroyInstance',
-    'refreshInstance',
-    'callJS',
-    'getRoot'
-  ].forEach(genInstance)
-
-  methods.receiveTasks = methods.callJS
-
-  return methods
 }
+
+adaptInstance('receiveTasks', 'callJS')

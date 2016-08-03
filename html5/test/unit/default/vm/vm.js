@@ -454,6 +454,154 @@ describe('generate virtual dom for a single vm', () => {
     expect(el.children[6].type).eql('image')
     expect(el.children[6].attr).eql({ src: 2 })
   })
+
+  it('generate more than one group of elements with the same repeat data', () => {
+    customComponentMap.foo = {
+      template: {
+        type: 'container',
+        children: [
+          { type: 'begin' },
+          {
+            repeat: {
+              expression: function () { return this.list },
+              value: 'v1'
+            },
+            type: 'image', attr: { src: function () { return this.v1.x } }
+          },
+          { type: 'middle' },
+          {
+            repeat: {
+              expression: function () { return this.list },
+              value: 'v2'
+            },
+            type: 'text', attr: { value: function () { return this.v2.x } }
+          },
+          { type: 'end' }
+        ]
+      },
+      data: {
+        list: [
+          { uid: 1, x: 1 }, { uid: 2, x: 2 }, { uid: 3 }
+        ]
+      }
+    }
+
+    const app = { doc, customComponentMap, differ }
+    const vm = new Vm('foo', customComponentMap.foo, { _app: app })
+
+    expect(vm._app).equal(app)
+    expect(vm.list).eql([
+      { uid: 1, x: 1 },
+      { uid: 2, x: 2 },
+      { uid: 3 }])
+
+    const el = doc.body
+    expect(el.type).eql('container')
+    expect(el.children).is.an.array
+
+    // [begin, comment, image x 3, comment, middle, comment, text x 3, comment, end]
+    expect(el.children.length).eql(13)
+
+    expect(el.children[0].type).eql('begin')
+    expect(el.children[1].type).eql('comment')
+    expect(el.children[1].value).eql('start')
+    expect(el.children[2].type).eql('image')
+    expect(el.children[2].attr).eql({ src: 1 })
+    expect(el.children[3].type).eql('image')
+    expect(el.children[3].attr).eql({ src: 2 })
+    expect(el.children[4].type).eql('image')
+    expect(el.children[4].attr).eql({})
+    expect(el.children[5].type).eql('comment')
+    expect(el.children[5].value).eql('end')
+    expect(el.children[6].type).eql('middle')
+    expect(el.children[7].type).eql('comment')
+    expect(el.children[7].value).eql('start')
+    expect(el.children[8].type).eql('text')
+    expect(el.children[8].attr).eql({ value: 1 })
+    expect(el.children[9].type).eql('text')
+    expect(el.children[9].attr).eql({ value: 2 })
+    expect(el.children[10].type).eql('text')
+    expect(el.children[10].attr).eql({})
+    expect(el.children[11].type).eql('comment')
+    expect(el.children[11].value).eql('end')
+    expect(el.children[12].type).eql('end')
+
+    vm.list[0].x = 4
+    differ.flush()
+
+    expect(el.children.length).eql(13)
+    expect(el.children[2].attr).eql({ src: 4 })
+    expect(el.children[8].attr).eql({ value: 4 })
+
+    // [begin, comment, image x 4, comment, middle, comment, text x 4, comment, end]
+    vm.list.push({ uid: 10, x: 10 })
+    differ.flush()
+
+    expect(el.children.length).eql(15)
+    expect(el.children[5].attr).eql({ src: 10 })
+    expect(el.children[12].attr).eql({ value: 10 })
+
+    // [begin, comment, image x 2, comment, middle, comment, text x 2, comment, end]
+    vm.list = [
+      { uid: 100, x: 100 }, { uid: 1, x: 1 }
+    ]
+    differ.flush()
+
+    expect(el.children.length).eql(11)
+    expect(el.children[2].attr).eql({ src: 100 })
+    expect(el.children[3].attr).eql({ src: 1 })
+    expect(el.children[7].attr).eql({ value: 100 })
+    expect(el.children[8].attr).eql({ value: 1 })
+
+    vm.list[0].x = 4
+    differ.flush()
+
+    expect(el.children.length).eql(11)
+    expect(el.children[2].attr).eql({ src: 4 })
+    expect(el.children[3].attr).eql({ src: 1 })
+    expect(el.children[7].attr).eql({ value: 4 })
+    expect(el.children[8].attr).eql({ value: 1 })
+
+    vm.list[1].x = 5
+    differ.flush()
+
+    expect(el.children.length).eql(11)
+    expect(el.children[2].attr).eql({ src: 4 })
+    expect(el.children[3].attr).eql({ src: 5 })
+    expect(el.children[7].attr).eql({ value: 4 })
+    expect(el.children[8].attr).eql({ value: 5 })
+  })
+
+  it('generate an element with external data', () => {
+    customComponentMap.foo = {
+      data: () => {
+        return { a: 10, b: 20 }
+      },
+      template: {
+        type: 'container',
+        attr: {
+          x: function () { return this.a },
+          y: function () { return this.b }
+        }
+      }
+    }
+
+    const app = { doc, customComponentMap, differ }
+    const vm = new Vm('foo', customComponentMap.foo, { _app: app }, null, { a: 1000 })
+
+    expect(vm._app).equal(app)
+
+    const el = doc.body
+    expect(el.type).eql('container')
+    expect(el.attr).eql({ x: 1000, y: 20 })
+
+    vm.a = 100
+    vm.b = 200
+    differ.flush()
+
+    expect(el).equal(doc.body)
+    expect(el.attr).eql({ x: 100, y: 200 })
+  })
 })
 
 describe('generate virtual dom for sub vm', () => {
@@ -485,9 +633,11 @@ describe('generate virtual dom for sub vm', () => {
         }
       },
       template: {
-        type: 'container',
+        type: 'div',
         children: [
-          { type: 'bar', id: 'bar', component: true },
+          { type: 'bar', id: 'bar', component: true,
+            events: { click: 'handleClick' }
+          },
           { type: 'bar1',
             shown: function () { return this.showbar1 },
             id: 'bar1', component: true
@@ -499,6 +649,9 @@ describe('generate virtual dom for sub vm', () => {
               component: true
           }
         ]
+      },
+      methods: {
+        handleClick: sinon.spy()
       }
     }
     customComponentMap.bar = {
@@ -525,7 +678,7 @@ describe('generate virtual dom for sub vm', () => {
     expect(vm._childrenVms[0]._rootEl).to.deep.equal(vm._ids['bar'].el)
 
     const el = doc.body
-    expect(el.type).eql('container')
+    expect(el.type).eql('div')
     expect(el.pureChildren).is.an.array
     expect(el.pureChildren.length).eql(1)
 
@@ -535,6 +688,12 @@ describe('generate virtual dom for sub vm', () => {
     expect(sub.children.length).eql(2)
     expect(sub.children[0].type).eql('aaa')
     expect(sub.children[1].type).eql('bbb')
+    expect(sub.event.click).is.a.function
+
+    const spy = customComponentMap.foo.methods.handleClick
+    sub.event.click(1, 2, 3)
+    expect(spy.args.length).eql(1)
+    expect(spy.args[0]).eql([1, 2, 3])
 
     vm.showbar1 = true
     differ.flush()
@@ -948,35 +1107,109 @@ describe('generate virtual dom for sub vm', () => {
     expect(el.pureChildren[2].attr).eql({ bbb: 10 })
   })
 
-  it('generate sub elements with external data', () => {
+  it('generate sub elements with dynamic types', (done) => {
     customComponentMap.foo = {
-      data: () => {
-        return { a: 10, b: 20 }
+      data: {
+        x: 'bar',
+        y: 'hello'
       },
       template: {
-        type: 'container',
-        attr: {
-          x: function () { return this.a },
-          y: function () { return this.b }
+        type: 'div',
+        children: [{
+          type: function () { return this.x },
+          attr: { value: function () { return this.y } }
+        }]
+      }
+    }
+    customComponentMap.bar = {
+      template: {
+        type: 'text',
+        attr: { value: 'bar' }
+      }
+    }
+    customComponentMap.baz = {
+      data: function () {
+        return {
+          value: ''
         }
+      },
+      template: {
+        type: 'text',
+        attr: { value: function () { return this.value + ' baz' } }
       }
     }
 
     const app = { doc, customComponentMap, differ }
-    const vm = new Vm('foo', customComponentMap.foo, { _app: app }, null, { a: 1000 })
+    const vm = new Vm('foo', customComponentMap.foo, { _app: app })
 
-    expect(vm._app).equal(app)
+    expect(doc.body.pureChildren[0].type).eql('text')
+    expect(doc.body.pureChildren[0].attr).eql({ value: 'bar' })
 
-    const el = doc.body
-    expect(el.type).eql('container')
-    expect(el.attr).eql({ x: 1000, y: 20 })
+    vm.x = 'baz'
+    expect(doc.body.pureChildren[0].type).eql('text')
+    expect(doc.body.pureChildren[0].attr).eql({ value: 'hello baz' })
 
-    vm.a = 100
-    vm.b = 200
-    differ.flush()
+    vm.y = 'bye'
+    setTimeout(() => {
+      expect(doc.body.pureChildren[0].type).eql('text')
+      expect(doc.body.pureChildren[0].attr).eql({ value: 'bye baz' })
 
-    expect(el).equal(doc.body)
-    expect(el.attr).eql({ x: 100, y: 200 })
+      vm.x = 'text'
+      expect(doc.body.pureChildren[0].type).eql('text')
+      expect(doc.body.pureChildren[0].attr).eql({ value: 'bye' })
+
+      done()
+    })
+  })
+
+  it('generate sub elements with repeat dynamic types', (done) => {
+    customComponentMap.foo = {
+      data: {
+        list: [
+          { uid: 1, type: 'bar' },
+          { uid: 2, type: 'baz' },
+          { uid: 3, type: 'bar' },
+          { uid: 4, type: 'baz' }
+        ]
+      },
+      template: {
+        type: 'div',
+        children: [{
+          type: function () { return this.v.type },
+          repeat: {
+            expression: function () { return this.list },
+            trackBy: 'uid',
+            value: 'v'
+          }
+        }]
+      }
+    }
+    customComponentMap.bar = {
+      template: {
+        type: 'text',
+        attr: { value: 'bar' }
+      }
+    }
+    customComponentMap.baz = {
+      template: {
+        type: 'text',
+        attr: { value: 'baz' }
+      }
+    }
+
+    const app = { doc, customComponentMap, differ }
+    const vm = new Vm('foo', customComponentMap.foo, { _app: app })
+
+    expect(doc.body.pureChildren.length).eql(4)
+    expect(doc.body.pureChildren.map(el => el.attr.value)).eql(['bar', 'baz', 'bar', 'baz'])
+
+    vm.list.splice(2, 0, { uid: 5, type: 'baz' })
+    setTimeout(() => {
+      expect(doc.body.pureChildren.length).eql(5)
+      expect(doc.body.pureChildren.map(el => el.attr.value)).eql(['bar', 'baz', 'baz', 'bar', 'baz'])
+
+      done()
+    })
   })
 })
 

@@ -205,10 +205,10 @@
 package com.taobao.weex.ui.component;
 
 import android.text.Layout;
+import android.view.ViewGroup;
 
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.Component;
-import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.view.WXTextView;
 
@@ -248,4 +248,25 @@ public class WXText extends WXComponent{
     }
   }
 
+  /**
+   * Flush view no matter what height and width the {@link WXDomObject} specifies.
+   * @param object must be a {@link Layout} object, otherwise, nothing will happen.
+   */
+  private void flushView(Object extra){
+    if(extra instanceof Layout &&
+       getView()!=null && !extra.equals(getView().getTextLayout())){
+      final Layout layout = (Layout) extra;
+      /**The following if block change the height of the width of the textView.
+       * other part of the code is the same to updateExtra
+       */
+      ViewGroup.LayoutParams layoutParams=getView().getLayoutParams();
+      if(layoutParams!=null){
+        layoutParams.height=layout.getHeight();
+        layoutParams.width=layout.getWidth();
+        getView().setLayoutParams(layoutParams);
+      }
+      getView().setTextLayout(layout);
+      getView().invalidate();
+    }
+  }
 }

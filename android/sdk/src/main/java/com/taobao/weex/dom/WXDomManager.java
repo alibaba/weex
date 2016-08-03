@@ -206,6 +206,9 @@ package com.taobao.weex.dom;
 
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXEnvironment;
@@ -213,6 +216,9 @@ import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.common.WXThread;
 import com.taobao.weex.ui.WXRenderManager;
+import com.taobao.weex.utils.FontDO;
+import com.taobao.weex.utils.TypefaceUtil;
+import com.taobao.weex.utils.WXConst;
 import com.taobao.weex.utils.WXUtils;
 
 import java.util.Iterator;
@@ -531,5 +537,43 @@ public final class WXDomManager {
       return;
     }
     statement.updateFinish();
+  }
+
+  void startAnimation(@NonNull String instanceId,
+                      @NonNull String ref,
+                      @NonNull String animation,
+                      @Nullable String callBack){
+    if (!isDomThread()) {
+      throw new WXRuntimeException("RefreshFinish operation must be done in dom thread");
+    }
+    WXDomStatement statement = mDomRegistries.get(instanceId);
+    if (statement == null) {
+      return;
+    }
+    statement.startAnimation(ref,animation,callBack);
+  }
+
+  public void addRule(final String type,final JSONObject jsonObject) {
+    if (WXConst.FONT_FACE.equals(type)) {
+      FontDO fontDO = parseFontDO(jsonObject);
+      if (fontDO != null && !TextUtils.isEmpty(fontDO.getFontFamilyName())) {
+        FontDO cacheFontDO = TypefaceUtil.getFontDO(fontDO.getFontFamilyName());
+        if (cacheFontDO == null || !TextUtils.equals(cacheFontDO.getUrl(), fontDO.getUrl())) {
+          TypefaceUtil.putFontDO(fontDO);
+          TypefaceUtil.loadTypeface(fontDO);
+        } else {
+          TypefaceUtil.loadTypeface(cacheFontDO);
+        }
+      }
+    }
+  }
+
+  private FontDO parseFontDO(JSONObject jsonObject) {
+    if(jsonObject == null) {
+      return null;
+    }
+    String src = jsonObject.getString(WXConst.FONT_SRC);
+    String name = jsonObject.getString(WXConst.FONT_FAMILY);
+    return new FontDO(name, src);
   }
 }

@@ -123,7 +123,7 @@ const stream = {
    * Note: This API is deprecated. Please use stream.fetch instead.
    * send a http request through XHR.
    * @param  {obj} params
-   *  - method: 'GET' | 'POST',
+   *  - method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'HEAD' | 'PATCH',
    *  - url: url requested
    * @param  {string} callbackId
    */
@@ -164,7 +164,7 @@ const stream = {
    * a arraybuffer for a file stream. (You can use Blob and FileReader
    * API implemented by most modern browsers to read a arraybuffer.)
    * @param  {object} options config options
-   *   - method {string} 'GET' | 'POST'
+   *   - method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'HEAD' | 'PATCH'
    *   - headers {obj}
    *   - url {string}
    *   - mode {string} 'cors' | 'no-cors' | 'same-origin' | 'navigate'
@@ -178,7 +178,7 @@ const stream = {
     const DEFAULT_MODE = 'cors'
     const DEFAULT_TYPE = 'text'
 
-    const methodOptions = ['GET', 'POST']
+    const methodOptions = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'PATCH']
     const modeOptions = ['cors', 'no-cors', 'same-origin', 'navigate']
     const typeOptions = ['text', 'json', 'jsonp', 'arraybuffer']
 
@@ -253,6 +253,9 @@ const stream = {
         config.headers['Content-Type'] = TYPE_FORM
       }
     }
+
+    // validate options.timeout
+    config.timeout = parseInt(config.timeout, 10) || 2500
 
     const _callArgs = [config, function (res) {
       sender.performCallback(callbackId, res)
