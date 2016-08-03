@@ -102,6 +102,9 @@
     free_css_node(_cssNode);
 
     [self _removeAllEvents];
+    if (_positionType == WXPositionTypeFixed) {
+        [self.weexInstance.componentManager removeFixedComponent:self];
+    }
 
     pthread_mutex_destroy(&_propertyMutex);
     pthread_mutexattr_destroy(&_propertMutexAttr);
