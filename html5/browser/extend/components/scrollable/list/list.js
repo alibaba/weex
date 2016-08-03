@@ -17,7 +17,7 @@ function getProto (Scrollable) {
       const children = this.data.children || []
       children.forEach(function (data) {
         const type = data.type
-        if (availableChildrenTypes.indexOf(type) !== -1) {
+        if (availableChildrenTypes.indexOf(type) === -1) {
           // throw new Error('[h5-render] invalid child type "'
           //   + type + '" for list.')
           console.warn('[h5-render] invalid child type "'
@@ -29,7 +29,7 @@ function getProto (Scrollable) {
 
     appendChild (data) {
       const type = data.type
-      if (availableChildrenTypes.indexOf(type) !== -1) {
+      if (availableChildrenTypes.indexOf(type) === -1) {
         // throw new Error('[h5-render] invalid child type "'
         //   + type + '" for list.')
         console.warn('[h5-render] invalid child type "'
@@ -40,7 +40,7 @@ function getProto (Scrollable) {
 
     insertBefore (child, before) {
       const type = child.data.type
-      if (availableChildrenTypes.indexOf(type) !== -1) {
+      if (availableChildrenTypes.indexOf(type) === -1) {
         // throw new Error('[h5-render] invalid child type "'
         //   + type + '" for list.')
         console.warn('[h5-render] invalid child type "'
