@@ -12,6 +12,7 @@
 
 import {
   extend,
+  isObject,
   bind
 } from '../util'
 import {
@@ -419,7 +420,7 @@ function bindRepeat (vm, target, fragBlock, info) {
     let mergedData
     if (oldStyle) {
       mergedData = item
-      if (typeof item === 'object') {
+      if (isObject(item)) {
         mergedData[keyName] = index
         if (!mergedData.hasOwnProperty('INDEX')) {
           Object.defineProperty(mergedData, 'INDEX', {
@@ -429,6 +430,13 @@ function bindRepeat (vm, target, fragBlock, info) {
             }
           })
         }
+      }
+      else {
+        console.warn('[JS Framework] Each list item must be an object in old-style repeat, '
+          + 'please use `repeat={{v in list}}` instead.')
+        mergedData = {}
+        mergedData[keyName] = index
+        mergedData[valueName] = item
       }
     }
     else {
