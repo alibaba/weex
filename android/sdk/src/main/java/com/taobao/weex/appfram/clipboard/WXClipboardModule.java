@@ -238,7 +238,6 @@ public class WXClipboardModule extends WXModule implements IWXClipboard {
 
     private static final String RESULT_OK = "success";
     private static final String RESULT_FAILED = "failed";
-    private static final String UNDEFINED = "undefined";
 
     @Override
     @WXModuleAnno
@@ -246,14 +245,11 @@ public class WXClipboardModule extends WXModule implements IWXClipboard {
         if(null == text) {
             return;
         }
+
         Context context = mWXSDKInstance.getContext();
-        try {
-            ClipboardManager clipboard = (ClipboardManager) context.getSystemService(context.CLIPBOARD_SERVICE);
-            ClipData clip = ClipData.newPlainText(CLIP_KEY, text);
-            clipboard.setPrimaryClip(clip);
-        } catch (Exception e) {
-            WXLogUtils.e("error in WXClipboardModule.setString().", e);
-        }
+        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText(CLIP_KEY, text);
+        clipboard.setPrimaryClip(clip);
     }
 
     @Override
@@ -263,9 +259,8 @@ public class WXClipboardModule extends WXModule implements IWXClipboard {
         ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
 
         Map<String, Object> map = new HashMap<>(2);
-        ContentResolver cr = context.getContentResolver();
         ClipData clip = clipboard.getPrimaryClip();
-        if (clip != null) {
+        if (clip != null && clip.getItemCount() > 0) {
             ClipData.Item item = clip.getItemAt(0);
             CharSequence text = coerceToText(context, item);
 
@@ -275,6 +270,7 @@ public class WXClipboardModule extends WXModule implements IWXClipboard {
             map.put(RESULT, RESULT_FAILED);
             map.put(DATA, "");
         }
+
         if (null != callback) {
             callback.invoke(map);
         }
@@ -293,8 +289,8 @@ public class WXClipboardModule extends WXModule implements IWXClipboard {
         if (uri != null) {
             FileInputStream stream = null;
             try {
-                AssetFileDescriptor descr = context.getContentResolver().openTypedAssetFileDescriptor(uri, "text/*", null);
-                stream = descr.createInputStream();
+                AssetFileDescriptor assetFileDescriptor = context.getContentResolver().openTypedAssetFileDescriptor(uri, "text/*", null);
+                stream = assetFileDescriptor.createInputStream();
                 InputStreamReader reader = new InputStreamReader(stream, "UTF-8");
 
                 StringBuilder builder = new StringBuilder(128);
@@ -314,6 +310,7 @@ public class WXClipboardModule extends WXModule implements IWXClipboard {
                     try {
                         stream.close();
                     } catch (IOException e) {
+                        // ignore
                     }
                 }
             }
@@ -321,7 +318,7 @@ public class WXClipboardModule extends WXModule implements IWXClipboard {
             return uri.toString();
         }
 
-        // Condition 3.  An intent.
+        // Condition 3.  an intent.
         Intent intent = item.getIntent();
         if (intent != null) {
             return intent.toUri(Intent.URI_INTENT_SCHEME);
