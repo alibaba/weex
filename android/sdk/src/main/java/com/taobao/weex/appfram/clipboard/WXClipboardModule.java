@@ -267,7 +267,7 @@ public class WXClipboardModule extends WXModule implements IWXClipboard {
         ClipData clip = clipboard.getPrimaryClip();
         if (clip != null) {
             ClipData.Item item = clip.getItemAt(0);
-            String text = coerceToText(context, item).toString();
+            CharSequence text = coerceToText(context, item);
 
             map.put(RESULT, text != null ? RESULT_OK : RESULT_FAILED);
             map.put(DATA, text != null ? text : "");
@@ -275,7 +275,9 @@ public class WXClipboardModule extends WXModule implements IWXClipboard {
             map.put(RESULT, RESULT_FAILED);
             map.put(DATA, "");
         }
-        callback.invoke(map);
+        if (null != callback) {
+            callback.invoke(map);
+        }
     }
 
     private CharSequence coerceToText(Context context, ClipData.Item item) {
