@@ -248,8 +248,8 @@ public class WXClipboardModule extends WXModule implements IWXClipboard {
         }
         Context context = mWXSDKInstance.getContext();
         try {
-            android.content.ClipboardManager clipboard = (ClipboardManager) context.getSystemService(context.CLIPBOARD_SERVICE);
-            android.content.ClipData clip = ClipData.newPlainText(CLIP_KEY, text);
+            ClipboardManager clipboard = (ClipboardManager) context.getSystemService(context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText(CLIP_KEY, text);
             clipboard.setPrimaryClip(clip);
         } catch (Exception e) {
             WXLogUtils.e("error in WXClipboardModule.setString().", e);
@@ -280,6 +280,7 @@ public class WXClipboardModule extends WXModule implements IWXClipboard {
         }
     }
 
+    @Nullable
     private CharSequence coerceToText(Context context, ClipData.Item item) {
         // Condition 1. just a simple text
         CharSequence text = item.getText();
@@ -320,7 +321,7 @@ public class WXClipboardModule extends WXModule implements IWXClipboard {
             return uri.toString();
         }
 
-        // Condition 3. It is a intent. try with a NO user-friendly thing, but it's something.
+        // Condition 3.  An intent.
         Intent intent = item.getIntent();
         if (intent != null) {
             return intent.toUri(Intent.URI_INTENT_SCHEME);
