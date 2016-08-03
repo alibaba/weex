@@ -275,7 +275,7 @@ public class WXStreamModule extends WXModule {
           WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callback,
             (response == null || response.originalData == null) ? "{}" :
               readAsString(response.originalData,
-                headers!=null?headers.get("Content-Type"):""
+                headers!=null?getHeader(headers,"Content-Type"):""
               ));
       }
     }, null);
@@ -360,7 +360,7 @@ public class WXStreamModule extends WXModule {
               resp.put("data", null);
             } else {
               String respData = readAsString(response.originalData,
-                headers!=null?headers.get("Content-Type"):""
+                headers!=null?getHeader(headers,"Content-Type"):""
               );
               resp.put("data",parseJson(respData,options.getType()));
             }
@@ -392,6 +392,18 @@ public class WXStreamModule extends WXModule {
       return data;
     }
   }
+
+  static String getHeader(Map<String,String> headers,String key){
+    if(headers == null||key == null){
+      return null;
+    }
+    if(headers.containsKey(key)){
+      return headers.get(key);
+    }else{
+      return headers.get(key.toLowerCase());
+    }
+  }
+
 
 
   static String readAsString(byte[] data,String cType){
