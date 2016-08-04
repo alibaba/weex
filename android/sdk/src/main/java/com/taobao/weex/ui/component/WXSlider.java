@@ -240,7 +240,7 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
 
   public static class Ceator implements ComponentCreator {
     public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-      return new WXSlider(instance,node,parent,lazy);
+      return new WXSlider(instance, node, parent, lazy);
     }
   }
 
@@ -262,7 +262,7 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
 
   @Deprecated
   public WXSlider(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
-    this(instance,dom,parent,isLazy);
+    this(instance, dom, parent, isLazy);
   }
 
   public WXSlider(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
@@ -274,7 +274,7 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
     FrameLayout view = new FrameLayout(context);
     // init view pager
     FrameLayout.LayoutParams pagerParams = new FrameLayout.LayoutParams(
-      LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
     mViewPager = new WXCircleViewPager(context);
     mViewPager.setLayoutParams(pagerParams);
 
@@ -323,7 +323,7 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
 
   @Override
   public void remove(WXComponent child) {
-    remove(child,true);
+    remove(child, true);
   }
 
   @Override
@@ -367,7 +367,7 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
     }
     mIndicator = indicator;
     WXCircleIndicator indicatorView = indicator.getHostView();
-    if(indicatorView != null){
+    if (indicatorView != null) {
       indicatorView.setCircleViewPager(mViewPager);
       indicatorView.setOnPageChangeListener(this);
       root.addView(indicatorView);
@@ -379,29 +379,34 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
   protected boolean setProperty(String key, Object param) {
     switch (key) {
       case WXDomPropConstant.WX_ATTR_SLIDER_VALUE:
-        String value = WXUtils.getString(param,null);
-        if (value != null)
+        String value = WXUtils.getString(param, null);
+        if (value != null) {
           setValue(value);
+        }
         return true;
       case AUTO_PLAY:
-        String aotu_play = WXUtils.getString(param,null);
-        if (aotu_play != null)
+        String aotu_play = WXUtils.getString(param, null);
+        if (aotu_play != null) {
           setAutoPlay(aotu_play);
+        }
         return true;
       case SHOW_INDICATORS:
-        String indicators = WXUtils.getString(param,null);
-        if (indicators != null)
+        String indicators = WXUtils.getString(param, null);
+        if (indicators != null) {
           setShowIndicators(indicators);
+        }
         return true;
       case INTERVAL:
-        Integer interval = WXUtils.getInteger(param,null);
-        if (interval != null)
+        Integer interval = WXUtils.getInteger(param, null);
+        if (interval != null) {
           setInterval(interval);
+        }
         return true;
       case INDEX:
-        Integer index = WXUtils.getInteger(param,null);
-        if (index != null)
+        Integer index = WXUtils.getInteger(param, null);
+        if (index != null) {
           setIndex(index);
+        }
         return true;
     }
     return super.setProperty(key, param);
@@ -412,10 +417,10 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
     if (value == null || mHost == null) {
       return;
     }
-    int i ;
+    int i;
     try {
       i = Integer.valueOf(value);
-    }catch (NumberFormatException e){
+    } catch (NumberFormatException e) {
       WXLogUtils.e("", e);
       return;
     }
@@ -453,15 +458,16 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
   }
 
   @WXComponentProp(name = INTERVAL)
-  public void setInterval(int intervalMS){
-    if(mViewPager != null && intervalMS>0){
+  public void setInterval(int intervalMS) {
+    if (mViewPager != null && intervalMS > 0) {
       mViewPager.setIntervalTime(intervalMS);
     }
   }
 
   @WXComponentProp(name = INDEX)
-  public void setIndex(int index){
-    if(mViewPager != null){
+  public void setIndex(int index) {
+    if (mViewPager != null && mAdapter != null) {
+      index = index % mAdapter.getRealCount();
       mViewPager.setCurrentItem(index);
     }
   }
@@ -490,10 +496,10 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
 
       Map<String, Object> domChanges = new HashMap<>();
       Map<String, Object> attrsChanges = new HashMap<>();
-      attrsChanges.put("value",realPosition);
-      domChanges.put("attrs",attrsChanges);
+      attrsChanges.put("value", realPosition);
+      domChanges.put("attrs", attrsChanges);
       WXSDKManager.getInstance().fireEvent(mInstanceId, ref,
-                                           WXEventType.SLIDER_CHANGE, params,domChanges);
+          WXEventType.SLIDER_CHANGE, params, domChanges);
     }
   }
 
