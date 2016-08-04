@@ -71,7 +71,7 @@
                         if ([flag isEqualToNumber:[NSNumber numberWithInteger:WXLogFlagWarning]]) {
                             id<WXAppMonitorProtocol> appMonitorHandler = [WXHandlerFactory handlerForProtocol:@protocol(WXAppMonitorProtocol)];
                             if ([appMonitorHandler respondsToSelector:@selector(commitAppMonitorAlarm:monitorPoint:success:errorCode:errorMsg:arg:)]) {
-                                [appMonitorHandler commitAppMonitorAlarm:[WXSDKEngine topInstance].pageName monitorPoint:@"jswarning" success:FALSE errorCode:@"99999" errorMsg:string arg:nil];
+                                [appMonitorHandler commitAppMonitorAlarm:[WXSDKEngine topInstance].pageName monitorPoint:@"jswarning" success:FALSE errorCode:@"99999" errorMsg:string arg:@"weex"];
                             }
                         }
                         WX_LOG([flag unsignedIntegerValue], @"%@", string);
