@@ -204,9 +204,6 @@
  */
 package com.taobao.weex.utils;
 
-
-import android.graphics.Color;
-
 import com.taobao.weappplus_sdk.BuildConfig;
 
 import org.junit.Before;
@@ -229,97 +226,77 @@ public class WXResourceUtilsTest {
   }
 
   @Test
-  public void testColor0() throws Exception {
-    assertEquals(Color.parseColor("#ffffffff"), 0xffffffff);
-  }
-
-  @Test
-  public void testColor() throws Exception {
+  public void testColor1() throws Exception {
     int color = WXResourceUtils.getColor("#ffffff");
     assertEquals(color, 0xffffffff);
-  }
 
-  @Test
-  public void testColor1() throws Exception {
-    int color = WXResourceUtils.getColor("rgb(255,255,255)");
-    assertEquals(color, 0xffffffff);
+    color = WXResourceUtils.getColor("#99ffffff");
+    assertEquals(color, 0x99ffffff);
+
+    color = WXResourceUtils.getColor("#aa123123");
+    assertEquals(color, 0xaa123123);
+
+    color = WXResourceUtils.getColor("#00000000");
+    assertEquals(color, 0x00000000);
   }
 
   @Test
   public void testColor2() throws Exception {
-    int color = WXResourceUtils.getColor("#aa123123");
-    assertEquals(color, 0xaa123123);
+    int color = WXResourceUtils.getColor("#123");
+    assertEquals(color, 0xff112233);
+
+    color = WXResourceUtils.getColor("#abc");
+    assertEquals(color, 0xffaabbcc);
+
+    color = WXResourceUtils.getColor("#12332");
+    assertEquals(color, Integer.MIN_VALUE);
   }
 
   @Test
   public void testColor3() throws Exception {
-    int color = WXResourceUtils.getColor("#123");
-    assertEquals(color, 0xff112233);
+    int color = WXResourceUtils.getColor("rgba(50%,50%,50%,50%)");
+    assertEquals(color, 0x7f7f7f7f);
+
+    color = WXResourceUtils.getColor("rgba( 50%, 50% , 50%   ,50% )");
+    assertEquals(color, 0x7f7f7f7f);
+
+    color = WXResourceUtils.getColor("rgba( 50%, 50% , 50%   ,100% )");
+    assertEquals(color, 0xff7f7f7f);
+
+    color = WXResourceUtils.getColor("rgba( 90.5%, 50% , 50%   ,100% )");
+    assertEquals(color, 0xffe67f7f);
+
+    color = WXResourceUtils.getColor("rgba( 90.5%, 50% , 50%   ,0.1)");
+    assertEquals(color, 0x19e67f7f);
+
+    color = WXResourceUtils.getColor("rgba( 0.1, 0.1, 0.1   ,0.1)");
+    assertEquals(color, 0x19191919);
   }
 
   @Test
   public void testColor4() throws Exception {
-    int color = WXResourceUtils.getColor("#abc");
-    assertEquals(color, 0xffaabbcc);
-  }
+    int color = WXResourceUtils.getColor("rgb(255, 255, 255)");
+    assertEquals(color, 0xffffffff);
 
-  @Test
-  public void testColor5() throws Exception {
-    int color = WXResourceUtils.getColor("rgba(50%,50%,50%,50%)");
-    assertEquals(color, 0x7f7f7f7f);
-  }
-
-  @Test
-  public void testColor6() throws Exception {
-    int color = WXResourceUtils.getColor("rgba( 50%, 50% , 50%   ,50% )");
-    assertEquals(color, 0x7f7f7f7f);
-  }
-
-  @Test
-  public void testColor7() throws Exception {
-    int color = WXResourceUtils.getColor("rgba( 50%, 50% , 50%   ,100% )");
-    assertEquals(color, 0xff7f7f7f);
-  }
-
-  @Test
-  public void testColor8() throws Exception {
-    int color = WXResourceUtils.getColor("rgb( 256,256  , 256   )");
+    color = WXResourceUtils.getColor("rgb( 256,256  , 256   )");
     assertEquals(color, Integer.MIN_VALUE);
-  }
 
-  @Test
-  public void testColor9() throws Exception {
-    int color = WXResourceUtils.getColor("rgb( -1,255  , 255   )");
+    color = WXResourceUtils.getColor("rgb( -1,255  , 255   )");
     assertEquals(color, Integer.MIN_VALUE);
-  }
 
-  @Test
-  public void testColor10() throws Exception {
-    int color = WXResourceUtils.getColor("rgb( 000000,255  , 255   )");
+    color = WXResourceUtils.getColor("rgb( 000000,255  , 255   )");
     assertEquals(color, 0xff00ffff);
   }
 
   @Test
-  public void testColor11() throws Exception {
-    int color = WXResourceUtils.getColor("#12332");
-    assertEquals(color, Integer.MIN_VALUE);
-  }
+  public void testColor5() throws Exception {
+    int color = WXResourceUtils.getColor("aliceblue");
+    assertEquals(color, 0XFFF0F8FF);
 
-  @Test
-  public void testColor12() throws Exception {
-    int color = WXResourceUtils.getColor("#12332");
-    assertEquals(color, Integer.MIN_VALUE);
-  }
+    color = WXResourceUtils.getColor("pink");
+    assertEquals(color, 0XFFFFC0CB);
 
-  @Test
-  public void testColor13() throws Exception {
-    int color = WXResourceUtils.getColor("#123   32");
-    assertEquals(color, Integer.MIN_VALUE);
-  }
-
-  @Test
-  public void testColor14() throws Exception {
-    int color = WXResourceUtils.getColor("#99ffffff");
+    color = WXResourceUtils.getColor("jahskdja");
     assertEquals(color, Integer.MIN_VALUE);
   }
 }

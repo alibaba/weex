@@ -218,7 +218,7 @@ public class WXResourceUtils {
 
   private final static Map<String, Integer> colorMap = new HashMap<>();
   private final static Pattern RGB_PATTERN = Pattern.compile("^#[0-9a-fA-F]{3,9}$");
-  private final static Pattern FUNCTION_RGBA_PATTERN = Pattern.compile("^(rgb)a?[\\(]([\\s]*[0-9%]+[\\s]*,){2,3}[\\s]*[0-9%]+[\\s]*[\\)]$");
+  private final static Pattern FUNCTION_RGBA_PATTERN = Pattern.compile("^(rgb)a?[\\(]([\\s]*[0-9%.]+[\\s]*,){2,3}[\\s]*[0-9%.]+[\\s]*[\\)]$");
 
   static {
     colorMap.put("aliceblue", 0XFFF0F8FF);
@@ -472,9 +472,14 @@ public class WXResourceUtils {
         gradient = gradients[i].trim();
         if ((percent_loc = gradient.lastIndexOf("%")) != -1) {
           gradient = gradient.substring(0, percent_loc);
-          value = (int)(Float.parseFloat(gradient) / 100 * 255);
+          value = (int) (Float.parseFloat(gradient) / 100 * 255);
         } else {
-          value = Integer.parseInt(gradient);
+          float temp = Float.parseFloat(gradient);
+          if (0f < temp && temp < 1f) {
+            value = (int) (temp * 255);
+          } else {
+            value = (int) temp;
+          }
         }
         if (value < 0 || value > 255) {
           throw new IllegalArgumentException("ColorConvertHandler invalid gradient: " + gradient);
@@ -483,7 +488,7 @@ public class WXResourceUtils {
       }
 
       int result = digits[3];
-      for (int i= 0; i < 3; i++) {
+      for (int i = 0; i < 3; i++) {
         result = result * 256 + digits[i];
       }
       return result;
