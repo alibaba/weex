@@ -68,7 +68,6 @@ Something you have to do is to render weex view with specific URL, then add it t
 	_instance = [[WXSDKInstance alloc] init];
 	_instance.viewController = self;
     _instance.frame = self.view.frame; 
-    [_instance renderWithURL:self.url options:@{@"bundleUrl":[self.url absoluteString]} data:nil];
     
     __weak typeof(self) weakSelf = self;
     _instance.onCreate = ^(UIView *view) {
@@ -83,6 +82,7 @@ Something you have to do is to render weex view with specific URL, then add it t
     _instance.renderFinish = ^ (UIView *view) {
     	//process renderFinish
     };
+    [_instance renderWithURL:self.url options:@{@"bundleUrl":[self.url absoluteString]} data:nil];
 }
 ```
 WXSDKInstance is a very imporent class, which provides you with some basic methods and callbacks, such as renderWithURL、onCreate、onFailed and etc. You can understand their usage by reading WXSDKInstance.h.
