@@ -5,10 +5,12 @@ import android.app.Instrumentation;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
+import android.text.method.Touch;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ScrollView;
 
 import com.alibaba.weex.R;
 import com.alibaba.weex.WXPageActivity;
@@ -72,7 +74,7 @@ public class TestFlow extends ActivityInstrumentationTestCase2<WXPageActivity>{
         mViewGroup = (ViewGroup) waTestPageActivity.findViewById(R.id.container);
         setViewGroup(mViewGroup);
         // 根据TC 获取TC 列表,默认“"TC_"”
-        mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, "TC_");
+        mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, "AG_");
         Thread.sleep(3000);
     }
 
@@ -102,9 +104,17 @@ public class TestFlow extends ActivityInstrumentationTestCase2<WXPageActivity>{
                 final WXTextView inputView = (WXTextView) caseView;
 
                 // handle if the view is INVISIBLE then scrollToBottom
+                int maxStep = 50;
+                int scrollCount = 0;
                 if(inputView.getVisibility() == View.INVISIBLE){
-                    TouchUtils.scrollToBottom(this, waTestPageActivity, mViewGroup);
+                    while(scrollCount <maxStep){
+
+                        TouchUtils.dragQuarterScreenUp(this, this.getActivity());
+                        scrollCount ++;
+
+                    }
                 }
+
                 mInstrumentation.runOnMainSync(new Runnable() {
                     @Override
                     public void run() {
@@ -123,10 +133,37 @@ public class TestFlow extends ActivityInstrumentationTestCase2<WXPageActivity>{
                 Log.e(TAG, myGroup.toString());
 
                 String childCaseName = (String)testMap.get("testChildCaseInit");
+                Log.e(TAG, "testChildCaseInit to find==" + childCaseName);
                 ArrayList<View> inputListView = new ArrayList<View>();
                 inputListView = ViewUtil.findViewWithText(myGroup,
                         childCaseName);
                 sleep(2000);
+//                View scrollableView = ViewUtil.getFirstChildScrollableView(myGroup);
+
+                int findCount = 0;
+                while(inputListView.size() == 0 ){
+
+//                    TouchUtils.dragQuarterScreenUp(this, this.getActivity());
+//                    sleep(2000);
+
+                    if(findCount< maxStep){
+                        Log.e(TAG, "inputListView size=" + inputListView.size()+"," + "findCount=" + findCount);
+                        TouchUtils.dragQuarterScreenUp(this, this.getActivity());
+                        sleep(2000);
+                        myGroup = (ViewGroup) (activity2.findViewById(R.id.container));
+                        inputListView = ViewUtil.findViewWithText(myGroup,
+                                childCaseName);
+                        sleep(2000);
+
+                        findCount ++ ;
+                    }
+                }
+//                else{
+//                    Log.e(TAG, "inputListView size==" +
+//                            inputListView.size() + "findCount=="+findCount);
+//
+//                }
+
 
                 if (inputListView.size() != 0) {
                     final WXTextView inputTypeView = (WXTextView) inputListView.get(0);
@@ -134,6 +171,7 @@ public class TestFlow extends ActivityInstrumentationTestCase2<WXPageActivity>{
                     mInstrumentation.runOnMainSync(new Runnable() {
                         @Override
                         public void run() {
+                            Log.e(TAG, "find veiw text=" + inputTypeView.getText().toString());
                             inputTypeView.requestFocus();
                             inputTypeView.performClick();
                             Log.e(TAG, "child clcik!");
@@ -215,7 +253,7 @@ public class TestFlow extends ActivityInstrumentationTestCase2<WXPageActivity>{
 
         for (View view : inputListView11) {
             if (view instanceof WXTextView) {
-                if (((WXTextView) view).getText().toString().contains((String)action)) {
+                if (((WXTextView) view).getText().toString().contains((String)actionValue)) {
                     final FrameLayout aView = (FrameLayout) view.getParent();
                     mInstrumentation.runOnMainSync(new Runnable() {
                         @Override

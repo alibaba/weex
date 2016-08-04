@@ -2,9 +2,13 @@ package com.alibaba.weex.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ScrollView;
+
 import com.taobao.weex.ui.view.WXTextView;
 
 import java.util.ArrayList;
@@ -24,10 +28,11 @@ public class ViewUtil{
         if(out.size() == 0){
             ArrayList<View> wxTextViewList = new ArrayList<View>();
             wxTextViewList = getAllChildViews((View)vg);
-            for (View wxText:wxTextViewList
-                 ) {
+            for (View wxText:wxTextViewList) {
                 if(wxText instanceof WXTextView){
-                    if(((WXTextView)wxText).getText().toString().contains(text)){
+                    String value = ((WXTextView) wxText).getText().toString();
+                    if(value.contains(text)){
+                        Log.e("TestFlow", "find target:" + text + "|" + "actualVale=" + value);
                         out.add(wxText);
                     }
 
@@ -68,6 +73,32 @@ public class ViewUtil{
 
         return allchildren;
     }
+
+    /**
+     * scroller or RecyclerView
+     * @param view
+     * @return
+     */
+    public static View getFirstChildScrollableView(ViewGroup view){
+
+
+        View viewResult = null;
+        ArrayList<View> allViews = new ArrayList<View>();
+        if(null != view){
+
+            allViews= getAllChildViews(view);
+            for(View eachView : allViews){
+                if(eachView instanceof ScrollView
+                        || eachView instanceof RecyclerView){
+
+                    return eachView;
+
+                }
+            }
+        }
+    return viewResult;
+    }
+
 
     public static ArrayList<View> getAllEditTextViews(View view) {
         ArrayList<View> allchildren = new ArrayList<View>();
