@@ -238,6 +238,10 @@ public class WXResourceUtilsTest {
 
     color = WXResourceUtils.getColor("#00000000");
     assertEquals(color, 0x00000000);
+
+    //can't match
+    color = WXResourceUtils.getColor("#ssssss");
+    assertEquals(color, Integer.MIN_VALUE);
   }
 
   @Test
@@ -248,29 +252,43 @@ public class WXResourceUtilsTest {
     color = WXResourceUtils.getColor("#abc");
     assertEquals(color, 0xffaabbcc);
 
+    //can't match
     color = WXResourceUtils.getColor("#12332");
+    assertEquals(color, Integer.MIN_VALUE);
+
+    color = WXResourceUtils.getColor("#sss");
     assertEquals(color, Integer.MIN_VALUE);
   }
 
   @Test
   public void testColor3() throws Exception {
-    int color = WXResourceUtils.getColor("rgba(50%,50%,50%,50%)");
+    int color = WXResourceUtils.getColor("rgba(50%,50%,50%, 0.5)");
     assertEquals(color, 0x7f7f7f7f);
 
-    color = WXResourceUtils.getColor("rgba( 50%, 50% , 50%   ,50% )");
+    color = WXResourceUtils.getColor("rgba( 50%, 50% , 50%   , 0.5 )");
     assertEquals(color, 0x7f7f7f7f);
 
-    color = WXResourceUtils.getColor("rgba( 50%, 50% , 50%   ,100% )");
-    assertEquals(color, 0xff7f7f7f);
+    color = WXResourceUtils.getColor("rgba(255, 255, 255, 1.0)");
+    assertEquals(color, 0xffffffff);
 
-    color = WXResourceUtils.getColor("rgba( 90.5%, 50% , 50%   ,100% )");
-    assertEquals(color, 0xffe67f7f);
+    color = WXResourceUtils.getColor("rgba(1%, 1% ,1%, 1)");
+    assertEquals(color, 0xff020202);
 
-    color = WXResourceUtils.getColor("rgba( 90.5%, 50% , 50%   ,0.1)");
-    assertEquals(color, 0x19e67f7f);
+    color = WXResourceUtils.getColor("rgba(0%, 0, 1%, 0.1)");
+    assertEquals(color, 0x19000002);
 
-    color = WXResourceUtils.getColor("rgba( 0.1, 0.1, 0.1   ,0.1)");
-    assertEquals(color, 0x19191919);
+    color = WXResourceUtils.getColor("rgba(100%, 100%, 100%, 0.1)");
+    assertEquals(color, 0x19ffffff);
+
+    color = WXResourceUtils.getColor("rgba(1, 1, 1, 1.0)");
+    assertEquals(color, 0xff010101);
+
+    //can't match
+    color = WXResourceUtils.getColor("rgba(0.1, 0.1, 0.1, 1.0)");
+    assertEquals(color, Integer.MIN_VALUE);
+
+    color = WXResourceUtils.getColor("rgba(10.0%, 101%, -0.1, 50%)");
+    assertEquals(color, Integer.MIN_VALUE);
   }
 
   @Test
@@ -278,14 +296,15 @@ public class WXResourceUtilsTest {
     int color = WXResourceUtils.getColor("rgb(255, 255, 255)");
     assertEquals(color, 0xffffffff);
 
-    color = WXResourceUtils.getColor("rgb( 256,256  , 256   )");
-    assertEquals(color, Integer.MIN_VALUE);
-
-    color = WXResourceUtils.getColor("rgb( -1,255  , 255   )");
-    assertEquals(color, Integer.MIN_VALUE);
-
-    color = WXResourceUtils.getColor("rgb( 000000,255  , 255   )");
+    color = WXResourceUtils.getColor("rgb(000000, 255, 255)");
     assertEquals(color, 0xff00ffff);
+
+    //can't match
+    color = WXResourceUtils.getColor("rgb(256, 256, 256)");
+    assertEquals(color, Integer.MIN_VALUE);
+
+    color = WXResourceUtils.getColor("rgb(-1, 255, 255)");
+    assertEquals(color, Integer.MIN_VALUE);
   }
 
   @Test
@@ -296,6 +315,7 @@ public class WXResourceUtilsTest {
     color = WXResourceUtils.getColor("pink");
     assertEquals(color, 0XFFFFC0CB);
 
+    //can't match
     color = WXResourceUtils.getColor("jahskdja");
     assertEquals(color, Integer.MIN_VALUE);
   }

@@ -218,7 +218,7 @@ public class WXResourceUtils {
 
   private final static Map<String, Integer> colorMap = new HashMap<>();
   private final static Pattern RGB_PATTERN = Pattern.compile("^#[0-9a-fA-F]{3,9}$");
-  private final static Pattern FUNCTION_RGBA_PATTERN = Pattern.compile("^(rgb)a?[\\(]([\\s]*[0-9%.]+[\\s]*,){2,3}[\\s]*[0-9%.]+[\\s]*[\\)]$");
+  private final static Pattern FUNCTION_RGBA_PATTERN = Pattern.compile("^(rgb)a?[\\(]([\\s]*[0-9%]+[\\s]*,){2,3}[\\s]*[0-9.]+[\\s]*[\\)]$");
 
   static {
     colorMap.put("aliceblue", 0XFFF0F8FF);
@@ -475,7 +475,7 @@ public class WXResourceUtils {
           value = (int) (Float.parseFloat(gradient) / 100 * 255);
         } else {
           float temp = Float.parseFloat(gradient);
-          if (0f < temp && temp < 1f) {
+          if (0f < temp && temp <= 1f && i == 3) {
             value = (int) (temp * 255);
           } else {
             value = (int) temp;
