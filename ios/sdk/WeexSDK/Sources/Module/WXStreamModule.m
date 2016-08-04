@@ -91,6 +91,7 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
     }
     [request setHTTPBody:[body dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValue:[WXUtility userAgent] forHTTPHeaderField:@"User-Agent"];
+
     [callbackRsp setObject:@{ @"OPENED": @1 } forKey:@"readyState"];
     
     [[WXSDKManager bridgeMgr] callBack:self.weexInstance.instanceId funcId:progressCallback params:callbackRsp keepAlive:true];
@@ -196,8 +197,7 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
 }
 
 + (NSString*)getStatusText:(NSInteger)code
-{
-    
+{    
     switch (code) {
         case -1:
             return @"ERR_INVALID_REQUEST";

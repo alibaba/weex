@@ -269,7 +269,7 @@ public class WXCircleViewPager extends ViewPager implements Callback, WXGestureO
                                        (Interpolator) interpolator.get(null));
       scroller.set(this, mScroller);
     } catch (Exception e) {
-      WXLogUtils.e("[CircleViewPager] postInitViewPager: " + WXLogUtils.getStackTrace(e));
+      WXLogUtils.e("[CircleViewPager] postInitViewPager: ", e);
     }
   }
 

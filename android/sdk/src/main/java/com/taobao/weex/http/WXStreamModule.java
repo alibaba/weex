@@ -309,7 +309,7 @@ public class WXStreamModule extends WXModule {
     try {
       optionsObj = JSON.parseObject(optionsStr);
     }catch (JSONException e){
-      e.printStackTrace();
+      WXLogUtils.e("", e);
     }
 
     boolean invaildOption = optionsObj==null || optionsObj.getString("url")==null;
@@ -383,7 +383,7 @@ public class WXStreamModule extends WXModule {
     try {
       return new String(data,charset);
     } catch (UnsupportedEncodingException e) {
-      e.printStackTrace();
+      WXLogUtils.e("", e);
       return new String(data);
     }
   }

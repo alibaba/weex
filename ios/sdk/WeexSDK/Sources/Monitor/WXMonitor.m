@@ -36,7 +36,7 @@ static WXThreadSafeMutableDictionary *globalPerformanceDict;
     NSMutableDictionary *performanceDict = [self performanceDictForInstance:instance];
     NSMutableDictionary *dict = performanceDict[@(tag)];
     if (!dict) {
-        WXLogError(@"Performance point:%ld, in instance:%@, did not have a start", tag, instance.instanceId);
+        WXLogError(@"Performance point:%ld, in instance:%@, did not have a start", (unsigned long)tag, instance.instanceId);
         return;
     }
     
@@ -165,7 +165,7 @@ static WXThreadSafeMutableDictionary *globalPerformanceDict;
     
     id<WXAppMonitorProtocol> appMonitorHandler = [WXHandlerFactory handlerForProtocol:@protocol(WXAppMonitorProtocol)];
     if ([appMonitorHandler respondsToSelector:@selector(commitAppMonitorAlarm:monitorPoint:success:errorCode:errorMsg:arg:)]) {
-        NSString *errorCodeStr = [NSString stringWithFormat:@"%ld", error.code];
+        NSString *errorCodeStr = [NSString stringWithFormat:@"%ld", (long)error.code];
         
         static NSDictionary *monitorNameDict;
         static dispatch_once_t onceToken;

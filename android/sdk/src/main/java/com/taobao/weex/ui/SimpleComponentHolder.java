@@ -275,7 +275,7 @@ public class SimpleComponentHolder implements IFComponentHolder{
         e1.printStackTrace();
         throw new WXRuntimeException("Can't find constructor of component.");
       }
-      e.printStackTrace();
+      WXLogUtils.e("", e);
     }
   }
 

@@ -55,9 +55,6 @@
         url: GET_URL,
         type:'json'
       }, function(ret) {
-        if(typeof ret === 'string'){
-          ret = JSON.parse(ret);
-        }
         if(!ret.ok){
           me.getResult = "request failed";
         }else{
@@ -74,9 +71,6 @@
         url: POST_URL,
         type:'json'
       }, function(ret) {
-        if(typeof ret === 'string'){
-          ret = JSON.parse(ret);
-        }
         if(!ret.ok){
           me.postResult = "request failed";
         }else{
@@ -93,9 +87,6 @@
         url: PUT_URL,
         type:'json'
       }, function(ret) {
-        if(typeof ret === 'string'){
-          ret = JSON.parse(ret);
-        }
         if(!ret.ok){
           me.putResult = "request failed";
         }else{
@@ -112,9 +103,7 @@
         url: DELETE_URL,
         type:'json'
       }, function(ret) {
-        if(typeof ret === 'string'){
-          ret = JSON.parse(ret);
-        }
+
         if(!ret.ok){
           me.deleteResult = "request failed";
         }else{
@@ -125,7 +114,7 @@
         console.log('get in progress:'+response.length);
         me.deleteResult = "bytes received:"+response.length;
       });
-
+      
       stream.fetch({
         method: 'HEAD',
         url: HEAD_URL,
@@ -147,9 +136,6 @@
         url: PATCH_URL,
         type:'json'
       }, function(ret) {
-        if(typeof ret === 'string'){
-          ret = JSON.parse(ret);
-        }
         if(!ret.ok){
           me.patchResult = "request failed";
         }else{
