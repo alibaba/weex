@@ -41,10 +41,15 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
 
 - (void)getItem:(NSString *)key callback:(WXModuleCallback)callback
 {
-    if ([key isKindOfClass:[NSString class]] == NO) {
-        callback(@{@"result":@"failed",@"data":@"key must a string!"});
+    if ([self checkInput:key]) {
+        callback(@{@"result":@"failed",@"data":@"key must a string or number!"}); // forgive my english
         return;
     }
+    
+    if ([key isKindOfClass:[NSNumber class]]) {
+        key = [((NSNumber *)key) stringValue]; // oh no!
+    }
+    
     if ([WXUtility isBlankString:key]) {
         callback(@{@"result":@"failed",@"data":@"invalid_param"});
         return ;
@@ -81,14 +86,23 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
 
 - (void)setItem:(NSString *)key value:(NSString *)value callback:(WXModuleCallback)callback
 {
-    if ([key isKindOfClass:[NSString class]] == NO) {
-        callback(@{@"result":@"failed",@"data":@"key must a string!"});
+    if ([self checkInput:key]) {
+        callback(@{@"result":@"failed",@"data":@"key must a string or number!"});
         return;
     }
-    if ([value isKindOfClass:[NSString class]] == NO) {
-        callback(@{@"result":@"failed",@"data":@"value must a string!"});
+    if ([self checkInput:value]) {
+        callback(@{@"result":@"failed",@"data":@"value must a string or number!"});
         return;
     }
+    
+    if ([key isKindOfClass:[NSNumber class]]) {
+        key = [((NSNumber *)key) stringValue];
+    }
+    
+    if ([value isKindOfClass:[NSNumber class]]) {
+        value = [((NSNumber *)value) stringValue];
+    }
+    
     if ([WXUtility isBlankString:key]) {
         callback(@{@"result":@"failed",@"data":@"invalid_param"});
         return ;
@@ -98,10 +112,15 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
 
 - (void)removeItem:(NSString *)key callback:(WXModuleCallback)callback
 {
-    if ([key isKindOfClass:[NSString class]] == NO) {
-        callback(@{@"result":@"failed",@"data":@"key must a string!"});
+    if ([self checkInput:key]) {
+        callback(@{@"result":@"failed",@"data":@"key must a string or number!"});
         return;
     }
+    
+    if ([key isKindOfClass:[NSNumber class]]) {
+        key = [((NSNumber *)key) stringValue];
+    }
+    
     if ([WXUtility isBlankString:key]) {
         callback(@{@"result":@"failed",@"data":@"invalid_param"});
         return ;
@@ -248,7 +267,6 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
         if (!memory) {
             memory = [WXThreadSafeMutableDictionary new];
         }
-        
 //        [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidReceiveMemoryWarningNotification object:nil queue:nil usingBlock:^(__unused NSNotification *note) {
 //            [memory removeAllObjects];
 //        }];
@@ -258,6 +276,10 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
 
 - (WXThreadSafeMutableDictionary<NSString *, NSString *> *)memory {
     return [WXStorageModule memory];
+}
+
+- (BOOL)checkInput:(id)input{
+    return ([input isKindOfClass:[NSString class]] == NO || [input isKindOfClass:[NSNumber class]] == NO);
 }
 
 @end
