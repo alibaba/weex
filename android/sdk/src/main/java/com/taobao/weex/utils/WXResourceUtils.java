@@ -219,7 +219,7 @@ public class WXResourceUtils {
 
   private final static Map<String, Integer> colorMap = new HashMap<>();
   private final static Pattern RGB_PATTERN = Pattern.compile("^#[0-9a-fA-F]{3,9}$");
-  private final static Pattern FUNCTION_RGBA_PATTERN = Pattern.compile("^(rgb)a?[\\(]([\\s]*[0-9%]+[\\s]*,){2,3}[\\s]*[0-9.]+[\\s]*[\\)]$");
+  private final static Pattern FUNCTION_RGBA_PATTERN = Pattern.compile("^(rgba?[\\(])([\\s]*[0-9%]+[\\s]*),([\\s]*[0-9%]+[\\s]*),(([\\s]*[0-9%]+[\\s]*),)?([\\s]*[0-9.]+[\\s]*)[\\)]$");
 
   static {
     colorMap.put("aliceblue", 0XFFF0F8FF);
@@ -443,16 +443,17 @@ public class WXResourceUtils {
     private static Integer convertFunctionalColor(String raw) {
       Matcher matcher = FUNCTION_RGBA_PATTERN.matcher(raw);
       if (matcher.matches()) {
-        int start = raw.indexOf('(');
-        int end = raw.lastIndexOf(')');
-        boolean alpha = raw.startsWith("rgba");
-        if (start != -1 && end != -1) {
-          raw = raw.substring(start + 1, end);
-          String[] gradients = raw.split(",");
-          if (gradients.length == (alpha ? 4 : 3)) {
-            return parseRGBA(gradients);
-          }
+        boolean alpha = matcher.group(1).startsWith("rgba");
+        String[] gradients = new String [alpha ? 4 : 3];
+        gradients[0] = matcher.group(2);
+        gradients[1] = matcher.group(3);
+        if (alpha) {
+          gradients[2] = matcher.group(5);
+          gradients[3] = matcher.group(6);
+        } else {
+          gradients[2] = matcher.group(6);
         }
+        return parseRGBA(gradients);
       }
       return null;
     }
