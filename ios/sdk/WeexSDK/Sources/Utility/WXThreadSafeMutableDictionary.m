@@ -118,4 +118,18 @@
     });
 }
 
+- (void)removeAllObjects{
+    dispatch_barrier_async(_queue, ^{
+        [_dict removeAllObjects];
+    });
+}
+
+- (id)copy{
+    __block id copyInstance;
+    dispatch_sync(_queue, ^{
+        copyInstance = [_dict copy];
+    });
+    return copyInstance;
+}
+
 @end
