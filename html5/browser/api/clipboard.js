@@ -26,7 +26,7 @@ const clipboard = {
 
   setString: function (text) {
     // not support safari
-    if (typeof text === 'string' && text !== '') {
+    if (typeof text === 'string' && text !== '' && document.execCommand) {
       const tempInput = element()
       tempInput.value = text
 
@@ -59,7 +59,7 @@ function element () {
 clipboard._meta = {
   clipboard: [{
     name: 'getString',
-    args: ['string']
+    args: ['function']
   }, {
     name: 'setString',
     args: ['string']
