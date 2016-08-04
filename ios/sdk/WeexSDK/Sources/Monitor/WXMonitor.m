@@ -139,7 +139,7 @@ static WXThreadSafeMutableDictionary *globalPerformanceDict;
     
     NSMutableString *performanceString = [NSMutableString stringWithString:@"Performance:"];
     for (NSString *commitKey in commitDict) {
-        [performanceString appendFormat:@"\n    %@: %@", commitKey, commitDict[commitKey]];
+        [performanceString appendFormat:@"\n    %@: %@,", commitKey, commitDict[commitKey]];
     }
     
     WXLog(@"%@", performanceString);
