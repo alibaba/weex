@@ -64,6 +64,7 @@
         * [animation](/modules/animation.md)
         * [webview](/modules/webview.md)
         * [navigator](/modules/navigator.md)
+        * [clipboard](/modules/clipboard.md)
     * Low-level Specs
         * [JS Bundle Format](/specs/js-bundle-format.md)
         * [JS Framework APIs](/specs/js-framework-apis.md)
@@ -71,6 +72,7 @@
 * Examples
     * [Hello World](demo/hello-world.md)
     * [Modal](demo/modal.md)
+    * [Clipboard](demo/clipboard.md)
     * [List](demo/list.md)
     * [Slider](demo/slider.md)
     * [Animation](demo/animation.md)
