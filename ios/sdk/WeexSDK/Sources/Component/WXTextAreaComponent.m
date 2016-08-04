@@ -209,7 +209,9 @@
     [_textView setPadding:_padding];
     
     [_textView setNeedsDisplay];
+    [_textView setClipsToBounds:YES];
 }
+
 #pragma mark - Add Event
 - (void)addEvent:(NSString *)eventName
 {
