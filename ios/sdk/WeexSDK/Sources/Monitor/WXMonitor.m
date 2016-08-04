@@ -147,17 +147,17 @@ static WXThreadSafeMutableDictionary *globalPerformanceDict;
 
 #pragma mark - Error Monitor
 
-+ (void)monitoringPointDidSuccess:(WXMonitorTag)tag
++ (void)monitoringPointDidSuccess:(WXMonitorTag)tag onPage:(NSString *)pageName
 {
-    [self monitoringPoint:tag isSuccss:YES error:nil];
+    [self monitoringPoint:tag isSuccss:YES error:nil onPage:pageName];
 }
 
-+ (void)monitoringPoint:(WXMonitorTag)tag didFailWithError:(NSError *)error
++ (void)monitoringPoint:(WXMonitorTag)tag didFailWithError:(NSError *)error onPage:(NSString *)pageName
 {
-    [self monitoringPoint:tag isSuccss:NO error:error];
+    [self monitoringPoint:tag isSuccss:NO error:error onPage:pageName];
 }
 
-+ (void)monitoringPoint:(WXMonitorTag)tag isSuccss:(BOOL)success error:(NSError *)error
++ (void)monitoringPoint:(WXMonitorTag)tag isSuccss:(BOOL)success error:(NSError *)error onPage:(NSString *)pageName
 {
     if (!success) {
         WXLogError(@"%@", error.localizedDescription);
@@ -178,7 +178,7 @@ static WXThreadSafeMutableDictionary *globalPerformanceDict;
                                 };
         });
         
-        NSString *pageName = [WXSDKEngine topInstance].pageName;
+        pageName = pageName ? : [WXSDKEngine topInstance].pageName;
         [appMonitorHandler commitAppMonitorAlarm:@"weex" monitorPoint:monitorNameDict[@(tag)] success:success errorCode:errorCodeStr errorMsg:error.localizedDescription arg:pageName];
     }
 }

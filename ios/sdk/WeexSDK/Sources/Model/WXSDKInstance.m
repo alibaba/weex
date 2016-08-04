@@ -127,7 +127,7 @@ NSTimeInterval JSLibInitTime = 0;
             
             if (error) {
                 NSString *errorMessage = [NSString stringWithFormat:@"Connection to %@ occurs an error:%@", request.URL, error.localizedDescription];
-                WX_MONITOR_FAIL(WXMTJSDownload, WX_ERR_JSBUNDLE_DOWNLOAD, errorMessage);
+                WX_MONITOR_FAIL_ON_PAGE(WXMTJSDownload, WX_ERR_JSBUNDLE_DOWNLOAD, errorMessage, weakSelf.pageName);
                 
                 if (weakSelf.onFailed) {
                     weakSelf.onFailed(error);
@@ -137,7 +137,7 @@ NSTimeInterval JSLibInitTime = 0;
                        
             if (!totalData) {
                 NSString *errorMessage = [NSString stringWithFormat:@"Connection to %@ but no data return", request.URL];
-                WX_MONITOR_FAIL(WXMTJSDownload, WX_ERR_JSBUNDLE_DOWNLOAD, errorMessage);
+                WX_MONITOR_FAIL_ON_PAGE(WXMTJSDownload, WX_ERR_JSBUNDLE_DOWNLOAD, errorMessage, weakSelf.pageName);
                 
                 if (weakSelf.onFailed) {
                     weakSelf.onFailed(error);
@@ -147,11 +147,11 @@ NSTimeInterval JSLibInitTime = 0;
                        
             NSString *script = [[NSString alloc] initWithData:totalData encoding:NSUTF8StringEncoding];
             if (!script) {
-                WX_MONITOR_FAIL(WXMTJSDownload, WX_ERR_JSBUNDLE_STRING_CONVERT, @"data converting to string failed.")
+                WX_MONITOR_FAIL_ON_PAGE(WXMTJSDownload, WX_ERR_JSBUNDLE_STRING_CONVERT, @"data converting to string failed.", weakSelf.pageName)
                 return;
             }
             
-            WX_MONITOR_SUCCESS(WXMTJSDownload);
+            WX_MONITOR_SUCCESS_ON_PAGE(WXMTJSDownload, weakSelf.pageName);
             WX_MONITOR_INSTANCE_PERF_END(WXPTJSDownload, weakSelf);
 
             [weakSelf renderView:script options:newOptions data:data];
@@ -239,7 +239,7 @@ NSTimeInterval JSLibInitTime = 0;
     }
     
     [[WXSDKManager bridgeMgr] destroyInstance:self.instanceId];
-    
+
     __weak typeof(self) weakSelf = self;
     WXPerformBlockOnComponentThread(^{
         __strong typeof(self) strongSelf = weakSelf;
