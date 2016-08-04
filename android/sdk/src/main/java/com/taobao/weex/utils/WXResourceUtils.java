@@ -209,6 +209,7 @@ import android.text.TextUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -414,7 +415,7 @@ public class WXResourceUtils {
             //#eee, #333
             int result = 0;
             for (int i = 1; i < 4; i++) {
-              result = result * 256 + 17 * Character.digit(rawColor.charAt(i), 16);
+              result = (result << 8) + 17 * Character.digit(rawColor.charAt(i), 16);
             }
             return result | 0xff000000;
           } else if (rawColor.length() == 7 || rawColor.length() == 9) {
@@ -440,7 +441,8 @@ public class WXResourceUtils {
      * @return #RRGGBB or #AARRGGBB
      */
     private static Integer convertFunctionalColor(String raw) {
-      if (FUNCTION_RGBA_PATTERN.matcher(raw).matches()) {
+      Matcher matcher = FUNCTION_RGBA_PATTERN.matcher(raw);
+      if (matcher.matches()) {
         int start = raw.indexOf('(');
         int end = raw.lastIndexOf(')');
         boolean alpha = raw.startsWith("rgba");
@@ -489,7 +491,7 @@ public class WXResourceUtils {
 
       int result = digits[3];
       for (int i = 0; i < 3; i++) {
-        result = result * 256 + digits[i];
+        result = (result << 8) + digits[i];
       }
       return result;
     }
