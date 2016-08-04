@@ -10,7 +10,7 @@
 #define __WX_DEFINE_H__
 
 #define WX_SDK_VERSION @"0.7.0"
-#define WX_JS_FRAMEWORK_VERSION @"0.14.7"
+#define WX_JS_FRAMEWORK_VERSION @"0.15.2"
 
 #if defined(__cplusplus)
 #define WX_EXTERN extern "C" __attribute__((visibility("default")))
