@@ -501,7 +501,7 @@
     self.currentIndex = index;
     
     if (_sliderChangeEvent) {
-        [self fireEvent:@"change" params:@{@"index":@(index)} domChanges:@{@"index": @(index)}];
+        [self fireEvent:@"change" params:@{@"index":@(index)} domChanges:@{@"attrs": @{@"index": @(index)}}];
     }
 }
 
