@@ -87,7 +87,6 @@
         var self = this;
         self.loading_display = 'show';
         setTimeout(function () {
-          debugger;
           self.loading_display = 'hide';
         }, 1000)
       }
