@@ -85,7 +85,7 @@ static id<WXLogProtocol> _externalLog;
 {
     NSDictionary *logLevelEnumToString =
     @{
-      @(WXLogLevelAll) : @"all",
+      @(WXLogLevelAll) : @"debug",
       @(WXLogLevelError) : @"error",
       @(WXLogLevelWarning) : @"warn",
       @(WXLogLevelInfo) : @"info",
