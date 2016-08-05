@@ -663,14 +663,8 @@ class WXDomStatement {
       return;
     }
 
-    if (domObject.isFixed()) {
-      WXDomObject rootDom = mRegistry.get(WXDomObject.ROOT);
-      if (rootDom == null) {
-        return;
-      }
-      rootDom.add2FixedDomList(domObject.ref);
+    findFixed(domObject);
 
-    }
     parent.add(domObject, index);
 
     transformStyle(domObject, true);
@@ -709,6 +703,28 @@ class WXDomStatement {
       instance.commitUTStab(WXConst.DOM_MODULE, WXErrorCode.WX_SUCCESS);
     }
   }
+
+  /**
+   * Find fixed node and tell root dom
+   * @param obj
+   */
+  void findFixed(WXDomObject obj){
+    WXDomObject rootDom = mRegistry.get(WXDomObject.ROOT);
+    if (rootDom == null) {
+      return;
+    }
+    if (obj.isFixed()) {
+      rootDom.add2FixedDomList(obj.ref);
+    }
+
+    int childrenCount = obj.childCount();
+    if(childrenCount > 0){
+      for (int i = 0;i < childrenCount;i++){
+        findFixed(obj.getChild(i));
+      }
+    }
+  }
+
 
   /**
    * Create a command object for moving the specific {@link WXDomObject} to a new parent.
