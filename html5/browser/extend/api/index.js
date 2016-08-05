@@ -6,6 +6,8 @@ import animation from './animation'
 import webview from './webview'
 // import timer from './timer'
 import navigator from './navigator'
+import storage from './storage'
+import clipboard from './clipboard'
 
 export default {
   init: function (Weex) {
@@ -17,5 +19,7 @@ export default {
     Weex.install(webview)
     // Weex.install(timer)
     Weex.install(navigator)
+    Weex.install(storage)
+    Weex.install(clipboard)
   }
 }

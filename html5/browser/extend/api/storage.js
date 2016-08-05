@@ -2,8 +2,6 @@
 'use strict'
 
 const supportLocalStorage = typeof localStorage !== 'undefined'
-const logger = require('../logger')
-
 const SUCCESS = 'success'
 const FAILED = 'failed'
 const INVALID_PARAM = 'invalid_param'
@@ -20,7 +18,7 @@ const storage = {
    */
   setItem: function (key, value, callbackId) {
     if (!supportLocalStorage) {
-      logger.error('your browser is not support localStorage yet.')
+      console.error('your browser is not support localStorage yet.')
       return
     }
     const sender = this.sender
@@ -54,7 +52,7 @@ const storage = {
    */
   getItem: function (key, callbackId) {
     if (!supportLocalStorage) {
-      logger.error('your browser is not support localStorage yet.')
+      console.error('your browser is not support localStorage yet.')
       return
     }
     const sender = this.sender
@@ -79,7 +77,7 @@ const storage = {
    */
   removeItem: function (key, callbackId) {
     if (!supportLocalStorage) {
-      logger.error('your browser is not support localStorage yet.')
+      console.error('your browser is not support localStorage yet.')
       return
     }
     const sender = this.sender
@@ -103,7 +101,7 @@ const storage = {
    */
   length: function (callbackId) {
     if (!supportLocalStorage) {
-      logger.error('your browser is not support localStorage yet.')
+      console.error('your browser is not support localStorage yet.')
       return
     }
     const sender = this.sender
@@ -120,7 +118,7 @@ const storage = {
    */
   getAllKeys: function (callbackId) {
     if (!supportLocalStorage) {
-      logger.error('your browser is not support localStorage yet.')
+      console.error('your browser is not support localStorage yet.')
       return
     }
     const sender = this.sender
@@ -135,7 +133,7 @@ const storage = {
   }
 }
 
-storage._meta = {
+const _meta = {
   storage: [{
     name: 'setItem',
     args: ['string', 'string', 'function']
@@ -154,4 +152,8 @@ storage._meta = {
   }]
 }
 
-module.exports = storage
+export default {
+  init: function (Weex) {
+    Weex.registerApiModule('storage', storage, meta)
+  }
+}
