@@ -10,6 +10,8 @@
 		1D3000F41D41F5BE004F3B4F /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7469869B1C4DEAC20054A57E /* libicucore.tbd */; };
 		1D3000F51D41FAEE004F3B4F /* SRWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A27E7D81C3E360B00D7A552 /* SRWebSocket.m */; };
 		1D3000F71D41FB22004F3B4F /* WXStorageTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3000F61D41FB22004F3B4F /* WXStorageTests.m */; };
+		1D467A281D50459B0007AD9E /* WXUtility+Hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 1D467A261D50459B0007AD9E /* WXUtility+Hash.h */; };
+		1D467A291D50459B0007AD9E /* WXUtility+Hash.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D467A271D50459B0007AD9E /* WXUtility+Hash.m */; };
 		2A1F57B71C75C6A600B58017 /* WXTextInputComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A1F57B51C75C6A600B58017 /* WXTextInputComponent.h */; };
 		2A1F57B81C75C6A600B58017 /* WXTextInputComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A1F57B61C75C6A600B58017 /* WXTextInputComponent.m */; };
 		2A42AF881C23B33E00818EA6 /* WeexSDK_MTL.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 2A42AF871C23B33E00818EA6 /* WeexSDK_MTL.h */; };
@@ -199,6 +201,8 @@
 
 /* Begin PBXFileReference section */
 		1D3000F61D41FB22004F3B4F /* WXStorageTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXStorageTests.m; sourceTree = "<group>"; };
+		1D467A261D50459B0007AD9E /* WXUtility+Hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WXUtility+Hash.h"; sourceTree = "<group>"; };
+		1D467A271D50459B0007AD9E /* WXUtility+Hash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WXUtility+Hash.m"; sourceTree = "<group>"; };
 		2A1F57B51C75C6A600B58017 /* WXTextInputComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXTextInputComponent.h; sourceTree = "<group>"; };
 		2A1F57B61C75C6A600B58017 /* WXTextInputComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXTextInputComponent.m; sourceTree = "<group>"; };
 		2A27E7D71C3E360B00D7A552 /* SRWebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SRWebSocket.h; path = dependency/SRWebSocket.h; sourceTree = "<group>"; };
@@ -683,6 +687,8 @@
 				7461F8A71CFC33A800F62D44 /* WXThreadSafeMutableArray.m */,
 				74896F2E1D1AC79400D1D593 /* NSObject+WXSwizzle.h */,
 				74896F2F1D1AC79400D1D593 /* NSObject+WXSwizzle.m */,
+				1D467A261D50459B0007AD9E /* WXUtility+Hash.h */,
+				1D467A271D50459B0007AD9E /* WXUtility+Hash.m */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -780,6 +786,7 @@
 				74CC7A201C2BF9DC00829368 /* WXListComponent.h in Headers */,
 				74FD6E041C7C0E9600DBEB6D /* WXScrollerProtocol.h in Headers */,
 				77D161201C02DDB40010B15B /* WXSDKEngine.h in Headers */,
+				1D467A281D50459B0007AD9E /* WXUtility+Hash.h in Headers */,
 				745ED2DA1C5F2C7E002DB5A8 /* WXView.h in Headers */,
 				59D3CA411CF9ED57008835DC /* Layout.h in Headers */,
 				2AE5B7521CAB7DBD0082FDDB /* WXAComponent.h in Headers */,
@@ -1051,6 +1058,7 @@
 				77D161311C02DE4E0010B15B /* WXComponent.m in Sources */,
 				77E659DB1C07F594008B8775 /* WXDomModule.m in Sources */,
 				D3FC0DF81C508B2A002B9E31 /* WXTimerModule.m in Sources */,
+				1D467A291D50459B0007AD9E /* WXUtility+Hash.m in Sources */,
 				594C28921CF9E61A009793A4 /* WXAnimationModule.m in Sources */,
 				59A5961D1CB630F10012CD52 /* WXComponent+Navigation.m in Sources */,
 				77D161631C02ED790010B15B /* WXLog.m in Sources */,

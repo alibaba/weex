@@ -237,6 +237,8 @@ const proto = {
       }
       return true
     })
+
+    Component.prototype.onAppend.call(this)
   },
 
   play () {
@@ -261,6 +263,31 @@ const attr = {
     }
   },
 
+  index: function (val) {
+    const _this = this
+    function doSlide (index) {
+      index = parseInt(index)
+      if (index < 0 || isNaN(index)) {
+        return console.error('[h5-render] invalid index ', index)
+      }
+      _this.slideTo(index)
+      if (_this._updateIndex) {
+        window.removeEventListener('renderend', _this._updateIndex)
+      }
+    }
+    if (this.isDomRendering) {
+      const pre = !!this._updateIndex
+      this._updateIndex = function () {
+        _this.autoPlay && _this.isPageShow && _this.play()
+        doSlide(val)
+      }
+      !pre && window.addEventListener('renderend', this._updateIndex)
+    }
+    else {
+      doSlide(val)
+    }
+  },
+
   playstatus: function (val) {
     this.playstatus = val && val !== 'false'
     this.autoPlay = this.playstatus
@@ -277,6 +304,18 @@ const attr = {
   // support playstatus' alias auto-play for compatibility
   autoPlay: function (val) {
     this.attr.playstatus.call(this, val)
+  }
+}
+
+const event = {
+  change: {
+    updator: function () {
+      return {
+        attrs: {
+          index: this.currentIndex
+        }
+      }
+    }
   }
 }
 
