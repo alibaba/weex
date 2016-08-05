@@ -1,12 +1,17 @@
 'use strict'
 
 import './shared'
-import init from '../../runtime/init'
-import { Document, Element, Comment } from '../dom'
+// import init from '../../runtime/init'
+import init from './init'
+import frameworks from './config'
+import { Document, Element, Comment } from '../../vdom'
 import { subversion } from '../../../package.json'
+// import * as methods from '../../default/api/methods'
+import * as methods from '../../default/api/methods'
+import Listener from '../dom/componentManager'
 
 const config = {
-  Document, Element, Comment,
+  Document, Element, Comment, Listener, frameworks,
   sendTasks (...args) {
     global.callNative(...args)
   }
@@ -14,7 +19,7 @@ const config = {
 
 const runtime = init(config)
 
-const { framework, transformer } = subversion
+const { native, transformer } = subversion
 
 for (const methodName in runtime) {
   global[methodName] = function (...args) {
@@ -26,14 +31,11 @@ for (const methodName in runtime) {
   }
 }
 
-Object.assign(global, {
-  frameworkVersion: framework,
-  needTransformerVersion: transformer
-})
+global.frameworkVersion = native
+global.transformVersion = transformer
 
 /**
  * register methods
  */
-const methods = require('../../default/api/methods')
-const { registerMethods } = global
-registerMethods(methods)
+global.registerMethods(methods)
+

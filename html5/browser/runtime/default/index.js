@@ -12,8 +12,8 @@
  *   - fireEvent(ref, type, data)
  *   - callback(funcId, data)
  */
-export { createInstance } from './static/create'
-export { init, refreshInstance, destroyInstance } from './static/life'
-export { registerComponents, registerModules, registerMethods } from './static/register'
-export { receiveTasks } from './static/bridge'
-export { getRoot } from './static/misc'
+export { createInstance } from '../static/create'
+export { init, refreshInstance, destroyInstance } from '../../../default/static/life'
+export { registerComponents, registerModules, registerMethods } from '../../../default/static/register'
+export { receiveTasks } from '../../../default/static/bridge'
+export { getRoot } from '../../../default/static/misc'

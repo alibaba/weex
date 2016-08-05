@@ -54,7 +54,7 @@ function getSliderChangeHandler (slider, e) {
       this.dispatchEvent('change', { index: index })
     }.bind(slider)
   }
-  return this._sliderChangeHandler
+  return slider._sliderChangeHandler
 }
 
 function doRender (slider) {

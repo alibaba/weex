@@ -2,7 +2,7 @@
 
 'use strict'
 
-require('./style/base.css')
+import './style/base.css'
 
 import '../runtime'
 
@@ -39,6 +39,8 @@ global.WXEnvironment = {
 
 const _weexInstance = {}
 
+function noop () {}
+
 ; (function initializeWithUrlParams () {
   // in casperjs the protocol is file.
   if (location.protocol.match(/file/)) {
@@ -52,6 +54,8 @@ const _weexInstance = {}
   if (debug === true || debug === 'true') {
     config.debug = true
   }
+
+  !config.debug && (console.debug = noop)
 })()
 
 export default function Weex (options) {

@@ -5,7 +5,7 @@
 
 let utils
 
-require('httpurl')
+import 'httpurl'
 
 let jsonpCnt = 0
 const ERROR_STATE = -1

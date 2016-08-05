@@ -7,6 +7,18 @@
 import frameUpdater from './frameUpdater'
 export { frameUpdater }
 
+export {
+  extend,
+  def,
+  remove,
+  hasOwn,
+  bind,
+  toArray,
+  isObject,
+  isPlainObject,
+  typof
+} from '../../default/util'
+
 import { isArray, slice } from './array'
 export { isArray, slice }
 
@@ -43,17 +55,17 @@ let _isStickySupported = false
   _isStickySupported = elementStyle.position.indexOf('sticky') !== -1
 })()
 
-export function extend (to, from) {
-  for (const key in from) {
-    to[key] = from[key]
-  }
-  return to
-}
+// export function extend (to, from) {
+//   for (const key in from) {
+//     to[key] = from[key]
+//   }
+//   return to
+// }
 
-export function isPlainObject (obj) {
-  return Object.prototype.toString.call(obj)
-    .slice(8, -1).toLowerCase() === 'object'
-}
+// export function isPlainObject (obj) {
+//   return Object.prototype.toString.call(obj)
+//     .slice(8, -1).toLowerCase() === 'object'
+// }
 
 export function getType (obj) {
   return Object.prototype.toString.call(obj)
@@ -113,7 +125,7 @@ export function getRandom (num) {
 export function getRgb (color) {
   let match
   color = color + ''
-  match = color.match(/#(\d{2})(\d{2})(\d{2})/)
+  match = color.match(/#([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})/)
   if (match) {
     return {
       r: parseInt(match[1], 16),

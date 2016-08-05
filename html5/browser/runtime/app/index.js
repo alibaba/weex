@@ -2,8 +2,10 @@
  * @fileOverview
  * Weex instance constructor & definition
  */
-import { extend } from '../util'
 import * as ctrl from './ctrl'
-import AppInstance from './instance'
+import { extend } from '../../utils'
+import AppInstance from '../../../default/app/instance'
 
 extend(AppInstance.prototype, ctrl)
+
+export default AppInstance

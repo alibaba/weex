@@ -70,7 +70,7 @@ function adaptInstance (methodName, nativeMethodName) {
 }
 
 export default function init (config) {
-  frameworks = config.frameworks || {}
+  frameworks = config.frameworks
   for (const name in frameworks) {
     const framework = frameworks[name]
     framework.init(config)
