@@ -1,7 +1,6 @@
 # Weex
 
 Table of Contents
-
 * [Tutorial](/tutorial.md)
 * [Syntax](/syntax/main.md)
 * [References](/references/bootstrap.md)

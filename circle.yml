@@ -7,10 +7,10 @@ test:
     - cd android/playground && ./gradlew assembleDebug
     - cp -r android/playground/app/build/outputs $CIRCLE_ARTIFACTS # playground artifacts
     - cp -r android/sdk/build/outputs/ $CIRCLE_ARTIFACTS # sdk artifacts
-    - cd android/playground && ./gradlew testDebugUnitTest 
-    - cp -r android/sdk/build/reports/tests/debug/ $CIRCLE_ARTIFACTS/unit_test_report 
+    - cd android/playground && ./gradlew testDebugUnitTest
+    - cp -r android/sdk/build/reports/tests/debug/ $CIRCLE_ARTIFACTS/unit_test_report
 
-dependencies: 
+dependencies:
   cache_directories:
     - "node_modules"
 
@@ -18,3 +18,10 @@ notify:
   webhooks:
     # gitter
     - url: https://webhooks.gitter.im/e/f1030e2836f6c2beb41c
+
+general:
+  branches:
+    ignore:
+      - gh-pages # ignore weex website
+      - doc      # ignore doc
+      - /doc-.*/ # ignore doc

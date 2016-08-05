@@ -59,7 +59,7 @@
   },
   "subversion": {
     "browser": "0.2.23",
-    "framework": "0.15.1",
+    "framework": "0.15.2",
     "transformer": ">=0.1.5 <0.4"
   },
   "dependencies": {

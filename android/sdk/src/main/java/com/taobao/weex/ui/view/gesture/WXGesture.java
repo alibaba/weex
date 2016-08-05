@@ -281,7 +281,7 @@ public class WXGesture implements OnTouchListener {
       }
       return result;
     } catch (Exception e) {
-      WXLogUtils.e("Gesture RunTime Error " + WXLogUtils.getStackTrace(e));
+      WXLogUtils.e("Gesture RunTime Error ", e);
       return false;
     }
   }
