@@ -7,6 +7,11 @@ import * as position from './position'
 import flexbox from './flexbox'
 import { makeImageLazy, fireLazyload } from './lazyload'
 
+function hasIntersection (rect, ctRect) {
+  return (rect.left < ctRect.right && rect.right > ctRect.left)
+    && (rect.top < ctRect.bottom && rect.bottom > ctRect.top)
+}
+
 export default function Component (data, nodeType) {
   this.data = data
   this.node = this.create(nodeType)
@@ -112,6 +117,18 @@ Component.prototype = {
     event.data = extend({}, data)
     extend(event, data)
     this.node.dispatchEvent(event)
+  },
+
+  onAppend: function () {
+    const rect = this.node.getBoundingClientRect()
+    const parent = this.getParentScroller()
+    const parentNode = parent
+      ? parent.node
+      : this.getRootContainer()
+    const ctRect = parentNode.getBoundingClientRect()
+    if (hasIntersection(rect, ctRect)) {
+      this.dispatchEvent('appear', { direction: '' })
+    }
   },
 
   addAppendHandler (cb) {

@@ -133,7 +133,7 @@ const storage = {
   }
 }
 
-const _meta = {
+const meta = {
   storage: [{
     name: 'setItem',
     args: ['string', 'string', 'function']

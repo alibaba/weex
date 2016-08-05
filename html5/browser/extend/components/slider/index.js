@@ -7,7 +7,7 @@ import './slider.css'
 
 const DEFAULT_INTERVAL = 3000
 
-let extend
+let extend, Component
 
 function idleWhenPageDisappear (slider) {
   function handlePageShow () {
@@ -45,7 +45,7 @@ function updateIndicators (slider) {
   slider.indicator && slider.indicator.setIndex(slider.currentIndex)
 }
 
-function getSliderChangeHandler (slider, e) {
+function getSliderChangeHandler (slider) {
   if (!slider._sliderChangeHandler) {
     slider._sliderChangeHandler = function (e) {
       const index = this.carrousel.items.index
@@ -174,7 +174,7 @@ const proto = {
 
   onAppend () {
     if (this.carrousel) {
-      this.carrousel.removeEventListener('change', getSliderChangeHandler.bind(null, this))
+      this.carrousel.removeEventListener('change', getSliderChangeHandler(this))
       this.carrousel.stop()
       this.carrousel = null
     }
@@ -185,7 +185,7 @@ const proto = {
     })
 
     this.carrousel.playInterval = this.interval
-    this.carrousel.addEventListener('change', getSliderChangeHandler.bind(null, this))
+    this.carrousel.addEventListener('change', getSliderChangeHandler(this))
     this.currentIndex = 0
 
     // preload all images for slider
@@ -320,7 +320,7 @@ const event = {
 }
 
 function init (Weex) {
-  const Component = Weex.Component
+  Component = Weex.Component
   extend = Weex.utils.extend
 
   function Slider (data) {
