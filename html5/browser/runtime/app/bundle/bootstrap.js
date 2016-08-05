@@ -7,7 +7,7 @@ import {
   isNpmModule,
   removeWeexPrefix,
   removeJSSurfix
-} from './misc'
+} from '../../../../default/app/bundle/misc'
 
 export function bootstrap (app, name, config, data) {
   console.debug(`[JS Framework] bootstrap for ${name}`)
