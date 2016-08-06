@@ -13,7 +13,7 @@
 #import "WXUtility.h"
 
 static NSString * const WXStorageDirectory            = @"wxstorage";
-static NSString * const WXStorageFileName             = @"wxstorage.json";
+static NSString * const WXStorageFileName             = @"wxstorage.plist";
 static NSUInteger const WXStorageLineLimit            = 1024;
 static NSString * const WXStorageThreadName           = @"com.taobao.weex.storage";
 
@@ -192,20 +192,7 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
 }
 
 - (void)write:(NSDictionary *)dict toFilePath:(NSString *)filePath{
-    NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict
-                                                       options:(NSJSONWritingOptions)0
-                                                         error:&error];
-    if (error) {
-        return ;
-    }
-    NSString *contents = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    
-    [contents writeToFile:filePath
-                      atomically:YES
-                        encoding:NSUTF8StringEncoding
-                           error:NULL];
-
+    [dict writeToFile:filePath atomically:YES];
 }
 
 + (NSString *)filePathForKey:(NSString *)key
@@ -279,7 +266,7 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
 }
 
 - (BOOL)checkInput:(id)input{
-    return ([input isKindOfClass:[NSString class]] == NO || [input isKindOfClass:[NSNumber class]] == NO);
+    return !([input isKindOfClass:[NSString class]] || [input isKindOfClass:[NSNumber class]]);
 }
 
 @end
