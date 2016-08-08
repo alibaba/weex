@@ -335,7 +335,7 @@ public class WXListComponent extends WXVContainer implements
                         break;
                 }
             }catch (NumberFormatException e){
-                e.printStackTrace();
+                WXLogUtils.e("", e);
                 WXLogUtils.e(TAG, "Invaild transform expression:" + match);
             }
         }
@@ -750,10 +750,9 @@ public class WXListComponent extends WXVContainer implements
 
             }
         } catch (RuntimeException e) {
-            WXLogUtils.e(TAG, WXLogUtils.getStackTrace(e));
-            id = RecyclerView.NO_ID;
-            WXLogUtils.e(TAG, "getItemViewType: NO ID, this will crash the whole render system of WXListRecyclerView");
-
+          WXLogUtils.eTag(TAG, e);
+          id = RecyclerView.NO_ID;
+          WXLogUtils.e(TAG, "getItemViewType: NO ID, this will crash the whole render system of WXListRecyclerView");
         }
         return (int) id;
     }
@@ -802,7 +801,7 @@ public class WXListComponent extends WXVContainer implements
           }
         }
       } catch (Exception e) {
-        WXLogUtils.d(TAG, "onLoadMore :" + WXLogUtils.getStackTrace(e));
+        WXLogUtils.d(TAG + "onLoadMore :", e);
       }
     }
 

@@ -372,7 +372,7 @@ public class WXSlider extends WXVContainer implements OnPageChangeListener {
     try {
       i = Integer.valueOf(value);
     }catch (NumberFormatException e){
-      e.printStackTrace();
+      WXLogUtils.e("", e);
       return;
     }
 

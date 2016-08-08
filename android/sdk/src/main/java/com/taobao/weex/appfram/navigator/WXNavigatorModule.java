@@ -161,7 +161,7 @@ public class WXNavigatorModule extends WXModule {
                             WXConst.MSG_SUCCESS);
                 }
             } catch (Exception e) {
-                WXLogUtils.e(TAG, WXLogUtils.getStackTrace(e));
+                WXLogUtils.eTag(TAG, e);
                 WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
                         WXConst.MSG_FAILED);
             }

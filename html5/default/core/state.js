@@ -84,7 +84,7 @@ export function initMethods (vm) {
   const methods = vm._methods
   if (methods) {
     for (let key in methods) {
-      vm[key] = bind(methods[key], vm)
+      vm[key] = methods[key]
     }
   }
 }

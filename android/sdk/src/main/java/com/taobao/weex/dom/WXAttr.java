@@ -318,7 +318,7 @@ public class WXAttr extends ConcurrentHashMap<String, Object> {
     try {
       return Boolean.parseBoolean(String.valueOf(obj));
     } catch (Exception e) {
-      WXLogUtils.e("[WXAttr] showIndicators:" + WXLogUtils.getStackTrace(e));
+      WXLogUtils.e("[WXAttr] showIndicators:", e);
     }
     return true;
   }
@@ -332,7 +332,7 @@ public class WXAttr extends ConcurrentHashMap<String, Object> {
     try {
       return Boolean.parseBoolean(String.valueOf(obj));
     } catch (Exception e) {
-      WXLogUtils.e("[WXAttr] autoPlay:" + WXLogUtils.getStackTrace(e));
+      WXLogUtils.e("[WXAttr] autoPlay:", e);
     }
     return false;
   }
@@ -369,7 +369,7 @@ public class WXAttr extends ConcurrentHashMap<String, Object> {
     try {
       return Boolean.parseBoolean(String.valueOf(obj));
     } catch (Exception e) {
-      WXLogUtils.e("[WXAttr] recycleImage:" + WXLogUtils.getStackTrace(e));
+      WXLogUtils.e("[WXAttr] recycleImage:", e);
     }
     return false;
   }

@@ -1,10 +1,215 @@
 # JS Bundle format
-<span class="weex-version">0.4</span>
-<a href="https://github.com/weexteam/article/wiki/%E6%AC%A2%E8%BF%8E%E5%8F%82%E4%B8%8EWeex%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91"  class="weex-translate incomplete">cn</a>
 
-v0.3.0
+JS Bundle Version: v0.3.0
 
-## Whole Syntax and Structure
+## v0.5.0
+
+### Whole Syntax and Structure
+
+A JS Bundle is actually a JavaScript file which follows **ES5** standard. The code is used to define some custom components for the instance and bootstrap the instance with certain name, config and data. Developers could use all kinds of JS code packager like webpack, browserify, requirejs to organize your whole instance code.
+
+### Meta Info
+
+The JS Bundle Must begin with a comment line which is a JSON object like:
+
+```javascript
+// { "framework": "Weex", "version": "0.5.0" }
+```
+
+This JSON object as least contains:
+
+* property `framework` must be `"Weex"`
+* property `version` should be corresponded with the JS Bundle format version
+
+### Global Members
+
+* `__weex_define__(name, options)`
+* `__weex_bootstrap__(name, config, data)`
+* `__weex_document__`
+* `__weex_require__(name)`
+
+#### `__weex_define__(name:string, options: object)`
+
+Define a custom component named `name` for current instance with `options`.
+
+**example:**
+
+```javascript
+__weex_define__('rmb', {
+  template: {
+    type: 'div',
+    style: {flexDirection: 'row'},
+    children: [
+      {type: 'text', attr: {value: '￥'}},
+      {type: 'text', attr: {value: this.value}}
+    ]
+  },
+  data: function () {
+    return {
+      value: '0'
+    }
+  },
+  methods: {...}
+})
+```
+
+The enabled component options contains:
+
+* `template`: just the same as [v0.3.0](#details-of-template-option-definitions)
+* `style`: just the same as [v0.3.0](#details-of-style-option-definitions)
+* `data`: a function which return a plain object to observe by the ViewModel
+* `methods`: a function map to proxy to the ViewModel
+* `computed`: a map of several computed keys for the ViewModel
+* `init`, `created`, `ready`: lifecycle methods
+* `events`: event handlers for the ViewModel
+<!-- * `components`: a map for options of sub components the ViewModel needed (So `__weex_define__(name, options)` equals to run `this.components[name] = options` in each custom components when `init`) -->
+
+The enabled ViewModel APIs contains:
+
+* `$el(id): Element`: find element by id in current ViewModel scope
+* `$vm(id): ViewModel`: find sub ViewModel by id
+* `$getConfig(): object`: get instance config info
+* `$broadcast`/`$emit`/`$dispatch`/`$on`/`$off`: listen and fire component events
+* `$transition` *(experimental)*: animation transition (see more in [animation native module](../animation.md))
+
+#### `__weex_require__(name: string): object`
+
+Get a Weex native module with several native APIs.
+
+**example:**
+
+```javascript
+var modal = __weex_require__('modal')
+modal.toast({
+  message: 'Hey!',
+  duration: 2
+})
+```
+
+polyfill for v0.3.0
+
+```javascript
+function __weex_require__(name) {
+  var result
+  define('__weex_require__', function (r, e, m) {
+    result = r('@weex-module/' + name)
+  })
+  return result
+}
+```
+
+#### `__weex_bootstrap__(nameOrOptions: string|object, config: object?, data: object?): AppInstance | Error`
+
+Start to render by a certain component name or a direct component options as the root element, and some instance `config` and instance `data`. If everything fine, it will returns the root app instance. Otherwise it will return an `Error` instance which describes something wrong.
+
+**example:**
+
+```javascript
+__weex_bootstrap__(
+  'root',
+  {
+    // format 1:
+    // downgrade: { appVersion: '>= 0.5.0' },
+    // format 2:
+    // downgrade: function (config) { return true }
+  },
+  {
+    // external data
+    // value: '12345'
+  }
+)
+```
+
+The instance `config` now only support `downgrade` property which allows two format:
+
+1. an object like `{ osVersion, appVersion, weexVersion, deviceModel }`
+2. a function like `function (config) { return true }` to return a boolean value. `true` means normal and `false` means downgrade.
+
+The instance `data` will merge to root component data. So the root component is also easy to reuse and the instance data is easy to customize.
+
+#### `__weex_document__`
+
+An virtual-DOM `Document` instance. Also the host of [virtual-DOM APIs](./virtual-dom-apis.md). Every Weex instance has and must have just one `Document` instance.
+
+### Preserved Global Variables
+
+`define`, `bootstrap`, `module`, `exports`, `document`, `require`, `register`, `render`
+
+### A whole example
+
+```javascript
+// { "framework": "Weex", "version": "0.5.0" }
+
+var modal = __weex_require__('modal')
+
+__weex_define__('item', {
+  template: {
+    type: 'div',
+    style: { flexDirection: 'row' },
+    event: {
+      click: function (e) {
+        this.update(e)
+      }
+    },
+    children: [
+      { type: 'image', attr: { src: this.imageUrl }, ...},
+      { type: 'text', attr: { value: this.title }, ...}
+    ]
+  },
+  data: function () {
+    return {
+      imageUrl: '',
+      title: ''
+    }
+  },
+  methods: {
+    update: function (e) {
+      modal.toast({ message: this.title })
+    }
+  }
+})
+
+__weex_define__('app', {
+  template: {
+    type: 'div',
+    children: [
+      {
+        type: 'item',
+        repeat: {
+          expression: function () {
+            return this.list
+          },
+          key: '$index',
+          value: '$value'}
+        },
+        attr: {
+          imageUrl: function () {
+            return this.$value.imageUrl
+          },
+          title: function () {
+            return this.$value.title
+          }
+        }
+      }
+    ]
+  },
+  data: function () {
+    return {
+      list: [
+        { imageUrl: 'xxx', title: '111' },
+        { imageUrl: 'yyy', title: '222' },
+        { imageUrl: 'zzz', title: '333' }
+      ]
+    }
+  }
+})
+
+__weex_bootstrap__('app')
+```
+
+## v0.3.0
+
+### Whole Syntax and Structure
 
 A JS Bundle is actually a JavaScript file which follows **ES5** standard. The code is organized by several modules with AMD-like format:
 
@@ -38,13 +243,7 @@ As the sample above, the component name should be hyphenated (a-z, 0-9, "-"). Ot
 
 And, the method call `bootstrap()` allows 1~3 parameters: root module name (String), config info (optional JSON) and external data (optional JSON).
 
-
-## NOTICE
-After Weex added multi-module support ( support using `require` in your `<script>` tag  include other we file or js code into current we file). we begin using [Webpack](https://webpack.github.io/) as module bundler in our tool chain. So the eventual format of Weex JSBundle is webpack packed .
-
-if you are JS Ninja, explore [weex-transformer](https://www.npmjs.com/package/weex-transformer) will give your unpacked , original Weex JS Bundle .
-
-## Content of Composed Components
+### Content of Composed Components
 
 A module of composed component contains 3 parts: whole options definition, additional template option definition and additional style option definition.
 
@@ -56,7 +255,7 @@ The `template` option is required and appeared only once, and the `style` option
 
 These options are defined and transformed by Transformer. Actually you can also ignore all the format limitation and write options to `module.exports` as the same result if you are not going to use Transformer. But that's not recommended.
 
-### Details of template option definitions
+#### Details of template option definitions
 
 A piece of multi-level embedded JSON-like object which describes the view structure.
 
@@ -87,7 +286,7 @@ Every level JSON-like object has these members below:
 
 All tag names, attr names are case-insensitive and transformed to lower-cased. But the attr values are case-sensitive.
 
-### Details of style option definitions
+#### Details of style option definitions
 
 Just a two-levels JSON object.
 

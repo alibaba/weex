@@ -1,6 +1,7 @@
 import './setTimeout'
 import './promise'
 import './console'
+import './objectAssign'
 
 /**
  * Mix properties into target object.

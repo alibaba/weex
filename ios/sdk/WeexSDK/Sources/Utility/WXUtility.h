@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import <CommonCrypto/CommonCrypto.h>
 #import "WXDefine.h"
 #import "WXType.h"
 #import "WXLog.h"
@@ -284,4 +285,15 @@ CGPoint WXPixelPointResize(CGPoint value);
 
 + (NSURL *_Nonnull)urlByDeletingParameters:(NSURL *_Nonnull)url;
 
+/**
+ *  @abstract Returns the contents of file.
+ *
+ */
++ (NSString *_Nullable)stringWithContentsOfFile:(NSString *_Nonnull)filePath;
+
+/**
+ *  @abstract Returns md5 string.
+ *
+ */
++ (NSString *)md5:(NSString *)string;
 @end

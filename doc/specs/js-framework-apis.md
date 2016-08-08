@@ -9,9 +9,10 @@ These APIs are designed for JS Framework and Native Engine working together.
 Considering the limitation of mobile phone resource, *Weex runs only one JS runtime* to handle all Weex instances. So it need a multi-instance management layer in JavaScript. These JS Framework APIs are just designed to do the management job.
 
 * First, each Weex instance have a lifecycle, from `createInstance` to `destroyInstance`. During this period, we can import some extra data by `refreshInstance`.
-* To communicate with Native Engine, we have a couple of APIs: `callNative` and `callJS`. They are used to call each other by some commands and messages.
+* To communicate with Native Engine, we have a couple of APIs: `sendTasks` and `receiveTasks`. They are used to call each other by some commands and messages.
 * And when JS runtime start at the beginning of the app launching, we need something initialized and configured. So we supply some APIs like `registerComponents`, `registerModules`.
 * The last API is just for debugging, we supply an API named `getRoot` to return the whole virtual-DOM data for developers.
+* If any of these API calls failed, an `Error` object should be returned.
 
 ## Called by native and supplied from JS Framework
 
@@ -26,7 +27,7 @@ Create a Weex instance from Native Engine
 
 Example:
 
-```
+```javascript
 createInstance('x', 'define(...); define(...); define(...); bootstrap(...)')
 createInstance('x', '...', { bundleUrl, debug, ... }, { a: 1, b: 2 }})
 ```
@@ -41,7 +42,7 @@ Refresh data to an existed Weex instance with certain external data from Native 
 
 Example:
 
-```
+```javascript
 refreshInstance('x', {a: 100, b: 200})
 ```
 
@@ -49,20 +50,20 @@ refreshInstance('x', {a: 100, b: 200})
 
 Register all native components
 
-* `components`: A map of which keys are component types and values are force options part of each type of component. *Currently it supports `append` attribute which forces the appending mechanism (`tree` or `node`) when first time rendering.*
+* `components`: A array of whose items are component options that are force part to use. *Currently it supports `append` attribute which forces the appending mechanism (`tree` or `node`) when first time rendering.*
 
 Example:
 
-```
-registerComponents({
-  container: {},
-  text: {},
-  image: {},
-  slider: {append: 'tree'},
-  list: {},
-  cell: {append: 'tree'},
+```javascript
+registerComponents([
+  { type: 'container' },
+  { type: 'text' },
+  { type: 'image' },
+  { type: 'slider', append: 'tree' },
+  { type: 'list' },
+  { type: 'cell', append: 'tree' },
   ...
-})
+])
 ```
 
 ### `registerModules(modules)`
@@ -75,7 +76,7 @@ Register the name, methods and args format of each module
 
 Example:
 
-```
+```javascript
 registerModules({
   event: [
     {name: 'openURL', args: ['string']}
@@ -84,7 +85,7 @@ registerModules({
 })
 ```
 
-### `callJS(instanceId, tasks)`
+### `receiveTasks(instanceId, tasks)`
 
 Fire events or callbacks to an existed Weex instance from Native Engine
 
@@ -94,9 +95,9 @@ Fire events or callbacks to an existed Weex instance from Native Engine
 
 Example:
 
-```
-callJS('x', [{method: 'fireEvent', args: ['x', '13', 'click', {a: 100, b: 200}]}])
-callJS('x', [{method: 'callback', args: ['x', '7', {a: 100, b: 200}, true]}])
+```javascript
+receiveTasks('x', [{method: 'fireEvent', args: ['x', '13', 'click', {a: 100, b: 200}]}])
+receiveTasks('x', [{method: 'callback', args: ['x', '7', {a: 100, b: 200}, true]}])
 ```
 
 ### `getRoot(instanceId)`
@@ -105,14 +106,14 @@ Return a JSON object which describes the whole virtual DOM body of an existed We
 
 Example:
 
-```
+```javascript
 getRoot('x')
 // {ref: '_root', type: 'container', attr: {...}, style: {...}, children: [...]}
 ```
 
 ## Called from JavaScript and implemented with native code
 
-### `callNative(instanceId, tasks)`
+### `sendTasks(instanceId, tasks)`
 
 Make native calls from JS Framework
 
@@ -120,11 +121,65 @@ Make native calls from JS Framework
 
 Example:
 
-```
-callNative('x', [
+```javascript
+sendTasks('x', [
   {module: 'dom', method: 'addElement', args: ['_root', {ref: '1', type: 'container'}, -1]},
   {module: 'dom', method: 'addElement', args: ['1', {ref: '2', type: 'text', ...}, -1]},
   {module: 'dom', method: 'addElement', args: ['1', {ref: '3', type: 'image', ...}, -1]},
   ...
 ])
 ```
+
+## Supporting other JS Framework <sup>(experimental)</sup>
+
+### Register a new JS Framework
+
+```javascript
+// lib/frameworks/index.js
+
+import Vue from '...'
+import React from '...'
+import Angular from '...'
+
+export const frameworks = {
+  Vue,
+  React,
+  Angular
+}
+```
+
+### Expose JS Framework APIs
+
+```javascript
+// 3rd-party-framework.js
+
+export function createInstance (id, code, config, data) { ... }
+export function destroyInstance (id) { ... }
+export function refreshInstance (id, data) { ... }
+export function registerComponents (components) { ... }
+export function registerModules (modules) { ... }
+export function recieveTasks (id, tasks) { ... }
+export function getRoot (id) { ... }
+```
+
+The virtual-DOM tasks should follow [virtual-DOM spec](virtual-dom-apis.md).
+
+### Framework Helper
+
+You can import `lib/runtime/helper.js` to get two important things:
+
+* `Document` class, see [virtual-DOM spec](virtual-dom-apis.md) for more.
+* `sendTasks` method.
+
+### JS Bundle format
+
+You must ensure the JS Bundle has its first line of code like this:
+
+```javascript
+// { "framework": "Vue" }
+...
+```
+
+to allow JS Runtime to detect which JS Framework it should be opened by.
+
+If no valid annotation found. The JS Bundle will be opened by default JS Framework of Weex.
