@@ -7,3 +7,5 @@ import * as ctrl from './ctrl'
 import AppInstance from './instance'
 
 extend(AppInstance.prototype, ctrl)
+
+export default AppInstance

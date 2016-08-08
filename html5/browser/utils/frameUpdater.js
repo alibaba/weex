@@ -10,7 +10,7 @@ let rafId
 const observers = []
 let paused = false
 
-const FrameUpdater = {
+export default {
   start: function () {
     if (rafId) {
       return
@@ -45,4 +45,3 @@ const FrameUpdater = {
   }
 }
 
-module.exports = FrameUpdater
