@@ -84,7 +84,9 @@
     [WXSDKEngine registerModule:@"event" withClass:[WXEventModule class]];
     [self atAddPlugin];
     
+#if !(TARGET_IPHONE_SIMULATOR)
     [self checkUpdate];
+#endif
     
 #ifdef DEBUG
     [WXDebugTool setDebug:YES];
