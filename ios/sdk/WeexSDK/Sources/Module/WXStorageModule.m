@@ -16,6 +16,7 @@ static NSString * const WXStorageDirectory            = @"wxstorage";
 static NSString * const WXStorageFileName             = @"wxstorage.plist";
 static NSUInteger const WXStorageLineLimit            = 1024;
 static NSString * const WXStorageThreadName           = @"com.taobao.weex.storage";
+static NSString * const WXStorageNullValue            = @"#{eulaVlluNegarotSXW}";
 
 @implementation WXStorageModule
 
@@ -59,7 +60,7 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
     dispatch_async([WXStorageModule storageQueue], ^{
         WXStorageModule *strongSelf = weakSelf;
         NSString *value = [strongSelf.memory objectForKey:key];
-        if (value == (id)kCFNull) {
+        if ([WXStorageNullValue isEqualToString:value]) {
             value = [[WXUtility globalCache] objectForKey:key];
             if (!value) {
                 dispatch_async([WXStorageModule storageQueue], ^{
@@ -128,7 +129,7 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
     __weak typeof(self) weakSelf = self;
     dispatch_async([WXStorageModule storageQueue], ^{
         WXStorageModule *strongSelf = weakSelf;
-        if (strongSelf.memory[key] == (id)kCFNull) {
+        if ([WXStorageNullValue isEqualToString:strongSelf.memory[key]]) {
             [strongSelf.memory removeObjectForKey:key];
             dispatch_async([WXStorageModule storageQueue], ^{
                 NSString *filePath = [WXStorageModule filePathForKey:key];
@@ -137,11 +138,9 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
             });
         } else if (strongSelf.memory[key]) {
             [strongSelf.memory removeObjectForKey:key];
-            dispatch_async([WXStorageModule storageQueue], ^{
-                WXStorageModule *strongSelf = weakSelf;
-                NSDictionary *dict = [strongSelf.memory copy];
-                [strongSelf write:dict toFilePath:[WXStorageModule filePath]];
-            });
+            WXStorageModule *strongSelf = weakSelf;
+            NSDictionary *dict = [strongSelf.memory copy];
+            [strongSelf write:dict toFilePath:[WXStorageModule filePath]];
         }else{
             callback(@{@"result":@"failed"});
             return ;
@@ -158,29 +157,24 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
         WXStorageModule *strongSelf = weakSelf;
         NSString *filePath = [WXStorageModule filePathForKey:key];
         if (obj.length <= WXStorageLineLimit) {
-            if (strongSelf.memory[key] == (id)kCFNull) {
+            if ([WXStorageNullValue isEqualToString:strongSelf.memory[key]]) {
                 [[WXUtility globalCache] removeObjectForKey:key];
                 [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
             }
             strongSelf.memory[key] = obj;
-            dispatch_async([WXStorageModule storageQueue], ^{
-                WXStorageModule *strongSelf = weakSelf;
-                NSDictionary *dict = [strongSelf.memory copy];
-                [strongSelf write:dict toFilePath:[WXStorageModule filePath]];
-            });
+            NSDictionary *dict = [strongSelf.memory copy];
+            [strongSelf write:dict toFilePath:[WXStorageModule filePath]];
             callback(@{@"result":@"success"});
             return;
         }
         
         [[WXUtility globalCache] setObject:obj forKey:key cost:obj.length];
         
-        if (strongSelf.memory[key] != (id)kCFNull) {
-            strongSelf.memory[key] = (id)kCFNull;
-            dispatch_async([WXStorageModule storageQueue], ^{
-                WXStorageModule *strongSelf = weakSelf;
-                NSDictionary *dict = [strongSelf.memory copy];
-                [strongSelf write:dict toFilePath:[WXStorageModule filePath]];
-            });
+        if (![WXStorageNullValue isEqualToString:strongSelf.memory[key]]) {
+            strongSelf.memory[key] = WXStorageNullValue;
+            WXStorageModule *strongSelf = weakSelf;
+            NSDictionary *dict = [strongSelf.memory copy];
+            [strongSelf write:dict toFilePath:[WXStorageModule filePath]];
         }
         
         dispatch_async([WXStorageModule storageQueue], ^{
