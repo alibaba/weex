@@ -247,9 +247,11 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
     dispatch_once(&onceToken, ^{
         [WXStorageModule setupDirectory];
         
-        NSString *contents = [WXUtility stringWithContentsOfFile:[WXStorageModule filePath]];
-        if (contents) {
-            memory = [[WXThreadSafeMutableDictionary alloc] initWithDictionary:[WXUtility objectFromJSON:contents]];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:[WXStorageModule filePath]]) {
+            NSDictionary *contents = [NSDictionary dictionaryWithContentsOfFile:[WXStorageModule filePath]];
+            if (contents) {
+                memory = [[WXThreadSafeMutableDictionary alloc] initWithDictionary:contents];
+            }
         }
         if (!memory) {
             memory = [WXThreadSafeMutableDictionary new];
