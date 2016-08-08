@@ -1,4 +1,4 @@
-import { bind } from '../util'
+import { bind } from '../../util'
 
 import {
   define,

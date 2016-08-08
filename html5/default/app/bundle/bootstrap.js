@@ -1,5 +1,5 @@
 import semver from 'semver'
-import Vm from '../vm'
+import Vm from '../../vm'
 import * as downgrade from '../downgrade'
 import { isPlainObject } from '../../util'
 import {
