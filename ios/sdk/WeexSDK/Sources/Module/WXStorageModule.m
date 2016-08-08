@@ -75,6 +75,7 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
                         callback(@{@"result":@"failed"});
                     }
                 });
+                return;
             }
         }
         if (!value) {
