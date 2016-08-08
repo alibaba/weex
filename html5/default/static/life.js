@@ -1,5 +1,4 @@
 import config from '../config'
-import Vm from '../vm'
 import { instanceMap } from './map'
 
 export function init (cfg) {

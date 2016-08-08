@@ -341,6 +341,7 @@ function init (Weex) {
   Slider.prototype = Object.create(Component.prototype)
   extend(Slider.prototype, proto)
   extend(Slider.prototype, { attr })
+  extend(Slider.prototype, { event })
 
   Weex.registerComponent('slider', Slider)
 }

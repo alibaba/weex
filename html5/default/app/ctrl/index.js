@@ -9,7 +9,7 @@
  *
  * corresponded with the API of instance manager (framework.js)
  */
-import { init } from './init'
+export { init } from './init'
 
 export {
   updateActions,
