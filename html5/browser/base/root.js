@@ -1,8 +1,7 @@
 'use strict'
 
 import ComponentManager from '../dom/componentManager'
-
-const rootCandidates = ['div', 'list', 'vlist', 'scroller']
+import config from '../render/config'
 
 function detectRootHeight (root) {
   const rootQuery = '#' + root.getWeexInstance().rootId
@@ -35,9 +34,9 @@ function init (Weex) {
     if (!nodeType) {
       nodeType = 'div'
     }
-    else if (rootCandidates.indexOf(nodeType) === -1) {
+    else if (config.validRoots.indexOf(nodeType) === -1) {
       console.warn('[h5-render] the root component type \'' + nodeType + '\' is not one of '
-        + 'the types in [' + rootCandidates + '] list. It is auto downgraded '
+        + 'the types in [' + config.validRoots + '] list. It is auto downgraded '
         + 'to \'div\'.')
       nodeType = 'div'
     }
