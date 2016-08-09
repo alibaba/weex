@@ -328,6 +328,10 @@ public abstract class WXVContainer<T extends ViewGroup> extends WXComponent<T> {
     return mChildren.get(index);
   }
 
+  public int getChildCount() {
+    return mChildren.size();
+  }
+
   public void addChild(WXComponent child) {
     addChild(child, -1);
   }
