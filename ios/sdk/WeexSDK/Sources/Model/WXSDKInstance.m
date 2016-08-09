@@ -285,6 +285,11 @@ NSTimeInterval JSLibInitTime = 0;
     return [_componentManager componentForRef:ref];
 }
 
+- (NSUInteger)numberOfComponents
+{
+    return [_componentManager numberOfComponents];
+}
+
 - (void)finishPerformance
 {
     //deperacated

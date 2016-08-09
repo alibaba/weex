@@ -88,6 +88,9 @@ static WXThreadSafeMutableDictionary *globalPerformanceDict;
     commitDict[PAGENAME] = instance.pageName ?: @"";
     commitDict[WXSDKVERSION] = WX_SDK_VERSION;
     commitDict[JSLIBVERSION] = WX_JS_FRAMEWORK_VERSION;
+#if DEBUG
+    commitDict[@"componentCount"] = @([instance numberOfComponents]);
+#endif
     
     for (int tag = 0; tag < WXPTEnd; tag++) {
         NSMutableDictionary *performanceDict = tag <= WXPTFrameworkExecute ? globalPerformanceDict : instance.performanceDict;

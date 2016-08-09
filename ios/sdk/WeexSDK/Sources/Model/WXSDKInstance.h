@@ -178,7 +178,12 @@ typedef NS_ENUM(NSInteger, WXErrorCode) {//error.code
 /**
  * get Componet instance by ref
  */
-- (WXComponent *) componentForRef:(NSString *)ref;
+- (WXComponent *)componentForRef:(NSString *)ref;
+
+/**
+ * Number of components created
+ */
+- (NSUInteger)numberOfComponents;
 
 /**
  * application performance statistics

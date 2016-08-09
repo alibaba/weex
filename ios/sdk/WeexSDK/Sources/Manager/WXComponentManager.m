@@ -277,6 +277,10 @@ static css_node_t * rootNodeGetChild(void *context, int i)
     return [dict objectForKey:ref];
 }
 
+- (NSUInteger)numberOfComponents
+{
+    return _indexDict.count;
+}
 
 - (WXComponent *)_buildComponentForData:(NSDictionary *)data
 {

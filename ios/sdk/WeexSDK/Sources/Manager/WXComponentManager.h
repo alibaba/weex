@@ -66,6 +66,11 @@ extern void WXPerformBlockOnComponentThread(void (^block)());
  */
 - (WXComponent *)componentForRef:(NSString *)ref;
 
+/**
+ * @abstract number of components created
+ */
+- (NSUInteger)numberOfComponents;
+
 
 ///--------------------------------------
 /// @name Updating
