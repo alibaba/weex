@@ -282,7 +282,7 @@ NSTimeInterval JSLibInitTime = 0;
 
 - (WXComponent *)componentForRef:(NSString *)ref
 {
-    return [self.componentManager componentForRef:ref];
+    return [_componentManager componentForRef:ref];
 }
 
 - (void)finishPerformance
