@@ -553,7 +553,10 @@
     NSInteger row = -1;
     WXComponent *firstComponent;
     for (int i = 0; i <= index; i++) {
-        WXComponent* component = self.subcomponents[i];
+        WXComponent* component = [self.subcomponents wx_safeObjectAtIndex:i];
+        if (!component) {
+            continue;
+        }
         if (([component isKindOfClass:[WXHeaderComponent class]]
             || [component isKindOfClass:[WXCellComponent class]])
             && !firstComponent) {
