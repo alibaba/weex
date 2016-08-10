@@ -44,626 +44,144 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/2f482d7aef70ea2a1dd251c635dac048", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(30);
+	;__weex_define__("@weex-component/1c7fe998e56023469f05215078466ca1", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
-	  __webpack_require__(1);
+	__webpack_require__(1);
+	__weex_module__.exports = {
+	  data: function () {return {
+	    setItemResult:'loading',
+	    getItemResult:'loading',
+	    removeItemResult:'loading',
+	    lengthResult:'loading',
+	    getAllKeysResult:'loading'
+	  }},
+	  ready: function() {
+	    var storage = __weex_require__('@weex-module/storage');
+	    var me = this;
+
+
+	    //setItem
+	    storage.setItem('foo','foo-value',function(e){
+	      console.log('set [foo<->foo-value]:'+JSON.stringify(e));
+	      me.setItemResult = 'foo:'+JSON.stringify(e)+'\n';
+	    });
+	    storage.setItem('bar','bar-value',function(e){
+	      console.log('set [bar<->bar-value]:'+JSON.stringify(e));
+	      me.setItemResult = me.setItemResult + 'bar:'+JSON.stringify(e);
+	    });
+
+	    //getItem
+	    storage.getItem('foo',function(e){
+	      console.log('get foo result:'+JSON.stringify(e));
+	      me.getItemResult = 'get foo,value is '+e.data+'\n';
+	    });
+	    storage.getItem('bar',function(e){
+	      console.log('get bar result:'+JSON.stringify(e));
+	      me.getItemResult += 'get bar,value is '+e.data;
+	    });
+
+
+	    //length
+	    storage.length(function(e){
+	      console.log('length:'+JSON.stringify(e));
+	      me.lengthResult = 'current length is ' + e.data;
+	    });
+
+	    //getAllKeys
+	    storage.getAllKeys(function(e){
+	      console.log('getAllKeys:'+JSON.stringify(e));
+	      me.getAllKeysResult = e.data;
+	      //me.getAllKeysResult +=' '+ typeof e.data
+	    });
+
+	    //removeItem
+	    storage.removeItem('foo',function(e){
+	      console.log('remove foo:'+JSON.stringify(e));
+	      me.removeItemResult = 'remove item foo '+e.result;
+	    });
+
+	  }
+	};
+
 
 	;__weex_module__.exports.template = __weex_module__.exports.template || {}
 	;Object.assign(__weex_module__.exports.template, {
-	  "type": "div",
+	  "type": "scroller",
 	  "children": [
 	    {
 	      "type": "wxc-panel",
 	      "attr": {
-	        "title": "flex-direction",
+	        "title": "storage API",
 	        "type": "primary"
 	      },
 	      "children": [
 	        {
-	          "type": "div",
-	          "classList": [
-	            "row"
-	          ],
-	          "style": {
-	            "flexDirection": "row"
+	          "type": "wxc-panel",
+	          "attr": {
+	            "title": "setItem"
 	          },
 	          "children": [
 	            {
-	              "type": "style-item",
+	              "type": "text",
 	              "attr": {
-	                "value": "row"
-	              },
-	              "style": {
-	                "marginRight": 0
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "attr": {
-	                "type": "1"
+	                "value": function () {return this.setItemResult}
 	              }
 	            }
 	          ]
 	        },
 	        {
-	          "type": "div",
-	          "classList": [
-	            "row"
-	          ],
-	          "style": {
-	            "flexDirection": "column"
+	          "type": "wxc-panel",
+	          "attr": {
+	            "title": "getItem"
 	          },
 	          "children": [
 	            {
-	              "type": "style-item",
+	              "type": "text",
 	              "attr": {
-	                "value": "column"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "attr": {
-	                "type": "1"
-	              }
-	            }
-	          ]
-	        }
-	      ]
-	    },
-	    {
-	      "type": "wxc-panel",
-	      "attr": {
-	        "title": "justify-content",
-	        "type": "primary"
-	      },
-	      "children": [
-	        {
-	          "type": "div",
-	          "classList": [
-	            "row"
-	          ],
-	          "style": {
-	            "justifyContent": "flex-start"
-	          },
-	          "children": [
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
-	              },
-	              "attr": {
-	                "type": "1"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
+	                "value": function () {return this.getItemResult}
 	              }
 	            }
 	          ]
 	        },
 	        {
-	          "type": "div",
-	          "classList": [
-	            "row"
-	          ],
-	          "style": {
-	            "justifyContent": "flex-end"
+	          "type": "wxc-panel",
+	          "attr": {
+	            "title": "length"
 	          },
 	          "children": [
 	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
-	              },
+	              "type": "text",
 	              "attr": {
-	                "type": "1"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
+	                "value": function () {return this.lengthResult}
 	              }
 	            }
 	          ]
 	        },
 	        {
-	          "type": "div",
-	          "classList": [
-	            "row"
-	          ],
-	          "style": {
-	            "justifyContent": "center"
+	          "type": "wxc-panel",
+	          "attr": {
+	            "title": "getAllKeys"
 	          },
 	          "children": [
 	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
-	              },
+	              "type": "text",
 	              "attr": {
-	                "type": "1"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
+	                "value": function () {return this.getAllKeysResult}
 	              }
 	            }
 	          ]
 	        },
 	        {
-	          "type": "div",
-	          "classList": [
-	            "row"
-	          ],
-	          "style": {
-	            "justifyContent": "space-between"
+	          "type": "wxc-panel",
+	          "attr": {
+	            "title": "removeItem"
 	          },
 	          "children": [
 	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
-	              },
+	              "type": "text",
 	              "attr": {
-	                "type": "1"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
-	              }
-	            }
-	          ]
-	        }
-	      ]
-	    },
-	    {
-	      "type": "wxc-panel",
-	      "attr": {
-	        "title": "align-items",
-	        "type": "primary"
-	      },
-	      "children": [
-	        {
-	          "type": "div",
-	          "classList": [
-	            "row",
-	            "row-align"
-	          ],
-	          "style": {
-	            "alignItems": "flex-start"
-	          },
-	          "children": [
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
-	              },
-	              "attr": {
-	                "type": "1"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
-	              }
-	            }
-	          ]
-	        },
-	        {
-	          "type": "div",
-	          "classList": [
-	            "row",
-	            "row-align"
-	          ],
-	          "style": {
-	            "alignItems": "flex-end"
-	          },
-	          "children": [
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
-	              },
-	              "attr": {
-	                "type": "1"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
-	              }
-	            }
-	          ]
-	        },
-	        {
-	          "type": "div",
-	          "classList": [
-	            "row",
-	            "row-align"
-	          ],
-	          "style": {
-	            "alignItems": "center"
-	          },
-	          "children": [
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
-	              },
-	              "attr": {
-	                "type": "1"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
-	              }
-	            }
-	          ]
-	        },
-	        {
-	          "type": "div",
-	          "classList": [
-	            "row",
-	            "row-align"
-	          ],
-	          "style": {
-	            "alignItems": "stretch"
-	          },
-	          "children": [
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
-	              },
-	              "attr": {
-	                "type": "1"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
-	              }
-	            }
-	          ]
-	        }
-	      ]
-	    },
-	    {
-	      "type": "wxc-panel",
-	      "attr": {
-	        "title": "flex",
-	        "type": "primary"
-	      },
-	      "children": [
-	        {
-	          "type": "div",
-	          "classList": [
-	            "row"
-	          ],
-	          "style": {
-	            "alignItems": "flex-start"
-	          },
-	          "children": [
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
-	              },
-	              "attr": {
-	                "value": "no flex"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
-	              },
-	              "attr": {
-	                "value": "no flex",
-	                "type": "1"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
-	              },
-	              "attr": {
-	                "value": "no flex"
-	              }
-	            }
-	          ]
-	        },
-	        {
-	          "type": "div",
-	          "classList": [
-	            "row"
-	          ],
-	          "style": {
-	            "alignItems": "flex-start"
-	          },
-	          "children": [
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0
-	              },
-	              "attr": {
-	                "value": "no flex"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0,
-	                "flex": 1
-	              },
-	              "attr": {
-	                "type": "1",
-	                "value": "flex:1"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0,
-	                "flex": 2
-	              },
-	              "attr": {
-	                "value": "flex:2"
-	              }
-	            }
-	          ]
-	        },
-	        {
-	          "type": "div",
-	          "classList": [
-	            "row"
-	          ],
-	          "style": {
-	            "alignItems": "flex-start"
-	          },
-	          "children": [
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0,
-	                "flex": 1
-	              },
-	              "attr": {
-	                "value": "flex:1"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0,
-	                "flex": 1
-	              },
-	              "attr": {
-	                "type": "1",
-	                "value": "flex:1"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0,
-	                "flex": 1
-	              },
-	              "attr": {
-	                "value": "flex:1"
-	              }
-	            }
-	          ]
-	        },
-	        {
-	          "type": "div",
-	          "classList": [
-	            "row"
-	          ],
-	          "style": {
-	            "alignItems": "flex-start"
-	          },
-	          "children": [
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0,
-	                "flex": 1
-	              },
-	              "attr": {
-	                "value": "flex:1"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0,
-	                "flex": 2
-	              },
-	              "attr": {
-	                "type": "1",
-	                "value": "flex:2"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "style": {
-	                "marginRight": 0,
-	                "flex": 3
-	              },
-	              "attr": {
-	                "value": "flex:3"
-	              }
-	            }
-	          ]
-	        }
-	      ]
-	    },
-	    {
-	      "type": "wxc-panel",
-	      "attr": {
-	        "title": "flex-wrap",
-	        "type": "primary"
-	      },
-	      "children": [
-	        {
-	          "type": "div",
-	          "classList": [
-	            "row"
-	          ],
-	          "style": {
-	            "flexWrap": "wrap",
-	            "backgroundColor": "#808080",
-	            "padding": 10
-	          },
-	          "children": [
-	            {
-	              "type": "style-item",
-	              "attr": {
-	                "value": "1:wrap"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "attr": {
-	                "value": "2:wrap"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "attr": {
-	                "value": "3:wrap"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "attr": {
-	                "value": "4:wrap"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "attr": {
-	                "value": "5:wrap"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "attr": {
-	                "value": "6:wrap"
-	              }
-	            }
-	          ]
-	        },
-	        {
-	          "type": "div",
-	          "classList": [
-	            "row"
-	          ],
-	          "style": {
-	            "flexWrap": "nowrap",
-	            "backgroundColor": "#808080",
-	            "padding": 10
-	          },
-	          "children": [
-	            {
-	              "type": "style-item",
-	              "attr": {
-	                "value": "1:nowrap"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "attr": {
-	                "value": "2:nowrap"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "attr": {
-	                "value": "3:nowrap"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "attr": {
-	                "value": "4:nowrap"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "attr": {
-	                "value": "5:nowrap"
-	              }
-	            },
-	            {
-	              "type": "style-item",
-	              "attr": {
-	                "value": "6:nowrap"
+	                "value": function () {return this.removeItemResult}
 	              }
 	            }
 	          ]
@@ -672,21 +190,8 @@
 	    }
 	  ]
 	})
-	;__weex_module__.exports.style = __weex_module__.exports.style || {}
-	;Object.assign(__weex_module__.exports.style, {
-	  "row": {
-	    "flexDirection": "row",
-	    "marginBottom": 10
-	  },
-	  "row-align": {
-	    "height": 160,
-	    "borderWidth": 3,
-	    "borderColor": "#dddddd",
-	    "borderStyle": "solid"
-	  }
 	})
-	})
-	;__weex_bootstrap__("@weex-component/2f482d7aef70ea2a1dd251c635dac048", {
+	;__weex_bootstrap__("@weex-component/1c7fe998e56023469f05215078466ca1", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
@@ -1826,73 +1331,6 @@
 	    "marginTop": 5,
 	    "textAlign": "center",
 	    "fontSize": 20
-	  }
-	})
-	})
-
-/***/ },
-/* 13 */,
-/* 14 */,
-/* 15 */,
-/* 16 */,
-/* 17 */,
-/* 18 */,
-/* 19 */,
-/* 20 */,
-/* 21 */,
-/* 22 */,
-/* 23 */,
-/* 24 */,
-/* 25 */,
-/* 26 */,
-/* 27 */,
-/* 28 */,
-/* 29 */,
-/* 30 */
-/***/ function(module, exports) {
-
-	;__weex_define__("@weex-component/style-item", [], function(__weex_require__, __weex_exports__, __weex_module__){
-
-	;
-	  __weex_module__.exports = {
-	    data: function () {return {
-	      value: '',
-	      type: '0' // 0, 1
-	    }},
-	    methods: {
-	      bgColor: function() {
-	        return this.type == '1' ? '#7BA3A8' : '#BEAD92';
-	      }
-	    }
-	  }
-
-	;__weex_module__.exports.template = __weex_module__.exports.template || {}
-	;Object.assign(__weex_module__.exports.template, {
-	  "type": "text",
-	  "classList": [
-	    "item",
-	    "txt"
-	  ],
-	  "attr": {
-	    "value": function () {return this.value}
-	  },
-	  "style": {
-	    "backgroundColor": function () {return this.bgColor()}
-	  }
-	})
-	;__weex_module__.exports.style = __weex_module__.exports.style || {}
-	;Object.assign(__weex_module__.exports.style, {
-	  "item": {
-	    "marginRight": 10,
-	    "width": 160,
-	    "height": 75,
-	    "paddingLeft": 8,
-	    "paddingRight": 8,
-	    "paddingTop": 8,
-	    "paddingBottom": 8
-	  },
-	  "txt": {
-	    "color": "#eeeeee"
 	  }
 	})
 	})

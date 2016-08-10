@@ -40,70 +40,44 @@
 /******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
-/******/ ({
-
-/***/ 0:
-/***/ function(module, exports, __webpack_require__) {
-
-	;__weex_define__("@weex-component/9f86da5d6b34376b9cac6c09a9b78cc2", [], function(__weex_require__, __weex_exports__, __weex_module__){
-
-	;
-	  __webpack_require__(33)
-
-	;__weex_module__.exports.template = __weex_module__.exports.template || {}
-	;Object.assign(__weex_module__.exports.template, {
-	  "type": "div",
-	  "children": [
-	    {
-	      "type": "btn",
-	      "children": [
-	        {
-	          "type": "text",
-	          "attr": {
-	            "value": "Click!"
-	          }
-	        }
-	      ]
-	    }
-	  ]
-	})
-	})
-	;__weex_bootstrap__("@weex-component/9f86da5d6b34376b9cac6c09a9b78cc2", {
-	  "transformerVersion": "0.3.1"
-	},undefined)
-
-/***/ },
-
-/***/ 33:
+/******/ ([
+/* 0 */
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/btn", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/fca21923ec1c1c0065eb4383d4822356", [], function(__weex_require__, __weex_exports__, __weex_module__){
+
+	;
+	  __weex_module__.exports = {
+	    data: function () {return {
+	      img: '//gw.alicdn.com/tps/i2/TB1DpsmMpXXXXabaXXX20ySQVXX-512-512.png_400x400.jpg'
+	    }}
+	  }
 
 	;__weex_module__.exports.template = __weex_module__.exports.template || {}
 	;Object.assign(__weex_module__.exports.template, {
-	  "type": "div",
+	  "type": "image",
 	  "classList": [
-	    "btn"
+	    "img"
 	  ],
-	  "children": [
-	    {
-	      "type": "content"
-	    }
-	  ]
+	  "style": {
+	    "width": 400,
+	    "height": 400
+	  },
+	  "attr": {
+	    "src": function () {return this.img},
+	    "placeHolder": "hehe"
+	  }
 	})
 	;__weex_module__.exports.style = __weex_module__.exports.style || {}
 	;Object.assign(__weex_module__.exports.style, {
-	  "btn": {
-	    "fontSize": 36,
-	    "textAlign": "center",
-	    "color": "#FFFFFF",
-	    "backgroundColor": "#808080",
-	    "padding": 20,
-	    "borderRadius": 5
+	  "img": {
+	    "marginBottom": 20
 	  }
 	})
 	})
+	;__weex_bootstrap__("@weex-component/fca21923ec1c1c0065eb4383d4822356", {
+	  "transformerVersion": "0.3.1"
+	},undefined)
 
 /***/ }
-
-/******/ });
+/******/ ]);
