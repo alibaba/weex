@@ -104,14 +104,15 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
                 } withResponse:^(NSURLResponse *response) {
                     httpResponse = (NSHTTPURLResponse*)response;
                     respEncode = httpResponse.textEncodingName;
-                    [callbackRsp setObject:@{ @"HEADERS_RECEIVED" : @2  } forKey:@"readyState"];
-                    [callbackRsp setObject:[NSNumber numberWithInteger:httpResponse.statusCode] forKey:@"status"];
-                    [callbackRsp setObject:httpResponse.allHeaderFields forKey:@"headers"];
-                    statusText = [weakSelf.class getStatusText:httpResponse.statusCode];
-                    [callbackRsp setObject:statusText forKey:@"statusText"];
-                    [callbackRsp setObject:[NSNumber numberWithInteger:received] forKey:@"length"];
-                    
-                    [[WXSDKManager bridgeMgr] callBack:weakSelf.weexInstance.instanceId funcId:progressCallback params:callbackRsp keepAlive:true];
+                    if (weakSelf) {
+                        [callbackRsp setObject:@{ @"HEADERS_RECEIVED" : @2  } forKey:@"readyState"];
+                        [callbackRsp setObject:[NSNumber numberWithInteger:httpResponse.statusCode] forKey:@"status"];
+                        [callbackRsp setObject:httpResponse.allHeaderFields forKey:@"headers"];
+                        statusText = [weakSelf.class getStatusText:httpResponse.statusCode];
+                        [callbackRsp setObject:statusText forKey:@"statusText"];
+                        [callbackRsp setObject:[NSNumber numberWithInteger:received] forKey:@"length"];
+                        [[WXSDKManager bridgeMgr] callBack:weakSelf.weexInstance.instanceId funcId:progressCallback params:callbackRsp keepAlive:true];
+                    }
                     
                 } withReceiveData:^(NSData *data) {
                     [callbackRsp setObject:@{ @"LOADING" : @3 } forKey:@"readyState"];
