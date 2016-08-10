@@ -15,6 +15,7 @@
 #import "WXSDKInstance.h"
 #import "WXAssert.h"
 #import "WXUtility.h"
+#import "WXMonitor.h"
 #import "WXScrollerProtocol.h"
 
 static NSThread *WXComponentThread;
@@ -276,6 +277,10 @@ static css_node_t * rootNodeGetChild(void *context, int i)
     return [dict objectForKey:ref];
 }
 
+- (NSUInteger)numberOfComponents
+{
+    return _indexDict.count;
+}
 
 - (WXComponent *)_buildComponentForData:(NSDictionary *)data
 {
@@ -385,7 +390,11 @@ static css_node_t * rootNodeGetChild(void *context, int i)
     WXSDKInstance *instance  = self.weexInstance;
     [self _addUITask:^{        
         UIView *rootView = instance.rootView;
-        [instance finishPerformance];
+        
+        WX_MONITOR_INSTANCE_PERF_END(WXPTFirstScreenRender, instance);
+        WX_MONITOR_INSTANCE_PERF_END(WXPTAllRender, instance);
+        WX_MONITOR_SUCCESS(WXMTJSBridge);
+        WX_MONITOR_SUCCESS(WXMTNativeRender);
         
         if(instance.renderFinish){
             instance.renderFinish(rootView);

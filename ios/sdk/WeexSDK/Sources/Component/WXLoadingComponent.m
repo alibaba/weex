@@ -1,4 +1,4 @@
-/**
+ /**
  * Created by Weex.
  * Copyright (c) 2016, Alibaba, Inc. All rights reserved.
  *
@@ -66,9 +66,23 @@
 - (void)viewDidLoad
 {
     _initFinished = YES;
+    
     if (!_displayState) {
-        [self.view setHidden:YES];
+        [_indicator.view setHidden:YES];
     }
+    [self.view setFrame: (CGRect){
+        .size = self.calculatedFrame.size,
+        .origin.x = self.calculatedFrame.origin.x,
+        .origin.y = self.view.frame.origin.y + CGRectGetHeight(self.calculatedFrame)
+    }];
+}
+
+- (void)layoutDidFinish {
+    [self.view setFrame: (CGRect){
+        .size = self.calculatedFrame.size,
+        .origin.x = self.calculatedFrame.origin.x,
+        .origin.y = self.view.frame.origin.y + CGRectGetHeight(self.calculatedFrame)
+    }];
 }
 
 - (void)addEvent:(NSString *)eventName
@@ -100,13 +114,11 @@
         return;
     WXComponent *scroller = (WXComponent*)scrollerProtocol;
     CGPoint contentOffset = [scrollerProtocol contentOffset];
-    NSInteger screen = [scrollerProtocol contentSize].height/([UIScreen mainScreen].bounds.size.height);
     if (_displayState) {
         contentOffset.y = [scrollerProtocol contentSize].height - scroller.calculatedFrame.size.height + self.calculatedFrame.size.height;
-        [scrollerProtocol setContentOffset:contentOffset animated:YES];
+        [scrollerProtocol setContentOffset:contentOffset animated:NO];
         [_indicator start];
     } else {
-        [self.view setHidden:YES];
         _displayState = NO;
         contentOffset.y = contentOffset.y - self.calculatedFrame.size.height;
         [scrollerProtocol setContentOffset:contentOffset animated:YES];
@@ -136,7 +148,7 @@
     id<WXScrollerProtocol> scrollerProtocol = self.ancestorScroller;
     WXComponent *scroller = (WXComponent*)scrollerProtocol;
     if (scrollerProtocol) {
-        rect.origin.y = scroller.calculatedFrame.size.height;
+        rect.origin.y = [scrollerProtocol contentSize].height;
     }
     
     [self.view setFrame:rect];

@@ -9,8 +9,14 @@
 #import <Foundation/Foundation.h>
 
 @class WXBridgeMethod;
+@class WXSDKInstance;
 
 @interface WXBridgeManager : NSObject
+
+/**
+ *  return instance at the top of the stack.
+ **/
+@property (nonatomic, weak, readonly) WXSDKInstance *topInstance;
 
 /**
  *  Create Instance Method
@@ -94,7 +100,7 @@
  *  @param params     params
  *  @param iflast     indicate that whether this func will be reused
  */
-- (void)callBack:(NSString *)instanceId funcId:(NSString *)funcId params:(NSString *)params keepAlive:(BOOL)keepAlive;
+- (void)callBack:(NSString *)instanceId funcId:(NSString *)funcId params:(id)params keepAlive:(BOOL)keepAlive;
 
 /**
  *  Connect To WebSocket for devtool debug
@@ -108,7 +114,7 @@
  *  @param funcId    :   callback id
  *  @param params    :   parameters
  **/
-- (void)callBack:(NSString *)instanceId funcId:(NSString *)funcId params:(NSString *)params;
+- (void)callBack:(NSString *)instanceId funcId:(NSString *)funcId params:(id)params;
 
 /**
  *  Connect To WebSocket for collecting log

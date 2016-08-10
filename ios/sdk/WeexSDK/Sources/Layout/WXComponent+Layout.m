@@ -143,7 +143,8 @@
 {
     WXAssertMainThread();
     
-    if ([self isViewLoaded] && !CGRectEqualToRect(_calculatedFrame, self.view.frame)) {
+    if ([self isViewLoaded] && !CGRectEqualToRect(_calculatedFrame, self.view.frame)
+        && [self isViewFrameSyncWithCalculated]) {
         self.view.frame = _calculatedFrame;
         // transform does not belong to layout, move it to other place hopefully
         if (_transform) {

@@ -241,6 +241,13 @@ public class WXConst {
 
   public static final String MSG_PARAM_ERR = "MSG_PARAM_ERR";
 
-
+  //font
+  public static final String FONT_FACE = "font-face";
+  public static final String FONT_SRC = "src";
+  public static final String FONT_FAMILY = "font-family";
+  public static final String SCHEME_FILE = "file";
+  public static final String SCHEME_HTTPS = "https";
+  public static final String SCHEME_HTTP = "http";
+  public static final String FONT_CACHE_DIR_NAME = "font-family";
 }
 

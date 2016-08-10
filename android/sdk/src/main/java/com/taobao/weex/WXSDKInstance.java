@@ -887,7 +887,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
 
       }
     } catch (Exception e) {
-      WXLogUtils.e("WXSDKInstance destroyView Exception: " + WXLogUtils.getStackTrace(e));
+      WXLogUtils.e("WXSDKInstance destroyView Exception: ", e);
     }
   }
 

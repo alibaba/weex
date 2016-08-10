@@ -17,6 +17,7 @@
 #import "WXWeakObjectWrapper.h"
 #import "WXUtility.h"
 #import "WXConvert.h"
+#import "WXMonitor.h"
 #import "WXAssert.h"
 #import "WXThreadSafeMutableDictionary.h"
 #import "WXThreadSafeMutableArray.h"
@@ -61,8 +62,8 @@
         pthread_mutexattr_settype(&_propertMutexAttr, PTHREAD_MUTEX_RECURSIVE);
         pthread_mutex_init(&_propertyMutex, &_propertMutexAttr);
         
-        _ref = [ref copy];
-        _type = [type copy];
+        _ref = ref;
+        _type = type;
         _weexInstance = weexInstance;
         _styles = styles ? [NSMutableDictionary dictionaryWithDictionary:styles] : [NSMutableDictionary dictionary];
         _attributes = attributes ? [NSMutableDictionary dictionaryWithDictionary:attributes] : [NSMutableDictionary dictionary];
@@ -72,6 +73,7 @@
         
         _isNeedJoinLayoutSystem = YES;
         _isLayoutDirty = YES;
+        _isViewFrameSyncWithCalculated = YES;
         
         _async = NO;
         
@@ -100,6 +102,9 @@
     free_css_node(_cssNode);
 
     [self _removeAllEvents];
+    if (_positionType == WXPositionTypeFixed) {
+        [self.weexInstance.componentManager removeFixedComponent:self];
+    }
 
     pthread_mutex_destroy(&_propertyMutex);
     pthread_mutexattr_destroy(&_propertMutexAttr);
@@ -113,7 +118,7 @@
     styles = _styles;
     pthread_mutex_unlock(&_propertyMutex);
     
-    return [styles copy];
+    return styles;
 }
 
 - (NSDictionary *)attributes
@@ -123,7 +128,7 @@
     attributes = _attributes;
     pthread_mutex_unlock(&_propertyMutex);
     
-    return [attributes copy];
+    return attributes;
 }
 
 - (NSArray *)events
@@ -213,18 +218,16 @@
             }
         }
         
-        [self handleFirstScreenTime];
+        [self _handleFirstScreenTime];
         
         return _view;
     }
 }
 
-- (void)handleFirstScreenTime
+- (void)_handleFirstScreenTime
 {
     if (self.absolutePosition.y > self.weexInstance.rootView.frame.size.height) {
-        if (self.weexInstance.screenRenderTime == 0) {
-            self.weexInstance.screenRenderTime = [[NSDate new] timeIntervalSinceDate:self.weexInstance.renderStartDate];
-        }
+        WX_MONITOR_INSTANCE_PERF_END(WXPTFirstScreenRender, self.weexInstance);
     }
 }
 
@@ -257,7 +260,7 @@
     subcomponents = _subcomponents;
     pthread_mutex_unlock(&_propertyMutex);
     
-    return [subcomponents copy];
+    return subcomponents;
 }
 
 - (WXComponent *)supercomponent

@@ -85,7 +85,7 @@ static id<WXLogProtocol> _externalLog;
 {
     NSDictionary *logLevelEnumToString =
     @{
-      @(WXLogLevelAll) : @"all",
+      @(WXLogLevelAll) : @"debug",
       @(WXLogLevelError) : @"error",
       @(WXLogLevelWarning) : @"warn",
       @(WXLogLevelInfo) : @"info",
@@ -153,7 +153,11 @@ static id<WXLogProtocol> _externalLog;
     }
 }
 
-+ (void)devLog:(WXLogFlag)flag file:(const char *)fileName line:(NSUInteger)line format:(NSString *)format, ... {
++ (void)devLog:(WXLogFlag)flag file:(const char *)fileName line:(NSUInteger)line format:(NSString *)format, ...
+{
+    if (!([self logLevel] & flag)) {
+        return;
+    }
     
     NSString *flagString = @"log";
     switch (flag) {

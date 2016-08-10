@@ -59,7 +59,7 @@
   },
   "subversion": {
     "browser": "0.2.23",
-    "framework": "0.15.1",
+    "framework": "0.15.2",
     "transformer": ">=0.1.5 <0.4"
   },
   "dependencies": {
@@ -95,7 +95,7 @@
     "mocha": "^2.5.3",
     "nightwatch": "^0.9.4",
     "phantomjs-prebuilt": "^2.1.7",
-    "selenium-server": "^2.53.0",
+    "selenium-server": "2.53.1",
     "serve": "^1.4.0",
     "sinon": "^1.17.4",
     "sinon-chai": "^2.8.0",

@@ -231,7 +231,7 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
   public static final String TRANSFORM = "transform";
   public static final String TRANSFORM_ORIGIN = "transformOrigin";
   private static final long serialVersionUID = 611132641365274134L;
-  static final int UNSET = -1;
+  public static final int UNSET = -1;
   private WXAnimationBean animationBean;
   /*
    * text-decoration

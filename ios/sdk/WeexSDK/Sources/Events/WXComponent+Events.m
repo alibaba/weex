@@ -519,6 +519,10 @@ if ([removeEventName isEqualToString:@#eventName]) {\
     if ([gestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:NSClassFromString(@"UIScrollViewPanGestureRecognizer")]) {
         return YES;
     }
+    // onclick and textviewInput
+    if ([gestureRecognizer isKindOfClass:[UITapGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass: NSClassFromString(@"UITextTapRecognizer")]) {
+        return YES;
+    }
     
 //#ifdef DEBUG
 //    if ([gestureRecognizer isKindOfClass:[WXDebugLongPressGestureRecognizer class]]

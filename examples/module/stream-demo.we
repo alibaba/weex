@@ -55,14 +55,11 @@
         url: GET_URL,
         type:'json'
       }, function(ret) {
-        if(typeof ret === 'string'){
-          ret = JSON.parse(ret);
-        }
         if(!ret.ok){
           me.getResult = "request failed";
         }else{
           console.log('get:'+ret);
-          me.getResult = ret.data;
+          me.getResult = JSON.stringify(ret.data);
         }
       },function(response){
         console.log('get in progress:'+response.length);
@@ -74,14 +71,11 @@
         url: POST_URL,
         type:'json'
       }, function(ret) {
-        if(typeof ret === 'string'){
-          ret = JSON.parse(ret);
-        }
         if(!ret.ok){
           me.postResult = "request failed";
         }else{
-          console.log('get:'+ret);
-          me.postResult = ret.data;
+          console.log('get:'+JSON.stringify(ret));
+          me.postResult = JSON.stringify(ret.data);
         }
       },function(response){
         console.log('get in progress:'+response.length);
@@ -93,15 +87,15 @@
         url: PUT_URL,
         type:'json'
       }, function(ret) {
-        if(typeof ret === 'string'){
-          ret = JSON.parse(ret);
-        }
         if(!ret.ok){
           me.putResult = "request failed";
         }else{
-          console.log('get:'+ret);
-          me.putResult = ret.data;
+          console.log('get:'+JSON.stringify(ret));
+          me.putResult = JSON.stringify(ret.data);
         }
+      },function(response){
+        console.log('get in progress:'+response.length);
+        me.putResult = "bytes received:"+response.length;
       });
 
       stream.fetch({
@@ -109,20 +103,18 @@
         url: DELETE_URL,
         type:'json'
       }, function(ret) {
-        if(typeof ret === 'string'){
-          ret = JSON.parse(ret);
-        }
+
         if(!ret.ok){
           me.deleteResult = "request failed";
         }else{
-          console.log('get:'+ret);
-          me.deleteResult = ret.data;
+          console.log('get:'+JSON.stringify(ret));
+          me.deleteResult = JSON.stringify(ret.data);
         }
       },function(response){
         console.log('get in progress:'+response.length);
         me.deleteResult = "bytes received:"+response.length;
       });
-
+      
       stream.fetch({
         method: 'HEAD',
         url: HEAD_URL,
@@ -131,7 +123,7 @@
         if(ret.statusText !== 'I\'m a teapot'){
           me.headResult = "request failed";
         }else{
-          console.log('get:'+ret);
+          console.log('get:'+JSON.stringify(ret));
           me.headResult = ret.statusText;
         }
       },function(response){
@@ -144,15 +136,15 @@
         url: PATCH_URL,
         type:'json'
       }, function(ret) {
-        if(typeof ret === 'string'){
-          ret = JSON.parse(ret);
-        }
         if(!ret.ok){
           me.patchResult = "request failed";
         }else{
-          console.log('get:'+ret);
-          me.patchResult = ret.data;
+          console.log('get:'+JSON.stringify(ret));
+          me.patchResult = JSON.stringify(request.data);
         }
+      },function(response){
+        console.log('get in progress:'+response.length);
+        me.patchResult = "bytes received:"+response.length;
       });
     }
   };

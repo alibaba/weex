@@ -78,7 +78,8 @@ static const CGFloat WXToastDefaultPadding = 30.0;
 
 - (void)toast:(NSDictionary *)param
 {
-    NSString *message = param[@"message"];
+    NSString *message = [self stringValue:param[@"message"]];
+    
     if (!message) return;
     
     double duration = [param[@"duration"] doubleValue];
@@ -206,8 +207,8 @@ static const CGFloat WXToastDefaultPadding = 30.0;
 
 - (void)alert:(NSDictionary *)param callback:(WXModuleCallback)callback
 {
-    NSString *message = param[@"message"];
-    NSString *okTitle = param[@"okTitle"];
+    NSString *message = [self stringValue:param[@"message"]];
+    NSString *okTitle = [self stringValue:param[@"okTitle"]];
     
     if ([WXUtility isBlankString:okTitle]) {
         okTitle = @"OK";
@@ -220,9 +221,9 @@ static const CGFloat WXToastDefaultPadding = 30.0;
 
 - (void)confirm:(NSDictionary *)param callback:(WXModuleCallback)callback
 {
-    NSString *message = param[@"message"];
-    NSString *okTitle = param[@"okTitle"];
-    NSString *cancelTitle = param[@"cancelTitle"];
+    NSString *message = [self stringValue:param[@"message"]];
+    NSString *okTitle = [self stringValue:param[@"okTitle"]];
+    NSString *cancelTitle = [self stringValue:param[@"cancelTitle"]];
     
     if ([WXUtility isBlankString:okTitle]) {
         okTitle = @"OK";
@@ -238,10 +239,10 @@ static const CGFloat WXToastDefaultPadding = 30.0;
 
 - (void)prompt:(NSDictionary *)param callback:(WXModuleCallback)callback
 {
-    NSString *message = param[@"message"];
-    NSString *defaultValue = param[@"default"];
-    NSString *okTitle = param[@"okTitle"];
-    NSString *cancelTitle = param[@"cancelTitle"];
+    NSString *message = [self stringValue:param[@"message"]];
+    NSString *defaultValue = [self stringValue:param[@"default"]];
+    NSString *okTitle = [self stringValue:param[@"okTitle"]];
+    NSString *cancelTitle = [self stringValue:param[@"cancelTitle"]];
     
     if ([WXUtility isBlankString:okTitle]) {
         okTitle = @"OK";
@@ -259,7 +260,7 @@ static const CGFloat WXToastDefaultPadding = 30.0;
 - (void)alert:(NSString *)message okTitle:(NSString *)okTitle cancelTitle:(NSString *)cancelTitle defaultText:(NSString *)defaultText type:(WXModalType)type callback:(WXModuleCallback)callback
 {
     if (!message) {
-        callback(@"Error: message should be passed.");
+        callback(@"Error: message should be passed correctly.");
         return;
     }
     
@@ -303,6 +304,17 @@ static const CGFloat WXToastDefaultPadding = 30.0;
     }
     
     callback(result);
+}
+
+- (NSString*)stringValue:(id)value
+{
+    if ([value isKindOfClass:[NSString class]]) {
+        return value;
+    }
+    if ([value isKindOfClass:[NSNumber class]]) {
+        return [value stringValue];
+    }
+    return nil;
 }
 
 @end

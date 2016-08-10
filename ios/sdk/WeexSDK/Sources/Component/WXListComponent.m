@@ -12,10 +12,12 @@
 #import "WXComponent_internal.h"
 #import "NSArray+Weex.h"
 #import "WXAssert.h"
+#import "WXMonitor.h"
 #import "WXUtility.h"
 #import "NSObject+WXSwizzle.h"
 #import "WXSDKInstance_private.h"
-
+#import "WXRefreshComponent.h"
+#import "WXLoadingComponent.h"
 
 @interface WXTableView : UITableView
 
@@ -183,6 +185,11 @@
     // Do Nothing
 }
 
+- (void)_handleFirstScreenTime
+{
+    // Do Nothing， firstScreenTime is set by cellDidRendered:
+}
+
 #pragma mark - Inheritance
 
 - (void)_insertSubcomponent:(WXComponent *)subcomponent atIndex:(NSInteger)index
@@ -193,6 +200,11 @@
         ((WXCellComponent *)subcomponent).list = self;
     } else if ([subcomponent isKindOfClass:[WXHeaderComponent class]]) {
         ((WXHeaderComponent *)subcomponent).list = self;
+    } else if (![subcomponent isKindOfClass:[WXRefreshComponent class]]
+               && ![subcomponent isKindOfClass:[WXLoadingComponent class]]
+               && subcomponent->_positionType != WXPositionTypeFixed) {
+        WXLogError(@"list only support cell/header/refresh/loading/fixed-component as child.");
+        return;
     }
     
     NSIndexPath *indexPath = [self indexPathForSubIndex:index];
@@ -327,9 +339,7 @@
     
     CGRect cellRect = [_tableView rectForRowAtIndexPath:indexPath];
     if (cellRect.origin.y + cellRect.size.height >= _tableView.frame.size.height) {
-        if (self.weexInstance.screenRenderTime == 0) {
-            self.weexInstance.screenRenderTime = [[NSDate new] timeIntervalSinceDate:self.weexInstance.renderStartDate];
-        }
+        WX_MONITOR_INSTANCE_PERF_END(WXPTFirstScreenRender, self.weexInstance);
     }
     
     if (self.weexInstance.onRenderProgress) {
@@ -543,7 +553,10 @@
     NSInteger row = -1;
     WXComponent *firstComponent;
     for (int i = 0; i <= index; i++) {
-        WXComponent* component = self.subcomponents[i];
+        WXComponent* component = [self.subcomponents wx_safeObjectAtIndex:i];
+        if (!component) {
+            continue;
+        }
         if (([component isKindOfClass:[WXHeaderComponent class]]
             || [component isKindOfClass:[WXCellComponent class]])
             && !firstComponent) {

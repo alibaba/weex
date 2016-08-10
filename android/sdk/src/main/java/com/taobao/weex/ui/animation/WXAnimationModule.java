@@ -275,7 +275,7 @@ public class WXAnimationModule extends WXModule {
         animator.start();
       }
     } catch (RuntimeException e) {
-      WXLogUtils.e(WXLogUtils.getStackTrace(e));
+      WXLogUtils.e("", e);
     }
   }
 

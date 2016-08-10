@@ -451,7 +451,7 @@ function touchcancelHandler(event) {
   for (var i = 0; i < event.changedTouches.length; i++) {
     var touch = event.changedTouches[i]
     var id = touch.identifier
-    vargesture = gestures[id]
+    var gesture = gestures[id]
 
     if (!gesture) {
       continue

@@ -40,22 +40,22 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  @abstract The component's identifier string.
  */
-@property (nonatomic, readonly, copy) NSString *ref;
+@property (nonatomic, readonly, strong) NSString *ref;
 
 /**
  *  @abstract The component's styles.
  */
-@property (nonatomic, readonly, copy) NSDictionary *styles;
+@property (nonatomic, readonly, strong) NSDictionary *styles;
 
 /**
  *  @abstract The component's attributes.
  */
-@property (nonatomic, readonly, copy) NSDictionary *attributes;
+@property (nonatomic, readonly, strong) NSDictionary *attributes;
 
 /**
  *  @abstract The component's events.
  */
-@property (nonatomic, readonly, copy) NSArray *events;
+@property (nonatomic, readonly, strong) NSArray *events;
 
 /**
  *  @abstract The reference to
@@ -65,7 +65,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * @abstract The component's subcomponents.
  */
-@property (nonatomic, readonly, copy, nullable) NSArray<WXComponent *> *subcomponents;
+@property (nonatomic, readonly, strong, nullable) NSArray<WXComponent *> *subcomponents;
 
 /**
  * @abstract The component's supercomponent.
@@ -82,6 +82,12 @@ NS_ASSUME_NONNULL_BEGIN
  * @warning Subclasses must not override this.
  */
 @property(nonatomic, readonly, assign) CGRect calculatedFrame;
+
+/**
+ * @abstract Tell if component's view frame will keep synchronized with calculatedFrame. 
+ * Default Value is YES.
+ */
+@property(nonatomic, assign) BOOL isViewFrameSyncWithCalculated;
 
 /**
  * @abstract Return the calculated absolute position.

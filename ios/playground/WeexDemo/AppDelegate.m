@@ -84,6 +84,10 @@
     [WXSDKEngine registerComponent:@"select" withClass:NSClassFromString(@"WXSelectComponent")];
     [WXSDKEngine registerModule:@"event" withClass:[WXEventModule class]];
     
+#if !(TARGET_IPHONE_SIMULATOR)
+    [self checkUpdate];
+#endif
+    
 #ifdef DEBUG
     [self atAddPlugin];
     [WXDebugTool setDebug:YES];
@@ -98,9 +102,8 @@
 #endif
 }
 
--(UIViewController *)demoController
+- (UIViewController *)demoController
 {
-    
     UIViewController *demo = [[WXDemoViewController alloc] init];
     
 #if DEBUG

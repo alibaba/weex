@@ -9,8 +9,14 @@
 #import <Foundation/Foundation.h>
 
 @class WXBridgeMethod;
+@class WXSDKInstance;
 
 @interface WXBridgeContext : NSObject
+
+/**
+ *  return instance at the top of the stack.
+ **/
+@property (nonatomic, weak, readonly) WXSDKInstance *topInstance;
 
 /**
  *  Create Instance Method
@@ -57,7 +63,6 @@
  *  @param method    :   object of bridge method
  **/
 - (void)executeJsMethod:(WXBridgeMethod *)method;
-
 /**
  *  Register Modules Method
  *  @param modules   :   module list
@@ -74,7 +79,7 @@
  *  Connect To WebSocket for devtool debug
  *  @param url       :   url to connect
  **/
-- (void) connectToDevToolWithUrl:(NSURL *)url;
+- (void)connectToDevToolWithUrl:(NSURL *)url;
 
 /**
  *  Connect To WebSocket for collecting log

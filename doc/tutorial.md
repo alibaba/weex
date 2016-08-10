@@ -3,11 +3,11 @@
 <span class="weex-version">0.4</span>
 <a href="https://github.com/weexteam/article/issues/4"  class="weex-translate">cn</a>
 
-We will make a simple but realistic list, in which the technologies weex used will be shown. This form of list also works for a lot of e-commerce apps/mobile sites.
+We will make a simple but realistic list, in which the technologies Weex uses will be shown. This form of list also works for a lot of e-commercial apps and mobile sites.
 
 ## Getting Started
 
-Let's start easy though, making a item of list.
+Let's get started with the list item, which contains one `image` element and one `text` right behind.
 
 ```html
 <template>
@@ -26,17 +26,19 @@ Let's start easy though, making a item of list.
 </style>
 ```
 
-You can copy and paste above code to a Weex file named `tech_list.we` (`.we` is our recommended the file extension name)
+You can directly copy and paste the above code into a Weex file named `tech_list.we` (`.we` is our recommended filename extension).
 
 ## Preview
 
-First you need to install [Node](https://nodejs.org/en/download/stable/). Then you can install Weex CLI program  [Weex Toolkit](https://www.npmjs.com/package/weex-toolkit) with command:
+Once created, we want to see the running result of the `.we` file. But before that, we must make sure the dependencies are installed.
+
+We should install [Node](https://nodejs.org/en/download/) first, which our Weex CLI program [Weex Toolkit](https://www.npmjs.com/package/weex-toolkit) depends on. Then install `weex-toolkit` by running the command:
 
 ```
 npm install -g weex-toolkit
 ```
 
-After the installation finished, you could ensure the Weex CLI is properly installed by typing `weex` on the command line. You should see the following help text displayed:
+When installation completed, you can check if Weex CLI is installed properly by running `weex` command in the command line. The following text is expected:
 
 ```
 Usage: weex foo/bar/your_next_best_weex_script_file.we  [options]
@@ -50,31 +52,33 @@ Options:
   -h, --host [default: "127.0.0.1"]
 ```
 
-If all works well, navigate to the directory where you save the newly created `tech_list.we`, then type:
+If all work well, navigate to the directory where you saved `tech_list.we`, then type:
 
 ```
 weex tech_list.we
 ```
 
-A browser window will open automatically  to display  something like below     ( weex-toolkit version must greater then 0.1.0 , please check using `weex --version` cmd)
+A browser window will be opened automatically to display the running result like below     (weex-toolkit version should be greater than 0.1.0, use `weex --version` to check it):
 
 ![weex html5 render](http://gtms02.alicdn.com/tps/i2/TB1y151LVXXXXXXaXXXoRYgWVXX-495-584.jpg)
 
-## Intro Weex Syntax
+## Introduce to Weex Syntax
 
-So it's time for introduce the syntax. As the content of `tech_list.we` showing, Weex source code is written in three parts -- *template*, *style*, *script* just like html,css,javascript for the Web.
+So it's time for introducing the syntax. 
 
-Template is the skeleton that give weex structure, it composed by tags which surround content and apply meaning to it. Weex has two type of tag, opening tag & closing tag, we call every couple of opening tag & closing tag a Weex tag. Tag have *attributes*, different attribute have different meaning, class attribute makes it possible to define equal styles for multiple tags, onclick attribute makes the tag responds to click event.
+Given the content of `tech_list.we`, Weex source code is composed of three parts -- *template*, *style*, and *script*, just like html, css, and javascript for the Web.
 
-Style describes how Weex tags are to be displayed. We like you, love the CSS, so we try to keep consistent with CSS standard as possible. Weex Style support a lot of CSS features, eg: margin, padding, fixed...... Better yet, flexbox layout (flex) is well supported in Weex Style.
+Template is the skeleton that gives Weex structure. It is composed of tags which surround content and apply meaning to it. Weex has two types of tag, opening tag & closing tag. We call every pair of opening tags & closing tags a Weex tag. Tags have *attributes*, different attribute has different meaning, for example, `class` attribute makes it possible to define equal styles for multiple tags, `onclick` attribute makes the tag respond to click event.
 
-Script add *data* & *logic* to Weex tags, help you easy access local or remote data and update tags. You can also define some methods for your tag to respond to different events. Weex Script organizing learn a lot from CommonJS module style.
+Style describes how Weex tags are to be displayed. We like you, love the CSS, so we try to keep consistent with CSS standard as possible. Weex Style supports a lot of CSS features, like margin, padding, fixed and so on. Better yet, flexbox layout (flex) is well supported in Weex Style.
 
-More complete information about Weex syntax can be found in our [Syntax chapter](syntax/main.md).
+Script adds *data* & *logic* to Weex tags, helping you easily access local or remote data and update tags. You can also define some methods for your tag to respond to different events. Weex Script organization learns a lot from CommonJS module style.
 
-## Add More Item
+More information about Weex syntax can be found in our [Syntax chapter](syntax/main.md).
 
-We can't call one item an list, so we need add more item to our tech list. open `tech_list.we` in your favorite editor and update it's content like below:
+## Add More Items
+
+We can't call one item an list, so we need to add more items to our tech list. Open `tech_list.we` in your favorite editor and update it's content like below:
 
 ```html
 <template>
@@ -101,7 +105,7 @@ We can't call one item an list, so we need add more item to our tech list. open 
 </style>
 ```
 
-Now we will try to  render our  tech_list.we  with Weex native renderer.  Open your terminal and  navigate to the directory where you save the tech_list.we again, then type
+Now we will try to  render our  `tech_list.we`  with Weex native renderer.  Open your terminal and  navigate to the directory where you save the `tech_list.we` again, then type:
 
 ```
 weex tech_list.we --qr -h {ip or hostname}
@@ -109,21 +113,21 @@ weex tech_list.we --qr -h {ip or hostname}
 
 It's ***RECOMMENDED*** to use `-h` option to specify your local ip address or hostname.
 
-An QR code will be display in the terminal window like:
+An QR code will be displayed in the terminal window like below:
 
 ![Weex CLI](images/tut-cli-qrcode.png)
 
-The QR code can work together with [Weex Playground App](http://alibaba.github.io/weex/download.html). Open it and tap the scan icon at the top-right corner, then scan the Qr code in your terminal.If all works well, a beautiful list will be displayed in your phone.
+The QR code can work together with [Weex Playground App](http://alibaba.github.io/weex/download.html). Open it and tap the scan icon at the top-right corner, then scan the Qr code displayed in your terminal. If all work well, a beautiful list will be displayed in your phone.
 
 ![Second Example](images/tut-second.png)
 
-Here, I must stress that the list is rendered by native view ( not Webkit ), so your app get faster loading and less memory overhead than common Webview renderer.
+Here, I must stress that the list is rendered by a native view, instead of Webkit, so your app gets faster loading and less memory overhead than common Webview renderer.
 
-Now open tech_list.we again and trying to change some text,after changes saved the Weex playground App will immediately display these changes. we called it **Hot-Reload**. Hope it can help you use Weex better.
+Now open `tech_list.we` again and try to change some text, after changes saved the Weex playground App will immediately display these changes. We call that **Hot-Reload**, which is intended to help you use Weex better.
 
-## Add Build-in Component
+## Add Built-in Components
 
-Beyond writing basic tag by yourself, Weex provide a lot of build-in components. For example, Slider is common to many App/Mobile Web, So Weex include a build-in Slider and you can easily using the component in your script. Let's open tech_list.we and update it's content like below.
+Instead of writing basic tags by yourself, Weex provides a lot of built-in components. For example, Slider is common to many apps and mobile websites, so Weex includes a built-in Slider so that you can easily use it in your script. Let's open `tech_list.we` and update it's content like below.
 
 ```html
 <template>
@@ -188,7 +192,7 @@ module.exports = {
 </script>
 ```
 
-Open terminal and run the command again.
+Open terminal and run the command again:
 
 ```
 weex tech_list.we
@@ -198,6 +202,6 @@ You should see a slider prepend to our list.
 
 ![Third Example](images/tut4.gif)
 
-More information about Slider Component can be found [here](components/slider.md).
+More information about Slider component can be found [here](components/slider.md).
 
-Just as previous example, the slider can be rendering in native, easily in Weex playground,also in your App. Please refer [the document](advanced/integrate-to-android.md) for integrating Weex into your App.
+Just as the previous example, the slider can be rendered in native, easily in Weex playground, or in your App. Please refer [the document](advanced/integrate-to-android.md) for integrating Weex into your App.

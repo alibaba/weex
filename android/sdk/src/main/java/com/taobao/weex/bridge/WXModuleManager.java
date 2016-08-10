@@ -260,14 +260,14 @@ public class WXModuleManager {
             WXModule wxModule = factory.buildInstance();
             sGlobalModuleMap.put(moduleName, wxModule);
           } catch (Exception e) {
-            WXLogUtils.e(moduleName + " class must have a default constructor without params. " + WXLogUtils.getStackTrace(e));
+            WXLogUtils.e(moduleName + " class must have a default constructor without params. ", e);
           }
         }
 
         try {
           registerNativeModule(moduleName, factory);
         } catch (WXException e) {
-          e.printStackTrace();
+          WXLogUtils.e("", e);
         }
         registerJSModule(moduleName, factory);
       }
@@ -342,7 +342,7 @@ public class WXModuleManager {
             try {
               invoker.invoke(wxModule, params);
             } catch (Exception e) {
-              WXLogUtils.e("callModuleMethod >>> invoke module:" + WXLogUtils.getStackTrace(e));
+              WXLogUtils.e("callModuleMethod >>> invoke module:", e);
             }
           }
         }, 0);
@@ -350,7 +350,7 @@ public class WXModuleManager {
         invoker.invoke(wxModule, params);
       }
     } catch (Exception e) {
-      WXLogUtils.e("callModuleMethod >>> invoke module:" + moduleStr + ", method:" + methodStr + " failed. " + WXLogUtils.getStackTrace(e));
+      WXLogUtils.e("callModuleMethod >>> invoke module:" + moduleStr + ", method:" + methodStr + " failed. ", e);
       return false;
     } finally {
       if (wxModule instanceof WXDomModule) {
@@ -377,7 +377,7 @@ public class WXModuleManager {
         try {
           wxModule = factory.buildInstance();
         } catch (Exception e) {
-          WXLogUtils.e(moduleStr + " module build instace failed." + WXLogUtils.getStackTrace(e));
+          WXLogUtils.e(moduleStr + " module build instace failed.", e);
           return null;
         }
         moduleMap.put(moduleStr, wxModule);

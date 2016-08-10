@@ -423,16 +423,14 @@
 {
     UIEdgeInsets inset = [scrollView contentInset];
     if ([_refreshComponent displayState]) {
-        inset.top = _refreshComponent.calculatedFrame.size.height;
+        inset.top = _refreshComponent.view.frame.size.height;
     }
     else {
         inset.top = 0;
     }
-    
     if ([_loadingComponent displayState]) {
-        inset.bottom = _loadingComponent.calculatedFrame.size.height;
-    }
-    else {
+        inset.bottom = _loadingComponent.view.frame.size.height;
+    } else {
         inset.bottom = 0;
     }
     
@@ -450,7 +448,7 @@
     
     //loading
     if (_loadingComponent &&
-        scrollView.contentOffset.y + scrollView.frame.size.height > _loadingComponent.view.frame.origin.y + _loadingComponent.view.frame.size.height) {
+        scrollView.contentOffset.y + scrollView.frame.size.height > _loadingComponent.view.frame.origin.y + _loadingComponent.calculatedFrame.size.height) {
         [_loadingComponent loading];
     }
 }

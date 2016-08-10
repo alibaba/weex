@@ -289,6 +289,9 @@ public class WXDomHandler implements Handler.Callback {
       case MsgType.WX_DOM_SCROLLTO:
         mWXDomManager.scrollToDom(task.instanceId, (String) task.args.get(0), (JSONObject) task.args.get(1));
         break;
+      case MsgType.WX_DOM_ADD_RULE:
+        mWXDomManager.addRule((String) task.args.get(0), (JSONObject) task.args.get(1));
+        break;
       default:
         break;
     }
@@ -311,6 +314,7 @@ public class WXDomHandler implements Handler.Callback {
     public static final int WX_DOM_REFRESH_FINISH = 0x0a;
     public static final int WX_DOM_UPDATE_FINISH = 0x0b;
     public static final int WX_ANIMATION=0xc;
+    public static final int WX_DOM_ADD_RULE=0xd;
 
     public static final int WX_DOM_BATCH = 0xff;
   }
