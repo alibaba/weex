@@ -111,6 +111,7 @@
 package com.taobao.weex;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -119,6 +120,7 @@ import android.util.Log;
 import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
 import com.taobao.weex.adapter.IWXUserTrackAdapter;
+import com.taobao.weex.appfram.clipboard.WXClipboardModule;
 import com.taobao.weex.appfram.navigator.IActivityNavBarSetter;
 import com.taobao.weex.appfram.navigator.WXNavigatorModule;
 import com.taobao.weex.appfram.storage.IWXStorageAdapter;
@@ -131,34 +133,14 @@ import com.taobao.weex.common.TypeModuleFactory;
 import com.taobao.weex.common.WXException;
 import com.taobao.weex.common.WXInstanceWrap;
 import com.taobao.weex.common.WXModule;
-import com.taobao.weex.dom.WXDomModule;
-import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.dom.WXDomRegistry;
-import com.taobao.weex.dom.WXSwitchDomObject;
-import com.taobao.weex.dom.WXTextDomObject;
-import com.taobao.weex.dom.module.WXModalUIModule;
+import com.taobao.weex.dom.*;
+import com.taobao.weex.ui.module.WXModalUIModule;
 import com.taobao.weex.http.WXStreamModule;
+import com.taobao.weex.ui.IFComponentHolder;
 import com.taobao.weex.ui.SimpleComponentHolder;
 import com.taobao.weex.ui.WXComponentRegistry;
 import com.taobao.weex.ui.animation.WXAnimationModule;
-import com.taobao.weex.ui.component.WXA;
-import com.taobao.weex.ui.component.WXBasicComponentType;
-import com.taobao.weex.ui.component.WXComponent;
-import com.taobao.weex.ui.component.WXDiv;
-import com.taobao.weex.ui.component.WXEmbed;
-import com.taobao.weex.ui.component.WXHeader;
-import com.taobao.weex.ui.component.WXImage;
-import com.taobao.weex.ui.component.WXIndicator;
-import com.taobao.weex.ui.component.WXInput;
-import com.taobao.weex.ui.component.WXLoading;
-import com.taobao.weex.ui.component.WXLoadingIndicator;
-import com.taobao.weex.ui.component.WXRefresh;
-import com.taobao.weex.ui.component.WXScroller;
-import com.taobao.weex.ui.component.WXSlider;
-import com.taobao.weex.ui.component.WXSwitch;
-import com.taobao.weex.ui.component.WXText;
-import com.taobao.weex.ui.component.WXVideo;
-import com.taobao.weex.ui.component.WXWeb;
+import com.taobao.weex.ui.component.*;
 import com.taobao.weex.ui.component.list.HorizontalListComponent;
 import com.taobao.weex.ui.component.list.WXCell;
 import com.taobao.weex.ui.component.list.WXListComponent;
@@ -175,8 +157,8 @@ public class WXSDKEngine {
 
   public static final String JS_FRAMEWORK_RELOAD="js_framework_reload";
 
-  private static final String V8_SO_NAME = "weexcore";
-  private volatile static boolean init;
+  private static final String V8_SO_NAME = "weexv8";
+  private volatile static boolean mIsInit = false;
   private static final Object mLock = new Object();
   private static final String TAG = "WXSDKEngine";
 
@@ -211,7 +193,7 @@ public class WXSDKEngine {
 
   public static boolean isInitialized(){
     synchronized(mLock) {
-      return init;
+      return mIsInit;
     }
   }
 
@@ -222,13 +204,15 @@ public class WXSDKEngine {
    */
   public static void initialize(Application application,InitConfig config){
     synchronized (mLock) {
-      if (init) {
+      if (mIsInit) {
         return;
       }
       long start = System.currentTimeMillis();
+      WXEnvironment.sSDKInitStart = start;
       doInitInternal(application,config);
       WXEnvironment.sSDKInitInvokeTime = System.currentTimeMillis()-start;
-      init = true;
+      WXLogUtils.renderPerformanceLog("SDKInitInvokeTime", WXEnvironment.sSDKInitInvokeTime);
+      mIsInit = true;
     }
   }
 
@@ -259,7 +243,6 @@ public class WXSDKEngine {
         sm.initScriptsFramework(null);
 
         WXEnvironment.sSDKInitExecuteTime = System.currentTimeMillis() - start;
-        WXLogUtils.renderPerformanceLog("SDKInitInvokeTime", WXEnvironment.sSDKInitInvokeTime);
         WXLogUtils.renderPerformanceLog("SDKInitExecuteTime", WXEnvironment.sSDKInitExecuteTime);
       }
     });
@@ -279,18 +262,60 @@ public class WXSDKEngine {
 
   private static void register() {
     try {
-      registerComponent(WXBasicComponentType.TEXT, WXText.class, false);
-      registerComponent(WXDiv.class, false,WXBasicComponentType.CONTAINER,WXBasicComponentType.DIV,WXBasicComponentType.HEADER,WXBasicComponentType.FOOTER);
-      registerComponent(WXImage.class, false,WXBasicComponentType.IMAGE,WXBasicComponentType.IMG);
-      registerComponent(WXBasicComponentType.SCROLLER, WXScroller.class, false);
-      registerComponent(WXBasicComponentType.SLIDER, WXSlider.class, true);
-
+      registerComponent(
+        WXText.class,
+        new SimpleComponentHolder(
+          WXText.class,
+          new WXText.Ceator()
+        ),
+        false,
+        WXBasicComponentType.TEXT
+      );
+      registerComponent(
+        WXDiv.class,
+        new SimpleComponentHolder(
+          WXDiv.class,
+          new WXDiv.Ceator()
+        ),
+        false,
+        WXBasicComponentType.CONTAINER,
+        WXBasicComponentType.DIV,
+        WXBasicComponentType.HEADER,
+        WXBasicComponentType.FOOTER
+      );
+      registerComponent(
+        WXImage.class,
+        new SimpleComponentHolder(
+          WXImage.class,
+          new WXImage.Ceator()
+        ),
+        false,
+        WXBasicComponentType.IMAGE,
+        WXBasicComponentType.IMG
+      );
+      registerComponent( WXScroller.class,
+        new SimpleComponentHolder(
+          WXScroller.class,
+          new WXScroller.Ceator()
+        ),
+        false,
+        WXBasicComponentType.SCROLLER
+      );
+      registerComponent( WXSlider.class,
+        new SimpleComponentHolder(
+          WXSlider.class,
+          new WXSlider.Ceator()
+        ),
+        true,
+        WXBasicComponentType.SLIDER
+      );
       registerComponent(WXListComponent.class, false,WXBasicComponentType.LIST,WXBasicComponentType.VLIST);
       registerComponent(HorizontalListComponent.class,false,WXBasicComponentType.HLIST);
       registerComponent(WXBasicComponentType.CELL, WXCell.class, true);
       registerComponent(WXBasicComponentType.INDICATOR, WXIndicator.class, true);
       registerComponent(WXBasicComponentType.VIDEO, WXVideo.class, false);
       registerComponent(WXBasicComponentType.INPUT, WXInput.class, false);
+      registerComponent(WXBasicComponentType.TEXTAREA, Textarea.class,false);
       registerComponent(WXBasicComponentType.SWITCH, WXSwitch.class, false);
       registerComponent(WXBasicComponentType.A, WXA.class, false);
       registerComponent(WXBasicComponentType.EMBED, WXEmbed.class, true);
@@ -300,7 +325,6 @@ public class WXSDKEngine {
       registerComponent(WXBasicComponentType.LOADING_INDICATOR, WXLoadingIndicator.class);
       registerComponent(WXBasicComponentType.HEADER, WXHeader.class);
 
-      registerModule("dom", WXDomModule.class, true);
       registerModule("modal", WXModalUIModule.class, false);
       registerModule("instanceWrap", WXInstanceWrap.class, true);
       registerModule("animation", WXAnimationModule.class, true);
@@ -308,11 +332,18 @@ public class WXSDKEngine {
       registerModule("navigator", WXNavigatorModule.class);
       registerModule("stream", WXStreamModule.class);
       registerModule("timer", WXTimerModule.class, true);
-      registerModule("storage", WXStorageModule.class,true);
+      registerModule("storage", WXStorageModule.class, true);
+      registerModule("clipboard", WXClipboardModule.class, true);
 
+      registerDomObject(WXBasicComponentType.INDICATOR, WXIndicator.IndicatorDomNode.class);
       registerDomObject(WXBasicComponentType.TEXT, WXTextDomObject.class);
-      registerDomObject(WXBasicComponentType.INPUT, WXTextDomObject.class);
+      registerDomObject(WXBasicComponentType.INPUT, BasicEditTextDomObject.class);
+      registerDomObject(WXBasicComponentType.TEXTAREA, TextAreaEditTextDomObject.class);
       registerDomObject(WXBasicComponentType.SWITCH, WXSwitchDomObject.class);
+      registerDomObject(WXBasicComponentType.LIST, WXListDomObject.class);
+      registerDomObject(WXBasicComponentType.VLIST, WXListDomObject.class);
+      registerDomObject(WXBasicComponentType.HLIST, WXListDomObject.class);
+      registerDomObject(WXBasicComponentType.SCROLLER, WXScrollerDomObject.class);
     } catch (WXException e) {
       WXLogUtils.e("[WXSDKEngine] register:", e);
     }
@@ -341,8 +372,15 @@ public class WXSDKEngine {
    * @throws WXException Throws exception if type conflicts.
    */
   public static boolean registerComponent(Class<? extends WXComponent> clazz, boolean appendTree,String ... names) throws WXException {
-    boolean result =  true;
+    if(clazz == null){
+      return false;
+    }
     SimpleComponentHolder holder = new SimpleComponentHolder(clazz);
+    return registerComponent(clazz,holder,appendTree,names);
+  }
+
+  static boolean registerComponent(Class<? extends WXComponent> clazz, IFComponentHolder holder, boolean appendTree, String ... names) throws WXException {
+    boolean result =  true;
     Map<String, String> componentInfo = new HashMap<>();
     if (appendTree) {
       componentInfo.put("append", "tree");
@@ -363,7 +401,7 @@ public class WXSDKEngine {
    * {@link WXModuleManager#registerModule(String, ModuleFactory, boolean)}
    */
   public static <T extends WXModule> boolean registerModule(String moduleName, Class<T> moduleClass,boolean global) throws WXException {
-    return registerModule(moduleName, new TypeModuleFactory(moduleClass),global);
+    return moduleClass != null && registerModule(moduleName, new TypeModuleFactory<>(moduleClass), global);
   }
 
   /**
@@ -438,6 +476,7 @@ public class WXSDKEngine {
     return WXSDKManager.getInstance().getIWXUserTrackAdapter();
   }
 
+  @Deprecated
   public static void setIWXUserTrackAdapter(IWXUserTrackAdapter IWXUserTrackAdapter) {
     WXSDKManager.getInstance().setIWXUserTrackAdapter(IWXUserTrackAdapter);
   }
@@ -446,6 +485,7 @@ public class WXSDKEngine {
     return WXSDKManager.getInstance().getIWXImgLoaderAdapter();
   }
 
+  @Deprecated
   public static void setIWXImgLoaderAdapter(IWXImgLoaderAdapter IWXImgLoaderAdapter) {
     if(IWXImgLoaderAdapter==null){
       if(WXEnvironment.isApkDebugable()){
@@ -460,6 +500,7 @@ public class WXSDKEngine {
     return WXSDKManager.getInstance().getIWXHttpAdapter();
   }
 
+  @Deprecated
   public static void setIWXHttpAdapter(IWXHttpAdapter IWXHttpAdapter) {
     WXSDKManager.getInstance().setIWXHttpAdapter(IWXHttpAdapter);
   }
@@ -507,20 +548,18 @@ public class WXSDKEngine {
       }
     }
   }
-  public static void reload(final Application application,boolean remoteDebug){
-    if(remoteDebug){
-      WXEnvironment.sRemoteDebugMode=true;
-      WXBridgeManager.getInstance().restart();
-      WXBridgeManager.getInstance().initScriptsFramework(null);
-      WXModuleManager.reload();
-      WXComponentRegistry.reload();
-      WXSDKManager.getInstance().postOnUiThread(new Runnable() {
-        @Override
-        public void run() {
-          LocalBroadcastManager.getInstance(application).sendBroadcast(new Intent(JS_FRAMEWORK_RELOAD));
-        }
-      }, 1000);
-    }
+  public static void reload(final Context context, boolean remoteDebug) {
+    WXEnvironment.sRemoteDebugMode = remoteDebug;
+    WXBridgeManager.getInstance().restart();
+    WXBridgeManager.getInstance().initScriptsFramework(null);
+    WXModuleManager.reload();
+    WXComponentRegistry.reload();
+    WXSDKManager.getInstance().postOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(JS_FRAMEWORK_RELOAD));
+      }
+    }, 1000);
   }
 
   public static void reload() {

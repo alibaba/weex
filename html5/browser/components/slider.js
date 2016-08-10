@@ -72,6 +72,31 @@ Slider.prototype.attr = {
     }
   },
 
+  index: function (val) {
+    const _this = this
+    function doSlide (index) {
+      index = parseInt(index)
+      if (index < 0 || isNaN(index)) {
+        return console.error('[h5-render] invalid index ', index)
+      }
+      _this.slideTo(index)
+      if (_this._updateIndex) {
+        window.removeEventListener('renderend', _this._updateIndex)
+      }
+    }
+    if (this.isDomRendering) {
+      const pre = !!this._updateIndex
+      this._updateIndex = function () {
+        _this.autoPlay && _this.isPageShow && _this.play()
+        doSlide(val)
+      }
+      !pre && window.addEventListener('renderend', this._updateIndex)
+    }
+    else {
+      doSlide(val)
+    }
+  },
+
   playstatus: function (val) {
     this.playstatus = val && val !== 'false'
     this.autoPlay = this.playstatus
@@ -273,6 +298,8 @@ Slider.prototype.onAppend = function () {
     }
     return true
   })
+
+  Component.prototype.onAppend.call(this)
 }
 
 Slider.prototype._updateIndicators = function () {
@@ -305,6 +332,19 @@ Slider.prototype.stop = function () {
 Slider.prototype.slideTo = function (index) {
   const offset = index - this.currentIndex
   this.carrousel.items.slide(offset)
+}
+
+// events configurations
+Slider.prototype.event = {
+  change: {
+    updator: function () {
+      return {
+        attrs: {
+          index: this.currentIndex
+        }
+      }
+    }
+  }
 }
 
 module.exports = Slider

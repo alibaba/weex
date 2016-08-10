@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import <CommonCrypto/CommonCrypto.h>
 #import "WXDefine.h"
 #import "WXType.h"
 #import "WXLog.h"
@@ -301,4 +302,9 @@ CGPoint WXPixelPointResize(CGPoint value);
  */
 + (NSString *_Nullable)stringWithContentsOfFile:(NSString *_Nonnull)filePath;
 
+/**
+ *  @abstract Returns md5 string.
+ *
+ */
++ (NSString *_Nullable)md5:(NSString *_Nullable)string;
 @end
