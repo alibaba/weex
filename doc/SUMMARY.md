@@ -64,6 +64,7 @@
         * [animation](/modules/animation.md)
         * [webview](/modules/webview.md)
         * [navigator](/modules/navigator.md)
+        * [storage](/modules/storage.md)
         * [clipboard](/modules/clipboard.md)
     * Low-level Specs
         * [JS Bundle Format](/specs/js-bundle-format.md)
@@ -77,7 +78,7 @@
     * [Slider](demo/slider.md)
     * [Animation](demo/animation.md)
     * [More](https://github.com/alibaba/weex/tree/dev/examples)
-    
+
 * Service & Tools
     * [CLI](/tools/cli.md)
     * [Devtools](/tools/devtools.md)
@@ -87,4 +88,3 @@
     * [Playground App](/tools/playground-app.md)
 
 * [FAQ](/faq.md)
-

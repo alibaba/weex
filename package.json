@@ -58,7 +58,7 @@
     "copy": "npm run copy:js && npm run copy:examples"
   },
   "subversion": {
-    "browser": "0.2.23",
+    "browser": "0.3.0",
     "framework": "0.15.2",
     "transformer": ">=0.1.5 <0.4"
   },
