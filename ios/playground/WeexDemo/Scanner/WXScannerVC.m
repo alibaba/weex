@@ -41,11 +41,12 @@
     AVCaptureDevice * device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     AVCaptureDeviceInput * input = [AVCaptureDeviceInput deviceInputWithDevice:device error:nil];
     AVCaptureMetadataOutput * output = [[AVCaptureMetadataOutput alloc]init];
-    [output setMetadataObjectsDelegate:self queue:dispatch_get_main_queue()];
-    [_session addInput:input];
-    [_session addOutput:output];
-    
-    output.metadataObjectTypes=@[AVMetadataObjectTypeQRCode,AVMetadataObjectTypeEAN13Code, AVMetadataObjectTypeEAN8Code, AVMetadataObjectTypeCode128Code];
+    if (output && input && device) {
+        [output setMetadataObjectsDelegate:self queue:dispatch_get_main_queue()];
+        [_session addInput:input];
+        [_session addOutput:output];
+        output.metadataObjectTypes=@[AVMetadataObjectTypeQRCode,AVMetadataObjectTypeEAN13Code, AVMetadataObjectTypeEAN8Code, AVMetadataObjectTypeCode128Code];
+    }
     
     _captureLayer = [AVCaptureVideoPreviewLayer layerWithSession:_session];
     _captureLayer.videoGravity=AVLayerVideoGravityResizeAspectFill;
