@@ -7,12 +7,13 @@ chai.use(sinonChai)
 global.callNative = function () {}
 
 import { Document } from '../../../vdom'
+import Listener from '../../../vdom/listener'
 
 global.callNative = function () {}
 
 describe('dom listener basic', () => {
   it('works with no handler', () => {
-    const doc = new Document('foo')
+    const doc = new Document('foo', null, null, Listener)
     doc.createBody('r')
     doc.documentElement.appendChild(doc.body)
     doc.destroy()
@@ -24,7 +25,7 @@ describe('dom listener details', () => {
 
   beforeEach(() => {
     spy = sinon.spy()
-    doc = new Document('foo', '', spy)
+    doc = new Document('foo', '', spy, Listener)
   })
 
   afterEach(() => {
