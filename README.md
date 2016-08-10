@@ -59,6 +59,11 @@ On Android Platform , Weex code is executed in [weex_v8core](https://github.com/
 
 See [SCRIPTS.md](./SCRIPTS.md) for more information.
 
+
+## IDE Plugin & Syntax Highlight
+
+See [Weex Community](https://github.com/alibaba/weex/wiki/Weex-Community) Wiki page 
+
 ## FAQ
 
 See [FAQ](http://alibaba.github.io/weex/doc/faq.html) for more information.
