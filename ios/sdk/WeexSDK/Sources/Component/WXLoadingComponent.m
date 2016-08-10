@@ -146,7 +146,6 @@
     CGRect rect = self.calculatedFrame;
     
     id<WXScrollerProtocol> scrollerProtocol = self.ancestorScroller;
-    WXComponent *scroller = (WXComponent*)scrollerProtocol;
     if (scrollerProtocol) {
         rect.origin.y = [scrollerProtocol contentSize].height;
     }
