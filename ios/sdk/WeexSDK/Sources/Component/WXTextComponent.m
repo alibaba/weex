@@ -7,6 +7,7 @@
  */
 
 #import "WXTextComponent.h"
+#import "WXSDKInstance_private.h"
 #import "WXComponent_internal.h"
 #import "WXLayer.h"
 #import "WXUtility.h"
@@ -176,14 +177,6 @@ do {\
     [super setNeedsLayout];
 }
 
-- (void)layoutDidFinish
-{
-    if ([self isViewLoaded]) {
-        ((WXText *)self.view).textStorage = _textStorage;
-        [self setNeedsDisplay];
-    }
-}
-
 - (void)viewDidLoad
 {
     ((WXText *)self.view).textStorage = _textStorage;
@@ -238,22 +231,6 @@ do {\
             WXCeilPixelValue(computedSize.height)
         };
     };
-}
-
-- (void)updateStyles:(NSDictionary *)styles
-{
-    if (((WXText *)(self.view)).textStorage != _textStorage) {
-        ((WXText *)(self.view)).textStorage = _textStorage;
-        [self setNeedsDisplay];
-    }
-}
-
-- (void)updateAttributes:(NSDictionary *)attributes
-{
-    if (((WXText *)(self.view)).textStorage != _textStorage) {
-        ((WXText *)(self.view)).textStorage = _textStorage;
-        [self setNeedsDisplay];
-    }
 }
 
 #pragma mark Text Building
@@ -339,10 +316,22 @@ do {\
     return textStorage;
 }
 
-- (void)_frameDidCalculated:(BOOL)isChanged
+- (void)syncTextStorageForView
 {
     CGFloat width = self.calculatedFrame.size.width - (_padding.left + _padding.right);
-    _textStorage = [self textStorageWithWidth:width];
+    NSTextStorage *textStorage = [self textStorageWithWidth:width];
+    
+    [self.weexInstance.componentManager  _addUITask:^{
+        if ([self isViewLoaded]) {
+            ((WXText *)self.view).textStorage = textStorage;
+            [self setNeedsDisplay];
+        }
+    }];
+}
+
+- (void)_frameDidCalculated:(BOOL)isChanged
+{
+    [self syncTextStorageForView];
 }
 
 - (void)_updateStylesOnComponentThread:(NSDictionary *)styles
@@ -351,10 +340,7 @@ do {\
     
     [self fillCSSStyles:styles];
     
-    if (!_textStorage) {
-        CGFloat width = self.calculatedFrame.size.width - (_padding.left + _padding.right);
-        _textStorage = [self textStorageWithWidth:width];
-    }
+    [self syncTextStorageForView];
 }
 
 - (void)_updateAttributesOnComponentThread:(NSDictionary *)attributes
@@ -363,10 +349,7 @@ do {\
     
     [self fillAttributes:attributes];
     
-    if (!_textStorage) {
-        CGFloat width = self.calculatedFrame.size.width - (_padding.left + _padding.right);
-        _textStorage = [self textStorageWithWidth:width];
-    }
+    [self syncTextStorageForView];
 }
 
 #ifdef UITEST

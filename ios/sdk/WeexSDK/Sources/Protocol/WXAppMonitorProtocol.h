@@ -12,6 +12,9 @@
 #define PAGENAME            @"pageName"
 #define WXSDKVERSION        @"WXSDKVersion"
 #define JSLIBVERSION        @"JSLibVersion"
+
+#define SDKINITTIME         @"SDKInitTime"
+#define SDKINITINVOKETIME   @"SDKInitInvokeTime"
 #define JSLIBINITTIME       @"JSLibInitTime"
 #define JSTEMPLATESIZE      @"JSTemplateSize"
 #define NETWORKTIME         @"networkTime"

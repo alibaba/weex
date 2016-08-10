@@ -12,10 +12,12 @@
 #import "WXComponent_internal.h"
 #import "NSArray+Weex.h"
 #import "WXAssert.h"
+#import "WXMonitor.h"
 #import "WXUtility.h"
 #import "NSObject+WXSwizzle.h"
 #import "WXSDKInstance_private.h"
-
+#import "WXRefreshComponent.h"
+#import "WXLoadingComponent.h"
 
 @interface WXTableView : UITableView
 
@@ -183,6 +185,11 @@
     // Do Nothing
 }
 
+- (void)_handleFirstScreenTime
+{
+    // Do Nothing， firstScreenTime is set by cellDidRendered:
+}
+
 #pragma mark - Inheritance
 
 - (void)_insertSubcomponent:(WXComponent *)subcomponent atIndex:(NSInteger)index
@@ -193,6 +200,11 @@
         ((WXCellComponent *)subcomponent).list = self;
     } else if ([subcomponent isKindOfClass:[WXHeaderComponent class]]) {
         ((WXHeaderComponent *)subcomponent).list = self;
+    } else if (![subcomponent isKindOfClass:[WXRefreshComponent class]]
+               && ![subcomponent isKindOfClass:[WXLoadingComponent class]]
+               && subcomponent->_positionType != WXPositionTypeFixed) {
+        WXLogError(@"list only support cell/header/refresh/loading/fixed-component as child.");
+        return;
     }
     
     NSIndexPath *indexPath = [self indexPathForSubIndex:index];
@@ -209,7 +221,7 @@
         
         [self.weexInstance.componentManager _addUITask:^{
             [_completedSections addObject:completedSection];
-            WXLogDebug(@"Insert section:%ld",  [_completedSections indexOfObject:completedSection]);
+            WXLogDebug(@"Insert section:%ld",  (unsigned long)[_completedSections indexOfObject:completedSection]);
             [UIView performWithoutAnimation:^{
                 [_tableView insertSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
             }];
@@ -327,9 +339,7 @@
     
     CGRect cellRect = [_tableView rectForRowAtIndexPath:indexPath];
     if (cellRect.origin.y + cellRect.size.height >= _tableView.frame.size.height) {
-        if (self.weexInstance.screenRenderTime == 0) {
-            self.weexInstance.screenRenderTime = [[NSDate new] timeIntervalSinceDate:self.weexInstance.renderStartDate];
-        }
+        WX_MONITOR_INSTANCE_PERF_END(WXPTFirstScreenRender, self.weexInstance);
     }
     
     if (self.weexInstance.onRenderProgress) {
@@ -405,7 +415,7 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     WXHeaderComponent *header = ((WXSection *)_completedSections[section]).header;
-    WXLogDebug(@"header view for section %ld:%@", section, header.view);
+    WXLogDebug(@"header view for section %ld:%@", (long)section, header.view);
     return header.view;
 }
 
@@ -494,13 +504,13 @@
 {
     WXSection *section = [_completedSections wx_safeObjectAtIndex:indexPath.section];
     if (!section) {
-        WXLogError(@"No section found for num:%ld, completed sections:%ld", indexPath.section, _completedSections.count);
+        WXLogError(@"No section found for num:%ld, completed sections:%ld", (long)indexPath.section, (unsigned long)_completedSections.count);
         return nil;
     }
     
     WXCellComponent *cell = [section.rows wx_safeObjectAtIndex:indexPath.row];
     if (!cell) {
-        WXLogError(@"No cell found for num:%ld, completed rows:%ld", indexPath.row, section.rows.count);
+        WXLogError(@"No cell found for num:%ld, completed rows:%ld", (long)indexPath.row, (unsigned long)section.rows.count);
         return nil;
     }
     
@@ -543,7 +553,10 @@
     NSInteger row = -1;
     WXComponent *firstComponent;
     for (int i = 0; i <= index; i++) {
-        WXComponent* component = self.subcomponents[i];
+        WXComponent* component = [self.subcomponents wx_safeObjectAtIndex:i];
+        if (!component) {
+            continue;
+        }
         if (([component isKindOfClass:[WXHeaderComponent class]]
             || [component isKindOfClass:[WXCellComponent class]])
             && !firstComponent) {

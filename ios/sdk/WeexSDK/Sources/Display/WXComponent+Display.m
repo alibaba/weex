@@ -407,7 +407,7 @@
         previousNeedsDrawBorder = [self _needsDrawBorder];
     }
     
-#define WX_CHECK_BORDER_PROP(prop, direction1, direction2, direction3, direction4, type, setLayerProp)\
+#define WX_CHECK_BORDER_PROP(prop, direction1, direction2, direction3, direction4, type)\
 do {\
     BOOL needsDisplay = NO; \
     NSString *styleProp= WX_NSSTRING(WX_CONCAT(border, prop));\
@@ -436,20 +436,14 @@ do {\
         needsDisplay = YES;\
     }\
     if (needsDisplay && updating) {\
-        if (![self _needsDrawBorder]) {\
-            setLayerProp;\
-        }\
         [self setNeedsDisplay];\
     }\
 } while (0);
     
-    WX_CHECK_BORDER_PROP(Style, Top, Left, Bottom, Right, WXBorderStyle,)
-    WX_CHECK_BORDER_PROP(Color, Top, Left, Bottom, Right, UIColor,
-                         _layer.borderColor = _borderTopColor.CGColor)
-    WX_CHECK_BORDER_PROP(Width, Top, Left, Bottom, Right, WXPixelType,
-                         _layer.borderWidth = _borderTopWidth)
-    WX_CHECK_BORDER_PROP(Radius, TopLeft, TopRight, BottomLeft, BottomRight, WXPixelType,
-                         _layer.cornerRadius = _borderTopLeftRadius)
+    WX_CHECK_BORDER_PROP(Style, Top, Left, Bottom, Right, WXBorderStyle)
+    WX_CHECK_BORDER_PROP(Color, Top, Left, Bottom, Right, UIColor)
+    WX_CHECK_BORDER_PROP(Width, Top, Left, Bottom, Right, WXPixelType)
+    WX_CHECK_BORDER_PROP(Radius, TopLeft, TopRight, BottomLeft, BottomRight, WXPixelType)
     
     if (updating) {
         BOOL nowNeedsDrawBorder = [self _needsDrawBorder];
@@ -457,6 +451,13 @@ do {\
             _layer.cornerRadius = 0;
             _layer.borderWidth = 0;
             _layer.backgroundColor = NULL;
+        }
+        
+        if (!nowNeedsDrawBorder) {
+            _layer.cornerRadius = _borderTopLeftRadius;
+            _layer.borderWidth = _borderTopWidth;
+            _layer.borderColor = _borderTopColor.CGColor;
+            _layer.backgroundColor = _backgroundColor.CGColor;
         }
     }
 }

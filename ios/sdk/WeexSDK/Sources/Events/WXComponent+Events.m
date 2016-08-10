@@ -223,7 +223,6 @@ if ([removeEventName isEqualToString:@#eventName]) {\
 - (void)removeClickEvent
 {
     if (_tapGesture) {
-        [self.view removeGestureRecognizer:_tapGesture];
         _tapGesture.delegate = nil;
         _tapGesture = nil;
     }
@@ -231,7 +230,17 @@ if ([removeEventName isEqualToString:@#eventName]) {\
 
 - (void)onClick:(__unused UITapGestureRecognizer *)recognizer
 {
-    [self fireEvent:@"click" params:nil];
+    NSMutableDictionary *position = [[NSMutableDictionary alloc] initWithCapacity:4];
+    
+    if (!CGRectEqualToRect(self.calculatedFrame, CGRectZero)) {
+        CGRect frame = [self.view.superview convertRect:self.calculatedFrame toView:self.view.window];
+        position[@"x"] = @(frame.origin.x);
+        position[@"y"] = @(frame.origin.y);
+        position[@"width"] = @(frame.size.width);
+        position[@"height"] = @(frame.size.height);
+    }
+
+    [self fireEvent:@"click" params:@{@"position":position}];
 }
 
 #pragma mark - Swipe event
@@ -283,7 +292,6 @@ if ([removeEventName isEqualToString:@#eventName]) {\
   
     for (UISwipeGestureRecognizer *recognizer in _swipeGestures) {
         recognizer.delegate = nil;
-        [self.view removeGestureRecognizer:recognizer];
     }
     
     _swipeGestures = nil;
@@ -331,7 +339,6 @@ if ([removeEventName isEqualToString:@#eventName]) {\
 - (void)removeLongPressEvent
 {
     if (_longPressGesture) {
-        [self.view removeGestureRecognizer:_longPressGesture];
         _longPressGesture.delegate = nil;
         _longPressGesture = nil;
     }
@@ -420,7 +427,6 @@ if ([removeEventName isEqualToString:@#eventName]) {\
 - (void)checkRemovePanGesture
 {
     if (_panGesture && !_listenPanStart && !_listenPanMove && !_listenPanEnd) {
-        [self.view removeGestureRecognizer:_panGesture];
         _panGesture.delegate = nil;
         _panGesture = nil;
     }
@@ -486,7 +492,6 @@ if ([removeEventName isEqualToString:@#eventName]) {\
 - (void)checkRemoveTouchGesture
 {
     if (_touchGesture && !_touchGesture.listenTouchStart && !_touchGesture.listenTouchMove && !_touchGesture.listenTouchEnd && !_touchGesture.listenTouchCancel) {
-        [self.view removeGestureRecognizer:_touchGesture];
         _touchGesture.delegate = nil;
         _touchGesture = nil;
     }
@@ -512,6 +517,10 @@ if ([removeEventName isEqualToString:@#eventName]) {\
     }
     // swipe and scroll
     if ([gestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:NSClassFromString(@"UIScrollViewPanGestureRecognizer")]) {
+        return YES;
+    }
+    // onclick and textviewInput
+    if ([gestureRecognizer isKindOfClass:[UITapGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass: NSClassFromString(@"UITextTapRecognizer")]) {
         return YES;
     }
     

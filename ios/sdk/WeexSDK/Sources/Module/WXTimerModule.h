@@ -11,4 +11,10 @@
 
 @interface WXTimerModule : NSObject <WXModuleProtocol>
 
+- (NSMutableDictionary *)timers;
+
+- (void)createTimerWithCallback:(NSString *)callbackID time:(NSTimeInterval)milliseconds target:(id)target selector:(SEL)selector shouldRepeat:(BOOL)shouldRepeat;
+
+- (void)clearTimeout:(NSString *)callbackID;
+
 @end
