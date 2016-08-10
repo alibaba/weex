@@ -69,14 +69,13 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
     if (!options || [WXUtility isBlankString:urlStr]) {
         [callbackRsp setObject:@(-1) forKey:@"status"];
         [callbackRsp setObject:@false forKey:@"ok"];
-        
         callback(callbackRsp);
         
         return;
     }
     NSDictionary *headers = [options objectForKey:@"headers"];
     NSString *body = [options objectForKey:@"body"];
-    
+    NSString *type = [options objectForKey:@"type"];
     NSURL *url = [NSURL URLWithString:urlStr];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:method];
@@ -92,7 +91,7 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
     }
     [request setHTTPBody:[body dataUsingEncoding:NSUTF8StringEncoding]];
     [request setValue:[WXUtility userAgent] forHTTPHeaderField:@"User-Agent"];
-    
+
     [callbackRsp setObject:@{ @"OPENED": @1 } forKey:@"readyState"];
     
     [[WXSDKManager bridgeMgr] callBack:self.weexInstance.instanceId funcId:progressCallback params:callbackRsp keepAlive:true];
@@ -105,17 +104,18 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
                 } withResponse:^(NSURLResponse *response) {
                     httpResponse = (NSHTTPURLResponse*)response;
                     respEncode = httpResponse.textEncodingName;
-                    [callbackRsp setObject:@{ @"HEADERS_RECEIVED" : @2  } forKey:@"readyState"];
-                    [callbackRsp setObject:[NSNumber numberWithInteger:httpResponse.statusCode] forKey:@"status"];
-                    [callbackRsp setObject:httpResponse.allHeaderFields forKey:@"headers"];
-                    statusText = [weakSelf.class getStatusText:httpResponse.statusCode];
-                    [callbackRsp setObject:statusText forKey:@"statusText"];
-                    [callbackRsp setObject:[NSNumber numberWithInteger:received] forKey:@"length"];
-                    
-                    [[WXSDKManager bridgeMgr] callBack:weakSelf.weexInstance.instanceId funcId:progressCallback params:callbackRsp keepAlive:true];
+                    if (weakSelf) {
+                        [callbackRsp setObject:@{ @"HEADERS_RECEIVED" : @2  } forKey:@"readyState"];
+                        [callbackRsp setObject:[NSNumber numberWithInteger:httpResponse.statusCode] forKey:@"status"];
+                        [callbackRsp setObject:httpResponse.allHeaderFields forKey:@"headers"];
+                        statusText = [WXStreamModule getStatusText:httpResponse.statusCode];
+                        [callbackRsp setObject:statusText forKey:@"statusText"];
+                        [callbackRsp setObject:[NSNumber numberWithInteger:received] forKey:@"length"];
+                        [[WXSDKManager bridgeMgr] callBack:weakSelf.weexInstance.instanceId funcId:progressCallback params:callbackRsp keepAlive:true];
+                    }
                     
                 } withReceiveData:^(NSData *data) {
-                    [callbackRsp setObject:@{ @"LOADING" : @3  } forKey:@"readyState"];
+                    [callbackRsp setObject:@{ @"LOADING" : @3 } forKey:@"readyState"];
                     received += [data length];
                     [callbackRsp setObject:[NSNumber numberWithInteger:received] forKey:@"length"];
                     
@@ -145,16 +145,21 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
                         
                     }else {
                         // no error
-                        NSString *responseData = nil;
-                        if (!respEncode) {
-                            respEncode = @"utf-8";
-                        }
-                        CFStringEncoding cfStrEncoding = CFStringConvertIANACharSetNameToEncoding((CFStringRef) respEncode);
-                        if (cfStrEncoding == kCFStringEncodingInvalidId) {
-                            WXLogError(@"not supported encode");
+                        NSString *responseData = [self stringfromData:totalData encode:respEncode];
+                        if ([type isEqualToString:@"json"] || [type isEqualToString:@"jsonp"]) {
+                            if ([type isEqualToString:@"jsonp"]) {
+                                NSUInteger start = [responseData rangeOfString:@"("].location + 1 ;
+                                NSUInteger end = [responseData rangeOfString:@")" options:NSBackwardsSearch].location;
+                                if (end > start) {
+                                    responseData = [responseData substringWithRange:NSMakeRange(start, end-start)];
+                                }
+                            }
+                            id jsonObj = [self JSONObjFromData:[responseData dataUsingEncoding:NSUTF8StringEncoding]];
+                            if (jsonObj) {
+                                [callbackRsp setObject:jsonObj forKey:@"data"];
+                            }
+                            
                         } else {
-                            NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(cfStrEncoding);
-                            responseData = [[NSString alloc]initWithData:totalData encoding:encoding];
                             if (responseData) {
                                 [callbackRsp setObject:responseData forKey:@"data"];
                             }
@@ -164,8 +169,36 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
                 }];
 }
 
-+ (NSString*)getStatusText:(NSInteger)code {
-    
+- (NSString*)stringfromData:(NSData *)data encode:(NSString *)encoding
+{
+    NSMutableString *responseData = nil;
+    if (data) {
+        if (!encoding) {
+            encoding = @"utf-8";
+        }
+        CFStringEncoding cfStrEncoding = CFStringConvertIANACharSetNameToEncoding((CFStringRef)encoding);
+        if (cfStrEncoding == kCFStringEncodingInvalidId) {
+            WXLogError(@"not supported encode");
+        } else {
+            NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(cfStrEncoding);
+            responseData = [[NSMutableString alloc]initWithData:data encoding:encoding];
+        }
+    }
+    return responseData;
+}
+
+- (id)JSONObjFromData:(NSData *)data
+{
+    NSError * error = nil;
+    id jsonObj = [WXUtility JSONObject:data error:&error];
+    if (error) {
+        WXLogError(@"%@", [error description]);
+    }
+    return jsonObj;
+}
+
++ (NSString*)getStatusText:(NSInteger)code
+{    
     switch (code) {
         case -1:
             return @"ERR_INVALID_REQUEST";

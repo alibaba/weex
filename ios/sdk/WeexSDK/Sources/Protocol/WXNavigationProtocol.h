@@ -8,13 +8,6 @@
 
 #import "WXModuleProtocol.h"
 
-#define MSG_SUCCESS     @"WX_SUCCESS"
-#define MSG_NO_HANDLER  @"WX_NO_HANDLER"
-#define MSG_NO_PERMIT   @"WX_NO_PERMISSION"
-#define MSG_FAILED      @"WX_FAILED"
-#define MSG_PARAM_ERR   @"WX_PARAM_ERR"
-#define MSG_EXP         @"WX_EXCEPTION"
-
 /**
  * This enum is used to define the position of navbar item.
  */

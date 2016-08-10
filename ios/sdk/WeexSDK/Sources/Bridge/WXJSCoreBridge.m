@@ -13,6 +13,9 @@
 #import "WXUtility.h"
 #import "WXSDKEngine.h"
 #import "WXSDKError.h"
+#import "WXMonitor.h"
+#import "WXAppMonitorProtocol.h"
+#import "WXHandlerFactory.h"
 #import <sys/utsname.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 
@@ -65,6 +68,12 @@
                 if (idx == args.count - 1) {
                     NSNumber *flag = levelMap[[jsVal toString]];
                     if (flag) {
+                        if ([flag isEqualToNumber:[NSNumber numberWithInteger:WXLogFlagWarning]]) {
+                            id<WXAppMonitorProtocol> appMonitorHandler = [WXHandlerFactory handlerForProtocol:@protocol(WXAppMonitorProtocol)];
+                            if ([appMonitorHandler respondsToSelector:@selector(commitAppMonitorAlarm:monitorPoint:success:errorCode:errorMsg:arg:)]) {
+                                [appMonitorHandler commitAppMonitorAlarm:[WXSDKEngine topInstance].pageName monitorPoint:@"jswarning" success:FALSE errorCode:@"99999" errorMsg:string arg:@"weex"];
+                            }
+                        }
                         WX_LOG([flag unsignedIntegerValue], @"%@", string);
                     } else {
                         [string appendFormat:@"%@ ", jsVal];
@@ -79,7 +88,7 @@
             context.exception = exception;
             NSString *message = [NSString stringWithFormat:@"[%@:%@:%@] %@\n%@", exception[@"sourceURL"], exception[@"line"], exception[@"column"], exception, [exception[@"stack"] toObject]];
             
-            [[NSNotificationCenter defaultCenter] postNotificationName:WX_JS_ERROR_NOTIFICATION_NAME object:weakSelf userInfo:message ? @{@"message":message} : nil];
+            WX_MONITOR_FAIL(WXMTJSBridge, WX_ERR_JS_EXECUTE, message);
         };
     }
     return self;
@@ -90,7 +99,6 @@
 - (void)executeJSFramework:(NSString *)frameworkScript
 {
     WXAssertParam(frameworkScript);
-    
     [_jsContext evaluateScript:frameworkScript];
 }
 

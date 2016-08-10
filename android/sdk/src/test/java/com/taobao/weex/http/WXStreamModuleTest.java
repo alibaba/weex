@@ -254,13 +254,13 @@ public class WXStreamModuleTest {
      Map<String, Object> mData;
 
     @Override
-    public void invoke(Map<String, Object> data) {
-      mData = data;
+    public void invoke(Object data) {
+      mData = (Map<String,Object>)data;
     }
 
     @Override
-    public void invokeAndKeepAlive(Map<String, Object> data) {
-      mData = data;
+    public void invokeAndKeepAlive(Object data) {
+      mData = (Map<String,Object>)data;
     }
   }
 

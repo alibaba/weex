@@ -245,6 +245,7 @@ Scroller.prototype.removeChild = function (child) {
 }
 
 Scroller.prototype.onAppend = function () {
+  Component.prototype.onAppend.call(this)
   this._refreshWhenDomRenderend()
 }
 

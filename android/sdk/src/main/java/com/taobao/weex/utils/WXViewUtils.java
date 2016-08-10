@@ -338,6 +338,20 @@ public class WXViewUtils {
     }
   }
 
+  /**
+   *  Internal interface that just for debug, you should never call this method because of accuracy loss obviously
+   */
+  public static float getWeexPxByReal(float pxValue) {
+    if (Float.isNaN(pxValue)) {
+      return pxValue;
+    }
+    if (mUseWebPx) {
+      return (float) Math.rint(pxValue);
+    } else {
+      return pxValue * WXEnvironment.sDefaultWidth / getScreenWidth();
+    }
+  }
+
   public static int getRealPxByWidth2(float pxValue) {
     if (mUseWebPx) {
       return (int) pxValue;

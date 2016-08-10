@@ -204,18 +204,15 @@
  */
 package com.taobao.weex.ui;
 
-import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.bridge.Invoker;
-import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.ui.component.WXComponent;
-import com.taobao.weex.ui.component.WXVContainer;
-
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * Created by sospartan on 6/23/16.
  */
-public interface IFComponentHolder {
-  Invoker getMethod(String name);
-  WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException;
+public interface IFComponentHolder extends ComponentCreator {
+
+    /** Prepare component if not a lazy load componnet.**/
+    void loadIfNonLazy();
+
+    Invoker getMethod(String name);
 }

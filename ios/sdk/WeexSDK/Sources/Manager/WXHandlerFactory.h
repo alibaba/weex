@@ -29,6 +29,6 @@
 /**
  * @abstract Returns the registered handlers.
  */
-+ (NSDictionary *)handlerConfs;
++ (NSDictionary *)handlerConfigs;
 
 @end

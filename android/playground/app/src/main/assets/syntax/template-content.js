@@ -48,7 +48,7 @@
 	;__weex_define__("@weex-component/9f86da5d6b34376b9cac6c09a9b78cc2", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
-	  __webpack_require__(32)
+	  __webpack_require__(33)
 
 	;__weex_module__.exports.template = __weex_module__.exports.template || {}
 	;Object.assign(__weex_module__.exports.template, {
@@ -74,7 +74,7 @@
 
 /***/ },
 
-/***/ 32:
+/***/ 33:
 /***/ function(module, exports) {
 
 	;__weex_define__("@weex-component/btn", [], function(__weex_require__, __weex_exports__, __weex_module__){

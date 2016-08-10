@@ -9,6 +9,11 @@ const flexbox = require('../flexbox')
 const valueFilter = require('../valueFilter')
 require('fixedsticky')
 
+function hasIntersection (rect, ctRect) {
+  return (rect.left < ctRect.right && rect.right > ctRect.left)
+    && (rect.top < ctRect.bottom && rect.bottom > ctRect.top)
+}
+
 function Component (data, nodeType) {
   this.data = data
   this.node = this.create(nodeType)
@@ -95,10 +100,6 @@ Component.prototype = {
       this._isInScrollable = true
       this._parentScroller = parent
       return true
-    }
-    if (!parent) {
-      console && console.error('isInScrollable - parent not exist.')
-      return
     }
   },
 
@@ -260,6 +261,18 @@ Component.prototype = {
           updator: func.updator && func.updator.bind(this)
         })
       }
+    }
+  },
+
+  onAppend: function () {
+    const rect = this.node.getBoundingClientRect()
+    const parent = this.getParentScroller()
+    const parentNode = parent
+      ? parent.node
+      : this.getRootContainer()
+    const ctRect = parentNode.getBoundingClientRect()
+    if (hasIntersection(rect, ctRect)) {
+      this.dispatchEvent('appear', { direction: '' })
     }
   },
 

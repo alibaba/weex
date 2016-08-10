@@ -46,7 +46,7 @@
     return handler;
 }
 
-+ (NSDictionary *)handlerConfs {
++ (NSDictionary *)handlerConfigs {
     return [WXHandlerFactory sharedInstance].handlers;
 }
 

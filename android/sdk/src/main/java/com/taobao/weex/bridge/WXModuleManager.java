@@ -204,6 +204,8 @@
  */
 package com.taobao.weex.bridge;
 
+import android.text.TextUtils;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXSDKManager;
@@ -211,6 +213,7 @@ import com.taobao.weex.common.Destroyable;
 import com.taobao.weex.common.WXException;
 import com.taobao.weex.common.WXModule;
 import com.taobao.weex.dom.WXDomModule;
+import com.taobao.weex.ui.module.WXTimerModule;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXReflectionUtils;
 
@@ -248,6 +251,11 @@ public class WXModuleManager {
       return false;
     }
 
+    if (TextUtils.equals(moduleName,WXDomModule.WXDOM)) {
+      WXLogUtils.e("Connot registered module name is dom.");
+      return false;
+    }
+
     WXBridgeManager.getInstance().getJSHandler().post(new Runnable() {
       @Override
       public void run() {
@@ -281,7 +289,14 @@ public class WXModuleManager {
       return false;
     }
 
-    sModuleFactoryMap.put(moduleName, factory);
+    try {
+      sModuleFactoryMap.put(moduleName, factory);
+    }catch (ArrayStoreException e){
+      e.printStackTrace();
+      //ignore:
+      //may throw this exception:
+      //java.lang.String cannot be stored in an array of type java.util.HashMap$HashMapEntry[]
+    }
     return true;
   }
 
@@ -317,9 +332,14 @@ public class WXModuleManager {
       Type paramClazz;
       for (int i = 0; i < paramClazzs.length; i++) {
         paramClazz = paramClazzs[i];
-        if(i>=args.size() && !paramClazz.getClass().isPrimitive()){
-          params[i] = null;
-          continue;
+        if(i>=args.size()){
+          if(!paramClazz.getClass().isPrimitive()) {
+            params[i] = null;
+            continue;
+          }else {
+            WXLogUtils.e("[WXModuleManager] module method argument list not match.");
+            return false;
+          }
         }
         value = args.get(i);
 
@@ -353,12 +373,14 @@ public class WXModuleManager {
       WXLogUtils.e("callModuleMethod >>> invoke module:" + moduleStr + ", method:" + methodStr + " failed. ", e);
       return false;
     } finally {
-      if (wxModule instanceof WXDomModule) {
+      if (wxModule instanceof WXDomModule || wxModule instanceof WXTimerModule) {
         wxModule.mWXSDKInstance = null;
       }
     }
     return true;
   }
+
+
 
   private static WXModule findModule(String instanceId, String moduleStr,ModuleFactory factory) {
     // find WXModule
@@ -424,12 +446,12 @@ public class WXModuleManager {
 
 
     @Override
-    public void invoke(Map<String, Object> data) {
+    public void invoke(Object data) {
       WXBridgeManager.getInstance().callback(mInstanceId,mCallbackId,data,false);
     }
 
     @Override
-    public void invokeAndKeepAlive(Map<String, Object> data) {
+    public void invokeAndKeepAlive(Object data) {
       WXBridgeManager.getInstance().callback(mInstanceId,mCallbackId,data,true);
     }
   }

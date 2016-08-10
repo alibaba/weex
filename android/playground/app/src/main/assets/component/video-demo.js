@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/5de6c104a27746ba4e1386691baec790", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/13c6f8f9dc2ed874e5f24be910e31f26", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(1);
@@ -59,16 +59,20 @@
 	      play: function() {
 	        this.playStatus = 'play'
 	      },
-	      onpause: function() {
+	      onpause: function(e) {
+	        this.playStatus = e.playStatus;
 	        this.$call('modal', 'toast', {'message': 'video pause'});
 	      },
-	      onstart: function() {
+	      onstart: function(e) {
+	        this.playStatus = e.playStatus;
 	        this.$call('modal', 'toast', {'message': 'video start'});
 	      },
-	      onfinish: function() {
+	      onfinish: function(e) {
+	        this.playStatus = e.playStatus;
 	        this.$call('modal', 'toast', {'message': 'video finish'});
 	      },
-	      onfail: function() {
+	      onfail: function(e) {
+	        this.playStatus = e.playStatus;
 	        this.$call('modal', 'toast', {'message': 'video fail'});
 	      }
 	    }
@@ -137,7 +141,7 @@
 	  }
 	})
 	})
-	;__weex_bootstrap__("@weex-component/5de6c104a27746ba4e1386691baec790", {
+	;__weex_bootstrap__("@weex-component/13c6f8f9dc2ed874e5f24be910e31f26", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 

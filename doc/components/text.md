@@ -56,7 +56,7 @@ Other attributes please check out the [common attributes](../references/common-a
   <text>...</text>
   <text value="..."></text>
   <text style="font-size: 24; text-decoration: underline;">{{price}}</text>
-  <text value="{{...}}"></text>
+  <text value="{% raw %}{{...}}{% endraw %}"></text>
 </div>
 ```
 

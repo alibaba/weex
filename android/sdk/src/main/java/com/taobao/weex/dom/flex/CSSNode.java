@@ -575,4 +575,28 @@ public class CSSNode {
      */
     public void measure(CSSNode node, float width, MeasureOutput measureOutput);
   }
+
+  public float getCSSLayoutHeight() {
+    return csslayout.dimensions[CSSLayout.DIMENSION_HEIGHT];
+  }
+
+  public float getCSSLayoutWidth() {
+    return csslayout.dimensions[CSSLayout.DIMENSION_WIDTH];
+  }
+
+  public float getCSSLayoutTop() {
+    return csslayout.position[CSSLayout.POSITION_TOP];
+  }
+
+  public float getCSSLayoutBottom() {
+    return csslayout.position[CSSLayout.POSITION_BOTTOM];
+  }
+
+  public float getCSSLayoutLeft() {
+    return csslayout.position[CSSLayout.POSITION_LEFT];
+  }
+
+  public float getCSSLayoutRight() {
+    return csslayout.position[CSSLayout.POSITION_RIGHT];
+  }
 }
