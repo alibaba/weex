@@ -48,7 +48,7 @@ Other attributes please check out the [common attributes](../references/common-a
 
 ```js
 <template>
-  <wxc-navpage height={{...}} background-color="..." title="..." title-color="..." left-item-title="..." left-item-color="..." right-item-src="...">
+  <wxc-navpage height={% raw %}{{...}}{% endraw %} background-color="..." title="..." title-color="..." left-item-title="..." left-item-color="..." right-item-src="...">
       <content> ...</content>
   </wxc-navpage>
 </template>

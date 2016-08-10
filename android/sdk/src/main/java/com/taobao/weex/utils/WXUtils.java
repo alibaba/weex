@@ -204,8 +204,11 @@
  */
 package com.taobao.weex.utils;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Looper;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.taobao.weex.WXEnvironment;
@@ -236,8 +239,34 @@ public class WXUtils {
     try {
       result = Float.parseFloat(temp);
     } catch (NumberFormatException e) {
+      WXLogUtils.e("Argument format error!");
     }
     return result;
+  }
+
+  public static Float getFloat(Object value, @Nullable Float df) {
+
+    if (value == null) {
+      return df;
+    }
+
+    try {
+      return (Float) value;
+    } catch (ClassCastException cce) {
+      String temp = value.toString().trim();
+      if (temp.endsWith("px")) {
+        temp = temp.substring(0, temp.indexOf("px"));
+      }
+      try {
+        return Float.parseFloat(temp);
+      } catch (NumberFormatException nfe) {
+        WXLogUtils.e("Argument format error!");
+      } catch (Exception e) {
+        WXLogUtils.e("Argument error!");
+      }
+    }
+
+    return df;
   }
 
   public static float fastGetFloat(String raw, int precision){
@@ -312,6 +341,31 @@ public class WXUtils {
     return result;
   }
 
+  public static Integer getInteger(@Nullable Object value, @Nullable Integer df) {
+
+    if (value == null) {
+      return df;
+    }
+
+    try {
+      return (Integer) value;
+    } catch (ClassCastException cce) {
+      String temp = value.toString().trim();
+      if (temp.endsWith("px")) {
+        temp = temp.substring(0, temp.indexOf("px"));
+      }
+      try {
+        return Integer.parseInt(temp);
+      } catch (NumberFormatException nfe) {
+        WXLogUtils.e("Argument format error!");
+      } catch (Exception e) {
+        WXLogUtils.e("Argument error!");
+      }
+    }
+
+    return df;
+  }
+
   public static long getLong(Object value) {
     if (value == null) {
       return 0;
@@ -353,5 +407,42 @@ public class WXUtils {
       WXLogUtils.e("[WXUtils] isTabletDevice:", e);
     }
     return false;
+  }
+
+  public static Boolean getBoolean(@Nullable Object value, @Nullable Boolean df) {
+
+    if (value == null)
+      return df;
+    if (TextUtils.equals("false",value.toString())) {
+      return false;
+    } else if (TextUtils.equals("true",value.toString())) {
+      return true;
+    }
+    return df;
+  }
+
+  public static long getAvailMemory(Context context){
+    ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+    ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
+    am.getMemoryInfo(mi);
+    //mi.availMem; 当前系统的可用内存
+    //return Formatter.formatFileSize(context, mi.availMem);// 将获取的内存大小规格化
+    WXLogUtils.w("app AvailMemory ---->>>"+mi.availMem/(1024*1024));
+    return mi.availMem/(1024*1024);
+  }
+
+  public static String getString(@Nullable Object value,@Nullable String df) {
+
+    if (value == null)
+      return df;
+
+    String originValue;
+    if (value instanceof String) {
+      originValue = (String) value;
+    } else {
+      originValue = value.toString();
+    }
+
+    return originValue;
   }
 }

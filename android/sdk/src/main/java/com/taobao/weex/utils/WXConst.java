@@ -216,6 +216,7 @@ public class WXConst {
   public static final String LOAD = "load";
 
   //Alert
+  public static final String JS_DOWNLOAD = "jsDownload";
   public static final String DOM_MODULE = "domModule";
   public static final String JS_BRIDGE = "jsBridge";
   public static final String ENVIRONMENT = "environment";

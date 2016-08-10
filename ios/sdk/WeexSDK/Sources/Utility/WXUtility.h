@@ -295,5 +295,5 @@ CGPoint WXPixelPointResize(CGPoint value);
  *  @abstract Returns md5 string.
  *
  */
-+ (NSString *)md5:(NSString *)string;
++ (NSString *_Nullable)md5:(NSString *_Nullable)string;
 @end

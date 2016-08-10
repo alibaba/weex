@@ -230,6 +230,8 @@ public class WXEventType {
   public static final String ONREFRESH = "refresh";
   public static final String ONLOADING = "loading";
 
+  public static final String ONLOAD = "load";
+
   public static final String CHANGE = "change";
 
   public static String  CLICK_LEFT_ITEM= "clickleftitem";
