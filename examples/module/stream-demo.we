@@ -81,7 +81,7 @@
           me.getResult = "request failed";
         }else{
           console.log('get:'+ret);
-          me.getResult = ret.data;
+          me.getResult = JSON.stringify(ret.data);
         }
       },function(response){
         console.log('get in progress:'+response.length);
@@ -96,8 +96,8 @@
         if(!ret.ok){
           me.postResult = "request failed";
         }else{
-          console.log('get:'+ret);
-          me.postResult = ret.data;
+          console.log('get:'+JSON.stringify(ret));
+          me.postResult = JSON.stringify(ret.data);
         }
       },function(response){
         console.log('get in progress:'+response.length);
@@ -112,8 +112,8 @@
         if(!ret.ok){
           me.putResult = "request failed";
         }else{
-          console.log('get:'+ret);
-          me.putResult = ret.data;
+          console.log('get:'+JSON.stringify(ret));
+          me.putResult = JSON.stringify(ret.data);
         }
       },function(response){
         console.log('get in progress:'+response.length);
@@ -129,8 +129,8 @@
         if(!ret.ok){
           me.deleteResult = "request failed";
         }else{
-          console.log('get:'+ret);
-          me.deleteResult = ret.data;
+          console.log('get:'+JSON.stringify(ret));
+          me.deleteResult = JSON.stringify(ret.data);
         }
       },function(response){
         console.log('get in progress:'+response.length);
@@ -145,7 +145,7 @@
         if(ret.statusText !== 'I\'m a teapot'){
           me.headResult = "request failed";
         }else{
-          console.log('get:'+ret);
+          console.log('get:'+JSON.stringify(ret));
           me.headResult = ret.statusText;
         }
       },function(response){
@@ -161,8 +161,8 @@
         if(!ret.ok){
           me.patchResult = "request failed";
         }else{
-          console.log('get:'+ret);
-          me.patchResult = ret.data;
+          console.log('get:'+JSON.stringify(ret));
+          me.patchResult = JSON.stringify(request.data);
         }
       },function(response){
         console.log('get in progress:'+response.length);

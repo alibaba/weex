@@ -293,6 +293,8 @@
     if (!UIEdgeInsetsEqualToEdgeInsets(border, _border)) {
         [self setBorder:border];
     }
+    
+    [self setTextFont];
 }
 
 - (CGSize (^)(CGSize))measureBlock
@@ -358,7 +360,7 @@
 {
     if (_changeEvent) {
         if (![[textField text] isEqualToString:_changeEventString]) {
-            [self fireEvent:@"change" params:@{@"value":[textField text]} domChanges:@{@"value":[textField text]}];
+            [self fireEvent:@"change" params:@{@"value":[textField text]} domChanges:@{@"attrs":@{@"value":[textField text]}}];
         }
     }
     if (_blurEvent) {
@@ -394,8 +396,7 @@
 {
     if (b) {
         [_inputView becomeFirstResponder];
-    }
-    else {
+    } else {
         [_inputView resignFirstResponder];
     }
 }

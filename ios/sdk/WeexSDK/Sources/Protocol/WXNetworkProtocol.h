@@ -7,7 +7,7 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <WXModuleProtocol.h>
+#import "WXModuleProtocol.h"
 
 @protocol WXNetworkProtocol <NSObject>
 

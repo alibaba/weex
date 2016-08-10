@@ -25,6 +25,11 @@ WX_EXPORT_METHOD(@selector(transition:args:callback:))
         return;
     }
     
+    [self animation:targetComponent args:args callback:callback];
+}
+
+- (void)animation:(WXComponent *)targetComponent args:(NSDictionary *)args callback:(WXModuleCallback)callback
+{
     CALayer *layer = targetComponent.layer;
     UIView *view = targetComponent.view;
     
@@ -32,7 +37,7 @@ WX_EXPORT_METHOD(@selector(transition:args:callback:))
     
     NSTimeInterval duration = [args[@"duration"] doubleValue] / 1000;
     NSTimeInterval delay = [args[@"delay"] doubleValue] / 1000;
-//    CAMediaTimingFunction *timingFunction = [WXConvert CAMediaTimingFunction:args[@"timingFunction"]];
+    //    CAMediaTimingFunction *timingFunction = [WXConvert CAMediaTimingFunction:args[@"timingFunction"]];
     UIViewAnimationOptions timingFunction = [WXConvert UIViewAnimationTimingFunction:args[@"timingFunction"]];
     
     // Rotate 360 not work , have not found any solution
@@ -53,23 +58,6 @@ WX_EXPORT_METHOD(@selector(transition:args:callback:))
             callback(finished ? @"SUCCESS" : @"FAIL");
         }
     }];
-    
-//
-//    CAAnimationGroup *group = [CAAnimationGroup animation];
-//    group.fillMode = kCAFillModeForwards;
-//    group.removedOnCompletion = NO;
-//    group.timingFunction = timingFunction;
-//    group.animations = animations;
-//    group.delegate = self;
-//    group.beginTime = CACurrentMediaTime() + delay;
-//    group.duration = duration;
-//
-//    _callback = [callback copy];
-//    [layer addAnimation:group forKey:nil];
 }
-
-//- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
-//{
-//}
 
 @end

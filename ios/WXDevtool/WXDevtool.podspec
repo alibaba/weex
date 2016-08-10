@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
   s.name         = "WXDevtool"
   s.version      = "0.0.1"
-  s.summary      = "WXDevtool Source ."
+  s.summary      = "WXDevtool Source."
 
   s.description  = <<-DESC
                    WXDevtool Source description
@@ -22,9 +22,11 @@ Pod::Spec.new do |s|
   s.platform     = :ios
   s.ios.deployment_target = '7.0'
   s.source =  { :path => '.' }
-  s.source_files = 'inspector/**/*.{h,m,mm,c}'
+  s.source_files = 'WXDevTool/Source/**/*.{h,m,mm,c}'
 
   s.requires_arc = true
-  s.frameworks = 'Foundation', 'UIKit'
-  s.dependency 'SocketRocket'
+  s.prefix_header_file = 'WXDevTool/Source/Supporting Files/TBWXDevTool.pch'
+#s.vendored_frameworks = 'WXDevTool.framework'
+  s.frameworks = 'Foundation'
+  s.dependency 'WeexSDK'
 end
