@@ -45,11 +45,7 @@ describe('the api of app', () => {
     spy1 = sinon.spy()
     spy2 = sinon.spy()
     app = createApp()
-    sinon.stub(console, 'debug')
-  })
-
-  after(() => {
-    console.debug.restore()
+    !console.debug && (console.debug = function () {})
   })
 
   afterEach(() => {

@@ -8,6 +8,7 @@ global.callNative = function () {}
 
 import Vm from '../../../../default/vm'
 import { Document } from '../../../../vdom'
+import Listener from '../../../../vdom/listener'
 
 describe('bind and fire events', () => {
   let doc, customComponentMap, spy
@@ -26,7 +27,7 @@ describe('bind and fire events', () => {
     spy = sinon.spy()
     doc = new Document('test', '', (actions) => {
       spy(actions)
-    })
+    }, Listener)
     customComponentMap = {}
   })
 
