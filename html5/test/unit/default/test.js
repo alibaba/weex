@@ -562,6 +562,22 @@ describe('test input and output', () => {
     delete allDocs[name]
   })
 
+  it('reset class style case', () => {
+    const name = 'reset-style'
+    const inputCode = readInput(name)
+    const outputCode = readOutput(name)
+    const doc = new Document(name)
+    allDocs[name] = doc
+
+    framework.createInstance(name, inputCode)
+    const expected = eval('(' + outputCode + ')')
+    const actual = doc.toJSON()
+    expect(actual).eql(expected)
+
+    framework.destroyInstance(name)
+    delete allDocs[name]
+  })
+
   it('dynamic type case', () => {
     const name = 'dynamic-type'
     const inputCode = readInput(name)
