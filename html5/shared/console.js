@@ -8,7 +8,7 @@
  */
 
 const { console, nativeLog } = global
-const LEVELS = ['error', 'warn', 'info', 'log', 'debug']
+const LEVELS = ['off', 'error', 'warn', 'info', 'log', 'debug']
 const levelMap = {}
 
 generateLevelMap()
