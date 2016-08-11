@@ -571,8 +571,15 @@ describe('test input and output', () => {
 
     framework.createInstance(name, inputCode)
     const expected = eval('(' + outputCode + ')')
-    const actual = doc.toJSON()
-    expect(actual).eql(expected)
+
+    framework.callJS(name, [{
+      method: 'fireEvent',
+      args: [doc.body.children[0].ref, 'click', {}]
+    }])
+
+    setTimeout(function () {
+      expect(doc.toJSON()).eql(expected)
+    }, 0)
 
     framework.destroyInstance(name)
     delete allDocs[name]
