@@ -2,23 +2,22 @@
  * @fileOverview
  * A simple virtual dom implementation
  */
-
-import Listener from './listener'
-import { extend } from '../shared'
+// import { extend } from '../shared'
+import { extend } from '../shared/utils'
 
 const DEFAULT_TAG_NAME = 'div'
 
 export const instanceMap = {}
 let nextNodeRef = 1
 
-export function Document (id, url, handler) {
+export function Document (id, url, handler, Listener) {
   id = id ? id.toString() : ''
   this.id = id
   this.URL = url
 
   instanceMap[id] = this
   this.nodeMap = {}
-  this.listener = new Listener(id, handler || genCallTasks(id))
+  Listener && (this.listener = new Listener(id, handler || genCallTasks(id)))
   this.createDocumentElement()
 }
 

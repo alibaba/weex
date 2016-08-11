@@ -1,14 +1,13 @@
 'use strict'
 
-const config = require('../config')
-const utils = require('../utils')
-const protocol = require('../protocol')
-const FrameUpdater = require('../frameUpdater')
-const Sender = require('./sender')
+import config from '../render/config'
+import protocol from './protocol'
+import { isArray, frameUpdater } from '../utils'
+import Sender from './sender'
 
 const callQueue = []
 // Need a task counter?
-// When FrameUpdater is not activated, tasks will not be push
+// When frameUpdater is not activated, tasks will not be push
 // into callQueue and there will be no trace for situation of
 // execution of tasks.
 
@@ -31,7 +30,7 @@ function callNative (instanceId, tasks, callbackId) {
       console.error('invalid tasks:', tasks)
     }
   }
-  else if (utils.isArray(tasks)) {
+  else if (isArray(tasks)) {
     calls = tasks
   }
   const len = calls.length
@@ -42,7 +41,7 @@ function callNative (instanceId, tasks, callbackId) {
   // be replaced by calling directly except the situation of page loading.
   // 2015-11-03
   for (let i = 0; i < len; i++) {
-    if (FrameUpdater.isActive()) {
+    if (frameUpdater.isActive()) {
       callQueue.push({
         instanceId: instanceId,
         call: calls[i]
@@ -82,7 +81,7 @@ function processCall (instanceId, call) {
     return
   }
 
-  method.apply(protocol.getWeexInstance(instanceId), args)
+  method.apply(global.weex.getInstance(instanceId), args)
 
   const callbackId = call.callbackId
   if ((callbackId
@@ -113,11 +112,11 @@ function exportsBridgeMethodsToGlobal () {
   global.nativeLog = nativeLog
 }
 
-module.exports = {
+export default {
   init: function () {
     // process callQueue every 16 milliseconds.
-    FrameUpdater.addUpdateObserver(processCallQueue)
-    FrameUpdater.start()
+    frameUpdater.addUpdateObserver(processCallQueue)
+    frameUpdater.start()
 
     // exports methods to global(window).
     exportsBridgeMethodsToGlobal()

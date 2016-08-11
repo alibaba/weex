@@ -10,6 +10,7 @@ import * as bundle from '../../../../default/app/bundle'
 import * as register from '../../../../default/app/register'
 import { Document }
 from '../../../../vdom'
+import Listener from '../../../../vdom/listener'
 import Vm from '../../../../default/vm'
 
 describe('parsing a bundle file', () => {
@@ -27,12 +28,14 @@ describe('parsing a bundle file', () => {
     sinon.stub(console, 'info')
     sinon.stub(console, 'warn')
     sinon.stub(console, 'error')
+    sinon.stub(console, 'debug')
   })
 
   after(() => {
     console.info.restore()
     console.warn.restore()
     console.error.restore()
+    console.debug.restore()
     bundle.clearCommonModules()
   })
 
@@ -46,7 +49,7 @@ describe('parsing a bundle file', () => {
 
       const doc = new Document(id, '', (tasks, callback) => {
         app.callTasks(tasks, callback)
-      })
+      }, Listener)
 
       app = {
         id, doc,
@@ -280,7 +283,7 @@ describe('parsing a bundle file', () => {
 
       const doc = new Document(id, '', (tasks, callback) => {
         app.callTasks(tasks, callback)
-      })
+      }, Listener)
 
       app = {
         id, doc,
@@ -443,7 +446,7 @@ describe('parsing a bundle file', () => {
 
       const doc = new Document(id, '', (tasks, callback) => {
         app.callTasks(tasks, callback)
-      })
+      }, Listener)
 
       app = {
         id, doc,

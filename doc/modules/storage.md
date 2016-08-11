@@ -6,7 +6,6 @@
 
 `storage` is a series of apis, allowing you to for example add, modify or delete stored data items.
 
-
 ## API
 
 ### setItem(key, value, callback)

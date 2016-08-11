@@ -1,10 +1,10 @@
 'use strict'
 
-const utils = require('../utils')
+import { extend } from '../utils'
 
 const _senderMap = {}
 
-function Sender (instance) {
+export default function Sender (instance) {
   if (!(this instanceof Sender)) {
     return new Sender(instance)
   }
@@ -35,7 +35,7 @@ Sender.prototype = {
   },
 
   fireEvent: function (ref, type, func, event) {
-    func.extra && utils.extend(event, func.extra())
+    func.extra && extend(event, func.extra())
     _send(this.instanceId, {
       method: 'fireEvent',
       args: [ref, type, event, func.updator && func.updator()]
@@ -43,5 +43,3 @@ Sender.prototype = {
   }
 
 }
-
-module.exports = Sender

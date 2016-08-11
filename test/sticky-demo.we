@@ -1,0 +1,81 @@
+<style>
+  .top {
+    width: 750;
+    height: 200px;
+  }
+  .ct {
+    width: 750;
+    height: 1000;
+  }
+  .content {
+    width: 750;
+    height: 1000px;
+    background-color: green;
+  }
+  .header {
+    width: 750;
+    height: 80;
+  }
+  .header1 {
+    background-color: yellow;
+  }
+  .header2 {
+    background-color: red;
+    height: 200px;
+  }
+  .fixed1 {
+    color: #fff;
+    position: fixed;
+    width: 300px;
+    height: 100px;
+    background-color: #999;
+    border: 1px solid #666;
+    z-index: 999;
+  }
+  .fixed2 {
+    color: #fff;
+    position: fixed;
+    top: 300px;
+    width: 300px;
+    height: 100px;
+    background-color: #999;
+    border: 1px solid #666;
+    z-index: 999;
+  }
+</style>
+
+<template>
+  <div>
+    <div class="top"></div>
+    <scroller class="ct">
+      <div class="fixed1" style="position:{{fixPosition}};top:{{fixTop}};" onclick="toggleSticky"><text>TOGGLE STICKY</text></div>
+      <div class="fixed2" onclick="toggleFixed"><text>TOGGLE FIXED</text></div>
+      <div class="content"></div>
+      <div class="header header1" style="position:{{position}}"></div>
+      <div class="content"></div>
+      <div class="header header2" style="position:{{position}}"></div>
+      <div class="content"></div>
+      <div class="content"></div>
+    </scroller>
+  </div>
+</template>
+
+<script>
+  module.exports = {
+    data: {
+      position: 'sticky',
+      fixPosition: 'fixed',
+      fixTop: 100,
+    },
+    methods: {
+      toggleSticky: function () {
+        this.position = this.position === 'sticky' ? 'relative' : 'sticky'
+      },
+      toggleFixed: function () {
+        const nextPosition = this.fixPosition === 'fixed' ? 'relative' : 'fixed'
+        this.fixPosition = nextPosition
+        this.fixTop = nextPosition === 'fixed' ? 50 : 0
+      }
+    }
+  }
+</script>

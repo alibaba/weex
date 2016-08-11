@@ -8,6 +8,7 @@ global.callNative = function () {}
 
 import Vm from '../../../../default/vm'
 import { Document } from '../../../../vdom'
+import Listener from '../../../../vdom/listener'
 import Differ from '../../../../default/app/differ'
 
 describe('generate virtual dom for a single vm', () => {
@@ -22,7 +23,7 @@ describe('generate virtual dom for a single vm', () => {
       actions.forEach((action) => {
         spy.apply(null, ['test', action.method].concat(action.args))
       })
-    })
+    }, Listener)
     customComponentMap = {}
   })
 
@@ -610,7 +611,7 @@ describe('generate virtual dom for sub vm', () => {
   let differ
 
   beforeEach(() => {
-    doc = new Document('test')
+    doc = new Document('test', null, null, Listener)
     customComponentMap = {}
     differ = new Differ('test')
   })
@@ -1222,7 +1223,7 @@ describe('generate dom actions', () => {
       actions.forEach((action) => {
         spy.apply(null, ['bar', action.method].concat(action.args))
       })
-    })
+    }, Listener)
     differ = new Differ('foo')
     customComponentMap = {}
     app = { doc, customComponentMap, differ }
