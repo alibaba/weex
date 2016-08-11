@@ -298,6 +298,7 @@ public class WXDomPropConstant {
   public static final String WX_ATTR_IMAGE_QUALITY_HIGH = "high";
 
   public static final String WX_ATTR_SRC = "src";
+  public static final String WX_ATTR_PLACE_HOLDER="placeHolder";
 
   public static final String WX_RESIZE_MODE = "resizeMode";
   public static final String WX_RESIZE = "resize";
@@ -339,7 +340,8 @@ public class WXDomPropConstant {
   public static final String WX_ATTR_INPUT_AUTOFOCUS = "autofocus";
   public static final String WX_ATTR_INPUT_LINES = "lines";
   public static final String WX_ATTR_INPUT_SINGLELINE = "singleline";
-  public static final String WX_ATTR_INPUT_MAXLENGTH = "maxlength";
+  public static final String WX_ATTR_INPUT_MAXLENGTH = "maxLength";
+  public static final String WX_ATTR_TEXTAREA_ROWS = "rows";
 
   //switch
   public static final String WX_ATTR_SWITCH_CHECKED = "checked";
@@ -351,5 +353,16 @@ public class WXDomPropConstant {
   public static final String WX_VISIBILITY = "visibility";
   public static final String WX_VISIBILITY_VISIBLE = WX_OVERFLOW_VISIBLE;
   public static final String WX_VISIBILITY_HIDDEN = WX_OVERFLOW_HIDDEN;
+
+  //indicator
+  public static final String WX_ATTR_ITEM_COLOR = "itemColor";
+  public static final String WX_ATTR_ITEM_SELECTED_COLOR = "itemSelectedColor";
+  public static final String WX_ATTR_ITEM_SIZE = "itemSize";
+
+  //refresh
+  public static final String WX_ATTR_DISPLAY = "display";
+
+  //web
+  public static final String WX_ATTR_SHOW_LOADING = "show-loading";
 
 }

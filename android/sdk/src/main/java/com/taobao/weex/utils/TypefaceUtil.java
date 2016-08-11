@@ -206,6 +206,9 @@ package com.taobao.weex.utils;
 
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import com.taobao.weex.dom.WXStyle;
+
+import java.util.HashMap;
 import android.text.TextUtils;
 
 import com.taobao.weex.WXEnvironment;
@@ -213,10 +216,8 @@ import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.common.WXRequest;
 import com.taobao.weex.common.WXResponse;
-import com.taobao.weex.dom.WXStyle;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -225,7 +226,7 @@ import java.util.Map;
  */
 public class TypefaceUtil {
   private final static String TAG = "TypefaceUtil";
-  private final static HashMap<String, FontDO> sCacheMap = new HashMap<>(); //Key: fontFamilyName
+  private final static Map<String, FontDO> sCacheMap = new HashMap<>(); //Key: fontFamilyName
 
   public static void putFontDO(FontDO fontDO) {
     if (fontDO != null && !TextUtils.isEmpty(fontDO.getFontFamilyName())) {
@@ -248,17 +249,17 @@ public class TypefaceUtil {
 
     int want = 0;
     if ((weight == Typeface.BOLD)
-            || ((oldStyle & Typeface.BOLD) != 0 && weight == WXStyle.UNSET)) {
+      || ((oldStyle & Typeface.BOLD) != 0 && weight == WXStyle.UNSET)) {
       want |= Typeface.BOLD;
     }
 
     if ((style == Typeface.ITALIC)
-            || ((oldStyle & Typeface.ITALIC) != 0 && style == WXStyle.UNSET)) {
+      || ((oldStyle & Typeface.ITALIC) != 0 && style == WXStyle.UNSET)) {
       want |= Typeface.ITALIC;
     }
 
     if (family != null) {
-      typeface = getOrCreateTypeface(family, style);
+      typeface = getOrCreateTypeface(family, want);
     }
 
     if (typeface != null) {

@@ -218,7 +218,7 @@ import java.util.concurrent.Executors;
 
 public class DefaultWXStorage implements IWXStorageAdapter {
 
-    private WXDatabaseSupplier mDatabaseSupplier;
+    private WXSQLiteOpenHelper mDatabaseSupplier;
 
     private ExecutorService mExecutorService;
 
@@ -230,7 +230,7 @@ public class DefaultWXStorage implements IWXStorageAdapter {
     }
 
     public DefaultWXStorage(Context context) {
-        this.mDatabaseSupplier = WXDatabaseSupplier.getInstance(context);
+        this.mDatabaseSupplier = WXSQLiteOpenHelper.getInstance(context);
     }
 
 
@@ -289,9 +289,14 @@ public class DefaultWXStorage implements IWXStorageAdapter {
         });
     }
 
+    @Override
+    public void close() {
+        mDatabaseSupplier.closeDatabase();
+    }
+
 
     private boolean performSetItem(String key, String value) {
-        String sql = "INSERT OR REPLACE INTO " + WXDatabaseSupplier.TABLE_STORAGE + " VALUES (?,?);";
+        String sql = "INSERT OR REPLACE INTO " + WXSQLiteOpenHelper.TABLE_STORAGE + " VALUES (?,?);";
         SQLiteStatement statement = mDatabaseSupplier.getDatabase().compileStatement(sql);
         try {
             statement.clearBindings();
@@ -304,19 +309,18 @@ public class DefaultWXStorage implements IWXStorageAdapter {
             return false;
         } finally {
             statement.close();
-            mDatabaseSupplier.closeDatabase();
         }
     }
 
     private String performGetItem(String key) {
-        Cursor c = mDatabaseSupplier.getDatabase().query(WXDatabaseSupplier.TABLE_STORAGE,
-                new String[]{WXDatabaseSupplier.COLUMN_VALUE},
-                WXDatabaseSupplier.COLUMN_KEY + "=?",
+        Cursor c = mDatabaseSupplier.getDatabase().query(WXSQLiteOpenHelper.TABLE_STORAGE,
+                new String[]{WXSQLiteOpenHelper.COLUMN_VALUE},
+                WXSQLiteOpenHelper.COLUMN_KEY + "=?",
                 new String[]{key},
                 null, null, null);
         try {
             if (c.moveToNext()) {
-                return c.getString(c.getColumnIndex(WXDatabaseSupplier.COLUMN_VALUE));
+                return c.getString(c.getColumnIndex(WXSQLiteOpenHelper.COLUMN_VALUE));
             } else {
                 return null;
             }
@@ -325,24 +329,22 @@ public class DefaultWXStorage implements IWXStorageAdapter {
             return null;
         } finally {
             c.close();
-            mDatabaseSupplier.closeDatabase();
         }
     }
 
     private boolean performRemoveItem(String key) {
         int count = 0;
         try {
-            count = mDatabaseSupplier.getDatabase().delete(WXDatabaseSupplier.TABLE_STORAGE,
-                    WXDatabaseSupplier.COLUMN_KEY + "=?",
+            count = mDatabaseSupplier.getDatabase().delete(WXSQLiteOpenHelper.TABLE_STORAGE,
+                    WXSQLiteOpenHelper.COLUMN_KEY + "=?",
                     new String[]{key});
         } finally {
-            mDatabaseSupplier.closeDatabase();
         }
         return count == 1;
     }
 
     private long performGetLength() {
-        String sql = "SELECT count(" + WXDatabaseSupplier.COLUMN_KEY + ") FROM " + WXDatabaseSupplier.TABLE_STORAGE;
+        String sql = "SELECT count(" + WXSQLiteOpenHelper.COLUMN_KEY + ") FROM " + WXSQLiteOpenHelper.TABLE_STORAGE;
         SQLiteStatement statement = mDatabaseSupplier.getDatabase().compileStatement(sql);
         try {
             return statement.simpleQueryForLong();
@@ -351,16 +353,15 @@ public class DefaultWXStorage implements IWXStorageAdapter {
             return 0;
         } finally {
             statement.close();
-            mDatabaseSupplier.closeDatabase();
         }
     }
 
     private List<String> performGetAllKeys() {
         List<String> result = new ArrayList<>();
-        Cursor c = mDatabaseSupplier.getDatabase().query(WXDatabaseSupplier.TABLE_STORAGE, new String[]{WXDatabaseSupplier.COLUMN_KEY}, null, null, null, null, null);
+        Cursor c = mDatabaseSupplier.getDatabase().query(WXSQLiteOpenHelper.TABLE_STORAGE, new String[]{WXSQLiteOpenHelper.COLUMN_KEY}, null, null, null, null, null);
         try {
             while (c.moveToNext()) {
-                result.add(c.getString(c.getColumnIndex(WXDatabaseSupplier.COLUMN_KEY)));
+                result.add(c.getString(c.getColumnIndex(WXSQLiteOpenHelper.COLUMN_KEY)));
             }
             return result;
         } catch (Exception e) {
@@ -368,7 +369,6 @@ public class DefaultWXStorage implements IWXStorageAdapter {
             return result;
         } finally {
             c.close();
-            mDatabaseSupplier.closeDatabase();
         }
     }
 

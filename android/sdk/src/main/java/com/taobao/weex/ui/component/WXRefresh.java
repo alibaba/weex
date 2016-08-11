@@ -204,28 +204,37 @@
  */
 package com.taobao.weex.ui.component;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.component.list.WXListComponent;
 import com.taobao.weex.ui.view.WXBaseRefreshLayout;
+import com.taobao.weex.ui.view.WXFrameLayout;
 import com.taobao.weex.ui.view.refresh.core.WXSwipeLayout;
 import com.taobao.weex.ui.view.refresh.wrapper.BaseBounceView;
+import com.taobao.weex.utils.WXUtils;
 
 /**
  * div component
  */
 public class WXRefresh extends WXBaseRefresh implements WXSwipeLayout.WXOnRefreshListener{
 
+  @Deprecated
+  public WXRefresh(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
+    this(instance,dom,parent,isLazy);
+  }
+
   public WXRefresh(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
     super(instance, node, parent, lazy);
   }
 
   @Override
-  protected void initView() {
-    mHost = new WXBaseRefreshLayout(mContext);
+  protected WXFrameLayout initComponentHostView(Context context) {
+    return new WXBaseRefreshLayout(context);
   }
 
   @Override
@@ -235,14 +244,26 @@ public class WXRefresh extends WXBaseRefresh implements WXSwipeLayout.WXOnRefres
     }
   }
 
-  @WXComponentProp(name = "display")
+  @Override
+  protected boolean setProperty(String key, Object param) {
+    switch (key) {
+      case WXDomPropConstant.WX_ATTR_DISPLAY:
+        String display = WXUtils.getString(param,null);
+        if (display != null)
+          setDisplay(display);
+        return true;
+    }
+    return super.setProperty(key,param);
+  }
+
+  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_DISPLAY)
   public void setDisplay(String display) {
     if (!TextUtils.isEmpty(display)) {
       if (display.equals("hide")) {
         if (getParent() instanceof WXListComponent || getParent() instanceof WXScroller) {
-          if (((BaseBounceView)getParent().getView()).getSwipeLayout().isRefreshing()) {
-            ((BaseBounceView) getParent().getView()).finishPullRefresh();
-            ((BaseBounceView) getParent().getView()).onRefreshingComplete();
+          if (((BaseBounceView)getParent().getHostView()).getSwipeLayout().isRefreshing()) {
+            ((BaseBounceView) getParent().getHostView()).finishPullRefresh();
+            ((BaseBounceView) getParent().getHostView()).onRefreshingComplete();
           }
         }
       }

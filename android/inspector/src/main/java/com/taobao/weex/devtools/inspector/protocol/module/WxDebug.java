@@ -28,6 +28,24 @@ public class WxDebug implements ChromeDevtoolsDomain {
     }
 
     @ChromeDevtoolsMethod
+    public void enable(JsonRpcPeer peer, JSONObject params) {
+        Context context = WXEnvironment.getApplication();
+        if (context != null) {
+            WXSDKEngine.reload(context, true);
+            context.sendBroadcast(new Intent(IWXDebugProxy.ACTION_DEBUG_INSTANCE_REFRESH));
+        }
+    }
+
+    @ChromeDevtoolsMethod
+    public void disable(JsonRpcPeer peer, JSONObject params) {
+        Context context = WXEnvironment.getApplication();
+        if (context != null) {
+            WXSDKEngine.reload(context, false);
+            context.sendBroadcast(new Intent(IWXDebugProxy.ACTION_DEBUG_INSTANCE_REFRESH));
+        }
+    }
+
+    @ChromeDevtoolsMethod
     public void callNative(JsonRpcPeer peer, JSONObject params) {
         if (params != null) {
             DebugBridge.getInstance().callNative(

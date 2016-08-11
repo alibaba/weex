@@ -1,5 +1,6 @@
 package com.alibaba.weex.extend.component;
 
+import android.content.Context;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -12,16 +13,17 @@ import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXComponentProp;
 import com.taobao.weex.ui.component.WXVContainer;
 
-public class RichText extends WXComponent {
+public class RichText extends WXComponent<TextView> {
 
   public RichText(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
     super(instance, dom, parent, isLazy);
   }
 
   @Override
-  protected void initView() {
-    mHost=new TextView(mContext);
-    ((TextView)mHost).setMovementMethod(LinkMovementMethod.getInstance());
+  protected TextView initComponentHostView(Context context) {
+    TextView view = new TextView(context);
+    view.setMovementMethod(LinkMovementMethod.getInstance());
+    return view;
   }
 
   @WXComponentProp(name = "tel")

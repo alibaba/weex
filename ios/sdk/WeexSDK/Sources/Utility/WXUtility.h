@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import <CommonCrypto/CommonCrypto.h>
 #import "WXDefine.h"
 #import "WXType.h"
 #import "WXLog.h"
@@ -135,9 +136,20 @@ extern _Nonnull SEL WXSwizzledSelectorForSelector(_Nonnull SEL selector);
  */
 + (NSString * _Nullable)JSONString:(id _Nonnull)object;
 
-
 #define WXEncodeJson(obj)  [WXUtility JSONString:obj]
 
+/**
+ * @abstract Returns a Foundation object from given JSON data. A Foundation object from the JSON data in data, or nil if an error occurs.
+ *
+ * @param data A data object containing JSON data.
+ * @param error If an error occurs, upon return contains an NSError object that describes the problem.
+ *
+ * @return A Foundation object from the JSON data in data, or nil if an error occurs.
+ *
+ */
++ (id _Nullable)JSONObject:(NSData * _Nonnull)data error:(NSError * __nullable * __nullable)error;
+
+#define WXJSONObjectFromData(data) [WXUtility JSONObject:data error:nil]
 /**
  * @abstract JSON Object Copy Mehthod
  *
@@ -284,4 +296,15 @@ CGPoint WXPixelPointResize(CGPoint value);
 
 + (NSURL *_Nonnull)urlByDeletingParameters:(NSURL *_Nonnull)url;
 
+/**
+ *  @abstract Returns the contents of file.
+ *
+ */
++ (NSString *_Nullable)stringWithContentsOfFile:(NSString *_Nonnull)filePath;
+
+/**
+ *  @abstract Returns md5 string.
+ *
+ */
++ (NSString *_Nullable)md5:(NSString *_Nullable)string;
 @end

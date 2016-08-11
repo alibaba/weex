@@ -257,8 +257,8 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
           if (listener != null) {
             listener.onHttpFinish(response);
           }
-        } catch (IOException e) {
-          WXLogUtils.e("", e);
+        } catch (IOException|IllegalArgumentException e) {
+          e.printStackTrace();
           response.statusCode = "-1";
           response.errorCode="-1";
           response.errorMsg=e.getMessage();

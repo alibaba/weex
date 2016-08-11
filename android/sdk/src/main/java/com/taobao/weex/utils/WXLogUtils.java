@@ -110,6 +110,7 @@
  */
 package com.taobao.weex.utils;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.taobao.weex.WXEnvironment;
@@ -176,11 +177,36 @@ public class WXLogUtils {
   }
 
   public static void d(String tag, String msg) {
-    if (WXEnvironment.isApkDebugable() && msg != null) {
+    if (WXEnvironment.isApkDebugable() && !TextUtils.isEmpty(msg)) {
       Log.d(tag, msg);
       writeConsoleLog("debug", tag + ":" + msg);
+      if(msg.contains(" | __")){
+        String[] msgs=msg.split(" | __");
+        LogLevel level;
+        if( msgs!=null && msgs.length==4 && !TextUtils.isEmpty(msgs[0]) && !TextUtils.isEmpty(msgs[2])){
+          level=getLogLevel(msgs[2]);
+          sendLog(level,msgs[0]);
+          return;
+        }
+      }
       sendLog(LogLevel.DEBUG, tag + ":" + msg);
     }
+  }
+
+  private static LogLevel getLogLevel(String level) {
+    switch (level.trim()){
+      case "__ERROR":
+        return LogLevel.ERROR;
+      case "__WARN":
+        return LogLevel.WARN;
+      case "__INFO":
+        return LogLevel.INFO;
+      case "__LOG":
+        return LogLevel.INFO;
+      case "__DEBUG":
+        return LogLevel.DEBUG;
+    }
+    return LogLevel.DEBUG;
   }
 
   public static void i(String tag, String msg) {

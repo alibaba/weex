@@ -88,7 +88,7 @@ The syntax is JavaScript (ES5) and it describes data and behavior of a Weex page
   <container>
     <text>The time is {{datetime}}</text>
     <text>{{title}}</text>
-    <text>{{getTitle()}}</text>
+    <text>{% raw %}{{getTitle()}}{% endraw %}</text>
   </container>
 </template>
 

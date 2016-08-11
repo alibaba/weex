@@ -223,7 +223,7 @@ public enum WXErrorCode {
   /**
    * So library corrupted
    */
-  WX_ERR_BAD_SO("-2003", "so error"),
+  WX_ERR_BAD_SO("-2003", "so size error, to reload apk so"),
 
   /**
    * Failure for extract and copy so from apk
@@ -300,7 +300,15 @@ public enum WXErrorCode {
   /**
    * Failure for scrollToElement
    */
-  WX_ERR_DOM_SCROLLTO("-2110", "scrollToElement");
+  WX_ERR_DOM_SCROLLTO("-2110", "scrollToElement"),
+
+  WX_ERR_JSDOWNLOAD_START("-2201", "js bundle download start"),
+
+  WX_ERR_JSBUNDLE_DOWNLOAD("-2202", "js bundle download err"),
+
+  WX_ERR_JSBUNDLE_EMPTY("-2203", "js bundle empty"),
+
+  WX_ERR_JSDOWNLOAD_END("-2299", "js bundle download end");
 
   private String errorCode;
   private String errorMsg;

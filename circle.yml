@@ -7,9 +7,8 @@ test:
     - cd android/playground && ./gradlew assembleDebug
     - cp -r android/playground/app/build/outputs $CIRCLE_ARTIFACTS # playground artifacts
     - cp -r android/sdk/build/outputs/ $CIRCLE_ARTIFACTS # sdk artifacts
-    - cd android/playground && ./gradlew testDebugUnitTest
-    - cp -r android/sdk/build/reports/tests/debug/ $CIRCLE_ARTIFACTS/unit_test_report
-
+    - cd android/playground && ./gradlew testDebugUnitTest jacocoTestReportDebug
+    - cp -r android/sdk/build/reports/ $CIRCLE_ARTIFACTS/reports
 dependencies:
   cache_directories:
     - "node_modules"

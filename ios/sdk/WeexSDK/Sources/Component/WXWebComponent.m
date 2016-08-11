@@ -17,6 +17,13 @@
 
 @implementation WXWebView
 
+- (void)dealloc
+{
+    if (self) {
+        self.delegate = nil;
+    }
+}
+
 @end
 
 @interface WXWebComponent ()
@@ -156,7 +163,7 @@
 {
     if (_finishLoadEvent) {
         NSDictionary *data = [self baseInfo];
-        [self fireEvent:@"pagefinish" params:data domChanges:@{@"src":self.webview.request.URL.absoluteString}];
+        [self fireEvent:@"pagefinish" params:data domChanges:@{@"attrs": @{@"src":self.webview.request.URL.absoluteString}}];
     }
 }
 

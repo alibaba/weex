@@ -85,7 +85,7 @@ static id<WXLogProtocol> _externalLog;
 {
     NSDictionary *logLevelEnumToString =
     @{
-      @(WXLogLevelAll) : @"all",
+      @(WXLogLevelAll) : @"debug",
       @(WXLogLevelError) : @"error",
       @(WXLogLevelWarning) : @"warn",
       @(WXLogLevelInfo) : @"info",
@@ -153,7 +153,11 @@ static id<WXLogProtocol> _externalLog;
     }
 }
 
-+ (void)devLog:(WXLogFlag)flag file:(const char *)fileName line:(NSUInteger)line format:(NSString *)format, ... {
++ (void)devLog:(WXLogFlag)flag file:(const char *)fileName line:(NSUInteger)line format:(NSString *)format, ...
+{
+    if (!([self logLevel] & flag)) {
+        return;
+    }
     
     NSString *flagString = @"log";
     switch (flag) {
@@ -177,7 +181,9 @@ static id<WXLogProtocol> _externalLog;
     va_list args;
     va_start(args, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
-    NSArray *messageAry = @[message];
+    va_end(args);
+    
+    NSArray *messageAry = [NSArray arrayWithObjects:message, nil];
     Class PDLogClass = NSClassFromString(@"PDDebugger");
     if (PDLogClass) {
         SEL selector = NSSelectorFromString(@"coutLogWithLevel:arguments:");

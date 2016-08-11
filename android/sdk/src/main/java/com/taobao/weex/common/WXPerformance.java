@@ -368,6 +368,7 @@ public class WXPerformance {
     quotas.put("pureNetworkTime",(double)pureNetworkTime);
     quotas.put("syncTaskTime",(double)syncTaskTime);
     quotas.put("packageSpendTime",(double)packageSpendTime);
+    quotas.put("SDKInitTime",(double)WXEnvironment.sSDKInitTime);
     return quotas;
   }
 
@@ -401,6 +402,7 @@ public class WXPerformance {
         "templateLoadTime",
         "SDKInitInvokeTime",
         "SDKInitExecuteTime",
+        "SDKInitTime",
         "packageSpendTime",
         "syncTaskTime",
         "pureNetworkTime",
@@ -425,6 +427,7 @@ public class WXPerformance {
              + ",connectionType:" + connectionType
              + ",requestType:" + requestType
              + ",initInvokeTime:"+WXEnvironment.sSDKInitInvokeTime+",initExecuteTime:"+WXEnvironment.sSDKInitExecuteTime
+             + ",SDKInitTime:"+ WXEnvironment.sSDKInitTime
              + ",totalTime:" + totalTime + ",JSLibVersion:" + JSLibVersion + ",WXSDKVersion:" + WXSDKVersion
              + ",errCode:" + errCode + ",renderFailedDetail:" + renderFailedDetail
              + ",errMsg:" + errMsg;

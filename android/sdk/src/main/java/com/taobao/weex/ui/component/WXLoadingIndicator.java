@@ -204,6 +204,7 @@
  */
 package com.taobao.weex.ui.component;
 
+import android.content.Context;
 import android.graphics.Color;
 
 import com.taobao.weex.WXSDKInstance;
@@ -211,27 +212,38 @@ import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.view.refresh.circlebar.CircleProgressBar;
 import com.taobao.weex.utils.WXResourceUtils;
+import com.taobao.weex.utils.WXUtils;
 
-public class WXLoadingIndicator extends WXComponent {
+public class WXLoadingIndicator extends WXComponent<CircleProgressBar> {
 
-    private CircleProgressBar circleProgressBar;
 
     public WXLoadingIndicator(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
         super(instance, dom, parent, isLazy);
     }
 
+
     @Override
-    protected void initView() {
-        super.initView();
-        circleProgressBar = new CircleProgressBar(mContext);
-        mHost = circleProgressBar;
+    protected CircleProgressBar initComponentHostView(Context context) {
+        return new CircleProgressBar(context);
+    }
+
+    @Override
+    protected boolean setProperty(String key, Object param) {
+        switch (key) {
+            case WXDomPropConstant.WX_COLOR:
+                String color = WXUtils.getString(param,null);
+                if (color != null)
+                    setColor(color);
+                return true;
+        }
+        return super.setProperty(key, param);
     }
 
     @WXComponentProp(name = WXDomPropConstant.WX_COLOR)
     public void setColor(String color) {
         if (color != null && !color.equals("")) {
             int parseColor = WXResourceUtils.getColor(color, Color.RED);
-            circleProgressBar.setColorSchemeColors(parseColor);
+            getHostView().setColorSchemeColors(parseColor);
         }
     }
 }
