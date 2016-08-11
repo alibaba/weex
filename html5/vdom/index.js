@@ -465,8 +465,15 @@ Element.prototype.setStyle = function (key, value, silent) {
   }
 }
 
+Element.prototype.resetClassStyle = function () {
+  for (const key in this.classStyle) {
+    this.classStyle[key] = ''
+  }
+}
+
 Element.prototype.setClassStyle = function (classStyle) {
-  this.classStyle = classStyle
+  this.resetClassStyle()
+  extend(this.classStyle, classStyle)
   if (this.docId) {
     const listener = instanceMap[this.docId].listener
     listener.setStyles(this.ref, this.toStyle())
