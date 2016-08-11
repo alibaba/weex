@@ -8,8 +8,8 @@ android {
         applicationId "com.alibaba.weex"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 1
-        versionName "0.5.2.2"
+        versionCode 5
+        versionName "0.5.2.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk{
             abiFilters "x86"

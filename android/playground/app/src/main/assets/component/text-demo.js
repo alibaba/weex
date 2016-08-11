@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/610122a9602101680271cd31b3d07010", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/621c9dd25370a65530622e88f51a4c08", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(1);
@@ -384,7 +384,7 @@
 	    {
 	      "type": "wxc-panel",
 	      "attr": {
-	        "title": "text-lineheight",
+	        "title": "line-height",
 	        "type": "primary"
 	      },
 	      "children": [
@@ -433,7 +433,7 @@
 	  }
 	})
 	})
-	;__weex_bootstrap__("@weex-component/610122a9602101680271cd31b3d07010", {
+	;__weex_bootstrap__("@weex-component/621c9dd25370a65530622e88f51a4c08", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 
