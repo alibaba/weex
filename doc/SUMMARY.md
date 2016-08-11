@@ -65,6 +65,7 @@
         * [webview](/modules/webview.md)
         * [navigator](/modules/navigator.md)
         * [storage](/modules/storage.md)
+        * [timer](/modules/timer.md)
         * [clipboard](/modules/clipboard.md)
     * Low-level Specs
         * [JS Bundle Format](/specs/js-bundle-format.md)

@@ -15,18 +15,17 @@ or update that key's value if it already exists.
 
 #### Arguments
 
-* `key`*(string)*: the name of the key you want to store.
-* `value`*(object)*: the name of the value you want to store.
+* `key`*(string)*: the name of the key you want to store. "" or null is not allowed.
+* `value`*(string)*: the name of the value you want to store."" or null is not allowed.
 * `callback`*(object)*: the callback function after executing this action.  
 
 ##### Example
 
 ```js
 var storage = require('@weex-module/storage');
-storage.setItem('foo', 'foo-value');
-//or
 storage.setItem('bar', 'bar-value', function(e) {
-  // callback.
+  // callback.'e' is an object that contains 'result' and 'data'. e.result indicate wether `setItem` is succeed.
+  // e.data will return 'undefined' if success or 'invalid_param' if your key/value is ""/null.
 });
 ```
 
@@ -36,7 +35,7 @@ When passed a key name, will return that key's value.
 
 #### Arguments
 
-* `key`*(string)*:  the name of the key you want to retrieve the value of.
+* `key`*(string)*:  the name of the key you want to retrieve the value of."" or null is not allowed.
 * `callback`*(object)*: the callback function after executing this action.  
 
 ##### Example
@@ -55,7 +54,7 @@ When passed a key name, will remove that key from the storage.
 
 #### Arguments
 
-* `key`*(string)*:  the name of the key you want to remove.
+* `key`*(string)*:  the name of the key you want to remove."" or null is not allowed.
 * `callback`*(object)*: the callback function after executing this action.  
 
 ##### Example
@@ -65,7 +64,7 @@ var storage = require('@weex-module/storage');
 storage.removeItem('foo', function(e) {
   // callback. 'e' is an object that contains 'result' and 'data'.
   // e.result will return 'success' or 'failed' according to the executing result.
-  // 'data' is always return 'undefined' in this function.
+  // e.data will always return 'undefined' in this function if success.
 });
 ```
 
