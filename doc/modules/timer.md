@@ -15,24 +15,24 @@ Also, timeout and interval should be a non-negative integer(the max of integer i
 ### setTimeout(fn: function, timeout: number)
 Execute a one-time task after a fixed delay.
 #### Arguments
-* `fnId` *(function)*: the task to be executed.
+* `fn` *(function)*: the task to be executed.
 * `timeout`*(number)*: the time delay when executing task.
 
 ### setInterval(fn: function, interval: number)
 Execute a repeated task for at a fixed rate.
 #### Arguments
-* `fnId` *(function)*: the task to be executed.
+* `fn` *(function)*: the task to be executed.
 * `interval`*(number)*: the time interval when executing two tasks.
 
 ### clearTimeout(fnId: number)
 Stop a specified one-time task. If this method is executed before the corresponding task start, the task would be destroyed. Otherwise, this method has no influence on the task.
 #### Arguments
-* `fnId` *(number)*: the return value of corresponding `setTimeout(fnId: number, timeout: number)`.
+* `fnId` *(number)*: the return value of corresponding `setTimeout(fn: function, timeout: number)`.
 
 ### clearInterval(fnId: number)
 Stop a specified repeated task.
 #### Arguments
-* `fnId` *(number)*: the return value of corresponding `setInterval(fnId: number, interval: number)`.
+* `fnId` *(number)*: the return value of corresponding `setInterval(fn: function, interval: number)`.
 
 ## Example
 	<template>
