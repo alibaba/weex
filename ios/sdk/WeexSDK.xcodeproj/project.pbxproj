@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1D3000F11D40B9AC004F3B4F /* WXClipboardModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 1D3000EF1D40B9AB004F3B4F /* WXClipboardModule.h */; };
+		1D3000F21D40B9AC004F3B4F /* WXClipboardModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3000F01D40B9AB004F3B4F /* WXClipboardModule.m */; };
 		2A1F57B71C75C6A600B58017 /* WXTextInputComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A1F57B51C75C6A600B58017 /* WXTextInputComponent.h */; };
 		2A1F57B81C75C6A600B58017 /* WXTextInputComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A1F57B61C75C6A600B58017 /* WXTextInputComponent.m */; };
 		2A42AF881C23B33E00818EA6 /* WeexSDK_MTL.h in Copy Files */ = {isa = PBXBuildFile; fileRef = 2A42AF871C23B33E00818EA6 /* WeexSDK_MTL.h */; };
@@ -215,6 +217,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1D3000EF1D40B9AB004F3B4F /* WXClipboardModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXClipboardModule.h; sourceTree = "<group>"; };
+		1D3000F01D40B9AB004F3B4F /* WXClipboardModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXClipboardModule.m; sourceTree = "<group>"; };
 		2A1F57B51C75C6A600B58017 /* WXTextInputComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXTextInputComponent.h; sourceTree = "<group>"; };
 		2A1F57B61C75C6A600B58017 /* WXTextInputComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXTextInputComponent.m; sourceTree = "<group>"; };
 		2A27E7D71C3E360B00D7A552 /* SRWebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SRWebSocket.h; path = dependency/SRWebSocket.h; sourceTree = "<group>"; };
@@ -750,6 +754,8 @@
 		77E659D71C07F585008B8775 /* Module */ = {
 			isa = PBXGroup;
 			children = (
+				1D3000EF1D40B9AB004F3B4F /* WXClipboardModule.h */,
+				1D3000F01D40B9AB004F3B4F /* WXClipboardModule.m */,
 				59A5961E1CB6311F0012CD52 /* WXNavigatorModule.h */,
 				59A5961F1CB6311F0012CD52 /* WXNavigatorModule.m */,
 				59A596201CB6311F0012CD52 /* WXStorageModule.h */,
@@ -857,6 +863,7 @@
 				59A5961C1CB630F10012CD52 /* WXComponent+Navigation.h in Headers */,
 				775BEE6E1C1BD8F4008D1629 /* WXImgLoaderProtocol.h in Headers */,
 				7410811F1CED585A001BC6E5 /* WXComponentManager.h in Headers */,
+				1D3000F11D40B9AC004F3B4F /* WXClipboardModule.h in Headers */,
 				59A583081CF5B2FD0081FD3E /* WXNavigationDefaultImpl.h in Headers */,
 				775BEE4E1C16F993008D1629 /* WXDefine.h in Headers */,
 				59597F981D2A041700EE9317 /* WXDebugLoggerBridge.h in Headers */,
@@ -1136,6 +1143,7 @@
 				59A582FD1CF5B17B0081FD3E /* WXBridgeContext.m in Sources */,
 				743933B51C7ED9AA00773BB7 /* WXSimulatorShortcutMananger.m in Sources */,
 				741081201CED585A001BC6E5 /* WXComponentManager.m in Sources */,
+				1D3000F21D40B9AC004F3B4F /* WXClipboardModule.m in Sources */,
 				D312CE3C1C730DEB00046D68 /* WXWebComponent.m in Sources */,
 				D317338D1C57257000BB7539 /* WXTransform.m in Sources */,
 				7461F8A91CFC33A800F62D44 /* WXThreadSafeMutableArray.m in Sources */,

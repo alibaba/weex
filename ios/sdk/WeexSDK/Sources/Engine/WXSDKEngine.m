@@ -38,6 +38,7 @@
     [self registerModule:@"instanceWrap" withClass:NSClassFromString(@"WXInstanceWrap")];
     [self registerModule:@"timer" withClass:NSClassFromString(@"WXTimerModule")];
     [self registerModule:@"storage" withClass:NSClassFromString(@"WXStorageModule")];
+    [self registerModule:@"clipboard" withClass:NSClassFromString(@"WXClipboardModule")];
 }
 
 + (void)registerModule:(NSString *)name withClass:(Class)clazz
