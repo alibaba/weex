@@ -1,0 +1,49 @@
+<template>
+    <div class="nav_bar" style="justify-content:{{justifyContent}}">
+        <text class="nav_title" value="ONE">ONE {{title}}</text>
+        <image src="http://image.wufazhuce.com/m.wufazhuce.com-menu-white.png"
+               class="nav_right_icon" onclick="nav_right_click"></image>
+    </div>
+</template>
+
+<style>
+
+    .nav_bar {
+        background-color: rgba(0, 0, 0, 0.3);
+        flex-direction: row;
+        justify-content: space-between;
+        height: 99px;
+    }
+
+    .nav_title {
+        color: #eee;
+        text-align: center;
+        font-weight: bold;
+        margin-left: 20px;
+    }
+
+    .nav_right_icon {
+        width: 40px;
+        height: 40px;
+        margin-top: 26px;
+        margin-right: 25px;
+    }
+
+</style>
+
+<script>
+    require('weex-components');
+    var modal = require('@weex-module/modal');
+    module.exports = {
+        data: {title: '', showIcon: true, justifyContent: 'space-between'},
+        created: function () {
+            var self = this;
+        },
+        methods: {
+            nav_right_click: function (e) {
+//                modal.toast({'message': 'I am toast!', 'duration': 1});
+                this.$dispatch('navRightClick', {});
+            }
+        }
+    }
+</script>

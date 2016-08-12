@@ -1,0 +1,46 @@
+<template>
+
+    <div class="item-text">
+        <text class="text-title">{{title}}</text>
+        <text class="text-author">{{author}}</text>
+        <text class="text-content-short">{{content}}</text>
+    </div>
+
+</template>
+
+<style>
+    .item-text {
+        margin-top: 10px;
+        margin-bottom: 40px;
+    }
+
+    .text-title {
+        color: white;
+        font-size: 36px;
+        margin-top: 20px;
+        font-weight: bold;
+        /*width:700px;*/
+    }
+
+    .text-author {
+        margin-top: 20px;
+        color: #c7edf2;
+    }
+
+    .text-content-short {
+        margin-top: 20px;
+        color: #c7edf2;
+        lines: 2;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+    }
+
+</style>
+
+<script>
+    require('weex-components');
+    module.exports = {
+        methods: {},
+        data: {date: '', title: '', author: '', content: ''}
+    }
+</script>

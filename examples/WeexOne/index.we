@@ -1,0 +1,89 @@
+<template>
+    <div>
+        <wxc-tabbar class="tabbar" tab-items={{tabItems}}></wxc-tabbar>
+    </div>
+</template>
+
+<style>
+
+</style>
+
+<script>
+    require('weex-components');
+    module.exports = {
+        data: {
+            dir: 'examples',
+            tabItems: [
+                {
+                    index: 0,
+                    title: "图片",
+                    titleColor: 0x0,
+                    icon: "",
+                    image: "http://gtms01.alicdn.com/tps/i1/TB1qw.hMpXXXXagXXXX9t7RGVXX-46-46.png",
+                    selectedImage: "http://gtms04.alicdn.com/tps/i4/TB16jjPMpXXXXazXVXX9t7RGVXX-46-46.png",
+                    src: "WeexOne/modules/main.js",
+                    visibility: "visible"
+                },
+                {
+                    index: 1,
+                    title: "阅读",
+                    titleColor: 0x0,
+                    icon: "",
+                    image: "http://gtms03.alicdn.com/tps/i3/TB1LEn9MpXXXXaUXpXX9t7RGVXX-46-46.png",
+                    selectedImage: "http://gtms02.alicdn.com/tps/i2/TB1qysbMpXXXXcnXXXX9t7RGVXX-46-46.png",
+                    src: "WeexOne/modules/read.js",
+                    visibility: "hidden"
+                },
+                {
+                    index: 2,
+                    title: "电影",
+                    titleColor: 0x0,
+                    icon: "",
+                    image: "http://gtms01.alicdn.com/tps/i1/TB1B0v5MpXXXXcvXpXX9t7RGVXX-46-46.png",
+                    selectedImage: "http://gtms04.alicdn.com/tps/i4/TB1NxY5MpXXXXcrXpXX9t7RGVXX-46-46.png",
+                    src: "WeexOne/modules/movie.js",
+                    visibility: "hidden"
+                }
+            ]
+        },
+        created: function () {
+            var bundleUrl = this.$getConfig().bundleUrl;
+            var nativeBase;
+            var isAndroidAssets = bundleUrl.indexOf('file://assets/') >= 0;
+            var isiOSAssets = bundleUrl.indexOf('file:///') >= 0 && bundleUrl.indexOf('WeexDemo.app') > 0;
+            if (isAndroidAssets) {
+                nativeBase = 'file://assets/';
+            } else if (isiOSAssets) {
+                nativeBase = bundleUrl.substring(0, bundleUrl.lastIndexOf('/') + 1);
+            } else {
+                var host = 'localhost:12580';
+                var matches = /\/\/([^\/]+?)\//.exec(this.$getConfig().bundleUrl);
+                if (matches && matches.length >= 2) {
+                    host = matches[1];
+                }
+                nativeBase = 'http://' + host + '/' + this.dir + '/build/';
+            }
+            var h5Base = './' + this.dir + '/build/';
+            // in Native
+            var base = nativeBase;
+            if (typeof window === 'object') {
+                // in Browser or WebView
+                base = h5Base;
+            }
+
+            for (var i = 0; i < this.tabItems.length; i++) {
+                var tabItem = this.tabItems[i];
+                tabItem.src = base + tabItem.src;
+            }
+        },
+        methods: {
+            ready: function (e) {
+                var vm = this;
+                vm.$on('tabBar.onClick', function (e) {
+                    var detail = e.detail;
+                    nativeLog('tabBar.onClick ' + detail.index);
+                });
+            },
+        }
+    }
+</script>

@@ -1,0 +1,120 @@
+<template>
+    <div>
+        <nav-bar-normal showback="true" title="电影"></nav-bar-normal>
+
+        <scroller>
+            <!--<video class="video" onpause="onpause" onstart="onstart" onfinish="onfinish" onfail="onfail"-->
+            <!--src="{{video}}"-->
+            <!--auto-play="false" play-status="{{playStatus}}">-->
+            <!--</video>-->
+            <slider class="slider" append="tree" auto-play="true">
+                <div repeat="{{i in photo}}">
+                    <image class="slider" src="{{i}}"></image>
+                </div>
+                <indicator class="indicator"></indicator>
+            </slider>
+            <text style="width:750px;font-weight:bold;font-size:48px;text-align:center;color:#333;margin-top: 40px;margin-bottom: 40px">{{title}}</text>
+            <wxc-panel title="演员" type="primary">
+                <text>{{info}}</text>
+            </wxc-panel>
+            <wxc-panel title="剧情" type="primary">
+                <text>{{officialstory}}</text>
+            </wxc-panel>
+        </scroller>
+    </div>
+
+</template>
+
+<style>
+    .slider {
+        width: 750px;
+        height: 440px;
+    }
+
+    .video {
+        width: 750px;
+        height: 460px;
+    }
+
+    .indicator {
+        position: absolute;
+        width: 690px;
+        height: 20px;
+        top: 400px;
+        left: 240px;
+        itemColor: #dddddd;
+        itemSelectedColor: rgb(40, 96, 144);
+    }
+</style>
+
+<script>
+    require('weex-components');
+    var modal = require('@weex-module/modal');
+    var navigator = require('@weex-module/navigator');
+    var apis = require('../common/api');
+    module.exports = {
+        data: {
+            playStatus: 'play',
+            video: '',
+            title: '',
+            officialstory: '',
+            info: '',
+            photo: []
+
+        },
+        created: function () {
+
+            var self = this;
+            var bundleUrl = this.$getConfig().bundleUrl;
+            var contentId = self.getParameterByName('id', bundleUrl);
+            if (contentId.lastIndexOf('?') != -1) {
+                contentId = contentId.substr(0, contentId.lastIndexOf('?'));
+            }
+
+            //请求数据
+            apis.getMovieDetail(contentId, function (ret) {
+                self.video = ret.data.video;
+                self.title = ret.data.title;
+                self.officialstory = ret.data.officialstory;
+                self.info = ret.data.info;
+                self.photo = ret.data.photo;
+            });
+
+            this.$on('onbackclick', function (e) {
+                var params = {
+                    'animated': 'true'
+                };
+                self.$call('navigator_dodo', 'pop', params, function () {
+                });
+            });
+        },
+        methods: {
+            getParameterByName: function (name, url) {
+                name = name.replace(/[\[\]]/g, "\\$&");
+                var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                        results = regex.exec(url);
+                if (!results) return null;
+                if (!results[2]) return '';
+                return decodeURIComponent(results[2].replace(/\+/g, " "));
+            },
+            pause: function () {
+                this.playStatus = 'pause'
+            },
+            play: function () {
+                this.playStatus = 'play'
+            },
+            onpause: function () {
+                this.$call('modal', 'toast', {'message': 'video pause'});
+            },
+            onstart: function () {
+                this.$call('modal', 'toast', {'message': 'video start'});
+            },
+            onfinish: function () {
+                this.$call('modal', 'toast', {'message': 'video finish'});
+            },
+            onfail: function () {
+                this.$call('modal', 'toast', {'message': 'video fail'});
+            }
+        }
+    };
+</script>

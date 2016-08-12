@@ -1,0 +1,97 @@
+<template>
+    <div>
+        <nav-bar-normal showback="true"></nav-bar-normal>
+        <scroller class="scroll">
+            <div class="scroll-content">
+                <text class="text-title">{{question_title}}</text>
+                <text class="text-content">{{question_title}}</text>
+                <div class="separate-line"></div>
+                <text class="text-title">{{answer_title}}</text>
+                <text class="text-content">{{answer_content}}</text>
+            </div>
+        </scroller>
+    </div>
+</template>
+
+<style>
+
+    .scroll {
+        /*padding-left: 30px;*/
+        /*padding-right: 30px;*/
+    }
+
+    .scroll-content {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    .separate-line {
+        background-color: #d4d4d4;
+        height: 1px;
+        margin-top: 30px;
+        margin-bottom: 20px;
+    }
+
+    .text-title {
+        color: black;
+        font-size: 40px;
+        margin-top: 26px;
+        font-weight: bold;
+    }
+
+    .text-content {
+        color: #333;
+        margin-top: 28px;
+    }
+
+</style>
+
+<script>
+    require('weex-components');
+    var modal = require('@weex-module/modal');
+    var navigator = require('@weex-module/navigator');
+    var apis = require('../common/api');
+    module.exports = {
+        data: {
+            question_content: '',
+            answer_content: '',
+            answer_title: '',
+            question_title: ''
+        },
+        created: function () {
+            var self = this;
+            var bundleUrl = this.$getConfig().bundleUrl;
+            var contentId = self.getParameterByName('id', bundleUrl);
+            if (contentId.lastIndexOf('?') != -1) {
+                contentId = contentId.substr(0, contentId.lastIndexOf('?'));
+            }
+            //获取参数
+//            modal.toast({'message': 'hide me!' + contentId, 'duration': 1});
+            //请求数据
+            apis.getQuestionDetail(contentId, function (ret) {
+                self.question_content = ret.data.question_content;
+                self.answer_title = ret.data.answer_title;
+                self.answer_content = ret.data.answer_content;
+                self.question_title = ret.data.question_title;
+            });
+
+            this.$on('onbackclick', function (e) {
+                var params = {
+                    'animated': 'true'
+                };
+                self.$call('navigator_dodo', 'pop', params, function () {
+                });
+            });
+        },
+        methods: {
+            getParameterByName: function (name, url) {
+                name = name.replace(/[\[\]]/g, "\\$&");
+                var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                        results = regex.exec(url);
+                if (!results) return null;
+                if (!results[2]) return '';
+                return decodeURIComponent(results[2].replace(/\+/g, " "));
+            },
+        }
+    }
+</script>

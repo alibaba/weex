@@ -1,0 +1,60 @@
+<template>
+    <div>
+        <div class="nav_bar">
+            <div style="flex:1">
+                <image style="width:99px;height:99px;" if="{{showback}}" onclick="onBackClick"
+                       src="https://github.com/dodola/WeexOne/raw/master/imgs/return_image.png"></image>
+            </div>
+            <div style="flex:1;justify-content: center; flex-direction: row">
+                <image src="http://image.wufazhuce.com/m.wufazhuce.com-logo-gray-pure.png"
+                       style="width:75px;height:30px ;margin-top: 34px"></image>
+                <text class="text-type">|{{title}}</text>
+            </div>
+            <div style="flex:1;"></div>
+        </div>
+        <div class="separate-item-text"></div>
+    </div>
+</template>
+
+<style>
+    .text-type {
+        color: #29a7e2;
+        text-align: center;
+        margin-left: 10px;
+    }
+
+    .nav_bar {
+        flex-direction: row;
+        margin-bottom: 10px;
+        justify-content: space-between;
+        height: 99px;
+    }
+
+    .separate-item-text {
+        height: 1px;
+        background-color: #d4d4d4;
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+</style>
+
+<script>
+    require('weex-components');
+    var modal = require('@weex-module/modal');
+    module.exports = {
+        data: {
+            title: '阅读',
+            justifyContent: 'center',
+            showback: false,
+        },
+        created: function () {
+            var self = this;
+        },
+        methods: {
+            onBackClick: function (e) {
+
+                this.$dispatch('onbackclick', {});
+            }
+        }
+    }
+</script>

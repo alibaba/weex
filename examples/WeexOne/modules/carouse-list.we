@@ -1,0 +1,176 @@
+<template>
+    <div style="background-color:#1db7ca">
+        <div class="nav_bar">
+            <div>
+                <image style="width:30px;height:30px;margin-top: 30px;margin-left: 30px;margin-right: 30px;"
+                       onclick="onBackClick"
+                       src="https://github.com/dodola/WeexOne/raw/master/imgs/close.png"></image>
+            </div>
+            <text class="text-type">{{title}}</text>
+            <div style="width:50px;height:50px;"></div>
+        </div>
+
+        <list class="reading-list">
+            <cell class="row" repeat="{{readingList}}" index="{{$index}}">
+                <div class="reading-item" if="{{showType1}}" cid="{{item_id}}"
+                     onclick="onReadCellClick">
+                    <carouse-item title="{{title}}" author="{{author}}"
+                                  content="作者／{{introduction}}"></carouse-item>
+                </div>
+                <div class="reading-item" if="{{showType2}}" cid="{{item_id}}"
+                     onclick="onSerialCellClick">
+                    <carouse-item title="{{title}}" author="{{author}}"
+                                  content="作者／{{introduction}}"></carouse-item>
+                </div>
+                <div class="reading-item" if="{{showType3}}" cid="{{item_id}}"
+                     onclick="onQuestionCellClick">
+                    <carouse-item title="{{title}}" author="{{author}}"
+                                  content="{{introduction}}"></carouse-item>
+                </div>
+            </cell>
+        </list>
+
+    </div>
+</template>
+
+<style>
+    .reading-list {
+        margin-left: 80px;
+        margin-right: 80px;
+    }
+
+    .nav_bar {
+        background-color: #1db7ca;
+        flex-direction: row;
+        justify-content: space-between;
+        height: 100px;
+    }
+
+    .text-type {
+        color: white;
+        text-align: center;
+        margin-left: 10px;
+    }
+</style>
+
+<script>
+    require('weex-components');
+    var modal = require('@weex-module/modal');
+    var apis = require('../common/api');
+
+    module.exports = {
+        data: {
+            title: '', readingList: [], dir: 'examples', baseURL: ''
+        },
+        created: function () {
+            var self = this;
+            var bundleUrl = this.$getConfig().bundleUrl;
+            var contentId = self.getParameterByName('id', bundleUrl);
+            if (contentId.lastIndexOf('?') != -1) {
+                contentId = contentId.substr(0, contentId.lastIndexOf('?'));
+            }
+            self.title = self.getParameterByName('title', bundleUrl);
+            if (self.title.lastIndexOf('?') != -1) {
+                self.title = self.title.substr(0, self.title.lastIndexOf('?'));
+            }
+            apis.getCarouseList(contentId, function (ret) {
+                for (var i = 0; i < ret.data.length; i++) {
+                    var item = ret.data[i];
+                    item.showType1 = item.type == 1;
+                    item.showType2 = item.type == 2;
+                    item.showType3 = item.type == 3;
+                    self.readingList.push(item);
+                }
+            });
+
+
+            var bundleUrl = this.$getConfig().bundleUrl;
+            bundleUrl = new String(bundleUrl);
+            var nativeBase;
+            var isAndroidAssets = bundleUrl.indexOf('file://assets/') >= 0;
+
+            var isiOSAssets = bundleUrl.indexOf('file:///') >= 0 && bundleUrl.indexOf('WeexDemo.app') > 0;
+            if (isAndroidAssets) {
+                nativeBase = 'file://assets/';
+            }
+            else if (isiOSAssets) {
+                nativeBase = bundleUrl.substring(0, bundleUrl.lastIndexOf('/') + 1);
+            }
+            else {
+                var host = 'localhost:12580';
+                var matches = /\/\/([^\/]+?)\//.exec(this.$getConfig().bundleUrl);
+                if (matches && matches.length >= 2) {
+                    host = matches[1];
+                }
+                nativeBase = 'http://' + host + '/' + this.dir + '/build/';
+            }
+            var h5Base = './index.html?page=./' + this.dir + '/build/';
+            var base = nativeBase;
+            if (typeof window === 'object') {
+                base = h5Base;
+            }
+            this.baseURL = base;
+
+        },
+        methods: {
+            onBackClick: function (e) {
+                var self = this;
+                var params = {
+                    'animated': 'true'
+                };
+                self.$call('navigator_dodo', 'pop', params, function () {
+                });
+            }, getParameterByName: function (name, url) {
+                name = name.replace(/[\[\]]/g, "\\$&");
+                var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                        results = regex.exec(url);
+                if (!results) return null;
+                if (!results[2]) return '';
+                return decodeURIComponent(results[2].replace(/\+/g, " "));
+            },
+            onReadCellClick: function (e) {
+                var self = this;
+                var itemid = e.target.attr.cid;
+                self.openEssayDetail(itemid);
+            },
+            onSerialCellClick: function (e) {
+                var self = this;
+                var itemid = e.target.attr.cid;
+                self.openSerialDetail(itemid);
+            },
+            onQuestionCellClick: function (e) {
+                var self = this;
+                var itemid = e.target.attr.cid;
+                self.openQuestionDetail(itemid);
+            },
+            openEssayDetail: function (id) {
+                var vm = this;
+                var params = {
+                    'url': this.baseURL + 'WeexOne/modules/essay-detail.js?id=' + id,
+                    'animated': 'true'
+                };
+                vm.$call('navigator_dodo', 'push', params, function () {
+                });
+            },
+            openSerialDetail: function (id) {
+                var vm = this;
+                var params = {
+                    'url': this.baseURL + 'WeexOne/modules/serial-detail.js?id=' + id,
+                    'animated': 'true'
+                };
+                vm.$call('navigator_dodo', 'push', params, function () {
+                });
+            },
+            openQuestionDetail: function (id) {
+                var vm = this;
+                var params = {
+                    'url': this.baseURL + 'WeexOne/modules/question-detail.js?id=' + id,
+                    'animated': 'true'
+                };
+                vm.$call('navigator_dodo', 'push', params, function () {
+                });
+            }
+        }
+    }
+
+</script>

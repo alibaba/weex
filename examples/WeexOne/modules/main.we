@@ -1,0 +1,226 @@
+<template>
+    <div>
+        <scroller class="content">
+            <slider class="slider" append="tree" auto-play="false" onchange="sliderChange" id="imageSlider"
+                    style="height:{{deviceHeight}}px">
+                <div repeat="{{imageList}}" class="slider">
+                    <image src="{{hp_img_url}}" style="height:{{deviceHeight}}px"
+                           class="home-img" resize="cover" onclick="onMainImageClick"></image>
+                    <div class="sentence-bg" style="height:{{deviceHeight}}px"></div>
+                    <div style="align-items:flex-end;flex-direction: row;height:{{deviceHeight}}px">
+                        <div id="img_info{{$index}}">
+                            <text class="day">{{hp_day}}</text>
+                            <text class="month"> {{hp_title}} | {{hp_month}} {{hp_year}}</text>
+                            <text class="text-content-short">{{hp_content}}</text>
+                        </div>
+                    </div>
+                </div>
+            </slider>
+        </scroller>
+        <nav-bar id="nav" title="{{nav_title}}"></nav-bar>
+        <div if="showMenu"
+             id="menuDiv"
+             style="height: {{deviceHeight}}px;width:750px;position:absolute;top:0;right:0;background-color:rgba(0,0,0,0.5)"
+             onclick="hideMenu">
+            <div style="width:300px;background-color:#fff;position:absolute;top:100px;right:10px;">
+                <list class="list">
+                    <cell class="row" repeat="{{rows}}" onclick="onMenuItemclick"
+                          index="{{$index}}" rowdata="{{data}}">
+                        <div class="menu-item">
+                            <text class="menu-item-title">{{data}}</text>
+                        </div>
+                    </cell>
+                </list>
+            </div>
+        </div>
+    </div>
+</template>
+<style>
+    .content {
+        color: #353535;
+        background-color: #666;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+
+    .menu-item {
+        justify-content: center;
+        border-bottom-width: 2px;
+        border-bottom-color: #c0c0c0;
+        height: 100px;
+        padding: 20px;
+    }
+
+    .home-img {
+        position: absolute;
+        width: 750px;
+        /*height: 1024px;*/
+        padding: 0;
+        margin: 0;
+        background: no-repeat center center;
+        background-size: cover;
+    }
+
+    .slider {
+        width: 750px;
+        /*height:1024px;*/
+    }
+
+    .sentence-bg {
+        position: absolute;
+        /*height: 1024px;*/
+        width: 750px;
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .day {
+        color: white;
+        text-align: left;
+        font-size: 70px;
+        line-height: 48px;
+        margin-bottom: 0px;
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    .month {
+        color: white;
+        text-align: left;
+        font-size: 35px;
+        margin-top: 11px;
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    .text-content-short {
+        width: 710px;
+        max-height: 78px;
+        margin-top: 14px;
+        color: white;
+        margin-left: 20px;
+        margin-right: 20px;
+        font-size: 28px;
+        margin-bottom: 20px;
+        -webkit-box-orient: vertical;
+    }
+
+
+</style>
+
+<script>
+    require('weex-components');
+    var modal = require('@weex-module/modal');
+    var animation = require('@weex-module/animation');
+    var stream = require('@weex-module/stream');
+    var apis = require('../common/api');
+    module.exports = {
+        data: {
+            current_index: 0,
+            current_translate: '',
+            current_info_translate: '',
+            imageList: [],
+            showSliderContent: true,
+            nav_title: '',
+            showMenu: false,
+            deviceHeight: 1024,
+            rows: [{data: '2016-06'}, {data: '2016-05'}, {data: '2016-04'}, {data: '2016-03'}, {data: '2016-02'}]
+        },
+        created: function () {
+            var self = this;
+            this.$on('navRightClick', function (e) {
+                self.showMenu = true;
+            });
+
+
+            this.$getConfig(function (config) {
+                var env = config.env;
+                var scale = env.scale;
+//                var deviceWidth = env.deviceWidth / scale;
+                self.deviceHeight = env.deviceHeight-170;
+            }.bind(this));
+
+        },
+        ready: function () {
+            var self = this;
+            this.getHomeData('2016-06');
+        },
+
+        computed: {},
+        methods: {
+            getHomeData: function (dateStr) {
+                var self = this;
+                self.imageList = [];
+                apis.getHome(dateStr, function (retdata) {
+                    self.imageList = retdata.data;
+                    self.nav_title = dateStr;
+                    var monthdata = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May.', 'Jun.', 'Jul.', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.'];
+
+                    for (var i = 0; i < self.imageList.length; i++) {
+                        var datap = self.imageList[i];
+                        var hpMarketTime = new Date(datap.hp_makettime);
+                        datap.hp_day = hpMarketTime.getDate();
+                        datap.hp_month = monthdata[hpMarketTime.getMonth()];
+                        datap.hp_year = hpMarketTime.getYear() + 1900;
+                    }
+                });
+            },
+            anim: function (styles, el, timingFunction, duration, callback) {
+                this.$call('animation', 'transition', el, {
+                    styles: styles,
+                    timingFunction: timingFunction,
+                    duration: duration
+                }, callback);
+            },
+            onMainImageClick: function () {
+                this.current_translate = this.current_translate ? '' : 'translate(0, -100%)';
+                this.current_info_translate = this.current_info_translate ? '' : 'translate(0,100%)';
+                this.anim({
+                    transform: this.current_translate
+                }, this._ids.nav.el.ref, 'ease-out', 500, function () {
+                });
+                this.anim({
+                    transform: this.current_info_translate
+                }, this.$el('img_info' + this.current_index), 'ease-out', 500, function () {
+                });
+            },
+            sliderChange: function (e) {
+                var self = this;
+                var currentItemData = self.imageList[e.index];
+//                self.nav_title = currentItemData.hp_title;
+                if (this.current_translate && this.current_info_translate) {
+                    this.current_translate = '';
+                    this.current_info_translate = '';
+                    this.anim({
+                        transform: this.current_translate
+                    }, this._ids.nav.el.ref, 'ease-out', 500, function () {
+                    });
+                    this.anim({
+                        transform: this.current_info_translate
+                    }, self.$el('img_info' + self.current_index), 'ease-out', 500, function () {
+                    });
+                }
+                this.current_index = e.index;
+            },
+            hideMenu: function (e) {
+//                modal.toast({'message': 'hide me!', 'duration': 1});
+                var self = this;
+                this.anim({
+                    opacity: 0
+                }, this.$el('menuDiv'), 'ease-out', 200, function () {
+                    self.showMenu = false;
+                });
+            },
+            onMenuItemclick: function (e) {
+                this.$call('modal', 'toast', {
+                    'message': 'row ' + e.target.attr.rowdata + ' clicked',
+                    'duration': 2.0
+                });
+                this.getHomeData(e.target.attr.rowdata);
+                this.hideMenu(e);
+            }
+        }
+    }
+</script>

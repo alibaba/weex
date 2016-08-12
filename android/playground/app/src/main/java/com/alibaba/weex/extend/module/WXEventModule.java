@@ -8,7 +8,7 @@ import com.taobao.weex.common.WXModule;
 import com.taobao.weex.common.WXModuleAnno;
 
 
-public class WXEventModule extends WXModule {
+public class  WXEventModule extends WXModule {
 
   private static final String WEEX_CATEGORY = "com.taobao.android.intent.category.WEEX";
 

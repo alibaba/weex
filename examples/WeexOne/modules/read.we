@@ -1,0 +1,246 @@
+<template>
+    <div>
+        <nav-bar-normal></nav-bar-normal>
+        <list class="reading-list">
+            <refresh class="refresh-view" display="{{refresh_display}}" onrefresh="onrefresh">
+                <text class="refresh-arrow" if="{{(refresh_display==='hide')}}">刷新</text>
+                <loading-indicator></loading-indicator>
+            </refresh>
+            <cell if="{{showSliderCell}}">
+                <slider class="top-slider" append="tree" auto-play="true" interval="5000">
+                    <indicator class="indicator"></indicator>
+                    <div repeat="{{imageList}}">
+                        <image class="slider-item" src="{{cover}}" itemid="{{id}}" itemtitle="{{title}}"
+                               onclick="onSliderItemClick"></image>
+                    </div>
+                </slider>
+            </cell>
+            <cell if="{{showSliderReplaceCell}}">
+                <div class="top-slider"></div>
+            </cell>
+            <cell class="row" repeat="{{readingList}}" index="{{$index}}">
+                <div class="reading-item" if="{{readingList[$index].showType1}}" cid="{{content.content_id}}"
+                     onclick="onReadCellClick">
+                    <read-item title="{{content.hp_title}}" author="{{content.author[0].user_name}}"
+                               content="{{content.guide_word}}"></read-item>
+                </div>
+                <div class="reading-item" if="{{readingList[$index].showType2}}" cid="{{content.id}}"
+                     onclick="onSerialCellClick">
+                    <read-item title="{{content.title}}" author="{{content.author.user_name}}"
+                               content="{{content.excerpt}}"></read-item>
+                </div>
+                <div class="reading-item" if="{{readingList[$index].showType3}}" cid="{{content.question_id}}"
+                     onclick="onQuestionCellClick">
+                    <read-item title="{{content.question_title}}" author="{{content.answer_title}}"
+                               content="{{content.answer_content}}"></read-item>
+                </div>
+            </cell>
+        </list>
+    </div>
+</template>
+
+<style>
+    .top-slider {
+        flex-direction: row;
+        height: 360px;
+        width: 750px;
+    }
+
+    .slider-item {
+        height: 360px;
+        width: 750px;
+    }
+
+    .reading-list {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    .refresh-view {
+        height: 80px;
+        width: 750px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .refresh-arrow {
+        font-size: 30px;
+        color: #45b5f0;
+    }
+
+    .row {
+        width: 750px;
+    }
+
+    .reading-item {
+        justify-content: center;
+        border-bottom-width: 1px;
+        border-bottom-color: #d4d4d4;
+        padding: 20px;
+    }
+
+    .indicator {
+        position: absolute;
+        width: 690px;
+        height: 420px;
+        top: 140px;
+        left: 240px;
+        itemColor: #dddddd;
+        itemSelectedColor: rgb(40, 96, 144);
+    }
+
+</style>
+
+
+<script>
+    require('weex-components');
+    var modal = require('@weex-module/modal');
+    var apis = require('../common/api');
+    module.exports = {
+        data: {
+            currentIndex: 0,
+            showSliderCell: false,
+            showSliderReplaceCell: true,
+            refresh_display: 'hide',
+            loading_display: 'hide',
+            imageList: [],
+            dir: 'examples',
+            readingList: [],
+            baseURL: '',
+        },
+        methods: {
+            onrefresh: function (e) {
+                var self = this;
+                self.refresh_display = 'show';
+                self.currentIndex = 0;
+                // self.$call('timer', 'setTimeout', function() {
+                //   self.refresh_display = 'hide';
+                // },3000);
+                self.getCarouselData();
+                self.getReadingIndex(self.currentIndex, false);
+                self.refresh_display = 'hide';
+            },
+            getReadingIndex: function (index, loadmore) {
+                var self = this;
+                apis.getReadingIndex(index, function (ret) {
+//                    modal.toast({'message': 'hide me!' + ret.data, 'duration': 1});
+                    if (loadmore) {
+                        self.readingList = [];
+                    }
+                    for (var i = 0; i < ret.data.length; i++) {
+                        var items = ret.data[i].items;
+                        for (var j = 0; j < items.length; j++) {
+                            items[j].showType1 = items[j].type == 1;
+                            items[j].showType2 = items[j].type == 2;
+                            items[j].showType3 = items[j].type == 3;
+                            self.readingList.push(items[j]);
+                        }
+                    }
+                });
+            },
+            getCarouselData: function () {
+                var self = this;
+                self.showSliderCell = false;
+                self.showSliderReplaceCell = true;
+                apis.getReadingCarousel(function (ret) {
+
+                    self.imageList = ret.data;
+                    self.showSliderCell = true;
+                    self.showSliderReplaceCell = false;
+                });
+            },
+            onSliderItemClick: function (e) {
+                var self = this;
+                var itemid = e.target.attr.itemid;
+                var title = e.target.attr.itemtitle;
+                var vm = this;
+                var params = {
+                    'url': this.baseURL + 'WeexOne/modules/carouse-list.js?id=' + itemid + "&title=" + title,
+                    'animated': 'true'
+                };
+                vm.$call('navigator_dodo', 'push', params, function () {
+                });
+
+            },
+            onReadCellClick: function (e) {
+                var self = this;
+                var itemid = e.target.attr.cid;
+                self.openEssayDetail(itemid);
+            },
+            onSerialCellClick: function (e) {
+                var self = this;
+                var itemid = e.target.attr.cid;
+                self.openSerialDetail(itemid);
+            },
+            onQuestionCellClick: function (e) {
+                var self = this;
+                var itemid = e.target.attr.cid;
+                self.openQuestionDetail(itemid);
+            },
+            openEssayDetail: function (id) {
+                var vm = this;
+                var params = {
+                    'url': this.baseURL + 'WeexOne/modules/essay-detail.js?id=' + id,
+                    'animated': 'true'
+                };
+                vm.$call('navigator_dodo', 'push', params, function () {
+                });
+            },
+            openSerialDetail: function (id) {
+                var vm = this;
+                var params = {
+                    'url': this.baseURL + 'WeexOne/modules/serial-detail.js?id=' + id,
+                    'animated': 'true'
+                };
+                vm.$call('navigator_dodo', 'push', params, function () {
+                });
+            },
+            openQuestionDetail: function (id) {
+                var vm = this;
+                var params = {
+                    'url': this.baseURL + 'WeexOne/modules/question-detail.js?id=' + id,
+                    'animated': 'true'
+                };
+                vm.$call('navigator_dodo', 'push', params, function () {
+                });
+            }
+        },
+        created: function () {
+            var self = this;
+            self.currentIndex = 0;
+            self.getCarouselData();
+            self.getReadingIndex(self.currentIndex, false);
+
+            var bundleUrl = this.$getConfig().bundleUrl;
+            bundleUrl = new String(bundleUrl);
+            var nativeBase;
+            var isAndroidAssets = bundleUrl.indexOf('file://assets/') >= 0;
+
+            var isiOSAssets = bundleUrl.indexOf('file:///') >= 0 && bundleUrl.indexOf('WeexDemo.app') > 0;
+            if (isAndroidAssets) {
+                nativeBase = 'file://assets/';
+            }
+            else if (isiOSAssets) {
+                nativeBase = bundleUrl.substring(0, bundleUrl.lastIndexOf('/') + 1);
+            }
+            else {
+                var host = 'localhost:12580';
+                var matches = /\/\/([^\/]+?)\//.exec(this.$getConfig().bundleUrl);
+                if (matches && matches.length >= 2) {
+                    host = matches[1];
+                }
+                nativeBase = 'http://' + host + '/' + this.dir + '/build/';
+            }
+            var h5Base = './index.html?page=./' + this.dir + '/build/';
+            var base = nativeBase;
+            if (typeof window === 'object') {
+                base = h5Base;
+            }
+            this.baseURL = base;
+
+        },
+        ready: function () {
+            var self = this;
+        }
+    }
+</script>

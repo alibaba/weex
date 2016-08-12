@@ -1,0 +1,120 @@
+<template>
+    <div>
+        <nav-bar-normal showback="true"></nav-bar-normal>
+        <scroller class="scroll">
+            <div class="scroll-content">
+
+                <text class="text-lead">{{guideWord}}</text>
+                <text class="text-title">{{title}}</text>
+                <div style="flex-direction: row;margin-top: 28px;">
+                    <image src="{{authorImage}}" class="author-image"></image>
+                    <div style="flex-direction: column;margin-left: 20px">
+                        <text class="text-author">Jun. 2016</text>
+                        <text class="text-author">作者／{{author}}</text>
+                    </div>
+                </div>
+                <text class="text-content">{{content}}</text>
+            </div>
+        </scroller>
+    </div>
+</template>
+
+<style>
+
+    .scroll {
+        /*padding-left: 30px;*/
+        /*padding-right: 30px;*/
+    }
+
+    .scroll-content {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    .author-image {
+        height: 100px;
+        width: 100px;
+        border-radius: 50px;
+        background-color: #fff;
+        border-color: #ffffff;
+    }
+
+    .text-lead {
+        margin-top: 20px;
+        color: #a5a5a5;
+        font-size: 30px;
+    }
+
+    .text-title {
+        color: black;
+        font-size: 40px;
+        margin-top: 26px;
+        font-weight: bold;
+    }
+
+    .text-author {
+        color: black;
+        font-size: 26px;
+        height: 50px;
+        text-align: center;
+    }
+
+    .text-content {
+        color: #333;
+        margin-top: 28px;
+    }
+
+</style>
+
+<script>
+    require('weex-components');
+    var modal = require('@weex-module/modal');
+    var navigator = require('@weex-module/navigator');
+    var apis = require('../common/api');
+    module.exports = {
+        data: {
+            content: '',
+            authorImage: '',
+            guideWord: '',
+            author: '',
+            title: ''
+        },
+        created: function () {
+            var self = this;
+            var bundleUrl = this.$getConfig().bundleUrl;
+            var contentId = self.getParameterByName('id', bundleUrl);
+            if (contentId.lastIndexOf('?') != -1) {
+                contentId = contentId.substr(0, contentId.lastIndexOf('?'));
+            }
+            //获取参数
+//            modal.toast({'message': 'hide me!' + contentId, 'duration': 1});
+            //请求数据
+            apis.getSerialContent(contentId, function (ret) {
+//                self.content = ret.data.hp_content.replace(/\<br\>/g, '');
+                self.content = ret.data.content;
+                self.authorImage = ret.data.author.web_url;
+                self.guideWord = ret.data.excerpt;
+                self.author = ret.data.author.user_name;
+                self.title = ret.data.title;
+            });
+
+            this.$on('onbackclick', function (e) {
+                var params = {
+                    'animated': 'true'
+                };
+                self.$call('navigator_dodo', 'pop', params, function () {
+                });
+            });
+        },
+        methods: {
+            getParameterByName: function (name, url) {
+                name = name.replace(/[\[\]]/g, "\\$&");
+                var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                        results = regex.exec(url);
+                if (!results) return null;
+                if (!results[2]) return '';
+                return decodeURIComponent(results[2].replace(/\+/g, " "));
+            },
+        }
+    }
+</script>

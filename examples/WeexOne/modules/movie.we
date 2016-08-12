@@ -1,0 +1,88 @@
+<template>
+    <div>
+        <nav-bar-normal title="电影"></nav-bar-normal>
+        <list>
+            <cell repeat="{{movieItems}}">
+                <div>
+                    <image src="{{cover}}" class="movie-item" movieid="{{id}}" onclick="onMovieItemClick"></image>
+                    <text style="position:absolute;bottom:20px;right:20px;color:#f0595d;font-weight:bold;font-size:60px">{{score}}
+                    </text>
+                </div>
+            </cell>
+        </list>
+    </div>
+</template>
+
+<style>
+    .movie-item {
+        width: 750px;
+        height: 320px;
+        border-style: solid;
+        border-bottom-width: 1px;
+        border-color: #ddd;
+        margin-top: 20px;
+    }
+</style>
+
+<script>
+    require('weex-components');
+    var modal = require('@weex-module/modal');
+    var navigator = require('@weex-module/navigator');
+    var apis = require('../common/api');
+    module.exports = {
+        data: {
+            index: 0,
+            movieItems: [],
+            dir: 'examples',
+            baseURL: '',
+        },
+        created: function () {
+            var self = this;
+            //请求数据
+            apis.getMovieList(self.index, function (ret) {
+                self.movieItems = ret.data;
+            });
+
+            var bundleUrl = this.$getConfig().bundleUrl;
+            bundleUrl = new String(bundleUrl);
+            var nativeBase;
+            var isAndroidAssets = bundleUrl.indexOf('file://assets/') >= 0;
+
+            var isiOSAssets = bundleUrl.indexOf('file:///') >= 0 && bundleUrl.indexOf('WeexDemo.app') > 0;
+            if (isAndroidAssets) {
+                nativeBase = 'file://assets/';
+            }
+            else if (isiOSAssets) {
+                nativeBase = bundleUrl.substring(0, bundleUrl.lastIndexOf('/') + 1);
+            }
+            else {
+                var host = 'localhost:12580';
+                var matches = /\/\/([^\/]+?)\//.exec(this.$getConfig().bundleUrl);
+                if (matches && matches.length >= 2) {
+                    host = matches[1];
+                }
+                nativeBase = 'http://' + host + '/' + this.dir + '/build/';
+            }
+            var h5Base = './index.html?page=./' + this.dir + '/build/';
+            var base = nativeBase;
+            if (typeof window === 'object') {
+                base = h5Base;
+            }
+            this.baseURL = base;
+
+        },
+        methods: {
+            onMovieItemClick: function (e) {
+                var self = this;
+                var itemid = e.target.attr.movieid;
+
+                var params = {
+                    'url': this.baseURL + 'WeexOne/modules/movie-detail.js?id=' + itemid,
+                    'animated': 'true'
+                };
+                self.$call('navigator_dodo', 'push', params, function () {
+                });
+            }
+        }
+    }
+</script>
