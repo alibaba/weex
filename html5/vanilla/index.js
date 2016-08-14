@@ -19,8 +19,8 @@ export function prepareInstance (id, options, data) {}
 
 export function createInstance (id, code, options, data) {
   const document = new config.Document(id, options.bundleUrl)
-  const callbacks = {};
-  let lastCallbackId = 0;
+  const callbacks = {}
+  let lastCallbackId = 0
   document.addCallback = func => {
     lastCallbackId++
     callbacks[lastCallbackId] = func
@@ -60,11 +60,11 @@ export function createInstance (id, code, options, data) {
 export function refreshInstance (id, data) {}
 
 export function destroyInstance (id) {
-  delete instanceMap[id];
+  delete instanceMap[id]
 }
 
 export function getRoot (id) {
-  return instanceMap[id].body.toJSON();
+  return instanceMap[id].body.toJSON()
 }
 
 export function receiveTasks (id, tasks) {
