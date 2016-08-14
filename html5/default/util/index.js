@@ -55,8 +55,8 @@ export { _Set }
 
 export function createNewSet () {
   /* eslint-disable */
-  if (typeof __weex_set_polyfill__ === 'object') {
-    return __weex_set_polyfill__.create()
+  if (typeof nativeSet === 'object') {
+    return nativeSet.create()
   }
   /* eslint-enable */
   return new Set()
