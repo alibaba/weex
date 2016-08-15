@@ -728,18 +728,9 @@
       handleRefresh: function (e) {
         var vm = this
         vm.displayRefresh = 'show'
-        var timer = require('@weex-module/timer')
-        if (timer) {
-          timer.setTimeout(function () {
-            vm.displayRefresh = 'hide'
-          }, 2000)
-        } else {
-          this.$call('modal', 'alert',  {
-            message: 'refreshing.'
-          }, function () {
-            vm.displayRefresh = 'hide'
-          })
-        }
+        setTimeout(function () {
+          vm.displayRefresh = 'hide'
+        }, 2000)
       },
       handleLoading: function (e) {
         var vm = this
@@ -747,16 +738,10 @@
         this.$call('modal', 'toast', {
           message: 'loading.'
         })
-        var timer = require('@weex-module/timer')
-        if (timer) {
-          timer.setTimeout(function () {
-            vm.simLoadingData(vm.cnt++)
-            vm.displayLoading = 'hide'
-          }, 2000)
-        } else {
+        setTimeout(function () {
           vm.simLoadingData(vm.cnt++)
           vm.displayLoading = 'hide'
-        }
+        }, 2000)
       },
       simLoadingData: function (num) {
         if (num >= 3) {

@@ -559,6 +559,12 @@
           this.backgroundColor = 'red';
           this.composite = false;
         }
+      },
+      onloading: function (e) {
+        this.loading_display = "show"
+        setTimeout(function () {
+          this.loading_display = 'hide'
+        }.bind(this), 1000)
       }
     }
 

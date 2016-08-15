@@ -84,12 +84,15 @@
     [self.view addGestureRecognizer:edgePanGestureRecognizer];
 }
 
-- (void)edgePanGesture:(UIScreenEdgePanGestureRecognizer*)edgePanGestureRecognizer{
+- (void)edgePanGesture:(UIScreenEdgePanGestureRecognizer*)edgePanGestureRecognizer
+{
     [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark- UIGestureRecognizerDelegate
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
     if (!self.navigationController || [self.navigationController.viewControllers count] == 1) {
         return NO;
     }
@@ -137,8 +140,7 @@
     
     if ([sourceURL.absoluteString rangeOfString:@"?"].location != NSNotFound) {
         newURL = [NSString stringWithFormat:@"%@&random=%d", sourceURL.absoluteString, arc4random()];
-    }
-    else {
+    } else {
         newURL = [NSString stringWithFormat:@"%@?random=%d", sourceURL.absoluteString, arc4random()];
     }
     [_instance renderWithURL:[NSURL URLWithString:newURL] options:@{@"bundleUrl":sourceURL} data:nil];
@@ -166,8 +168,7 @@
         
         if (state == WeexInstanceAppear) {
             [[WXSDKManager bridgeMgr] fireEvent:_instance.instanceId ref:WX_SDK_ROOT_REF type:@"viewappear" params:nil domChanges:nil];
-        }
-        else if (state == WeexInstanceDisappear) {
+        } else if (state == WeexInstanceDisappear) {
             [[WXSDKManager bridgeMgr] fireEvent:_instance.instanceId ref:WX_SDK_ROOT_REF type:@"viewdisappear" params:nil domChanges:nil];
         }
     }
@@ -177,8 +178,7 @@
 {
     if ([nofity.name isEqualToString:@"UIApplicationDidBecomeActiveNotification"]) {
         [self _updateInstanceState:WeexInstanceForeground];
-    }
-    else if([nofity.name isEqualToString:@"UIApplicationDidEnterBackgroundNotification"]) {
+    } else if([nofity.name isEqualToString:@"UIApplicationDidEnterBackgroundNotification"]) {
         [self _updateInstanceState:WeexInstanceBackground]; ;
     }
 }

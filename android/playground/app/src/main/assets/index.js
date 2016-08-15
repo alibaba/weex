@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/2720f5df2d848285e38e4b2906e8540a", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/5e6c4a62a4f2ddfd7c2d1010facc95ec", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(15);
@@ -78,11 +78,15 @@
 	        {name: 'module/instance-api', title: 'Instance API'},
 	        {name: 'module/modal', title: 'Modal'},
 	        {name: 'module/stream-demo', title: 'Stream'},
+	        {name: 'module/storage-demo',title:'Storage'},
+	        {name: 'module/clipboard', title: 'Clipboard'},
+
 	        // showcase
 	        {name: 'showcase/new-fashion/index', title: 'Activity'},
 	        {name: 'showcase/calculator', title: 'Calculator'},
 	        {name: 'showcase/minesweeper', title: 'Minesweeper'},
-	        {name: 'showcase/ui', title: 'UI Gallery'}
+	        {name: 'showcase/ui', title: 'UI Gallery'},
+	        {name: 'showcase/dropdown/dropdown-demo', title: 'Dropdown'}
 	      ]
 	    }}
 	  }
@@ -96,7 +100,7 @@
 	  }
 	})
 	})
-	;__weex_bootstrap__("@weex-component/2720f5df2d848285e38e4b2906e8540a", {
+	;__weex_bootstrap__("@weex-component/5e6c4a62a4f2ddfd7c2d1010facc95ec", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 

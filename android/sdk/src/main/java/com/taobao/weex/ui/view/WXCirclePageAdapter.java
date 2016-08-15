@@ -276,10 +276,11 @@ public class WXCirclePageAdapter extends PagerAdapter {
   @Override
   public int getCount() {
     // if count less than 3,the circle doesn't work as expected.
-    if (getRealCount() > 2) {
-      return Integer.MAX_VALUE;
+    int count = getRealCount();
+    if (count > 2) {
+      return count * 110;
     } else {
-      return getRealCount();
+      return count;
     }
 
   }
@@ -303,7 +304,7 @@ public class WXCirclePageAdapter extends PagerAdapter {
         container.addView(pageView);
       }
     } catch (Exception e) {
-      WXLogUtils.e("[CirclePageAdapter] instantiateItem: " + WXLogUtils.getStackTrace(e));
+      WXLogUtils.e("[CirclePageAdapter] instantiateItem: ", e);
     }
     return pageView;
   }

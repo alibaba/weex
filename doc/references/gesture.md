@@ -39,6 +39,9 @@ The following properties can be used in gesture callback:
 * `screenX`. The X coordinate of the touch point relative to the left edge of the screen.
 * `screenY`. The Y coordinate of the touch point relative to the top edge of the screen.
 
+## Constrain
+Currently, Weex Android do not support listening to gesture on `scroller`, `list` and `webview`, as it would lead a large amount of event conflicting. 
+
 ## How to use
 
 Example:

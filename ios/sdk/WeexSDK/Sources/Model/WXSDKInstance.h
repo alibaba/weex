@@ -178,18 +178,26 @@ typedef NS_ENUM(NSInteger, WXErrorCode) {//error.code
 /**
  * get Componet instance by ref
  */
-- (WXComponent *) componentForRef:(NSString *)ref;
+- (WXComponent *)componentForRef:(NSString *)ref;
+
+/**
+ * Number of components created
+ */
+- (NSUInteger)numberOfComponents;
 
 /**
  * application performance statistics
  */
 @property (nonatomic, strong) NSString *bizType;
 @property (nonatomic, strong) NSString *pageName;
-@property (nonatomic, strong) NSDictionary *properties;
 @property (nonatomic, weak) id pageObject;
-@property (nonatomic, assign) NSTimeInterval networkTime;
+@property (nonatomic, strong) NSMutableDictionary *performanceDict;
 
-- (void)finishPerformance;
+
+@property (nonatomic, strong) NSDictionary *properties DEPRECATED_MSG_ATTRIBUTE();
+@property (nonatomic, assign) NSTimeInterval networkTime DEPRECATED_MSG_ATTRIBUTE();
+
+- (void)finishPerformance DEPRECATED_MSG_ATTRIBUTE();
 
 - (void)reloadData:(id)data  DEPRECATED_MSG_ATTRIBUTE("Use refreshInstance: method instead.");
 

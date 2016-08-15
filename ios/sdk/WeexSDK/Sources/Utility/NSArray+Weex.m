@@ -34,4 +34,9 @@
     return (__bridge id)(CFArrayCreateMutable(0, capacity, &callbacks));
 }
 
++ (void)wx_releaseArray:(id)array {
+    
+    CFBridgingRelease((__bridge CFArrayRef _Nullable)(array));
+}
+
 @end

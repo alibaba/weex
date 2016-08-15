@@ -180,7 +180,7 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
         ctx.getWindow().getDecorView().getWindowVisibleDisplayFrame(outRect);
         mConfigMap.put("bundleUrl", mUri.toString());
         String path = mUri.getScheme().equals("file") ? assembleFilePath(mUri) : mUri.toString();
-        mInstance.render(TAG, WXFileUtils.loadFileContent(path, WXPageActivity.this),
+        mInstance.render(TAG, WXFileUtils.loadAsset(path, WXPageActivity.this),
                 mConfigMap, null,
                 ScreenUtil.getDisplayWidth(WXPageActivity.this), ScreenUtil
                         .getDisplayHeight(WXPageActivity.this),
@@ -379,8 +379,11 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
       finish();
       return true;
     } else if (id == R.id.action_refresh) {
-      if (TextUtils.equals(mUri.getScheme(), "http") || TextUtils.equals(mUri.getScheme(), "https")) {
-        loadWXfromService(mUri.toString());
+      String scheme=mUri.getScheme();
+      if (mUri.isHierarchical() && (TextUtils.equals(scheme,"http") || TextUtils.equals(scheme,"https"))) {
+        String weexTpl = mUri.getQueryParameter(Constants.WEEX_TPL_KEY);
+        String url = TextUtils.isEmpty(weexTpl) ? mUri.toString() : weexTpl;
+        loadWXfromService(url);
         return true;
       }
     }

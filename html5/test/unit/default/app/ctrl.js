@@ -9,6 +9,7 @@ global.callNative = function () {}
 import * as ctrl from '../../../../default/app/ctrl'
 import Differ from '../../../../default/app/differ'
 import { Document } from '../../../../vdom'
+import Listener from '../../../../vdom/listener'
 
 describe('the api of app', () => {
   let app
@@ -31,7 +32,7 @@ describe('the api of app', () => {
       differ: new Differ(id)
     }
 
-    app.doc = new Document(id, '', spy1)
+    app.doc = new Document(id, '', spy1, Listener)
     app.doc.createBody('div')
     // app.bootstrap.returns()
 
@@ -42,6 +43,7 @@ describe('the api of app', () => {
     spy1 = sinon.spy()
     spy2 = sinon.spy()
     app = createApp()
+    !console.debug && (console.debug = function () {})
   })
 
   afterEach(() => {

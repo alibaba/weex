@@ -5,6 +5,10 @@
         <text>{{getResult}}</text>
       </wxc-panel>
 
+      <wxc-panel title="method = GET / type = jsonp">
+        <text>{{getJsonpResult}}</text>
+      </wxc-panel>
+
       <wxc-panel title="method = POST">
         <text>{{postResult}}</text>
       </wxc-panel>
@@ -33,6 +37,7 @@
 
   module.exports = {
     data: {
+      getJsonpResult: 'loading...',
       getResult: 'loading...',
       postResult: 'loading...',
       putResult: 'loading...',
@@ -43,6 +48,7 @@
     ready: function() {
       var stream = require('@weex-module/stream');
       var me = this;
+      var GET_URL_JSONP = 'http://jsfiddle.net/echo/jsonp/?callback=anything&result=content_in_response';
       var GET_URL = 'http://httpbin.org/get';
       var POST_URL = 'http://httpbin.org/post';
       var PUT_URL = 'http://httpbin.org/put';
@@ -52,6 +58,22 @@
       
       stream.fetch({
         method: 'GET',
+        url: GET_URL_JSONP,
+        type:'jsonp'
+      }, function(ret) {
+        if(!ret.ok){
+          me.getJsonpResult = "request failed";
+        }else{
+          console.log('get:'+ret);
+          me.getJsonpResult = ret.data;
+        }
+      },function(response){
+        console.log('get jsonp in progress:'+response.length);
+        me.getJsonpResult = "bytes received:"+response.length;
+      });
+
+      stream.fetch({
+        method: 'GET',
         url: GET_URL,
         type:'json'
       }, function(ret) {
@@ -59,7 +81,7 @@
           me.getResult = "request failed";
         }else{
           console.log('get:'+ret);
-          me.getResult = ret.data;
+          me.getResult = JSON.stringify(ret.data);
         }
       },function(response){
         console.log('get in progress:'+response.length);
@@ -74,8 +96,8 @@
         if(!ret.ok){
           me.postResult = "request failed";
         }else{
-          console.log('get:'+ret);
-          me.postResult = ret.data;
+          console.log('get:'+JSON.stringify(ret));
+          me.postResult = JSON.stringify(ret.data);
         }
       },function(response){
         console.log('get in progress:'+response.length);
@@ -90,8 +112,8 @@
         if(!ret.ok){
           me.putResult = "request failed";
         }else{
-          console.log('get:'+ret);
-          me.putResult = ret.data;
+          console.log('get:'+JSON.stringify(ret));
+          me.putResult = JSON.stringify(ret.data);
         }
       },function(response){
         console.log('get in progress:'+response.length);
@@ -107,8 +129,8 @@
         if(!ret.ok){
           me.deleteResult = "request failed";
         }else{
-          console.log('get:'+ret);
-          me.deleteResult = ret.data;
+          console.log('get:'+JSON.stringify(ret));
+          me.deleteResult = JSON.stringify(ret.data);
         }
       },function(response){
         console.log('get in progress:'+response.length);
@@ -123,7 +145,7 @@
         if(ret.statusText !== 'I\'m a teapot'){
           me.headResult = "request failed";
         }else{
-          console.log('get:'+ret);
+          console.log('get:'+JSON.stringify(ret));
           me.headResult = ret.statusText;
         }
       },function(response){
@@ -139,8 +161,8 @@
         if(!ret.ok){
           me.patchResult = "request failed";
         }else{
-          console.log('get:'+ret);
-          me.patchResult = ret.data;
+          console.log('get:'+JSON.stringify(ret));
+          me.patchResult = JSON.stringify(request.data);
         }
       },function(response){
         console.log('get in progress:'+response.length);

@@ -218,6 +218,7 @@ import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRenderStrategy;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.flex.Spacing;
+import com.taobao.weex.ui.animation.WXAnimationBean;
 import com.taobao.weex.ui.animation.WXAnimationModule;
 import com.taobao.weex.ui.component.Scrollable;
 import com.taobao.weex.ui.component.WXBasicComponentType;
@@ -311,7 +312,7 @@ class WXRenderStatement {
       //TODO error callback
       return null;
     }
-    FrameLayout frameLayout = (FrameLayout) mGodComponent.getView();
+    FrameLayout frameLayout = (FrameLayout) mGodComponent.getHostView();
     ViewGroup.LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
     frameLayout.setLayoutParams(layoutParams);
     frameLayout.setBackgroundColor(Color.TRANSPARENT);
@@ -393,6 +394,7 @@ class WXRenderStatement {
     WXVContainer parent = component.getParent();
     clearRegistryForComponent(component);
     parent.remove(component);
+    mRegistry.remove(ref);
     component.destroy();
     return component;
   }
@@ -556,7 +558,7 @@ class WXRenderStatement {
     return component;
   }
 
-  void startAnimation(@NonNull String ref, @Nullable String callBack) {
-    WXAnimationModule.startAnimation(mWXSDKInstance,mRegistry.get(ref),callBack);
+  void startAnimation(@NonNull String ref, @NonNull WXAnimationBean animationBean, @Nullable String callBack) {
+    WXAnimationModule.startAnimation(mWXSDKInstance, mRegistry.get(ref), animationBean, callBack);
   }
 }

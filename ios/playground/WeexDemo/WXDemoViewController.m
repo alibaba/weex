@@ -122,7 +122,7 @@
     };
     
     _instance.renderFinish = ^(UIView *view) {
-        NSLog(@"render finish");
+         WXLogDebug(@"%@", @"Render Finish...");
         [weakSelf updateInstanceState:WeexInstanceAppear];
     };
     

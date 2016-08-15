@@ -338,6 +338,20 @@ public class WXViewUtils {
     }
   }
 
+  /**
+   *  Internal interface that just for debug, you should never call this method because of accuracy loss obviously
+   */
+  public static float getWeexPxByReal(float pxValue) {
+    if (Float.isNaN(pxValue)) {
+      return pxValue;
+    }
+    if (mUseWebPx) {
+      return (float) Math.rint(pxValue);
+    } else {
+      return pxValue * WXEnvironment.sDefaultWidth / getScreenWidth();
+    }
+  }
+
   public static int getRealPxByWidth2(float pxValue) {
     if (mUseWebPx) {
       return (int) pxValue;
@@ -379,7 +393,7 @@ public class WXViewUtils {
       scale = WXEnvironment.getApplication().getResources()
           .getDisplayMetrics().density;
     } catch (Exception e) {
-      WXLogUtils.e("[WXViewUtils] dip2px:" + WXLogUtils.getStackTrace(e));
+      WXLogUtils.e("[WXViewUtils] dip2px:", e);
     }
     float finalPx = (dpValue * scale + 0.5f);
     return finalPx > 0 && finalPx < 1 ? 1 : (int) finalPx;

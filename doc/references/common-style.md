@@ -12,35 +12,35 @@ Weex box model based on the CSS box model, all of weex elements can be considere
 
 you can use the definition below in weex box model.
 
-- width
-- height
-- padding (space around content, between element content and the element border)
-  - padding-left
-  - padding-right
-  - padding-top
-  - padding-bottom
-- margin (space around elements, outside the border)
-  - margin-left
-  - margin-right
-  - margin-top
-  - margin-bottom
-- border
-  - border-style(solid,dashed,dotted)
-  - border-width
-    - border-left-width
-    - border-top-width
-    - border-right-width
-    - border-bottom-width
-  - border-color
-    - border-left-color
-    - border-top-color
-    - border-right-color
-    - border-bottom-color
-  - border-radius  ( rounded borders to elements , default value is 0 meaning right angle )
-    - border-bottom-left-radius
-    - border-bottom-right-radius
-    - border-top-left-radius
-    - border-top-right-radius
+- `width`: [length](styles/units/length.md) type, default value `0`
+- `height`: [length](styles/units/length.md) type, default value `0`
+- `padding`: [length](styles/units/length.md) type, default value `0`, (space around content, between element content and the element border)
+  - `padding-left`: [length](styles/units/length.md) type, default value `0`
+  - `padding-right`: [length](styles/units/length.md) type, default value `0`
+  - `padding-top`: [length](styles/units/length.md) type, default value `0`
+  - `padding-bottom`: [length](styles/units/length.md) type, default value `0`
+- `margin`: [length](styles/units/length.md) type, default value `0`, (space around elements, outside the border)
+  - `margin-left`: [length](styles/units/length.md) type, default value `0`
+  - `margin-right`: [length](styles/units/length.md) type, default value `0`
+  - `margin-top`: [length](styles/units/length.md) type, default value `0`
+  - `margin-bottom`: [length](styles/units/length.md) type, default value `0`
+- `border`
+  - `border-style`: values `solid` | `dashed` | `dotted`, default value `solid`
+  - `border-width`: [length](styles/units/length.md) type, default value `0`
+    - `border-left-width`: [length](styles/units/length.md) type, default value `0`
+    - `border-top-width`: [length](styles/units/length.md) type, default value `0`
+    - `border-right-width`: [length](styles/units/length.md) type, default value `0`
+    - `border-bottom-width`: [length](styles/units/length.md) type, default value `0`
+  - `border-color`: [color](styles/units/color.md) type, default value `#000000`
+    - `border-left-color`: [color](styles/units/color.md) type, default value `#000000`
+    - `border-top-color`: [color](styles/units/color.md) type, default value `#000000`
+    - `border-right-color`: [color](styles/units/color.md) type, default value `#000000`
+    - `border-bottom-color`: [color](styles/units/color.md) type, default value `#000000`
+  - `border-radius`: [length](styles/units/length.md) type, default value `0`, (rounded borders to elements , default value is 0 meaning right angle )
+    - `border-bottom-left-radius`: [length](styles/units/length.md) type, default value `0`
+    - `border-bottom-right-radius`: [length](styles/units/length.md) type, default value `0`
+    - `border-top-left-radius`: [length](styles/units/length.md) type, default value `0`
+    - `border-top-right-radius`: [length](styles/units/length.md) type, default value `0`
 
 Notes: The rule of border-radius for a specific corner such as `border-top-left-radius` is not currently supported for component `<image>` and `<text>`.
 
@@ -68,17 +68,17 @@ Notice that the old version of flexbox specification has differences with the ne
 
 Flexbox is the default and only style model in Weex, so you don't have to add `display: flex;` in a container.
 
-- `flex-direction`: `row` | `column`
+- `flex-direction`: values `row` | `column`, default value `column`
 
 The flex-direction property specifies the direction of the flexible items inside the flex container. Default value is `column` (top-to-bottom).
 
-- `justify-content`: `flex-start` | `flex-end` | `center` | `space-between`
+- `justify-content`: values `flex-start` | `flex-end` | `center` | `space-between`, default value `flex-start`
 
 The justify-content property horizontally aligns the flexible container's items when the items do not use all available space on the main-axis. Default value is `flex-start` meaning the flex items are positioned at the beginning of the container. `flex-end` means the items are positioned at the end of the container. `center` means the items are positioned at the center of the container. `space-between` means the items are positioned with space between the lines.
 
 ![justify-content](../images/css-flexbox-justify.svg)
 
-- `align-items`: `stretch` | `flex-start` | `center` | `flex-end`
+- `align-items`: values `stretch` | `flex-start` | `center` | `flex-end`, default value `stretch`
 
 The align-items property vertically aligns the flexible container's items when the items do not use all available space on the cross-axis. Default value is `stretch` meaning the items are stretched to fit the container. `flex-start` means the items are positioned at the top of the container; `flex-end` means the items are positioned at the bottom of the container; `center` means items are positioned at the center of the container (vertically).
 
@@ -86,7 +86,7 @@ The align-items property vertically aligns the flexible container's items when t
 
 ### Flex item
 
-- flex : &lt;number&gt;
+- `flex`: [number](styles/units/number.md) type, default value `0`
 
 the flex property specifies the length of the flex item, relative to the rest of the flex items inside the same container.  If all of the flex items set `flex: 1`, they will have equal width or height on direction of flex container's `flex-direction`. If there are two flex items, with one setting `flex: 1`, and the other setting `flex: 2`, the first one will take 1/3 container space, and the second one will take 2/3 container space. If all of flex items don't set `flex`, they will be aligned depending on the container's `justify-content` property.
 
@@ -147,14 +147,14 @@ one text align left , the other float right:
 
 we can use properties below to control placement of weex tag
 
-- `position`: `relative` | `absolute` | `fixed` | `sticky`, default value is `relative`. 
+- `position`: values `relative` | `absolute` | `fixed` | `sticky`, default value `relative`
 
 `relative` means the item is positioned relative to its normal position. `absolute` means the item is positioned relative to its container. `fixed` keeps the elements position fixed when the page is scrolling. `sticky` keeps elements positioned inside the viewport as "stuck" at the top or "relative" at its original place depending on whether does it about to scroll out of the view.
 
-- `top`:  &lt;number&gt;, upward offset value, default value is  `0`
-- `bottom`: &lt;number&gt;, downward offset value, default value is  `0`
-- `left`: &lt;number&gt;, leftward offset value, default value is  `0`
-- `right`: &lt;number&gt;, rightward offset value, default value is  `0`
+- `top`: [number](styles/units/number.md) type, default value `0`, upward offset value
+- `bottom`: [number](styles/units/number.md) type, default value `0`, downward offset value
+- `left`: [number](styles/units/number.md) type, default value `0`, leftward offset value
+- `right`: [number](styles/units/number.md) type, default value `0`, rightward offset value
 
 ### Examples
 
@@ -176,16 +176,15 @@ we can use properties below to control placement of weex tag
 
 ## Other Common Style
 
-- `opacity`:  &lt;number&gt;, value within range 0 to 1. 1 is not transparent at all, 0.5 is 50% see-through, and 0 is completely transparent, default value is 1.
-- `background-color`: &lt;colors&gt; sets the background color of an element, default value is `transparent`.
+- [`opacity`](styles/opacity.md)
+- [`background-color`](styles/background-color.md)
 
 ## Type of Style Value
 
-- length: number followed by length unit `px`, `px` can be omitted.
-- colors: support multiple formats of values, including rgb (`rgb(255, 0, 0)`), rgba (`rgba(255, 0, 0, 0.5)`), hexadecimal (`#ff0000`), short hexadecimal (`#f00`), named color (`red`).
-- enumerated values: a limited number of string values.
-
-**Note:** [The list of color keywords.](./color-names.md)
+- [length](styles/units/length.md) type
+- [number](styles/units/number.md) type
+- [color](styles/units/color.md) type (*[The list of color keywords.](./color-names.md)*)
+- enumerated type
 
 ## Simple Step
 
@@ -194,6 +193,4 @@ These up-to-down steps may help you to plan the whole style of weex pages.
 1. overall style: divide the whole page to different parts
 2. flex alignment: align boxes in every part of page
 3. position box: place box, set offset
-4. special style: add special styles if needed
-
-
+4. element specific style: set styles for certain element if needed

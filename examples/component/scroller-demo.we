@@ -1,5 +1,5 @@
 <template>
-  <scroller class="list" append＝"tree">
+  <scroller class="list" append="tree">
     <div class="section" repeat="{{sections}}">
       <div class="header">
         <text class="header-title">{{title}}</text>
@@ -79,12 +79,16 @@
       onrefresh: function(e) {
         var self = this;
         self.refresh_display = 'show';
-        self.refresh_display = 'hide';
+        setTimeout(function () {
+          self.refresh_display = 'hide';
+        }, 1000)
       },
       onloading: function(e) {
         var self = this;
         self.loading_display = 'show';
-        self.loading_display = 'hide';
+        setTimeout(function () {
+          self.loading_display = 'hide';
+        }, 1000)
       }
     },
     data: {

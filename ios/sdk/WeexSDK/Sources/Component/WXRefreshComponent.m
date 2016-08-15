@@ -37,7 +37,6 @@
                 WXLogError(@"");
             }
         }
-        
         self.cssNode->style.position_type = CSS_POSITION_ABSOLUTE;
     }
     return self;
@@ -63,6 +62,9 @@
         .origin.x = self.calculatedFrame.origin.x,
         .origin.y = self.view.frame.origin.y - CGRectGetHeight(self.calculatedFrame)
     }];
+    if (!_displayState) {
+        [_indicator.view setHidden:YES];
+    }
 }
 
 - (void)viewWillUnload
@@ -126,12 +128,16 @@
     if (_displayState) {
         offset.y = -self.calculatedFrame.size.height;
         [_indicator start];
-    }
-    else {
+    } else {
         offset.y = 0;
         [_indicator stop];
     }
     [scrollerProtocol setContentOffset:offset animated:YES];
+}
+
+- (BOOL)displayState
+{
+    return _displayState;
 }
 
 - (void)setFrame:(CGRect)frame

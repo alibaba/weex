@@ -55,14 +55,18 @@
     }
     _cssNode->context = (__bridge void *)self;
     
-    
-    
     [self _recomputeCSSNodeChildren];
     [self _fillCSSNode:styles];
     
-    // TODO: JS Default flex:1 on root, not here
-    if ([self.ref isEqualToString:WX_SDK_ROOT_REF] && isUndefined(_cssNode->style.dimensions[CSS_HEIGHT])) {
-        _cssNode->style.flex = 1.0;
+    // To be in conformity with Android/Web, hopefully remove this in the future.
+    if ([self.ref isEqualToString:WX_SDK_ROOT_REF]) {
+        if (isUndefined(_cssNode->style.dimensions[CSS_HEIGHT]) && self.weexInstance.frame.size.height) {
+            _cssNode->style.dimensions[CSS_HEIGHT] = self.weexInstance.frame.size.height;
+        }
+        
+        if (isUndefined(_cssNode->style.dimensions[CSS_WIDTH]) && self.weexInstance.frame.size.width) {
+            _cssNode->style.dimensions[CSS_WIDTH] = self.weexInstance.frame.size.width;
+        }
     }
 }
 
@@ -139,7 +143,8 @@
 {
     WXAssertMainThread();
     
-    if ([self isViewLoaded] && !CGRectEqualToRect(_calculatedFrame, self.view.frame)) {
+    if ([self isViewLoaded] && !CGRectEqualToRect(_calculatedFrame, self.view.frame)
+        && [self isViewFrameSyncWithCalculated]) {
         self.view.frame = _calculatedFrame;
         // transform does not belong to layout, move it to other place hopefully
         if (_transform) {
