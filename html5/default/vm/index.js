@@ -14,10 +14,6 @@ import {
   initEvents,
   mixinEvents
 } from './events'
-import {
-  registerModules,
-  registerMethods
-} from '../app/register'
 
 /**
  * ViewModel constructor
@@ -87,8 +83,3 @@ export default function Vm (
 }
 
 mixinEvents(Vm.prototype)
-
-extend(Vm, {
-  registerModules,
-  registerMethods
-})

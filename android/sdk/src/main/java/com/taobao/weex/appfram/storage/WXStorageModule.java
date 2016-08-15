@@ -202,103 +202,138 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex;
+package com.taobao.weex.appfram.storage;
 
-import com.taobao.weex.adapter.IWXDebugAdapter;
-import com.taobao.weex.adapter.IWXHttpAdapter;
-import com.taobao.weex.adapter.IWXImgLoaderAdapter;
-import com.taobao.weex.adapter.IWXUserTrackAdapter;
-import com.taobao.weex.appfram.storage.IWXStorageAdapter;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
+
+import com.taobao.weex.WXSDKEngine;
+import com.taobao.weex.bridge.JSCallback;
+import com.taobao.weex.common.WXModule;
+import com.taobao.weex.common.WXModuleAnno;
+
+import java.util.Map;
 
 /**
- * Created by sospartan on 5/31/16.
+ * Created by rowandjj(chuyi)<br/>
  */
-public class InitConfig {
-  private IWXHttpAdapter httpAdapter;
-  private IWXImgLoaderAdapter imgAdapter;
-  private IWXUserTrackAdapter utAdapter;
-  private IWXDebugAdapter debugAdapter;
-  private IWXStorageAdapter storageAdapter;
-  private String framework;
+public class WXStorageModule extends WXModule implements IWXStorage {
 
-  public IWXHttpAdapter getHttpAdapter() {
-    return httpAdapter;
-  }
+    private IWXStorageAdapter mStorageAdapter;
 
-  public IWXImgLoaderAdapter getImgAdapter() {
-    return imgAdapter;
-  }
-
-  public IWXUserTrackAdapter getUtAdapter() {
-    return utAdapter;
-  }
-
-  public IWXDebugAdapter getDebugAdapter(){
-    return debugAdapter;
-  }
-  public String getFramework() {
-    return framework;
-  }
-
-  public IWXStorageAdapter getStorageAdapter() {
-    return storageAdapter;
-  }
+    private IWXStorageAdapter ability() {
+        if (mStorageAdapter != null) {
+            return mStorageAdapter;
+        }
+        mStorageAdapter = WXSDKEngine.getIWXStorageAdapter();
+        return mStorageAdapter;
+    }
 
 
+    @Override
+    @WXModuleAnno
+    public void setItem(String key, String value, @Nullable final JSCallback callback) {
+        if (TextUtils.isEmpty(key) || TextUtils.isEmpty(value)) {
+            StorageResultHandler.handleInvalidParam(callback);
+            return;
+        }
 
-  private InitConfig() {
-  }
+        IWXStorageAdapter adapter = ability();
+        if (adapter == null) {
+            StorageResultHandler.handleNoHandlerError(callback);
+            return;
+        }
+        adapter.setItem(key, value, new IWXStorageAdapter.OnResultReceivedListener() {
+            @Override
+            public void onReceived(Map<String, Object> data) {
+                if(callback != null){
+                    callback.invoke(data);
+                }
+            }
+        });
 
-  public static class Builder{
-    IWXHttpAdapter httpAdapter;
-    IWXImgLoaderAdapter imgAdapter;
-    IWXUserTrackAdapter utAdapter;
-    IWXDebugAdapter debugAdapter;
-    IWXStorageAdapter storageAdapter;
-    String framework;
-    public Builder(){
 
     }
 
-    public Builder setHttpAdapter(IWXHttpAdapter httpAdapter) {
-      this.httpAdapter = httpAdapter;
-      return this;
+    @Override
+    @WXModuleAnno
+    public void getItem(String key, @Nullable final JSCallback callback) {
+        if (TextUtils.isEmpty(key)) {
+            StorageResultHandler.handleInvalidParam(callback);
+            return;
+        }
+
+        IWXStorageAdapter adapter = ability();
+        if (adapter == null) {
+            StorageResultHandler.handleNoHandlerError(callback);
+            return;
+        }
+        adapter.getItem(key, new IWXStorageAdapter.OnResultReceivedListener() {
+            @Override
+            public void onReceived(Map<String, Object> data) {
+                if(callback != null){
+                    callback.invoke(data);
+                }
+            }
+        });
     }
 
-    public Builder setImgAdapter(IWXImgLoaderAdapter imgAdapter) {
-      this.imgAdapter = imgAdapter;
-      return this;
+    @Override
+    @WXModuleAnno
+    public void removeItem(String key, @Nullable final JSCallback callback) {
+        if (TextUtils.isEmpty(key)) {
+            StorageResultHandler.handleInvalidParam(callback);
+            return;
+        }
+
+        IWXStorageAdapter adapter = ability();
+        if (adapter == null) {
+            StorageResultHandler.handleNoHandlerError(callback);
+            return;
+        }
+        adapter.removeItem(key, new IWXStorageAdapter.OnResultReceivedListener() {
+            @Override
+            public void onReceived(Map<String, Object> data) {
+                if(callback != null){
+                    callback.invoke(data);
+                }
+            }
+        });
     }
 
-    public Builder setUtAdapter(IWXUserTrackAdapter utAdapter) {
-      this.utAdapter = utAdapter;
-      return this;
+    @Override
+    @WXModuleAnno
+    public void length(@Nullable final JSCallback callback) {
+        IWXStorageAdapter adapter = ability();
+        if (adapter == null) {
+            StorageResultHandler.handleNoHandlerError(callback);
+            return;
+        }
+        adapter.length(new IWXStorageAdapter.OnResultReceivedListener() {
+            @Override
+            public void onReceived(Map<String, Object> data) {
+                if(callback != null){
+                    callback.invoke(data);
+                }
+            }
+        });
     }
 
-    public Builder setDebugAdapter(IWXDebugAdapter debugAdapter){
-      this.debugAdapter=debugAdapter;
-      return this;
+    @Override
+    @WXModuleAnno
+    public void getAllKeys(@Nullable final JSCallback callback) {
+        IWXStorageAdapter adapter = ability();
+        if (adapter == null) {
+            StorageResultHandler.handleNoHandlerError(callback);
+            return;
+        }
+        adapter.getAllKeys(new IWXStorageAdapter.OnResultReceivedListener() {
+            @Override
+            public void onReceived(Map<String, Object> data) {
+                if(callback != null){
+                    callback.invoke(data);
+                }
+            }
+        });
     }
-
-    public Builder setStorageAdapter(IWXStorageAdapter storageAdapter) {
-      this.storageAdapter = storageAdapter;
-      return this;
-    }
-
-    public Builder setFramework(String framework){
-      this.framework=framework;
-      return this;
-    }
-
-    public InitConfig build(){
-      InitConfig config =  new InitConfig();
-      config.httpAdapter = this.httpAdapter;
-      config.imgAdapter = this.imgAdapter;
-      config.utAdapter = this.utAdapter;
-      config.debugAdapter=this.debugAdapter;
-      config.storageAdapter = this.storageAdapter;
-      config.framework=this.framework;
-      return config;
-    }
-  }
 }

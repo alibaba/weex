@@ -356,8 +356,40 @@ describe('test input and output', () => {
     delete allDocs[name]
   })
 
+  it('if in root element case', () => {
+    const name = 'if-root'
+    const inputCode = readInput(name)
+    const outputCode = readOutput(name)
+    const doc = new Document(name)
+    allDocs[name] = doc
+
+    framework.createInstance(name, inputCode)
+    const expected = eval('(' + outputCode + ')')
+    const actual = doc.toJSON()
+    expect(actual).eql(expected)
+
+    framework.destroyInstance(name)
+    delete allDocs[name]
+  })
+
   it('repeat with index case', () => {
     const name = 'repeat-index'
+    const inputCode = readInput(name)
+    const outputCode = readOutput(name)
+    const doc = new Document(name)
+    allDocs[name] = doc
+
+    framework.createInstance(name, inputCode)
+    const expected = eval('(' + outputCode + ')')
+    const actual = doc.toJSON()
+    expect(actual).eql(expected)
+
+    framework.destroyInstance(name)
+    delete allDocs[name]
+  })
+
+  it('repeat in root element case', () => {
+    const name = 'repeat-root'
     const inputCode = readInput(name)
     const outputCode = readOutput(name)
     const doc = new Document(name)
@@ -525,6 +557,29 @@ describe('test input and output', () => {
     const expected = eval('(' + outputCode + ')')
     const actual = doc.toJSON()
     expect(actual).eql(expected)
+
+    framework.destroyInstance(name)
+    delete allDocs[name]
+  })
+
+  it('reset class style case', () => {
+    const name = 'reset-style'
+    const inputCode = readInput(name)
+    const outputCode = readOutput(name)
+    const doc = new Document(name)
+    allDocs[name] = doc
+
+    framework.createInstance(name, inputCode)
+    const expected = eval('(' + outputCode + ')')
+
+    framework.callJS(name, [{
+      method: 'fireEvent',
+      args: [doc.body.children[0].ref, 'click', {}]
+    }])
+
+    setTimeout(function () {
+      expect(doc.toJSON()).eql(expected)
+    }, 0)
 
     framework.destroyInstance(name)
     delete allDocs[name]

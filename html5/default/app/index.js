@@ -3,70 +3,45 @@
  * Weex instance constructor & definition
  */
 
-import { extend, typof } from '../util'
-import * as ctrl from './ctrl'
 import Differ from './differ'
 
 import renderer from '../config'
-import { registerComponent, requireComponent, requireModule } from './register'
+import { requireModule } from './register'
+import { updateActions, callTasks } from './ctrl'
 
-export default function AppInstance (instanceId, options) {
-  this.id = instanceId
+/**
+ * App constructor for Weex framework.
+ * @param {string} id
+ * @param {object} options
+ */
+export default function App (id, options) {
+  this.id = id
   this.options = options || {}
   this.vm = null
   this.customComponentMap = {}
   this.callbacks = {}
-  this.doc = new renderer.Document(
-    instanceId,
-    this.options.bundleUrl
-  )
-  this.differ = new Differ(instanceId)
+  this.doc = new renderer.Document(id, this.options.bundleUrl)
+  this.differ = new Differ(id)
   this.uid = 0
 }
 
-function normalize (app, v) {
-  const type = typof(v)
-
-  switch (type) {
-    case 'undefined':
-    case 'null':
-      return ''
-    case 'regexp':
-      return v.toString()
-    case 'date':
-      return v.toISOString()
-    case 'number':
-    case 'string':
-    case 'boolean':
-    case 'array':
-    case 'object':
-      if (v instanceof renderer.Element) {
-        return v.ref
-      }
-      return v
-    case 'function':
-      app.callbacks[++app.uid] = v
-      return app.uid.toString()
-    default:
-      return JSON.stringify(v)
-  }
+/**
+ * @deprecated
+ */
+App.prototype.requireModule = function (name) {
+  return requireModule(this, name)
 }
 
-AppInstance.prototype.callTasks = function (tasks) {
-  if (typof(tasks) !== 'array') {
-    tasks = [tasks]
-  }
-
-  tasks.forEach((task) => {
-    task.args = task.args.map(arg => normalize(this, arg))
-  })
-
-  return renderer.sendTasks(this.id, tasks, '-1')
+/**
+ * @deprecated
+ */
+App.prototype.updateActions = function () {
+  updateActions(this)
 }
 
-extend(AppInstance.prototype, ctrl, {
-  registerComponent,
-  requireComponent,
-  requireModule
-})
-
+/**
+ * @deprecated
+ */
+App.prototype.callTasks = function (tasks) {
+  callTasks(this, tasks)
+}

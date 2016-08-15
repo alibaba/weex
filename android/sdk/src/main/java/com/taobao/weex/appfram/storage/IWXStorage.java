@@ -202,103 +202,17 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex;
+package com.taobao.weex.appfram.storage;
 
-import com.taobao.weex.adapter.IWXDebugAdapter;
-import com.taobao.weex.adapter.IWXHttpAdapter;
-import com.taobao.weex.adapter.IWXImgLoaderAdapter;
-import com.taobao.weex.adapter.IWXUserTrackAdapter;
-import com.taobao.weex.appfram.storage.IWXStorageAdapter;
+import android.support.annotation.Nullable;
 
-/**
- * Created by sospartan on 5/31/16.
- */
-public class InitConfig {
-  private IWXHttpAdapter httpAdapter;
-  private IWXImgLoaderAdapter imgAdapter;
-  private IWXUserTrackAdapter utAdapter;
-  private IWXDebugAdapter debugAdapter;
-  private IWXStorageAdapter storageAdapter;
-  private String framework;
+import com.taobao.weex.bridge.JSCallback;
 
-  public IWXHttpAdapter getHttpAdapter() {
-    return httpAdapter;
-  }
+interface IWXStorage {
+    public void setItem(String key, String value,@Nullable JSCallback callback);
+    public void getItem(String key,@Nullable JSCallback callback);
+    public void removeItem(String key,@Nullable JSCallback callback);
+    public void length(@Nullable JSCallback callback);
+    public void getAllKeys(@Nullable JSCallback callback);
 
-  public IWXImgLoaderAdapter getImgAdapter() {
-    return imgAdapter;
-  }
-
-  public IWXUserTrackAdapter getUtAdapter() {
-    return utAdapter;
-  }
-
-  public IWXDebugAdapter getDebugAdapter(){
-    return debugAdapter;
-  }
-  public String getFramework() {
-    return framework;
-  }
-
-  public IWXStorageAdapter getStorageAdapter() {
-    return storageAdapter;
-  }
-
-
-
-  private InitConfig() {
-  }
-
-  public static class Builder{
-    IWXHttpAdapter httpAdapter;
-    IWXImgLoaderAdapter imgAdapter;
-    IWXUserTrackAdapter utAdapter;
-    IWXDebugAdapter debugAdapter;
-    IWXStorageAdapter storageAdapter;
-    String framework;
-    public Builder(){
-
-    }
-
-    public Builder setHttpAdapter(IWXHttpAdapter httpAdapter) {
-      this.httpAdapter = httpAdapter;
-      return this;
-    }
-
-    public Builder setImgAdapter(IWXImgLoaderAdapter imgAdapter) {
-      this.imgAdapter = imgAdapter;
-      return this;
-    }
-
-    public Builder setUtAdapter(IWXUserTrackAdapter utAdapter) {
-      this.utAdapter = utAdapter;
-      return this;
-    }
-
-    public Builder setDebugAdapter(IWXDebugAdapter debugAdapter){
-      this.debugAdapter=debugAdapter;
-      return this;
-    }
-
-    public Builder setStorageAdapter(IWXStorageAdapter storageAdapter) {
-      this.storageAdapter = storageAdapter;
-      return this;
-    }
-
-    public Builder setFramework(String framework){
-      this.framework=framework;
-      return this;
-    }
-
-    public InitConfig build(){
-      InitConfig config =  new InitConfig();
-      config.httpAdapter = this.httpAdapter;
-      config.imgAdapter = this.imgAdapter;
-      config.utAdapter = this.utAdapter;
-      config.debugAdapter=this.debugAdapter;
-      config.storageAdapter = this.storageAdapter;
-      config.framework=this.framework;
-      return config;
-    }
-  }
 }

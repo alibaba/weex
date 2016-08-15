@@ -202,103 +202,92 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex;
+package com.taobao.weex.appfram.storage;
 
-import com.taobao.weex.adapter.IWXDebugAdapter;
-import com.taobao.weex.adapter.IWXHttpAdapter;
-import com.taobao.weex.adapter.IWXImgLoaderAdapter;
-import com.taobao.weex.adapter.IWXUserTrackAdapter;
-import com.taobao.weex.appfram.storage.IWXStorageAdapter;
+import android.support.annotation.Nullable;
 
-/**
- * Created by sospartan on 5/31/16.
- */
-public class InitConfig {
-  private IWXHttpAdapter httpAdapter;
-  private IWXImgLoaderAdapter imgAdapter;
-  private IWXUserTrackAdapter utAdapter;
-  private IWXDebugAdapter debugAdapter;
-  private IWXStorageAdapter storageAdapter;
-  private String framework;
+import com.taobao.weex.bridge.JSCallback;
 
-  public IWXHttpAdapter getHttpAdapter() {
-    return httpAdapter;
-  }
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-  public IWXImgLoaderAdapter getImgAdapter() {
-    return imgAdapter;
-  }
+public class StorageResultHandler {
 
-  public IWXUserTrackAdapter getUtAdapter() {
-    return utAdapter;
-  }
-
-  public IWXDebugAdapter getDebugAdapter(){
-    return debugAdapter;
-  }
-  public String getFramework() {
-    return framework;
-  }
-
-  public IWXStorageAdapter getStorageAdapter() {
-    return storageAdapter;
-  }
-
-
-
-  private InitConfig() {
-  }
-
-  public static class Builder{
-    IWXHttpAdapter httpAdapter;
-    IWXImgLoaderAdapter imgAdapter;
-    IWXUserTrackAdapter utAdapter;
-    IWXDebugAdapter debugAdapter;
-    IWXStorageAdapter storageAdapter;
-    String framework;
-    public Builder(){
-
+    private StorageResultHandler() {
     }
 
-    public Builder setHttpAdapter(IWXHttpAdapter httpAdapter) {
-      this.httpAdapter = httpAdapter;
-      return this;
+    private static final String RESULT = "result";
+    private static final String DATA = "data";
+
+
+    private static final String UNDEFINED = "undefined";
+    private static final String RESULT_FAILED_NO_HANDLER = "no_handler";
+    private static final String RESULT_FAILED_INVALID_PARAM = "invalid_param";
+
+
+    private static final String RESULT_OK = "success";
+    private static final String RESULT_FAILED = "failed";
+
+
+    public static Map<String, Object> getItemResult(String result) {
+        Map<String, Object> map = new HashMap<>(4);
+        map.put(RESULT, result != null ? RESULT_OK : RESULT_FAILED);
+        map.put(DATA, result != null ? result : UNDEFINED);
+        return map;
     }
 
-    public Builder setImgAdapter(IWXImgLoaderAdapter imgAdapter) {
-      this.imgAdapter = imgAdapter;
-      return this;
+    public static Map<String, Object> setItemResult(boolean result) {
+        Map<String, Object> map = new HashMap<>(4);
+        map.put(RESULT, result ? RESULT_OK : RESULT_FAILED);
+        map.put(DATA, UNDEFINED);
+        return map;
     }
 
-    public Builder setUtAdapter(IWXUserTrackAdapter utAdapter) {
-      this.utAdapter = utAdapter;
-      return this;
+
+    public static Map<String, Object> removeItemResult(boolean result) {
+        Map<String, Object> map = new HashMap<>(4);
+        map.put(RESULT, result ? RESULT_OK : RESULT_FAILED);
+        map.put(DATA, UNDEFINED);
+        return map;
     }
 
-    public Builder setDebugAdapter(IWXDebugAdapter debugAdapter){
-      this.debugAdapter=debugAdapter;
-      return this;
+    public static Map<String, Object> getLengthResult(long result) {
+        Map<String, Object> map = new HashMap<>(4);
+        map.put(RESULT, RESULT_OK);
+        map.put(DATA, result);
+        return map;
     }
 
-    public Builder setStorageAdapter(IWXStorageAdapter storageAdapter) {
-      this.storageAdapter = storageAdapter;
-      return this;
+    public static Map<String, Object> getAllkeysResult(List<String> result) {
+        if (result == null) {
+            result = new ArrayList<>(1);
+        }
+        Map<String, Object> map = new HashMap<>(4);
+        map.put(RESULT, RESULT_OK);
+        map.put(DATA, result);
+        return map;
     }
 
-    public Builder setFramework(String framework){
-      this.framework=framework;
-      return this;
+
+    private static void handleResult(@Nullable JSCallback callback, String result, Object data) {
+        if (callback == null) {
+            return;
+        }
+        Map<String, Object> retVal = new HashMap<>(4);
+        retVal.put(RESULT, result);
+        retVal.put(DATA, data);
+        callback.invoke(retVal);
     }
 
-    public InitConfig build(){
-      InitConfig config =  new InitConfig();
-      config.httpAdapter = this.httpAdapter;
-      config.imgAdapter = this.imgAdapter;
-      config.utAdapter = this.utAdapter;
-      config.debugAdapter=this.debugAdapter;
-      config.storageAdapter = this.storageAdapter;
-      config.framework=this.framework;
-      return config;
+    public static void handleNoHandlerError(@Nullable JSCallback callback) {
+        handleResult(callback, RESULT_FAILED, RESULT_FAILED_NO_HANDLER);
     }
-  }
+
+    public static void handleInvalidParam(@Nullable JSCallback callback) {
+        handleResult(callback, RESULT_FAILED, RESULT_FAILED_INVALID_PARAM);
+    }
+
+
 }

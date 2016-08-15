@@ -13,121 +13,122 @@
  */
 
 import semver from 'semver'
-import { typof, isPlainObject } from '../util'
+import {
+  isPlainObject,
+  isWeexComponent,
+  isWeexModule,
+  isNormalModule,
+  isNpmModule,
+  removeWeexPrefix,
+  removeJSSurfix
+} from '../util'
 import Vm from '../vm'
+import {
+  registerCustomComponent,
+  requireCustomComponent,
+  initModules
+} from './register'
 import * as downgrade from './downgrade'
 
-const WEEX_COMPONENT_REG = /^@weex-component\//
-const WEEX_MODULE_REG = /^@weex-module\//
-const NORMAL_MODULE_REG = /^\.{1,2}\//
-const JS_SURFIX_REG = /\.js$/
-
-const isWeexComponent = name => !!name.match(WEEX_COMPONENT_REG)
-const isWeexModule = name => !!name.match(WEEX_MODULE_REG)
-const isNormalModule = name => !!name.match(NORMAL_MODULE_REG)
-const isNpmModule = name => !isWeexComponent(name) &&
-                              !isWeexModule(name) &&
-                              !isNormalModule(name)
-
-function removeWeexPrefix (str) {
-  return str.replace(WEEX_COMPONENT_REG, '')
-          .replace(WEEX_MODULE_REG, '')
-}
-
-function removeJSSurfix (str) {
-  return str.replace(JS_SURFIX_REG, '')
-}
-
+/**
+ * @deprecated
+ *
+ * common modules are shared to all instances
+ * it's very dangerous
+ */
 let commonModules = {}
 
+/**
+ * @deprecated
+ */
 export function clearCommonModules () {
   commonModules = {}
 }
 
-// define(name, factory) for primary usage
-// or
-// define(name, deps, factory) for compatibility
-// Notice: DO NOT use function define() {},
-// it will cause error after builded by webpack
-export const define = function (name, deps, factory) {
+/**
+ * define(name, factory) for primary usage
+ * or
+ * define(name, deps, factory) for compatibility
+ * Notice: DO NOT use function define() {},
+ * it will cause error after builded by webpack
+ */
+export function defineFn (app, name, ...args) {
   console.debug(`[JS Framework] define a component ${name}`)
 
-  if (typof(deps) === 'function') {
-    factory = deps
-    deps = []
+  // adapt args:
+  // 1. name, deps[], factory()
+  // 2. name, factory()
+  // 3. name, definition{}
+  let factory, definition
+  if (args.length > 1) {
+    definition = args[1]
+  }
+  else {
+    definition = args[0]
+  }
+  if (typeof definition === 'function') {
+    factory = definition
+    definition = null
   }
 
-  const _require = (name) => {
-    let cleanName
-
-    if (isWeexComponent(name)) {
-      cleanName = removeWeexPrefix(name)
-      return this.requireComponent(cleanName)
+  // resolve definition from factory
+  if (factory) {
+    const r = (name) => {
+      if (isWeexComponent(name)) {
+        const cleanName = removeWeexPrefix(name)
+        return requireCustomComponent(app, cleanName)
+      }
+      if (isWeexModule(name)) {
+        const cleanName = removeWeexPrefix(name)
+        return app.requireModule(cleanName)
+      }
+      if (isNormalModule(name) || isNpmModule(name)) {
+        const cleanName = removeJSSurfix(name)
+        return commonModules[cleanName]
+      }
     }
-    if (isWeexModule(name)) {
-      cleanName = removeWeexPrefix(name)
-      return this.requireModule(cleanName)
-    }
-    if (isNormalModule(name)) {
-      cleanName = removeJSSurfix(name)
-      return commonModules[name]
-    }
-    if (isNpmModule(name)) {
-      cleanName = removeJSSurfix(name)
-      return commonModules[name]
-    }
+    const m = { exports: {}}
+    factory(r, m.exports, m)
+    definition = m.exports
   }
-  const _module = { exports: {}}
 
-  let cleanName
+  // apply definition
   if (isWeexComponent(name)) {
-    cleanName = removeWeexPrefix(name)
-
-    factory(_require, _module.exports, _module)
-
-    this.registerComponent(cleanName, _module.exports)
+    const cleanName = removeWeexPrefix(name)
+    registerCustomComponent(app, cleanName, definition)
   }
   else if (isWeexModule(name)) {
-    cleanName = removeWeexPrefix(name)
-
-    factory(_require, _module.exports, _module)
-
-    Vm.registerModules({
-      [cleanName]: _module.exports
-    })
+    const cleanName = removeWeexPrefix(name)
+    initModules({ [cleanName]: definition })
   }
   else if (isNormalModule(name)) {
-    cleanName = removeJSSurfix(name)
-
-    factory(_require, _module.exports, _module)
-
-    commonModules[cleanName] = _module.exports
+    const cleanName = removeJSSurfix(name)
+    commonModules[cleanName] = definition
   }
   else if (isNpmModule(name)) {
-    cleanName = removeJSSurfix(name)
-
-    factory(_require, _module.exports, _module)
-
-    const exports = _module.exports
-    if (exports.template ||
-        exports.style ||
-        exports.methods) {
+    const cleanName = removeJSSurfix(name)
+    if (definition.template ||
+        definition.style ||
+        definition.methods) {
       // downgrade to old define method (define('componentName', factory))
       // the exports contain one key of template, style or methods
       // but it has risk!!!
-      this.registerComponent(cleanName, exports)
+      registerCustomComponent(app, cleanName, definition)
     }
     else {
-      commonModules[cleanName] = _module.exports
+      commonModules[cleanName] = definition
     }
   }
 }
 
+/**
+ * bootstrap app from a certain custom component with config & data
+ */
 export function bootstrap (app, name, config, data) {
   console.debug(`[JS Framework] bootstrap for ${name}`)
 
+  // 1. validate custom component name first
   let cleanName
-
   if (isWeexComponent(name)) {
     cleanName = removeWeexPrefix(name)
   }
@@ -135,7 +136,7 @@ export function bootstrap (app, name, config, data) {
     cleanName = removeJSSurfix(name)
     // check if define by old 'define' method
     /* istanbul ignore if */
-    if (!app.customComponentMap[cleanName]) {
+    if (!requireCustomComponent(app, cleanName)) {
       return new Error(`It's not a component: ${name}`)
     }
   }
@@ -143,8 +144,9 @@ export function bootstrap (app, name, config, data) {
     return new Error(`Wrong component name: ${name}`)
   }
 
+  // 2. validate configuration
   config = isPlainObject(config) ? config : {}
-
+  // 2.1 transformer version check
   if (typeof config.transformerVersion === 'string' &&
     typeof global.transformerVersion === 'string' &&
     !semver.satisfies(config.transformerVersion,
@@ -152,29 +154,30 @@ export function bootstrap (app, name, config, data) {
     return new Error(`JS Bundle version: ${config.transformerVersion} ` +
       `not compatible with ${global.transformerVersion}`)
   }
-
-  const _checkDowngrade = downgrade.check(config.downgrade)
+  // 2.2 downgrade version check
+  const downgradeResult = downgrade.check(config.downgrade)
   /* istanbul ignore if */
-  if (_checkDowngrade.isDowngrade) {
+  if (downgradeResult.isDowngrade) {
     app.callTasks([{
       module: 'instanceWrap',
       method: 'error',
       args: [
-        _checkDowngrade.errorType,
-        _checkDowngrade.code,
-        _checkDowngrade.errorMessage
+        downgradeResult.errorType,
+        downgradeResult.code,
+        downgradeResult.errorMessage
       ]
     }])
-    return new Error(`Downgrade[${_checkDowngrade.code}]: ${_checkDowngrade.errorMessage}`)
+    return new Error(`Downgrade[${downgradeResult.code}]: ${downgradeResult.errorMessage}`)
   }
 
+  // 3. create a new Vm with custom component name and data
   app.vm = new Vm(cleanName, null, { _app: app }, null, data)
 }
 
 /**
  * @deprecated
  */
-export function register (type, options) {
+export function register (app, type, options) {
   console.warn('[JS Framework] Register is deprecated, please install lastest transformer.')
-  this.registerComponent(type, options)
+  registerCustomComponent(app, type, options)
 }

@@ -1,13 +1,6 @@
 /**
  * @fileOverview
  * ViewModel template parser & data-binding process
- *
- * required:
- * index.js: Vm
- * dom-helper.js: createElement, createBlock
- * dom-helper.js: attachTarget, moveTarget, removeTarget
- * directive.js: bindElement, bindSubVm, setId, watch
- * events.js: $on
  */
 
 import {
@@ -36,9 +29,7 @@ import {
 } from './dom-helper'
 
 /**
- * build(externalDirs)
- *   createVm()
- *   merge(externalDirs, dirs)
+ * build()
  *   compile(template, parentNode)
  *     if (type is content) create contentNode
  *     else if (dirs have v-for) foreach -> create context
@@ -106,12 +97,22 @@ function compile (vm, target, dest, meta) {
 
   if (targetNeedCheckRepeat(target, meta)) {
     console.debug('[JS Framework] compile "repeat" logic by', target)
-    compileRepeat(vm, target, dest)
+    if (dest.type === 'document') {
+      console.warn('[JS Framework] The root element does\'t support `repeat` directive!')
+    }
+    else {
+      compileRepeat(vm, target, dest)
+    }
     return
   }
   if (targetNeedCheckShown(target, meta)) {
     console.debug('[JS Framework] compile "if" logic by', target)
-    compileShown(vm, target, dest, meta)
+    if (dest.type === 'document') {
+      console.warn('[JS Framework] The root element does\'t support `if` directive!')
+    }
+    else {
+      compileShown(vm, target, dest, meta)
+    }
     return
   }
   const typeGetter = meta.type || target.type

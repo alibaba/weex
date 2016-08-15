@@ -1,6 +1,7 @@
 import './setTimeout'
 import './promise'
 import './console'
+import './objectAssign'
 
 /**
  * Mix properties into target object.
@@ -66,6 +67,7 @@ export function remove (arr, item) {
  * @param {String} key
  * @return {Boolean}
  */
+
 const hasOwnProperty = Object.prototype.hasOwnProperty
 export function hasOwn (obj, key) {
   return hasOwnProperty.call(obj, key)
