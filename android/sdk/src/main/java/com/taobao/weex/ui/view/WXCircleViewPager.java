@@ -230,7 +230,6 @@ public class WXCircleViewPager extends ViewPager implements Callback, WXGestureO
 
   private WXGesture wxGesture;
   private Handler mCircleHandler;
-  private WXCircleViewPager mViewPager;
   private boolean isAutoScroll;
   private boolean isPause;
   private long intervalTime = 3 * 1000;
@@ -246,7 +245,6 @@ public class WXCircleViewPager extends ViewPager implements Callback, WXGestureO
   }
 
   private void initView() {
-    mViewPager = this;
     mCircleHandler = new Handler(Looper.getMainLooper(), this);
   }
 
@@ -266,10 +264,10 @@ public class WXCircleViewPager extends ViewPager implements Callback, WXGestureO
       interpolator.setAccessible(true);
 
       mScroller = new WXSmoothScroller(getContext(),
-                                       (Interpolator) interpolator.get(null));
+          (Interpolator) interpolator.get(null));
       scroller.set(this, mScroller);
     } catch (Exception e) {
-      WXLogUtils.e("[CircleViewPager] postInitViewPager: " + WXLogUtils.getStackTrace(e));
+      WXLogUtils.e("[CircleViewPager] postInitViewPager: ", e);
     }
   }
 
@@ -283,7 +281,8 @@ public class WXCircleViewPager extends ViewPager implements Callback, WXGestureO
 
   public boolean handleMessage(Message msg) {
     if (isAutoScroll && !isPause) {
-      mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
+
+      setCurrentItem(getCurrentItem() + 1);
       mCircleHandler.removeCallbacksAndMessages(null);
       mCircleHandler.sendEmptyMessageDelayed(0, intervalTime);
     }
@@ -292,8 +291,17 @@ public class WXCircleViewPager extends ViewPager implements Callback, WXGestureO
 
   @Override
   public int getCurrentItem() {
-    // TODO Auto-generated method stub
-    return super.getCurrentItem();
+    if (getAdapter().getCount() == 0) {
+      return super.getCurrentItem();
+    }
+    int position = super.getCurrentItem();
+    if (getAdapter() instanceof WXCirclePageAdapter) {
+      WXCirclePageAdapter infAdapter = (WXCirclePageAdapter) getAdapter();
+      // Return the actual item position in the data backing InfinitePagerAdapter
+      return (position % infAdapter.getRealCount());
+    } else {
+      return super.getCurrentItem();
+    }
   }
 
   @Override
@@ -322,22 +330,42 @@ public class WXCircleViewPager extends ViewPager implements Callback, WXGestureO
     mCircleHandler.removeCallbacksAndMessages(null);
   }
 
-  /**
-   * get real item
-   *
-   * @return int real item
-   */
-  public int getRealCurrentItem() {
-    return getCurrentItem() % getCirclePageAdapter().getRealCount();
+
+
+  @Override
+  public void setCurrentItem(int item) {
+    setCurrentItem(item,false);
   }
 
   /**
    * set real item
    *
-   * @param realItem void real item
    */
-  public void setRealCurrentItem(int realItem) {
-    setCurrentItem(realItem);
+  @Override
+  public void setCurrentItem(int item, boolean smoothScroll) {
+    if (getAdapter().getCount() == 0) {
+      super.setCurrentItem(item, smoothScroll);
+      return;
+    }
+    item = getOffsetAmount() + (item % getAdapter().getCount());
+    super.setCurrentItem(item, smoothScroll);
+  }
+
+
+  private int getOffsetAmount() {
+    if (getAdapter().getCount() == 0) {
+      return 0;
+    }
+    if (getAdapter() instanceof WXCirclePageAdapter) {
+      WXCirclePageAdapter infAdapter = (WXCirclePageAdapter) getAdapter();
+      // allow for 100 back cycles from the beginning
+      // should be enough to create an illusion of infinity
+      // warning: scrolling to very high values (1,000,000+) results in
+      // strange drawing behaviour
+      return infAdapter.getRealCount() * 100;
+    } else {
+      return 0;
+    }
   }
 
   /**

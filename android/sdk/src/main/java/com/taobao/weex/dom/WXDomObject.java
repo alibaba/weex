@@ -228,6 +228,8 @@ public class WXDomObject extends CSSNode implements Cloneable {
 
   public static final String TAG = WXDomObject.class.getSimpleName();
   public static final String ROOT = "_root";
+  public static final String TRANSFORM = "transform";
+  public static final String TRANSFORM_ORIGIN = "transformOrigin";
   public AtomicBoolean sDestroy = new AtomicBoolean();
   public String ref = ROOT;
   public String type = WXBasicComponentType.SCROLLER;
@@ -240,6 +242,25 @@ public class WXDomObject extends CSSNode implements Cloneable {
   private ArrayList<String> fixedStyleRefs;
 
   private boolean mYoung = false;
+
+  private boolean isModifyHeight;
+  private boolean isModifyWidth;
+
+  public boolean isModifyHeight() {
+    return isModifyHeight;
+  }
+
+  public void setModifyHeight(boolean isModifyHeight) {
+    this.isModifyHeight = isModifyHeight;
+  }
+
+  public boolean isModifyWidth() {
+    return isModifyWidth;
+  }
+
+  public void setModifyWidth(boolean isModifyWidth) {
+    this.isModifyWidth = isModifyWidth;
+  }
 
   /**
    * Do pre-staff before layout. Subclass may provide different implementation.
@@ -298,11 +319,6 @@ public class WXDomObject extends CSSNode implements Cloneable {
     }
   }
 
-
-  public boolean isSticky() {
-    return style == null ? false : style.isSticky();
-  }
-
   public boolean isFixed() {
     return style == null ? false : style.isFixed();
   }
@@ -331,7 +347,7 @@ public class WXDomObject extends CSSNode implements Cloneable {
     int index = children.indexOf(child);
     if (index == -1) {
       if (WXEnvironment.isApkDebugable()) {
-        WXLogUtils.e("[WXDomObject]" + "remove function error");
+        WXLogUtils.e("[WXDomObject] remove function error");
       }
       return;
     }
@@ -481,6 +497,8 @@ public class WXDomObject extends CSSNode implements Cloneable {
         dom.cssstyle.copy(this.cssstyle);
       }
 
+      dom.setModifyHeight(isModifyHeight);
+      dom.setModifyWidth(isModifyWidth);
       dom.ref = ref;
       dom.type = type;
       dom.style = style;//style == null ? null : style.clone();
@@ -493,7 +511,7 @@ public class WXDomObject extends CSSNode implements Cloneable {
 
     } catch (Exception e) {
       if (WXEnvironment.isApkDebugable()) {
-        WXLogUtils.e("WXDomObject clone error: " + WXLogUtils.getStackTrace(e));
+        WXLogUtils.e("WXDomObject clone error: ", e);
       }
     }
 
@@ -518,6 +536,15 @@ public class WXDomObject extends CSSNode implements Cloneable {
       }
       children.clear();
     }
+  }
+
+  /** package **/
+  /**
+   * Get default style map for component.
+   * @return
+   */
+  protected Map<String,String> getDefaultStyle(){
+    return null;
   }
 
   public ArrayList<String> getFixedStyleRefs() {

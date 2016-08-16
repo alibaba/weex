@@ -204,66 +204,44 @@
  */
 package com.taobao.weex.utils;
 
-import android.util.Log;
 
+import android.support.annotation.NonNull;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.common.WXRuntimeException;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Tool for parse JSON
  */
 public class WXJsonUtils {
 
-  public static <T> T fromJson(String json, Class<T> responseClass) {
-    return JSONObject.parseObject(json, responseClass);
-  }
 
-  public static <T> T fromJsonProtocolStr(String json, Class<T> responseClass) {
-    return JSONObject.parseObject(json, responseClass);
-  }
-
-  public static <T> List<T> getList(String json, Class<T> clazz) {
+  public @NonNull static <T> List<T> getList(String json, Class<T> clazz) {
     List<T> result = null;
     try {
       result = JSONObject.parseArray(json, clazz);
     } catch (Exception e) {
+      e.printStackTrace();
+      result = new ArrayList<>();
     }
     return result;
   }
 
-
-  public static JSONArray parseArrayStr(String arrStr) {
-    return JSONObject.parseArray(arrStr);
-  }
-
-  public static String fromObjectToJSONString(Object obj) {
+  public @NonNull static String fromObjectToJSONString(Object obj) {
     try {
       return JSONObject.toJSONString(obj);
     }catch(Exception e){
       if(WXEnvironment.isApkDebugable()){
         throw new WXRuntimeException("fromObjectToJSONString parse error!");
       }
-      WXLogUtils.e("fromObjectToJSONString error:"+e.getMessage());
+      WXLogUtils.e("fromObjectToJSONString error:", e);
       return "{}";
     }
 
   }
 
-  public static String fromObject2JSONArrayString(Object obj) {
-    if (obj == null) {
-      return "";
-    }
-    try {
-      return JSONArray.toJSON(obj).toString();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-
-    return "";
-  }
 }

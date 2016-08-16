@@ -12,13 +12,14 @@ import {
   removeTarget
 } from '../../../../default/vm/dom-helper'
 import { Document } from '../../../../vdom'
+import Listener from '../../../../vdom/listener'
 
 describe('help create body', () => {
   let vm
 
   beforeEach(() => {
     vm = {
-      _app: { doc: new Document('foo') }
+      _app: { doc: new Document('foo', null, null, Listener) }
     }
   })
 
@@ -41,7 +42,7 @@ describe('help create element', () => {
 
   beforeEach(() => {
     vm = {
-      _app: { doc: new Document('foo') }
+      _app: { doc: new Document('foo', null, null, Listener) }
     }
   })
 
@@ -63,7 +64,7 @@ describe('help create block', () => {
 
   beforeEach(() => {
     vm = {
-      _app: { doc: new Document('foo') }
+      _app: { doc: new Document('foo', null, null, Listener) }
     }
   })
 
@@ -92,7 +93,7 @@ describe('help attach target', () => {
 
   beforeEach(() => {
     vm = {
-      _app: { doc: new Document('foo') }
+      _app: { doc: new Document('foo', null, null, Listener) }
     }
   })
 
@@ -193,7 +194,7 @@ describe('help move target', () => {
 
   beforeEach(() => {
     vm = {
-      _app: { doc: new Document('foo') }
+      _app: { doc: new Document('foo', null, null, Listener) }
     }
     parent = createElement(vm, 'r')
     dest = createBlock(vm, parent)
@@ -317,7 +318,7 @@ describe('help remove target', () => {
 
   beforeEach(() => {
     vm = {
-      _app: { doc: new Document('foo') }
+      _app: { doc: new Document('foo', null, null, Listener) }
     }
   })
 

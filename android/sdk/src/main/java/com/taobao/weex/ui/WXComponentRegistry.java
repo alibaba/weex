@@ -209,6 +209,7 @@ import android.text.TextUtils;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.common.WXException;
+import com.taobao.weex.utils.WXLogUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -222,11 +223,16 @@ public class WXComponentRegistry {
   private static Map<String, IFComponentHolder> sTypeComponentMap = new HashMap<>();
   private static ArrayList<Map<String, String>> sComponentInfos=new ArrayList<>();
 
-  public static boolean registerComponent(final String type, final IFComponentHolder holder, final Map<String, String> componentInfo) throws WXException {
+  public static boolean registerComponent(final String type, final IFComponentHolder holder, Map<String, String> componentInfo) throws WXException {
     if (holder == null || TextUtils.isEmpty(type)) {
       return false;
     }
+    if (componentInfo == null){
+      componentInfo = new HashMap<>();
+    }
 
+    componentInfo.put("type",type);
+    final Map<String, String> registerInfo = componentInfo;
     //execute task in js thread to make sure register order is same as the order invoke register method.
     WXBridgeManager.getInstance().getJSHandler()
     .post(new Runnable() {
@@ -234,10 +240,10 @@ public class WXComponentRegistry {
       public void run() {
         try {
           registerNativeComponent(type, holder);
-          registerJSComponent(componentInfo);
-          sComponentInfos.add(componentInfo);
+          registerJSComponent(registerInfo);
+          sComponentInfos.add(registerInfo);
         } catch (WXException e) {
-          e.printStackTrace();
+          WXLogUtils.e("", e);
         }
 
       }
@@ -246,7 +252,13 @@ public class WXComponentRegistry {
   }
 
   private static boolean registerNativeComponent(String type, IFComponentHolder holder) throws WXException {
-    sTypeComponentMap.put(type, holder);
+    try {
+      holder.loadIfNonLazy();
+      sTypeComponentMap.put(type, holder);
+    }catch (ArrayStoreException e){
+      e.printStackTrace();
+      //ignore: ArrayStoreException: java.lang.String cannot be stored in an array of type java.util.HashMap$HashMapEntry[]
+    }
     return true;
   }
 
@@ -270,7 +282,7 @@ public class WXComponentRegistry {
             registerJSComponent(com);
           }
         } catch (WXException e) {
-          e.printStackTrace();
+          WXLogUtils.e("", e);
         }
       }
     });

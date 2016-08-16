@@ -117,7 +117,7 @@ public class DebugServerProxy implements IWXDebugProxy {
             @Override
             public void onFailure(Throwable cause) {
                 mContext.sendBroadcast(new Intent(ACTION_DEBUG_SERVER_CONNECT_FAILED));
-                WXLogUtils.d("connect debugger server failure!! " + cause.toString());
+                WXLogUtils.d("connect debugger server failure!! ", cause);
             }
 
         });

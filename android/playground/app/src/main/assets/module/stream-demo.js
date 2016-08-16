@@ -44,30 +44,53 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/a7c8f395a9fe63d3701adaeb7a25eb97", [], function(__weex_require__, __weex_exports__, __weex_module__){
+	;__weex_define__("@weex-component/2e3ee5c853359a76389401bc185c933a", [], function(__weex_require__, __weex_exports__, __weex_module__){
 
 	;
 	  __webpack_require__(1);
 
 	  __weex_module__.exports = {
 	    data: function () {return {
+	      getJsonpResult: 'loading...',
 	      getResult: 'loading...',
-	      postResult: 'loading...'
+	      postResult: 'loading...',
+	      putResult: 'loading...',
+	      deleteResult: 'loading...',
+	      headResult: 'loading...',
+	      patchResult: 'loading...',
 	    }},
 	    ready: function() {
 	      var stream = __weex_require__('@weex-module/stream');
 	      var me = this;
+	      var GET_URL_JSONP = 'http://jsfiddle.net/echo/jsonp/?callback=anything&result=content_in_response';
 	      var GET_URL = 'http://httpbin.org/get';
 	      var POST_URL = 'http://httpbin.org/post';
+	      var PUT_URL = 'http://httpbin.org/put';
+	      var DELETE_URL = 'http://httpbin.org/delete';
+	      var HEAD_URL = 'http://httpbin.org/status/418';
+	      var PATCH_URL = 'http://httpbin.org/patch';
 	      
+	      stream.fetch({
+	        method: 'GET',
+	        url: GET_URL_JSONP,
+	        type:'jsonp'
+	      }, function(ret) {
+	        if(!ret.ok){
+	          me.getJsonpResult = "request failed";
+	        }else{
+	          console.log('get:'+ret);
+	          me.getJsonpResult = ret.data;
+	        }
+	      },function(response){
+	        console.log('get jsonp in progress:'+response.length);
+	        me.getJsonpResult = "bytes received:"+response.length;
+	      });
+
 	      stream.fetch({
 	        method: 'GET',
 	        url: GET_URL,
 	        type:'json'
 	      }, function(ret) {
-	        if(typeof ret === 'string'){
-	          ret = JSON.parse(ret);
-	        }
 	        if(!ret.ok){
 	          me.getResult = "request failed";
 	        }else{
@@ -84,9 +107,6 @@
 	        url: POST_URL,
 	        type:'json'
 	      }, function(ret) {
-	        if(typeof ret === 'string'){
-	          ret = JSON.parse(ret);
-	        }
 	        if(!ret.ok){
 	          me.postResult = "request failed";
 	        }else{
@@ -96,6 +116,71 @@
 	      },function(response){
 	        console.log('get in progress:'+response.length);
 	        me.postResult = "bytes received:"+response.length;
+	      });
+
+	      stream.fetch({
+	        method: 'PUT',
+	        url: PUT_URL,
+	        type:'json'
+	      }, function(ret) {
+	        if(!ret.ok){
+	          me.putResult = "request failed";
+	        }else{
+	          console.log('get:'+ret);
+	          me.putResult = ret.data;
+	        }
+	      },function(response){
+	        console.log('get in progress:'+response.length);
+	        me.putResult = "bytes received:"+response.length;
+	      });
+
+	      stream.fetch({
+	        method: 'DELETE',
+	        url: DELETE_URL,
+	        type:'json'
+	      }, function(ret) {
+
+	        if(!ret.ok){
+	          me.deleteResult = "request failed";
+	        }else{
+	          console.log('get:'+ret);
+	          me.deleteResult = ret.data;
+	        }
+	      },function(response){
+	        console.log('get in progress:'+response.length);
+	        me.deleteResult = "bytes received:"+response.length;
+	      });
+	      
+	      stream.fetch({
+	        method: 'HEAD',
+	        url: HEAD_URL,
+	        type:'json'
+	      }, function(ret) {
+	        if(ret.statusText !== 'I\'m a teapot'){
+	          me.headResult = "request failed";
+	        }else{
+	          console.log('get:'+ret);
+	          me.headResult = ret.statusText;
+	        }
+	      },function(response){
+	        console.log('get in progress:'+response.length);
+	        me.headResult = "bytes received:"+response.length;
+	      });
+
+	      stream.fetch({
+	        method: 'PATCH',
+	        url: PATCH_URL,
+	        type:'json'
+	      }, function(ret) {
+	        if(!ret.ok){
+	          me.patchResult = "request failed";
+	        }else{
+	          console.log('get:'+ret);
+	          me.patchResult = ret.data;
+	        }
+	      },function(response){
+	        console.log('get in progress:'+response.length);
+	        me.patchResult = "bytes received:"+response.length;
 	      });
 	    }
 	  };
@@ -128,6 +213,20 @@
 	        {
 	          "type": "wxc-panel",
 	          "attr": {
+	            "title": "method = GET / type = jsonp"
+	          },
+	          "children": [
+	            {
+	              "type": "text",
+	              "attr": {
+	                "value": function () {return this.getJsonpResult}
+	              }
+	            }
+	          ]
+	        },
+	        {
+	          "type": "wxc-panel",
+	          "attr": {
 	            "title": "method = POST"
 	          },
 	          "children": [
@@ -138,13 +237,69 @@
 	              }
 	            }
 	          ]
+	        },
+	        {
+	          "type": "wxc-panel",
+	          "attr": {
+	            "title": "method = PUT"
+	          },
+	          "children": [
+	            {
+	              "type": "text",
+	              "attr": {
+	                "value": function () {return this.putResult}
+	              }
+	            }
+	          ]
+	        },
+	        {
+	          "type": "wxc-panel",
+	          "attr": {
+	            "title": "method = DELETE"
+	          },
+	          "children": [
+	            {
+	              "type": "text",
+	              "attr": {
+	                "value": function () {return this.deleteResult}
+	              }
+	            }
+	          ]
+	        },
+	        {
+	          "type": "wxc-panel",
+	          "attr": {
+	            "title": "method = HEAD"
+	          },
+	          "children": [
+	            {
+	              "type": "text",
+	              "attr": {
+	                "value": function () {return this.headResult}
+	              }
+	            }
+	          ]
+	        },
+	        {
+	          "type": "wxc-panel",
+	          "attr": {
+	            "title": "method = PATCH"
+	          },
+	          "children": [
+	            {
+	              "type": "text",
+	              "attr": {
+	                "value": function () {return this.patchResult}
+	              }
+	            }
+	          ]
 	        }
 	      ]
 	    }
 	  ]
 	})
 	})
-	;__weex_bootstrap__("@weex-component/a7c8f395a9fe63d3701adaeb7a25eb97", {
+	;__weex_bootstrap__("@weex-component/2e3ee5c853359a76389401bc185c933a", {
 	  "transformerVersion": "0.3.1"
 	},undefined)
 

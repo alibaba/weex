@@ -394,8 +394,8 @@ public class WXHack {
       try {
         @SuppressWarnings("unchecked") final T value = (T) mField.get(instance);
         return value;
-      } catch (final IllegalAccessException e) {
-        e.printStackTrace();
+      } catch (IllegalAccessException e) {
+        WXLogUtils.e("", e);
         //TBS.Ext.commitEvent("AtlasRuntimeException", AtlasConstant.ATLAS_RUNTIME_EXCEPTION, e.toString());
         return null; /* Should never happen */
       }
@@ -409,7 +409,7 @@ public class WXHack {
       try {
         mField.set(instance, value);
       } catch (final IllegalAccessException e) {
-        e.printStackTrace();
+        WXLogUtils.e("", e);
         //                if(value instanceof DelegateClassLoader){
         //                    throw new RuntimeException("set DelegateClassLoader fail",e);
         //                }
@@ -453,7 +453,7 @@ public class WXHack {
         obj = mMethod.invoke(receiver, args);
         return obj;
       } catch (final IllegalAccessException e) { /* Should never happen */
-        e.printStackTrace();
+        WXLogUtils.e("", e);
       }
       return obj;
     }
@@ -486,7 +486,7 @@ public class WXHack {
       try {
         obj = mConstructor.newInstance(arg_types);
       } catch (Exception e) {
-        e.printStackTrace();
+        WXLogUtils.e("", e);
       }
       return obj;
     }
