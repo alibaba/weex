@@ -38,4 +38,3 @@ global.transformVersion = transformer
  * register methods
  */
 global.registerMethods(methods)
-
