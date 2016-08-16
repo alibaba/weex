@@ -72,7 +72,9 @@
     "modals": "^0.1.5",
     "scroll-to": "0.0.2",
     "semver": "^5.1.0",
-    "weex-components": "^0.1.3"
+    "transitionize": "0.0.3",
+    "weex-components": "^0.1.3",
+    "weex-rx-framework": "^0.0.9"
   },
   "devDependencies": {
     "babel-cli": "~6.4.5",
