@@ -1,5 +1,4 @@
 import {
-  typof,
   isWeexComponent,
   isWeexModule,
   isNormalModule,
@@ -12,7 +11,6 @@ import {
   requireCustomComponent,
   initModules
 } from '../register'
-import Vm from '../../vm'
 
 /**
  * @deprecated

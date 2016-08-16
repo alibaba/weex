@@ -8,15 +8,9 @@ global.callNative = function () {}
 
 import * as bundle from '../../../../default/app/bundle'
 import * as register from '../../../../default/app/register'
-<<<<<<< HEAD
 import { removeWeexPrefix } from '../../../../default/util'
 import { Document } from '../../../../vdom'
-=======
-import { Document }
-from '../../../../vdom'
 import Listener from '../../../../vdom/listener'
-import Vm from '../../../../default/vm'
->>>>>>> dev
 
 describe('parsing a bundle file', () => {
   const componentTemplate = {

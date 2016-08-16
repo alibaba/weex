@@ -1,5 +1,8 @@
 import Vm from '../../../../default/vm'
 import {
+  requireCustomComponent
+} from '../../../../default/app/register'
+import {
   isPlainObject,
   isWeexComponent,
   isNpmModule,

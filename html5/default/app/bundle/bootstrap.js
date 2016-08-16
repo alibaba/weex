@@ -2,6 +2,9 @@ import semver from 'semver'
 import Vm from '../../vm'
 import * as downgrade from '../downgrade'
 import {
+  requireCustomComponent
+} from '../register'
+import {
   isPlainObject,
   isWeexComponent,
   isNpmModule,
