@@ -137,7 +137,7 @@ export function init (code, data) {
     fn(
       bundleDefine,
       bundleRequire,
-      bundleDocument,
+      typeof window !== 'undefined' ? window.document : bundleDocument,
       bundleBootstrap,
       bundleRegister,
       bundleRender,
