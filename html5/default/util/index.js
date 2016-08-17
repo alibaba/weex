@@ -49,6 +49,20 @@ else {
 export { _Set }
 
 /**
+ * Polyfill in iOS7 by native because the JavaScript polyfill has memory problem.
+ * @return {object}
+ */
+
+export function createNewSet () {
+  /* eslint-disable */
+  if (typeof nativeSet === 'object') {
+    return nativeSet.create()
+  }
+  /* eslint-enable */
+  return new Set()
+}
+
+/**
  * Create a cached version of a pure function.
  *
  * @param {Function} fn
