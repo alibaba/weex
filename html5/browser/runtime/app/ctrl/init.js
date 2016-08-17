@@ -7,6 +7,7 @@
  * corresponded with the API of instance manager (framework.js)
  */
 
+import Vm from '../../../../default/vm'
 import { removeWeexPrefix } from '../../../../default/util'
 import {
   defineFn,
@@ -33,6 +34,7 @@ export function init (app, code, data) {
     app.doc.listener.createFinish()
     console.debug(`[JS Framework] After intialized an instance(${app.id})`)
   }
+  bundleBootstrap.Vm = Vm
   const bundleRegister = (...args) => register(app, ...args)
   const bundleRender = (name, _data) => {
     result = bootstrap(app, name, {}, _data)
