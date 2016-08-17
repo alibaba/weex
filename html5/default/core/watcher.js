@@ -8,7 +8,8 @@ import {
   extend,
   isObject,
   parsePath,
-  _Set as Set
+  createNewSet
+  // _Set as Set
 } from '../util'
 
 let uid = 0
@@ -49,8 +50,8 @@ export default function Watcher (vm, expOrFn, cb, options) {
   this.dirty = this.lazy // for lazy watchers
   this.deps = []
   this.newDeps = []
-  this.depIds = new Set()
-  this.newDepIds = new Set()
+  this.depIds = createNewSet() // new Set()
+  this.newDepIds = createNewSet() // new Set()
   // parse expression for getter
   if (isFn) {
     this.getter = expOrFn
@@ -248,7 +249,7 @@ Watcher.prototype.teardown = function () {
  * @param {Set} seen
  */
 
-const seenObjects = new Set()
+const seenObjects = createNewSet() // new Set()
 function traverse (val, seen) {
   let i, keys, isA, isO
   if (!seen) {
