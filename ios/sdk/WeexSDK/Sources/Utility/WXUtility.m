@@ -15,6 +15,7 @@
 #import <sys/utsname.h>
 #import <UIKit/UIScreen.h>
 #import <Security/Security.h>
+#import <CommonCrypto/CommonCrypto.h>
 
 #define KEY_PASSWORD  @"com.taobao.Weex.123456"
 #define KEY_USERNAME_PASSWORD  @"com.taobao.Weex.weex123456"
