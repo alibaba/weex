@@ -12,11 +12,11 @@
 export { init } from './init'
 
 export {
-	refresh,
+  refresh,
   destroy,
   getRootElement,
   fireEvent,
   callback,
   updateActions,
-	callTasks
+  callTasks
 } from '../../../../default/app/ctrl/misc'
