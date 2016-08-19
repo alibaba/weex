@@ -7,16 +7,18 @@
 
 A core component which provides the most popular features for using a list of items.  
 
-It can provide better experience and performace with smooth scrolling and memory reusing.
+It can provide better experience and performance with smooth scrolling and memory reusing.
 
 ### Child Components
 
 **Notes:** The `list`'s subcomponents can only contain `cell`, `header`, `refresh`, `loading` or fixed-position components. Other kind of components will not be displayed correctly.
 
-* `cell` defines the attributes and behavior of the cells that appear in list. 
-* `header` <sup class="wx-v">0.6.1</sup> header which will stick to the top when it reaches the top of the screen. 
-* `refresh` component can be used inside list to add pull to refresh functionality.
-* `loading` component can be used inside list to add loading view at the bottom of scroller.
+* `cell` defines the attributes and behavior of the cells that appear in list.
+* `header` <sup class="wx-v">0.6.1</sup> header which will stick to the top when it reaches the top of the screen.
+* `refresh` component can be used inside list to add pull down to refresh functionality.
+* `loading` component can be used inside list to add pull up to loadmore functionality.
+
+* `refresh` and `loading` please check out the [refresh-loading](refresh-loading.md).
 
 ### Attributes
 
@@ -41,12 +43,15 @@ Other attributes please check out the [common attributes](../references/common-a
 
 - support `click` event. Check out [common events](../references/common-event.md)
 - support `appear` / `disappear` event. Check out [common events](../references/common-event.md)
-- support `refresh` event  <sup class="wx-v">0.5</sup>.  If a refresh component is inside scroller, this event will be triggered when the scroller is swiping down.
-- support `loading` event .  If a loading component is inside scroller, this event will be triggered when user scrolling to the bottom.
 
 ### API
 
 All cells or cell's subcomponents in list support the `scrollToElement` API in [dom module](../modules/dom.md)
+
+### Restriction
+Nested lists or scrollers within the same direction are **not** supported. In other words. nested lists/scroller must have different directions.
+
+For example, a vertical list nested in a vertical list or scroller is ** not ** allowed. However, a vertical list nested in a horizontal list or scroller is legal.
 
 ### Example
 
