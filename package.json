@@ -72,7 +72,7 @@
     "modals": "^0.1.5",
     "scroll-to": "0.0.2",
     "semver": "^5.1.0",
-    "weex-components": "^0.1.3"
+    "weex-components": "^0.2.0"
   },
   "devDependencies": {
     "babel-cli": "~6.4.5",
@@ -97,6 +97,6 @@
     "style-loader": "^0.13.1",
     "uglify-js": "^2.6.4",
     "webpack": "^1.13.1",
-    "weex-loader": "^0.2.0"
+    "weex-loader": "^0.3.0"
   }
 }
