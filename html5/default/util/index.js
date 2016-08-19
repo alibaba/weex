@@ -59,7 +59,7 @@ export function createNewSet () {
     return nativeSet.create()
   }
   /* eslint-enable */
-  return new Set()
+  return new _Set()
 }
 
 /**
