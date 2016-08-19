@@ -204,35 +204,244 @@
  */
 package com.taobao.weex.ui.component;
 
-/**
- * basic Component types
- */
-public class WXBasicComponentType {
+import android.content.Context;
+import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.FrameLayout;
 
-  public static final String TEXT = "text";
-  public static final String IMAGE = "image";
-  public static final String IMG = "img";
-  public static final String CONTAINER = "container";
-  public static final String DIV = "div";
-  public static final String SCROLLER = "scroller";
-  public static final String SLIDER = "slider";
-  public static final String SLIDER_NEIGHBOR = "slider-neighbor";
-  public static final String LIST = "list";
-  public static final String VLIST = "vlist";
-  public static final String HLIST = "hlist";
-  public static final String CELL = "cell";
-  public static final String HEADER = "header";
-  public static final String FOOTER = "footer";
-  public static final String INDICATOR = "indicator";
-  public static final String VIDEO = "video";
-  public static final String INPUT = "input";
-  public static final String TEXTAREA = "textarea";
-  public static final String SWITCH = "switch";
-  public static final String A = "a";
-  public static final String EMBED = "embed";
-  public static final String WEB = "web";
-  public static final String REFRESH = "refresh";
-  public static final String LOADING = "loading";
-  public static final String LOADING_INDICATOR = "loading-indicator";
+import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.ComponentCreator;
+import com.taobao.weex.ui.view.WXCirclePageAdapter;
+import com.taobao.weex.ui.view.WXCircleViewPager;
+import com.taobao.weex.utils.WXUtils;
+
+import java.lang.reflect.InvocationTargetException;
+
+/**
+ * Created by xingjiu on 16/8/18.
+ */
+
+public class WXSliderNeighbor extends WXSlider {
+    public static final String NEIGHBOR_SPACE = "neighborSpace"; // the neighbor page space width
+    public static final String NEIGHBOR_SCALE = "neighborScale"; // the init scale of neighor page
+    public static final String NEIGHBOR_ALPHA = "neighborAlpha"; // the init alpha of neighor page
+
+    private static final int DEFAULT_NEIGHBOR_SPACE = 150;
+    private static final float DEFAULT_NEIGHBOR_SCALE = 0.8F;
+    private static final float DEFAULT_NEIGHBOR_ALPHA = 0.6F;
+
+    private float mNerghborScale = DEFAULT_NEIGHBOR_SCALE;
+    private float mNerghborAlpha = DEFAULT_NEIGHBOR_ALPHA;
+
+    private OnTouchCallback selfTouchCallback = new OnTouchCallback();
+
+    public WXSliderNeighbor(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
+        super(instance, dom, parent, instanceId, isLazy);
+    }
+
+    public WXSliderNeighbor(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
+        super(instance, node, parent, lazy);
+    }
+
+    public static class Creator implements ComponentCreator {
+        public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+            return new WXSliderNeighbor(instance, node, parent, lazy);
+        }
+    }
+
+    @Override
+    protected FrameLayout initComponentHostView(Context context) {
+        FrameLayout view = new FrameLayout(context);
+        // init view pager
+        FrameLayout.LayoutParams pagerParams = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
+        pagerParams.gravity = Gravity.CENTER;
+        mViewPager = new WXCircleViewPager(mContext);
+        mViewPager.setLayoutParams(pagerParams);
+
+        // init adapter
+        mAdapter = new WXCirclePageAdapter();
+        mViewPager.setAdapter(mAdapter);
+
+        // add to parent
+        view.addView(mViewPager);
+        mViewPager.addOnPageChangeListener(mPageChangeListener);
+
+        // set animation
+        mViewPager.setPageTransformer(true, new ZoomTransformer());
+        mViewPager.setOffscreenPageLimit(mAdapter.getCount()/2);
+        mViewPager.setClipChildren(false);
+        mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
+
+        view.setClipChildren(false);
+        view.setOnTouchListener(selfTouchCallback);
+
+        registerActivityStateListener();
+
+        return view;
+    }
+
+    @Override
+    protected void addSubView(View view, int index) {
+        // fix init view not animated
+        view.setAlpha(mNerghborAlpha);
+        view.setScaleX(mNerghborScale);
+        view.setScaleY(mNerghborScale);
+
+        super.addSubView(view, index);
+    }
+
+    @Override
+    public void addEvent(String type) {
+        super.addEvent(type);
+        if (getRealView() != null) {
+            getRealView().setOnTouchListener(selfTouchCallback);
+        }
+        mGestureType.clear();
+    }
+
+    @WXComponentProp(name = NEIGHBOR_SPACE)
+    public void setNeighborSpace(String input) {
+        int neighborSpace = DEFAULT_NEIGHBOR_SPACE;
+        if (!TextUtils.isEmpty(input)) {
+            try {
+                neighborSpace = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+            }
+        }
+
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mViewPager.getLayoutParams();
+        lp.leftMargin = neighborSpace;
+        lp.rightMargin = neighborSpace;
+        mViewPager.setLayoutParams(lp);
+    }
+
+    @WXComponentProp(name = NEIGHBOR_SCALE)
+    public void setNeighborScale(String input) {
+        float neighborScale = DEFAULT_NEIGHBOR_SCALE;
+        if (!TextUtils.isEmpty(input)) {
+            try {
+                neighborScale = Float.parseFloat(input);
+            } catch (NumberFormatException e) {
+            }
+        }
+
+        this.mNerghborScale = neighborScale;
+    }
+
+    @WXComponentProp(name = NEIGHBOR_ALPHA)
+    public void setNeighborAlpha(String input) {
+        float neighborAlpha = DEFAULT_NEIGHBOR_ALPHA;
+        if (!TextUtils.isEmpty(input)) {
+            try {
+                neighborAlpha = Float.parseFloat(input);
+            } catch (NumberFormatException e) {
+            }
+        }
+
+        this.mNerghborAlpha = neighborAlpha;
+    }
+
+    @Override
+    protected boolean setProperty(String key, Object param) {
+        String input = "";
+        switch (key) {
+            case NEIGHBOR_SPACE:
+                input = WXUtils.getString(param, null);
+                if (input != null) {
+                    setNeighborSpace(input);
+                }
+                return true;
+            case NEIGHBOR_SCALE:
+                input = WXUtils.getString(param, null);
+                if (input != null) {
+                    setNeighborScale(input);
+                }
+                return true;
+            case NEIGHBOR_ALPHA:
+                input = WXUtils.getString(param, null);
+                if (input != null) {
+                    setNeighborAlpha(input);
+                }
+                return true;
+        }
+        return super.setProperty(key, param);
+    }
+
+    class ZoomTransformer implements ViewPager.PageTransformer {
+        @Override
+        public void transformPage(View page, float position) {
+            float alpha, scale;
+            if (position >= -1 && position <= 1) {
+                Log.e("4444", "trans " + mAdapter.getItemPosition(page) + " " + position);
+
+                float factor = Math.abs(Math.abs(position) - 1);//0--1
+                scale = (1-mNerghborScale) * factor + mNerghborScale;//0.8---1
+                alpha = (1-mNerghborAlpha) * factor + mNerghborAlpha;//0.6----1
+
+                page.setAlpha(alpha);
+                page.setScaleX(scale);
+                page.setScaleY(scale);
+
+                // page.invalidate();
+            }
+        }
+    }
+
+    class OnTouchCallback implements View.OnTouchListener {
+        private float downX = -1;
+        private boolean hasMove;
+        private int mScreenWidth;
+
+        public OnTouchCallback() {
+            mScreenWidth = getParent().getAbsoluteX();
+        }
+
+        @Override
+        public boolean onTouch(View view, MotionEvent event) {
+            try {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        downX = event.getX();
+                        hasMove = false;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        if (downX < 0) {
+                            downX = event.getX();
+                        }
+                        if (Math.abs(event.getX() - downX) > 20) {
+                            hasMove = true;
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if (!hasMove) {
+                            hasMove = false;
+                            if (event.getX() < mScreenWidth / 4) {
+                                if (mViewPager.getCurrentItem() > 0) {
+                                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
+                                    return false;
+                                }
+                            } else if (event.getX() > mScreenWidth * 0.75) {
+                                if (mViewPager.getAdapter() != null && mViewPager.getCurrentItem() < mViewPager.getAdapter().getCount() - 1) {
+                                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
+                                    return false;
+                                }
+                            }
+                        }
+                        hasMove = false;
+                        break;
+                }
+                return mViewPager.dispatchTouchEvent(event);
+            } catch (Exception e) {
+                // do nothing
+                return false;
+            }
+        }
+    }
 
 }
