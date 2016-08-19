@@ -11,6 +11,7 @@
 
 <script>
   require('weex-components');
+  var img0 = 'https://gw.alicdn.com/tps/TB1dzanMVXXXXXQXVXXXXXXXXXX-573-412.png';
   var img1 = 'https://gw.alicdn.com/tps/TB1p9CCMVXXXXa_XFXXXXXXXXXX-450-340.png';
   var img2 = 'https://gw.alicdn.com/tps/TB1zpSiMVXXXXchXFXXXXXXXXXX-448-338.png';
   var img3 = 'https://gw.alicdn.com/tps/TB1EuGIMVXXXXcoXpXXXXXXXXXX-452-337.png';
@@ -30,6 +31,14 @@
           interval: 2000,
           autoPlay: true,
           sliderPages: [
+            {
+              items: [
+                {
+                  image: img0,
+                  link: '//h5.m.taobao.com/1'
+                }
+              ]
+            },
             {
               items: [
                 {

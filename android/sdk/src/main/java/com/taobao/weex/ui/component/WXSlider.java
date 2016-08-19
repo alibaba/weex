@@ -205,11 +205,9 @@
 package com.taobao.weex.ui.component;
 
 import android.content.Context;
-import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -276,11 +274,10 @@ public class WXSlider extends WXVContainer<FrameLayout> {
 
   @Override
   protected FrameLayout initComponentHostView(Context context) {
-    Log.e("2222", "initComponentHostView " + context + " ");
     FrameLayout view = new FrameLayout(context);
     // init view pager
     FrameLayout.LayoutParams pagerParams = new FrameLayout.LayoutParams(
-            LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+         LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
     mViewPager = new WXCircleViewPager(mContext);
     mViewPager.setLayoutParams(pagerParams);
 
@@ -295,7 +292,6 @@ public class WXSlider extends WXVContainer<FrameLayout> {
 
     return view;
   }
-
 
   //TODO Slider don't support any gesture for now.
   @Override
@@ -314,7 +310,6 @@ public class WXSlider extends WXVContainer<FrameLayout> {
 
   @Override
   protected void addSubView(View view, int index) {
-    Log.e("2222", "addSubView " + view + " " + index);
     if (view == null || mAdapter == null) {
       return;
     }
@@ -325,11 +320,9 @@ public class WXSlider extends WXVContainer<FrameLayout> {
     mAdapter.addPageView(view);
     mAdapter.notifyDataSetChanged();
     if (mIndicator != null) {
-            mIndicator.getHostView().forceLayout();
+      mIndicator.getHostView().forceLayout();
       mIndicator.getHostView().requestLayout();
     }
-
-
   }
 
   @Override
@@ -482,7 +475,6 @@ public class WXSlider extends WXVContainer<FrameLayout> {
 
     @Override
     public void onPageSelected(int pos) {
-      Log.e("2222", "onPageSelected " + pos);
       if (WXEnvironment.isApkDebugable()) {
         WXLogUtils.d("onPageSelected >>>>" + pos);
       }
@@ -517,23 +509,14 @@ public class WXSlider extends WXVContainer<FrameLayout> {
 
     @Override
     public void onPageScrollStateChanged(int arg0) {
-      Log.e("2222", "onPageScrollStateChanged " + arg0);
       FrameLayout root = getHostView();
       if(null != root) {
         root.invalidate();
       }
-
-
-      mViewPager.requestLayout();
-      getHostView().invalidate();
-
     }
 
     @Override
     public void onPageScrolled(int arg0, float arg1, int arg2) {
-
-      mViewPager.requestLayout();
-      getHostView().invalidate();
     }
   }
 }
