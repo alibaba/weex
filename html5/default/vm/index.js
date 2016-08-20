@@ -82,4 +82,37 @@ export default function Vm (
   build(this)
 }
 
+Vm.prototype.destroy = function () {
+  delete this._app
+  delete this._computed
+  delete this._css
+  delete this._data
+  delete this._ids
+  delete this._methods
+  delete this._options
+  delete this._parent
+  delete this._parentEl
+  delete this._rootEl
+  delete this._vmEvents
+  delete this._type
+
+  // remove all watchers
+  if (this._watchers) {
+    let watcherCount = this._watchers.length
+    while (watcherCount--) {
+      this._watchers[watcherCount].teardown()
+    }
+    delete this._watchers
+  }
+
+  // remove child vms recursively
+  if (this._childrenVms) {
+    let vmCount = this._childrenVms.length
+    while (vmCount--) {
+      this._childrenVms[vmCount].destroy()
+    }
+    delete this._childrenVms
+  }
+}
+
 mixinEvents(Vm.prototype)
