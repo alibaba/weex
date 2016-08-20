@@ -44,6 +44,10 @@ export function refresh (app, data) {
 export function destroy (app) {
   console.debug(`[JS Framework] Destory an instance(${app.id})`)
 
+  if (app.vm) {
+    app.vm.destroy()
+  }
+
   app.id = ''
   app.options = null
   app.blocks = null
