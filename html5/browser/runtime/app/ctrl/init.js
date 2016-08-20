@@ -34,7 +34,7 @@ export function init (app, code, data) {
     app.doc.listener.createFinish()
     console.debug(`[JS Framework] After intialized an instance(${app.id})`)
   }
-  bundleBootstrap.Vm = Vm
+  const bundleVm = Vm
   const bundleRegister = (...args) => register(app, ...args)
   const bundleRender = (name, _data) => {
     result = bootstrap(app, name, {}, _data)
@@ -72,6 +72,7 @@ export function init (app, code, data) {
       '__weex_bootstrap__', // alias for bootstrap
       '__weex_document__', // alias for bootstrap
       '__weex_require__',
+      '__weex_viewmodel__',
       functionBody
     )
 
@@ -85,7 +86,8 @@ export function init (app, code, data) {
       bundleDefine,
       bundleBootstrap,
       bundleDocument,
-      bundleRequireModule)
+      bundleRequireModule,
+      bundleVm)
   }
 
   return result
