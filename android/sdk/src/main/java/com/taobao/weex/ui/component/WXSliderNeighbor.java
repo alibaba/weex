@@ -207,7 +207,6 @@ package com.taobao.weex.ui.component;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -220,12 +219,15 @@ import com.taobao.weex.ui.view.WXCirclePageAdapter;
 import com.taobao.weex.ui.view.WXCircleViewPager;
 import com.taobao.weex.utils.WXUtils;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 /**
+ * Known Issus: In auto play mode, neighbor view not scaled or aplhaed rarely.
+ *
  * Created by xingjiu on 16/8/18.
  */
-
 public class WXSliderNeighbor extends WXSlider {
     public static final String NEIGHBOR_SPACE = "neighborSpace"; // the neighbor page space width
     public static final String NEIGHBOR_SCALE = "neighborScale"; // the init scale of neighor page
@@ -257,6 +259,7 @@ public class WXSliderNeighbor extends WXSlider {
     @Override
     protected FrameLayout initComponentHostView(Context context) {
         FrameLayout view = new FrameLayout(context);
+
         // init view pager
         FrameLayout.LayoutParams pagerParams = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
@@ -275,7 +278,6 @@ public class WXSliderNeighbor extends WXSlider {
         // set animation
         mViewPager.setPageTransformer(true, new ZoomTransformer());
         mViewPager.setOffscreenPageLimit(mAdapter.getCount()/2);
-        mViewPager.setClipChildren(false);
         mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
 
         view.setClipChildren(false);
@@ -288,12 +290,38 @@ public class WXSliderNeighbor extends WXSlider {
 
     @Override
     protected void addSubView(View view, int index) {
-        // fix init view not animated
-        view.setAlpha(mNerghborAlpha);
-        view.setScaleX(mNerghborScale);
-        view.setScaleY(mNerghborScale);
-
+        updateScaleAndAplha(view, mNerghborAlpha, mNerghborScale);
         super.addSubView(view, index);
+    }
+
+    private void updateScaleAndAplha(View view, float alpha, float scale) {
+        if(null == view) {
+            return;
+        }
+        if(alpha > 0) {
+            view.setAlpha(alpha);
+        }
+        if(scale > 0) {
+            view.setScaleX(scale);
+            view.setScaleY(scale);
+        }
+    }
+
+    private void updateAdpaterScaleAndAplha(float alpha, float scale) {
+        try {
+            Field f = mAdapter.getClass().getDeclaredField("views");
+            f.setAccessible(true);
+            List<View> views = (List<View>) f.get(mAdapter);
+            if(null != views && views.size() > 0) {
+                for(View v : views) {
+                    updateScaleAndAplha(v, alpha, scale);
+                }
+            }
+        } catch (NoSuchFieldException e) {
+            // ignore
+        } catch (IllegalAccessException e) {
+            // ignore
+        }
     }
 
     @Override
@@ -315,6 +343,7 @@ public class WXSliderNeighbor extends WXSlider {
             }
         }
 
+        // margin is the space for neighbor views.
         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mViewPager.getLayoutParams();
         lp.leftMargin = neighborSpace;
         lp.rightMargin = neighborSpace;
@@ -331,7 +360,11 @@ public class WXSliderNeighbor extends WXSlider {
             }
         }
 
-        this.mNerghborScale = neighborScale;
+        // addSubView is called before setProperty, so we need to modify the neighbor view in mAdapter.
+        if(this.mNerghborScale != neighborScale) {
+            this.mNerghborScale = neighborScale;
+            updateAdpaterScaleAndAplha(0, neighborScale);
+        }
     }
 
     @WXComponentProp(name = NEIGHBOR_ALPHA)
@@ -344,7 +377,11 @@ public class WXSliderNeighbor extends WXSlider {
             }
         }
 
-        this.mNerghborAlpha = neighborAlpha;
+        // The same work as setNeighborScale()
+        if(this.mNerghborAlpha != neighborAlpha) {
+            this.mNerghborAlpha = neighborAlpha;
+            updateAdpaterScaleAndAplha(neighborAlpha, 0);
+        }
     }
 
     @Override
@@ -378,8 +415,6 @@ public class WXSliderNeighbor extends WXSlider {
         public void transformPage(View page, float position) {
             float alpha, scale;
             if (position >= -1 && position <= 1) {
-                Log.e("4444", "trans " + mAdapter.getItemPosition(page) + " " + position);
-
                 float factor = Math.abs(Math.abs(position) - 1);//0--1
                 scale = (1-mNerghborScale) * factor + mNerghborScale;//0.8---1
                 alpha = (1-mNerghborAlpha) * factor + mNerghborAlpha;//0.6----1
@@ -387,8 +422,6 @@ public class WXSliderNeighbor extends WXSlider {
                 page.setAlpha(alpha);
                 page.setScaleX(scale);
                 page.setScaleY(scale);
-
-                // page.invalidate();
             }
         }
     }

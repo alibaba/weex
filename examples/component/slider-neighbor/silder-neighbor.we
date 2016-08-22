@@ -1,12 +1,44 @@
 <template>
-  
-    <slider-neighbor class="slider" append="tree" interval="{{sliders[0].interval}}"  auto-play="true" 
-      neighbor-alpha="0.5"
+  <scroller class="body">
+
+    <wxc-panel title="Notice" type="primary">
+    <text class="notice">1. AutoPlay properties has a known issus in SliderNeighbor.</text>
+    <text class="notice">2. wxc-panel has a default margin left, conflict with slider-neighbor, so DONOT use slider-neighbor in wxc-panel. </text>
+    </wxc-panel>
+
+    <text class="normal"> 1. Default Usage. neighbor-space=150; neighbor-alpha=0.6; neighbor-scale=0.8; </text>
+    <slider-neighbor  class="slider" append="tree" interval="{{sliders[0].interval}}"  auto-play="false" 
+      neighbor-alpha="0.6"
       neighbor-scale="0.8"
       neighbor-space="150">
       <slider-neighbor-page  repeat="{{sliders[0].sliderPages}}"></slider-neighbor-page>
     </slider-neighbor>
 
+    <text class="normal"> 2. neighbor-space = 190, this property number works with slider-item width. </text>
+    <slider-neighbor  class="slider" append="tree" interval="{{sliders[0].interval}}"  auto-play="false" 
+      neighbor-alpha="0.6"
+      neighbor-scale="0.8"
+      neighbor-space="190">
+      <slider-neighbor-page  repeat="{{sliders[0].sliderPages}}"></slider-neighbor-page>
+    </slider-neighbor>
+
+    <text class="normal"> 3. neighbor-scale = 0.7, Also makes neighbor view smaller. too small will not be seen on screen. </text>
+    <slider-neighbor  class="slider" append="tree" interval="{{sliders[0].interval}}"  auto-play="false" 
+      neighbor-alpha="0.6"
+      neighbor-scale="0.7"
+      neighbor-space="150">
+      <slider-neighbor-page  repeat="{{sliders[0].sliderPages}}"></slider-neighbor-page>
+    </slider-neighbor>
+
+    <text class="normal"> 4. neighbor-alpha = 0.1 </text>
+    <slider-neighbor  class="slider" append="tree" interval="{{sliders[0].interval}}"  auto-play="false" 
+      neighbor-alpha="0.1"
+      neighbor-scale="0.8"
+      neighbor-space="150">
+      <slider-neighbor-page  repeat="{{sliders[0].sliderPages}}"></slider-neighbor-page>
+    </slider-neighbor>
+
+  </scroller>
 </template>
 
 <script>
@@ -136,10 +168,26 @@
     background-color: #ffffff;
   }
 
+  .notice {
+    font-size:32px; 
+    color:#ff0000; 
+    marginBottom:30;
+  }
+
+  .normal {
+    font-size:26px; 
+    marginBottom:30;
+    marginTop:30;
+  }
+
   .slider {
     flexDirection: row;
     width: 750px;
     height: 360px;
+    marginLeft: 0px;
+    marginRight: 0px;
+    paddingLeft: 0px;
+    paddingRight: 0px;
   }
 
 
@@ -151,5 +199,9 @@
     left: 240;
     itemColor: #dddddd;
     itemSelectedColor: rgb(40, 96, 144);
+  }
+
+  .container {
+    width: 750px;
   }
 </style>
