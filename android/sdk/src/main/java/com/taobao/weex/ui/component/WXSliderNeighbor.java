@@ -279,7 +279,6 @@ public class WXSliderNeighbor extends WXSlider {
         mViewPager.setPageTransformer(true, new ZoomTransformer());
         mViewPager.setOffscreenPageLimit(mAdapter.getCount()/2);
         mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
-
         view.setClipChildren(false);
         view.setOnTouchListener(selfTouchCallback);
 
@@ -290,7 +289,7 @@ public class WXSliderNeighbor extends WXSlider {
 
     @Override
     protected void addSubView(View view, int index) {
-        updateScaleAndAplha(view, mNerghborAlpha, mNerghborScale);
+        updateScaleAndAplha(view, mNerghborAlpha, mNerghborScale); // we need to set neighbor view status when added.
         super.addSubView(view, index);
     }
 
@@ -307,6 +306,7 @@ public class WXSliderNeighbor extends WXSlider {
         }
     }
 
+    // WXCirclePageAdapter not expoesd views, So do it in reflect way. Thanks god, it is not proguarded.
     private void updateAdpaterScaleAndAplha(float alpha, float scale) {
         try {
             Field f = mAdapter.getClass().getDeclaredField("views");
@@ -410,6 +410,7 @@ public class WXSliderNeighbor extends WXSlider {
         return super.setProperty(key, param);
     }
 
+    // Here is the trick.
     class ZoomTransformer implements ViewPager.PageTransformer {
         @Override
         public void transformPage(View page, float position) {
