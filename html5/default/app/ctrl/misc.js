@@ -45,7 +45,7 @@ export function destroy (app) {
   console.debug(`[JS Framework] Destory an instance(${app.id})`)
 
   if (app.vm) {
-    app.vm.destroy()
+    destroyVm(app.vm)
   }
 
   app.id = ''
@@ -56,6 +56,43 @@ export function destroy (app) {
   app.doc = null
   app.customComponentMap = null
   app.callbacks = null
+}
+
+/**
+ * Destroy an Vm.
+ * @param {object} vm
+ */
+export function destroyVm (vm) {
+  delete vm._app
+  delete vm._computed
+  delete vm._css
+  delete vm._data
+  delete vm._ids
+  delete vm._methods
+  delete vm._options
+  delete vm._parent
+  delete vm._parentEl
+  delete vm._rootEl
+  delete vm._vmEvents
+  delete vm._type
+
+  // remove all watchers
+  if (vm._watchers) {
+    let watcherCount = vm._watchers.length
+    while (watcherCount--) {
+      vm._watchers[watcherCount].teardown()
+    }
+    delete vm._watchers
+  }
+
+  // remove child vms recursively
+  if (vm._childrenVms) {
+    let vmCount = vm._childrenVms.length
+    while (vmCount--) {
+      destroyVm(vm._childrenVms[vmCount])
+    }
+    delete vm._childrenVms
+  }
 }
 
 /**
