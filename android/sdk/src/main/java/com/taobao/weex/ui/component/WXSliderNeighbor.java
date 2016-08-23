@@ -207,6 +207,7 @@ package com.taobao.weex.ui.component;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -240,8 +241,6 @@ public class WXSliderNeighbor extends WXSlider {
     private float mNerghborScale = DEFAULT_NEIGHBOR_SCALE;
     private float mNerghborAlpha = DEFAULT_NEIGHBOR_ALPHA;
 
-    private OnTouchCallback selfTouchCallback = new OnTouchCallback();
-
     public WXSliderNeighbor(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
         super(instance, dom, parent, instanceId, isLazy);
     }
@@ -254,6 +253,12 @@ public class WXSliderNeighbor extends WXSlider {
         public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
             return new WXSliderNeighbor(instance, node, parent, lazy);
         }
+    }
+
+    @Override
+    public void bindData(WXComponent component) {
+        super.bindData(component);
+        mViewPager.setCurrentItem(mAdapter.getCount(), true);
     }
 
     @Override
@@ -277,10 +282,9 @@ public class WXSliderNeighbor extends WXSlider {
 
         // set animation
         mViewPager.setPageTransformer(true, new ZoomTransformer());
-        mViewPager.setOffscreenPageLimit(mAdapter.getCount()/2);
         mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
         view.setClipChildren(false);
-        view.setOnTouchListener(selfTouchCallback);
+        view.setOnTouchListener(new OnTouchCallback());
 
         registerActivityStateListener();
 
@@ -324,14 +328,6 @@ public class WXSliderNeighbor extends WXSlider {
         }
     }
 
-    @Override
-    public void addEvent(String type) {
-        super.addEvent(type);
-        if (getRealView() != null) {
-            getRealView().setOnTouchListener(selfTouchCallback);
-        }
-        mGestureType.clear();
-    }
 
     @WXComponentProp(name = NEIGHBOR_SPACE)
     public void setNeighborSpace(String input) {
@@ -414,7 +410,15 @@ public class WXSliderNeighbor extends WXSlider {
     class ZoomTransformer implements ViewPager.PageTransformer {
         @Override
         public void transformPage(View page, float position) {
+            //Log.e("333", "transformPage " + mAdapter.getItemPosition(page) + " to " + position + " now is " + mViewPager.getCurrentItem());
             float alpha, scale;
+            if(position <= (-mAdapter.getRealCount() + 1)) {
+                position = position + mAdapter.getRealCount();
+            }
+            if(position >= mAdapter.getRealCount() - 1) {
+                position = position - mAdapter.getRealCount();
+            }
+
             if (position >= -1 && position <= 1) {
                 float factor = Math.abs(Math.abs(position) - 1);//0--1
                 scale = (1-mNerghborScale) * factor + mNerghborScale;//0.8---1
@@ -423,6 +427,7 @@ public class WXSliderNeighbor extends WXSlider {
                 page.setAlpha(alpha);
                 page.setScaleX(scale);
                 page.setScaleY(scale);
+                //Log.e("333", "transformPage inner set " + mAdapter.getItemPosition(page) + " to alpha " + alpha + " scale " + scale);
             }
         }
     }
@@ -430,10 +435,10 @@ public class WXSliderNeighbor extends WXSlider {
     class OnTouchCallback implements View.OnTouchListener {
         private float downX = -1;
         private boolean hasMove;
-        private int mScreenWidth;
+        private float mScreenWidth;
 
         public OnTouchCallback() {
-            mScreenWidth = getParent().getAbsoluteX();
+            mScreenWidth = getParent().getDomObject().getLayoutWidth();
         }
 
         @Override
@@ -455,16 +460,24 @@ public class WXSliderNeighbor extends WXSlider {
                     case MotionEvent.ACTION_UP:
                         if (!hasMove) {
                             hasMove = false;
-                            if (event.getX() < mScreenWidth / 4) {
-                                if (mViewPager.getCurrentItem() > 0) {
-                                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
-                                    return false;
+                            if (event.getX() < mScreenWidth * 0.25) {
+                                //Log.e("333", "onTouch left  event is " + event.getAction() + " x is " + event.getX() + " next pos is " +  (mViewPager.getCurrentItem() != 0 ? (mViewPager.getCurrentItem() - 1) : mAdapter.getRealCount() - 1)  );
+
+                                if(mViewPager.getCurrentItem() == 0) {
+                                    mViewPager.setCurrentItem(mAdapter.getRealCount() - 1, false);
+                                }else {
+                                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1, false);
                                 }
+                                return false;
                             } else if (event.getX() > mScreenWidth * 0.75) {
-                                if (mViewPager.getAdapter() != null && mViewPager.getCurrentItem() < mViewPager.getAdapter().getCount() - 1) {
-                                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
-                                    return false;
+                                //Log.e("333", "onTouch right  event is " + event.getAction() + " x is " + event.getX() + " next pos is " + (mViewPager.getCurrentItem() + 1));
+
+                                if(mViewPager.getCurrentItem() == mAdapter.getRealCount()) {
+                                    mViewPager.setCurrentItem(0, false);
+                                }else {
+                                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1, false);
                                 }
+                                return false;
                             }
                         }
                         hasMove = false;

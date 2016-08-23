@@ -2,12 +2,11 @@
   <scroller class="body">
 
     <wxc-panel title="Notice" type="primary">
-    <text class="notice">1. AutoPlay properties has a known issus in SliderNeighbor.</text>
-    <text class="notice">2. wxc-panel has a default margin left, conflict with slider-neighbor, so DONOT use slider-neighbor in wxc-panel. </text>
+    <text class="notice">1. wxc-panel has a default margin left, conflict with slider-neighbor, so DONOT use slider-neighbor in wxc-panel. </text>
     </wxc-panel>
 
     <text class="normal"> 1. Default Usage. neighbor-space=150; neighbor-alpha=0.6; neighbor-scale=0.8; </text>
-    <slider-neighbor  class="slider" append="tree" interval="{{sliders[0].interval}}"  auto-play="false" 
+    <slider-neighbor  class="slider" append="tree" interval="{{sliders[0].interval}}"  auto-play="true" 
       neighbor-alpha="0.6"
       neighbor-scale="0.8"
       neighbor-space="150">
