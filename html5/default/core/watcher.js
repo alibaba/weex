@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import Dep from './dep'
+import Dep, { pushTarget, popTarget } from './dep'
 // import { pushWatcher } from './batcher'
 import {
   warn,
@@ -96,8 +96,7 @@ Watcher.prototype.get = function () {
  */
 
 Watcher.prototype.beforeGet = function () {
-  prevTarget = Dep.target
-  Dep.target = this
+  pushTarget(this)
 }
 
 /**
@@ -122,7 +121,7 @@ Watcher.prototype.addDep = function (dep) {
  */
 
 Watcher.prototype.afterGet = function () {
-  Dep.target = prevTarget
+  popTarget()
   let i = this.deps.length
   while (i--) {
     const dep = this.deps[i]
