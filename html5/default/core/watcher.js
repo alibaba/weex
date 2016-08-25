@@ -13,7 +13,6 @@ import {
 } from '../util'
 
 let uid = 0
-let prevTarget
 
 /**
  * A watcher parses an expression, collects dependencies,
