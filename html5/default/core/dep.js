@@ -56,7 +56,9 @@ Dep.prototype.removeSub = function (sub) {
  */
 
 Dep.prototype.depend = function () {
-  Dep.target.addDep(this)
+  if (Dep.target) {
+    Dep.target.addDep(this)
+  }
 }
 
 /**
