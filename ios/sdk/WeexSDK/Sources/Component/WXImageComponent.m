@@ -36,6 +36,7 @@ static dispatch_queue_t WXImageUpdateQueue;
 @property (nonatomic, assign) UIViewContentMode resizeMode;
 @property (nonatomic, assign) WXImageQuality imageQuality;
 @property (nonatomic, assign) WXImageSharp imageSharp;
+@property (nonatomic, assign) NSInteger blurRadius;
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic, strong) id<WXImageOperationProtocol> imageOperation;
 @property (nonatomic, strong) id<WXImageOperationProtocol> placeholderOperation;
@@ -63,6 +64,7 @@ static dispatch_queue_t WXImageUpdateQueue;
         _resizeMode = [WXConvert UIViewContentMode:attributes[@"resize"]];
         _imageQuality = [WXConvert WXImageQuality:styles[@"quality"]];
         _imageSharp = [WXConvert WXImageSharp:styles[@"sharpen"]];
+        _blurRadius = [WXConvert NSInteger:styles[@"blurRadius"]];
         _imageLoadEvent = NO;
     }
     
@@ -95,6 +97,11 @@ static dispatch_queue_t WXImageUpdateQueue;
     
     if (styles[@"sharpen"]) {
         _imageSharp = [WXConvert WXImageSharp:styles[@"sharpen"]];
+        [self updateImage];
+    }
+    
+    if (styles[@"blurRadius"]) {
+        _blurRadius = [WXConvert NSInteger:styles[@"blurRadius"]];
         [self updateImage];
     }
 }
@@ -217,7 +224,9 @@ static dispatch_queue_t WXImageUpdateQueue;
             }];
         }
         if (weakSelf.imageSrc) {
-            NSDictionary *userInfo = @{@"imageQuality":@(weakSelf.imageQuality), @"imageSharp":@(weakSelf.imageSharp)};
+            NSDictionary *userInfo = @{@"imageQuality":@(weakSelf.imageQuality),
+                                       @"imageSharp":@(weakSelf.imageSharp),
+                                       @"blurRadius":@(weakSelf.blurRadius)};
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 weakSelf.imageOperation = [[weakSelf imageLoader] downloadImageWithURL:imageSrc imageFrame:weakSelf.calculatedFrame userInfo:userInfo completed:^(UIImage *image, NSError *error, BOOL finished) {
