@@ -319,14 +319,18 @@ describe('Element in document methods', () => {
     expect(el.toJSON().attr).eql({ a: 21, b: 12 })
     el.setAttr('a', 22, true)
     expect(el.toJSON().attr).eql({ a: 22, b: 12 })
+    el.setAttr('a', 23, false)
+    expect(el.toJSON().attr).eql({ a: 23, b: 12 })
 
     el.setStyle('c', 21)
     expect(el.toJSON().style).eql({ a: 211, c: 21, d: 14 })
     el.setStyle('c', 22, true)
     expect(el.toJSON().style).eql({ a: 211, c: 22, d: 14 })
+    el.setStyle('c', 23, false)
+    expect(el.toJSON().style).eql({ a: 211, c: 23, d: 14 })
 
     el.setClassStyle({ a: 311, c: 313 })
-    expect(el.toJSON().style).eql({ a: 311, c: 22, d: 14 })
+    expect(el.toJSON().style).eql({ a: 311, c: 23, d: 14 })
 
     const handler = function () {}
     el.addEvent('click', handler)

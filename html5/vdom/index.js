@@ -443,7 +443,7 @@ function removeIndex (target, list, changeSibling) {
 }
 
 Element.prototype.setAttr = function (key, value, silent) {
-  if (this.attr[key] === value) {
+  if (this.attr[key] === value && silent !== false) {
     return
   }
   this.attr[key] = value
@@ -454,7 +454,7 @@ Element.prototype.setAttr = function (key, value, silent) {
 }
 
 Element.prototype.setStyle = function (key, value, silent) {
-  if (this.style[key] === value) {
+  if (this.style[key] === value && silent !== false) {
     return
   }
   this.style[key] = value
