@@ -383,6 +383,7 @@ public class WXScrollView extends ScrollView implements Callback, IWXScroller,
       MotionEvent down = MotionEvent.obtain(ev);
       down.setAction(MotionEvent.ACTION_DOWN);
       mHasNotDoneActionDown = false;
+      down.recycle();
     }
 
     if (ev.getAction() == MotionEvent.ACTION_DOWN) {
