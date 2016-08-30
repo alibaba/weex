@@ -153,41 +153,60 @@ describe('dom listener details', () => {
       args: ['_root', el.toJSON(), -1]
     }])
 
-    el.setAttr('a', 11)
+    el.setAttr('a', 11, true)
+    expect(spy.args.length).eql(2)
+    el.setAttr('a', 12)
     expect(spy.args.length).eql(3)
     expect(spy.args[2][0]).eql([{
       module: 'dom', method: 'updateAttrs',
-      args: [el.ref, { a: 11 }]
-    }])
-    el.setStyle('a', 12)
-    expect(spy.args.length).eql(4)
-    expect(spy.args[3][0]).eql([{
-      module: 'dom', method: 'updateStyle',
       args: [el.ref, { a: 12 }]
     }])
-    el.setClassStyle({ a: 13, b: 14 })
+    el.setAttr('a', 12, false)
+    expect(spy.args.length).eql(4)
+    expect(spy.args[3][0]).eql([{
+      module: 'dom', method: 'updateAttrs',
+      args: [el.ref, { a: 12 }]
+    }])
+
+    el.setStyle('a', 13, true)
+    expect(spy.args.length).eql(4)
+    el.setStyle('a', 14)
+    expect(spy.args.length).eql(5)
     expect(spy.args[4][0]).eql([{
       module: 'dom', method: 'updateStyle',
-      args: [el.ref, { a: 12, b: 14 }]
+      args: [el.ref, { a: 14 }]
     }])
-    expect(spy.args.length).eql(5)
-    el.addEvent('click', () => {})
-    expect(spy.args.length).eql(5)
-    el.addEvent('appear', () => {})
+    el.setStyle('a', 14, false)
     expect(spy.args.length).eql(6)
     expect(spy.args[5][0]).eql([{
+      module: 'dom', method: 'updateStyle',
+      args: [el.ref, { a: 14 }]
+    }])
+
+    el.setClassStyle({ a: 13, b: 14 })
+    expect(spy.args[6][0]).eql([{
+      module: 'dom', method: 'updateStyle',
+      args: [el.ref, { a: 14, b: 14 }]
+    }])
+    expect(spy.args.length).eql(7)
+    el.addEvent('click', () => {})
+    expect(spy.args.length).eql(7)
+    el.addEvent('appear', () => {})
+    expect(spy.args.length).eql(8)
+    expect(spy.args[7][0]).eql([{
       module: 'dom', method: 'addEvent',
       args: [el.ref, 'appear']
     }])
+
     el.removeEvent('click')
-    expect(spy.args.length).eql(7)
-    expect(spy.args[6][0]).eql([{
+    expect(spy.args.length).eql(9)
+    expect(spy.args[8][0]).eql([{
       module: 'dom', method: 'removeEvent',
       args: [el.ref, 'click']
     }])
     el.removeEvent('appear')
-    expect(spy.args.length).eql(8)
-    expect(spy.args[7][0]).eql([{
+    expect(spy.args.length).eql(10)
+    expect(spy.args[9][0]).eql([{
       module: 'dom', method: 'removeEvent',
       args: [el.ref, 'appear']
     }])
@@ -200,7 +219,7 @@ describe('dom listener details', () => {
     el.addEvent('click', () => {})
     el.addEvent('appear', () => {})
     el.removeEvent('appear')
-    expect(spy.args.length).eql(8)
+    expect(spy.args.length).eql(10)
     expect(doc.listener.updates).eql([
       { module: 'dom', method: 'updateAttrs', args: [el.ref, { a: 1 }] },
       { module: 'dom', method: 'updateStyle', args: [el.ref, { a: 2 }] },
