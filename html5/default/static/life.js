@@ -4,6 +4,7 @@ import {
   destroy
 } from '../app/ctrl'
 import { instanceMap } from './map'
+import { clearCommonModules } from '../app/bundle/define'
 
 /**
  * Init config informations for Weex framework
@@ -45,6 +46,7 @@ export function destroyInstance (id) {
     return new Error(`invalid instance id "${id}"`)
   }
   destroy(instance)
+  clearCommonModules()
   delete instanceMap[id]
   return instanceMap
 }
