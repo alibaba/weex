@@ -63,6 +63,26 @@ export function destroy (app) {
  * @param {object} vm
  */
 export function destroyVm (vm) {
+  delete vm._app
+  delete vm._computed
+  delete vm._css
+  delete vm._data
+  delete vm._ids
+  delete vm._methods
+  delete vm._options
+  delete vm._parent
+  delete vm._parentEl
+  delete vm._rootEl
+
+  // remove all watchers
+  if (vm._watchers) {
+    let watcherCount = vm._watchers.length
+    while (watcherCount--) {
+      vm._watchers[watcherCount].teardown()
+    }
+    delete vm._watchers
+  }
+
   // destroy child vms recursively
   if (vm._childrenVms) {
     let vmCount = vm._childrenVms.length
@@ -75,27 +95,8 @@ export function destroyVm (vm) {
   console.debug(`[JS Framework] "destroyed" lifecycle in Vm(${vm._type})`)
   vm.$emit('hook:destroyed')
 
-  delete vm._app
-  delete vm._computed
-  delete vm._css
-  delete vm._data
-  delete vm._ids
-  delete vm._methods
-  delete vm._options
-  delete vm._parent
-  delete vm._parentEl
-  delete vm._rootEl
-  delete vm._vmEvents
   delete vm._type
-
-  // remove all watchers
-  if (vm._watchers) {
-    let watcherCount = vm._watchers.length
-    while (watcherCount--) {
-      vm._watchers[watcherCount].teardown()
-    }
-    delete vm._watchers
-  }
+  delete vm._vmEvents
 }
 
 /**
