@@ -355,21 +355,19 @@ public class WXLogUtils {
   }
 
   /**
-   * Why the index is 4 ?
+   * Why the index is 2 ?
    * StackTrace:
-   * 0 = dalvik.system.VMStack.getThreadStackTrace
-   * 1 = java.lang.Thread.getStackTrace
-   * 2 = com.taobao.weex.utils.WXLogUtils.getLineNumber
-   * 3 = com.taobao.weex.utils.WXLogUtils.x
-   * 4 = the actual caller
+   * 0 = com.taobao.weex.utils.WXLogUtils.getLineNumber
+   * 1 = com.taobao.weex.utils.WXLogUtils#x
+   * 2 = the actual caller
    * …… more stack trace element
    * */
   private static String getLineNumber() {
-    if (!WXEnvironment.isApkDebugable()) {
+    if (!WXEnvironment.isShowLineNumber()) {
       return "";
     }
-    StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-    int index = 4;
+    StackTraceElement[] stackTrace = new Throwable().getStackTrace();
+    final int index = 2;
     String className = stackTrace[index].getFileName();
     int lineNum = stackTrace[index].getLineNumber();
     return "(" + className + ":" + lineNum + ") ";
