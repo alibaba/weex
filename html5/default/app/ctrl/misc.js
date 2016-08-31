@@ -73,8 +73,6 @@ export function destroyVm (vm) {
   delete vm._parent
   delete vm._parentEl
   delete vm._rootEl
-  delete vm._vmEvents
-  delete vm._type
 
   // remove all watchers
   if (vm._watchers) {
@@ -85,7 +83,7 @@ export function destroyVm (vm) {
     delete vm._watchers
   }
 
-  // remove child vms recursively
+  // destroy child vms recursively
   if (vm._childrenVms) {
     let vmCount = vm._childrenVms.length
     while (vmCount--) {
@@ -93,6 +91,12 @@ export function destroyVm (vm) {
     }
     delete vm._childrenVms
   }
+
+  console.debug(`[JS Framework] "destroyed" lifecycle in Vm(${vm._type})`)
+  vm.$emit('hook:destroyed')
+
+  delete vm._type
+  delete vm._vmEvents
 }
 
 /**

@@ -124,7 +124,7 @@ export function $off (type, handler) {
   handlerList.$remove(handler)
 }
 
-const LIFE_CYCLE_TYPES = ['init', 'created', 'ready']
+const LIFE_CYCLE_TYPES = ['init', 'created', 'ready', 'destroyed']
 
 /**
  * Init events:
