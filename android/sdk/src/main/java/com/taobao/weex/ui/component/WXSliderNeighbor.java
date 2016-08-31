@@ -318,7 +318,9 @@ public class WXSliderNeighbor extends WXSlider {
             List<View> views = (List<View>) f.get(mAdapter);
             if(null != views && views.size() > 0) {
                 for(View v : views) {
-                    updateScaleAndAplha(v, alpha, scale);
+                    if(mAdapter.getItemPosition(v) != mViewPager.getCurrentItem()) {
+                        updateScaleAndAplha(v, alpha, scale);
+                    }
                 }
             }
         } catch (NoSuchFieldException e) {
