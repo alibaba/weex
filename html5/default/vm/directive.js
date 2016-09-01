@@ -140,13 +140,25 @@ function mergeClassStyle (target, vm, subVm) {
     return
   }
 
+  const className = '@originalRootEl'
+  css[className] = subVm._rootEl.classStyle
+
+  function addClassName (list, name) {
+    if (typof(list) === 'array') {
+      list.unshift(name)
+    }
+  }
+
   if (typeof target === 'function') {
     const value = watch(vm, target, v => {
+      addClassName(v, className)
       setClassStyle(subVm._rootEl, css, v)
     })
+    addClassName(value, className)
     setClassStyle(subVm._rootEl, css, value)
   }
   else if (target != null) {
+    addClassName(target, className)
     setClassStyle(subVm._rootEl, css, target)
   }
 }
