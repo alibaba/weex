@@ -55,6 +55,21 @@ modal.toast({message: 'hello'})
 
 We will bring a better syntax design in the future.
 
+
+
+## How to get rid of 750 adaption and calculate width/height in real pixels？
+
+The deviceHeight and deviceWidth gotten in `this.$getConfig()` is the real device width/height in pixels, not the ones with 750-adapted.
+
+So you can use them to calculate width/height in real pixels.
+
+Suppose you need to display a navigation bar of fixed 88 pixels, the bar's height will be:
+
+```
+var height = 88 * 750 / env.deviceWidth 
+```
+
+
 ## How to detect an native module/component supported in JavaScript?
 
 ### Detect native module
@@ -98,7 +113,6 @@ If you have 2 pages, A and B.
 
 0. A -> B, use [getConfig api](http://alibaba.github.io/weex/doc/references/api.html#getconfig) or [storage module](http://alibaba.github.io/weex/doc/modules/storage.html) to transfer data
 0. B -> A, use [storage module](http://alibaba.github.io/weex/doc/modules/storage.html) to transfer data
-
 
 
 

@@ -70,8 +70,8 @@ Get the current global environment variables and configuration information.
     * `platform`*(string)*: the platform, one of `iOS`, `Android` and `Web`.
     * `osVersion`*(string)*: the version of os.
     * `deviceModel`*(string)*: the model of device. **native only**
-    * `deviceWidth`*(number)*: the width of device, default is `750`.
-    * `deviceHeight`*(number)*: the height of device.
+    * `deviceWidth`*(number)*: the width of device, in pixels.
+    * `deviceHeight`*(number)*: the height of device, in pixels.
 
 ## $call(module, method, ...args)
 
