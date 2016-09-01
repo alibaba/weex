@@ -258,7 +258,7 @@ public class WXSliderNeighbor extends WXSlider {
     @Override
     public void bindData(WXComponent component) {
         super.bindData(component);
-        mViewPager.setCurrentItem(mAdapter.getCount(), true);
+        mViewPager.setCurrentItem(mAdapter.getRealCount()*50, true);  // WXCirclePageAdapter#getCount default=110, so we are in the middle.
     }
 
     @Override
@@ -301,10 +301,10 @@ public class WXSliderNeighbor extends WXSlider {
         if(null == view) {
             return;
         }
-        if(alpha > 0) {
+        if(alpha >= 0) {
             view.setAlpha(alpha);
         }
-        if(scale > 0) {
+        if(scale >= 0) {
             view.setScaleX(scale);
             view.setScaleY(scale);
         }
@@ -329,7 +329,6 @@ public class WXSliderNeighbor extends WXSlider {
             // ignore
         }
     }
-
 
     @WXComponentProp(name = NEIGHBOR_SPACE)
     public void setNeighborSpace(String input) {
@@ -361,7 +360,7 @@ public class WXSliderNeighbor extends WXSlider {
         // addSubView is called before setProperty, so we need to modify the neighbor view in mAdapter.
         if(this.mNerghborScale != neighborScale) {
             this.mNerghborScale = neighborScale;
-            updateAdpaterScaleAndAplha(0, neighborScale);
+            updateAdpaterScaleAndAplha(-1, neighborScale);
         }
     }
 
@@ -378,7 +377,7 @@ public class WXSliderNeighbor extends WXSlider {
         // The same work as setNeighborScale()
         if(this.mNerghborAlpha != neighborAlpha) {
             this.mNerghborAlpha = neighborAlpha;
-            updateAdpaterScaleAndAplha(neighborAlpha, 0);
+            updateAdpaterScaleAndAplha(neighborAlpha, -1);
         }
     }
 
