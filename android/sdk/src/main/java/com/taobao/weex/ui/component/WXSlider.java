@@ -373,7 +373,7 @@ public class WXSlider extends WXVContainer<FrameLayout> {
     WXCircleIndicator indicatorView = indicator.getHostView();
     if (indicatorView != null) {
       indicatorView.setCircleViewPager(mViewPager);
-      indicatorView.setOnPageChangeListener(mPageChangeListener);
+      // indicatorView.setOnPageChangeListener(mPageChangeListener);  // commented for twice onChange() called when do slide.
       root.addView(indicatorView);
     }
 
