@@ -43,7 +43,7 @@ For example:
 </style>
 ```
 
-The stylesheets contain multiple style rules, each style rule has only one class which is contained by its style selector, a pair of curly braces `{...}`, and the styles of the curly braces. For example:
+The stylesheets contain multiple style rules, each style rule has only one class which is contained by its style selector, a pair of curly braces `{...}`, and the styles in the curly braces. For example:
 
 ```
 .title {width: 400; height: 50;}
