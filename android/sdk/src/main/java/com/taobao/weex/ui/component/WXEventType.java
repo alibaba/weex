@@ -228,6 +228,7 @@ public class WXEventType {
   public static final String WEBVIEW_PAGEFINISH = "pagefinish";
   public static final String WEBVIEW_PAGESTART = "pagestart";
   public static final String ONREFRESH = "refresh";
+  public static final String ONPULLING_DOWN = "pullingdown";
   public static final String ONLOADING = "loading";
 
   public static final String ONLOAD = "load";

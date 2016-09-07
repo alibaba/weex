@@ -9,7 +9,7 @@ A simple Weex page sample is just a piece of `<template>` code, a piece of `<sty
 
 - `<template>`: *required*. Just uses HTML syntax and describes the structure of a Weex page, which is build upon several tags. Each tag means a type of *component*.
 - `<style>`: *optional*. Describes the presetation details, and the content is based on CSS syntax.
-- `<script>`: *optional*. Describes the data and behaiver with JavaScript syntax. It defines data and how these data are processed etc.
+- `<script>`: *optional*. Describes the data and behavior with JavaScript syntax. It defines data and how these data are processed etc.
 
 ```html
 <template>

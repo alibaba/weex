@@ -1,4 +1,5 @@
 # Timer
+<span class="weex-version">0.7</span>
 
 
 ## Summary

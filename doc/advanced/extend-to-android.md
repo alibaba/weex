@@ -80,7 +80,7 @@ There are label, image, div, scroll, ect. components in weex, you can also custo
 4. The component class can not be an inner class  
 5. Customize can not be obfuscated by tools like ProGuard  
 6. Component methods will be invoked in UI thread, do not put time consuming operation there.  
-7. Weex params can be int, double, float, String, Map, List, self-defined class that implements WXObject interface 
+7. Weex params can be int, double, float, String, Map, List, Array
 
 
 Refer to the following example 

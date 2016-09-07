@@ -238,7 +238,7 @@ public class WXSlider extends WXVContainer<FrameLayout> implements OnPageChangeL
   public static final String INTERVAL = "interval";
   Map<String, Object> params = new HashMap<>();
 
-  public static class Ceator implements ComponentCreator {
+  public static class Creator implements ComponentCreator {
     public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
       return new WXSlider(instance, node, parent, lazy);
     }

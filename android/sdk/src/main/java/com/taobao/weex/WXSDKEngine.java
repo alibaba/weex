@@ -240,7 +240,7 @@ public class WXSDKEngine {
         if (!isSoInitSuccess) {
           return;
         }
-        sm.initScriptsFramework(null);
+        sm.initScriptsFramework(config.getFramework());
 
         WXEnvironment.sSDKInitExecuteTime = System.currentTimeMillis() - start;
         WXLogUtils.renderPerformanceLog("SDKInitExecuteTime", WXEnvironment.sSDKInitExecuteTime);
@@ -304,7 +304,7 @@ public class WXSDKEngine {
       registerComponent( WXSlider.class,
         new SimpleComponentHolder(
           WXSlider.class,
-          new WXSlider.Ceator()
+          new WXSlider.Creator()
         ),
         true,
         WXBasicComponentType.SLIDER

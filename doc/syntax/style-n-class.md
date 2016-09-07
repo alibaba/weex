@@ -69,7 +69,7 @@ The selectors of `<style>` label are matched with the class attribute of `<templ
 </style>
 ```
 
-It means that the width of the outermost container is 600px, The inside of the two title text is 400 pixels high 50 pixels wide, the second piece of text is red.
+It means that the width of the outermost container is 600px, The inside of the two title text is 400 pixels wide 50 pixels high, the second piece of text is red.
 
 ### Notes
 

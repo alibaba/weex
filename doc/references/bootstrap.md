@@ -25,7 +25,7 @@ here is an example:
 
 ```html
 <script type="data">
-  module.exports = {
+  {
       title: 'Alibaba',
       date: new Date().toLocaleString()
   }
