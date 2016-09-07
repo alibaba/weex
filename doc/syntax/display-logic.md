@@ -34,7 +34,7 @@ There are two attributes for display logic control: `if` and `repeat`. We can cr
 
 ## `repeat`
 
-`repeat` statement is just for array rendering. Every item in an array is also a structed data. This means in `repeat`ed component, you can bind their item properties directly.
+`repeat` statement is just for array rendering. Every item in an array is also a structured data. This means in `repeat`ed component, you can bind their item properties directly.
 
 ```html
 <template>
