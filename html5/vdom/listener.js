@@ -39,7 +39,8 @@ Listener.prototype.addElement = function (element, ref, index) {
   if (!(index >= 0)) {
     index = -1
   }
-  return this.addActions(createAction('addElement', [ref, element.toJSON(), index]))
+  //return this.addActions(createAction('addElement', [ref, element.toJSON(), index]))
+  callAddElement(id,ref, element.toJSON(), index,-1)
 }
 
 Listener.prototype.removeElement = function (ref) {
