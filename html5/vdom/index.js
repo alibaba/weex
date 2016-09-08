@@ -85,6 +85,7 @@ function appendBody (doc, node, before) {
       node.docId = doc.id
       node.ownerDocument = doc
       node.parentNode = documentElement
+      linkParent(node, documentElement)
     }
     else {
       node.children.forEach(child => {
