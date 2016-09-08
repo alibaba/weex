@@ -5,18 +5,28 @@ const { expect } = chai
 chai.use(sinonChai)
 
 global.callNative = function () {}
+global.callAddElement = function () {}
 
 import App from '../../../../default/app'
 import { Element } from '../../../../vdom'
 
 describe('App Instance', () => {
   const oriCallNative = global.callNative
+  const oriCallAddElement = global.callAddElement
   const callNativeSpy = sinon.spy()
+  const callAddElementSpy = sinon.spy()
   let app
 
   before(() => {
     global.callNative = (id, tasks, callbackId) => {
       callNativeSpy(id, tasks, callbackId)
+      /* istanbul ignore if */
+      if (callbackId !== '-1') {
+        app.callbacks[callbackId] && app.callbacks[callbackId]()
+      }
+    }
+    global.callAddElement = (name, ref, json, index, callbackId) => {
+      callAddElementSpy(name, ref, json, index, callbackId)
       /* istanbul ignore if */
       if (callbackId !== '-1') {
         app.callbacks[callbackId] && app.callbacks[callbackId]()
@@ -30,6 +40,7 @@ describe('App Instance', () => {
 
   after(() => {
     global.callNative = oriCallNative
+    global.callAddElement = oriCallAddElement
   })
 
   describe('normal check', () => {

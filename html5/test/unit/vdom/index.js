@@ -5,6 +5,7 @@ const { expect } = chai
 chai.use(sinonChai)
 
 global.callNative = function () {}
+global.callAddElement = function () {}
 
 import {
   instanceMap,
@@ -16,6 +17,7 @@ import {
 import Listener from '../../../vdom/listener'
 
 global.callNative = function () {}
+global.callAddElement = function () {}
 
 describe('document constructor', () => {
   it('create & destroy document', () => {

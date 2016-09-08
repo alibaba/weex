@@ -2,6 +2,7 @@ import chai from 'chai'
 const { expect } = chai
 
 global.callNative = function () {}
+global.callAddElement = function () {}
 
 import {
   createElement,

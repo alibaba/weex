@@ -21,7 +21,9 @@ function clearRefs (json) {
 
 describe('framework entry', () => {
   const oriCallNative = global.callNative
+  const oriCallAddElement = global.callAddElement
   const callNativeSpy = sinon.spy()
+  const callAddElementSpy = sinon.spy()
   const instanceId = Date.now() + ''
 
   before(() => {
@@ -35,14 +37,27 @@ describe('framework entry', () => {
         }])
       }
     }
+
+    global.callAddElement = (name, id, ref, json, index, callbackId) => {
+      callAddElementSpy(name, ref, json, index, callbackId)
+      /* istanbul ignore if */
+      if (callbackId !== '-1') {
+        framework.callJS(id, [{
+          method: 'callback',
+          args: [callbackId, null, true]
+        }])
+      }
+    }
   })
 
   afterEach(() => {
     callNativeSpy.reset()
+    callAddElementSpy.reset()
   })
 
   after(() => {
     global.callNative = oriCallNative
+    global.callAddElement = oriCallAddElement
   })
 
   describe('createInstance', () => {
@@ -82,7 +97,8 @@ describe('framework entry', () => {
       `
       framework.createInstance(instanceId, code)
 
-      expect(callNativeSpy.callCount).to.be.equal(3)
+      expect(callNativeSpy.callCount).to.be.equal(2)
+      expect(callAddElementSpy.callCount).to.be.equal(1)
 
       expect(callNativeSpy.firstCall.args[0]).to.be.equal(instanceId)
       expect(callNativeSpy.firstCall.args[1]).to.deep.equal([{
@@ -97,25 +113,18 @@ describe('framework entry', () => {
       }])
       // expect(callNativeSpy.firstCall.args[2]).to.not.equal('-1')
 
-      expect(callNativeSpy.secondCall.args[0]).to.be.equal(instanceId)
-      delete callNativeSpy.secondCall.args[1][0].args[1].ref
-      expect(callNativeSpy.secondCall.args[1]).to.deep.equal([{
-        module: 'dom',
-        method: 'addElement',
-        args: ['_root', {
-          type: 'text',
-          attr: {
-            value: 'Hello World'
-          },
-          style: {}
-        },
-          0
-        ]
-      }])
+      expect(callAddElementSpy.firstCall.args[0]).to.be.equal(instanceId)
+      delete callAddElementSpy.firstCall.args[1].ref
+      expect(callAddElementSpy.firstCall.args[1]).to.deep.equal({
+        type: 'text',
+        attr: { value: 'Hello World' },
+        style: {}
+      })
+
       // expect(callNativeSpy.secondCall.args[2]).to.not.equal('-1')
 
-      expect(callNativeSpy.thirdCall.args[0]).to.be.equal(instanceId)
-      expect(callNativeSpy.thirdCall.args[1]).to.deep.equal([{
+      expect(callNativeSpy.secondCall.args[0]).to.be.equal(instanceId)
+      expect(callNativeSpy.secondCall.args[1]).to.deep.equal([{
         module: 'dom',
         method: 'createFinish',
         args: []
@@ -137,7 +146,9 @@ describe('framework entry', () => {
       }
       const code = `// {"framework":"xxx","version":"0.3.1"}
       'This is a piece of JavaScript from a third-party Framework...'`
+
       framework.createInstance(instanceId + '~', code)
+
       expect(spy.callCount).equal(1)
       expect(spy.firstCall.args).eql([
         instanceId + '~',
