@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import Dep from './dep'
+import Dep, { pushTarget, popTarget } from './dep'
 // import { pushWatcher } from './batcher'
 import {
   warn,
@@ -13,7 +13,6 @@ import {
 } from '../util'
 
 let uid = 0
-let prevTarget
 
 /**
  * A watcher parses an expression, collects dependencies,
@@ -80,24 +79,16 @@ export default function Watcher (vm, expOrFn, cb, options) {
  */
 
 Watcher.prototype.get = function () {
-  this.beforeGet()
+  pushTarget(this)
   const value = this.getter.call(this.vm, this.vm)
   // "touch" every property so they are all tracked as
   // dependencies for deep watching
   if (this.deep) {
     traverse(value)
   }
-  this.afterGet()
+  popTarget()
+  this.cleanupDeps()
   return value
-}
-
-/**
- * Prepare for dependency collection.
- */
-
-Watcher.prototype.beforeGet = function () {
-  prevTarget = Dep.target
-  Dep.target = this
 }
 
 /**
@@ -121,8 +112,7 @@ Watcher.prototype.addDep = function (dep) {
  * Clean up for dependency collection.
  */
 
-Watcher.prototype.afterGet = function () {
-  Dep.target = prevTarget
+Watcher.prototype.cleanupDeps = function () {
   let i = this.deps.length
   while (i--) {
     const dep = this.deps[i]
@@ -199,12 +189,8 @@ Watcher.prototype.run = function () {
  */
 
 Watcher.prototype.evaluate = function () {
-  // avoid overwriting another watcher that is being
-  // collected.
-  const current = Dep.target
   this.value = this.get()
   this.dirty = false
-  Dep.target = current
 }
 
 /**

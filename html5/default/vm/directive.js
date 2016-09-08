@@ -79,9 +79,17 @@ export function bindSubVm (vm, subVm, template, repeatItem) {
 /**
  * merge class and styles from vm to sub vm.
  */
-export function bindSubVmAfterInitialized (vm, subVm, template) {
+export function bindSubVmAfterInitialized (vm, subVm, template, target = {}) {
   mergeClassStyle(template.classList, vm, subVm)
   mergeStyle(template.style, vm, subVm)
+
+  // bind subVm to the target element
+  if (target.children) {
+    target.children[target.children.length - 1]._vm = subVm
+  }
+  else {
+    target._vm = subVm
+  }
 }
 
 /**
@@ -140,13 +148,25 @@ function mergeClassStyle (target, vm, subVm) {
     return
   }
 
+  const className = '@originalRootEl'
+  css[className] = subVm._rootEl.classStyle
+
+  function addClassName (list, name) {
+    if (typof(list) === 'array') {
+      list.unshift(name)
+    }
+  }
+
   if (typeof target === 'function') {
     const value = watch(vm, target, v => {
+      addClassName(v, className)
       setClassStyle(subVm._rootEl, css, v)
     })
+    addClassName(value, className)
     setClassStyle(subVm._rootEl, css, value)
   }
   else if (target != null) {
+    addClassName(target, className)
     setClassStyle(subVm._rootEl, css, target)
   }
 }

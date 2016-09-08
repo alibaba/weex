@@ -22,7 +22,7 @@ export function refresh (app, data) {
             `in instance[${app.id}]`)
   const vm = app.vm
   if (vm && data) {
-    app.doc.close()
+    // app.doc.close()
     if (typeof vm.refreshData === 'function') {
       vm.refreshData(data)
     }
@@ -31,7 +31,7 @@ export function refresh (app, data) {
     }
     updateActions(app)
     app.doc.listener.refreshFinish()
-    app.doc.open()
+    // app.doc.open()
     return
   }
   return new Error(`invalid data "${data}"`)
@@ -44,6 +44,10 @@ export function refresh (app, data) {
 export function destroy (app) {
   console.debug(`[JS Framework] Destory an instance(${app.id})`)
 
+  if (app.vm) {
+    destroyVm(app.vm)
+  }
+
   app.id = ''
   app.options = null
   app.blocks = null
@@ -52,6 +56,47 @@ export function destroy (app) {
   app.doc = null
   app.customComponentMap = null
   app.callbacks = null
+}
+
+/**
+ * Destroy an Vm.
+ * @param {object} vm
+ */
+export function destroyVm (vm) {
+  delete vm._app
+  delete vm._computed
+  delete vm._css
+  delete vm._data
+  delete vm._ids
+  delete vm._methods
+  delete vm._options
+  delete vm._parent
+  delete vm._parentEl
+  delete vm._rootEl
+
+  // remove all watchers
+  if (vm._watchers) {
+    let watcherCount = vm._watchers.length
+    while (watcherCount--) {
+      vm._watchers[watcherCount].teardown()
+    }
+    delete vm._watchers
+  }
+
+  // destroy child vms recursively
+  if (vm._childrenVms) {
+    let vmCount = vm._childrenVms.length
+    while (vmCount--) {
+      destroyVm(vm._childrenVms[vmCount])
+    }
+    delete vm._childrenVms
+  }
+
+  console.debug(`[JS Framework] "destroyed" lifecycle in Vm(${vm._type})`)
+  vm.$emit('hook:destroyed')
+
+  delete vm._type
+  delete vm._vmEvents
 }
 
 /**
@@ -85,11 +130,11 @@ export function fireEvent (app, ref, type, e, domChanges) {
   }
   const el = app.doc.getRef(ref)
   if (el) {
-    app.doc.close()
+    // app.doc.close()
     const result = app.doc.fireEvent(el, type, e, domChanges)
     updateActions(app)
     app.doc.listener.updateFinish()
-    app.doc.open()
+    // app.doc.open()
     return result
   }
   return new Error(`invalid element reference "${ref}"`)
@@ -107,14 +152,14 @@ export function callback (app, callbackId, data, ifKeepAlive) {
             `in instance(${app.id})`)
   const callback = app.callbacks[callbackId]
   if (typeof callback === 'function') {
-    app.doc.close()
+    // app.doc.close()
     callback(data)
     if (typeof ifKeepAlive === 'undefined' || ifKeepAlive === false) {
       app.callbacks[callbackId] = undefined
     }
     updateActions(app)
     app.doc.listener.updateFinish()
-    app.doc.open()
+    // app.doc.open()
     return
   }
   return new Error(`invalid callback id "${callbackId}"`)

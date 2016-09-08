@@ -319,7 +319,7 @@ function compileCustomComponent (vm, component, target, dest, type, meta) {
       }
     }
   })
-  bindSubVmAfterInitialized(vm, subVm, target)
+  bindSubVmAfterInitialized(vm, subVm, target, dest)
 }
 
 /**
