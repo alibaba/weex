@@ -43,7 +43,7 @@ A series of animation api.
         styles: {
           color: '#FF0000',
           transform: 'translate(1, 1)',
-          transform-origin: 'center center'
+          transformOrigin: 'center center'
         },
         duration: 0, //ms
         timingFunction: 'ease',
