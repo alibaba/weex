@@ -453,7 +453,7 @@ function bindRepeat (vm, target, fragBlock, info) {
   const list = watchBlock(vm, fragBlock, getter, 'repeat',
     (data) => {
       console.debug('[JS Framework] the "repeat" item has changed', data)
-      if (!fragBlock) {
+      if (!fragBlock || !data) {
         return
       }
 
