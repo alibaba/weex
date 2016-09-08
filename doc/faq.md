@@ -59,7 +59,7 @@ We will bring a better syntax design in the future.
 
 ## How to get rid of 750 adaption and calculate width/height in real pixels？
 
-The deviceHeight and deviceWidth gotten in `this.$getConfig()` is the real device width/height in pixels, not the ones with 750-adapted.
+The deviceHeight and deviceWidth got in `this.$getConfig()` is the real device width/height in pixels, not the ones with 750-adapted.
 
 So you can use them to calculate width/height in real pixels.
 
