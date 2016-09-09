@@ -944,7 +944,7 @@ describe('test callNative signals', () => {
   })
 
   it('long signals control', function () {
-    this.timeout(50000)
+    this.timeout(500000)
 
     const name = 'signals-long'
     const inputCode = readInput(name)
