@@ -79,9 +79,17 @@ export function bindSubVm (vm, subVm, template, repeatItem) {
 /**
  * merge class and styles from vm to sub vm.
  */
-export function bindSubVmAfterInitialized (vm, subVm, template) {
+export function bindSubVmAfterInitialized (vm, subVm, template, target = {}) {
   mergeClassStyle(template.classList, vm, subVm)
   mergeStyle(template.style, vm, subVm)
+
+  // bind subVm to the target element
+  if (target.children) {
+    target.children[target.children.length - 1]._vm = subVm
+  }
+  else {
+    target._vm = subVm
+  }
 }
 
 /**
