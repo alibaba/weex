@@ -207,7 +207,6 @@ package com.taobao.weex.ui.component;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -219,6 +218,7 @@ import com.taobao.weex.ui.ComponentCreator;
 import com.taobao.weex.ui.view.WXCirclePageAdapter;
 import com.taobao.weex.ui.view.WXCircleViewPager;
 import com.taobao.weex.utils.WXUtils;
+import com.taobao.weex.utils.WXViewUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -342,6 +342,8 @@ public class WXSliderNeighbor extends WXSlider {
 
         // margin is the space for neighbor views.
         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mViewPager.getLayoutParams();
+        //fixed by chuyi.Convert distance from JS,CSS to native
+        neighborSpace = (int) WXViewUtils.getRealPxByWidth(neighborSpace);
         lp.leftMargin = neighborSpace;
         lp.rightMargin = neighborSpace;
         mViewPager.setLayoutParams(lp);
