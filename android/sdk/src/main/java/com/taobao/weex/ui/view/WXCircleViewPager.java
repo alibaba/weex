@@ -282,10 +282,7 @@ public class WXCircleViewPager extends ViewPager implements Callback, WXGestureO
 
   public boolean handleMessage(Message msg) {
     if (isAutoScroll && !isPause) {
-
-      int tab = getCurrentItem() + 1;
-      setCurrentItem(tab);
-      Log.e("CHUY","tab is "+tab);
+      setCurrentItem(getCurrentItem() + 1);
       mCircleHandler.removeCallbacksAndMessages(null);
       mCircleHandler.sendEmptyMessageDelayed(0, intervalTime);
     }
