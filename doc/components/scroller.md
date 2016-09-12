@@ -6,11 +6,16 @@
 
 A vertical scroller which can have multiple child components arranged in one column. If total height of its child components is higher then the height of itself, the whole child components are scrollable.
 
-**Notes:** A `<scroller>` can be used as a root element or a embed element. The scoll direction of this component is column, and it can't be changed.
+**Notes:** A `<scroller>` can be used as a root element or a embed element. The scroll direction of this component is column, and it can't be changed.
 
 ### Child Components
 
 It supports all kinds of weex components as its child components.
+
+* `refresh` component can be used inside scroller to add pull down to refresh functionality.
+* `loading` component can be used inside scroller to add pull up to loadmore functionality.
+
+* `refresh` and `loading` please check out the [refresh-loading](refresh-loading.md).
 
 ### Attributes
 
@@ -34,6 +39,11 @@ Other attributes please check out the [common attributes](../references/common-a
 
 - support `click` event. Check out [common events](../references/common-event.md)
 - support `appear` / `disappear` event. Check out [common events](../references/common-event.md)
+
+### Restriction
+Nested lists or scrollers within the same direction are **not** supported. In other words. nested lists/scroller must have different directions.
+
+For example, a vertical scroller nested in a vertical list or scroller is ** not ** allowed. However, a vertical scroller nested in a horizontal list or scroller is legal.
 
 ### Example
 
@@ -59,6 +69,3 @@ Other attributes please check out the [common attributes](../references/common-a
   }
 </script>
 ```
-
-
-

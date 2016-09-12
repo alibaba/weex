@@ -6,117 +6,144 @@
 
 Weex is a extendable cross-platform solution for dynamic programming and publishing projects. You can build your own components on web platform or native platform by extending the components system. Also you can extend weex by adding new methods for one module, new moudles or new bundle loaders. Follow the steps bellow you can dive into the journy of creating multiple builtin components, APIs and loaders.
 
-### Create new component
+First of all, components, APIs and loaders are extensions to weex, so you can create your extensions without requiring the weex package, that means your extensions can be totally standalone. 
+
+Second, you should always implement a extension for all the three platforms (android, ios and web), except that you only use it on one specific platform. After all weex is a cross platform framework and the equality of user expierence in all platforms is very important. Although you can create components separately on one platform by another, or welcome other developers on other platforms to join your work (You can always find coders who want the same feature with you in the commity). Here are docs about how to create native extensions on [ios](./extend-to-ios.md) and [android](./extend-to-android.md). 
+
+You should publish your extensions somewhere weex developers can easily find, somewhere popular, independent and easy to search and use, such as, npm. Npm is what we strongly recommended.
+
+The most important thing is, you'd better name your extension appropriately: it should begin with a `weex-` if it is a weex extension, and it should end up with a `-<platform>` as a platform mark. If your package is wrapped up with all the three platforms you can ignore it through. Here is a demonstrating component [`<weex-hello-web>`](https://github.com/MrRaindrop/weex-hello-web) to show how to define your own component.
+
+### Create a new component
 
 Steps:
 
-1. Require `weex-html5` package as `Weex` (or any other name you like).
-2. Extend `Weex.Component`, override methods of component class.
-3. Use `Weex.registerComponent` to register your customized component in the `init` method of the installation module.
+1. Extend `Weex.Component`, override methods of component class.
+2. Use `Weex.registerComponent` to register your customized component in the `init` method of the installation module.
+3. export the `init` method for the installation (Every weex-html5 extension has to have a `init` method in the export object, which is for another weex project to install.)
 
-You can override any method of class `Component` to customize your component's behavior. The typical methods of class `Component` you should override are:
-
-* create
-* createChildren
-* insertBefore
-* removeChild
-* bindEvents
-
-**Here is a example for creating a new component**
-
-The component's implementation file `new-component.js`:
+Here's a example to create a weex component for web platform (weex-html5):
 
 ```javascript
-// require weex-html5
-var Weex = require('weex-html5')
-var Component = Weex.Component
-
-// The constructor of your component.
-function NewComponent(data) {
-  this.someAttr = data.attr.someAttr
-  Component.call(this, data)
+const attr = {
+  // ...
 }
-
-// Extend from Weex.Component.
-NewComponent.prototype = Object.create(Component.prototype)
-
-// Override the "create" method to build elements for the component.
-NewComponent.prototype.create = function () {
-  var node = document.createElement('div')
-  node.setAttribute('data-some-attr', this.someAttr)
-  return node
+const style = {
+  // ...
 }
+const event = {
+  // ...
+}
+// every extension file should have a init method.
+function init (Weex) {
+  const Component = Weex.Component
+  const extend = Weex.utils.extend
 
-// Setup setters for updatable attributes.
-NewComponent.prototype.attr = {
-  updatableAttr: function (value) {
-    this.node.setAttribute('data-updatable-attr', value)
+  // the component's constructor
+  function Hello (data) {
+    Component.call(this, data)
   }
+
+  // extend the prototype
+  Hello.prototype = Object.create(Component.prototype)
+  extend(Hello.prototype, proto)
+
+  // config the attributes, styles and events.
+  extend(Hello.prototype, { attr })
+  extend(Hello.prototype, {
+    style: extend(Object.create(Component.prototype.style), style)
+  })
+  extend(Hello.prototype, { event })
+
+  Weex.registerComponent('weex-hello', Hello)
 }
 
-module.exports = NewComponent
+// export the init method.
+export default { init }
 ```
 
-Register your component in the init method of the installation module `installModule.js`
+The code above is extracted from [weex-hello-web/src/index.js](https://github.com/MrRaindrop/weex-hello-web/blob/master/src/index.js#L46-L65).
+
+This demo has overrided the `create` method of the base class `Component`. You can also override other methods to customize your component's behavior. The typical methods of class `Component` you may override are:
+
+* `create`: to create the node of the component, and return it.
+* `createChildren` to create the children's nodes.
+* `insertBefore` to insert a child before another child.
+* `appendChild` to append a child in the children list.
+* `removeChild` to remove a child in the children list.
+
+**Advanced**: Need more code demonstrations about overriding the component's methods ? Just take a look at the [weex repo's code](https://github.com/alibaba/weex/tree/dev/html5/browser/extend/components). Basically the most of the built-in components are defined this way.
+
+Important! To register your component in the `init` method, use `Weex.registerComponent`. Here's the demo code:
 
 ```javascript
-var NewComponent = require('new-component.js')
-module.exports = {
-  init: function (Weex) {
-    Weex.registerComponent('new-component', NewComponent)
-  }
-}
+Weex.registerComponent('weex-hello', Hello)
 ```
 
-Install your module:
+The code above is from [weex-hello-web/src/index.js](https://github.com/MrRaindrop/weex-hello-web/blob/master/src/index.js#L62)
+
+Install the component using `Weex.install`.
 
 ```javascript
-var Weex = require('weex-html5')
-var installationModule = require('installModule.js')
-
-Weex.install(installationModule)
+// import the original weex-html5.
+import weex from 'weex-html5'
+import hello from 'weex-hello-web'
+// install the component.
+weex.install(hello)
 ```
 
-### Add new API
+The code above is from [weex_extend_demo/src/main.js](https://github.com/MrRaindrop/weex_extend_demo/blob/master/src/main.js#L1-L5)
 
-You can add new API modules, or just add a new API for any existing API modules. For example, you can add a new module `user` with APIs like 'login', 'logout' etc. Or you can just add a single new method such as `setTitle` for the exsiting module `pageInfo`. Whichever way you use, the developer can invoke the API by using `require('@weex-module/moduleName)[methodName](arg1, arg2, ...)` ([Module APIs](../references/api.md)).
+use the component in your `.we` file:
+
+```html
+<template>
+  <div>
+    <weex-hello class="hello" style="txt-color:#fff;bg-color:green"
+      value="WEEX" onclick="handleClick">
+    </weex-hello>
+  </div>
+</template>
+```
+
+The code above is from [weex_extend_demo/demo/index.we](https://github.com/MrRaindrop/weex_extend_demo/blob/master/demo/index.we#L10-L15)
+
+### Add a new API
+
+You can add new API modules, or just add a new API for any existing API modules. For example, you can add a new module `user` with APIs like 'login', 'logout' etc. The developer can invoke the API by using `require('@weex-module/moduleName)[methodName](arg1, arg2, ...)` ([Module APIs](../references/api.md)).
 
 Steps:
 
-1. Require `weex-html5` package as `Weex` (or any other name you like).
-2. Require your API modules.
-3. Use `Weex.registerAPIModules` to register your API modules in the init method of your installation module.
-4. Or use `Weex.registerAPI` to register your API for existing API modules in the init method of your installation module.
+1. Implement your API modules.
+2. Use `Weex.registerAPIModules` to register your API modules in the init method of your installation module.
 
 **Here is a example for register a new API module**
 
 First create a file named `user.js` for a new module, then define `login/logout` methods.
 
 ```javascript
-var user = {
-  login: function (callbackId) {
-    var self = this
-    // your logic code.
-    login.then(function (res) {
-      self.sender.performCallback(callbackId, res)
-    }).catch(function (err) {
-      self.sender.performCallback(callbackId, err)
+const user = {
+  // for user to login.
+  login (callbackId) {
+    login.then(res => {
+      this.sender.performCallback(callbackId, res)
+    }).catch(err => {
+      this.sender.performCallback(callbackId, err)
     })
   },
-
-  logout: function (callbackId) {
-    var self = this
-    // your logic code.
-    logout.then(function (res) {
-      self.sender.performCallback(callbackId, res)
-    }).catch(function (err) {
-      self.sender.performCallback(callbackId, err)
+  
+  // for user to logout.
+  logout (callbackId) {
+    logout.then(res => {
+      this.sender.performCallback(callbackId, res)
+    }).catch(err => {
+      this.sender.performCallback(callbackId, err)
     })
   }
 }
 
 // add meta info to user module.
-user._meta = {
+const meta = {
   user: [{
     name: 'login',
     args: ['function']
@@ -126,74 +153,56 @@ user._meta = {
   }]
 }
 
-module.exports = user
-```
-
-Register your `user` module in the `installationModule.js`:
-
-```javascript
-// Require your module file, which is user.js.
-var user = require('./user')
-
-module.exports = {
-  init: function (Weex) {
+export default {
+  init (Weex) {
     // Register your new module. The last parameter is your
     // new API module's meta info.
-    Weex.registerApiModule('user', user, user._meta)
+    Weex.registerApiModule('user', user, meta)
   }
 }
 ```
 
-Install your module:
+After above coding work, you can publish this user helper API to npm now, for example, with the name of `weex-user-helper`.
+
+Install the component using `Weex.install` in your new weex project.
 
 ```javascript
-var Weex = require('weex-html5')
-var installationModule = require('installationModule.js')
+import Weex from 'weex-html5'
+import user from 'weex-user-helper'
 
-Weex.install(installationModule)
+Weex.install(user)
 ```
 
+Use the user helper API in your dsl code (xxx.we):
 
-**Another example for register a API to a exsiting API module**
+```html
+<template>
+  <div>
+    <div class="btn" onclick="handleClick">
+      <text>LOGIN</text>
+    </div>
+  </div>
+</template>
 
-First create a file named `pageInfo.js`, then define `setTitle` method:
-
-```javascript
-var pageInfo = {
-  setTitle: function (title) {
-    document.title = title
+<script>
+  var userHelper = require('@weex-module/user')
+  module.exports = {
+    methods: {
+      handleClick: function () {
+        userHelper.login(function () {
+          // ... do sth. in callback.
+        })
+      }
+    }
   }
-}
+</script>
 ```
 
-Register `setTitle` method to the `pageInfo` module in the `installationModule.js`:
+### Add a new loader
 
-```javascript
-var weex = require('weex-html5')
+**Loader is only a type of extension for weex-html5 (web platform), native platform is not needing this.**
 
-// Require your module file, which is pageInfo.js.
-var pageInfo = require('./pageInfo')
-
-module.exports = {
-  init: function (Weex) {
-    // Register your new method. The last parameter is your API's meta info.
-    Weex.registerApi('pageInfo', 'setTitle', pageInfo.setTitle, ['string', 'string'])
-  }
-}
-```
-
-install the isntallation module:
-
-```javascript
-var Weex = require('weex-html5')
-var installationModule = require('installationModule.js')
-
-Weex.install(installationModule)
-```
-
-### Add new loader
-
-The type of buildin loaders to load a weex bundle are `loadByXHR`, `loadByJsonp` and `loadBySourceCode`. You can register your own loader by using `weex.registerLoader`. For example, you got a service method named `myServe.getWeexBundle`, which can load a weex bundle file throught some magical tunnel:
+Weex's builtin loaders to load a weex bundle are `xhr`, `jsonp` and `source`. The default loader is `xhr`. You can register your own loader by using `weex.registerLoader`. For example, you got a service method named `myServe.getWeexBundle`, which can load a weex bundle file through some magical tunnel:
 
 ```javascript
 function loadByMyServe(pageId, callback) {
@@ -204,34 +213,41 @@ function loadByMyServe(pageId, callback) {
   })
 }
 
-module.exports = {
-  loadByMyServe: loadByMyServe
-}
-```
-
-Register your loader in your installation module `loaderMod.js` and then install it:
-
-```javascript
-// Require your new loader.
-var loadByMyServe = require('./loader').loadByMyServe
-
-module.exports = {
-  init: function (Weex) {
-    // Register your new loader.
+// export the init method to enable weex install this loader.
+export default {
+  init (Weex) {
     Weex.registerLoader('myserve', loadByMyServe)
   }
 }
 ```
 
-install:
+install and use your loader in your project's entry file:
 
 ```javascript
-var Weex = require('weex-html5')
-var loaderMod = require('loaderMod.js')
+import Weex from 'weex-html5'
 
-Weex.install(loaderMod)
+// or import from './myserve.js', no matter where you can import your loader file.
+import loader from 'myLoader'
+
+Weex.install(loader)
+
+// use your loader in the init function:
+(function () {
+  function getUrlParam (key) {
+    const reg = new RegExp('[?|&]' + key + '=([^&]+)')
+    const match = location.search.match(reg)
+    return match && match[1]
+  }
+  const page = getUrlParam('page') || 'examples/build/index.js'
+  Weex.init({
+    appId: location.href,
+    loader: 'myserve',  // use the loader type you defined.
+    source: page,
+    rootId: 'weex'
+  })
+})();
 ```
 
 
-
+That's the major extension feature weex brought to you. The deep details can be found in the [weex's repo](https://github.com/alibaba/weex) and the weex's community.
 

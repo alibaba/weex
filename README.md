@@ -4,7 +4,7 @@
 
 [![CircleCI](https://circleci.com/gh/alibaba/weex/tree/dev.svg?style=svg&circle-token=b83b047a3a01f6ec26458a455530a5ddc261925f)](https://circleci.com/gh/alibaba/weex/tree/dev) [![Gitter](https://img.shields.io/gitter/room/weexteam/cn.svg?maxAge=2592000)](https://gitter.im/weexteam) <sub>(English Gitter)</sub> [![Gitter](https://img.shields.io/gitter/room/weexteam/cn.svg?maxAge=2592000)](https://gitter.im/weexteam/cn) <sub>(Chinese 中文聊天室)</sub>
 
-Support Android 4.1 (API 16) and iOS 7.0+. See [Weex website](http://alibaba.github.io/weex/) for more information. 
+Support Android 4.1 (API 16) and iOS 7.0+. See [Weex website](https://alibaba.github.io/weex/) for more information. 
 
 ## For Windows
 
@@ -12,7 +12,7 @@ Please ***INSTALL [Git for Windows](https://git-scm.com/download/win)*** and run
 
 ## Meet Weex
 
-* Install [Weex Playground App](http://alibaba.github.io/weex/download.html) to see examples we already written.
+* Install [Weex Playground App](https://alibaba.github.io/weex/download.html) to see examples we already written.
 * If you want to write a demo, install [weex-toolkit](https://www.npmjs.com/package/weex-toolkit) in [Node.js](http://nodejs.org/) 4.0+ and
 * Run `weex init` to generate & start a simple project in an empty folder.
 * Follow the instructions in the project README.
@@ -20,8 +20,8 @@ Please ***INSTALL [Git for Windows](https://git-scm.com/download/win)*** and run
 
 ## Use Weex
 
-* [Tutorial](http://alibaba.github.io/weex/doc/tutorial.html)
-* Doc: [English](http://alibaba.github.io/weex/doc/), [中文](https://github.com/weexteam/article/wiki/Weex%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3)
+* [Tutorial](https://alibaba.github.io/weex/doc/tutorial.html)
+* Doc: [English](https://alibaba.github.io/weex/doc/), [中文](https://github.com/weexteam/article/wiki/Weex%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3)
 
 ### Android 
 
@@ -70,7 +70,7 @@ See [Weex Community](https://github.com/alibaba/weex/wiki/Weex-Community) Wiki p
 
 ## FAQ
 
-See [FAQ](http://alibaba.github.io/weex/doc/faq.html) for more information.
+See [FAQ](https://alibaba.github.io/weex/doc/faq.html) for more information.
 
 
 ### Community based Weex knowledge site 

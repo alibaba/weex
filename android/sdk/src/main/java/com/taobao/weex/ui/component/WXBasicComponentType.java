@@ -216,6 +216,7 @@ public class WXBasicComponentType {
   public static final String DIV = "div";
   public static final String SCROLLER = "scroller";
   public static final String SLIDER = "slider";
+  public static final String SLIDER_NEIGHBOR = "slider-neighbor";
   public static final String LIST = "list";
   public static final String VLIST = "vlist";
   public static final String HLIST = "hlist";

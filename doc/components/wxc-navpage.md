@@ -12,14 +12,14 @@ This type of component supports all kinds of weex component as its child compone
 
 ### Attributes
 
-- `height`: &lt;length&gt; The height of the navbar. Default value is 88. 
+- `height`: &lt;length&gt; The height of the navbar. Default value is 88.
 - `background-color`: &lt;color&gt;The backgroudColor of the navbar. Default value is `white`.
-- `title`: &lt;string&gt; The title of the navbar. 
+- `title`: &lt;string&gt; The title of the navbar.
 - `title-color`: &lt;color&gt;The color of the navbar title. Default value is `black`.
 - `left-item-title`: &lt;string&gt; The title of the leftItem.
 -  `left-item-color`: &lt;color&gt; The color of the leftItem title. Default value is `black`.
 - `right-item-title`: &lt;string&gt; The title of the rightItem.
--  `right-item-color`: &lt;color&gt; The color of the rightItem title. Default value is `black`. 
+-  `right-item-color`: &lt;color&gt; The color of the rightItem title. Default value is `black`.
 - `left-item-src`: &lt;string&gt; The imageURL of the leftItem you want to set.
 - `right-item-src`: &lt;string&gt; The imageURL of the rightItem you want to set.
 
@@ -48,7 +48,7 @@ Other attributes please check out the [common attributes](../references/common-a
 
 ```js
 <template>
-  <wxc-navpage height={% raw %}{{...}}{% endraw %} background-color="..." title="..." title-color="..." left-item-title="..." left-item-color="..." right-item-src="...">
+  <wxc-navpage height={{...}} background-color="..." title="..." title-color="..." left-item-title="..." left-item-color="..." right-item-src="...">
       <content> ...</content>
   </wxc-navpage>
 </template>
@@ -61,11 +61,9 @@ Other attributes please check out the [common attributes](../references/common-a
         });
 
         this.$on('naviBar.leftItem.click',function(e){
-          //handle your click event here. 
+          //handle your click event here.
         });
     }
   }
 </script>
 ```
-
-

@@ -54,3 +54,52 @@ modal.toast({message: 'hello'})
 ```
 
 We will bring a better syntax design in the future.
+
+## How to detect an native module/component supported in JavaScript?
+
+### Detect native module
+
+```javascript
+var xxx = require('@weex-module/xxx')
+if (xxx) {
+  // todo: use this module
+}
+else {
+  // todo: handle the exception
+}
+```
+
+### Detect native component
+
+```html
+<template>
+  <component is="{{type}}"></component>
+</template>
+
+<script>
+  var type = 'xxx'
+  var xxx = require('@weex-component/xxx')
+  if (!xxx) {
+    type = 'div' // downgrade to <div>
+  }
+  module.exports = {
+    data: function () {
+      return {
+        type: type
+      }
+    }
+  }
+</script>
+```
+
+## Transfer data between pages
+
+If you have 2 pages, A and B.
+
+0. A -> B, use [getConfig api](http://alibaba.github.io/weex/doc/references/api.html#getconfig) or [storage module](http://alibaba.github.io/weex/doc/modules/storage.html) to transfer data
+0. B -> A, use [storage module](http://alibaba.github.io/weex/doc/modules/storage.html) to transfer data
+
+
+
+
+

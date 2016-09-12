@@ -49,6 +49,8 @@ Composed component supports nesting. For example:
 <script>
   module.exports = {
     data: {
+      // The key is required if you want this property observed
+      // and could be updated from changing parent attribute
       title: null,
       image: null
     }
@@ -68,6 +70,8 @@ Composed component supports nesting. For example:
   module.exports = {
     data: {
       description: '',
+      // If no keys written here. There will be no data binding effect
+      // from parent attribute "list".
       list: []
     }
   }
@@ -100,5 +104,6 @@ The `main.we` uses `<foo-list>` from `foo-list.we`. And `<foo-list>` uses `<foo>
 - Every composed component have an independent `<style>` work scope.
 - If child component have `id` attribute, you can access the context of the child component by `this.$vm(id)` and find an element by `this.$el(id)`. See more about [find an element](./id.md).
 - Please refer to [communicate between components](./comm.md) for more communication issues.
+- The keys must be existed in `data` options **explicitly** if you want to make the data observation work both through inside data changes and outside attribute changes.
 
 Next is how to [find an element](./id.md).
