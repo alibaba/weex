@@ -258,7 +258,8 @@ public class WXSliderNeighbor extends WXSlider {
     @Override
     public void bindData(WXComponent component) {
         super.bindData(component);
-        mViewPager.setCurrentItem(mAdapter.getRealCount()*50, true);  // WXCirclePageAdapter#getCount default=110, so we are in the middle.
+//        mViewPager.setCurrentItem(mAdapter.getRealCount()*50, true);  // WXCirclePageAdapter#getCount default=110, so we are in the middle.
+        mViewPager.setCurrentItem(0);
     }
 
     @Override
