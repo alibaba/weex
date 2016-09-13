@@ -84,7 +84,8 @@ function appendBody (doc, node, before) {
     if (node.role === 'body') {
       node.docId = doc.id
       node.ownerDocument = doc
-      node.parentNode = documentElement
+      linkParent(node, documentElement)
+      delete doc.nodeMap[node.nodeId]
     }
     else {
       node.children.forEach(child => {
