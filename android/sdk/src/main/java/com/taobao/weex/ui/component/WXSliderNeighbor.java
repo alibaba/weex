@@ -207,9 +207,7 @@ package com.taobao.weex.ui.component;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -219,8 +217,8 @@ import com.taobao.weex.ui.ComponentCreator;
 import com.taobao.weex.ui.view.WXCirclePageAdapter;
 import com.taobao.weex.ui.view.WXCircleViewPager;
 import com.taobao.weex.utils.WXUtils;
+import com.taobao.weex.utils.WXViewUtils;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
@@ -230,16 +228,17 @@ import java.util.List;
  * Created by xingjiu on 16/8/18.
  */
 public class WXSliderNeighbor extends WXSlider {
-    public static final String NEIGHBOR_SPACE = "neighborSpace"; // the neighbor page space width
     public static final String NEIGHBOR_SCALE = "neighborScale"; // the init scale of neighor page
     public static final String NEIGHBOR_ALPHA = "neighborAlpha"; // the init alpha of neighor page
 
-    private static final int DEFAULT_NEIGHBOR_SPACE = 150;
+    private static final int DEFAULT_NEIGHBOR_SPACE = 25;
     private static final float DEFAULT_NEIGHBOR_SCALE = 0.8F;
     private static final float DEFAULT_NEIGHBOR_ALPHA = 0.6F;
 
     private float mNerghborScale = DEFAULT_NEIGHBOR_SCALE;
     private float mNerghborAlpha = DEFAULT_NEIGHBOR_ALPHA;
+
+    private static final float WX_DEFAULT_MAIN_NEIGHBOR_SCALE = 0.9f;
 
     public WXSliderNeighbor(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
         super(instance, dom, parent, instanceId, isLazy);
@@ -258,7 +257,20 @@ public class WXSliderNeighbor extends WXSlider {
     @Override
     public void bindData(WXComponent component) {
         super.bindData(component);
-        mViewPager.setCurrentItem(mAdapter.getRealCount()*50, true);  // WXCirclePageAdapter#getCount default=110, so we are in the middle.
+//        mViewPager.setCurrentItem(mAdapter.getRealCount()*50, true);  // WXCirclePageAdapter#getCount default=110, so we are in the middle.
+        mViewPager.setCurrentItem(0);
+
+        int neighborSpace = DEFAULT_NEIGHBOR_SPACE;
+        // margin is the space for neighbor views.
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mViewPager.getLayoutParams();
+        //fixed by chuyi.Convert distance from JS,CSS to native
+        neighborSpace = (int) WXViewUtils.getRealPxByWidth(neighborSpace);
+        lp.leftMargin = neighborSpace;
+        lp.rightMargin = neighborSpace;
+        mViewPager.setLayoutParams(lp);
+
+
+
     }
 
     @Override
@@ -284,8 +296,6 @@ public class WXSliderNeighbor extends WXSlider {
         mViewPager.setPageTransformer(true, new ZoomTransformer());
         mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
         view.setClipChildren(false);
-        view.setOnTouchListener(new OnTouchCallback());
-
         registerActivityStateListener();
 
         return view;
@@ -293,11 +303,11 @@ public class WXSliderNeighbor extends WXSlider {
 
     @Override
     protected void addSubView(View view, int index) {
-        updateScaleAndAplha(view, mNerghborAlpha, mNerghborScale); // we need to set neighbor view status when added.
+        updateScaleAndAlpha(view, mNerghborAlpha, mNerghborScale); // we need to set neighbor view status when added.
         super.addSubView(view, index);
     }
 
-    private void updateScaleAndAplha(View view, float alpha, float scale) {
+    private void updateScaleAndAlpha(View view, float alpha, float scale) {
         if(null == view) {
             return;
         }
@@ -310,41 +320,18 @@ public class WXSliderNeighbor extends WXSlider {
         }
     }
 
-    // WXCirclePageAdapter not expoesd views, So do it in reflect way. Thanks god, it is not proguarded.
     private void updateAdpaterScaleAndAplha(float alpha, float scale) {
-        try {
-            Field f = mAdapter.getClass().getDeclaredField("views");
-            f.setAccessible(true);
-            List<View> views = (List<View>) f.get(mAdapter);
-            if(null != views && views.size() > 0) {
-                for(View v : views) {
-                    if(mAdapter.getItemPosition(v) != mViewPager.getCurrentItem()) {
-                        updateScaleAndAplha(v, alpha, scale);
-                    }
+        List<View> pageViews = mAdapter.getViews();
+        int cusPos = mViewPager.getCurrentItem();
+        if(null != pageViews && pageViews.size() > 0) {
+            for(View v : pageViews) {
+                if(mAdapter.getItemPosition(v) != cusPos) {
+                    updateScaleAndAlpha(v, alpha, scale);
+                }else{
+                    updateScaleAndAlpha(v,1.0F,WX_DEFAULT_MAIN_NEIGHBOR_SCALE);//0.95
                 }
             }
-        } catch (NoSuchFieldException e) {
-            // ignore
-        } catch (IllegalAccessException e) {
-            // ignore
         }
-    }
-
-    @WXComponentProp(name = NEIGHBOR_SPACE)
-    public void setNeighborSpace(String input) {
-        int neighborSpace = DEFAULT_NEIGHBOR_SPACE;
-        if (!TextUtils.isEmpty(input)) {
-            try {
-                neighborSpace = Integer.parseInt(input);
-            } catch (NumberFormatException e) {
-            }
-        }
-
-        // margin is the space for neighbor views.
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mViewPager.getLayoutParams();
-        lp.leftMargin = neighborSpace;
-        lp.rightMargin = neighborSpace;
-        mViewPager.setLayoutParams(lp);
     }
 
     @WXComponentProp(name = NEIGHBOR_SCALE)
@@ -385,12 +372,6 @@ public class WXSliderNeighbor extends WXSlider {
     protected boolean setProperty(String key, Object param) {
         String input = "";
         switch (key) {
-            case NEIGHBOR_SPACE:
-                input = WXUtils.getString(param, null);
-                if (input != null) {
-                    setNeighborSpace(input);
-                }
-                return true;
             case NEIGHBOR_SCALE:
                 input = WXUtils.getString(param, null);
                 if (input != null) {
@@ -411,8 +392,8 @@ public class WXSliderNeighbor extends WXSlider {
     class ZoomTransformer implements ViewPager.PageTransformer {
         @Override
         public void transformPage(View page, float position) {
-            //Log.e("333", "transformPage " + mAdapter.getItemPosition(page) + " to " + position + " now is " + mViewPager.getCurrentItem());
             float alpha, scale;
+
             if(position <= (-mAdapter.getRealCount() + 1)) {
                 position = position + mAdapter.getRealCount();
             }
@@ -422,72 +403,27 @@ public class WXSliderNeighbor extends WXSlider {
 
             if (position >= -1 && position <= 1) {
                 float factor = Math.abs(Math.abs(position) - 1);//0--1
-                scale = (1-mNerghborScale) * factor + mNerghborScale;//0.8---1
-                alpha = (1-mNerghborAlpha) * factor + mNerghborAlpha;//0.6----1
+//                scale = (1-mNerghborScale) * factor + mNerghborScale;//0.8---1
+//                alpha = (1-mNerghborAlpha) * factor + mNerghborAlpha;//0.6----1
+
+                scale = mNerghborScale + factor * (WX_DEFAULT_MAIN_NEIGHBOR_SCALE-mNerghborScale);//mNeighborscale-->0.
+                alpha = (1-mNerghborAlpha) * factor + mNerghborAlpha;//0.6-1
+
+                if(mViewPager.getCurrentItem() != mAdapter.getItemPosition(page)){
+                    if(position > 0){//右边
+                        page.setPivotX(0);
+                    }else{//左边
+                        page.setPivotX(page.getMeasuredWidth());
+                    }
+                }else{
+                    page.setPivotX(page.getMeasuredWidth()/2);
+                }
+
+                page.setPivotY(page.getMeasuredHeight()/2);
 
                 page.setAlpha(alpha);
                 page.setScaleX(scale);
                 page.setScaleY(scale);
-                //Log.e("333", "transformPage inner set " + mAdapter.getItemPosition(page) + " to alpha " + alpha + " scale " + scale);
-            }
-        }
-    }
-
-    class OnTouchCallback implements View.OnTouchListener {
-        private float downX = -1;
-        private boolean hasMove;
-        private float mScreenWidth;
-
-        public OnTouchCallback() {
-            mScreenWidth = getParent().getDomObject().getLayoutWidth();
-        }
-
-        @Override
-        public boolean onTouch(View view, MotionEvent event) {
-            try {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        downX = event.getX();
-                        hasMove = false;
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        if (downX < 0) {
-                            downX = event.getX();
-                        }
-                        if (Math.abs(event.getX() - downX) > 20) {
-                            hasMove = true;
-                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        if (!hasMove) {
-                            hasMove = false;
-                            if (event.getX() < mScreenWidth * 0.25) {
-                                //Log.e("333", "onTouch left  event is " + event.getAction() + " x is " + event.getX() + " next pos is " +  (mViewPager.getCurrentItem() != 0 ? (mViewPager.getCurrentItem() - 1) : mAdapter.getRealCount() - 1)  );
-
-                                if(mViewPager.getCurrentItem() == 0) {
-                                    mViewPager.setCurrentItem(mAdapter.getRealCount() - 1, false);
-                                }else {
-                                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1, false);
-                                }
-                                return false;
-                            } else if (event.getX() > mScreenWidth * 0.75) {
-                                //Log.e("333", "onTouch right  event is " + event.getAction() + " x is " + event.getX() + " next pos is " + (mViewPager.getCurrentItem() + 1));
-
-                                if(mViewPager.getCurrentItem() == mAdapter.getRealCount()) {
-                                    mViewPager.setCurrentItem(0, false);
-                                }else {
-                                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1, false);
-                                }
-                                return false;
-                            }
-                        }
-                        hasMove = false;
-                        break;
-                }
-                return mViewPager.dispatchTouchEvent(event);
-            } catch (Exception e) {
-                // do nothing
-                return false;
             }
         }
     }
