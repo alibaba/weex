@@ -207,16 +207,13 @@ package com.taobao.weex.ui.component;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.ComponentCreator;
-import com.taobao.weex.ui.view.WXCircleIndicator;
 import com.taobao.weex.ui.view.WXCirclePageAdapter;
 import com.taobao.weex.ui.view.WXCircleViewPager;
 import com.taobao.weex.utils.WXUtils;
@@ -234,14 +231,14 @@ public class WXSliderNeighbor extends WXSlider {
     public static final String NEIGHBOR_SCALE = "neighborScale"; // the init scale of neighor page
     public static final String NEIGHBOR_ALPHA = "neighborAlpha"; // the init alpha of neighor page
 
-    private static final int DEFAULT_NEIGHBOR_SPACE = 70;
-    private static final float DEFAULT_NEIGHBOR_SCALE = 0.7F;
-    private static final float DEFAULT_NEIGHBOR_ALPHA = 0.8F;
+    private static final int DEFAULT_NEIGHBOR_SPACE = 25;
+    private static final float DEFAULT_NEIGHBOR_SCALE = 0.8F;
+    private static final float DEFAULT_NEIGHBOR_ALPHA = 0.6F;
 
     private float mNerghborScale = DEFAULT_NEIGHBOR_SCALE;
     private float mNerghborAlpha = DEFAULT_NEIGHBOR_ALPHA;
 
-    private static final float WX_DEFAULT_MAIN_NEIGHBOR_SCALE = 0.95F;
+    private static final float WX_DEFAULT_MAIN_NEIGHBOR_SCALE = 0.9f;
 
     public WXSliderNeighbor(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
         super(instance, dom, parent, instanceId, isLazy);
@@ -299,8 +296,6 @@ public class WXSliderNeighbor extends WXSlider {
         mViewPager.setPageTransformer(true, new ZoomTransformer());
         mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
         view.setClipChildren(false);
-        view.setOnTouchListener(new OnTouchCallback());
-
         registerActivityStateListener();
 
         return view;
@@ -309,31 +304,7 @@ public class WXSliderNeighbor extends WXSlider {
     @Override
     protected void addSubView(View view, int index) {
         updateScaleAndAlpha(view, mNerghborAlpha, mNerghborScale); // we need to set neighbor view status when added.
-//        super.addSubView(view, index);
-
-        if (view == null || mAdapter == null) {
-            return;
-        }
-
-        if (view instanceof WXCircleIndicator) {
-            return;
-        }
-
-//        FrameLayout wrapper = new FrameLayout(mContext);
-//        wrapper.addView(view);
-//
-//        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//        view.setLayoutParams(params);
-
-        mAdapter.addPageView(view);
-
-
-        mAdapter.notifyDataSetChanged();
-        if (mIndicator != null) {
-            mIndicator.getHostView().forceLayout();
-            mIndicator.getHostView().requestLayout();
-        }
-
+        super.addSubView(view, index);
     }
 
     private void updateScaleAndAlpha(View view, float alpha, float scale) {
@@ -421,8 +392,8 @@ public class WXSliderNeighbor extends WXSlider {
     class ZoomTransformer implements ViewPager.PageTransformer {
         @Override
         public void transformPage(View page, float position) {
-            Log.e("333", "transformPage " + mAdapter.getItemPosition(page) + " to " + position + " now is " + mViewPager.getCurrentItem());
             float alpha, scale;
+
             if(position <= (-mAdapter.getRealCount() + 1)) {
                 position = position + mAdapter.getRealCount();
             }
@@ -438,68 +409,21 @@ public class WXSliderNeighbor extends WXSlider {
                 scale = mNerghborScale + factor * (WX_DEFAULT_MAIN_NEIGHBOR_SCALE-mNerghborScale);//mNeighborscale-->0.
                 alpha = (1-mNerghborAlpha) * factor + mNerghborAlpha;//0.6-1
 
+                if(mViewPager.getCurrentItem() != mAdapter.getItemPosition(page)){
+                    if(position > 0){//右边
+                        page.setPivotX(0);
+                    }else{//左边
+                        page.setPivotX(page.getMeasuredWidth());
+                    }
+                }else{
+                    page.setPivotX(page.getMeasuredWidth()/2);
+                }
+
+                page.setPivotY(page.getMeasuredHeight()/2);
+
                 page.setAlpha(alpha);
                 page.setScaleX(scale);
                 page.setScaleY(scale);
-            }
-        }
-    }
-
-    class OnTouchCallback implements View.OnTouchListener {
-        private float downX = -1;
-        private boolean hasMove;
-        private float mScreenWidth;
-
-        public OnTouchCallback() {
-            mScreenWidth = getParent().getDomObject().getLayoutWidth();
-        }
-
-        @Override
-        public boolean onTouch(View view, MotionEvent event) {
-            try {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        downX = event.getX();
-                        hasMove = false;
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        if (downX < 0) {
-                            downX = event.getX();
-                        }
-                        if (Math.abs(event.getX() - downX) > 20) {
-                            hasMove = true;
-                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        if (!hasMove) {
-                            hasMove = false;
-                            if (event.getX() < mScreenWidth * 0.25) {
-                                //Log.e("333", "onTouch left  event is " + event.getAction() + " x is " + event.getX() + " next pos is " +  (mViewPager.getCurrentItem() != 0 ? (mViewPager.getCurrentItem() - 1) : mAdapter.getRealCount() - 1)  );
-
-                                if(mViewPager.getCurrentItem() == 0) {
-                                    mViewPager.setCurrentItem(mAdapter.getRealCount() - 1, false);
-                                }else {
-                                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1, false);
-                                }
-                                return false;
-                            } else if (event.getX() > mScreenWidth * 0.75) {
-                                //Log.e("333", "onTouch right  event is " + event.getAction() + " x is " + event.getX() + " next pos is " + (mViewPager.getCurrentItem() + 1));
-
-                                if(mViewPager.getCurrentItem() == mAdapter.getRealCount()) {
-                                    mViewPager.setCurrentItem(0, false);
-                                }else {
-                                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1, false);
-                                }
-                                return false;
-                            }
-                        }
-                        hasMove = false;
-                        break;
-                }
-                return mViewPager.dispatchTouchEvent(event);
-            } catch (Exception e) {
-                // do nothing
-                return false;
             }
         }
     }
