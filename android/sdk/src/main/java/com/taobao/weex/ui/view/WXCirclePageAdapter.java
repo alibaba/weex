@@ -327,4 +327,8 @@ public class WXCirclePageAdapter extends PagerAdapter {
     int position = views.indexOf(object);
     return position == -1 ? POSITION_NONE : position;
   }
+
+  public List<View> getViews(){
+    return views;
+  }
 }
