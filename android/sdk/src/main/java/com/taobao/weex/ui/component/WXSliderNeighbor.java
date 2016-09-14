@@ -209,11 +209,13 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.ComponentCreator;
+import com.taobao.weex.ui.view.WXCircleIndicator;
 import com.taobao.weex.ui.view.WXCirclePageAdapter;
 import com.taobao.weex.ui.view.WXCircleViewPager;
 import com.taobao.weex.utils.WXUtils;
@@ -269,7 +271,11 @@ public class WXSliderNeighbor extends WXSlider {
         lp.rightMargin = neighborSpace;
         mViewPager.setLayoutParams(lp);
 
-
+        if(mAdapter.getRealCount() > 3){
+            mViewPager.setOffscreenPageLimit(2);
+        }else if(mAdapter.getRealCount() == 3){
+            mViewPager.setOffscreenPageLimit(1);
+        }
 
     }
 
@@ -296,6 +302,7 @@ public class WXSliderNeighbor extends WXSlider {
         mViewPager.setPageTransformer(true, new ZoomTransformer());
         mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
         view.setClipChildren(false);
+        mViewPager.setClipChildren(false);
         registerActivityStateListener();
 
         return view;
@@ -304,7 +311,29 @@ public class WXSliderNeighbor extends WXSlider {
     @Override
     protected void addSubView(View view, int index) {
         updateScaleAndAlpha(view, mNerghborAlpha, mNerghborScale); // we need to set neighbor view status when added.
-        super.addSubView(view, index);
+//        super.addSubView(view, index);
+
+
+        if (view == null || mAdapter == null) {
+            return;
+        }
+
+        if (view instanceof WXCircleIndicator) {
+            return;
+        }
+
+        FrameLayout wrapper = new FrameLayout(mContext);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        view.setLayoutParams(params);
+        wrapper.addView(view);
+
+        mAdapter.addPageView(wrapper);
+        mAdapter.notifyDataSetChanged();
+        if (mIndicator != null) {
+            mIndicator.getHostView().forceLayout();
+            mIndicator.getHostView().requestLayout();
+        }
+
     }
 
     private void updateScaleAndAlpha(View view, float alpha, float scale) {
@@ -325,10 +354,12 @@ public class WXSliderNeighbor extends WXSlider {
         int cusPos = mViewPager.getCurrentItem();
         if(null != pageViews && pageViews.size() > 0) {
             for(View v : pageViews) {
+                View realView = ((ViewGroup)v).getChildAt(0);
+
                 if(mAdapter.getItemPosition(v) != cusPos) {
-                    updateScaleAndAlpha(v, alpha, scale);
+                    updateScaleAndAlpha(realView, alpha, scale);
                 }else{
-                    updateScaleAndAlpha(v,1.0F,WX_DEFAULT_MAIN_NEIGHBOR_SCALE);//0.95
+                    updateScaleAndAlpha(realView,1.0F,WX_DEFAULT_MAIN_NEIGHBOR_SCALE);//0.95
                 }
             }
         }
@@ -392,6 +423,10 @@ public class WXSliderNeighbor extends WXSlider {
     class ZoomTransformer implements ViewPager.PageTransformer {
         @Override
         public void transformPage(View page, float position) {
+            View realView = ((ViewGroup)page).getChildAt(0);
+            if(realView == null){
+                return;
+            }
             float alpha, scale;
 
             if(position <= (-mAdapter.getRealCount() + 1)) {
@@ -411,19 +446,19 @@ public class WXSliderNeighbor extends WXSlider {
 
                 if(mViewPager.getCurrentItem() != mAdapter.getItemPosition(page)){
                     if(position > 0){//右边
-                        page.setPivotX(0);
+                        realView.setPivotX(0);
                     }else{//左边
-                        page.setPivotX(page.getMeasuredWidth());
+                        realView.setPivotX(page.getMeasuredWidth());
                     }
                 }else{
-                    page.setPivotX(page.getMeasuredWidth()/2);
+                    realView.setPivotX(page.getMeasuredWidth()/2);
                 }
 
-                page.setPivotY(page.getMeasuredHeight()/2);
+                realView.setPivotY(page.getMeasuredHeight()/2);
 
-                page.setAlpha(alpha);
-                page.setScaleX(scale);
-                page.setScaleY(scale);
+                realView.setAlpha(alpha);
+                realView.setScaleX(scale);
+                realView.setScaleY(scale);
             }
         }
     }
