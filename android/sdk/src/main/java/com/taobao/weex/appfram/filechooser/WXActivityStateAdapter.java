@@ -202,37 +202,53 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.ui.view;
+package com.taobao.weex.appfram.filechooser;
 
-import android.support.annotation.Nullable;
-import android.view.View;
-import android.webkit.ValueCallback;
+import android.content.Intent;
 
-import com.taobao.weex.ui.component.WXWeb;
+import com.taobao.weex.IWXActivityStateListener;
 
-public interface IWebView {
-    public View getView();
-    public void destroy();
-    public void loadUrl(String url);
-    public void reload();
-    public void goBack();
-    public void goForward();
-    public void setShowLoading(boolean shown);
-    public void setOnErrorListener(OnErrorListener listener);
-    public void setOnPageListener(OnPageListener listener);
-    public void setOnFileChooserListener(OnShowFileChooserListener listener);
+/**
+ * Created by moxun on 16/9/18.
+ */
+public class WXActivityStateAdapter implements IWXActivityStateListener {
+    @Override
+    public void onActivityCreate() {
 
-    public interface OnErrorListener {
-        public void onError(String type, Object message);
     }
 
-    public interface OnPageListener {
-        public void onReceivedTitle(String title);
-        public void onPageStart(String url);
-        public void onPageFinish(String url, boolean canGoBack, boolean canGoForward);
+    @Override
+    public void onActivityStart() {
+
     }
 
-    public interface OnShowFileChooserListener {
-        public boolean onShowFileChooser(@Nullable String acceptType, @WXWeb.ResponseType int responseType, ValueCallback filePathCallback);
+    @Override
+    public void onActivityPause() {
+
+    }
+
+    @Override
+    public void onActivityResume() {
+
+    }
+
+    @Override
+    public void onActivityStop() {
+
+    }
+
+    @Override
+    public void onActivityDestroy() {
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+    }
+
+    @Override
+    public boolean onActivityBack() {
+        return false;
     }
 }

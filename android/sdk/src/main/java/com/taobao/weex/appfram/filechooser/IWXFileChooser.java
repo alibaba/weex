@@ -202,37 +202,18 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.ui.view;
+package com.taobao.weex.appfram.filechooser;
 
+import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.view.View;
-import android.webkit.ValueCallback;
 
-import com.taobao.weex.ui.component.WXWeb;
+/**
+ * Created by moxun on 16/9/18.
+ */
+public interface IWXFileChooser {
+    void chooseFile(@Nullable String acceptType, OnFileChooseListener listener);
 
-public interface IWebView {
-    public View getView();
-    public void destroy();
-    public void loadUrl(String url);
-    public void reload();
-    public void goBack();
-    public void goForward();
-    public void setShowLoading(boolean shown);
-    public void setOnErrorListener(OnErrorListener listener);
-    public void setOnPageListener(OnPageListener listener);
-    public void setOnFileChooserListener(OnShowFileChooserListener listener);
-
-    public interface OnErrorListener {
-        public void onError(String type, Object message);
-    }
-
-    public interface OnPageListener {
-        public void onReceivedTitle(String title);
-        public void onPageStart(String url);
-        public void onPageFinish(String url, boolean canGoBack, boolean canGoForward);
-    }
-
-    public interface OnShowFileChooserListener {
-        public boolean onShowFileChooser(@Nullable String acceptType, @WXWeb.ResponseType int responseType, ValueCallback filePathCallback);
+    interface OnFileChooseListener {
+        void onFileChoose(@Nullable Uri path);
     }
 }

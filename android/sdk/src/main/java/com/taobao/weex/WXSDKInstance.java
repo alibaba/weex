@@ -205,6 +205,7 @@
 package com.taobao.weex;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Message;
 import android.text.TextUtils;
@@ -618,6 +619,12 @@ public class WXSDKInstance implements IWXActivityStateListener {
     }
   }
 
+  public void unregisterActivityStateListener(IWXActivityStateListener listener) {
+    if (listener != null && mActivityStateListeners != null && mActivityStateListeners.contains(listener)) {
+      mActivityStateListeners.remove(listener);
+    }
+  }
+
   /********************************
    * end register listener
    ********************************************************/
@@ -687,6 +694,13 @@ public class WXSDKInstance implements IWXActivityStateListener {
       listener.onActivityDestroy();
     }
     destroy();
+  }
+
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    for (IWXActivityStateListener listener : mActivityStateListeners) {
+      listener.onActivityResult(requestCode, resultCode, data);
+    }
   }
 
   @Override

@@ -202,37 +202,122 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.ui.view;
+package com.taobao.weex.appfram.filechooser;
 
-import android.support.annotation.Nullable;
-import android.view.View;
-import android.webkit.ValueCallback;
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Parcelable;
+import android.provider.MediaStore;
 
-import com.taobao.weex.ui.component.WXWeb;
+import com.taobao.weex.IWXActivityStateListener;
+import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.utils.WXLogUtils;
 
-public interface IWebView {
-    public View getView();
-    public void destroy();
-    public void loadUrl(String url);
-    public void reload();
-    public void goBack();
-    public void goForward();
-    public void setShowLoading(boolean shown);
-    public void setOnErrorListener(OnErrorListener listener);
-    public void setOnPageListener(OnPageListener listener);
-    public void setOnFileChooserListener(OnShowFileChooserListener listener);
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-    public interface OnErrorListener {
-        public void onError(String type, Object message);
+/**
+ * Created by moxun on 16/9/18.
+ */
+public class WXFileChooser implements IWXFileChooser {
+
+    private static final int REQUEST_CODE_CHOOSE_FILE = 0x1;
+
+    private static final String MIME_TYPE_ANY = "*/*";
+    private static final String MIME_TYPE_IMAGE = "image/";
+    private static final String MIME_TYPE_AUDIO = "audio/";
+    private static final String MIME_TYPE_VIDEO = "video/";
+
+    private WXSDKInstance mInstance;
+    private IWXActivityStateListener mStateListener;
+    private OnFileChooseListener mCallback;
+    private static final String TEMP_IMAGE_FILE = "TEMP_CAPTURED_PICTURE.JPG";
+
+    public WXFileChooser(WXSDKInstance instance) {
+        mInstance = instance;
+        mStateListener = new WXActivityStateAdapter() {
+            @Override
+            public void onActivityResult(int requestCode, int resultCode, Intent data) {
+                if (mCallback != null && requestCode == REQUEST_CODE_CHOOSE_FILE) {
+                    if (resultCode == Activity.RESULT_OK) {
+                        File temp = new File(mInstance.getContext().getExternalCacheDir(), TEMP_IMAGE_FILE);
+                        Uri filePath = null;
+                        boolean isFromCamera = (data == null
+                                || data.getData() == null
+                                || data.getData().toString().contains(temp.getPath()));
+                        if (isFromCamera) {
+                            filePath = Uri.fromFile(temp);
+                        } else {
+                            filePath = data.getData();
+                        }
+
+                        WXLogUtils.d("WXFileChooser", "selected file path: " + filePath.toString());
+                        mCallback.onFileChoose(filePath);
+                    } else if (resultCode == Activity.RESULT_CANCELED) {
+                        mCallback.onFileChoose(null);
+                    }
+                    //release self
+                    mInstance.unregisterActivityStateListener(mStateListener);
+                }
+            }
+        };
+        mInstance.registerActivityStateListener(mStateListener);
     }
 
-    public interface OnPageListener {
-        public void onReceivedTitle(String title);
-        public void onPageStart(String url);
-        public void onPageFinish(String url, boolean canGoBack, boolean canGoForward);
+    @Override
+    public void chooseFile(String acceptType, OnFileChooseListener listener) {
+        WXLogUtils.d("WXFileChooser","acceptType: " + acceptType);
+        mCallback = listener;
+        Intent intent = getPickIntent(acceptType);
+        ((Activity) mInstance.getContext()).startActivityForResult(intent, REQUEST_CODE_CHOOSE_FILE);
     }
 
-    public interface OnShowFileChooserListener {
-        public boolean onShowFileChooser(@Nullable String acceptType, @WXWeb.ResponseType int responseType, ValueCallback filePathCallback);
+    private Intent getPickIntent(String acceptType) {
+        if (acceptType == null) {
+            acceptType = "*/*";
+        }
+
+        Intent result = null;
+        List<Intent> intents = new ArrayList<>();
+
+        Intent pickIntent = new Intent(Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        pickIntent.setType(acceptType);
+
+        Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(mInstance.getContext().getExternalCacheDir(), TEMP_IMAGE_FILE)));
+
+        Intent camcorderIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+
+        Intent soundRecorderIntent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+
+        Intent defaultOpenableIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        defaultOpenableIntent.addCategory(Intent.CATEGORY_OPENABLE);
+        defaultOpenableIntent.setType(acceptType);
+
+        if (acceptType.equals(MIME_TYPE_ANY)) {
+            intents.add(pickIntent);
+            intents.add(captureIntent);
+            intents.add(camcorderIntent);
+            intents.add(soundRecorderIntent);
+        } else if (acceptType.startsWith(MIME_TYPE_IMAGE)) {
+            intents.add(pickIntent);
+            intents.add(captureIntent);
+        } else if (acceptType.startsWith(MIME_TYPE_AUDIO)) {
+            intents.add(soundRecorderIntent);
+        } else if (acceptType.startsWith(MIME_TYPE_VIDEO)) {
+            intents.add(camcorderIntent);
+        }
+
+        intents.add(defaultOpenableIntent);
+
+        if (intents.size() > 0) {
+            result = Intent.createChooser(intents.remove(intents.size() - 1), null);
+            result.putExtra(Intent.EXTRA_INITIAL_INTENTS,
+                    intents.toArray(new Parcelable[intents.size()]));
+        }
+        return result;
     }
 }

@@ -205,24 +205,40 @@
 package com.taobao.weex.ui.component;
 
 import android.content.Context;
+import android.net.Uri;
+import android.support.annotation.IntDef;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
-
 import android.view.View;
+import android.webkit.ValueCallback;
+
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.appfram.filechooser.IWXFileChooser;
+import com.taobao.weex.appfram.filechooser.WXFileChooser;
 import com.taobao.weex.common.WXDomPropConstant;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.view.IWebView;
 import com.taobao.weex.ui.view.WXWebView;
 import com.taobao.weex.utils.WXUtils;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.HashMap;
 import java.util.Map;
 
 public class WXWeb extends WXComponent {
 
+    public static final int RESPONSE_MULTI = 0x1;
+    public static final int RESPONSE_SINGLE = 0x2;
+    @IntDef({RESPONSE_MULTI, RESPONSE_SINGLE})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface ResponseType {}
+
     protected IWebView mWebView;
     private String mUrl;
+
+    private ValueCallback<Object> cachedFilePathCallback;
 
     @Deprecated
     public WXWeb(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
@@ -274,6 +290,31 @@ public class WXWeb extends WXComponent {
                     params.put("canGoForward", canGoForward);
                     WXSDKManager.getInstance().fireEvent(mInstanceId, getRef(), WXEventType.WEBVIEW_PAGEFINISH, params);
                 }
+            }
+        });
+        mWebView.setOnFileChooserListener(new IWebView.OnShowFileChooserListener() {
+            @Override
+            public boolean onShowFileChooser(String acceptType, @ResponseType final int type, ValueCallback filePathCallback) {
+                cachedFilePathCallback = filePathCallback;
+                WXFileChooser fileChooser = new WXFileChooser(mInstance);
+                fileChooser.chooseFile(acceptType, new IWXFileChooser.OnFileChooseListener() {
+                    @Override
+                    public void onFileChoose(@Nullable Uri path) {
+                        if (cachedFilePathCallback != null) {
+                            if (path == null) {
+                                cachedFilePathCallback.onReceiveValue(null);
+                                return;
+                            }
+                            if (type == RESPONSE_MULTI) {
+                                cachedFilePathCallback.onReceiveValue(new Uri[]{path});
+                            } else if (type == RESPONSE_SINGLE) {
+                                cachedFilePathCallback.onReceiveValue(path);
+                            }
+                            cachedFilePathCallback = null;
+                        }
+                    }
+                });
+                return true;
             }
         });
         return mWebView.getView();

@@ -128,6 +128,7 @@
 package com.taobao.weex.ui.component;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PointF;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -968,6 +969,11 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
 
   @Override
   public void onActivityDestroy() {
+
+  }
+
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
   }
 

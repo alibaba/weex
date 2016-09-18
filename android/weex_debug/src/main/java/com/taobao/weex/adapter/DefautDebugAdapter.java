@@ -1,6 +1,7 @@
 package com.taobao.weex.adapter;
 
 import android.app.Application;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -98,6 +99,11 @@ public class DefautDebugAdapter implements IWXDebugAdapter {
 
     @Override
     public void onActivityDestroy() {
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
     }
 

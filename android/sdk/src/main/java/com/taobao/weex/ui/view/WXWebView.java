@@ -204,13 +204,18 @@
  */
 package com.taobao.weex.ui.view;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.net.http.SslError;
+import android.os.Build;
+import android.support.annotation.Keep;
 import android.view.Gravity;
 import android.view.View;
 import android.webkit.SslErrorHandler;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -221,6 +226,7 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
+import com.taobao.weex.ui.component.WXWeb;
 import com.taobao.weex.utils.WXLogUtils;
 
 public class WXWebView implements IWebView {
@@ -232,7 +238,7 @@ public class WXWebView implements IWebView {
 
     private OnErrorListener mOnErrorListener;
     private OnPageListener mOnPageListener;
-
+    private OnShowFileChooserListener mOnShowFileChooserListener;
 
     public WXWebView(Context context) {
         mContext = context;
@@ -312,6 +318,11 @@ public class WXWebView implements IWebView {
     @Override
     public void setOnPageListener(OnPageListener listener) {
         mOnPageListener = listener;
+    }
+
+    @Override
+    public void setOnFileChooserListener(OnShowFileChooserListener listener) {
+        mOnShowFileChooserListener = listener;
     }
 
     private void showProgressBar(boolean shown) {
@@ -406,6 +417,36 @@ public class WXWebView implements IWebView {
                 }
             }
 
+            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+                String acceptType = null;
+                if (fileChooserParams.getAcceptTypes().length > 0) {
+                    acceptType = fileChooserParams.getAcceptTypes()[0];
+                }
+                if (mOnShowFileChooserListener != null) {
+                    return mOnShowFileChooserListener.onShowFileChooser(acceptType, WXWeb.RESPONSE_MULTI, filePathCallback);
+                }
+                return false;
+            }
+
+            //override hided api
+            @Keep
+            public void openFileChooser(ValueCallback<Uri> uploadMsg) {
+                openFileChooser(uploadMsg, "*/*");
+            }
+
+            @Keep
+            public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType ) {
+                openFileChooser(uploadMsg, "*/*", "filesystem");
+            }
+
+            @Keep
+            public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
+                if (mOnShowFileChooserListener != null) {
+                    mOnShowFileChooserListener.onShowFileChooser(acceptType, WXWeb.RESPONSE_SINGLE, uploadMsg);
+                }
+            }
         });
     }
 

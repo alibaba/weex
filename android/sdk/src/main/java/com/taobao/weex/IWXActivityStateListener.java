@@ -204,6 +204,8 @@
  */
 package com.taobao.weex;
 
+import android.content.Intent;
+
 /**
  * Listener class for activity lifecycle
  */
@@ -220,6 +222,8 @@ public interface IWXActivityStateListener {
   void onActivityStop();
 
   void onActivityDestroy();
+
+  void onActivityResult(int requestCode, int resultCode, Intent data);
 
   boolean onActivityBack();
 }
