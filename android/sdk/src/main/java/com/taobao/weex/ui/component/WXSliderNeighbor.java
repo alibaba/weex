@@ -259,7 +259,6 @@ public class WXSliderNeighbor extends WXSlider {
     @Override
     public void bindData(WXComponent component) {
         super.bindData(component);
-//        mViewPager.setCurrentItem(mAdapter.getRealCount()*50, true);  // WXCirclePageAdapter#getCount default=110, so we are in the middle.
         mViewPager.setCurrentItem(0);
 
         int neighborSpace = DEFAULT_NEIGHBOR_SPACE;
@@ -311,9 +310,6 @@ public class WXSliderNeighbor extends WXSlider {
     @Override
     protected void addSubView(View view, int index) {
         updateScaleAndAlpha(view, mNerghborAlpha, mNerghborScale); // we need to set neighbor view status when added.
-//        super.addSubView(view, index);
-
-
         if (view == null || mAdapter == null) {
             return;
         }
@@ -360,7 +356,7 @@ public class WXSliderNeighbor extends WXSlider {
                 if(mAdapter.getItemPosition(v) != cusPos) {
                     updateScaleAndAlpha(realView, alpha, scale);
                 }else{
-                    updateScaleAndAlpha(realView,1.0F,WX_DEFAULT_MAIN_NEIGHBOR_SCALE);//0.95
+                    updateScaleAndAlpha(realView,1.0F,WX_DEFAULT_MAIN_NEIGHBOR_SCALE);
                 }
             }
         }
@@ -438,17 +434,14 @@ public class WXSliderNeighbor extends WXSlider {
             }
 
             if (position >= -1 && position <= 1) {
-                float factor = Math.abs(Math.abs(position) - 1);//0--1
-//                scale = (1-mNerghborScale) * factor + mNerghborScale;//0.8---1
-//                alpha = (1-mNerghborAlpha) * factor + mNerghborAlpha;//0.6----1
-
-                scale = mNerghborScale + factor * (WX_DEFAULT_MAIN_NEIGHBOR_SCALE-mNerghborScale);//mNeighborscale-->0.
-                alpha = (1-mNerghborAlpha) * factor + mNerghborAlpha;//0.6-1
+                float factor = Math.abs(Math.abs(position) - 1);
+                scale = mNerghborScale + factor * (WX_DEFAULT_MAIN_NEIGHBOR_SCALE-mNerghborScale);
+                alpha = (1-mNerghborAlpha) * factor + mNerghborAlpha;
 
                 if(mViewPager.getCurrentItem() != mAdapter.getItemPosition(page)){
-                    if(position > 0){//右边
+                    if(position > 0){
                         realView.setPivotX(0);
-                    }else{//左边
+                    }else{
                         realView.setPivotX(page.getMeasuredWidth());
                     }
                 }else{
