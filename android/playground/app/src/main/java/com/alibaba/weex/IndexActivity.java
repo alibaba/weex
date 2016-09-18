@@ -1,14 +1,14 @@
 package com.alibaba.weex;
 
-import com.google.zxing.client.android.CaptureActivity;
-
 import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -23,15 +23,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.weex.commons.AbstractWeexActivity;
+import com.google.zxing.client.android.CaptureActivity;
 import com.taobao.weex.WXRenderErrorCode;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.utils.WXFileUtils;
 import com.taobao.weex.utils.WXSoInstallMgrSdk;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class IndexActivity extends AbstractWeexActivity {
 
-  private static final int CAMARA_PERMISSION_REQUEST_CODE = 0x1;
+  private static final int PERMISSION_REQUEST_CODE = 0x1;
   private static final String TAG = "IndexActivity";
   private static final String DEFAULT_IP = "your_current_IP";
   private static String CURRENT_IP= DEFAULT_IP; // your_current_IP
@@ -112,13 +116,7 @@ public class IndexActivity extends AbstractWeexActivity {
         return true;
       }
     } else if (id == R.id.action_scan) {
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
-          Toast.makeText(this, "please give me the permission", Toast.LENGTH_SHORT).show();
-        } else {
-          ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMARA_PERMISSION_REQUEST_CODE);
-        }
-      } else {
+      if (checkNecessaryPermission()) {
         startActivity(new Intent(this, CaptureActivity.class));
       }
       return true;
@@ -126,13 +124,46 @@ public class IndexActivity extends AbstractWeexActivity {
     return super.onOptionsItemSelected(item);
   }
 
+  private boolean checkNecessaryPermission() {
+    if (Build.VERSION.SDK_INT < 23) {
+      return true;
+    }
+    boolean hasCameraPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
+    boolean hasPhoneStatePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED;
+    boolean hasCompletePermission = hasCameraPermission && hasPhoneStatePermission;
+    List<String> permissions = new ArrayList<>(2);
+    if (!hasCameraPermission) {
+      if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+        Toast.makeText(this, "please give me the permission", Toast.LENGTH_SHORT).show();
+      }
+      permissions.add(Manifest.permission.CAMERA);
+    }
+    if (!hasPhoneStatePermission) {
+      if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_PHONE_STATE)) {
+        Toast.makeText(this, "we need this permission for debugger", Toast.LENGTH_SHORT).show();
+      }
+      permissions.add(Manifest.permission.READ_PHONE_STATE);
+    }
+    if (!hasCompletePermission) {
+      ActivityCompat.requestPermissions(this, permissions.toArray(new String[permissions.size()]), PERMISSION_REQUEST_CODE);
+    }
+    return hasCompletePermission;
+  }
+
   @Override
-  public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    if (requestCode == CAMARA_PERMISSION_REQUEST_CODE && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      startActivity(new Intent(this, CaptureActivity.class));
-    } else {
-      Toast.makeText(this, "request camara permission fail!", Toast.LENGTH_SHORT).show();
+    if (requestCode == PERMISSION_REQUEST_CODE) {
+      boolean passed = true;
+      for (int i = 0; i < permissions.length; i++) {
+        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+          passed = false;
+          Toast.makeText(this, "Request permission " + permissions[i] + " failed!", Toast.LENGTH_SHORT).show();
+        }
+      }
+      if (passed) {
+        startActivity(new Intent(this, CaptureActivity.class));
+      }
     }
   }
 
