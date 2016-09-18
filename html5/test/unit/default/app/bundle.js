@@ -5,6 +5,7 @@ const { expect } = chai
 chai.use(sinonChai)
 
 global.callNative = function () {}
+global.callAddElement = function () {}
 
 import * as bundle from '../../../../default/app/bundle'
 import * as register from '../../../../default/app/register'
