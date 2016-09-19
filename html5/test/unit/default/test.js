@@ -124,6 +124,70 @@ describe('test input and output', () => {
     delete allDocs[name]
   })
 
+  it('static1 case', () => {
+    const name = 'static1'
+    const inputCode = readInput(name)
+    const outputCode = readOutput(name)
+    const doc = new Document(name)
+    allDocs[name] = doc
+
+    framework.createInstance(name, inputCode)
+    const expected = eval('(' + outputCode + ')')
+    const actual = doc.toJSON()
+    expect(actual).eql(expected)
+
+    framework.destroyInstance(name)
+    delete allDocs[name]
+  })
+
+  it('static2 case', () => {
+    const name = 'static2'
+    const inputCode = readInput(name)
+    const outputCode = readOutput(name)
+    const doc = new Document(name)
+    allDocs[name] = doc
+
+    framework.createInstance(name, inputCode)
+    const expected = eval('(' + outputCode + ')')
+    const actual = doc.toJSON()
+    expect(actual).eql(expected)
+
+    framework.destroyInstance(name)
+    delete allDocs[name]
+  })
+
+  it('static3 case', () => {
+    const name = 'static3'
+    const inputCode = readInput(name)
+    const outputCode = readOutput(name)
+    const doc = new Document(name)
+    allDocs[name] = doc
+
+    framework.createInstance(name, inputCode)
+    const expected = eval('(' + outputCode + ')')
+    const actual = doc.toJSON()
+    expect(actual).eql(expected)
+
+    framework.destroyInstance(name)
+    delete allDocs[name]
+  })
+
+  it('static4 case', () => {
+    const name = 'static4'
+    const inputCode = readInput(name)
+    const outputCode = readOutput(name)
+    const doc = new Document(name)
+    allDocs[name] = doc
+
+    framework.createInstance(name, inputCode)
+    const expected = eval('(' + outputCode + ')')
+    const actual = doc.toJSON()
+    expect(actual).eql(expected)
+
+    framework.destroyInstance(name)
+    delete allDocs[name]
+  })
+
   it('foo2 case', () => {
     const name = 'foo2'
     const inputCode = readInput(name)
