@@ -332,7 +332,6 @@ public class WXStreamModule extends WXModule {
     String type = optionsObj.getString("type");
     int timeout = optionsObj.getIntValue("timeout");
 
-
     if (method != null) method = method.toUpperCase();
     Options.Builder builder = new Options.Builder()
             .setMethod(!"GET".equals(method)
