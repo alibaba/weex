@@ -339,6 +339,9 @@ function bindKey (vm, el, name, key, calc) {
  * watch a calc function and callback if the calc value changes
  */
 export function watch (vm, calc, callback) {
+  if (vm._static) {
+    return ((typeof calc === 'function') ? calc : parsePath(calc)).call(vm, vm)
+  }
   const watcher = new Watcher(vm, calc, function (value, oldValue) {
     /* istanbul ignore if */
     if (typeof value !== 'object' && value === oldValue) {
