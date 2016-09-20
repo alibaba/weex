@@ -3,7 +3,7 @@ define('@weex-component/static2', function (require, exports, module) {
 ;
   module.exports = {
     ready: function() {
-	      this.arr.$set(2, 3)
+	    this.arr.$set(2, 3)
 	  },
     data: function () {return {
       arr: [1, 2]
