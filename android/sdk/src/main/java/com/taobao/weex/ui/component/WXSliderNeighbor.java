@@ -260,16 +260,6 @@ public class WXSliderNeighbor extends WXSlider {
     public void bindData(WXComponent component) {
         super.bindData(component);
         mViewPager.setCurrentItem(0);
-
-        int neighborSpace = DEFAULT_NEIGHBOR_SPACE;
-        // margin is the space for neighbor views.
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mViewPager.getLayoutParams();
-        //fixed by chuyi.Convert distance from JS,CSS to native
-        neighborSpace = (int) WXViewUtils.getRealPxByWidth(neighborSpace);
-        lp.leftMargin = neighborSpace;
-        lp.rightMargin = neighborSpace;
-        mViewPager.setLayoutParams(lp);
-
         if(mAdapter.getRealCount() > 3){
             mViewPager.setOffscreenPageLimit(2);
         }else if(mAdapter.getRealCount() == 3){
@@ -301,7 +291,6 @@ public class WXSliderNeighbor extends WXSlider {
         mViewPager.setPageTransformer(true, new ZoomTransformer());
         mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
         view.setClipChildren(false);
-        mViewPager.setClipChildren(false);
         registerActivityStateListener();
 
         return view;
@@ -437,18 +426,25 @@ public class WXSliderNeighbor extends WXSlider {
                 float factor = Math.abs(Math.abs(position) - 1);
                 scale = mNerghborScale + factor * (WX_DEFAULT_MAIN_NEIGHBOR_SCALE-mNerghborScale);
                 alpha = (1-mNerghborAlpha) * factor + mNerghborAlpha;
-
+                int delta = page.getMeasuredWidth()-realView.getMeasuredWidth();
+                float translation = ((page.getMeasuredWidth()-realView.getMeasuredWidth()*WX_DEFAULT_MAIN_NEIGHBOR_SCALE)- WXViewUtils.getRealPxByWidth(DEFAULT_NEIGHBOR_SPACE)*2)/2;
                 if(mViewPager.getCurrentItem() != mAdapter.getItemPosition(page)){
                     if(position > 0){
                         realView.setPivotX(0);
+                        realView.setTranslationX(-delta);
+                        page.setTranslationX(-translation);
                     }else{
-                        realView.setPivotX(page.getMeasuredWidth());
+                        realView.setPivotX(realView.getMeasuredWidth());
+                        realView.setTranslationX(delta);
+                        page.setTranslationX(translation);
                     }
                 }else{
-                    realView.setPivotX(page.getMeasuredWidth()/2);
+                    realView.setPivotX(realView.getMeasuredWidth()/2);
+                    page.setTranslationX(0);
+                    realView.setTranslationX(0);
                 }
 
-                realView.setPivotY(page.getMeasuredHeight()/2);
+                realView.setPivotY(realView.getMeasuredHeight()/2);
 
                 realView.setAlpha(alpha);
                 realView.setScaleX(scale);
