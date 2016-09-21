@@ -224,6 +224,8 @@ public interface IWXStorageAdapter {
 
     void getAllKeys(OnResultReceivedListener listener);
 
+    void setItemPersistent(String key, String value, OnResultReceivedListener listener);
+
     void close();
 
     /**

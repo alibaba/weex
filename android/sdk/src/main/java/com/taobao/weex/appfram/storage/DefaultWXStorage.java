@@ -204,14 +204,20 @@
  */
 package com.taobao.weex.appfram.storage;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteFullException;
 import android.database.sqlite.SQLiteStatement;
 
+import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.utils.WXLogUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -221,6 +227,11 @@ public class DefaultWXStorage implements IWXStorageAdapter {
     private WXSQLiteOpenHelper mDatabaseSupplier;
 
     private ExecutorService mExecutorService;
+
+    private SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+
+    //setItem/setItemPersistent method only allow try once when occurred a sqliteFullException.
+    private boolean once = false;
 
     private void execute(Runnable runnable) {
         if (mExecutorService == null) {
@@ -239,7 +250,7 @@ public class DefaultWXStorage implements IWXStorageAdapter {
         execute(new Runnable() {
             @Override
             public void run() {
-                Map<String, Object> data = StorageResultHandler.setItemResult(performSetItem(key, value));
+                Map<String, Object> data = StorageResultHandler.setItemResult(performSetItem(key, value, false));
                 listener.onReceived(data);
             }
         });
@@ -290,26 +301,86 @@ public class DefaultWXStorage implements IWXStorageAdapter {
     }
 
     @Override
+    public void setItemPersistent(final String key, final String value, final OnResultReceivedListener listener) {
+        execute(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, Object> data = StorageResultHandler.setItemResult(performSetItem(key, value, true));
+                listener.onReceived(data);
+            }
+        });
+    }
+
+    @Override
     public void close() {
         mDatabaseSupplier.closeDatabase();
     }
 
 
-    private boolean performSetItem(String key, String value) {
-        String sql = "INSERT OR REPLACE INTO " + WXSQLiteOpenHelper.TABLE_STORAGE + " VALUES (?,?);";
+    private boolean performSetItem(String key, String value, boolean isPersistent) {
+        String sql = "INSERT OR REPLACE INTO " + WXSQLiteOpenHelper.TABLE_STORAGE + " VALUES (?,?,?,?);";
         SQLiteStatement statement = mDatabaseSupplier.getDatabase().compileStatement(sql);
+        String timeStamp = mDateFormat.format(new Date());
         try {
             statement.clearBindings();
             statement.bindString(1, key);
             statement.bindString(2, value);
+            statement.bindString(3, timeStamp);
+            statement.bindLong(4, isPersistent ? 1 : 0);
             statement.execute();
+            once = false;
+
             return true;
         } catch (Exception e) {
             WXLogUtils.e("DefaultWXStorage", e.getMessage());
+            if(e instanceof SQLiteFullException){
+                if(!once && trimToSize()){
+                    once = true;
+                    //try again
+                    return performSetItem(key,value,isPersistent);
+                }else{
+                    once = false;
+                }
+            }
+
             return false;
         } finally {
             statement.close();
         }
+    }
+
+    private boolean trimToSize(){
+        List<String> toEvict = new ArrayList<>();
+        int num = 0;
+        //remove 10% of total record
+        Cursor c = mDatabaseSupplier.getDatabase().query(WXSQLiteOpenHelper.TABLE_STORAGE, new String[]{WXSQLiteOpenHelper.COLUMN_KEY,WXSQLiteOpenHelper.COLUMN_PERSISTENT}, null, null, null, null, WXSQLiteOpenHelper.COLUMN_TIMESTAMP+" ASC");
+        try {
+            int evictSize = c.getCount() / 10;
+            while (c.moveToNext()) {
+                String key = c.getString(c.getColumnIndex(WXSQLiteOpenHelper.COLUMN_KEY));
+                boolean persistent = c.getInt(c.getColumnIndex(WXSQLiteOpenHelper.COLUMN_PERSISTENT)) == 1;
+                if(!persistent && key != null){
+                    num++;
+                    toEvict.add(key);
+                    if(num == evictSize){
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            WXLogUtils.e("DefaultWXStorage", e.getMessage());
+        } finally {
+            c.close();
+        }
+
+        if(num <= 0){
+            return false;
+        }
+
+        for(String key : toEvict){
+            performRemoveItem(key);
+        }
+        return true;
     }
 
     private String performGetItem(String key) {
@@ -320,6 +391,14 @@ public class DefaultWXStorage implements IWXStorageAdapter {
                 null, null, null);
         try {
             if (c.moveToNext()) {
+                ContentValues values = new ContentValues();
+                //update timestamp
+                values.put(WXSQLiteOpenHelper.COLUMN_TIMESTAMP,mDateFormat.format(new Date()));
+                int updateResult = mDatabaseSupplier.getDatabase().update(WXSQLiteOpenHelper.TABLE_STORAGE,values,WXSQLiteOpenHelper.COLUMN_KEY+"= ?",new String[]{key});
+
+                if(WXEnvironment.isApkDebugable()){
+                    WXLogUtils.d("update timestamp "+ (updateResult == 1 ? "success" : "failed") + " for operation [getItem(key = "+key+")]" );
+                }
                 return c.getString(c.getColumnIndex(WXSQLiteOpenHelper.COLUMN_VALUE));
             } else {
                 return null;
@@ -338,7 +417,9 @@ public class DefaultWXStorage implements IWXStorageAdapter {
             count = mDatabaseSupplier.getDatabase().delete(WXSQLiteOpenHelper.TABLE_STORAGE,
                     WXSQLiteOpenHelper.COLUMN_KEY + "=?",
                     new String[]{key});
-        } finally {
+        } catch (Exception e) {
+            WXLogUtils.e("DefaultWXStorage", e.getMessage());
+            return false;
         }
         return count == 1;
     }

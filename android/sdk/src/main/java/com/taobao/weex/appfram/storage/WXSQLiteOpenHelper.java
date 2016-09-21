@@ -213,9 +213,9 @@ import com.taobao.weex.utils.WXLogUtils;
 public class WXSQLiteOpenHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "WXStorage";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;//version update
 
-    private long mMaximumDatabaseSize = 5L * 1024L * 1024L;
+    private long mMaximumDatabaseSize = 1 * 1024L;//5L * 10 * 1024L * 1024L;//50mb//todo
 
     private static WXSQLiteOpenHelper sInstance;
 
@@ -226,12 +226,19 @@ public class WXSQLiteOpenHelper extends SQLiteOpenHelper {
     static final String TABLE_STORAGE = "default_wx_storage";
     static final String COLUMN_KEY = "key";
     static final String COLUMN_VALUE = "value";
+    static final String COLUMN_TIMESTAMP = "timestamp";
+    static final String COLUMN_PERSISTENT = "persistent";
+
 
     private static final String STATEMENT_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_STORAGE + " ("
             + COLUMN_KEY
             + " TEXT PRIMARY KEY,"
             + COLUMN_VALUE
-            + " TEXT NOT NULL"
+            + " TEXT NOT NULL,"
+            + COLUMN_TIMESTAMP
+            + " TEXT NOT NULL,"
+            + COLUMN_PERSISTENT
+            + " INTEGER DEFAULT 0"
             + ")";
 
 
@@ -267,6 +274,7 @@ public class WXSQLiteOpenHelper extends SQLiteOpenHelper {
             deleteDB();
             onCreate(db);
         }
+        //todo 是否需要copy一份 还是alter table
     }
 
 
