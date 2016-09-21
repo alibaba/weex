@@ -19,7 +19,7 @@
 | `<video>` | `src`<br>`play-status`<br>`auto-play` | **box model**<br>**flexbox**<br>`position`<br>`background-color`<br>`opacity` | `click`<br>`appear`<br>`disappear`<br>`start`<br>`pause`<br>`finish`<br>`fail` | - | (none) |
 | `<a>` | `href` | **box model**<br>**flexbox**<br>`position`<br>`background-color`<br>`opacity` | `click`<br>`appear`<br>`disappear` | - | (any) |
 | `<input>` | `type`<br>`value`<br>`placeholder`<br>`disabled`<br>`autofocus` | **box model**<br>**flexbox**<br>`position`<br>`background-color`<br>`opacity`<br>`placeholder-color`<br>`color`<br>`font-size`<br>`font-style`<br>`font-weight`<br>`text-align` | `click`<br>`appear`<br>`disappear` | - | (none) |
-| `<switch>` | `checked` | **box model**<br>**flexbox**<br>`position`<br>`background-color`<br>`opacity` | `appear`<br>`disappear`<br>`input`<br>`change`<br>`focus`<br>`blur` | - | (none) |
+| `<switch>` | `checked`<br>`disabled` | **box model**<br>**flexbox**<br>`position`<br>`background-color`<br>`opacity` | `appear`<br>`disappear`<br>`input`<br>`change`<br>`focus`<br>`blur` | - | (none) |
 
 ## Native Modules
 
