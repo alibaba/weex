@@ -7,6 +7,7 @@ import { bind, typof } from '../util'
 
 import Watcher from '../core/watcher'
 import config from '../config'
+import { parsePath } from '../util'
 
 const { nativeComponentMap } = config
 
