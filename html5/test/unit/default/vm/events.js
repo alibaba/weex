@@ -59,7 +59,6 @@ describe('bind and fire events', () => {
 
     checkReady(vm, function () {
       doc.close()
-
       expect(doc.body.event.click).a('function')
 
       const el = doc.body
@@ -75,6 +74,61 @@ describe('bind and fire events', () => {
         { module: 'dom', method: 'updateAttrs', args: [el.ref, { a: 2 }] }
       ])
 
+      done()
+    })
+  })
+
+  it('context of event binding to element width repeat attribute', (done) => {
+    customComponentMap.foo = {
+      template: {
+        type: 'div',
+        id: 'container',
+        events: {
+          click: 'containerClick'
+        },
+        children: [
+          {
+            type: 'div',
+            id: 'items',
+            'repeat': function () { return this.items },
+            events: {
+              click: 'itemsClick'
+            },
+            children: [
+              {
+                type: 'div'
+              }
+            ]
+          }
+        ]
+      },
+      data: function () {
+        return {
+          items: [
+              { name: 1 },
+              { name: 2 }
+          ]
+        }
+      },
+      methods: {
+        containerClick: function () {
+          expect(this).eql(vm)
+        },
+        itemsClick: function () {
+          expect(this).eql(vm)
+        }
+      }
+    }
+
+    const app = { doc, customComponentMap }
+    const vm = new Vm('foo', customComponentMap.foo, { _app: app })
+
+    checkReady(vm, function () {
+      doc.close()
+      const containerEl = vm.$el('container')
+      const itemsEl = vm.$el('items')
+      containerEl.event.click()
+      itemsEl.event.click()
       done()
     })
   })
