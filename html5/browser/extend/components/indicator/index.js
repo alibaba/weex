@@ -24,7 +24,7 @@ function resetColor (indicator) {
 }
 
 function handleClick (indicator, idx, e) {
-  indicator.slider.slideTo(idx)
+  indicator.slider.slideTo(idx, true)
 }
 
 const proto = {

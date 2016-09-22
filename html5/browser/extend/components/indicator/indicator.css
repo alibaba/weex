@@ -1,6 +1,7 @@
 .weex-indicators {
   position: absolute;
   white-space: nowrap;
+  z-index: 999;
 }
 .weex-indicators .weex-indicator {
   float: left;
