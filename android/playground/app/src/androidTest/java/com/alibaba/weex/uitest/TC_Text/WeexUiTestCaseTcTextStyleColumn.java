@@ -62,6 +62,8 @@ public class WeexUiTestCaseTcTextStyleColumn extends ActivityInstrumentationTest
 
         TouchUtils.scrollToBottom(this, waTestPageActivity, mViewGroup);
         mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, "TC_");
+        addAllTargetView("TC_");
+
         Thread.sleep(3000);
     }
 
@@ -230,6 +232,17 @@ public class WeexUiTestCaseTcTextStyleColumn extends ActivityInstrumentationTest
 
     public void setViewGroup(ViewGroup viewGroup){
         mViewGroup = viewGroup;
+    }
+    public void addAllTargetView(String target){
+        int max = 6;
+        int count =0 ;
+        while (count < max){
+            TouchUtils.dragQuarterScreenUp(this, this.getActivity());
+            mViewGroup = (ViewGroup) waTestPageActivity.findViewById(R.id.container);
+            mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, target);
+            mCaseListIndexView.addAll(mCaseListIndexView);
+            count ++;
+        }
     }
 
 }

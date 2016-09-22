@@ -209,14 +209,10 @@ import android.text.TextUtils;
 
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.bridge.JSCallback;
-import com.taobao.weex.common.WXModule;
 import com.taobao.weex.common.WXModuleAnno;
 
 import java.util.Map;
 
-/**
- * Created by rowandjj(chuyi)<br/>
- */
 public class WXStorageModule extends WXSDKEngine.DestroyableModule implements IWXStorage {
 
     IWXStorageAdapter mStorageAdapter;

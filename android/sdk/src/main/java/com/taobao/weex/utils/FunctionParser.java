@@ -389,7 +389,9 @@ public class FunctionParser<K, V> {
       char letter;
       for (int i = 0; i < funcName.length(); i++) {
         letter = funcName.charAt(i);
-        if (!((A_LOWER <= letter && letter <= Z_LOWER) || (A_UPPER <= letter && letter <= Z_UPPER))) {
+        if (!((A_LOWER <= letter && letter <= Z_LOWER) ||
+              (A_UPPER <= letter && letter <= Z_UPPER) ||
+              letter == MINUS)) {
           return false;
         }
       }

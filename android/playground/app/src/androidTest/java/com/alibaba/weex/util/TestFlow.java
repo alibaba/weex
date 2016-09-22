@@ -69,13 +69,16 @@ public class TestFlow extends ActivityInstrumentationTestCase2<WXPageActivity>{
         launchActivityWithIntent("com.alibaba.weex", WXPageActivity.class, intent);
         waTestPageActivity = getActivity();
         Log.e(TAG, "activity1=" + waTestPageActivity.toString());
-        Thread.sleep(3000);
+        Thread.sleep(1000);
 
         mViewGroup = (ViewGroup) waTestPageActivity.findViewById(R.id.container);
         setViewGroup(mViewGroup);
         // 根据TC 获取TC 列表,默认“"TC_"”
         mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, "AG_");
-        Thread.sleep(3000);
+
+//        addAllTargetView("AG_");
+
+        Thread.sleep(1000);
     }
 
     /**
@@ -104,7 +107,7 @@ public class TestFlow extends ActivityInstrumentationTestCase2<WXPageActivity>{
                 final WXTextView inputView = (WXTextView) caseView;
 
                 // handle if the view is INVISIBLE then scrollToBottom
-                int maxStep = 50;
+                int maxStep = 12;
                 int scrollCount = 0;
                 if(inputView.getVisibility() == View.INVISIBLE){
                     while(scrollCount <maxStep){
@@ -123,7 +126,7 @@ public class TestFlow extends ActivityInstrumentationTestCase2<WXPageActivity>{
                     }
                 });
 
-                sleep(2000);
+                sleep(1000);
 
                 setActivity(WXPageActivity.wxPageActivityInstance);
                 Activity activity2 = getActivity();
@@ -149,13 +152,15 @@ public class TestFlow extends ActivityInstrumentationTestCase2<WXPageActivity>{
                     if(findCount< maxStep){
                         Log.e(TAG, "inputListView size=" + inputListView.size()+"," + "findCount=" + findCount);
                         TouchUtils.dragQuarterScreenUp(this, this.getActivity());
-                        sleep(2000);
+                        sleep(1000);
                         myGroup = (ViewGroup) (activity2.findViewById(R.id.container));
                         inputListView = ViewUtil.findViewWithText(myGroup,
                                 childCaseName);
-                        sleep(2000);
-
+                        sleep(1000);
                         findCount ++ ;
+
+                    }else{
+                        break;
                     }
                 }
 //                else{
@@ -178,10 +183,7 @@ public class TestFlow extends ActivityInstrumentationTestCase2<WXPageActivity>{
                         }
                     });
 
-//                    sleep(3000);
-//                    Log.e(TAG, childCaseName + " snap!");
-//                    screenShot(childCaseName + "_0" + stepCountFlag +  "_init");
-//                    sleep(3000);
+                    sleep(1000);
                 }
 
                 HashMap testStepMap = new HashMap();
@@ -191,12 +193,16 @@ public class TestFlow extends ActivityInstrumentationTestCase2<WXPageActivity>{
                 testStepMap.remove("testChildCaseInit");
 
                 Iterator iter = testStepMap.entrySet().iterator();
+                Log.e(TAG,"testStepMap keyset==" + testStepMap.keySet().toString());
 
                 while (iter.hasNext()) {
                     stepCountFlag ++;
                     HashMap.Entry entry = (HashMap.Entry) iter.next();
                     Object testStepkey = entry.getKey();
+                    Log.e(TAG,"testStepMap testStepkey==" + testStepkey.toString());
+
                     Object testStepValue = entry.getValue();
+                    Log.e(TAG,"testStepMap testStepValue==" + testStepValue.toString());
 
                     testStep(testStepkey, testStepValue);
 
@@ -211,11 +217,16 @@ public class TestFlow extends ActivityInstrumentationTestCase2<WXPageActivity>{
 
         HashMap testSteps = (HashMap) testStepValue;
         Iterator iter = testSteps.entrySet().iterator();
+        Log.e(TAG,"testSteps keyset==" + testSteps.keySet().toString());
 
         while (iter.hasNext()) {
             HashMap.Entry entry = (HashMap.Entry) iter.next();
             Object testStepAction = entry.getKey();
+            Log.e(TAG,"testSteps testStepAction==" + testStepAction.toString());
+
             Object testStepActionValue = entry.getValue();
+            Log.e(TAG,"testSteps testStepActionValue==" + testStepActionValue.toString());
+
             testAction(testStepAction, testStepActionValue);
         }
 
@@ -236,34 +247,49 @@ public class TestFlow extends ActivityInstrumentationTestCase2<WXPageActivity>{
 
     }
     private void doScreenShotAction (String name){
-        sleep(2000);
+        sleep(1000);
         screenShot(name);
-        sleep(2000);
+        sleep(1000);
     }
     private void doClickAction(String action, String actionValue){
         setActivity(WXPageActivity.wxPageActivityInstance);
-        activity2 = getActivity();
+        Activity activity2 = getActivity();
         Log.e(TAG, "activity2 = " + activity2.toString());
 
         ViewGroup myGroup = (ViewGroup) (activity2.findViewById(R.id.container));
         ArrayList<View> inputListView11 = new ArrayList<View>();
-        sleep(3000);
+        sleep(1000);
 
         inputListView11 = ViewUtil.getAllChildViews(myGroup);
 
         for (View view : inputListView11) {
             if (view instanceof WXTextView) {
-                if (((WXTextView) view).getText().toString().contains((String)actionValue)) {
-                    final FrameLayout aView = (FrameLayout) view.getParent();
-                    mInstrumentation.runOnMainSync(new Runnable() {
-                        @Override
-                        public void run() {
-                            aView.requestFocus();
-                            aView.performClick();
-                            Log.e(TAG,  "do click ");
+                String text = ((WXTextView) view).getText().toString();
+                Log.e(TAG, " doClickAction text===" + text);
+                if (text.contains(actionValue)) {
+                    float viewY= view.getY();
+                    float viewX = view.getX();
+                    Log.e(TAG,"viewY==" + viewY);
+                    Log.e(TAG,"viewX==" + viewX);
 
-                        }
-                    });
+                    TouchUtils.clickView(this, view);
+                    sleep(2000);
+                    Log.e(TAG,"clickView==" );
+
+
+//                    final FrameLayout aView = (FrameLayout) view.getParent();
+//                    TouchUtils.clickView(this, aView);
+//                    Log.e(TAG,"clickaView==" );
+//
+//                    mInstrumentation.runOnMainSync(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            aView.requestFocus();
+//                            aView.performClick();
+//                            Log.e(TAG,  "do click ");
+//
+//                        }
+//                    });
 
                     break;
                 }
@@ -293,7 +319,7 @@ public class TestFlow extends ActivityInstrumentationTestCase2<WXPageActivity>{
      */
     public void screenShot(String shotName) {
         try {
-            ScreenShot.shoot(WXPageActivity.wxPageActivityInstance, shotName);
+            ScreenShot.shoot(getActivity(), shotName);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -305,5 +331,38 @@ public class TestFlow extends ActivityInstrumentationTestCase2<WXPageActivity>{
 
     public HashMap getTestMap(){
         return testMap;
+    }
+
+    /**
+     *
+     */
+    public void setUpToFindComponet(String targert){
+        int max = 60;
+        int count = 0;
+        while(mCaseListIndexView.size() == 0){
+
+            if (count < max){
+                TouchUtils.dragQuarterScreenUp(this, this.getActivity());
+                mViewGroup = (ViewGroup) waTestPageActivity.findViewById(R.id.container);
+                mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, targert);
+                count ++;
+            }
+            else{
+                break;
+            }
+
+        }
+    }
+
+    public void addAllTargetView(String target){
+        int max = 6;
+        int count =0 ;
+        while (count < max){
+            TouchUtils.dragQuarterScreenUp(this, this.getActivity());
+            mViewGroup = (ViewGroup) waTestPageActivity.findViewById(R.id.container);
+            mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, target);
+            mCaseListIndexView.addAll(mCaseListIndexView);
+            count ++;
+        }
     }
 }

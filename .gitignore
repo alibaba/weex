@@ -29,3 +29,7 @@ html5/runtime/config.js
 html5/test/e2e/reports
 html5/test/e2e/screenshots
 html5/test/e2e/logs
+android/playground/app/gradlew
+android/playground/app/gradlew.bat
+android/playground/app/gradle/wrapper/gradle-wrapper.jar
+android/playground/app/gradle/wrapper/gradle-wrapper.properties

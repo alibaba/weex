@@ -225,9 +225,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-/**
- * Created by yiyuan.zhangyy(xingjiu) <br/>
- */
 public class WXClipboardModule extends WXModule implements IWXClipboard {
 
     private final String CLIP_KEY = "WEEX_CLIP_KEY_MAIN";

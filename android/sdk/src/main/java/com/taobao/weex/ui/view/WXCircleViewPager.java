@@ -217,6 +217,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Interpolator;
 
+import com.taobao.weex.common.WXThread;
 import com.taobao.weex.ui.view.gesture.WXGesture;
 import com.taobao.weex.ui.view.gesture.WXGestureObservable;
 import com.taobao.weex.utils.WXLogUtils;
@@ -245,7 +246,7 @@ public class WXCircleViewPager extends ViewPager implements Callback, WXGestureO
   }
 
   private void initView() {
-    mCircleHandler = new Handler(Looper.getMainLooper(), this);
+    mCircleHandler = new Handler(Looper.getMainLooper(), WXThread.secure(this));
   }
 
   /**
@@ -279,6 +280,7 @@ public class WXCircleViewPager extends ViewPager implements Callback, WXGestureO
     postInitViewPager();
   }
 
+  @Override
   public boolean handleMessage(Message msg) {
     if (isAutoScroll && !isPause) {
 
@@ -330,7 +332,9 @@ public class WXCircleViewPager extends ViewPager implements Callback, WXGestureO
     mCircleHandler.removeCallbacksAndMessages(null);
   }
 
-
+  public boolean isAutoScroll() {
+    return isAutoScroll;
+  }
 
   @Override
   public void setCurrentItem(int item) {

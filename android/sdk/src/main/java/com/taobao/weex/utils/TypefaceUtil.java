@@ -225,6 +225,7 @@ import java.util.Map;
  * Created by sospartan on 7/13/16.
  */
 public class TypefaceUtil {
+  public static final String FONT_CACHE_DIR_NAME = "font-family";
   private final static String TAG = "TypefaceUtil";
   private final static Map<String, FontDO> sCacheMap = new HashMap<>(); //Key: fontFamilyName
 
@@ -403,6 +404,6 @@ public class TypefaceUtil {
   }
 
   private static String getFontCacheDir() {
-    return WXEnvironment.getDiskCacheDir(WXEnvironment.getApplication()) + "/" + WXConst.FONT_CACHE_DIR_NAME;
+    return WXEnvironment.getDiskCacheDir(WXEnvironment.getApplication()) + "/" + FONT_CACHE_DIR_NAME;
   }
 }

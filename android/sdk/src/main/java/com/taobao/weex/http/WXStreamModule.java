@@ -204,7 +204,6 @@
  */
 package com.taobao.weex.http;
 
-import android.text.TextUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
@@ -212,8 +211,10 @@ import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.bridge.WXBridgeManager;
-import com.taobao.weex.common.*;
-import com.taobao.weex.utils.WXJsonUtils;
+import com.taobao.weex.common.WXModule;
+import com.taobao.weex.common.WXModuleAnno;
+import com.taobao.weex.common.WXRequest;
+import com.taobao.weex.common.WXResponse;
 import com.taobao.weex.utils.WXLogUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -256,6 +257,7 @@ public class WXStreamModule extends WXModule {
     String body = paramsObj.getString("body");
     int timeout = paramsObj.getIntValue("timeout");
 
+    if (method != null) method = method.toUpperCase();
     Options.Builder builder = new Options.Builder()
             .setMethod(!"GET".equals(method)
                     &&!"POST".equals(method)
@@ -330,6 +332,7 @@ public class WXStreamModule extends WXModule {
     String type = optionsObj.getString("type");
     int timeout = optionsObj.getIntValue("timeout");
 
+    if (method != null) method = method.toUpperCase();
     Options.Builder builder = new Options.Builder()
             .setMethod(!"GET".equals(method)
                     &&!"POST".equals(method)

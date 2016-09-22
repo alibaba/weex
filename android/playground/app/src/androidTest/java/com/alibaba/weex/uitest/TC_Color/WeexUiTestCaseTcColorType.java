@@ -5,6 +5,7 @@ import android.app.Application;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
+import android.test.TouchUtils;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -57,8 +58,9 @@ public class WeexUiTestCaseTcColorType extends ActivityInstrumentationTestCase2<
         mViewGroup = (ViewGroup) waTestPageActivity.findViewById(R.id.container);
         setViewGroup(mViewGroup);
 
-        mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, "TC_");
-        Thread.sleep(3000);
+        addAllTargetView("TC_");
+        sleep(1000);
+
 
     }
 
@@ -199,6 +201,18 @@ public class WeexUiTestCaseTcColorType extends ActivityInstrumentationTestCase2<
 
     public void setViewGroup(ViewGroup viewGroup){
         mViewGroup = viewGroup;
+    }
+
+    public void addAllTargetView(String target){
+        int max = 6;
+        int count =0 ;
+        while (count < max){
+            TouchUtils.dragQuarterScreenUp(this, this.getActivity());
+            mViewGroup = (ViewGroup) waTestPageActivity.findViewById(R.id.container);
+            mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, target);
+            mCaseListIndexView.addAll(mCaseListIndexView);
+            count ++;
+        }
     }
 
 

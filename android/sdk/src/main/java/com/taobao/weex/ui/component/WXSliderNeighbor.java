@@ -276,7 +276,7 @@ public class WXSliderNeighbor extends WXSlider {
         FrameLayout.LayoutParams pagerParams = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
         pagerParams.gravity = Gravity.CENTER;
-        mViewPager = new WXCircleViewPager(mContext);
+        mViewPager = new WXCircleViewPager(getContext());
         mViewPager.setLayoutParams(pagerParams);
 
         // init adapter
@@ -307,7 +307,7 @@ public class WXSliderNeighbor extends WXSlider {
             return;
         }
 
-        FrameLayout wrapper = new FrameLayout(mContext);
+        FrameLayout wrapper = new FrameLayout(getContext());
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.gravity = Gravity.CENTER;
         view.setLayoutParams(params);

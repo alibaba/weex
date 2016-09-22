@@ -5,6 +5,8 @@ import android.app.Application;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
+import android.test.InstrumentationTestCase;
+import android.test.TouchUtils;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -36,6 +38,8 @@ public class WeexUiTestCaseTCAHrefUpdate extends ActivityInstrumentationTestCase
     public Instrumentation mInstrumentation;
 
     public  ArrayList<View> mCaseListIndexView = new ArrayList<View>();
+    private boolean targetComponetNotFound;
+
     public WeexUiTestCaseTCAHrefUpdate() {
         super(WXPageActivity.class);
     }
@@ -59,6 +63,7 @@ public class WeexUiTestCaseTCAHrefUpdate extends ActivityInstrumentationTestCase
         setViewGroup(mViewGroup);
 
         mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, "TC_");
+        setUpToFindComponet("TC_", this);
         Thread.sleep(2000);
     }
 
@@ -71,9 +76,9 @@ public class WeexUiTestCaseTCAHrefUpdate extends ActivityInstrumentationTestCase
 //    }
 
     public void testAherf(){
-
+        findTargetComponetIfNotFound("TC_", this);
         for(final View caseView : mCaseListIndexView){
-           if (((WXTextView)caseView).getText().toString().equals("TC_AHref")){
+           if (((WXTextView)caseView).getText().toString().equals("TC_A")){
                Log.e(TAG, "TC_AHref find");
 
                final WXTextView inputView  = (WXTextView)caseView;
@@ -95,7 +100,7 @@ public class WeexUiTestCaseTCAHrefUpdate extends ActivityInstrumentationTestCase
                Log.e(TAG, myGroup.toString());
 
                ArrayList<View> inputListView = new ArrayList<View>();
-               inputListView = ViewUtil.findViewWithText(myGroup, "TC_AHref_Update");
+               inputListView = ViewUtil.findViewWithText(myGroup, "TC_A_Update");
                Log.e(TAG, "TC_AHref_Update size== " + inputListView.size());
                sleep(2000);
 
@@ -168,6 +173,9 @@ public class WeexUiTestCaseTCAHrefUpdate extends ActivityInstrumentationTestCase
                        }
                    }
                }
+           }
+           else{
+               targetComponetNotFound = true;
            }
         }
 
@@ -246,5 +254,45 @@ public class WeexUiTestCaseTCAHrefUpdate extends ActivityInstrumentationTestCase
         mViewGroup = viewGroup;
     }
 
+    /**
+     *
+     */
+    public void findTargetComponetIfNotFound(String target, InstrumentationTestCase test){
+        if(mCaseListIndexView.size() ==1 || targetComponetNotFound){
+            if(((WXTextView)mCaseListIndexView.get(0))
+                    .getText()
+                    .toString()
+                    .equals("TC__Home")){
 
+                TouchUtils.dragQuarterScreenUp(test,WXPageActivity.wxPageActivityInstance );
+                mViewGroup = (ViewGroup) WXPageActivity.wxPageActivityInstance.findViewById(R.id.container);
+                mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, target);
+            }
+
+            TouchUtils.dragQuarterScreenUp(test, WXPageActivity.wxPageActivityInstance );
+            mViewGroup = (ViewGroup) WXPageActivity.wxPageActivityInstance.findViewById(R.id.container);
+            mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, target);
+        }
+    }
+
+    /**
+     *
+     */
+    public void setUpToFindComponet(String target, InstrumentationTestCase test){
+        int max = 60;
+        int count = 0;
+        while(mCaseListIndexView.size() == 0){
+
+            if (count < max){
+                TouchUtils.dragQuarterScreenUp(test, WXPageActivity.wxPageActivityInstance );
+                mViewGroup = (ViewGroup) WXPageActivity.wxPageActivityInstance.findViewById(R.id.container);
+                mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, target);
+                count ++;
+            }
+            else{
+                targetComponetNotFound = true;
+            }
+
+        }
+    }
 }

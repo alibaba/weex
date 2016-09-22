@@ -27,7 +27,7 @@ import android.text.style.StrikethroughSpan;
 import android.text.style.UnderlineSpan;
 
 import com.taobao.weex.WXEnvironment;
-import com.taobao.weex.common.WXDomPropConstant;
+import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.flex.CSSConstants;
 import com.taobao.weex.dom.flex.CSSNode;
 import com.taobao.weex.dom.flex.FloatUtil;
@@ -82,11 +82,16 @@ public class WXTextDomObject extends WXDomObject {
       if (CSSConstants.isUndefined(width)) {
         width = node.cssstyle.maxWidth;
       }
-      textDomObject.layout = textDomObject.createLayout(width, false, null);
-      textDomObject.hasBeenMeasured = true;
-      textDomObject.previousWidth = textDomObject.layout.getWidth();
-      measureOutput.height = textDomObject.layout.getHeight();
-      measureOutput.width = textDomObject.previousWidth;
+      if(textDomObject.getTextWidth(textDomObject.mTextPaint,width,false)>0) {
+        textDomObject.layout = textDomObject.createLayout(width, false, null);
+        textDomObject.hasBeenMeasured = true;
+        textDomObject.previousWidth = textDomObject.layout.getWidth();
+        measureOutput.height = textDomObject.layout.getHeight();
+        measureOutput.width = textDomObject.previousWidth;
+      }else{
+        measureOutput.height = 0;
+        measureOutput.width = 0;
+      }
     }
   };
 
@@ -172,7 +177,7 @@ public class WXTextDomObject extends WXDomObject {
   public void updateAttr(Map<String, Object> attrs) {
     swap();
     super.updateAttr(attrs);
-    if (attrs.containsKey(WXDomPropConstant.WX_ATTR_VALUE)) {
+    if (attrs.containsKey(Constants.Name.VALUE)) {
       mText = WXAttr.getValue(attrs);
     }
   }
@@ -189,19 +194,9 @@ public class WXTextDomObject extends WXDomObject {
     WXTextDomObject dom = null;
     try {
       dom = new WXTextDomObject();
-      if (this.cssstyle != null) {
-        dom.cssstyle.copy(this.cssstyle);
-      }
-      dom.ref = ref;
-      dom.type = type;
-      dom.style = style;
-      dom.attr = attr;
-      dom.event = event == null ? null : event.clone();
+      copyFields(dom);
       dom.hasBeenMeasured = hasBeenMeasured;
       dom.atomicReference = atomicReference;
-      if (this.csslayout != null) {
-        dom.csslayout.copy(this.csslayout);
-      }
     } catch (Exception e) {
       if (WXEnvironment.isApkDebugable()) {
         WXLogUtils.e("WXTextDomObject clone error: ", e);
@@ -218,13 +213,23 @@ public class WXTextDomObject extends WXDomObject {
    * @return the width of the dom that excludes left-padding and right-padding.
    */
   private float getTextContentWidth() {
-    float rawWidth = getLayoutWidth(), left, right;
+    float rawWidth = getLayoutWidth();
+    float leftPadding, rightPadding, leftBorder, rightBorder;
     Spacing padding = getPadding();
-    if (!CSSConstants.isUndefined((left = padding.get(Spacing.LEFT)))) {
-      rawWidth -= left;
+    Spacing border = getBorder();
+
+    if (!CSSConstants.isUndefined((leftPadding = padding.get(Spacing.LEFT)))) {
+      rawWidth -= leftPadding;
     }
-    if (!CSSConstants.isUndefined((right = padding.get(Spacing.RIGHT)))) {
-      rawWidth -= right;
+    if (!CSSConstants.isUndefined((rightPadding = padding.get(Spacing.RIGHT)))) {
+      rawWidth -= rightPadding;
+    }
+
+    if (!CSSConstants.isUndefined(leftBorder = border.get(Spacing.LEFT))) {
+      rawWidth -= leftBorder;
+    }
+    if (!CSSConstants.isUndefined(rightBorder = border.get(Spacing.RIGHT))) {
+      rawWidth -= rightBorder;
     }
     return rawWidth;
   }
@@ -233,19 +238,20 @@ public class WXTextDomObject extends WXDomObject {
    * RecalculateLayout.
    */
   private void recalculateLayout() {
-    spanned = createSpanned(mText);
-    layout = createLayout(getTextContentWidth(), true, layout);
-    previousWidth = layout.getWidth();
+    float contentWidth = getTextContentWidth();
+    if (contentWidth > 0) {
+      spanned = createSpanned(mText);
+      layout = createLayout(contentWidth, true, layout);
+      previousWidth = layout.getWidth();
+    }
   }
 
   /**
    * Update style and text.
    */
   private void updateStyleAndText() {
-    updateStyleImp(style);
-    if (attr != null) {
-      mText = WXAttr.getValue(attr);
-    }
+    updateStyleImp(getStyles());
+    mText = WXAttr.getValue(getAttrs());
   }
 
   /**
@@ -254,29 +260,29 @@ public class WXTextDomObject extends WXDomObject {
    */
   private void updateStyleImp(Map<String, Object> style) {
     if (style != null) {
-      if (style.containsKey(WXDomPropConstant.WX_LINES)) {
+      if (style.containsKey(Constants.Name.LINES)) {
         int lines = WXStyle.getLines(style);
         if (lines > 0) {
           mNumberOfLines = lines;
         }
       }
-      if (style.containsKey(WXDomPropConstant.WX_FONTSIZE)) {
+      if (style.containsKey(Constants.Name.FONT_SIZE)) {
         mFontSize = WXStyle.getFontSize(style);
       }
-      if (style.containsKey(WXDomPropConstant.WX_FONTWEIGHT)) {
+      if (style.containsKey(Constants.Name.FONT_WEIGHT)) {
         mFontWeight = WXStyle.getFontWeight(style);
       }
-      if (style.containsKey(WXDomPropConstant.WX_FONTSTYLE)) {
+      if (style.containsKey(Constants.Name.FONT_STYLE)) {
         mFontStyle = WXStyle.getFontStyle(style);
       }
-      if (style.containsKey(WXDomPropConstant.WX_COLOR)) {
+      if (style.containsKey(Constants.Name.COLOR)) {
         mColor = WXResourceUtils.getColor(WXStyle.getTextColor(style));
         mIsColorSet = mColor != Integer.MIN_VALUE;
       }
-      if (style.containsKey(WXDomPropConstant.WX_TEXTDECORATION)) {
+      if (style.containsKey(Constants.Name.TEXT_DECORATION)) {
         mTextDecoration = WXStyle.getTextDecoration(style);
       }
-      if (style.containsKey(WXDomPropConstant.WX_FONTFAMILY)) {
+      if (style.containsKey(Constants.Name.FONT_FAMILY)) {
         mFontFamily = WXStyle.getFontFamily(style);
       }
       mAlignment = WXStyle.getTextAlignment(style);
@@ -370,7 +376,7 @@ public class WXTextDomObject extends WXDomObject {
   }
 
   /**
-   * Update {@link #spanned} according to the give charSequence and {@link #style}
+   * Update {@link #spanned} according to the give charSequence and styles
    * @param text the give raw text.
    * @return an Spanned contains text and spans
    */

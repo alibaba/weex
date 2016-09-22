@@ -208,9 +208,12 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.os.Build;
 
+import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.adapter.IWXUserTrackAdapter;
 import com.taobao.weex.common.WXErrorCode;
 import com.taobao.weex.common.WXPerformance;
+
+import dalvik.system.PathClassLoader;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -223,8 +226,6 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
-
-import dalvik.system.PathClassLoader;
 
 
 /**
@@ -249,8 +250,8 @@ public class WXSoInstallMgrSdk {
   private final static String ARMEABI = "armeabi"; //default
   private final static String X86 = "x86";
   private final static String MIPS = "mips";
-  private final static int ARMEABI_Size = 3559244;
-  private final static int X86_Size = 4304032;
+  private final static int ARMEABI_Size = 3563340;
+  private final static int X86_Size = 4308128;
 
   static Context mContext = null;
 
@@ -555,9 +556,9 @@ public class WXSoInstallMgrSdk {
       WXPerformance p = new WXPerformance();
       p.errCode = errCode;
       p.errMsg = errMsg;
-      utAdapter.commit(null, null, WXConst.ENVIRONMENT, p, null);
+      utAdapter.commit(null, null, WXEnvironment.ENVIRONMENT, p, null);
     } else {
-      utAdapter.commit(null, null, WXConst.ENVIRONMENT, null, null);
+      utAdapter.commit(null, null, WXEnvironment.ENVIRONMENT, null, null);
 
     }
   }

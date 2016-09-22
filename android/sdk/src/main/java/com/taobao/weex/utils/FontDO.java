@@ -205,6 +205,7 @@
 package com.taobao.weex.utils;
 
 import android.graphics.Typeface;
+import com.taobao.weex.common.Constants;
 
 import java.net.URI;
 
@@ -247,10 +248,10 @@ public class FontDO {
         URI uri = URI.create(mUrl);
         String scheme = uri.getScheme();
         //TODO: use bundle url to process relative path. see #497
-        if (WXConst.SCHEME_HTTP.equals(scheme) ||
-                WXConst.SCHEME_HTTPS.equals(scheme)) {
+        if (Constants.Scheme.HTTP.equals(scheme) ||
+                Constants.Scheme.HTTPS.equals(scheme)) {
           mType = TYPE_NETWORK;
-        } else if (WXConst.SCHEME_FILE.equals(scheme)) {
+        } else if (Constants.Scheme.FILE.equals(scheme)) {
           mType = TYPE_FILE;
           mUrl = uri.getPath();
         } else {

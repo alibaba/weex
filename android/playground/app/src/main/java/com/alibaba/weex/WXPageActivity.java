@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -36,6 +38,7 @@ import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.appfram.navigator.IActivityNavBarSetter;
 import com.taobao.weex.common.IWXDebugProxy;
 import com.taobao.weex.common.WXRenderStrategy;
+import com.taobao.weex.ui.component.NestedContainer;
 import com.taobao.weex.utils.WXFileUtils;
 import com.taobao.weex.utils.WXLogUtils;
 
@@ -46,73 +49,23 @@ import java.net.URL;
 import java.util.HashMap;
 
 
-public class WXPageActivity extends WXBaseActivity implements IWXRenderListener, android.os.Handler.Callback {
-
-  private class NavigatorAdapter implements IActivityNavBarSetter {
-
-    @Override
-    public boolean push(String param) {
-      return false;
-    }
-
-    @Override
-    public boolean pop(String param) {
-      return false;
-    }
-
-    @Override
-    public boolean setNavBarRightItem(String param) {
-      return false;
-    }
-
-    @Override
-    public boolean clearNavBarRightItem(String param) {
-      return false;
-    }
-
-    @Override
-    public boolean setNavBarLeftItem(String param) {
-      return false;
-    }
-
-    @Override
-    public boolean clearNavBarLeftItem(String param) {
-      return false;
-    }
-
-    @Override
-    public boolean setNavBarMoreItem(String param) {
-      return false;
-    }
-
-    @Override
-    public boolean clearNavBarMoreItem(String param) {
-      return false;
-    }
-
-    @Override
-    public boolean setNavBarTitle(String param) {
-      return false;
-    }
-  }
+public class WXPageActivity extends WXBaseActivity implements IWXRenderListener, Handler.Callback, WXSDKInstance.NestedInstanceInterceptor {
 
   private static final String TAG = "WXPageActivity";
   public static Activity wxPageActivityInstance;
-
   private ViewGroup mContainer;
   private ProgressBar mProgressBar;
   private View mWAView;
-
   private WXSDKInstance mInstance;
   private Handler mWXHandler;
   private BroadcastReceiver mReceiver;
-
   private Uri mUri;
   private HashMap mConfigMap = new HashMap<String, Object>();
 
-  private Button mRefresh;
-  private JSONArray mData;
-  private int count = 0;
+  @Override
+  public void onCreateNestInstance(WXSDKInstance instance, NestedContainer container) {
+    Log.d(TAG, "Nested Instance created.");
+  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +81,7 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
     }
     if (bundle != null) {
       String bundleUrl = bundle.getString("bundleUrl");
-      Log.e(TAG, "bundleUrl==" + bundleUrl);
+      Log.i(TAG, "bundleUrl==" + bundleUrl);
 
       if (bundleUrl != null) {
         mConfigMap.put("bundleUrl", bundleUrl + Constants.WEEX_SAMPLES_KEY);
@@ -150,7 +103,7 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
     initUIAndData();
 
     if (TextUtils.equals("http", mUri.getScheme()) || TextUtils.equals("https", mUri.getScheme())) {
-      //      if url has key "_wx_tpl" then get weex bundle js
+      // if url has key "_wx_tpl" then get weex bundle js
       String weexTpl = mUri.getQueryParameter(Constants.WEEX_TPL_KEY);
       String url = TextUtils.isEmpty(weexTpl) ? mUri.toString() : weexTpl;
       loadWXfromService(url);
@@ -169,8 +122,9 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
     }
     if (mInstance == null) {
       mInstance = new WXSDKInstance(this);
-      //        mInstance.setImgLoaderAdapter(new ImageAdapter(this));
+      // mInstance.setImgLoaderAdapter(new ImageAdapter(this));
       mInstance.registerRenderListener(this);
+      mInstance.setNestedInstanceInterceptor(this);
     }
     mContainer.post(new Runnable() {
       @Override
@@ -181,10 +135,9 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
         mConfigMap.put("bundleUrl", mUri.toString());
         String path = mUri.getScheme().equals("file") ? assembleFilePath(mUri) : mUri.toString();
         mInstance.render(TAG, WXFileUtils.loadAsset(path, WXPageActivity.this),
-                mConfigMap, null,
-                ScreenUtil.getDisplayWidth(WXPageActivity.this), ScreenUtil
-                        .getDisplayHeight(WXPageActivity.this),
-                WXRenderStrategy.APPEND_ASYNC);
+            mConfigMap, null, ScreenUtil.getDisplayWidth(WXPageActivity.this),
+            ScreenUtil.getDisplayHeight(WXPageActivity.this),
+            WXRenderStrategy.APPEND_ASYNC);
       }
     });
   }
@@ -228,7 +181,7 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
 
       @Override
       public void onSuccess(WXHttpTask task) {
-        Log.e(TAG, "into--[http:onSuccess] url:" + url);
+        Log.i(TAG, "into--[http:onSuccess] url:" + url);
         try {
           mConfigMap.put("bundleUrl", url);
           mInstance.render(TAG, new String(task.response.data, "utf-8"), mConfigMap, null, ScreenUtil.getDisplayWidth(WXPageActivity.this), ScreenUtil.getDisplayHeight(WXPageActivity.this), WXRenderStrategy.APPEND_ASYNC);
@@ -239,7 +192,7 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
 
       @Override
       public void onError(WXHttpTask task) {
-        Log.e(TAG, "into--[http:onError]");
+        Log.i(TAG, "into--[http:onError]");
         mProgressBar.setVisibility(View.GONE);
         Toast.makeText(getApplicationContext(), "network error!", Toast.LENGTH_SHORT).show();
       }
@@ -271,7 +224,7 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
     if (mInstance != null) {
       mInstance.onActivityDestroy();
     }
-    //        TopScrollHelper.getInstance(getApplicationContext()).onDestory();
+    // TopScrollHelper.getInstance(getApplicationContext()).onDestory();
     mWXHandler.obtainMessage(Constants.HOT_REFRESH_DISCONNECT).sendToTarget();
     unregisterBroadcastReceiver();
   }
@@ -284,12 +237,22 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
     }
   }
 
-  public Activity getCurrentWxPageActivity() {
+  public static Activity getCurrentWxPageActivity() {
     return wxPageActivityInstance;
   }
 
-  public void setCurrentWxPageActivity(Activity activity) {
+  public static void setCurrentWxPageActivity(Activity activity) {
     wxPageActivityInstance = activity;
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    Intent intent = new Intent("requestPermission");
+    intent.putExtra("REQUEST_PERMISSION_CODE", requestCode);
+    intent.putExtra("permissions", permissions);
+    intent.putExtra("grantResults", grantResults);
+    LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
   }
 
   @Override
@@ -307,6 +270,8 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
         break;
       case Constants.HOT_REFRESH_CONNECT_ERROR:
         Toast.makeText(this, "hot refresh connect error!", Toast.LENGTH_SHORT).show();
+        break;
+      default:
         break;
     }
 
@@ -379,8 +344,8 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
       finish();
       return true;
     } else if (id == R.id.action_refresh) {
-      String scheme=mUri.getScheme();
-      if (mUri.isHierarchical() && (TextUtils.equals(scheme,"http") || TextUtils.equals(scheme,"https"))) {
+      String scheme = mUri.getScheme();
+      if (mUri.isHierarchical() && (TextUtils.equals(scheme, "http") || TextUtils.equals(scheme, "https"))) {
         String weexTpl = mUri.getQueryParameter(Constants.WEEX_TPL_KEY);
         String url = TextUtils.isEmpty(weexTpl) ? mUri.toString() : weexTpl;
         loadWXfromService(url);
@@ -398,6 +363,67 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
     }
   }
 
+  private void registerBroadcastReceiver() {
+    mReceiver = new RefreshBroadcastReceiver();
+    IntentFilter filter = new IntentFilter();
+    filter.addAction(IWXDebugProxy.ACTION_DEBUG_INSTANCE_REFRESH);
+    registerReceiver(mReceiver, filter);
+  }
+
+  private void unregisterBroadcastReceiver() {
+    if (mReceiver != null) {
+      unregisterReceiver(mReceiver);
+    }
+  }
+
+  private static class NavigatorAdapter implements IActivityNavBarSetter {
+
+    @Override
+    public boolean push(String param) {
+      return false;
+    }
+
+    @Override
+    public boolean pop(String param) {
+      return false;
+    }
+
+    @Override
+    public boolean setNavBarRightItem(String param) {
+      return false;
+    }
+
+    @Override
+    public boolean clearNavBarRightItem(String param) {
+      return false;
+    }
+
+    @Override
+    public boolean setNavBarLeftItem(String param) {
+      return false;
+    }
+
+    @Override
+    public boolean clearNavBarLeftItem(String param) {
+      return false;
+    }
+
+    @Override
+    public boolean setNavBarMoreItem(String param) {
+      return false;
+    }
+
+    @Override
+    public boolean clearNavBarMoreItem(String param) {
+      return false;
+    }
+
+    @Override
+    public boolean setNavBarTitle(String param) {
+      return false;
+    }
+  }
+
   public class RefreshBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -411,19 +437,6 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
           }
         }
       }
-    }
-  }
-
-  private void registerBroadcastReceiver() {
-    mReceiver = new RefreshBroadcastReceiver();
-    IntentFilter filter = new IntentFilter();
-    filter.addAction(IWXDebugProxy.ACTION_DEBUG_INSTANCE_REFRESH);
-    registerReceiver(mReceiver, filter);
-  }
-
-  private void unregisterBroadcastReceiver() {
-    if (mReceiver != null) {
-      unregisterReceiver(mReceiver);
     }
   }
 }

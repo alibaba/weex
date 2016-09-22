@@ -208,6 +208,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.WXDomObject;
 
 import java.util.ArrayList;
@@ -235,7 +236,7 @@ public abstract class WXVContainer<T extends ViewGroup> extends WXComponent<T> {
    */
   @Deprecated
   public ViewGroup getView(){
-    return mHost;
+    return getHostView();
   }
 
   @Override
@@ -275,6 +276,18 @@ public abstract class WXVContainer<T extends ViewGroup> extends WXComponent<T> {
     }
   }
 
+  @Override
+  public void refreshData(WXComponent component) {
+      if (component == null) {
+        component = this;
+      }
+      super.refreshData(component);
+      int count = childCount();
+      for (int i = 0; i < count; i++) {
+        getChild(i).refreshData(((WXVContainer)component).getChild(i));
+      }
+  }
+
   /**
    * return real View
    */
@@ -286,7 +299,6 @@ public abstract class WXVContainer<T extends ViewGroup> extends WXComponent<T> {
   @Override
   public void createViewImpl(WXVContainer parent, int index) {
     super.createViewImpl(parent, index);
-    getOrCreateBorder().attachView(mHost);
     int count = childCount();
     for (int i = 0; i < count; ++i) {
       getChild(i).createViewImpl(this, i);
@@ -373,10 +385,10 @@ public abstract class WXVContainer<T extends ViewGroup> extends WXComponent<T> {
     }
 
     mChildren.remove(child);
-    if(mInstance!=null
-            &&mInstance.getRootView()!=null
-            && child.mDomObj.isFixed()){
-      mInstance.getRootView().removeView(child.getHostView());
+    if(getInstance()!=null
+            &&getInstance().getRootView()!=null
+            && child.getDomObject().isFixed()){
+      getInstance().getRootView().removeView(child.getHostView());
     }else if(getRealView() != null) {
       getRealView().removeView(child.getHostView());
     }
@@ -393,7 +405,7 @@ public abstract class WXVContainer<T extends ViewGroup> extends WXComponent<T> {
     }
     for(WXComponent component:mChildren){
       if(component.getHostView()!=null && !(component.getHostView().getVisibility()==View.VISIBLE)){
-        wxEventType=WXEventType.DISAPPEAR;
+        wxEventType= Constants.Event.DISAPPEAR;
       }
       component.notifyAppearStateChange(wxEventType,direction);
     }

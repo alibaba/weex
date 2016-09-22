@@ -204,16 +204,17 @@
  */
 package com.taobao.weex.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.taobao.weappplus_sdk.BuildConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.util.Pair;
 
-import java.lang.reflect.Type;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.*;
@@ -234,8 +235,69 @@ public class WXReflectionUtilsTest {
   public void testParseArgument() throws Exception {
    Object value =  WXReflectionUtils.parseArgument(String.class,"dkdkdkdk");
     assertTrue(value instanceof String);
+
     value = WXReflectionUtils.parseArgument(long.class,"123444");
     assertTrue(value instanceof Long);
+
+    value = WXReflectionUtils.parseArgument(int.class,"123444");
+    assertTrue(value instanceof Integer);
+
+    value = WXReflectionUtils.parseArgument(Integer.class,"123444");
+    assertTrue(value instanceof Integer);
+
+    value = WXReflectionUtils.parseArgument(int.class,123444);
+    assertTrue(value instanceof Integer);
+
+    value = WXReflectionUtils.parseArgument(double.class, Double.toString(123.444d));
+    assertTrue(value instanceof Double);
+
+
+
+    JSONObject j = new JSONObject();
+    j.put("a","b");
+    j.put("c",23);
+    value = WXReflectionUtils.parseArgument(String.class,j);
+    assertTrue(value instanceof String);
+
+    value = WXReflectionUtils.parseArgument(Map.class,j);
+    assertTrue(value instanceof Map);
+    assertEquals(((Map)value).get("a"),"b");
+
+    value = WXReflectionUtils.parseArgument(JSONObject.class,j);
+    assertTrue(value instanceof JSONObject);
+    assertEquals(((JSONObject)value).get("a"),"b");
+    assertEquals(((JSONObject)value).get("c"),23);
+
+    value = WXReflectionUtils.parseArgument(JSONObject.class, JSON.toJSONString(j));
+    assertTrue(value instanceof JSONObject);
+    assertEquals(((JSONObject)value).get("a"),"b");
+    assertEquals(((JSONObject)value).get("c"),23);
+
+    JSONArray k = new JSONArray();
+    k.add("b");
+    k.add(23);
+    value = WXReflectionUtils.parseArgument(String[].class, k);
+    assertTrue(value instanceof String[]);
+    assertEquals(((String[])value)[0],"b");
+    assertEquals(((String[])value)[1],"23");
+
+    value = WXReflectionUtils.parseArgument(String[].class, JSON.toJSONString(k));
+    assertTrue(value instanceof String[]);
+    assertEquals(((String[])value)[0],"b");
+    assertEquals(((String[])value)[1],"23");
+
+    value = WXReflectionUtils.parseArgument(List.class, JSON.toJSONString(k));
+    assertTrue(value instanceof List);
+    assertEquals(((List)value).get(0),"b");
+    assertEquals(((List)value).get(1),23);
+
+    k = new JSONArray();
+    k.add(1);
+    k.add(23);
+    value = WXReflectionUtils.parseArgument(int[].class, JSON.toJSONString(k));
+    assertTrue(value instanceof int[]);
+    assertEquals(((int[])value)[0],1);
+    assertEquals(((int[])value)[1],23);
   }
 
   @Test

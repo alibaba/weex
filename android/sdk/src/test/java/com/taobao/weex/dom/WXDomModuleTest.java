@@ -208,6 +208,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weappplus_sdk.BuildConfig;
 import com.taobao.weex.WXSDKInstanceTest;
+import com.taobao.weex.bridge.WXBridgeManager;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -217,10 +219,6 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import static com.taobao.weex.dom.WXDomModule.*;
-
-import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.*;
 
 /**
  * Created by sospartan on 7/29/16.
@@ -248,11 +246,17 @@ public class WXDomModuleTest {
     "unknown_method"
   };
 
+  static JSONObject data;
+  static{
+    data = new JSONObject();
+    data.put("a","b");
+  }
+
   static final Object[][] ARGS_CASES = {
     null,
     {new JSONObject()},
     {"",new JSONObject()},
-    {"test",new JSONObject()},
+    {"test",data},
     {"test"},
     {"",new JSONObject(),1},
     {"test",new JSONObject(),1},
@@ -272,6 +276,11 @@ public class WXDomModuleTest {
     module.mWXSDKInstance = WXSDKInstanceTest.createInstance();
   }
 
+  @After
+  public void tearDown() throws Exception {
+    WXDomManagerTest.getLooper().idle();
+  }
+
   @Test
   public void testCallDomMethod() throws Exception {
     module.callDomMethod(null);
@@ -279,7 +288,7 @@ public class WXDomModuleTest {
     JSONObject obj = new JSONObject();
     for (String m :
       METHODS) {
-      obj.put(WXDomModule.METHOD,m);
+      obj.put(WXBridgeManager.METHOD,m);
       module.callDomMethod(obj);
     }
 
@@ -296,57 +305,14 @@ public class WXDomModuleTest {
           ary.add(arg);
         }
       }
-      obj.put(WXDomModule.ARGS,ary);
+      obj.put(WXBridgeManager.ARGS,ary);
       for (String m :
         METHODS) {
-        obj.put(WXDomModule.METHOD,m);
+        obj.put(WXBridgeManager.METHOD,m);
         module.callDomMethod(obj);
       }
     }
   }
 
-  @Test
-  public void testCreateBody() throws Exception {
 
-  }
-
-  @Test
-  public void testUpdateAttrs() throws Exception {
-
-  }
-
-  @Test
-  public void testUpdateStyle() throws Exception {
-
-  }
-
-  @Test
-  public void testRemoveElement() throws Exception {
-
-  }
-
-  @Test
-  public void testAddElement() throws Exception {
-
-  }
-
-  @Test
-  public void testMoveElement() throws Exception {
-
-  }
-
-  @Test
-  public void testAddEvent() throws Exception {
-
-  }
-
-  @Test
-  public void testRemoveEvent() throws Exception {
-
-  }
-
-  @Test
-  public void testScrollToElement() throws Exception {
-
-  }
 }

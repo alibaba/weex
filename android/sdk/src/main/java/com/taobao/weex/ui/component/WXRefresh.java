@@ -205,15 +205,16 @@
 package com.taobao.weex.ui.component;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.WXSDKManager;
-import com.taobao.weex.common.WXDomPropConstant;
+import com.taobao.weex.common.Component;
+import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.component.list.WXListComponent;
-import com.taobao.weex.ui.view.WXBaseRefreshLayout;
 import com.taobao.weex.ui.view.WXFrameLayout;
+import com.taobao.weex.ui.view.WXRefreshLayout;
 import com.taobao.weex.ui.view.refresh.core.WXSwipeLayout;
 import com.taobao.weex.ui.view.refresh.wrapper.BaseBounceView;
 import com.taobao.weex.utils.WXUtils;
@@ -224,6 +225,7 @@ import java.util.Map;
 /**
  * div component
  */
+@Component(lazyload = false)
 public class WXRefresh extends WXBaseRefresh implements WXSwipeLayout.WXOnRefreshListener{
 
   @Deprecated
@@ -236,32 +238,32 @@ public class WXRefresh extends WXBaseRefresh implements WXSwipeLayout.WXOnRefres
   }
 
   @Override
-  protected WXFrameLayout initComponentHostView(Context context) {
-    return new WXBaseRefreshLayout(context);
+  protected WXFrameLayout initComponentHostView(@NonNull Context context) {
+    return new WXRefreshLayout(context);
   }
 
   @Override
   public void onRefresh() {
-    if (mDomObj.event != null && mDomObj.event.contains(WXEventType.ONREFRESH)) {
-      WXSDKManager.getInstance().fireEvent(mInstanceId, getRef(), WXEventType.ONREFRESH);
+    if (getDomObject().getEvents().contains(Constants.Event.ONREFRESH)) {
+      getInstance().fireEvent(getRef(), Constants.Event.ONREFRESH);
     }
   }
 
   @Override
   public void onPullingDown(float dy, int headerHeight, float maxHeight) {
-    if (mDomObj.event != null && mDomObj.event.contains(WXEventType.ONPULLING_DOWN)) {
+    if (getDomObject().event != null && getDomObject().event.contains(Constants.Event.ONPULLING_DOWN)) {
       Map<String, Object> data = new HashMap<>();
       data.put("dy", dy);
       data.put("headerHeight", headerHeight);
       data.put("maxHeight", maxHeight);
-      WXSDKManager.getInstance().fireEvent(mInstanceId, getRef(), WXEventType.ONPULLING_DOWN, data);
+      getInstance().fireEvent(getRef(), Constants.Event.ONPULLING_DOWN, data);
     }
   }
 
   @Override
   protected boolean setProperty(String key, Object param) {
     switch (key) {
-      case WXDomPropConstant.WX_ATTR_DISPLAY:
+      case Constants.Name.DISPLAY:
         String display = WXUtils.getString(param,null);
         if (display != null)
           setDisplay(display);
@@ -270,7 +272,7 @@ public class WXRefresh extends WXBaseRefresh implements WXSwipeLayout.WXOnRefres
     return super.setProperty(key,param);
   }
 
-  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_DISPLAY)
+  @WXComponentProp(name = Constants.Name.DISPLAY)
   public void setDisplay(String display) {
     if (!TextUtils.isEmpty(display)) {
       if (display.equals("hide")) {

@@ -232,7 +232,7 @@ public class TypeModuleFactory<T extends WXModule> implements ModuleFactory<T> {
   }
 
   private void generateMethodMap() {
-    WXLogUtils.d(TAG, "extractMethodNames");
+    WXLogUtils.d(TAG, "extractMethodNames:"+mClazz.getSimpleName());
     ArrayList<String> methods = new ArrayList<>();
     HashMap<String, Invoker> methodMap = new HashMap<>();
     try {

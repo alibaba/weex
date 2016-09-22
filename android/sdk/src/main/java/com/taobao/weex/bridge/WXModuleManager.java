@@ -218,11 +218,8 @@ import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXReflectionUtils;
 
 import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 /**
  * Manager class for weex module. There are two types of modules in weex, one is instance-level module,
@@ -252,11 +249,13 @@ public class WXModuleManager {
     }
 
     if (TextUtils.equals(moduleName,WXDomModule.WXDOM)) {
-      WXLogUtils.e("Connot registered module name is dom.");
+      WXLogUtils.e("Cannot registered module with name 'dom'.");
       return false;
     }
 
-    WXBridgeManager.getInstance().getJSHandler().post(new Runnable() {
+    //execute task in js thread to make sure register order is same as the order invoke register method.
+    WXBridgeManager.getInstance()
+        .post(new Runnable() {
       @Override
       public void run() {
         if (sModuleFactoryMap.containsKey(moduleName)) {
@@ -447,12 +446,12 @@ public class WXModuleManager {
 
     @Override
     public void invoke(Object data) {
-      WXBridgeManager.getInstance().callback(mInstanceId,mCallbackId,data,false);
+      WXBridgeManager.getInstance().callbackJavascript(mInstanceId,mCallbackId,data,false);
     }
 
     @Override
     public void invokeAndKeepAlive(Object data) {
-      WXBridgeManager.getInstance().callback(mInstanceId,mCallbackId,data,true);
+      WXBridgeManager.getInstance().callbackJavascript(mInstanceId,mCallbackId,data,true);
     }
   }
 

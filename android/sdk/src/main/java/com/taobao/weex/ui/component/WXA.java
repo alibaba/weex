@@ -204,20 +204,21 @@
  */
 package com.taobao.weex.ui.component;
 
-import android.text.TextUtils;
-import android.view.View;
-
 import com.alibaba.fastjson.JSONArray;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.common.Component;
+import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.view.WXFrameLayout;
+import com.taobao.weex.utils.WXLogUtils;
+@Component(lazyload = false)
 
 public class WXA extends WXDiv {
 
   @Deprecated
   public WXA(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
-    this(instance,dom,parent,isLazy);
+    this(instance, dom, parent, isLazy);
   }
 
   public WXA(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
@@ -226,16 +227,27 @@ public class WXA extends WXDiv {
 
   @Override
   protected void onHostViewInitialized(WXFrameLayout host) {
-    if (host != null && mDomObj != null && mDomObj.attr != null && !TextUtils.isEmpty((String) mDomObj.attr.get("href"))) {
-
-      host.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
+    super.onHostViewInitialized(host);
+    addClickListener(new OnClickListener() {
+      @Override
+      public void onHostViewClick() {
+        if ( getDomObject().getAttrs().get("href") != null) {
           JSONArray array = new JSONArray();
-          array.add(mDomObj.attr.get("href"));
-          WXSDKManager.getInstance().getWXBridgeManager().callModuleMethod(mInstanceId, "event", "openURL", array);
+          array.add(getDomObject().getAttrs().get("href"));
+          WXSDKManager.getInstance().getWXBridgeManager().callModuleMethod(getInstanceId(), "event", "openURL", array);
+        } else {
+          WXLogUtils.d("WXA", "Property href is empty.");
         }
-      });
+      }
+    });
+  }
+
+  @Override
+  protected boolean setProperty(String key, Object param) {
+    switch(key){
+      case Constants.Name.HREF:
+        return true;
     }
+    return super.setProperty(key, param);
   }
 }
