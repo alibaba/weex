@@ -139,7 +139,6 @@ function loopIndex (idx, total) {
 }
 
 function autoPlay (slider) {
-  const total = slider.slides.length
   const next = slider.currentIndex + 1
   setTimeout(() => slider.slideTo(next), 0)
   slider.playTimer = setTimeout(() => autoPlay(slider), slider.interval + TRANSITION_DURATION)
@@ -412,7 +411,7 @@ const proto = {
       opacity: MAIN_SLIDE_OPACITY,
       zIndex: 99
     }), 100)
-    
+
     const translateX = this.width
       - this.width * (1 - this.neighborScale) / 2
       - this.neighborSpace
@@ -421,7 +420,8 @@ const proto = {
 
     if (origIdx > this.currentIndex) {
       resetSideSlidePos(this, 'right')
-    } else if (origIdx < this.currentIndex) {
+    }
+    else if (origIdx < this.currentIndex) {
       resetSideSlidePos(this, 'left')
     }
 
@@ -493,18 +493,23 @@ const attr = {
     this.autoPlay = this.playstatus
 
     function doPlay () {
-      _this.play()
-      if (this._updatePlaystatus) {
+      _this.isPageShow && _this.play()
+      if (_this._updatePlaystatus) {
         window.removeEventListener('renderend', _this._updatePlaystatus)
       }
     }
 
     if (this.playstatus) {
-      const pre = !!this._updatePlaystatus
-      this._updatePlaystatus = function () {
-        _this.isPageShow && _this.play()
+      if (this.isDomRendering) {
+        const pre = !!this._updatePlaystatus
+        this._updatePlaystatus = function () {
+          doPlay()
+        }
+        !pre && window.addEventListener('renderend', this._updatePlaystatus)
       }
-      !pre && window.addEventListener('renderend', this._updatePlaystatus)
+      else {
+        doPlay()
+      }
     }
     else {
       this.stop()
@@ -565,7 +570,7 @@ function init (Weex) {
 
   /**
    * data.attr
-   * support slider's attributes and three 
+   * support slider's attributes and three
    * @param {number} neighbor-space 0 - 375, the exposing width of slides on both other sides.
    * @param {number} neighbor-alpha 0 - 1, opacity of both other sides of slides, default is 0.6.
    * @param {number} neighbor-scale 0 - 1, the scale of both other sides of slides, default is 0.8.
