@@ -208,13 +208,11 @@ import com.taobao.weappplus_sdk.BuildConfig;
 import com.taobao.weex.WXSDKInstanceTest;
 import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.bridge.WXBridgeManager;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.*;
-import org.powermock.api.mockito.PowerMockito;
-import static org.powermock.api.mockito.PowerMockito.*;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -222,7 +220,9 @@ import org.robolectric.annotation.Config;
 
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * Created by sospartan on 7/28/16.
@@ -270,6 +270,11 @@ public class WXStorageModuleTest {
       public void getAllKeys(OnResultReceivedListener listener) {
         Map<String, Object> data = StorageResultHandler.setItemResult(true);
         listener.onReceived(data);
+      }
+
+      @Override
+      public void setItemPersistent(String key, String value, OnResultReceivedListener listener) {
+
       }
 
       @Override
