@@ -210,17 +210,15 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteFullException;
 import android.database.sqlite.SQLiteStatement;
 
-import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.utils.WXLogUtils;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 
 public class DefaultWXStorage implements IWXStorageAdapter {
 
@@ -228,7 +226,6 @@ public class DefaultWXStorage implements IWXStorageAdapter {
 
     private ExecutorService mExecutorService;
 
-    private SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
     //setItem/setItemPersistent method only allow try once when occurred a sqliteFullException.
     private boolean once = false;
@@ -320,7 +317,7 @@ public class DefaultWXStorage implements IWXStorageAdapter {
     private boolean performSetItem(String key, String value, boolean isPersistent) {
         String sql = "INSERT OR REPLACE INTO " + WXSQLiteOpenHelper.TABLE_STORAGE + " VALUES (?,?,?,?);";
         SQLiteStatement statement = mDatabaseSupplier.getDatabase().compileStatement(sql);
-        String timeStamp = mDateFormat.format(new Date());
+        String timeStamp = WXSQLiteOpenHelper.sDateFormatter.format(new Date());
         try {
             statement.clearBindings();
             statement.bindString(1, key);
@@ -332,7 +329,7 @@ public class DefaultWXStorage implements IWXStorageAdapter {
 
             return true;
         } catch (Exception e) {
-            WXLogUtils.e("DefaultWXStorage", e.getMessage());
+            WXLogUtils.e(WXSQLiteOpenHelper.TAG_STORAGE,"DefaultWXStorage occurred an exception when execute setItem :" + e.getMessage());
             if(e instanceof SQLiteFullException){
                 if(!once && trimToSize()){
                     once = true;
@@ -368,7 +365,7 @@ public class DefaultWXStorage implements IWXStorageAdapter {
                 }
             }
         } catch (Exception e) {
-            WXLogUtils.e("DefaultWXStorage", e.getMessage());
+            WXLogUtils.e(WXSQLiteOpenHelper.TAG_STORAGE,"DefaultWXStorage occurred an exception when execute trimToSize:"+e.getMessage());
         } finally {
             c.close();
         }
@@ -393,18 +390,16 @@ public class DefaultWXStorage implements IWXStorageAdapter {
             if (c.moveToNext()) {
                 ContentValues values = new ContentValues();
                 //update timestamp
-                values.put(WXSQLiteOpenHelper.COLUMN_TIMESTAMP,mDateFormat.format(new Date()));
+                values.put(WXSQLiteOpenHelper.COLUMN_TIMESTAMP,WXSQLiteOpenHelper.sDateFormatter.format(new Date()));
                 int updateResult = mDatabaseSupplier.getDatabase().update(WXSQLiteOpenHelper.TABLE_STORAGE,values,WXSQLiteOpenHelper.COLUMN_KEY+"= ?",new String[]{key});
 
-                if(WXEnvironment.isApkDebugable()){
-                    WXLogUtils.d("update timestamp "+ (updateResult == 1 ? "success" : "failed") + " for operation [getItem(key = "+key+")]" );
-                }
+                WXLogUtils.d(WXSQLiteOpenHelper.TAG_STORAGE,"update timestamp "+ (updateResult == 1 ? "success" : "failed") + " for operation [getItem(key = "+key+")]" );
                 return c.getString(c.getColumnIndex(WXSQLiteOpenHelper.COLUMN_VALUE));
             } else {
                 return null;
             }
         } catch (Exception e) {
-            WXLogUtils.e("DefaultWXStorage", e.getMessage());
+            WXLogUtils.e(WXSQLiteOpenHelper.TAG_STORAGE,"DefaultWXStorage occurred an exception when execute getItem:"+e.getMessage());
             return null;
         } finally {
             c.close();
@@ -418,7 +413,7 @@ public class DefaultWXStorage implements IWXStorageAdapter {
                     WXSQLiteOpenHelper.COLUMN_KEY + "=?",
                     new String[]{key});
         } catch (Exception e) {
-            WXLogUtils.e("DefaultWXStorage", e.getMessage());
+            WXLogUtils.e(WXSQLiteOpenHelper.TAG_STORAGE,"DefaultWXStorage occurred an exception when execute removeItem:" + e.getMessage());
             return false;
         }
         return count == 1;
@@ -430,7 +425,7 @@ public class DefaultWXStorage implements IWXStorageAdapter {
         try {
             return statement.simpleQueryForLong();
         } catch (Exception e) {
-            WXLogUtils.e("DefaultWXStorage", e.getMessage());
+            WXLogUtils.e(WXSQLiteOpenHelper.TAG_STORAGE,"DefaultWXStorage occurred an exception when execute getLength:"+e.getMessage());
             return 0;
         } finally {
             statement.close();
@@ -446,7 +441,7 @@ public class DefaultWXStorage implements IWXStorageAdapter {
             }
             return result;
         } catch (Exception e) {
-            WXLogUtils.e("DefaultWXStorage", e.getMessage());
+            WXLogUtils.e(WXSQLiteOpenHelper.TAG_STORAGE,"DefaultWXStorage occurred an exception when execute getAllKeys:"+e.getMessage());
             return result;
         } finally {
             c.close();
