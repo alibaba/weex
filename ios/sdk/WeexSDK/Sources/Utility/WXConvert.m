@@ -18,9 +18,9 @@
     if([value respondsToSelector:@selector(op)]){\
         return (type)[value op];\
     } else {\
-        WXLogError(@"Convert Error:%@ not respond selector:%@", value, @#op);\
+        NSString * strval = [NSString stringWithFormat:@"%@",value];\
+        return (type)[self uint64_t: strval];\
     }\
-    return 0;\
 }
 
 WX_NUMBER_CONVERT(BOOL, boolValue)
@@ -30,11 +30,19 @@ WX_NUMBER_CONVERT(int64_t, longLongValue)
 WX_NUMBER_CONVERT(uint8_t, unsignedShortValue)
 WX_NUMBER_CONVERT(uint16_t, unsignedIntValue)
 WX_NUMBER_CONVERT(uint32_t, unsignedLongValue)
-WX_NUMBER_CONVERT(uint64_t, unsignedLongLongValue)
 WX_NUMBER_CONVERT(float, floatValue)
 WX_NUMBER_CONVERT(double, doubleValue)
 WX_NUMBER_CONVERT(NSInteger, integerValue)
 WX_NUMBER_CONVERT(NSUInteger, unsignedIntegerValue)
+
+
+
+//unsignedLongLongValue
++ (uint64_t)uint64_t:(id)value {\
+    NSString * strval = [NSString stringWithFormat:@"%@",value];
+    unsigned long long ullvalue = strtoull([strval UTF8String], NULL, 10);
+    return ullvalue;
+}
 
 + (CGFloat)CGFloat:(id)value
 {
