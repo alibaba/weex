@@ -7,39 +7,39 @@
         </div>
       </cell>
     </list>
-    <text class="count" value="Appear items:{{appearMin}} - {{appearMax}}"></text>
+    <text class="count">Appear items:{{appearMin}} - {{appearMax}}</text>
   </div>
 </template>
 
 <style>
   .list {
-    height:850px
+    height:850
   }
   .count {
-    font-size: 48px;
-    margin:10px;
+    font-size: 48;
+    margin:10;
   }
   .indicator {
-    height: 40px;
-    width: 40px;
+    height: 40;
+    width: 40;
     color:#45b5f0;
   }
   .row {
-    width: 750px;
+    width: 750;
   }
   .item {
     justify-content: center;
-    border-bottom-width: 2px;
+    border-bottom-width: 2;
     border-bottom-color: #c0c0c0;
-    height: 100px;
-    padding:20px;
+    height: 100;
+    padding:20;
   }
   .item-title {
   }
 </style>
 
 <script>
-  require('weex-components');
+
   module.exports = {
     methods: {
       onappear: function (e) {

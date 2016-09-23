@@ -20,6 +20,7 @@ This component supports no child components.
 - `placeholder`: &lt;string&gt; a hint to the user of which can be entered to the control. The placeholder text must have no carriage returns or line-feeds.
 - `disabled`: &lt;boolean&gt; a boolean attribute indicates that the form control is not available for interaction. In particular, the click event will not be dispatched on disabled controls.
 - `autofocus`: &lt;boolean&gt; a boolean attribute lets you specify that a form control should have input focus when the page loads.
+- `maxlength`<sup class="wx-v">0.7</sup> :&lt;length&gt; a number value to specify maxlength of input
 
 Other attributes please check out the [common attributes](../references/common-attrs.md).
 

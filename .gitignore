@@ -1,6 +1,7 @@
 # Created by IDE
 .idea/
 *.iml
+.DS_Store
 
 # Created by Builder
 examples/build

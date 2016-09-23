@@ -20,7 +20,10 @@ This component supports no child components.
   + selectedImage:  &lt;string&gt;The icon displayed when the tabitem is selected. If null, the icon is not displayed.
   + src: &lt;string&gt;The  custom weex page to display.
   + icon: &lt;string&gt;This is a special attribute. Be careful, You need to set the property even if it is empty.
-   + visibility: &lt;string&gt;`visible` | `hidden`. This attribute must be set to identify the display status. Default value is `visible`.
+  + visibility: &lt;string&gt;`visible` | `hidden`. This attribute must be set to identify the display status. Default value is `visible`.         
+
++ `selected-color`: &lt;color&gt; The color of the title when it is selected. Default is red color.
++ `unselected-color`: &lt;color&gt; The color of the title when it is unselected. Default is black color.  
                  
 Other attributes please check out the [common attributes](../references/common-attrs.md).
 

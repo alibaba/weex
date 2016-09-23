@@ -32,7 +32,7 @@ Other attributes please check out the [common attributes](../references/common-a
 - support `text-decoration` style.
 - support `text-align` style.
 - support `text-overflow` style.
-- support `line-height`<sup class="wx-v">0.6.1</sup> style. 
+- support `line-height`<sup class="wx-v">0.6.1</sup> style.
 - not support `flex-direction`, `justify-content`, `align-items` which is active for child nodes, and text has no child nodes.
 
 **common styles**: check out [common styles for components](../references/common-style.md)
@@ -56,8 +56,6 @@ Other attributes please check out the [common attributes](../references/common-a
   <text>...</text>
   <text value="..."></text>
   <text style="font-size: 24; text-decoration: underline;">{{price}}</text>
-  <text value="{% raw %}{{...}}{% endraw %}"></text>
+  <text value="{{...}}"></text>
 </div>
 ```
-
-

@@ -14,6 +14,7 @@ It supports all kinds of weex components as its slides, especially the `indicato
 ### Attributes
 
 - `auto-play`: &lt;boolean&gt; `true` | `false`. This value determines whether the slides plays automatically after the page rendering finished. The default value is `false`.
+- `index`: &lt;number&gt; . This value determines the  index of current shown slide. The default value is `0`.
 
 Other attributes please check out the [common attributes](../references/common-attrs.md).
 

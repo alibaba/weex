@@ -98,3 +98,29 @@ Weex ViewModel now supports these lifecycle hook functions which could be write 
 * `init`: fired at the beginning of a ViewModel constructor call.
 * `created`: fired when ViewModel observes default data but not compile the template.
 * `ready`: fired when ViewModel observes default data and compiles the template to generate virtual DOM finally.
+
+**Note: If you want to use the function in `methods`, `events` or lifecycle options as a parameter, please make sure the context is correct as expect. For example:**
+
+```javascript
+module.exports = {
+  data: function () {
+    return {x: 1, y: 2}
+  },
+  ready: function () {
+    // `undefined`
+    // because the context changed
+    this.foo(this.bar)
+    // `1`
+    // because the context bound correct
+    this.foo(this.bar.bind(this))
+  },
+  methods: {
+    foo: function (fn) {
+      return fn()
+    },
+    bar: function () {
+      return this.x
+    }
+  }
+}
+```

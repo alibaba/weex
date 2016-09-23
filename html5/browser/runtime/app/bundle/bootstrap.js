@@ -32,7 +32,7 @@ export function bootstrap (app, name, config, data) {
   config = isPlainObject(config) ? config : {}
 
   console.log(`transformerVersion: ${config.transformerVersion}, `
-    + `available transformerVersion: ${global.transformerVersion}`)
+    + `available transformerVersion: ${global.transformVersion}`)
 
   // if (typeof config.transformerVersion === 'string' &&
   //   typeof global.transformerVersion === 'string' &&

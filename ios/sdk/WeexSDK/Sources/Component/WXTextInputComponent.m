@@ -100,7 +100,7 @@
             [self setAutofocus:[attributes[@"autofocus"] boolValue]];
         }
         if (attributes[@"disabled"]) {
-            [_inputView setEnabled:[attributes[@"disabled"] boolValue]];
+            [_inputView setEnabled:![attributes[@"disabled"] boolValue]];
         }
         if (attributes[@"placeholder"]) {
             _placeholder = attributes[@"placeholder"];
@@ -238,7 +238,7 @@
         [self setAutofocus:[attributes[@"autofocus"] boolValue]];
     }
     if (attributes[@"disabled"]) {
-        [_inputView setEnabled:[attributes[@"disabled"] boolValue]];
+        [_inputView setEnabled:![attributes[@"disabled"] boolValue]];
     }
     if (attributes[@"maxlength"]) {
         _maxLength = [attributes[@"maxlength"] integerValue];

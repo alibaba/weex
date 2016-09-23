@@ -11,7 +11,7 @@
   "bugs": {
     "url": "https://github.com/alibaba/weex/issues"
   },
-  "private": "true",
+  "private": true,
   "keywords": [
     "weex",
     "hybrid",
@@ -34,10 +34,11 @@
     "postinstall": "bash ./bin/install-hooks.sh",
     "build:config": "node build/config.frameworks.js",
     "build:browser": "webpack --config build/webpack.browser.config.js",
+    "build:common": "webpack --config build/webpack.common.config.js",
     "build:native": "webpack --config build/webpack.native.config.js",
     "build:examples": "webpack --config build/webpack.examples.config.js",
     "build:test": "webpack --config build/webpack.test.config.js",
-    "dist:browser": "npm run build:browser && bash ./bin/dist-browser.sh",
+    "dist:browser": "npm run build:browser && npm run build:common && bash ./bin/dist-browser.sh",
     "dist": "npm run dist:browser",
     "dev:browser": "webpack --watch --config build/webpack.browser.config.js",
     "dev:native": "webpack --watch --config build/webpack.native.config.js",
@@ -58,7 +59,7 @@
     "copy": "npm run copy:js && npm run copy:examples"
   },
   "subversion": {
-    "browser": "0.3.0",
+    "browser": "0.3.2",
     "framework": "0.15.2",
     "transformer": ">=0.1.5 <0.4"
   },
@@ -72,12 +73,14 @@
     "modals": "^0.1.5",
     "scroll-to": "0.0.2",
     "semver": "^5.1.0",
-    "weex-components": "^0.1.3"
+    "weex-components": "^0.2.0"
   },
   "devDependencies": {
     "babel-cli": "~6.4.5",
     "babel-loader": "^6.2.4",
+    "babel-plugin-transform-runtime": "^6.15.0",
     "babel-preset-es2015": "^6.9.0",
+    "babel-runtime": "^6.11.6",
     "chai": "^3.5.0",
     "chromedriver": "^2.21.2",
     "cross-spawn": "^4.0.0",
@@ -97,6 +100,6 @@
     "style-loader": "^0.13.1",
     "uglify-js": "^2.6.4",
     "webpack": "^1.13.1",
-    "weex-loader": "^0.2.0"
+    "weex-loader": "^0.3.1"
   }
 }

@@ -14,3 +14,5 @@ Weex.install(root)
 Weex.install(div)
 Weex.install(components)
 Weex.install(api)
+
+export default Weex

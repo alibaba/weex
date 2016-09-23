@@ -234,6 +234,8 @@ public class WXSwipeLayout extends FrameLayout implements NestedScrollingParent 
   public interface WXOnRefreshListener {
 
     void onRefresh();
+
+    void onPullingDown(float dy, int headerHeight, float maxHeight);
   }
 
   /**
@@ -478,6 +480,7 @@ public class WXSwipeLayout extends FrameLayout implements NestedScrollingParent 
         mCurrentAction = -1;
       }
       headerView.setLayoutParams(lp);
+      onRefreshListener.onPullingDown(distanceY, lp.height, refreshViewFlowHeight);
       headerView.setProgressRotation(lp.height / refreshViewFlowHeight);
       moveTargetView(lp.height);
       return true;

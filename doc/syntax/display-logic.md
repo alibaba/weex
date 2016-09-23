@@ -34,7 +34,7 @@ There are two attributes for display logic control: `if` and `repeat`. We can cr
 
 ## `repeat`
 
-`repeat` statement is just for array rendering. Every item in an array is also a structed data. This means in `repeat`ed component, you can bind their item properties directly.
+`repeat` statement is just for array rendering. Every item in an array is also a structured data. This means in `repeat`ed component, you can bind their item properties directly.
 
 ```html
 <template>
@@ -114,13 +114,13 @@ e.g.
 e.g.
 
 ```html
-<div repeat="{% raw %}{{v in list}}{% endraw %}">
+<div repeat="{{v in list}}">
   <text>No. {{$index + 1}}, {{v.nickname}}</text>
 </div>
 ```
 
 ```html
-<div repeat="{% raw %}{{(k, v) in list}}{% endraw %}">
+<div repeat="{{(k, v) in list}}">
   <text>No. {{k + 1}}, {{v.nickname}}</text>
 </div>
 ```

@@ -1,3 +1,4 @@
+import dom from './dom'
 import event from './event'
 import pageInfo from './pageInfo'
 import stream from './stream'
@@ -11,6 +12,7 @@ import clipboard from './clipboard'
 
 export default {
   init: function (Weex) {
+    Weex.install(dom)
     Weex.install(event)
     Weex.install(pageInfo)
     Weex.install(stream)
