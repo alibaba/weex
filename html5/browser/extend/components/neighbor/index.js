@@ -35,7 +35,6 @@ function idleWhenPageDisappear (slider) {
 
 function idleWhenDomRendering (slider) {
   global.addEventListener('renderend', function () {
-    console.log('render end')
     slider.isDomRendering = false
     slider.autoPlay && slider.isPageShow && slider.play()
   })
@@ -467,7 +466,6 @@ const attr = {
       if (index < 0 || isNaN(index)) {
         return console.error('[h5-render] invalid index ', index)
       }
-      console.log('play to update index')
       _this.stop()
       _this.slideTo(index)
       _this.autoPlay && _this.isPageShow && _this.play()
