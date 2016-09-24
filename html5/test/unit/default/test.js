@@ -977,7 +977,7 @@ describe('test callNative signals', () => {
   function genCallAddElementWrapper (count) {
     return (name, ref, json, index, cbId) => {
       callAddElementSpy(ref, json, index)
-      const length = callAddElementSpy.args.length
+      const length = callAddElementSpy.callCount
       if (length > count) {
         return -1
       }
@@ -1020,9 +1020,9 @@ describe('test callNative signals', () => {
       global.callAddElement = genCallAddElementWrapper(calls)
 
       framework.createInstance(name + calls, inputCode)
+      expect(callNativeSpy.callCount).eql(2)
+      expect(callAddElementSpy.callCount).eql(calls + 1)
       framework.destroyInstance(name + calls)
-      expect(callNativeSpy.args.length).eql(2)
-      expect(callAddElementSpy.args.length).eql(60)
     }
 
     for (let i = 5; i < 60; i++) {
@@ -1045,9 +1045,8 @@ describe('test callNative signals', () => {
       framework.destroyInstance(name + calls)
 
       expect(callNativeSpy.args.length).eql(2)
-      expect(callAddElementSpy.args.length).eql(903)
+      expect(callAddElementSpy.args.length).eql(calls + 1)
     }
-
     run(10)
     run(30)
     run(90)
