@@ -219,13 +219,11 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
 public class DefaultWXStorage implements IWXStorageAdapter {
 
     private WXSQLiteOpenHelper mDatabaseSupplier;
 
     private ExecutorService mExecutorService;
-
 
     //setItem/setItemPersistent method only allow try once when occurred a sqliteFullException.
     private boolean once = false;
@@ -346,10 +344,12 @@ public class DefaultWXStorage implements IWXStorageAdapter {
         }
     }
 
+    /**
+     * remove 10% of total record(at most) ordered by timestamp.
+     * */
     private boolean trimToSize(){
         List<String> toEvict = new ArrayList<>();
         int num = 0;
-        //remove 10% of total record
         Cursor c = mDatabaseSupplier.getDatabase().query(WXSQLiteOpenHelper.TABLE_STORAGE, new String[]{WXSQLiteOpenHelper.COLUMN_KEY,WXSQLiteOpenHelper.COLUMN_PERSISTENT}, null, null, null, null, WXSQLiteOpenHelper.COLUMN_TIMESTAMP+" ASC");
         try {
             int evictSize = c.getCount() / 10;
