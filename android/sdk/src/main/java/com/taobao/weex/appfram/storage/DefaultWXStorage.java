@@ -225,9 +225,6 @@ public class DefaultWXStorage implements IWXStorageAdapter {
 
     private ExecutorService mExecutorService;
 
-    //setItem/setItemPersistent method only allow try once when occurred a sqliteFullException.
-    private boolean once = false;
-
     private void execute(Runnable runnable) {
         if (mExecutorService == null) {
             mExecutorService = Executors.newSingleThreadExecutor();
@@ -242,10 +239,13 @@ public class DefaultWXStorage implements IWXStorageAdapter {
 
     @Override
     public void setItem(final String key, final String value, final OnResultReceivedListener listener) {
+        if(listener == null){
+            return;
+        }
         execute(new Runnable() {
             @Override
             public void run() {
-                Map<String, Object> data = StorageResultHandler.setItemResult(performSetItem(key, value, false));
+                Map<String, Object> data = StorageResultHandler.setItemResult(performSetItem(key, value, false, true));
                 listener.onReceived(data);
             }
         });
@@ -253,6 +253,9 @@ public class DefaultWXStorage implements IWXStorageAdapter {
 
     @Override
     public void getItem(final String key, final OnResultReceivedListener listener) {
+        if(listener == null){
+            return;
+        }
         execute(new Runnable() {
             @Override
             public void run() {
@@ -264,6 +267,9 @@ public class DefaultWXStorage implements IWXStorageAdapter {
 
     @Override
     public void removeItem(final String key, final OnResultReceivedListener listener) {
+        if(listener == null){
+            return;
+        }
         execute(new Runnable() {
             @Override
             public void run() {
@@ -275,6 +281,9 @@ public class DefaultWXStorage implements IWXStorageAdapter {
 
     @Override
     public void length(final OnResultReceivedListener listener) {
+        if(listener == null){
+            return;
+        }
         execute(new Runnable() {
             @Override
             public void run() {
@@ -286,6 +295,9 @@ public class DefaultWXStorage implements IWXStorageAdapter {
 
     @Override
     public void getAllKeys(final OnResultReceivedListener listener) {
+        if(listener == null){
+            return;
+        }
         execute(new Runnable() {
             @Override
             public void run() {
@@ -297,10 +309,13 @@ public class DefaultWXStorage implements IWXStorageAdapter {
 
     @Override
     public void setItemPersistent(final String key, final String value, final OnResultReceivedListener listener) {
+        if(listener == null){
+            return;
+        }
         execute(new Runnable() {
             @Override
             public void run() {
-                Map<String, Object> data = StorageResultHandler.setItemResult(performSetItem(key, value, true));
+                Map<String, Object> data = StorageResultHandler.setItemResult(performSetItem(key, value, true, true));
                 listener.onReceived(data);
             }
         });
@@ -311,8 +326,8 @@ public class DefaultWXStorage implements IWXStorageAdapter {
         mDatabaseSupplier.closeDatabase();
     }
 
-
-    private boolean performSetItem(String key, String value, boolean isPersistent) {
+    private boolean performSetItem(String key, String value, boolean isPersistent, boolean allowRetryWhenFull) {
+        WXLogUtils.d(WXSQLiteOpenHelper.TAG_STORAGE,"set k-v to storage(key:"+ key + ",value:"+ value+",isPersistent:"+isPersistent+",allowRetry:"+allowRetryWhenFull+")");
         String sql = "INSERT OR REPLACE INTO " + WXSQLiteOpenHelper.TABLE_STORAGE + " VALUES (?,?,?,?);";
         SQLiteStatement statement = mDatabaseSupplier.getDatabase().compileStatement(sql);
         String timeStamp = WXSQLiteOpenHelper.sDateFormatter.format(new Date());
@@ -323,18 +338,15 @@ public class DefaultWXStorage implements IWXStorageAdapter {
             statement.bindString(3, timeStamp);
             statement.bindLong(4, isPersistent ? 1 : 0);
             statement.execute();
-            once = false;
-
             return true;
         } catch (Exception e) {
             WXLogUtils.e(WXSQLiteOpenHelper.TAG_STORAGE,"DefaultWXStorage occurred an exception when execute setItem :" + e.getMessage());
             if(e instanceof SQLiteFullException){
-                if(!once && trimToSize()){
-                    once = true;
+                if(allowRetryWhenFull && trimToSize()){
                     //try again
-                    return performSetItem(key,value,isPersistent);
-                }else{
-                    once = false;
+                    //setItem/setItemPersistent method only allow try once when occurred a sqliteFullException.
+                    WXLogUtils.d(WXSQLiteOpenHelper.TAG_STORAGE,"retry set k-v to storage(key:"+key+",value:"+value+")");
+                    return performSetItem(key,value,isPersistent,false);
                 }
             }
 
@@ -447,6 +459,5 @@ public class DefaultWXStorage implements IWXStorageAdapter {
             c.close();
         }
     }
-
 
 }
