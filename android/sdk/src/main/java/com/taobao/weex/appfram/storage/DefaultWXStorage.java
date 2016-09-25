@@ -389,6 +389,7 @@ public class DefaultWXStorage implements IWXStorageAdapter {
         for(String key : toEvict){
             performRemoveItem(key);
         }
+        WXLogUtils.e(WXSQLiteOpenHelper.TAG_STORAGE,"remove "+ num +" items by lru");
         return true;
     }
 
