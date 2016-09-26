@@ -239,12 +239,12 @@ public class DefaultWXStorage implements IWXStorageAdapter {
 
     @Override
     public void setItem(final String key, final String value, final OnResultReceivedListener listener) {
-        if(listener == null){
-            return;
-        }
         execute(new Runnable() {
             @Override
             public void run() {
+                if(listener == null){
+                    return;
+                }
                 Map<String, Object> data = StorageResultHandler.setItemResult(performSetItem(key, value, false, true));
                 listener.onReceived(data);
             }
@@ -253,12 +253,12 @@ public class DefaultWXStorage implements IWXStorageAdapter {
 
     @Override
     public void getItem(final String key, final OnResultReceivedListener listener) {
-        if(listener == null){
-            return;
-        }
         execute(new Runnable() {
             @Override
             public void run() {
+                if(listener == null){
+                    return;
+                }
                 Map<String, Object> data = StorageResultHandler.getItemResult(performGetItem(key));
                 listener.onReceived(data);
             }
@@ -267,12 +267,12 @@ public class DefaultWXStorage implements IWXStorageAdapter {
 
     @Override
     public void removeItem(final String key, final OnResultReceivedListener listener) {
-        if(listener == null){
-            return;
-        }
         execute(new Runnable() {
             @Override
             public void run() {
+                if(listener == null){
+                    return;
+                }
                 Map<String, Object> data = StorageResultHandler.removeItemResult(performRemoveItem(key));
                 listener.onReceived(data);
             }
@@ -281,12 +281,12 @@ public class DefaultWXStorage implements IWXStorageAdapter {
 
     @Override
     public void length(final OnResultReceivedListener listener) {
-        if(listener == null){
-            return;
-        }
         execute(new Runnable() {
             @Override
             public void run() {
+                if(listener == null){
+                    return;
+                }
                 Map<String, Object> data = StorageResultHandler.getLengthResult(performGetLength());
                 listener.onReceived(data);
             }
@@ -295,12 +295,12 @@ public class DefaultWXStorage implements IWXStorageAdapter {
 
     @Override
     public void getAllKeys(final OnResultReceivedListener listener) {
-        if(listener == null){
-            return;
-        }
         execute(new Runnable() {
             @Override
             public void run() {
+                if(listener == null){
+                    return;
+                }
                 Map<String, Object> data = StorageResultHandler.getAllkeysResult(performGetAllKeys());
                 listener.onReceived(data);
             }
@@ -309,12 +309,12 @@ public class DefaultWXStorage implements IWXStorageAdapter {
 
     @Override
     public void setItemPersistent(final String key, final String value, final OnResultReceivedListener listener) {
-        if(listener == null){
-            return;
-        }
         execute(new Runnable() {
             @Override
             public void run() {
+                if(listener == null){
+                    return;
+                }
                 Map<String, Object> data = StorageResultHandler.setItemResult(performSetItem(key, value, true, true));
                 listener.onReceived(data);
             }
