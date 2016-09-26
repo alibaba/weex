@@ -3,7 +3,7 @@
 <a href="https://github.com/weexteam/article/issues/27"  class="weex-translate">cn</a>
  
 ### Module extend
-weex sdk support Moulde extend,
+weex sdk support Module extend,
 Weex SDK provides only rendering capabilities, rather than have other capabilities, such as network, picture, and URL redirection. If you want the these features, you need to implement it.  
 
 For example: If you want to implement an address jumping function, you can achieve a Module Follow the steps below. 
