@@ -40,7 +40,13 @@
     info.compeletionCallback = compeletionCallback;
     
     if (!_session) {
-        _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]
+        NSURLSessionConfiguration *urlSessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+        Class windVaneProtocol = NSClassFromString(@"WVURLProtocol");
+        if (windVaneProtocol) {
+            NSArray *defaultProtocols = urlSessionConfig.protocolClasses;
+            urlSessionConfig.protocolClasses = [@[windVaneProtocol] arrayByAddingObjectsFromArray:defaultProtocols];
+        }
+        _session = [NSURLSession sessionWithConfiguration:urlSessionConfig
                                                  delegate:self
                                             delegateQueue:[NSOperationQueue mainQueue]];
     }
