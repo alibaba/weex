@@ -2,6 +2,7 @@ import './setTimeout'
 import './promise'
 import './console'
 import './objectAssign'
+import './objectSetPrototypeOf'
 import './arrayFrom'
 
 export {
