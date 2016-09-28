@@ -685,10 +685,9 @@ describe('test input and output', () => {
 
     setTimeout(function () {
       expect(doc.toJSON()).eql(expected)
-    }, 0)
-
-    framework.destroyInstance(name)
-    delete allDocs[name]
+      framework.destroyInstance(name)
+      delete allDocs[name]
+    }, 32)
   })
 
   it('dynamic type case', () => {
