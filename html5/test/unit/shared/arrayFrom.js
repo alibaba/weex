@@ -4,9 +4,9 @@ const { expect } = chai
 // remove original Array.from
 // Array.from = null
 
-// require('../../../shared/arrayFrom')
 import '../../../shared/arrayFrom'
 
+/* eslint-disable */
 describe('Array.from', () => {
   it('is a function', () => {
     expect(Array.from).is.an('function')

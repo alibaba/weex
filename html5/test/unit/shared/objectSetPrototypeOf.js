@@ -3,6 +3,7 @@ const { expect } = chai
 
 import '../../../shared/objectSetPrototypeOf'
 
+/* eslint-disable */
 describe('Object.setPrototypeOf', () => {
   it('is a function', () => {
     expect(Object.setPrototypeOf).is.an('function')
