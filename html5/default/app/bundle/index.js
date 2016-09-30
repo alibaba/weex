@@ -13,4 +13,4 @@
  */
 
 export { bootstrap } from './bootstrap'
-export { clearCommonModules, defineFn, register } from './define'
+export { defineFn, register } from './define'
