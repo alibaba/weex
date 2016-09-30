@@ -36,7 +36,6 @@ describe('parsing a bundle file', () => {
     console.warn.restore()
     console.error.restore()
     console.debug.restore()
-    bundle.clearCommonModules()
   })
 
   describe('use define/bootstrap', () => {
@@ -54,6 +53,7 @@ describe('parsing a bundle file', () => {
       app = {
         id, doc,
         customComponentMap: {},
+        commonModules: {},
         callbacks: {},
         callTasks: (tasks, callback) => {
           callTasksSpy(tasks)
