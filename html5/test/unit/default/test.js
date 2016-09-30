@@ -446,6 +446,43 @@ describe('test input and output', () => {
     delete allDocs[name]
   })
 
+  it('clear-module case', () => {
+    const nameA = 'clear-moduleA'
+    const nameB = 'clear-moduleB'
+    const inputCodeA = readInput(nameA)
+    const outputCodeA = readOutput(nameA)
+    const inputCodeB = readInput(nameB)
+    const outputCodeB = readOutput(nameB)
+
+    const docA = new Document(nameA)
+    const docB = new Document(nameB)
+    allDocs[nameA] = docA
+    allDocs[nameB] = docB
+
+    framework.createInstance(nameA, inputCodeA)
+    framework.createInstance(nameB, inputCodeB)
+
+    const expectedB = eval('(' + outputCodeB + ')')
+    const actualB = docB.toJSON()
+    expect(actualB).eql(expectedB)
+
+    framework.destroyInstance(nameB)
+
+    framework.callJS(nameA, [{
+      method: 'fireEvent',
+      args: [docA.body.children[0].ref, 'click', {}]
+    }])
+
+    const expectedA = eval('(' + outputCodeA + ')')
+    const actualA = docA.toJSON()
+
+    expect(actualA).eql(expectedA)
+
+    framework.destroyInstance(nameA)
+    delete allDocs[nameA]
+    delete allDocs[nameB]
+  })
+
   it('if case', () => {
     const name = 'if'
     const inputCode = readInput(name)

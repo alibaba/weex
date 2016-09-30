@@ -55,6 +55,7 @@ export function destroy (app) {
   app.doc.destroy()
   app.doc = null
   app.customComponentMap = null
+  app.commonModules = null
   app.callbacks = null
 }
 

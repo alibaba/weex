@@ -13,21 +13,6 @@ import {
 } from '../register'
 
 /**
- * @deprecated
- *
- * common modules are shared to all instances
- * it's very dangerous
- */
-let commonModules = {}
-
-/**
- * @deprecated
- */
-export function clearCommonModules () {
-  commonModules = {}
-}
-
-/**
  * define(name, factory) for primary usage
  * or
  * define(name, deps, factory) for compatibility
@@ -66,7 +51,7 @@ export const defineFn = function (app, name, ...args) {
       }
       if (isNormalModule(name) || isNpmModule(name)) {
         const cleanName = removeJSSurfix(name)
-        return commonModules[cleanName]
+        return app.commonModules[cleanName]
       }
     }
     const m = { exports: {}}
@@ -85,7 +70,7 @@ export const defineFn = function (app, name, ...args) {
   }
   else if (isNormalModule(name)) {
     const cleanName = removeJSSurfix(name)
-    commonModules[cleanName] = definition
+    app.commonModules[cleanName] = definition
   }
   else if (isNpmModule(name)) {
     const cleanName = removeJSSurfix(name)
@@ -98,7 +83,7 @@ export const defineFn = function (app, name, ...args) {
       registerCustomComponent(app, cleanName, definition)
     }
     else {
-      commonModules[cleanName] = definition
+      app.commonModules[cleanName] = definition
     }
   }
 }

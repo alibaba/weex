@@ -16,6 +16,7 @@ export default function App (id, options) {
   this.options = options || {}
   this.vm = null
   this.customComponentMap = {}
+  this.commonModules = {}
   this.callbacks = {}
   this.doc = new renderer.Document(
     id,
