@@ -222,7 +222,8 @@
         return;
     }
     
-    container.navigationItem.title = param[@"title"];
+//    container.navigationItem.title = param[@"title"];
+    container.navigationItem.titleView = [self titleView:param];
     
     [self callback:block code:MSG_SUCCESS data:nil];;
 }
