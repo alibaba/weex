@@ -11,7 +11,7 @@ const versionRegExp = /^\/\/ *(\{[^\}]*\}) *\r?\n/
  */
 function checkVersion (code) {
   let info
-  const result = versionRegExp.exec(code)
+  const result = versionRegExp.exec(String(code).trim())
   if (result) {
     try {
       info = JSON.parse(result[1])
