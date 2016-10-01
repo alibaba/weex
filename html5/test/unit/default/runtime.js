@@ -139,24 +139,108 @@ describe('framework entry', () => {
     })
 
     it('js bundle format version checker', function () {
-      const spy = sinon.spy()
+      const weexFramework = frameworks.Weex
+      frameworks.Weex = {
+        init: function () {},
+        createInstance: sinon.spy()
+      }
       frameworks.xxx = {
         init: function () {},
-        createInstance: spy
+        createInstance: sinon.spy()
       }
-      const code = `// {"framework":"xxx","version":"0.3.1"}
+      frameworks.yyy = {
+        init: function () {},
+        createInstance: sinon.spy()
+      }
+
+      // test framework xxx
+      let code = `// {"framework":"xxx","version":"0.3.1"}
       'This is a piece of JavaScript from a third-party Framework...'`
-
       framework.createInstance(instanceId + '~', code)
-
-      expect(spy.callCount).equal(1)
-      expect(spy.firstCall.args).eql([
+      expect(frameworks.xxx.createInstance.callCount).equal(1)
+      expect(frameworks.yyy.createInstance.callCount).equal(0)
+      expect(frameworks.Weex.createInstance.callCount).equal(0)
+      expect(frameworks.xxx.createInstance.firstCall.args).eql([
         instanceId + '~',
         code,
         { bundleVersion: '0.3.1' },
         undefined
       ])
-      delete framework.xxx
+
+      // also support spaces in JSON string
+      // also ignore spaces between double-slash and JSON string
+      code = `//{ "framework":"xxx" }
+      'This is a piece of JavaScript from a third-party Framework...'`
+      framework.createInstance(instanceId + '~~', code)
+      expect(frameworks.xxx.createInstance.callCount).equal(2)
+      expect(frameworks.yyy.createInstance.callCount).equal(0)
+      expect(frameworks.Weex.createInstance.callCount).equal(0)
+
+      // also support non-strict JSON format
+      code = `// {framework:"xxx",'version':"0.3.1"}
+      'This is a piece of JavaScript from a third-party Framework...'`
+      framework.createInstance(instanceId + '~~~', code)
+      expect(frameworks.xxx.createInstance.callCount).equal(2)
+      expect(frameworks.yyy.createInstance.callCount).equal(0)
+      expect(frameworks.Weex.createInstance.callCount).equal(1)
+      expect(frameworks.Weex.createInstance.firstCall.args).eql([
+        instanceId + '~~~',
+        code,
+        { bundleVersion: undefined },
+        undefined
+      ])
+
+      // test framework yyy
+      /* eslint-disable */
+      code = `
+
+
+
+        // {"framework":"yyy"}
+
+'JS Bundle with space and empty lines behind'` // modified from real generated code from tb
+      /* eslint-enable */
+      framework.createInstance(instanceId + '~~~~', code)
+      expect(frameworks.xxx.createInstance.callCount).equal(2)
+      expect(frameworks.yyy.createInstance.callCount).equal(1)
+      expect(frameworks.Weex.createInstance.callCount).equal(1)
+      expect(frameworks.yyy.createInstance.firstCall.args).eql([
+        instanceId + '~~~~',
+        code,
+        { bundleVersion: undefined },
+        undefined
+      ])
+
+      // test framework Weex (wrong format at the middle)
+      code = `'Some JS bundle code here ... // {"framework":"xxx"}\n ... end.'`
+      framework.createInstance(instanceId + '~~~~~', code)
+      expect(frameworks.xxx.createInstance.callCount).equal(2)
+      expect(frameworks.yyy.createInstance.callCount).equal(1)
+      expect(frameworks.Weex.createInstance.callCount).equal(2)
+      expect(frameworks.Weex.createInstance.secondCall.args).eql([
+        instanceId + '~~~~~',
+        code,
+        { bundleVersion: undefined },
+        undefined
+      ])
+
+      // test framework Weex (without any JSON string in comment)
+      code = `'Some JS bundle code here'`
+      framework.createInstance(instanceId + '~~~~~~', code)
+      expect(frameworks.xxx.createInstance.callCount).equal(2)
+      expect(frameworks.yyy.createInstance.callCount).equal(1)
+      expect(frameworks.Weex.createInstance.callCount).equal(3)
+      expect(frameworks.Weex.createInstance.thirdCall.args).eql([
+        instanceId + '~~~~~~',
+        code,
+        { bundleVersion: undefined },
+        undefined
+      ])
+
+      // revert frameworks
+      delete frameworks.xxx
+      delete frameworks.yyy
+      frameworks.Weex = weexFramework
     })
   })
 
