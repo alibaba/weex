@@ -1,8 +1,8 @@
 {
   "name": "weex-js-framework",
-  "version": "0.16.10",
+  "version": "0.16.12",
   "subversion": {
-    "framework": "0.16.10",
+    "framework": "0.16.12",
     "transformer": ">=0.1.5 <0.4"
   },
   "description": "Weex JS Framework",
