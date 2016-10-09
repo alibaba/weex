@@ -356,18 +356,25 @@ public class WXStreamModule extends WXModule {
             resp.put(STATUS,"-1");
             resp.put(STATUS_TEXT,Status.ERR_CONNECT_FAILED);
           }else {
-            resp.put(STATUS, response.statusCode);
-            int code = Integer.parseInt(response.statusCode);
-            resp.put("ok", (code >= 200 && code <= 299));
-            if (response.originalData == null) {
-              resp.put("data", null);
-            } else {
-              String respData = readAsString(response.originalData,
-                headers!=null?getHeader(headers,"Content-Type"):""
-              );
-              resp.put("data",parseJson(respData,options.getType()));
+            try {
+              resp.put(STATUS, response.statusCode);
+              int code = Integer.parseInt(response.statusCode);
+              resp.put("ok", (code >= 200 && code <= 299));
+              if (response.originalData == null) {
+                resp.put("data", null);
+              } else {
+                String respData = readAsString(response.originalData,
+                        headers != null ? getHeader(headers, "Content-Type") : ""
+                );
+                resp.put("data", parseJson(respData, options.getType()));
+              }
+              resp.put(STATUS_TEXT, Status.getStatusText(response.statusCode));
+            } catch (JSONException exception) {
+              WXLogUtils.e("", exception);
+              resp.clear();
+              resp.put("ok", false);
+              resp.put(STATUS_TEXT, "Parse json failed: " + exception.getMessage());
             }
-            resp.put(STATUS_TEXT, Status.getStatusText(response.statusCode));
           }
           resp.put("headers", headers);
           callback.invoke(resp);
