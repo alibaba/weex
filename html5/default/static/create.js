@@ -1,6 +1,7 @@
 import App from '../app'
 import { instanceMap } from './map'
 import { init as initApp } from '../app/ctrl'
+import { resetTarget } from '../core/dep'
 
 /**
  * Create a Weex instance.
@@ -11,6 +12,7 @@ import { init as initApp } from '../app/ctrl'
  * @param  {object} [data]
  */
 export function createInstance (id, code, options, data) {
+  resetTarget()
   let instance = instanceMap[id]
   options = options || {}
   let result
