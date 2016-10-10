@@ -396,6 +396,38 @@ describe('test input and output', () => {
     delete allDocs[nameB]
   })
 
+  it('clear-dep-target case', () => {
+    const nameError = 'clear-dep-target-error'
+    const nameFine = 'clear-dep-target-fine'
+    const inputCodeError = readInput(nameError)
+    const inputCodeFine = readInput(nameFine)
+    const outputCodeFine = readOutput(nameFine)
+
+    const docError = new Document(nameError)
+    allDocs[nameError] = docError
+
+    // should throw
+    expect(() => {
+      framework.createInstance(nameError, inputCodeError)
+    }).to.throw(TypeError)
+
+    framework.destroyInstance(nameError)
+
+    const docFine = new Document(nameFine)
+    allDocs[nameFine] = docFine
+
+    // no throw
+    framework.createInstance(nameFine, inputCodeFine)
+
+    const expected = eval('(' + outputCodeFine + ')')
+    const actual = docFine.toJSON()
+    expect(actual).eql(expected)
+
+    framework.destroyInstance(nameFine)
+    delete allDocs[nameError]
+    delete allDocs[nameFine]
+  })
+
   it('if case', () => {
     const name = 'if'
     const inputCode = readInput(name)
