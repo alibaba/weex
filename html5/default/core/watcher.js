@@ -80,7 +80,13 @@ export default function Watcher (vm, expOrFn, cb, options) {
 
 Watcher.prototype.get = function () {
   pushTarget(this)
-  const value = this.getter.call(this.vm, this.vm)
+  let value = {}
+  try {
+    value = this.getter.call(this.vm, this.vm)
+  } catch(e) {
+    console.log(e)
+  }
+  
   // "touch" every property so they are all tracked as
   // dependencies for deep watching
   if (this.deep) {
