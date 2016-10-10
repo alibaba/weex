@@ -249,7 +249,7 @@
         _inputView.placeholder = _placeholder;
     }
     if (attributes[@"value"]) {
-        _inputView.text = attributes[@"value"];
+        _inputView.text = [NSString stringWithFormat:@"%@", attributes[@"value"]];
     }
     
     [self setPlaceholderAttributedString];
