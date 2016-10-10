@@ -4,6 +4,7 @@ import {
   destroy
 } from '../app/ctrl'
 import { instanceMap } from './map'
+import { resetTarget } from '../core/dep'
 
 /**
  * Init config informations for Weex framework
@@ -40,6 +41,7 @@ export function refreshInstance (id, data) {
  * @param  {string} id
  */
 export function destroyInstance (id) {
+  resetTarget()
   const instance = instanceMap[id]
   if (!instance) {
     return new Error(`invalid instance id "${id}"`)
