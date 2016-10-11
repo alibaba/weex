@@ -362,7 +362,8 @@ public class WXCircleViewPager extends ViewPager implements Callback, WXGestureO
       // should be enough to create an illusion of infinity
       // warning: scrolling to very high values (1,000,000+) results in
       // strange drawing behaviour
-      return infAdapter.getRealCount() * 50;
+      int realCount = infAdapter.getRealCount();
+      return realCount> 2 ? realCount * 50 : 0;
     } else {
       return 0;
     }
