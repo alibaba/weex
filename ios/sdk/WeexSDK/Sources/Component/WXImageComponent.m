@@ -33,6 +33,7 @@ static dispatch_queue_t WXImageUpdateQueue;
 
 @property (nonatomic, strong) NSString *imageSrc;
 @property (nonatomic, strong) NSString *placeholdSrc;
+@property (nonatomic, strong) UIImage *bundleImage;
 @property (nonatomic, assign) UIViewContentMode resizeMode;
 @property (nonatomic, assign) WXImageQuality imageQuality;
 @property (nonatomic, assign) WXImageSharp imageSharp;
@@ -53,7 +54,11 @@ static dispatch_queue_t WXImageUpdateQueue;
             WXImageUpdateQueue = dispatch_queue_create("com.taobao.weex.ImageUpdateQueue", DISPATCH_QUEUE_SERIAL);
         }
         if (attributes[@"src"]) {
-            _imageSrc = [WXConvert NSString:attributes[@"src"]];
+            NSString * imageSource= [WXConvert NSString:attributes[@"src"]];
+            _bundleImage = [UIImage imageNamed:imageSource];
+            if (!_bundleImage) {
+                _imageSrc = imageSource;
+            }
         } else {
             WXLogWarning(@"image src is nil");
         }
@@ -193,6 +198,16 @@ static dispatch_queue_t WXImageUpdateQueue;
         NSString *imageSrc = weakSelf.imageSrc;
         NSString *placeholderSrc = weakSelf.placeholdSrc;
         
+        if (weakSelf.bundleImage) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                UIImage *viewImage = ((UIImageView *)strongSelf.view).image;
+                if ([strongSelf isViewLoaded] && !viewImage) {
+                    ((UIImageView *)strongSelf.view).image = strongSelf.bundleImage;
+                }
+            });
+        }
+
         if (weakSelf.placeholdSrc) {
             WXLogDebug(@"Updating image, component:%@, placeholder:%@ ", self.ref, placeholderSrc);
             weakSelf.placeholderOperation = [[weakSelf imageLoader] downloadImageWithURL:placeholderSrc imageFrame:weakSelf.calculatedFrame userInfo:nil completed:^(UIImage *image, NSError *error, BOOL finished) {
@@ -243,7 +258,7 @@ static dispatch_queue_t WXImageUpdateQueue;
                 }];
             });
         }
-        if (!weakSelf.imageSrc && !weakSelf.placeholdSrc) {
+        if (!weakSelf.imageSrc && !weakSelf.placeholdSrc && !weakSelf.bundleImage) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.layer.contents = nil;
             });
