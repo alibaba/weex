@@ -65,6 +65,7 @@ public class IndexActivity extends AbstractWeexActivity {
     }
 
     if(TextUtils.equals(CURRENT_IP,DEFAULT_IP)){
+//      renderPage(WXFileUtils.loadFileContent("component/a-demo.js", this),WEEX_INDEX_URL);
       renderPage(WXFileUtils.loadFileContent("index.js", this),WEEX_INDEX_URL);
     }else{
       renderPageByURL(WEEX_INDEX_URL);
