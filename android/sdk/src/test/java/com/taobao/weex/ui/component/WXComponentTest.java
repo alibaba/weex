@@ -204,77 +204,54 @@
  */
 package com.taobao.weex.ui.component;
 
+import com.taobao.weappplus_sdk.BuildConfig;
+import com.taobao.weex.common.Constants;
+import com.taobao.weex.ui.view.border.BorderDrawable;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.*;
 
 /**
  * Created by sospartan on 7/27/16.
  */
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 19)
+@PowerMockIgnore( {"org.mockito.*", "org.robolectric.*", "android.*"})
 public class WXComponentTest {
 
-  @Test
-  public void testSetLayout() throws Exception {
+  WXComponent component;
 
-  }
-
-  @Test
-  public void testSetPadding() throws Exception {
-
+  @Before
+  public void setUp() throws Exception {
+    WXVContainer root = WXDivTest.create();
+    ComponentTest.create(root);
+    component = WXDivTest.create(root);
+    ComponentTest.create(component);
   }
 
   @Test
   public void testSetProperty() throws Exception {
-
+    component.setProperty(Constants.Name.POSITION, Constants.Value.FIXED);
+    component.setProperty(Constants.Name.BORDER_RADIUS,0.5f);
+    component.setProperty(Constants.Name.BORDER_RADIUS,null);
+    component.setProperty(Constants.Name.BORDER_WIDTH,null);
+    component.setProperty(Constants.Name.BORDER_WIDTH,10);
+    component.setProperty(Constants.Name.BORDER_STYLE,null);
+    component.setProperty(Constants.Name.BORDER_STYLE, "SOLID");
+    component.setProperty(Constants.Name.BORDER_COLOR,null);
+    component.setProperty(Constants.Name.BORDER_COLOR, "#ff0000");
+    component.setProperty(Constants.Name.VISIBILITY,null);
+    component.setProperty(Constants.Name.VISIBILITY, Constants.Value.VISIBLE);
   }
 
-  @Test
-  public void testSetDisabled() throws Exception {
-
-  }
 
   @Test
-  public void testSetSticky() throws Exception {
-
-  }
-
-  @Test
-  public void testSetBackgroundColor() throws Exception {
-
-  }
-
-  @Test
-  public void testSetOpacity() throws Exception {
-
-  }
-
-  @Test
-  public void testSetBorderRadius() throws Exception {
-
-  }
-
-  @Test
-  public void testSetBorderWidth() throws Exception {
-
-  }
-
-  @Test
-  public void testSetBorderStyle() throws Exception {
-
-  }
-
-  @Test
-  public void testSetBorderColor() throws Exception {
-
-  }
-
-  @Test
-  public void testGetVisibility() throws Exception {
-
-  }
-
-  @Test
-  public void testSetVisibility() throws Exception {
-
+  public void testAddEvent() throws Exception {
+    component.addEvent(Constants.Event.FOCUS);
   }
 }

@@ -206,7 +206,7 @@ package com.taobao.weex.dom;
 
 import android.support.v4.util.ArrayMap;
 
-import com.taobao.weex.common.WXDomPropConstant;
+import com.taobao.weex.common.Constants;
 import com.taobao.weex.ui.component.WXBasicComponentType;
 
 import java.util.Map;
@@ -219,28 +219,19 @@ public class WXListDomObject extends WXDomObject {
 
         boolean isVertical = true;
         if (parent != null) {
-            if (parent.type != null) {
-                if (parent.type.equals(WXBasicComponentType.HLIST)) {
+            if (parent.getType() != null) {
+                if (parent.getType().equals(WXBasicComponentType.HLIST)) {
                     isVertical = false;
                 }
             }
         }
 
-        if (isVertical) {
-            if (style != null) {
-                if (style.get(WXDomPropConstant.WX_HEIGHT) == null &&
-                        style.get(WXDomPropConstant.WX_FLEX) == null) {
-                    map.put(WXDomPropConstant.WX_FLEX, "1");
-                }
-            }
-        } else {
-            if (style != null) {
-                if (style.get(WXDomPropConstant.WX_WIDTH) == null &&
-                        style.get(WXDomPropConstant.WX_FLEX) == null) {
-                    map.put(WXDomPropConstant.WX_FLEX, "1");
-                }
-            }
+        String prop = isVertical ? Constants.Name.HEIGHT : Constants.Name.WIDTH;
+        if (getStyles().get(prop) == null &&
+            getStyles().get(Constants.Name.FLEX) == null) {
+            map.put(Constants.Name.FLEX, "1");
         }
+
         return map;
     }
 }

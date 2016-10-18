@@ -97,10 +97,6 @@ Component.prototype = {
       this._parentScroller = parent
       return true
     }
-    if (!parent) {
-      console && console.warn('[h5-render] isInScrollable - parent not exist.')
-      return
-    }
   },
 
   // dispatch a specified event on this.node
@@ -120,15 +116,30 @@ Component.prototype = {
   },
 
   onAppend: function () {
-    const rect = this.node.getBoundingClientRect()
-    const parent = this.getParentScroller()
-    const parentNode = parent
-      ? parent.node
-      : this.getRootContainer()
-    const ctRect = parentNode.getBoundingClientRect()
-    if (hasIntersection(rect, ctRect)) {
-      this.dispatchEvent('appear', { direction: '' })
+    const evts = this.data.event
+    if (!evts || !evts.length) { return }
+    let flag = false
+    for (let i = 0, l = evts.length; i < l; i++) {
+      if (evts[i] === 'appear') {
+        flag = true
+        break
+      }
     }
+    if (!flag) {
+      return
+    }
+    // trigger 'appear' event in the next tick.
+    setTimeout(() => {
+      const rect = this.node.getBoundingClientRect()
+      const parent = this.getParentScroller()
+      const parentNode = parent
+        ? parent.node
+        : this.getRootContainer()
+      const ctRect = parentNode.getBoundingClientRect()
+      if (hasIntersection(rect, ctRect)) {
+        this.dispatchEvent('appear', { direction: '' })
+      }
+    }, 0)
   },
 
   addAppendHandler (cb) {
@@ -152,10 +163,10 @@ Component.prototype = {
     }
   },
 
-  // element can be both weex component and dom element.
-  fireLazyload (element) {
-    !element && (element = this)
-    fireLazyload(element)
+  // target can be both weex component and dom element.
+  fireLazyload (target) {
+    !target && (target = this)
+    fireLazyload(target)
   },
 
   attr: {}, // attr setters

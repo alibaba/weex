@@ -16,6 +16,7 @@
 
 @property (nonatomic, strong) WXBridgeContext   *bridgeCtx;
 @property (nonatomic, assign) BOOL  stopRunning;
+@property (nonatomic, strong) NSMutableArray *instanceIdStack;
 
 @end
 
@@ -113,7 +114,13 @@ void WXPerformBlockOnBridgeThread(void (^block)())
                   data:(id)data
 {
     if (!instance || !temp) return;
-    
+    if (![self.instanceIdStack containsObject:instance]) {
+        if ([options[@"RENDER_IN_ORDER"] boolValue]) {
+            [self.instanceIdStack addObject:instance];
+        } else {
+            [self.instanceIdStack insertObject:instance atIndex:0];
+        }
+    }
     __weak typeof(self) weakSelf = self;
     WXPerformBlockOnBridgeThread(^(){
         [weakSelf.bridgeCtx createInstance:instance
@@ -123,9 +130,26 @@ void WXPerformBlockOnBridgeThread(void (^block)())
     });
 }
 
+- (NSMutableArray *)instanceIdStack
+{
+    if (_instanceIdStack) return _instanceIdStack;
+    
+    _instanceIdStack = [NSMutableArray array];
+    
+    return _instanceIdStack;
+}
+
+- (NSArray *)getInstanceIdStack;
+{
+    return self.instanceIdStack;
+}
+
 - (void)destroyInstance:(NSString *)instance
 {
     if (!instance) return;
+    if([self.instanceIdStack containsObject:instance]){
+        [self.instanceIdStack removeObject:instance];
+    }
     
     __weak typeof(self) weakSelf = self;
     WXPerformBlockOnBridgeThread(^(){

@@ -7,6 +7,7 @@ import { bind, typof } from '../util'
 
 import Watcher from '../core/watcher'
 import config from '../config'
+import { parsePath } from '../util'
 
 const { nativeComponentMap } = config
 
@@ -76,11 +77,25 @@ export function bindSubVm (vm, subVm, template, repeatItem) {
   mergeProps(template.attr, props, vm, subVm)
 }
 
-export function bindSubVmAfterInitialized (vm, subVm, template) {
+/**
+ * merge class and styles from vm to sub vm.
+ */
+export function bindSubVmAfterInitialized (vm, subVm, template, target = {}) {
   mergeClassStyle(template.classList, vm, subVm)
   mergeStyle(template.style, vm, subVm)
+
+  // bind subVm to the target element
+  if (target.children) {
+    target.children[target.children.length - 1]._vm = subVm
+  }
+  else {
+    target._vm = subVm
+  }
 }
 
+/**
+ * Bind props from vm to sub vm and watch their updates.
+ */
 function mergeProps (target, props, vm, subVm) {
   if (!target) {
     return
@@ -101,6 +116,9 @@ function mergeProps (target, props, vm, subVm) {
   }
 }
 
+/**
+ * Bind style from vm to sub vm and watch their updates.
+ */
 function mergeStyle (target, vm, subVm) {
   for (const key in target) {
     const value = target[key]
@@ -120,6 +138,9 @@ function mergeStyle (target, vm, subVm) {
   }
 }
 
+/**
+ * Bind class & style from vm to sub vm and watch their updates.
+ */
 function mergeClassStyle (target, vm, subVm) {
   const css = vm._options && vm._options.style || {}
 
@@ -128,13 +149,25 @@ function mergeClassStyle (target, vm, subVm) {
     return
   }
 
+  const className = '@originalRootEl'
+  css[className] = subVm._rootEl.classStyle
+
+  function addClassName (list, name) {
+    if (typof(list) === 'array') {
+      list.unshift(name)
+    }
+  }
+
   if (typeof target === 'function') {
     const value = watch(vm, target, v => {
+      addClassName(v, className)
       setClassStyle(subVm._rootEl, css, v)
     })
+    addClassName(value, className)
     setClassStyle(subVm._rootEl, css, value)
   }
   else if (target != null) {
+    addClassName(target, className)
     setClassStyle(subVm._rootEl, css, target)
   }
 }
@@ -254,7 +287,8 @@ function bindEvents (vm, el, events) {
         console.debug(`[JS Framework] The method "${handler}" is not defined.`)
       }
     }
-    setEvent(vm, el, key, handler)
+    const realVm = vm._realParent ? vm._realParent : vm
+    setEvent(realVm, el, key, handler)
   }
 }
 
@@ -307,6 +341,9 @@ function bindKey (vm, el, name, key, calc) {
  * watch a calc function and callback if the calc value changes
  */
 export function watch (vm, calc, callback) {
+  if (vm._static) {
+    return ((typeof calc === 'function') ? calc : parsePath(calc)).call(vm, vm)
+  }
   const watcher = new Watcher(vm, calc, function (value, oldValue) {
     /* istanbul ignore if */
     if (typeof value !== 'object' && value === oldValue) {

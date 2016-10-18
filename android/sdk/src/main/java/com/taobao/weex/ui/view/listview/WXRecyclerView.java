@@ -210,6 +210,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import com.taobao.weex.common.WXThread;
 
 public class WXRecyclerView extends RecyclerView {
 
@@ -219,6 +220,11 @@ public class WXRecyclerView extends RecyclerView {
 
   public WXRecyclerView(Context context) {
     super(context);
+  }
+
+  @Override
+  public boolean postDelayed(Runnable action, long delayMillis) {
+    return super.postDelayed(WXThread.secure(action), delayMillis);
   }
 
   /**

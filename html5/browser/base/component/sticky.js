@@ -1,4 +1,6 @@
-import { throttle, detectSticky } from '../../utils'
+/* global HTMLElement */
+
+import { throttle } from '../../utils'
 
 const ua = navigator.userAgent
 const isFirefox = !!ua.match(/Firefox/i)
@@ -6,35 +8,8 @@ const isIEMobile = !!ua.match(/IEMobile/i)
 const cssPrefix = isFirefox ? '-moz-' : isIEMobile ? '-ms-' : '-webkit-'
 const stylePrefix = isFirefox ? 'Moz' : isIEMobile ? 'ms' : 'webkit'
 
-const supportSticky = detectSticky()
-
-function createStickyLayer (sticky) {
-  const parent = sticky.parentElement
-  let sl = parent._stickyLayer
-  if (sl) {
-    return
-  }
-  sl = document.createElement('div')
-  sl.classList.add('weex-sticky-layer')
-  sl.style.cssText = [
-    'position:fixed;',
-    `top:${parent.getBoundingClientRect().top}px;`,
-    'box-sizing:border-box;',
-    'width:100%;'
-  ].join('')
-  parent._stickyLayer = sl
-  parent.appendChild(sl)
-}
-
-function destroyStickyLayer (sticky) {
-  const parent = sticky.parentElement
-  const sl = parent._stickyLayer
-  if (!sl || sl.children.length > 0) {
-    return
-  }
-  sl && parent.removeChild(sl)
-  parent._stickyLayer = null
-}
+// even sticky, still not work. so...
+// const supportSticky = detectSticky()
 
 function bindParent (sticky) {
   if (!sticky instanceof Sticky) {
@@ -54,18 +29,27 @@ function bindParent (sticky) {
 
 function setSticky (sticky) {
   const comp = sticky.component
+  const element = sticky.element
   comp.stickyPlaceholder = sticky.element.cloneNode(true)
+  comp.stickyPlaceholder.removeAttribute('data-ref')
   comp.stickyPlaceholder.classList.add('weex-sticky-placeholder')
-  sticky.element.classList.add('weex-sticky')
-  sticky.preMarginTop = sticky.element.style.marginTop
-  sticky.element.style.marginTop = sticky.top + 'px'
-  sticky.element.parentNode.insertBefore(
-    comp.stickyPlaceholder, sticky.element)
-  const pt = sticky.parentElement
-  !pt.stickys && (pt.stickys = [])
-  pt.stickys.push(sticky)
-  createStickyLayer(sticky)
-  pt._stickyLayer.appendChild(sticky.element)
+  element.classList.add('weex-sticky')
+  sticky.preMarginTop = element.style.marginTop
+  sticky.preTop = element.style.top
+  element.style.marginTop = sticky.top || '0' + 'px'
+
+  element.parentNode.insertBefore(
+    comp.stickyPlaceholder, element)
+  element.style.position = 'fixed'
+  let top
+  if (sticky.parent instanceof HTMLElement) {
+    top = 0
+  }
+  else {
+    top = sticky.parentElement.getBoundingClientRect().top
+  }
+  element.style.top = top + 'px'
+  sticky.parentElement.appendChild(element)
 }
 
 /**
@@ -79,17 +63,14 @@ function unsetSticky (sticky, position) {
   position = position ? position + '' : sticky.prePosition
   element.style.position = position
   element.style.marginTop = sticky.preMarginTop || ''
+  element.style.top = sticky.preTop || ''
   element.classList.remove('weex-sticky')
   if (comp.stickyPlaceholder) {
     const parent = comp.stickyPlaceholder.parentNode
-    parent.insertBefore(sticky.element, comp.stickyPlaceholder)
+    parent.insertBefore(element, comp.stickyPlaceholder)
     parent.removeChild(comp.stickyPlaceholder)
     comp.stickyPlaceholder = null
   }
-  const stks = sticky.parentElement.stickys
-  const idx = stks.indexOf(sticky)
-  stks.splice(idx, 1)
-  destroyStickyLayer(sticky)
 }
 
 /**
@@ -120,14 +101,11 @@ Sticky.prototype = {
     elementStyle[stylePrefix + 'Transform'] = 'translateZ(0)' // fix flickering
     elementStyle['transform'] = 'translateZ(0)'
     bindParent(this)
-    if (supportSticky) {
-      elementStyle.position = cssPrefix + 'sticky'
-      elementStyle.position = 'sticky'
-    }
-    else {
-      this._simulateSticky()
-      this._bindResize()
-    }
+    // if (supportSticky) {
+    //   elementStyle.position = cssPrefix + 'sticky'
+    // }
+    this._simulateSticky()
+    this._bindResize()
   },
 
   _bindResize () {
@@ -150,9 +128,9 @@ Sticky.prototype = {
    * method should be called.
    */
   refresh () {
-    if (supportSticky) {
-      return
-    }
+    // if (supportSticky) {
+    //   return
+    // }
     this._detach()
     this._simulateSticky()
   },
@@ -181,11 +159,7 @@ Sticky.prototype = {
      */
     this.curState = 1
     const scrollHandler = this._scrollHandler = throttle(function (e) {
-      const sl = self.parentElement._stickyLayer
-      const layerHeight = sl ? sl.getBoundingClientRect().height : 0
-      const selfHeight = self.element.getBoundingClientRect().height
-      const selfOffset = self.curState === 2 ? selfHeight : 0
-      const thresholdTop = thresholdBase - layerHeight + selfOffset
+      const thresholdTop = thresholdBase
       const ypos = self.isInScrollable() ? e.offset : window.pageYOffset
       self.offset = ypos
       if (ypos < thresholdTop) {
@@ -214,12 +188,13 @@ Sticky.prototype = {
 
   _detach (position) {
     position = position ? position + '' : 'relative'
-    if (!supportSticky) {
-      if (this.curState === 2) {
-        unsetSticky(this)
-      }
-      window.removeEventListener('scroll', this._scrollHandler, false)
+    // if (supportSticky) {
+    //   return
+    // }
+    if (this.curState === 2) {
+      unsetSticky(this)
     }
+    window.removeEventListener('scroll', this._scrollHandler, false)
   },
 
   isInScrollable () {
@@ -247,8 +222,9 @@ Sticky.prototype = {
     const elementStyle = this.element.style
     elementStyle.removeProperty(cssPrefix + 'transform')
     elementStyle.removeProperty('transform')
-    if (!supportSticky) {
-      window.removeEventListener(this._resizeEvent, this._resizeHandler, false)
-    }
+    // if (supportSticky) {
+    //   return
+    // }
+    window.removeEventListener(this._resizeEvent, this._resizeHandler, false)
   }
 }

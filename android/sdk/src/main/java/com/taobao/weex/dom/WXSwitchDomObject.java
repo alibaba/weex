@@ -213,9 +213,6 @@ public class WXSwitchDomObject extends WXDomObject{
     @Override
     public void layoutBefore() {
         super.layoutBefore();
-        if (style == null){
-            style = new WXStyle();
-        }
         setStyleWidth(FIXED_WIDTH);
         setStyleHeight(FIXED_HEIGHT);
     }

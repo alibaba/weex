@@ -211,5 +211,13 @@ import com.taobao.weex.WXSDKInstance;
  */
 public abstract class WXModule implements IWXObject {
 
+  public static final String ACTION_ACTIVITY_RESULT = "actionActivityResult";
+  public static final String ACTION_REQUEST_PERMISSIONS_RESULT = "actionRequestPermissionsResult";
+  public static final String REQUEST_CODE = "requestCode";
+  public static final String RESULT_CODE = "resultCode";
+  public static final String PERMISSIONS = "permissions";
+  public static final String GRANT_RESULTS = "grantResults";
+
+
   public WXSDKInstance mWXSDKInstance;
 }

@@ -34,7 +34,8 @@ function hide (loading) {
 const proto = {
   create () {
     const node = document.createElement('div')
-    node.classList.add('weex-container', 'weex-loading')
+    node.classList.add('weex-container')
+    node.classList.add('weex-loading')
     return node
   },
 

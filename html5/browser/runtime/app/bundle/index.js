@@ -13,4 +13,4 @@
  */
 
 export { bootstrap } from './bootstrap'
-export { clearCommonModules, define, register } from '../../../../default/app/bundle/define'
+export { clearCommonModules, defineFn, register } from '../../../../default/app/bundle/define'

@@ -40,10 +40,10 @@ First, you need to git clone `weex` from github:
 git clone https://github.com/alibaba/weex.git
 ```
 ##### 2. Build APK
-  ***   1) Android stuido build APK ***
+  ***   1) Android studio build APK ***
  
  ```
-     Step 1: run android stuido 
+     Step 1: run android studio 
      Step 2: open the file of ~/weex/android/playground/build.gradle 
      Step 3: Run the Project and the Apk will auto install in your android device
  ```

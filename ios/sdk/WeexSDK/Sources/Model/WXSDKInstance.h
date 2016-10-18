@@ -52,6 +52,7 @@ typedef NS_ENUM(NSInteger, WXState) {//state.code
     WeexInstanceForeground,
     WeexInstanceBackground,
     WeexInstanceMemoryWarning,
+    WeexInstanceBindChanged,
     WeexInstanceDestroy
 };
 
@@ -127,7 +128,7 @@ typedef NS_ENUM(NSInteger, WXErrorCode) {//error.code
 /**
  *  the info stored by user.
  */
-@property (nonatomic, strong) NSDictionary *userInfo;
+@property (nonatomic, strong) NSMutableDictionary *userInfo;
 
 /**
  * Renders weex view with bundle url.
@@ -176,14 +177,19 @@ typedef NS_ENUM(NSInteger, WXErrorCode) {//error.code
 - (id)moduleForClass:(Class)moduleClass;
 
 /**
- * get Componet instance by ref
+ * get Component instance by ref, must be called on component thread by calling WXPerformBlockOnComponentThread
  */
 - (WXComponent *)componentForRef:(NSString *)ref;
 
 /**
- * Number of components created
+ * Number of components created, must be called on component thread by calling WXPerformBlockOnComponentThread
  */
 - (NSUInteger)numberOfComponents;
+
+/**
+ * fire global event
+ */
+- (void)fireGlobalEvent:(NSString *)eventName params:(NSDictionary *)params;
 
 /**
  * application performance statistics
@@ -200,5 +206,7 @@ typedef NS_ENUM(NSInteger, WXErrorCode) {//error.code
 - (void)finishPerformance DEPRECATED_MSG_ATTRIBUTE();
 
 - (void)reloadData:(id)data  DEPRECATED_MSG_ATTRIBUTE("Use refreshInstance: method instead.");
+
+- (void)creatFinish;
 
 @end

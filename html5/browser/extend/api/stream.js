@@ -25,7 +25,12 @@ function _jsonp (config, callback, progressCallback) {
 
   global[cbName] = (function (cb) {
     return function (response) {
-      callback(response)
+      callback({
+        status: 200,
+        ok: true,
+        statusText: 'OK',
+        data: response
+      })
       delete global[cb]
     }
   })(cbName)
@@ -46,7 +51,12 @@ function _jsonp (config, callback, progressCallback) {
   script.onerror = (function (cb) {
     return function (err) {
       console.error('[h5-render] unexpected error in _jsonp for \'fetch\' API', err)
-      callback(err)
+      callback({
+        status: ERROR_STATE,
+        ok: false,
+        statusText: '',
+        data: ''
+      })
       delete global[cb]
     }
   })(cbName)
@@ -107,8 +117,7 @@ function _xhr (config, callback, progressCallback) {
       status: ERROR_STATE,
       ok: false,
       statusText: '',
-      data: '',
-      headers: {}
+      data: ''
     })
   }
 

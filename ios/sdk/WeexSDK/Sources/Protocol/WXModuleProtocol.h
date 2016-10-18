@@ -23,6 +23,7 @@
  *  @abstract the module callback , result can be string or dictionary.
  */
 typedef void (^WXModuleCallback)(id result);
+typedef void (^WXModuleKeepAliveCallback)(id result, BOOL keepAlive);
 
 /**
  *  @abstract export public method

@@ -1,27 +1,26 @@
-import AppInstance from '../app'
+import App from '../app'
 import { instanceMap } from '../../../default/static/map'
+import { init as initApp } from '../app/ctrl'
 
 /**
- * create a Weex instance
+ * Create a Weex instance.
  *
- * @param  {string} instanceId
+ * @param  {string} id
  * @param  {string} code
  * @param  {object} [options] option `HAS_LOG` enable print log
  * @param  {object} [data]
  */
-export function createInstance (instanceId, code, options, data) {
-  let instance = instanceMap[instanceId]
+export function createInstance (id, code, options, data) {
+  let instance = instanceMap[id]
   options = options || {}
-
   let result
   if (!instance) {
-    instance = new AppInstance(instanceId, options)
-    instanceMap[instanceId] = instance
-    result = instance.init(code, data)
+    instance = new App(id, options)
+    result = instanceMap[id] = instance
+    initApp(instance, code, data)
   }
   else {
-    result = new Error(`invalid instance id "${instanceId}"`)
+    result = new Error(`invalid instance id "${id}"`)
   }
-
-  return result || instance
+  return result
 }

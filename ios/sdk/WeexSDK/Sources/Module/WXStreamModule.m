@@ -53,7 +53,7 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
               }];
 }
 
-- (void)fetch:(NSDictionary *)options callback:(WXModuleCallback)callback progressCallback:(NSString *)progressCallback
+- (void)fetch:(NSDictionary *)options callback:(WXModuleCallback)callback progressCallback:(WXModuleKeepAliveCallback)progressCallback
 {
     __block NSInteger received = 0;
     __block NSHTTPURLResponse *httpResponse = nil;
@@ -94,7 +94,7 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
 
     [callbackRsp setObject:@{ @"OPENED": @1 } forKey:@"readyState"];
     
-    [[WXSDKManager bridgeMgr] callBack:self.weexInstance.instanceId funcId:progressCallback params:callbackRsp keepAlive:true];
+    progressCallback(callbackRsp, TRUE);
     
     id<WXNetworkProtocol> networkHandler = [WXHandlerFactory handlerForProtocol:@protocol(WXNetworkProtocol)];
     __block NSString *respEncode = nil;
@@ -111,15 +111,14 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
                         statusText = [WXStreamModule getStatusText:httpResponse.statusCode];
                         [callbackRsp setObject:statusText forKey:@"statusText"];
                         [callbackRsp setObject:[NSNumber numberWithInteger:received] forKey:@"length"];
-                        [[WXSDKManager bridgeMgr] callBack:weakSelf.weexInstance.instanceId funcId:progressCallback params:callbackRsp keepAlive:true];
+                         progressCallback(callbackRsp, TRUE);
                     }
                     
                 } withReceiveData:^(NSData *data) {
                     [callbackRsp setObject:@{ @"LOADING" : @3 } forKey:@"readyState"];
                     received += [data length];
                     [callbackRsp setObject:[NSNumber numberWithInteger:received] forKey:@"length"];
-                    
-                    [[WXSDKManager bridgeMgr] callBack:weakSelf.weexInstance.instanceId funcId:progressCallback params:callbackRsp keepAlive:true];
+                     progressCallback(callbackRsp, TRUE);
                     
                 } withCompeletion:^(NSData *totalData, NSError *error) {
                     

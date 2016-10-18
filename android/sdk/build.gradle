@@ -4,7 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.2'
+        classpath 'com.android.tools.build:gradle:2.1.3'
         classpath files('license/license-gradle-plugin-0.12.1.jar')
         classpath files('license/maven-license-plugin-1.10.b1.jar')
         classpath files('license/plexus-utils-3.0.24.jar')
@@ -22,16 +22,56 @@ allprojects {
 
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.hierynomus.license'
-apply plugin: 'com.vanniktech.android.junit.jacoco'
+apply plugin: 'checkstyle'
 
-version = "1.5.2.4"
+ext.disableCov = project.hasProperty('disableCov') ? project.getProperty('disableCov') : 'false'
+
+if(!disableCov.toBoolean()){
+    apply plugin: 'com.vanniktech.android.junit.jacoco'
+    junitJacoco {
+        excludes = ['com/taobao/weex/dom/flex/**','com/taobao/weex/ui/view/refresh/circlebar/**']
+    }
+}
+
+task checkstyle(type: Checkstyle) {
+    configFile file("${project.rootDir}/config/quality/checkstyle.xml") // Where my checkstyle config is...
+    // configProperties.checkstyleSuppressionsPath = file("${project.rootDir}/config/quality/checkstyle/suppressions.xml").absolutePath // Where is my suppressions file for checkstyle is...
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+    exclude '**/test/**'
+    exclude '**/com/taobao/weex/dom/flex/**'
+    classpath = files()
+    
+}
+
+checkstyle {
+    toolVersion = '6.9'
+}
+
+version = "0.7.0"
 
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
     resourcePrefix "weex"
 
+    useLibrary 'org.apache.http.legacy'
+
+    def jsfmVersion = "0.15.2"
+    try{
+        def line
+        new File("assets/main.js").withReader { line = it.readLine() }
+        def m = line =~ /[A-Z\s]+\:\s+([0-9\.]+)\s+Build\s+[0-9]+/;
+        jsfmVersion = m[0][1]
+        println jsfmVersion
+    } catch (java.lang.Exception e) {
+
+    }
+
     defaultConfig {
+        buildConfigField "String", "buildJavascriptFrameworkVersion", "\"${jsfmVersion}\""
+        buildConfigField "String", "buildVersion", "\"${version}\""
         minSdkVersion 14
         targetSdkVersion 19
         versionCode 1
@@ -99,14 +139,14 @@ dependencies {
     testCompile 'org.powermock:powermock-module-testng:1.6.4'
     testCompile 'org.powermock:powermock-classloading-xstream:1.6.4'
     testCompile "org.powermock:powermock-module-junit4-rule:1.6.4"
-    testCompile 'org.robolectric:robolectric:3.0-rc3'
+    testCompile 'org.robolectric:robolectric:3.0'
+    testCompile "org.robolectric:shadows-httpclient:3.0"
     testCompile 'org.json:json:20160212'
 }
 
 license{
     header=file('license/LICENSE')
     excludes (["**/WXDataStructureUtil.java",
-               "**/WXBackgroundDrawable.java",
                "**/Spacing.java",
                "**/MeasureOutput.java",
                "**/LayoutEngine.java",

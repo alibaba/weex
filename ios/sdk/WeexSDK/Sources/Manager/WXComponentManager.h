@@ -62,12 +62,17 @@ extern void WXPerformBlockOnComponentThread(void (^block)());
 - (void)moveComponent:(NSString *)ref toSuper:(NSString *)superRef atIndex:(NSInteger)index;
 
 /**
- * @abstract return component for specific ref
+ * @abstract return component for specific ref, must be called on component thread by calling WXPerformBlockOnComponentThread
  */
 - (WXComponent *)componentForRef:(NSString *)ref;
 
 /**
- * @abstract number of components created
+ * @abstract return root component
+ */
+- (WXComponent *)componentForRoot;
+
+/**
+ * @abstract number of components created, must be called on component thread by calling WXPerformBlockOnComponentThread
  */
 - (NSUInteger)numberOfComponents;
 

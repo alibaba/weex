@@ -37,6 +37,8 @@
 
 - (void)_frameDidCalculated:(BOOL)isChanged
 {
+    [super _frameDidCalculated:isChanged];
+    
     if (isChanged) {
         [self.list cellDidLayout:self];
     }

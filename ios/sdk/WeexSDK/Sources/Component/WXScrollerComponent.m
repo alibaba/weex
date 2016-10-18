@@ -27,13 +27,6 @@
 
 @end
 
-@interface WXScrollView_new : UIScrollView
-
-@end
-
-@implementation WXScrollView_new
-
-@end
 
 @interface WXScrollerComponent()
 
@@ -144,7 +137,7 @@
 
 - (void)viewWillUnload
 {
-    ((UIScrollView *)(self.view)).delegate = nil;
+    ((UIScrollView *)_view).delegate = nil;
 }
 
 - (void)dealloc
@@ -210,27 +203,32 @@
 
 - (void)adjustSticky
 {
-    CGFloat scrollOffset = ((UIScrollView *)self.view).contentOffset.y;
+    CGFloat scrollOffsetY = ((UIScrollView *)self.view).contentOffset.y;
     for(WXComponent *component in self.stickyArray) {
-        if (isnan(component.absolutePosition.y)) {
+        if (CGPointEqualToPoint(component->_absolutePosition, CGPointZero)) {
+            component->_absolutePosition = [component.supercomponent.view convertPoint:component.view.frame.origin toView:self.view];
+        }
+        CGPoint relativePosition = component->_absolutePosition;
+        if (isnan(relativePosition.y)) {
             continue;
         }
         
-        if(component.supercomponent != self && component.view.superview != self.view) {
+        WXComponent *supercomponent = component.supercomponent;
+        if(supercomponent != self && component.view.superview != self.view) {
             [component.view removeFromSuperview];
             [self.view addSubview:component.view];
         } else {
             [self.view bringSubviewToFront:component.view];
         }
         
-        CGFloat componentY = component.absolutePosition.y - self.absolutePosition.y;
+        CGFloat relativeY = relativePosition.y;
         BOOL needSticky = NO;
         
-        if (scrollOffset >= componentY) {
+        if (scrollOffsetY >= relativeY) {
             needSticky = YES;
         } else {
             // important: reset views' frame
-            component.view.frame = CGRectMake(component.absolutePosition.x - self.absolutePosition.x, componentY, component.calculatedFrame.size.width, component.calculatedFrame.size.height);
+            component.view.frame = CGRectMake(relativePosition.x, relativePosition.y, component.calculatedFrame.size.width, component.calculatedFrame.size.height);
         }
         
         if (!needSticky) {
@@ -238,14 +236,14 @@
         }
         
         // The minimum Y sticky view can reach is its original position
-        CGFloat minY = component.absolutePosition.y - self.absolutePosition.y;
-        WXComponent *superComponent = (WXComponent *)(component.supercomponent);
-        CGFloat maxY = superComponent.absolutePosition.y - self.absolutePosition.y + superComponent.calculatedFrame.size.height - component.calculatedFrame.size.height;
+        CGFloat minY = relativeY;
+        CGPoint superRelativePosition = supercomponent == self ? CGPointZero : [supercomponent.supercomponent.view convertPoint:supercomponent.view.frame.origin toView:self.view];
+        CGFloat maxY = superRelativePosition.y + supercomponent.calculatedFrame.size.height - component.calculatedFrame.size.height;
         
-        CGFloat stickyY = scrollOffset;
+        CGFloat stickyY = scrollOffsetY;
         if (stickyY < minY) {
             stickyY = minY;
-        } else if (stickyY > maxY && ![superComponent conformsToProtocol:@protocol(WXScrollerProtocol)]) {
+        } else if (stickyY > maxY && ![supercomponent conformsToProtocol:@protocol(WXScrollerProtocol)]) {
             // Sticky component can not go beyond its parent's bounds when its parent is not scroller;
             stickyY = maxY;
         }
@@ -293,7 +291,7 @@
     CGPoint contentOffset = scrollView.contentOffset;
     
     if (_scrollDirection == WXScrollDirectionHorizontal) {
-        CGFloat contentOffetX = component.absolutePosition.x - self.absolutePosition.x;
+        CGFloat contentOffetX = [component.supercomponent.view convertPoint:component.view.frame.origin toView:self.view].x;
         contentOffetX += offset * WXScreenResizeRadio();
         
         if (contentOffetX > scrollView.contentSize.width - scrollView.frame.size.width) {
@@ -302,7 +300,7 @@
             contentOffset.x = contentOffetX;
         }
     } else {
-        CGFloat contentOffetY = component.absolutePosition.y - self.absolutePosition.y;
+        CGFloat contentOffetY = [component.supercomponent.view convertPoint:component.view.frame.origin toView:self.view].y;
         contentOffetY += offset * WXScreenResizeRadio();
         
         if (contentOffetY > scrollView.contentSize.height - scrollView.frame.size.height) {
@@ -470,23 +468,26 @@
     }
 }
 
-- (void)handleLoadMore
-{
-    if (_listenLoadMore && [self isNeedLoadMore]) {
-        [self loadMore];
-    }
-}
-
 - (void)scrollToTarget:(WXScrollToTarget *)target scrollRect:(CGRect)rect
 {
     WXComponent *component = target.target;
-    CGFloat ctop = component.absolutePosition.y - self.absolutePosition.y;
+    
+    CGFloat ctop;
+    if (component.supercomponent) {
+        ctop = [component.supercomponent->_view convertPoint:component->_view.frame.origin toView:_view].y;
+    } else {
+        ctop = 0.0;
+    }
     CGFloat cbottom = ctop + CGRectGetHeight(component.calculatedFrame);
-    CGFloat cleft = component.absolutePosition.x - self.absolutePosition.x;
+    CGFloat cleft;
+    if (component.supercomponent) {
+        cleft = [component.supercomponent->_view convertPoint:component->_view.frame.origin toView:_view].x;
+    } else {
+        cleft = 0.0;
+    }
     CGFloat cright = cleft + CGRectGetWidth(component.calculatedFrame);
     
     CGFloat vtop = CGRectGetMinY(rect), vbottom = CGRectGetMaxY(rect), vleft = CGRectGetMinX(rect), vright = CGRectGetMaxX(rect);
-    
     if(cbottom > vtop && ctop <= vbottom && cleft <= vright && cright > vleft){
         if(!target.hasAppear && component){
             target.hasAppear = YES;
@@ -501,6 +502,13 @@
                 [component fireEvent:@"disappear" params:_direction ? @{@"direction":_direction} : nil];
             }
         }
+    }
+}
+
+- (void)handleLoadMore
+{
+    if (_listenLoadMore && [self isNeedLoadMore]) {
+        [self loadMore];
     }
 }
 
@@ -545,7 +553,9 @@
         _scrollerCSSNode->layout.dimensions[CSS_HEIGHT] = CSS_UNDEFINED;
         
         layoutNode(_scrollerCSSNode, CSS_UNDEFINED, CSS_UNDEFINED, CSS_DIRECTION_INHERIT);
-//        print_css_node(_scrollerCSSNode, CSS_PRINT_LAYOUT | CSS_PRINT_STYLE | CSS_PRINT_CHILDREN);
+        if ([WXLog logLevel] >= WXLogLevelDebug) {
+            print_css_node(_scrollerCSSNode, CSS_PRINT_LAYOUT | CSS_PRINT_STYLE | CSS_PRINT_CHILDREN);
+        }
         CGSize size = {
             WXRoundPixelValue(_scrollerCSSNode->layout.dimensions[CSS_WIDTH]),
             WXRoundPixelValue(_scrollerCSSNode->layout.dimensions[CSS_HEIGHT])

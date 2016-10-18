@@ -214,5 +214,5 @@ interface IWXStorage {
     public void removeItem(String key,@Nullable JSCallback callback);
     public void length(@Nullable JSCallback callback);
     public void getAllKeys(@Nullable JSCallback callback);
-
+    public void setItemPersistent(String key, String value, @Nullable JSCallback callback);
 }

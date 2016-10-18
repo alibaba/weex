@@ -209,6 +209,7 @@ import android.os.Build;
 import android.view.MotionEvent;
 import android.widget.EditText;
 
+import com.taobao.weex.common.WXThread;
 import com.taobao.weex.ui.view.gesture.WXGesture;
 import com.taobao.weex.ui.view.gesture.WXGestureObservable;
 
@@ -240,5 +241,22 @@ public class WXEditText extends EditText implements WXGestureObservable {
       result |= wxGesture.onTouch(this, event);
     }
     return result;
+  }
+
+  @Override
+  protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+    super.onSizeChanged(w, h, oldw, oldh);
+    int contentH = getLayout().getHeight();
+    //TODO: known issue,set movement to null will make cursor disappear.
+    if(h < contentH){
+      setMovementMethod(null);
+    }else{
+      setMovementMethod(getDefaultMovementMethod());
+    }
+  }
+  
+  @Override
+  public boolean postDelayed(Runnable action, long delayMillis) {
+    return super.postDelayed(WXThread.secure(action), delayMillis);
   }
 }

@@ -206,7 +206,7 @@ package com.taobao.weex.dom;
 
 import android.support.v4.util.ArrayMap;
 
-import com.taobao.weex.common.WXDomPropConstant;
+import com.taobao.weex.common.Constants;
 
 import java.util.Map;
 
@@ -218,27 +218,18 @@ public class WXScrollerDomObject extends WXDomObject {
 
         boolean isVertical = true;
         if (parent != null) {
-            String direction = (String) parent.attr.get(WXDomPropConstant.WX_ATTR_SCROLL_DIRECTION);
+            String direction = (String) parent.getAttrs().get(Constants.Name.SCROLL_DIRECTION);
             if (direction != null && direction.equals("horizontal")) {
                 isVertical = false;
             }
         }
 
-        if (isVertical) {
-            if (style != null) {
-                if (style.get(WXDomPropConstant.WX_HEIGHT) == null &&
-                        style.get(WXDomPropConstant.WX_FLEX) == null) {
-                    map.put(WXDomPropConstant.WX_FLEX, "1");
-                }
-            }
-        } else {
-            if (style != null) {
-                if (style.get(WXDomPropConstant.WX_WIDTH) == null &&
-                        style.get(WXDomPropConstant.WX_FLEX) == null) {
-                    map.put(WXDomPropConstant.WX_FLEX, "1");
-                }
-            }
+        String prop = isVertical?Constants.Name.HEIGHT:Constants.Name.WIDTH;
+        if (getStyles().get(prop) == null &&
+            getStyles().get(Constants.Name.FLEX) == null) {
+            map.put(Constants.Name.FLEX, "1");
         }
+
         return map;
     }
 }

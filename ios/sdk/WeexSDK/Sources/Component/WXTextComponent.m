@@ -29,6 +29,7 @@
         
         self.opaque = NO;
         self.contentMode = UIViewContentModeRedraw;
+        self.textStorage = [NSTextStorage new];
     }
     return self;
 }
@@ -64,6 +65,14 @@
     UIGraphicsEndImageContext();
     
     return image;
+}
+
+- (void)setTextStorage:(NSTextStorage *)textStorage
+{
+    if (_textStorage != textStorage) {
+        _textStorage = textStorage;
+        [self setNeedsDisplay];
+    }
 }
 
 - (NSString *)description
@@ -330,6 +339,7 @@ do {\
 
 - (void)_frameDidCalculated:(BOOL)isChanged
 {
+    [super _frameDidCalculated:isChanged];
     [self syncTextStorageForView];
 }
 

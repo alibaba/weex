@@ -2,10 +2,30 @@
  * @fileOverview
  * Weex instance constructor & definition
  */
-import { extend } from '../util'
-import * as ctrl from './ctrl'
-import AppInstance from './instance'
 
-extend(AppInstance.prototype, ctrl)
+import { requireModule } from './register'
+import { updateActions, callTasks } from './ctrl'
+import App from './instance'
 
-export default AppInstance
+/**
+ * @deprecated
+ */
+App.prototype.requireModule = function (name) {
+  return requireModule(this, name)
+}
+
+/**
+ * @deprecated
+ */
+App.prototype.updateActions = function () {
+  updateActions(this)
+}
+
+/**
+ * @deprecated
+ */
+App.prototype.callTasks = function (tasks) {
+  callTasks(this, tasks)
+}
+
+export default App

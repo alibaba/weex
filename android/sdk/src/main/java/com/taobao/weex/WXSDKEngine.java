@@ -134,11 +134,9 @@ import com.taobao.weex.common.WXException;
 import com.taobao.weex.common.WXInstanceWrap;
 import com.taobao.weex.common.WXModule;
 import com.taobao.weex.dom.*;
+import com.taobao.weex.ui.*;
 import com.taobao.weex.ui.module.WXModalUIModule;
 import com.taobao.weex.http.WXStreamModule;
-import com.taobao.weex.ui.IFComponentHolder;
-import com.taobao.weex.ui.SimpleComponentHolder;
-import com.taobao.weex.ui.WXComponentRegistry;
 import com.taobao.weex.ui.animation.WXAnimationModule;
 import com.taobao.weex.ui.component.*;
 import com.taobao.weex.ui.component.list.HorizontalListComponent;
@@ -148,6 +146,7 @@ import com.taobao.weex.ui.module.WXTimerModule;
 import com.taobao.weex.ui.module.WXWebViewModule;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXSoInstallMgrSdk;
+import com.taobao.weex.utils.batch.BatchOperationHelper;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -220,7 +219,7 @@ public class WXSDKEngine {
     WXEnvironment.sApplication = application;
     WXEnvironment.JsFrameworkInit = false;
 
-    WXBridgeManager.getInstance().getJSHandler().post(new Runnable() {
+    WXBridgeManager.getInstance().post(new Runnable() {
       @Override
       public void run() {
         long start = System.currentTimeMillis();
@@ -240,7 +239,7 @@ public class WXSDKEngine {
         if (!isSoInitSuccess) {
           return;
         }
-        sm.initScriptsFramework(config.getFramework());
+        sm.initScriptsFramework(config!=null?config.getFramework():null);
 
         WXEnvironment.sSDKInitExecuteTime = System.currentTimeMillis() - start;
         WXLogUtils.renderPerformanceLog("SDKInitExecuteTime", WXEnvironment.sSDKInitExecuteTime);
@@ -261,18 +260,17 @@ public class WXSDKEngine {
   }
 
   private static void register() {
+    BatchOperationHelper batchHelper = new BatchOperationHelper(WXBridgeManager.getInstance());
     try {
       registerComponent(
-        WXText.class,
         new SimpleComponentHolder(
           WXText.class,
-          new WXText.Ceator()
+          new WXText.Creator()
         ),
         false,
         WXBasicComponentType.TEXT
       );
       registerComponent(
-        WXDiv.class,
         new SimpleComponentHolder(
           WXDiv.class,
           new WXDiv.Ceator()
@@ -284,7 +282,6 @@ public class WXSDKEngine {
         WXBasicComponentType.FOOTER
       );
       registerComponent(
-        WXImage.class,
         new SimpleComponentHolder(
           WXImage.class,
           new WXImage.Ceator()
@@ -293,15 +290,15 @@ public class WXSDKEngine {
         WXBasicComponentType.IMAGE,
         WXBasicComponentType.IMG
       );
-      registerComponent( WXScroller.class,
+      registerComponent(
         new SimpleComponentHolder(
           WXScroller.class,
-          new WXScroller.Ceator()
+          new WXScroller.Creator()
         ),
         false,
         WXBasicComponentType.SCROLLER
       );
-      registerComponent( WXSlider.class,
+      registerComponent(
         new SimpleComponentHolder(
           WXSlider.class,
           new WXSlider.Creator()
@@ -309,7 +306,7 @@ public class WXSDKEngine {
         true,
         WXBasicComponentType.SLIDER
       );
-      registerComponent( WXSliderNeighbor.class,
+      registerComponent(
         new SimpleComponentHolder(
                 WXSliderNeighbor.class,
           new WXSliderNeighbor.Creator()
@@ -342,6 +339,7 @@ public class WXSDKEngine {
       registerModule("timer", WXTimerModule.class, true);
       registerModule("storage", WXStorageModule.class, true);
       registerModule("clipboard", WXClipboardModule.class, true);
+      registerModule("globalEvent",WXGlobalEventModule.class);
 
       registerDomObject(WXBasicComponentType.INDICATOR, WXIndicator.IndicatorDomNode.class);
       registerDomObject(WXBasicComponentType.TEXT, WXTextDomObject.class);
@@ -355,6 +353,7 @@ public class WXSDKEngine {
     } catch (WXException e) {
       WXLogUtils.e("[WXSDKEngine] register:", e);
     }
+    batchHelper.flush();
   }
 
   /**
@@ -368,6 +367,10 @@ public class WXSDKEngine {
    */
   public static boolean registerComponent(String type, Class<? extends WXComponent> clazz, boolean appendTree) throws WXException {
     return registerComponent(clazz, appendTree,type);
+  }
+
+  public static boolean registerComponent(String type, IExternalComponentGetter componentGetter, boolean appendTree) throws WXException {
+    return registerComponent(new ExternalLoaderComponentHolder(type,componentGetter), appendTree,type);
   }
 
   /**
@@ -384,10 +387,11 @@ public class WXSDKEngine {
       return false;
     }
     SimpleComponentHolder holder = new SimpleComponentHolder(clazz);
-    return registerComponent(clazz,holder,appendTree,names);
+    return registerComponent(holder,appendTree,names);
   }
 
-  static boolean registerComponent(Class<? extends WXComponent> clazz, IFComponentHolder holder, boolean appendTree, String ... names) throws WXException {
+
+  static boolean registerComponent(IFComponentHolder holder, boolean appendTree, String ... names) throws WXException {
     boolean result =  true;
     Map<String, String> componentInfo = new HashMap<>();
     if (appendTree) {

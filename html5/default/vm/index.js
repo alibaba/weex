@@ -11,13 +11,16 @@ import {
   build
 } from './compiler'
 import {
+  set,
+  del
+} from '../core/observer'
+import {
+  watch
+} from './directive'
+import {
   initEvents,
   mixinEvents
 } from './events'
-import {
-  registerModules,
-  registerMethods
-} from '../app/register'
 
 /**
  * ViewModel constructor
@@ -37,13 +40,16 @@ export default function Vm (
   mergedData,
   externalEvents
 ) {
+  parentVm = parentVm || {}
   this._parent = parentVm._realParent ? parentVm._realParent : parentVm
-  this._app = parentVm._app
+  this._app = parentVm._app || {}
   parentVm._childrenVms && parentVm._childrenVms.push(this)
 
-  if (!options) {
-    options = this._app.customComponentMap[type] || {}
+  if (!options && this._app.customComponentMap) {
+    options = this._app.customComponentMap[type]
   }
+  options = options || {}
+
   const data = options.data || {}
 
   this._options = options
@@ -81,6 +87,10 @@ export default function Vm (
     options.methods.ready.call(this)
   }
 
+  if (!this._app.doc) {
+    return
+  }
+
   // if no parentElement then specify the documentElement
   this._parentEl = parentEl || this._app.doc.documentElement
   build(this)
@@ -88,7 +98,16 @@ export default function Vm (
 
 mixinEvents(Vm.prototype)
 
-extend(Vm, {
-  registerModules,
-  registerMethods
-})
+/**
+ * Watch an function and bind all the data appeared in it. When the related
+ * data changes, the callback will be called with new value as 1st param.
+ *
+ * @param {Function} fn
+ * @param {Function} callback
+ */
+Vm.prototype.$watch = function (fn, callback) {
+  watch(this, fn, callback)
+}
+
+Vm.set = set
+Vm.delete = del

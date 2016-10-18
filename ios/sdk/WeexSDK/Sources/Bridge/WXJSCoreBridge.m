@@ -10,6 +10,7 @@
 #import "WXDefine.h"
 #import "WXAssert.h"
 #import "WXLog.h"
+#import "WXDefine.h"
 #import "WXUtility.h"
 #import "WXSDKEngine.h"
 #import "WXSDKError.h"
@@ -18,6 +19,12 @@
 #import "WXHandlerFactory.h"
 #import <sys/utsname.h>
 #import <JavaScriptCore/JavaScriptCore.h>
+#import "WXPolyfillSet.h"
+
+#import <dlfcn.h>
+
+#import <mach/mach.h>
+
 
 @interface WXJSCoreBridge ()
 
@@ -33,19 +40,22 @@
     
     if(self){
         _jsContext = [[JSContext alloc] init];
+        if (WX_SYS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+            _jsContext.name = @"Weex Context";
+        }
         
         __weak typeof(self) weakSelf = self;
         
         NSDictionary *data = [WXUtility getEnvironment];
         _jsContext[@"WXEnvironment"] = data;
         
-        _jsContext[@"setTimeout"] = ^(JSValue* function, JSValue* timeout) {
+        _jsContext[@"setTimeout"] = ^(JSValue *function, JSValue *timeout) {
             // this setTimeout is used by internal logic in JS framework, normal setTimeout called by users will call WXTimerModule's method;
             [weakSelf performSelector: @selector(triggerTimeout:) withObject:^() {
                 [function callWithArguments:@[]];
             } afterDelay:[timeout toDouble] / 1000];
         };
-    
+        
         _jsContext[@"nativeLog"] = ^() {
             static NSDictionary *levelMap;
             static dispatch_once_t onceToken;
@@ -53,13 +63,11 @@
                 levelMap = @{
                              @"__ERROR": @(WXLogFlagError),
                              @"__WARN": @(WXLogFlagWarning),
-                             @"__LOG": @(WXLogFlagInfo),
                              @"__INFO": @(WXLogFlagInfo),
                              @"__DEBUG": @(WXLogFlagDebug),
                              @"__LOG": @(WXLogFlagLog)
                              };
             });
-            
             NSMutableString *string = [NSMutableString string];
             [string appendString:@"jsLog: "];
             NSArray *args = [JSContext currentArguments];
@@ -71,7 +79,7 @@
                         if ([flag isEqualToNumber:[NSNumber numberWithInteger:WXLogFlagWarning]]) {
                             id<WXAppMonitorProtocol> appMonitorHandler = [WXHandlerFactory handlerForProtocol:@protocol(WXAppMonitorProtocol)];
                             if ([appMonitorHandler respondsToSelector:@selector(commitAppMonitorAlarm:monitorPoint:success:errorCode:errorMsg:arg:)]) {
-                                [appMonitorHandler commitAppMonitorAlarm:[WXSDKEngine topInstance].pageName monitorPoint:@"jswarning" success:FALSE errorCode:@"99999" errorMsg:string arg:@"weex"];
+                                [appMonitorHandler commitAppMonitorAlarm:@"weex" monitorPoint:@"jswarning" success:FALSE errorCode:@"99999" errorMsg:string arg:[WXSDKEngine topInstance].pageName];
                             }
                         }
                         WX_LOG([flag unsignedIntegerValue], @"%@", string);
@@ -90,6 +98,11 @@
             
             WX_MONITOR_FAIL(WXMTJSBridge, WX_ERR_JS_EXECUTE, message);
         };
+        
+        if (WX_SYS_VERSION_LESS_THAN(@"8.0")) {
+            // solve iOS7 memory problem
+            _jsContext[@"nativeSet"] = [WXPolyfillSet class];
+        }
     }
     return self;
 }
@@ -99,13 +112,17 @@
 - (void)executeJSFramework:(NSString *)frameworkScript
 {
     WXAssertParam(frameworkScript);
-    [_jsContext evaluateScript:frameworkScript];
+    if (WX_SYS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+        [_jsContext evaluateScript:frameworkScript withSourceURL:[NSURL URLWithString:@"main.js"]];
+    }else{
+        [_jsContext evaluateScript:frameworkScript];
+    }
 }
 
-- (void)callJSMethod:(NSString *)method args:(NSArray *)args
+- (JSValue *)callJSMethod:(NSString *)method args:(NSArray *)args
 {
     WXLogDebug(@"Calling JS... method:%@, args:%@", method, args);
-    [[_jsContext globalObject] invokeMethod:method withArguments:args];
+    return [[_jsContext globalObject] invokeMethod:method withArguments:args];
 }
 
 - (void)registerCallNative:(WXJSCallNative)callNative
@@ -122,6 +139,24 @@
     _jsContext[@"callNative"] = callNativeBlock;
 }
 
+- (void)registerCallAddElement:(WXJSCallAddElement)callAddElement
+{
+    id callAddElementBlock = ^(JSValue *instanceId, JSValue *ref, JSValue *element, JSValue *index, JSValue *ifCallback) {
+        
+        // Temporary here , in order to improve performance, will be refactored next version.
+        NSString *instanceIdString = [instanceId toString];
+        NSDictionary *componentData = [element toDictionary];
+        NSString *parentRef = [ref toString];
+        NSInteger insertIndex = [[index toNumber] integerValue];
+        
+         WXLogDebug(@"callAddElement...%@, %@, %@, %ld", instanceIdString, parentRef, componentData, insertIndex);
+        
+        return callAddElement(instanceIdString, parentRef, componentData, insertIndex);
+    };
+
+    _jsContext[@"callAddElement"] = callAddElementBlock;
+}
+
 - (JSValue*)exception
 {
     return _jsContext.exception;
@@ -131,6 +166,21 @@
 {
     NSDictionary *data = [WXUtility getEnvironment];
     _jsContext[@"WXEnvironment"] = data;
+}
+
+typedef void (*WXJSCGarbageCollect)(JSContextRef);
+
+- (void)garbageCollect
+{
+    char str[80];
+    strcpy(str, "JSSynchron");
+    strcat(str, "ousGarbageColl");
+    strcat(str, "ectForDebugging");
+    WXJSCGarbageCollect garbageCollect = dlsym(RTLD_DEFAULT, str);
+    
+    if (garbageCollect != NULL) {
+        garbageCollect(_jsContext.JSGlobalContextRef);
+    }
 }
 
 #pragma mark - Private

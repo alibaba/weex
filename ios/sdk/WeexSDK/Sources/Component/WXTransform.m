@@ -13,15 +13,29 @@
 @interface WXTransform()
 
 @property (nonatomic, weak) UIView *view;
+@property (nonatomic, assign) float rotateAngle;
+@property (nonatomic, assign) BOOL isTransformRotate;
 
 @end
 
 @implementation WXTransform
 
+- (instancetype)init
+{
+    if (self = [super init]) {
+        _isTransformRotate = YES;
+        _rotateAngle = 0.0;
+    }
+    
+    return self;
+}
+
 - (CATransform3D)getTransform:(NSString *)cssValue
 {
+    //CATransform3D transform3D = _view.layer.transform;
+    //_transform = _view ? CGAffineTransformMake(transform3D.m11, transform3D.m12, transform3D.m21, transform3D.m22, transform3D.m41, transform3D.m42) : CGAffineTransformIdentity;
+    
     _transform = CGAffineTransformIdentity;
-
     if (!cssValue || cssValue.length == 0 || [cssValue isEqualToString:@"none"]) {
         return CATransform3DMakeAffineTransform(_transform);
     }
@@ -61,6 +75,10 @@
 - (CATransform3D)getTransform:(NSString *)cssValue withView:(UIView *)view withOrigin:(NSString *)origin
 {
     if (origin && origin.length > 0 && ![origin isEqualToString:@"none"]) {
+        /**
+          * Waiting to fix the issue that transform-origin behaves in rotation 
+          * http://ronnqvi.st/translate-rotate-translate/
+         **/
         CGPoint originPoint = [self getTransformOrigin:origin withView:view];
         if (originPoint.x != 0 || originPoint.y != 0) {
             cssValue = [NSString stringWithFormat:@"translate(%f,%f) %@ translate(%f,%f)", originPoint.x, originPoint.y, cssValue, -originPoint.x, -originPoint.y];
@@ -68,6 +86,12 @@
     }
     
     return [self getTransform:cssValue withView:view];
+}
+
+- (CATransform3D)getTransform:(NSString *)cssValue withView:(UIView *)view withOrigin:(NSString *)origin isTransformRotate:(BOOL)isTransformRotate
+{
+    _isTransformRotate = isTransformRotate;
+    return [self getTransform:cssValue withView:view withOrigin:origin];
 }
 
 - (CGPoint)getTransformOrigin:(NSString *)cssValue withView:(UIView *)view
@@ -163,7 +187,18 @@
 
 - (void)doRotate:(NSArray *)value
 {
-    _transform = CGAffineTransformRotate(_transform, [self getAngle:value[0]]);
+    float rotateAngle = [self getAngle:value[0]];
+    
+    if (_isTransformRotate || rotateAngle <= M_PI+0.0001) {
+        _transform = CGAffineTransformRotate(_transform, rotateAngle);
+    }
+
+    _rotateAngle += rotateAngle;
+}
+
+- (float)getRotateAngle
+{
+    return _rotateAngle;
 }
 
 - (void)doScale:(NSArray *)value

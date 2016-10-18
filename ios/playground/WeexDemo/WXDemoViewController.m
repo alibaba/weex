@@ -162,7 +162,7 @@
 
 - (void)setupRightBarItem
 {
-    if ([WXDebugTool isDebug]){
+    if ([self.url.scheme isEqualToString:@"http"]) {
         [self loadRefreshCtl];
     }
 }

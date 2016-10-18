@@ -193,6 +193,9 @@ export function removeTarget (vm, target, preserveBlock = false) {
   else {
     removeElement(target)
   }
+  if (target._vm) {
+    target._vm.$emit('hook:destroyed')
+  }
 }
 
 /**
@@ -235,4 +238,3 @@ function removeBlock (fragBlock, preserveBlock = false) {
     removeElement(fragBlock.end)
   }
 }
-

@@ -204,6 +204,7 @@
  */
 package com.taobao.weex.dom;
 
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.taobao.weex.WXEnvironment;
@@ -214,7 +215,7 @@ import com.taobao.weex.utils.WXLogUtils;
  */
 public class WXDomObjectFactory {
 
-  public static WXDomObject newInstance(String type) {
+  public static @Nullable WXDomObject newInstance(String type) {
     if (TextUtils.isEmpty(type)) {
       return null;
     }

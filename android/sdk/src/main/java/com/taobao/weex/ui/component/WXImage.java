@@ -205,6 +205,8 @@
 package com.taobao.weex.ui.component;
 
 import android.content.Context;
+import android.os.Build;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -213,13 +215,12 @@ import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
 import com.taobao.weex.common.Component;
-import com.taobao.weex.common.WXDomPropConstant;
+import com.taobao.weex.common.Constants;
 import com.taobao.weex.common.WXImageSharpen;
 import com.taobao.weex.common.WXImageStrategy;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.ComponentCreator;
 import com.taobao.weex.ui.view.WXImageView;
-import com.taobao.weex.utils.WXResourceUtils;
 import com.taobao.weex.utils.WXUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -250,76 +251,50 @@ public class WXImage extends WXComponent<ImageView> {
     }
 
     @Override
-    protected WXImageView initComponentHostView(Context context) {
-        WXImageView view = new WXImageView(mContext, mDomObj);
+    protected ImageView initComponentHostView(@NonNull Context context) {
+        WXImageView view = new WXImageView(context);
         view.setScaleType(ScaleType.FIT_XY);
-        return view;
-    }
-
-    @Override
-    public void setBackgroundColor(String color) {
-        if (!TextUtils.isEmpty(color)) {
-            int colorInt = WXResourceUtils.getColor(color);
-            if (colorInt != Integer.MIN_VALUE) {
-                mHost.setBackgroundColor(colorInt);
-            }
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN) {
+            view.setCropToPadding(true);
         }
-    }
-
-
-    /**
-     * Image is not support border.
-     */
-    @Override
-    public void setBorderRadius(String key, float borderRadius) {
-    }
-
-    /**
-     * Image is not support border.
-     */
-    @Override
-    public void setBorderWidth(String key, float borderWidth) {
-    }
-
-    /**
-     * Image is not support border.
-     */
-    @Override
-    public void setBorderStyle(String borderStyle) {
-    }
-
-    /**
-     * Image is not support border.
-     */
-    @Override
-    public void setBorderColor(String key, String borderColor) {
+        return view;
     }
 
     @Override
     protected boolean setProperty(String key, Object param) {
         switch (key) {
-            case WXDomPropConstant.WX_RESIZE_MODE:
+            case Constants.Name.RESIZE_MODE:
                 String resize_mode = WXUtils.getString(param,null);
                 if (resize_mode != null)
                     setResizeMode(resize_mode);
                 return true;
-            case WXDomPropConstant.WX_RESIZE:
+            case Constants.Name.RESIZE:
                 String resize = WXUtils.getString(param,null);
                 if (resize != null)
                     setResize(resize);
                 return true;
-            case WXDomPropConstant.WX_ATTR_SRC:
+            case Constants.Name.SRC:
                 String src = WXUtils.getString(param,null);
                 if (src != null)
                     setSrc(src);
+                return true;
+            case Constants.Name.IMAGE_QUALITY:
                 return true;
         }
         return super.setProperty(key, param);
     }
 
-    @WXComponentProp(name = WXDomPropConstant.WX_RESIZE_MODE)
+    @Override
+    public void refreshData(WXComponent component) {
+        super.refreshData(component);
+        if(component instanceof WXImage) {
+            setSrc(component.getDomObject().getAttrs().getImageSrc());
+        }
+    }
+
+    @WXComponentProp(name = Constants.Name.RESIZE_MODE)
     public void setResizeMode(String resizeMode) {
-        ((ImageView) getHostView()).setScaleType(getResizeMode(resizeMode));
+        (getHostView()).setScaleType(getResizeMode(resizeMode));
     }
 
     private ScaleType getResizeMode(String resizeMode) {
@@ -344,18 +319,18 @@ public class WXImage extends WXComponent<ImageView> {
         return scaleType;
     }
 
-    @WXComponentProp(name = WXDomPropConstant.WX_RESIZE)
+    @WXComponentProp(name = Constants.Name.RESIZE)
     public void setResize(String resize) {
-        ((ImageView) getHostView()).setScaleType(getResizeMode(resize));
+        (getHostView()).setScaleType(getResizeMode(resize));
     }
 
-    @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SRC)
+    @WXComponentProp(name = Constants.Name.SRC)
     public void setSrc(String src) {
 
         WXImageStrategy imageStrategy = new WXImageStrategy();
         imageStrategy.isClipping = true;
 
-        WXImageSharpen imageSharpen = mDomObj.attr.getImageSharpen();
+        WXImageSharpen imageSharpen = getDomObject().getAttrs().getImageSharpen();
         imageStrategy.isSharpen = imageSharpen == WXImageSharpen.SHARPEN;
 
         imageStrategy.setImageListener(new WXImageStrategy.ImageListener() {
@@ -364,23 +339,23 @@ public class WXImage extends WXComponent<ImageView> {
                 if(!result && imageView!=null){
                     imageView.setImageDrawable(null);
                 }
-                if(getDomObject()!=null && getDomObject().containsEvent(WXEventType.ONLOAD)){
+                if(getDomObject()!=null && getDomObject().containsEvent(Constants.Event.ONLOAD)){
                     Map<String,Object> params=new HashMap<String, Object>();
                     params.put("success",result);
-                    WXSDKManager.getInstance().fireEvent(mInstanceId,getRef(),WXEventType.ONLOAD,params);
+                    getInstance().fireEvent(getDomObject().getRef(), Constants.Event.ONLOAD,params);
                 }
             }
         });
 
-        if(mDomObj.attr!=null && mDomObj.attr.containsKey(WXDomPropConstant.WX_ATTR_PLACE_HOLDER)){
-            String placeHolder= (String) mDomObj.attr.get(WXDomPropConstant.WX_ATTR_PLACE_HOLDER);
+        if( getDomObject().getAttrs().containsKey(Constants.Name.PLACE_HOLDER)){
+            String placeHolder= (String) getDomObject().getAttrs().get(Constants.Name.PLACE_HOLDER);
             imageStrategy.placeHolder=placeHolder;
         }
 
-        IWXImgLoaderAdapter imgLoaderAdapter = mInstance.getImgLoaderAdapter();
+        IWXImgLoaderAdapter imgLoaderAdapter = getInstance().getImgLoaderAdapter();
         if (imgLoaderAdapter != null) {
             imgLoaderAdapter.setImage(src, getHostView(),
-                    mDomObj.attr.getImageQuality(), imageStrategy);
+                    getDomObject().getAttrs().getImageQuality(), imageStrategy);
         }
     }
 }

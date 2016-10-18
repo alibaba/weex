@@ -206,6 +206,13 @@ extern _Nonnull SEL WXSwizzledSelectorForSelector(_Nonnull SEL selector);
 + (UIFont *_Nonnull)fontWithSize:(CGFloat)size textWeight:(WXTextWeight)textWeight textStyle:(WXTextStyle)textStyle fontFamily:(NSString *_Nullable)fontFamily;
 
 /**
+ * @abstract download remote font from specified url
+ * @param url for remote font
+ *
+ */
++ (void)getIconfont:(NSURL * _Nonnull)fontURL completion:( void(^ _Nullable )(NSURL * _Nonnull url, NSError * _Nullable error)) completionBlock;
+
+/**
  * @abstract Returns the scale of the main screen.
  *
  */
@@ -262,6 +269,12 @@ CGRect WXPixelFrameResize(CGRect value);
 CGPoint WXPixelPointResize(CGPoint value);
 
 /**
+ *  @abstract check whether the file is exist
+ *
+ */
+
++ (BOOL)isFileExist:(NSString * _Nonnull)filePath;
+/**
  *  @abstract Returns the document directory path.
  *
  */
@@ -306,4 +319,11 @@ CGPoint WXPixelPointResize(CGPoint value);
  *
  */
 + (NSString *_Nullable)md5:(NSString *_Nullable)string;
+
+/**
+ *  @abstract Returns Creates a Universally Unique Identifier (UUID) string.
+ *
+ */
++ (NSString *_Nullable)uuidString;
+
 @end

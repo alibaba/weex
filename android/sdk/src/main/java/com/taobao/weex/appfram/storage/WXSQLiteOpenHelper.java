@@ -210,12 +210,19 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.taobao.weex.utils.WXLogUtils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class WXSQLiteOpenHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "WXStorage";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
+    static final String TAG_STORAGE = "weex_storage";
 
-    private long mMaximumDatabaseSize = 5L * 1024L * 1024L;
+    private long mMaximumDatabaseSize = 5 * 10 * 1024 * 1024L;//50mb
+    static SimpleDateFormat sDateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+
 
     private static WXSQLiteOpenHelper sInstance;
 
@@ -226,12 +233,19 @@ public class WXSQLiteOpenHelper extends SQLiteOpenHelper {
     static final String TABLE_STORAGE = "default_wx_storage";
     static final String COLUMN_KEY = "key";
     static final String COLUMN_VALUE = "value";
+    static final String COLUMN_TIMESTAMP = "timestamp";
+    static final String COLUMN_PERSISTENT = "persistent";
+
 
     private static final String STATEMENT_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_STORAGE + " ("
             + COLUMN_KEY
             + " TEXT PRIMARY KEY,"
             + COLUMN_VALUE
-            + " TEXT NOT NULL"
+            + " TEXT NOT NULL,"
+            + COLUMN_TIMESTAMP
+            + " TEXT NOT NULL,"
+            + COLUMN_PERSISTENT
+            + " INTEGER DEFAULT 0"
             + ")";
 
 
@@ -242,7 +256,7 @@ public class WXSQLiteOpenHelper extends SQLiteOpenHelper {
 
     public static WXSQLiteOpenHelper getInstance(Context context) {
         if (context == null) {
-            WXLogUtils.e("can not get context instance...");
+            WXLogUtils.e(TAG_STORAGE,"can not get context instance...");
             return null;
         }
         if (sInstance == null) {
@@ -261,11 +275,63 @@ public class WXSQLiteOpenHelper extends SQLiteOpenHelper {
         db.execSQL(STATEMENT_CREATE_TABLE);
     }
 
+
+    /**
+     * version 1:
+     *
+     *   ----------------
+     *   | key | value |
+     *   ---------------
+     *
+     * version 2:
+     *
+     *  ----------------------------------------
+     *  | key | value | timestamp | persistent |
+     *  ----------------------------------------
+     **/
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion != newVersion) {
-            deleteDB();
-            onCreate(db);
+            if(newVersion == 2 && oldVersion == 1){
+                WXLogUtils.d(TAG_STORAGE,"storage is updating from version "+oldVersion+" to version "+newVersion);
+                boolean updateResult = true;
+                try {
+                    long start = System.currentTimeMillis();
+
+                    db.beginTransaction();
+                    // update table structure
+                    String SQL_ADD_COLUMN_TIMESTAMP = "ALTER TABLE "+TABLE_STORAGE+" ADD COLUMN "+COLUMN_TIMESTAMP+" TEXT;";
+                    WXLogUtils.d(TAG_STORAGE,"exec sql : "+ SQL_ADD_COLUMN_TIMESTAMP);
+                    db.execSQL(SQL_ADD_COLUMN_TIMESTAMP);
+
+                    String SQL_ADD_COLUMN_PERSISTENT = "ALTER TABLE "+TABLE_STORAGE+" ADD COLUMN "+COLUMN_PERSISTENT+" INTEGER;";
+                    WXLogUtils.d(TAG_STORAGE,"exec sql : "+ SQL_ADD_COLUMN_PERSISTENT);
+                    db.execSQL(SQL_ADD_COLUMN_PERSISTENT);
+
+                    // update timestamp & persistent
+                    String SQL_UPDATE_TABLE = "UPDATE "+TABLE_STORAGE+" SET "+ COLUMN_TIMESTAMP+" = '"+sDateFormatter.format(new Date())+"' , "+ COLUMN_PERSISTENT +" = 0";
+                    WXLogUtils.d(TAG_STORAGE,"exec sql : "+ SQL_UPDATE_TABLE);
+                    db.execSQL(SQL_UPDATE_TABLE);
+
+                    db.setTransactionSuccessful();
+                    long time = System.currentTimeMillis() - start;
+                    WXLogUtils.d(TAG_STORAGE,"storage updated success ("+time+"ms)");
+                }catch (Exception e){
+                    WXLogUtils.d(TAG_STORAGE,"storage updated failed from version "+oldVersion+" to version "+newVersion+","+e.getMessage());
+                    updateResult = false;
+                }finally {
+                    db.endTransaction();
+                }
+                //rollback
+                if(!updateResult){
+                    WXLogUtils.d(TAG_STORAGE,"storage is rollback,all data will be removed");
+                    deleteDB();
+                    onCreate(db);
+                }
+            }else{
+                deleteDB();
+                onCreate(db);
+            }
         }
     }
 

@@ -205,13 +205,19 @@
 package com.taobao.weex.ui.view.refresh.wrapper;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.OrientationHelper;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.taobao.weex.common.Constants;
+import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.view.refresh.core.WXRefreshView;
 import com.taobao.weex.ui.view.refresh.core.WXSwipeLayout;
+import com.taobao.weex.utils.WXResourceUtils;
+import com.taobao.weex.utils.WXUtils;
 
 /**
  * BounceView(SwipeLayout) contains Scroller/List and refresh/loading view
@@ -290,24 +296,54 @@ public abstract class BaseBounceView<T extends View> extends FrameLayout {
 
     /**
      *
-     * @param headerView should be {@link WXRefreshView}
+     * @param refresh should be {@link WXRefreshView}
      */
-    public void setHeaderView(View headerView) {
+    public void setHeaderView(WXComponent refresh) {
         setRefreshEnable(true);
-        if (swipeLayout != null)
-            if (swipeLayout.getHeaderView() != null)
-                swipeLayout.getHeaderView().setRefreshView(headerView);
+        if (swipeLayout != null) {
+            if (swipeLayout.getHeaderView() != null) {
+                swipeLayout.setRefreshHeight((int) refresh.getDomObject().getLayoutHeight());
+
+                String colorStr = (String) refresh.getDomObject().getStyles().get(Constants.Name.BACKGROUND_COLOR);
+                String bgColor = WXUtils.getString(colorStr, null);
+
+                if (bgColor != null) {
+                    if (!TextUtils.isEmpty(bgColor)) {
+                        int colorInt = WXResourceUtils.getColor(bgColor);
+                        if (!(colorInt == Color.TRANSPARENT)) {
+                            swipeLayout.setRefreshBgColor(colorInt);
+                        }
+                    }
+                }
+                swipeLayout.getHeaderView().setRefreshView(refresh.getHostView());
+            }
+        }
     }
 
     /**
      *
-     * @param footerView should be {@link WXRefreshView}
+     * @param loading should be {@link WXRefreshView}
      */
-    public void setFooterView(View footerView) {
+    public void setFooterView(WXComponent loading) {
         setLoadmoreEnable(true);
-        if (swipeLayout != null)
-            if (swipeLayout.getFooterView() != null)
-                swipeLayout.getFooterView().setRefreshView(footerView);
+        if (swipeLayout != null) {
+            if (swipeLayout.getFooterView() != null) {
+                swipeLayout.setLoadingHeight((int) loading.getDomObject().getLayoutHeight());
+
+                String colorStr = (String) loading.getDomObject().getStyles().get(Constants.Name.BACKGROUND_COLOR);
+                String bgColor = WXUtils.getString(colorStr, null);
+
+                if (bgColor != null) {
+                    if (!TextUtils.isEmpty(bgColor)) {
+                        int colorInt = WXResourceUtils.getColor(bgColor);
+                        if (!(colorInt == Color.TRANSPARENT)) {
+                            swipeLayout.setLoadingBgColor(colorInt);
+                        }
+                    }
+                }
+                swipeLayout.getFooterView().setRefreshView(loading.getHostView());
+            }
+        }
     }
 
     public void setRefreshEnable(boolean enable) {

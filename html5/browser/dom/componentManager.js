@@ -328,10 +328,6 @@ ComponentManager.prototype = {
       return console.error(`[h5-render] component of ref '${ref}' does not exist.`)
     }
     component.updateAttrs({ [key]: value })
-    // if (component.data.type === 'image' && key === 'src') {
-    //  component.fire
-    //  lazyload.startIfNeeded(component)
-    // }
   },
 
   setStyle (ref, key, value) {

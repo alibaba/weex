@@ -210,6 +210,7 @@ import android.text.TextUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.common.WXModule;
 import com.taobao.weex.utils.WXLogUtils;
 
@@ -217,10 +218,15 @@ import java.util.ArrayList;
 
 
 /**
+ * <p>
  * Module class for dom operation. Methods in this class will run in dom thread by default.
  * Actually, methods in this class are wrapper classes, they just wrap method call info, and hand
  * the wrapped info to the {@link WXDomHandler} for further process. This class is also singleton
  * in the {@link com.taobao.weex.WXSDKInstance}
+ * </p>
+ * <p>
+ *   This module is work different with other regular module, method is invoked directly, without reflection.
+ * </p>
  */
 public final class WXDomModule extends WXModule {
 
@@ -228,82 +234,86 @@ public final class WXDomModule extends WXModule {
   // method
   static final String CREATE_BODY = "createBody";
   static final String UPDATE_ATTRS = "updateAttrs";
-  static final String  UPDATE_STYLE = "updateStyle";
+  static final String UPDATE_STYLE = "updateStyle";
   static final String REMOVE_ELEMENT = "removeElement";
-  static final String  ADD_ELEMENT = "addElement";
+  static final String ADD_ELEMENT = "addElement";
   static final String MOVE_ELEMENT = "moveElement";
   static final String ADD_EVENT = "addEvent";
-  static final String  REMOVE_EVENT = "removeEvent";
-  static final String  CREATE_FINISH = "createFinish";
-  static final String  REFRESH_FINISH = "refreshFinish";
-  static final String  UPDATE_FINISH = "updateFinish";
-  static final String SCROLL_TO_ELEMENT  = "scrollToElement";
+  static final String REMOVE_EVENT = "removeEvent";
+  static final String CREATE_FINISH = "createFinish";
+  static final String REFRESH_FINISH = "refreshFinish";
+  static final String UPDATE_FINISH = "updateFinish";
+  static final String SCROLL_TO_ELEMENT = "scrollToElement";
   static final String ADD_RULE = "addRule";
 
-  // args
-  public static final String MODULE = "module";
   public static final String WXDOM = "dom";
-  public static final String METHOD = "method";
-  public static final String ARGS = "args";
+
+
+  /**
+   * Methods expose to js. Every method which will be called in js should add to this array.
+   */
+  public static final String[] METHODS = {CREATE_BODY, UPDATE_ATTRS, UPDATE_STYLE,
+      REMOVE_ELEMENT, ADD_ELEMENT, MOVE_ELEMENT, ADD_EVENT, REMOVE_EVENT, CREATE_FINISH,
+      REFRESH_FINISH, UPDATE_FINISH, SCROLL_TO_ELEMENT, ADD_RULE};
 
   public void callDomMethod(JSONObject task) {
-    if( task == null ) {
+    if (task == null) {
       return;
     }
 
-    String method = (String) task.get(METHOD);
-    JSONArray args = (JSONArray) task.get(ARGS);
+    String method = (String) task.get(WXBridgeManager.METHOD);
+    JSONArray args = (JSONArray) task.get(WXBridgeManager.ARGS);
 
-    if(method == null){
+    if (method == null) {
       return;
     }
 
     try {
       switch (method) {
         case CREATE_BODY:
-          if(args == null){
+          if (args == null) {
             return;
           }
           createBody((JSONObject) args.get(0));
           break;
         case UPDATE_ATTRS:
-          if(args == null){
+          if (args == null) {
             return;
           }
           updateAttrs((String) args.get(0), (JSONObject) args.get(1));
           break;
         case UPDATE_STYLE:
-          if(args == null){
+          if (args == null) {
             return;
           }
           updateStyle((String) args.get(0), (JSONObject) args.get(1));
           break;
         case REMOVE_ELEMENT:
-          if(args == null){
+          if (args == null) {
             return;
           }
           removeElement((String) args.get(0));
           break;
         case ADD_ELEMENT:
-          if(args == null){
+          if (args == null) {
             return;
           }
           addElement((String) args.get(0), (JSONObject) args.get(1), (Integer) args.get(2));
           break;
         case MOVE_ELEMENT:
-          if(args == null){
+          if (args == null) {
             return;
           }
           moveElement((String) args.get(0), (String) args.get(1), (Integer) args.get(2));
           break;
         case ADD_EVENT:
-          if(args == null){
+          if (args == null) {
             return;
           }
           addEvent((String) args.get(0), (String) args.get(1));
           break;
         case REMOVE_EVENT:
-          if(args == null){
+          if (args == null) {
             return;
           }
           removeEvent((String) args.get(0), (String) args.get(1));
@@ -318,18 +328,19 @@ public final class WXDomModule extends WXModule {
           updateFinish();
           break;
         case SCROLL_TO_ELEMENT:
-          if(args == null){
+          if (args == null) {
             return;
           }
           scrollToElement((String) args.get(0), (JSONObject) args.get(1));
           break;
         case ADD_RULE:
-          if (args == null)
+          if (args == null) {
             return;
+          }
           addRule((String) args.get(0), (JSONObject) args.get(1));
       }
 
-    }catch (IndexOutOfBoundsException e){
+    } catch (IndexOutOfBoundsException e) {
       // no enougn args
       e.printStackTrace();
       WXLogUtils.e("Dom module call miss arguments.");
@@ -358,8 +369,8 @@ public final class WXDomModule extends WXModule {
   }
 
   /**
-   * Update {@link WXDomObject#attr}
-   * @param ref {@link WXDomObject#ref}
+   * Update attributes
+   * @param ref
    * @param attr the expected attr
    */
   public void updateAttrs(String ref, JSONObject attr) {
@@ -378,8 +389,8 @@ public final class WXDomModule extends WXModule {
   }
 
   /**
-   * Update {@link WXDomObject#style}
-   * @param ref {@link WXDomObject#ref}
+   * Update DOM style.
+   * @param ref DOM reference
    * @param style the expected style
    */
   public void updateStyle(String ref, JSONObject style) {
@@ -399,7 +410,7 @@ public final class WXDomModule extends WXModule {
 
   /**
    * Remove a node for the node tree.
-   * @param ref {@link WXDomObject#ref} of the node to be removed.
+   * @param ref reference of the node to be removed.
    */
   public void removeElement(String ref) {
     if (TextUtils.isEmpty(ref)) {
@@ -417,7 +428,7 @@ public final class WXDomModule extends WXModule {
 
   /**
    * Add a {@link WXDomObject} to the specified parent as its given n-th child.
-   * @param parentRef {@link WXDomObject#ref} of the parent.
+   * @param parentRef reference of the parent.
    * @param element the node to be added
    * @param index the expected index that the new dom in its new parent
    */
@@ -440,8 +451,8 @@ public final class WXDomModule extends WXModule {
 
   /**
    * Move the DomElement to the specified parent as its given n-th child.
-   * @param ref {@link WXDomObject#ref} of the node to be moved.
-   * @param parentRef {@link WXDomObject#ref} of the parent.
+   * @param ref reference of the node to be moved.
+   * @param parentRef reference of the parent.
    * @param index the expected index that the dom in its new parent
    */
   public void moveElement(String ref, String parentRef, Integer index) {
@@ -463,7 +474,7 @@ public final class WXDomModule extends WXModule {
 
   /**
    * Add eventListener for the specified {@link WXDomObject}
-   * @param ref {@link WXDomObject#ref} of the node
+   * @param ref reference of the node
    * @param type the type of the event listener to be added.
    */
   public void addEvent(String ref, String type) {
@@ -483,7 +494,7 @@ public final class WXDomModule extends WXModule {
 
   /**
    * Remove eventListener for the specified {@link WXDomObject}
-   * @param ref {@link WXDomObject#ref} of the node
+   * @param ref reference of the node
    * @param type the type of the event listener to be removed.
    */
   public void removeEvent(String ref, String type) {
@@ -539,7 +550,7 @@ public final class WXDomModule extends WXModule {
 
   /**
    * Scroll the specified {@link WXDomObject} to given offset in given duration
-   * @param ref {@link WXDomObject#ref} of specified dom object
+   * @param ref reference of specified dom object
    * @param options scroll option, like {offset:0, duration:300}
    */
   public void scrollToElement(String ref, JSONObject options) {

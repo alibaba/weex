@@ -5,20 +5,16 @@ const { expect } = chai
 chai.use(sinonChai)
 
 global.callNative = function () {}
+global.callAddElement = function () {}
 
-import AppInstance from '../../../../default/app'
-// import * as bundle from '../../../../default/app/bundle'
-import * as ctrl from '../../../../default/app/ctrl'
+import App from '../../../../default/app'
 import { Element } from '../../../../vdom'
-import {
-  registerComponent,
-  requireComponent,
-  requireModule
-} from '../../../../default/app/register'
 
 describe('App Instance', () => {
   const oriCallNative = global.callNative
+  const oriCallAddElement = global.callAddElement
   const callNativeSpy = sinon.spy()
+  const callAddElementSpy = sinon.spy()
   let app
 
   before(() => {
@@ -29,35 +25,38 @@ describe('App Instance', () => {
         app.callbacks[callbackId] && app.callbacks[callbackId]()
       }
     }
+    global.callAddElement = (name, ref, json, index, callbackId) => {
+      callAddElementSpy(name, ref, json, index, callbackId)
+      /* istanbul ignore if */
+      if (callbackId !== '-1') {
+        app.callbacks[callbackId] && app.callbacks[callbackId]()
+      }
+    }
   })
 
   beforeEach(() => {
-    app = new AppInstance(Date.now() + '')
+    app = new App(Date.now() + '')
   })
 
   after(() => {
     global.callNative = oriCallNative
+    global.callAddElement = oriCallAddElement
   })
 
   describe('normal check', () => {
     it('is a class', () => {
-      expect(AppInstance).to.be.an('function')
+      expect(App).to.be.an('function')
     })
 
     it('being created', () => {
       expect(app).to.be.an('object')
-      expect(app).to.be.instanceof(AppInstance)
+      expect(app).to.be.instanceof(App)
     })
 
     it('with some apis', () => {
-      const proto = Object.getPrototypeOf(app)
-      // expect(proto).to.contain.all.keys(bundle)
-      expect(proto).to.contain.all.keys(ctrl)
-      expect(proto).to.contain.all.keys({
-        registerComponent,
-        requireComponent,
-        requireModule
-      })
+      expect(app.requireModule).a.function
+      expect(app.updateActions).a.function
+      expect(app.callTasks).a.function
     })
   })
 
@@ -130,4 +129,3 @@ describe('App Instance', () => {
     })
   })
 })
-

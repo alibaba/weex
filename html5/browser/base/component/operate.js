@@ -4,8 +4,7 @@ import { extend } from '../../utils'
 import { getFilters } from './valueFilter'
 
 export function create (nodeType) {
-  const node = document.createElement(nodeType || 'div')
-  return node
+  return document.createElement(nodeType || 'div')
 }
 
 export function createChildren () {

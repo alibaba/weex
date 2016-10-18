@@ -9,9 +9,3 @@
     #import <UIKit/UIKit.h>
     #import "WXDefine.h"
 #endif
-
-#ifdef DEBUG
-# define NSLog(...) NSLog(__VA_ARGS__)
-#else
-# define NSLog(...)
-#endif

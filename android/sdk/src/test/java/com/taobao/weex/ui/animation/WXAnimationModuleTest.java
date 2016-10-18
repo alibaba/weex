@@ -257,7 +257,6 @@ public class WXAnimationModuleTest {
     WXAnimationBean animation = new WXAnimationBean();
     module.startAnimation(module.mWXSDKInstance,comp,animation,null);
 
-    comp.mHost = new View(module.mWXSDKInstance.getContext());
     animation.styles = new WXAnimationBean.Style();
     module.startAnimation(module.mWXSDKInstance,comp,animation,null);
 

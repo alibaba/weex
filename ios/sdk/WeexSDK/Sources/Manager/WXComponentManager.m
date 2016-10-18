@@ -60,7 +60,6 @@ static NSThread *WXComponentThread;
         _fixedComponents = [NSMutableArray wx_mutableArrayUsingWeakReferences];
         _uiTaskQueue = [NSMutableArray array];
         _isValid = YES;
-        
         [self _startDisplayLink];
     }
     
@@ -202,12 +201,11 @@ static css_node_t * rootNodeGetChild(void *context, int i)
 
 - (void)_recursivelyAddComponent:(NSDictionary *)componentData toSupercomponent:(WXComponent *)supercomponent atIndex:(NSInteger)index appendingInTree:(BOOL)appendingInTree
 {
-     WXComponent *component = [self _buildComponentForData:componentData];
+    WXComponent *component = [self _buildComponentForData:componentData];
     
-    index = (index == -1 ? supercomponent.subcomponents.count : index);
+    index = (index == -1 ? supercomponent->_subcomponents.count : index);
     
     [supercomponent _insertSubcomponent:component atIndex:index];
-    
     // use _lazyCreateView to forbid component like cell's view creating
     if(supercomponent && component && supercomponent->_lazyCreateView) {
         component->_lazyCreateView = YES;
@@ -273,12 +271,20 @@ static css_node_t * rootNodeGetChild(void *context, int i)
 
 - (WXComponent *)componentForRef:(NSString *)ref
 {
-    NSDictionary *dict = [_indexDict copy];
-    return [dict objectForKey:ref];
+    WXAssertComponentThread();
+    
+    return [_indexDict objectForKey:ref];
+}
+
+- (WXComponent *)componentForRoot
+{
+    return _rootComponent;
 }
 
 - (NSUInteger)numberOfComponents
 {
+    WXAssertComponentThread();
+    
     return _indexDict.count;
 }
 
@@ -397,6 +403,7 @@ static css_node_t * rootNodeGetChild(void *context, int i)
         WX_MONITOR_SUCCESS(WXMTNativeRender);
         
         if(instance.renderFinish){
+            [instance creatFinish];
             instance.renderFinish(rootView);
         }
     }];
@@ -434,10 +441,11 @@ static css_node_t * rootNodeGetChild(void *context, int i)
 {
     WXAssertComponentThread();
     
-    for (NSString *key in _indexDict) {
-        WXComponent *component = [_indexDict objectForKey:key];;
+    NSEnumerator *enumerator = [_indexDict objectEnumerator];
+    WXComponent *component;
+    while ((component = [enumerator nextObject])) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [component _unloadView];
+            [component _unloadViewWithReusing:NO];
         });
     }
     
@@ -524,14 +532,16 @@ static css_node_t * rootNodeGetChild(void *context, int i)
 - (void)_layout
 {
     BOOL needsLayout = NO;
-    for (NSString *ref in _indexDict) {
-        WXComponent *component = [_indexDict objectForKey:ref];
-        
+
+    NSEnumerator *enumerator = [_indexDict objectEnumerator];
+    WXComponent *component;
+    while ((component = [enumerator nextObject])) {
         if ([component needsLayout]) {
             needsLayout = YES;
+            break;
         }
     }
-    
+
     if (!needsLayout) {
         return;
     }
