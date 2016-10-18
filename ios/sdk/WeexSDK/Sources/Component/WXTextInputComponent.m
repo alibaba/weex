@@ -115,6 +115,10 @@
             if (value) {
                 _inputView.text = value;
             }
+            if([_inputType isEqualToString:@"date"] || [_inputType isEqualToString:@"time"])
+            {
+                [_datePickerManager configDatePicker:attributes];
+            }
         }
         if (attributes[@"placeholder"]) {
             NSString *placeHolder = [WXConvert NSString:attributes[@"placeholder"]];
