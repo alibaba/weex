@@ -1,0 +1,22 @@
+<template>
+  <container class="container"   onclick="goWeexSite" >
+    <image class="thumb" src="http://gtms03.alicdn.com/tps/i3/TB11zL.LFXXXXaTXFXX20ySQVXX-512-512.png"></image>
+    <text class="title">Click me</text>
+  </container>
+</template>
+
+<style>
+  .container{flex-direction: row;}
+  .thumb {width: 200; height: 200;}
+  .title { text-align: center ; flex: 1; color: grey; font-size: 48; font-weight: bold; background-color: #eeeeee;}
+</style>
+
+<script>
+  module.exports = {
+    methods: {
+      goWeexSite: function () {
+        this.$openURL('//alibaba.github.io/weex/')
+      }
+    }
+  }
+</script>
