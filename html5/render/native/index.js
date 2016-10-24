@@ -22,3 +22,15 @@ for (const methodName in globalMethods) {
     return ret
   }
 }
+
+export default {
+  registerMethods: global.registerMethods,
+  registerModules: global.registerModules,
+  createInstance: global.createInstance,
+  destroyInstance: global.destroyInstance,
+  refreshInstance: global.refreshInstance,
+  runtime: {
+    init,
+    config
+  }
+}
