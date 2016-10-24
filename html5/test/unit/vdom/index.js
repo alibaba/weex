@@ -8,7 +8,6 @@ global.callNative = function () {}
 global.callAddElement = function () {}
 
 import {
-  instanceMap,
   Document,
   Element,
   Comment
@@ -33,11 +32,9 @@ describe('document constructor', () => {
     expect(doc).is.an.object
     expect(doc.id).eql('foo')
     expect(doc.URL).eql('http://path/to/url')
-    expect(instanceMap.foo).equal(doc)
     expect(doc.documentElement).is.an.object
     expect(doc.documentElement.role).equal('documentElement')
     doc.destroy()
-    expect(instanceMap.foo).is.undefined
   })
 })
 
