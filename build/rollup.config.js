@@ -14,6 +14,7 @@ var global = this, process = { env: {}};
 `
 
 export default {
+  moduleName: 'weex',
   entry: './html5/render/native/index.js',
   dest: './dist/native.js',
   banner,
