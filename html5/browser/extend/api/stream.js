@@ -70,12 +70,11 @@ function _xhr (config, callback, progressCallback) {
   xhr.open(config.method, config.url, true)
 
   // cors cookie support
-  if (config.xhrFields){
-    for (let name in config.xhrFields){
+  if (config.xhrFields) {
+    for (const name in config.xhrFields) {
       xhr[name] = config.xhrFields[name]
     }
   }
-
 
   const headers = config.headers || {}
   for (const k in headers) {
