@@ -499,8 +499,6 @@ public class WXSDKInstance implements IWXActivityStateListener {
       options.put(BUNDLE_URL, url);
     }
 
-    mWXPerformance.templateUrl = url;
-
     Uri uri=Uri.parse(url);
     if(uri!=null && TextUtils.equals(uri.getScheme(),"file")){
       render(pageName, WXFileUtils.loadAsset(assembleFilePath(uri), mContext),options,jsonInitData,width,height,flag);
