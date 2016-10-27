@@ -71,7 +71,7 @@ function _xhr (config, callback, progressCallback) {
 
   // cors cookie support
   if (config.withCrendentials === true) {
-    xhr.withCrendentials = true;
+    xhr.withCrendentials = true
   }
 
   const headers = config.headers || {}
