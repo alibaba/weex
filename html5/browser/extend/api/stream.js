@@ -70,10 +70,8 @@ function _xhr (config, callback, progressCallback) {
   xhr.open(config.method, config.url, true)
 
   // cors cookie support
-  if (config.xhrFields) {
-    for (const name in config.xhrFields) {
-      xhr[name] = config.xhrFields[name]
-    }
+  if (config.withCrendentials === true) {
+    xhr.withCrendentials = true;
   }
 
   const headers = config.headers || {}
@@ -184,7 +182,7 @@ const stream = {
    *   - headers {obj}
    *   - url {string}
    *   - mode {string} 'cors' | 'no-cors' | 'same-origin' | 'navigate'
-   *   - xhrFields {obj}
+   *   - withCrendentials {boolean}
    *   - body
    *   - type {string} 'json' | 'jsonp' | 'text'
    * @param  {string} callbackId
