@@ -3,9 +3,10 @@ import packages from './packer'
 // install the apis and components as packages.
 export default {
   init (Weex) {
-    if (!packages || !packages.length) {
+    const packagesList = packages && Object.keys(packages)
+    if (!packagesList || !packagesList.length) {
       return
     }
-    packages.forEach(pkg => Weex.install(pkg))
+    packagesList.forEach(pkgName => Weex.install(packages[pkgName]))
   }
 }
