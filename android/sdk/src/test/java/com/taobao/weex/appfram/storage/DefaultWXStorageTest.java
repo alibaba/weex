@@ -205,6 +205,7 @@
 package com.taobao.weex.appfram.storage;
 
 import com.taobao.weappplus_sdk.BuildConfig;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -218,8 +219,10 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import static org.powermock.api.mockito.PowerMockito.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyMapOf;
+import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 /**
  * Created by sospartan on 7/28/16.
@@ -238,14 +241,15 @@ public class DefaultWXStorageTest {
   public PowerMockRule rule = new PowerMockRule();
 
   @Before
-  public void setup(){
+  public void setup() throws Exception{
     supplier = Mockito.mock(WXSQLiteOpenHelper.class);
     listener = Mockito.mock(IWXStorageAdapter.OnResultReceivedListener.class);
     storage = new DefaultWXStorage(RuntimeEnvironment.application);
 
     mockStatic(WXSQLiteOpenHelper.class);
-
-    PowerMockito.when(WXSQLiteOpenHelper.getInstance(RuntimeEnvironment.application)).thenReturn(supplier);
+    PowerMockito.whenNew(WXSQLiteOpenHelper.class)
+            .withArguments(RuntimeEnvironment.application)
+            .thenReturn(supplier);
   }
 
 

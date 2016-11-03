@@ -233,7 +233,7 @@ public class DefaultWXStorage implements IWXStorageAdapter {
     }
 
     public DefaultWXStorage(Context context) {
-        this.mDatabaseSupplier = WXSQLiteOpenHelper.getInstance(context);
+        this.mDatabaseSupplier = new WXSQLiteOpenHelper(context);
     }
 
 
