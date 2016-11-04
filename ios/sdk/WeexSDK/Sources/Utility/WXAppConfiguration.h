@@ -34,4 +34,12 @@
 + (NSString *)externalUserAgent;
 + (void)setExternalUserAgent:(NSString *)userAgent;
 
+/**
+ * @abstract JSFrameworkVersion
+ */
++ (NSString *)JSFrameworkVersion;
++ (void)setJSFrameworkVersion:(NSString *)JSFrameworkVersion;
+
+
+
 @end

@@ -70,7 +70,7 @@ module.exports = {
     //getAllKeys
     storage.getAllKeys(function(e){
       console.log('getAllKeys:'+JSON.stringify(e));
-      me.getAllKeysResult = '' + e.data;
+      me.getAllKeysResult = JSON.stringify(e.data);
       //me.getAllKeysResult +=' '+ typeof e.data
     });
     //removeItem

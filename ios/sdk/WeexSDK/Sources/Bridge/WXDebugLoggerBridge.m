@@ -74,7 +74,8 @@
 {
     if (!_isConnect) return;
     
-    for (NSString *msg in _msgAry) {
+    NSArray *templateContainers = [NSArray arrayWithArray:_msgAry];
+    for (NSString *msg in templateContainers) {
         [_webSocket send:msg];
     }
     [_msgAry removeAllObjects];
@@ -112,7 +113,7 @@
     [self callJSMethod:@"evalFramework" args:@[frameworkScript]];
 }
 
-- (void)callJSMethod:(NSString *)method args:(NSArray *)args
+- (JSValue *)callJSMethod:(NSString *)method args:(NSArray *)args
 {
     if (![method isEqualToString:@"__logger"]) {
         // prevent recursion
@@ -125,6 +126,8 @@
     
     [_msgAry addObject:[WXUtility JSONString:dict]];
     [self _executionMsgAry];
+    
+    return nil;
 }
 
 - (void)registerCallNative:(WXJSCallNative)callNative
@@ -140,6 +143,11 @@
 - (void)resetEnvironment
 {
     [self _initEnvironment];
+}
+
+- (void)garbageCollect
+{
+    
 }
 
 - (void)executeBridgeThead:(dispatch_block_t)block

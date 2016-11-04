@@ -38,22 +38,23 @@
       },
 
       doCopy: function() {
-        textToCopy = "autoGenerateTextToCopy" + Math.random();
+        var self = this
+        var textToCopy = "autoGenerateTextToCopy" + Math.random();
 
-        var $clipboard = require('@weex-module/clipboard');
-        $clipboard.setString(textToCopy);
+        var clipboard = require('@weex-module/clipboard');
+        clipboard.setString(textToCopy);
 
-        this.textToCopy = textToCopy;
-        this.tips = "copy done. Now system clipboard has string of '" + textToCopy + "', try PASTE button, or paste in another app." 
+        self.textToCopy = textToCopy;
+        self.tips = "copy done. Now system clipboard has string of '" + textToCopy + "', try PASTE button, or paste in another app." 
       },
 
       doPaste: function() {
-        var $clipboard = require('@weex-module/clipboard');
+        var clipboard = require('@weex-module/clipboard');
         var me = this;
-        $clipboard.getString(function(ret) {
+        clipboard.getString(function(ret) {
           console.log("paste result is " + JSON.stringify(ret));
 
-          me.textFromPaste = ret.data;
+          me.textFromPaste = JSON.stringify(ret);
           me.tips = "Paste done. Only support native(Android/iOS) NOW. according to security reason, paste in html5 is not supported.";
         });
       }

@@ -10,12 +10,15 @@
 #import "WXLog.h"
 #import "WXSDKEngine.h"
 #import "WXAppConfiguration.h"
+#import "WXThreadSafeMutableDictionary.h"
+#import "WXRuleManager.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
 #import <sys/utsname.h>
 #import <UIKit/UIScreen.h>
 #import <Security/Security.h>
 #import <CommonCrypto/CommonCrypto.h>
+#import <coreText/CoreText.h>
 
 #define KEY_PASSWORD  @"com.taobao.Weex.123456"
 #define KEY_USERNAME_PASSWORD  @"com.taobao.Weex.weex123456"
@@ -311,29 +314,83 @@ static BOOL WXNotStat;
 + (UIFont *)fontWithSize:(CGFloat)size textWeight:(WXTextWeight)textWeight textStyle:(WXTextStyle)textStyle fontFamily:(NSString *)fontFamily
 {
     CGFloat fontSize = (isnan(size) || size == 0) ?  WX_TEXT_FONT_SIZE : size;
-    UIFont *font;
+    UIFont *font = nil;
     
-    if (fontFamily) {
-        font = [UIFont fontWithName:fontFamily size:fontSize];
-        if (!font) {
-            WXLogWarning(@"Unknown fontFamily:%@", fontFamily);
+    WXThreadSafeMutableDictionary *fontFace = [[WXRuleManager sharedInstance] getRule:@"fontFace"];
+    WXThreadSafeMutableDictionary *fontFamilyDic = fontFace[fontFamily];
+    if (fontFamilyDic[@"localSrc"]){
+        NSString *fpath = [((NSURL*)fontFamilyDic[@"localSrc"]) path];
+        CGDataProviderRef fontDataProvider = CGDataProviderCreateWithFilename([fpath UTF8String]);
+        CGFontRef customfont = CGFontCreateWithDataProvider(fontDataProvider);
+        
+        CGDataProviderRelease(fontDataProvider);
+        NSString *fontName = (__bridge NSString *)CGFontCopyFullName(customfont);
+        CFErrorRef error;
+        CTFontManagerRegisterGraphicsFont(customfont, &error);
+        if (error){
+            CTFontManagerUnregisterGraphicsFont(customfont, &error);
+            CTFontManagerRegisterGraphicsFont(customfont, &error);
+        }
+        CGFontRelease(customfont);
+        font = [UIFont fontWithName:fontName size:fontSize];
+    }
+    if (!font) {
+        if (fontFamily) {
+            font = [UIFont fontWithName:fontFamily size:fontSize];
+            if (!font) {
+                WXLogWarning(@"Unknown fontFamily:%@", fontFamily);
+                font = [UIFont systemFontOfSize:fontSize];
+            }
+        } else {
             font = [UIFont systemFontOfSize:fontSize];
         }
-    } else {
-        font = [UIFont systemFontOfSize:fontSize];
     }
     
     UIFontDescriptor *fontD = font.fontDescriptor;
     UIFontDescriptorSymbolicTraits traits = 0;
     traits = (textStyle == WXTextStyleItalic) ? (traits | UIFontDescriptorTraitItalic) : traits;
     traits = (textWeight == WXTextWeightBold) ? (traits | UIFontDescriptorTraitBold) : traits;
-    fontD = [fontD fontDescriptorWithSymbolicTraits:traits];
-    UIFont *tempFont = [UIFont fontWithDescriptor:fontD size:0];
-    if (tempFont) {
-        font = tempFont;
+    if (traits != 0) {
+        fontD = [fontD fontDescriptorWithSymbolicTraits:traits];
+        UIFont *tempFont = [UIFont fontWithDescriptor:fontD size:0];
+        if (tempFont) {
+            font = tempFont;
+        }
     }
-
+    
     return font;
+}
+
++ (void)getIconfont:(NSURL *)url completion:(void(^)(NSURL *url, NSError *error))completionBlock
+{
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionDownloadTask *task = [session downloadTaskWithURL:url completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSURL * downloadPath = nil;
+        if (!error && location) {
+            NSString *file = [NSString stringWithFormat:@"%@/%@",WX_FONT_DOWNLOAD_DIR,[WXUtility md5:[url path]]];
+            
+            downloadPath = [NSURL fileURLWithPath:file];
+            NSFileManager *mgr = [NSFileManager defaultManager];
+            NSError * error ;
+            if (![mgr fileExistsAtPath:[file stringByDeletingLastPathComponent]]) {
+                // create font cache directory and its parent if not exist
+                [mgr createDirectoryAtPath:[file stringByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:&error];
+            }
+            BOOL result = [mgr moveItemAtURL:location toURL:downloadPath error:&error];
+            if (!result) {
+                downloadPath = nil;
+            }
+        }
+        completionBlock(downloadPath, error);
+    }];
+    
+    [task resume];
+}
+
++ (BOOL)isFileExist:(NSString *)filePath
+{
+    
+    return [[NSFileManager defaultManager] fileExistsAtPath:filePath];
 }
 
 + (NSString *)documentDirectory
@@ -520,6 +577,17 @@ CGFloat WXScreenResizeRadio(void)
             result[8], result[9], result[10], result[11],
             result[12], result[13], result[14], result[15]
             ];
+}
+
++ (NSString *)uuidString
+{
+    CFUUIDRef uuidRef = CFUUIDCreate(NULL);
+    CFStringRef uuidStringRef= CFUUIDCreateString(NULL, uuidRef);
+    NSString *uuid = [NSString stringWithString:(__bridge NSString *)uuidStringRef];
+    CFRelease(uuidRef);
+    CFRelease(uuidStringRef);
+    
+    return [uuid lowercaseString];
 }
 
 @end

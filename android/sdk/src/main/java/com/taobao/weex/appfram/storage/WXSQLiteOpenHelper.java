@@ -224,8 +224,6 @@ public class WXSQLiteOpenHelper extends SQLiteOpenHelper {
     static SimpleDateFormat sDateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
 
-    private static WXSQLiteOpenHelper sInstance;
-
     private Context mContext;
     private SQLiteDatabase mDb;
 
@@ -249,23 +247,12 @@ public class WXSQLiteOpenHelper extends SQLiteOpenHelper {
             + ")";
 
 
-    private WXSQLiteOpenHelper(Context context) {
+    public WXSQLiteOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.mContext = context;
     }
 
-    public static WXSQLiteOpenHelper getInstance(Context context) {
-        if (context == null) {
-            WXLogUtils.e(TAG_STORAGE,"can not get context instance...");
-            return null;
-        }
-        if (sInstance == null) {
-            sInstance = new WXSQLiteOpenHelper(context);
-        }
-        return sInstance;
-    }
-
-    SQLiteDatabase getDatabase() {
+    public SQLiteDatabase getDatabase() {
         ensureDatabase();
         return mDb;
     }

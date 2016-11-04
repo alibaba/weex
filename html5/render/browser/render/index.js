@@ -47,7 +47,6 @@ import 'httpurl'
 import './gesture'
 
 const DEFAULT_DESIGN_WIDTH = 750
-const DEFAULT_SCALE = window.innerWidth / DEFAULT_DESIGN_WIDTH
 const DEFAULT_ROOT_ID = 'weex'
 const DEFAULT_JSONP_CALLBACK_NAME = 'weexJsonpCallback'
 
@@ -58,8 +57,8 @@ global.WXEnvironment = {
   platform: 'Web',
   osName: lib.env.browser ? lib.env.browser.name : null,
   osVersion: lib.env.browser ? lib.env.browser.version.val : null,
-  deviceWidth: DEFAULT_DESIGN_WIDTH,
-  deviceHeight: window.innerHeight / DEFAULT_SCALE
+  deviceWidth: window.innerWidth,
+  deviceHeight: window.innerHeight
 }
 
 const _weexInstance = {}

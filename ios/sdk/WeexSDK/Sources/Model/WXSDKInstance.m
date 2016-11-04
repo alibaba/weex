@@ -17,6 +17,7 @@
 #import "WXHandlerFactory.h"
 #import "WXDebugTool.h"
 #import "WXUtility.h"
+#import "WXAssert.h"
 #import "WXLog.h"
 #import "WXView.h"
 #import "WXThreadSafeMutableDictionary.h"
@@ -35,6 +36,7 @@ NSTimeInterval JSLibInitTime = 0;
 - (void) dealloc
 {
     [self removeObservers];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (instancetype)init
@@ -107,6 +109,7 @@ NSTimeInterval JSLibInitTime = 0;
         
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
         [request setValue:[WXUtility userAgent] forHTTPHeaderField:@"User-Agent"];
+        [request setValue:@"weex" forHTTPHeaderField:@"f-refer"];
         
         id<WXNetworkProtocol> networkHandler = [self networkHandler];
         
@@ -282,17 +285,38 @@ NSTimeInterval JSLibInitTime = 0;
 
 - (WXComponent *)componentForRef:(NSString *)ref
 {
+    WXAssertComponentThread();
+    
     return [_componentManager componentForRef:ref];
 }
 
 - (NSUInteger)numberOfComponents
 {
+    WXAssertComponentThread();
+    
     return [_componentManager numberOfComponents];
 }
 
 - (void)finishPerformance
 {
     //deperacated
+}
+
+- (void)creatFinish
+{
+    
+}
+
+- (void)fireGlobalEvent:(NSString *)eventName params:(NSDictionary *)params
+{
+    if (!params){
+        params = [NSDictionary dictionary];
+    }
+    NSDictionary * userInfo = @{
+            @"weexInstance":self,
+            @"param":params
+    };
+    [[NSNotificationCenter defaultCenter] postNotificationName:eventName object:self userInfo:userInfo];
 }
 
 #pragma mark Private Methods

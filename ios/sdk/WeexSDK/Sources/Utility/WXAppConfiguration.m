@@ -14,6 +14,7 @@
 @property (nonatomic, strong) NSString * appName;
 @property (nonatomic, strong) NSString * appVersion;
 @property (nonatomic, strong) NSString * externalUA;
+@property (nonatomic, strong) NSString * JSFrameworkVersion;
 
 @end
 
@@ -67,6 +68,16 @@
 + (void)setExternalUserAgent:(NSString *)userAgent
 {
     [WXAppConfiguration sharedConfiguration].externalUA = userAgent;
+}
+
++ (NSString *)JSFrameworkVersion
+{
+    return [WXAppConfiguration sharedConfiguration].JSFrameworkVersion ?: @"";
+}
+
++ (void)setJSFrameworkVersion:(NSString *)JSFrameworkVersion
+{
+    [WXAppConfiguration sharedConfiguration].JSFrameworkVersion = JSFrameworkVersion;
 }
 
 @end

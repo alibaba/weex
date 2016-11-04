@@ -1,3 +1,4 @@
+#!/bin/bash
 # called by native
 THIS_DIR=$(dirname "$0")
 pushd "$THIS_DIR"
