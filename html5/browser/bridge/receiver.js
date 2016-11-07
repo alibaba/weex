@@ -70,7 +70,7 @@ function processCallQueue () {
 
 function processCall (instanceId, call) {
   const isComponent = typeof call.module === 'undefined'
-  isComponent ? componentCall(instanceId, call) : moduleCall(instanceId, call) 
+  isComponent ? componentCall(instanceId, call) : moduleCall(instanceId, call)
 
   const callbackId = call.callbackId
   if ((callbackId
@@ -82,7 +82,7 @@ function processCall (instanceId, call) {
   }
 }
 
-function moduleCall(instanceId, call) {
+function moduleCall (instanceId, call) {
   const moduleName = call.module
   const methodName = call.method
   let module, method
@@ -98,19 +98,19 @@ function moduleCall(instanceId, call) {
   method.apply(global.weex.getInstance(instanceId), args)
 }
 
-function componentCall(instanceId, call) {
+function componentCall (instanceId, call) {
   const componentName = call.component
   const ref = call.ref
   const methodName = call.method
   const args = call.args || call.arguments || []
-  
+
   const elem = global.weex.getInstance(instanceId).getComponentManager().getComponent(ref)
   if (!elem) {
     return console.error(`[h5-render] component of ref ${ref} doesn't exist.`)
   }
 
   let method
-  
+
   if (!(method = elem[methodName])) {
     return console.error(`[h5-render] component ${componentName} doesn't have a method named ${methodName}.`)
   }
