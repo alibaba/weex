@@ -15,4 +15,8 @@ Weex.install(droot)
 
 Weex.install(extensions)
 
+global.registerComponents([
+  { type: 'input', methods: ['focus', 'blur']}
+])
+
 export default Weex

@@ -35,6 +35,14 @@ const proto = {
     node.classList.add('weex-element')
     this.placeholder && (node.placeholder = this.placeholder)
     return node
+  },
+
+  focus () {
+    this.node.focus()
+  },
+
+  blur () {
+    this.node.blur()
   }
 }
 
