@@ -10,3 +10,5 @@ if ! (echo $branch_name | grep -iqE "$branch_regex"); then
 See https://github.com/alibaba/weex/blob/dev/CONTRIBUTING.md#branch-name\n"
     exit 1
 fi
+
+npm run lint
