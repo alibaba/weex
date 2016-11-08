@@ -205,9 +205,11 @@
 package com.taobao.weex.appfram.storage;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.taobao.weex.utils.WXLogUtils;
@@ -359,6 +361,9 @@ public class WXSQLiteOpenHelper extends SQLiteOpenHelper {
         if(mDb == null){
             return;
         }
+
+        createTableIfNotExists(mDb);
+
         mDb.setMaximumSize(mMaximumDatabaseSize);
     }
 
@@ -378,6 +383,23 @@ public class WXSQLiteOpenHelper extends SQLiteOpenHelper {
         if (mDb != null && mDb.isOpen()) {
             mDb.close();
             mDb = null;
+        }
+    }
+
+    private void createTableIfNotExists(@NonNull SQLiteDatabase db) {
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT DISTINCT tbl_name FROM sqlite_master WHERE tbl_name = '"+TABLE_STORAGE+"'", null);
+            if(cursor != null && cursor.getCount() > 0) {
+                return;
+            }
+            db.execSQL(STATEMENT_CREATE_TABLE);
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            if(cursor != null){
+                cursor.close();
+            }
         }
     }
 
