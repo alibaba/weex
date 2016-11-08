@@ -212,6 +212,7 @@ import android.database.sqlite.SQLiteFullException;
 import android.database.sqlite.SQLiteStatement;
 import android.support.annotation.Nullable;
 
+import com.taobao.weex.common.WXThread;
 import com.taobao.weex.utils.WXLogUtils;
 
 import java.util.ArrayList;
@@ -231,18 +232,10 @@ public class DefaultWXStorage implements IWXStorageAdapter {
         if (mExecutorService == null) {
             mExecutorService = Executors.newSingleThreadExecutor();
         }
-        mExecutorService.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    if (runnable != null) {
-                        runnable.run();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+
+        if(runnable != null) {
+            mExecutorService.execute(WXThread.secure(runnable));
+        }
     }
 
     public DefaultWXStorage(Context context) {
