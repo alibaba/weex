@@ -348,9 +348,10 @@ public class DefaultWXStorage implements IWXStorageAdapter {
 
         WXLogUtils.d(WXSQLiteOpenHelper.TAG_STORAGE, "set k-v to storage(key:" + key + ",value:" + value + ",isPersistent:" + isPersistent + ",allowRetry:" + allowRetryWhenFull + ")");
         String sql = "INSERT OR REPLACE INTO " + WXSQLiteOpenHelper.TABLE_STORAGE + " VALUES (?,?,?,?);";
-        SQLiteStatement statement = database.compileStatement(sql);
+        SQLiteStatement statement = null;
         String timeStamp = WXSQLiteOpenHelper.sDateFormatter.format(new Date());
         try {
+            statement = database.compileStatement(sql);
             statement.clearBindings();
             statement.bindString(1, key);
             statement.bindString(2, value);
@@ -371,7 +372,9 @@ public class DefaultWXStorage implements IWXStorageAdapter {
 
             return false;
         } finally {
-            statement.close();
+            if(statement != null) {
+                statement.close();
+            }
         }
     }
 
@@ -474,14 +477,17 @@ public class DefaultWXStorage implements IWXStorageAdapter {
         }
 
         String sql = "SELECT count(" + WXSQLiteOpenHelper.COLUMN_KEY + ") FROM " + WXSQLiteOpenHelper.TABLE_STORAGE;
-        SQLiteStatement statement = database.compileStatement(sql);
+        SQLiteStatement statement = null;
         try {
+            statement = database.compileStatement(sql);
             return statement.simpleQueryForLong();
         } catch (Exception e) {
             WXLogUtils.e(WXSQLiteOpenHelper.TAG_STORAGE, "DefaultWXStorage occurred an exception when execute getLength:" + e.getMessage());
             return 0;
         } finally {
-            statement.close();
+            if(statement != null) {
+                statement.close();
+            }
         }
     }
 
