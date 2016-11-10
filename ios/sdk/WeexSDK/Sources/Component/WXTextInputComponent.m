@@ -601,7 +601,7 @@ WX_EXPORT_METHOD(@selector(blur))
         .origin.y = CGRectGetMaxY(screenRect) - _keyboardSize.height - 54,
         .size = _keyboardSize
     };
-    CGRect inputFrame = [_inputView convertRect:_inputView.frame toView:rootView]
+    CGRect inputFrame = [_inputView.superview convertRect:_inputView.frame toView:rootView]
     ;
     if (keyboardRect.origin.y - inputFrame.size.height <= inputFrame.origin.y) {
         [self setViewMovedUp:YES];
