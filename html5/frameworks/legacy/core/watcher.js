@@ -223,6 +223,7 @@ Watcher.prototype.teardown = function () {
  */
 
 const seenObjects = createNewSet() // new Set()
+/* istanbul ignore next */
 function traverse (val, seen) {
   let i, keys, isA, isO
   if (!seen) {

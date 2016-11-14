@@ -3,9 +3,7 @@
  */
 import config from '../config'
 
-const {
-  nativeComponentMap
-} = config
+const { nativeComponentMap } = config
 
 /**
  * ==========================================================

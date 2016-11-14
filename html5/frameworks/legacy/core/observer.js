@@ -99,6 +99,7 @@ Observer.prototype.addVm = function (vm) {
  * @param {Vue} vm
  */
 
+/* istanbul ignore next */
 Observer.prototype.removeVm = function (vm) {
   remove(this.vms, vm)
 }
@@ -127,6 +128,7 @@ function protoAugment (target, src) {
  * @param {Object} proto
  */
 
+/* istanbul ignore next */
 function copyAugment (target, src, keys) {
   for (let i = 0, l = keys.length; i < l; i++) {
     const key = keys[i]
@@ -232,6 +234,7 @@ export function defineReactive (obj, key, val) {
  * @public
  */
 
+/* istanbul ignore next */
 export function set (obj, key, val) {
   if (Array.isArray(obj)) {
     return obj.splice(key, 1, val)
@@ -269,6 +272,7 @@ export function set (obj, key, val) {
  * @param {String} key
  */
 
+/* istanbul ignore next */
 export function del (obj, key) {
   if (!hasOwn(obj, key)) {
     return
@@ -310,6 +314,7 @@ export function proxy (vm, key) {
   }
 }
 
+/* istanbul ignore next */
 export function unproxy (vm, key) {
   if (!isReserved(key)) {
     delete vm[key]

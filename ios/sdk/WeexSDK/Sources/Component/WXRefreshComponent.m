@@ -42,18 +42,6 @@
     return self;
 }
 
-- (void)layoutDidFinish
-{
-    if ([self isViewLoaded]) {
-        
-        [self.view setFrame: (CGRect){
-            .size = self.calculatedFrame.size,
-            .origin.x = self.calculatedFrame.origin.x,
-            .origin.y = self.view.frame.origin.y - CGRectGetHeight(self.calculatedFrame)
-        }];
-    }
-}
-
 - (void)viewDidLoad
 {
      _initFinished = YES;

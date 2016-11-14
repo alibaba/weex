@@ -6,10 +6,13 @@ const {
 } = chai
 chai.use(sinonChai)
 
-import { init, config } from '../../../runtime'
+import runtime from '../../../runtime'
 import frameworks from '../../../frameworks'
 import defaultConfig from '../../../frameworks/legacy/config'
+
+const { init, config } = runtime
 config.frameworks = frameworks
+runtime.setNativeConsole()
 
 import Vm from '../../../frameworks/legacy/vm'
 import { clearModules, getModule } from '../../../frameworks/legacy/app/register'
@@ -276,6 +279,10 @@ describe('framework entry', () => {
   })
 
   describe('callJS', () => {
+    it('fireEvent with no params', () => {
+      framework.callJS()
+    })
+
     it('fireEvent with a exist instanceId', () => {
       framework.callJS(instanceId, [{
         method: 'fireEvent',
@@ -338,6 +345,10 @@ describe('framework entry', () => {
   })
 
   describe('destroyInstance', () => {
+    it('with no params', () => {
+      framework.destroyInstance()
+    })
+
     it('with a exist instanceId', () => {
       const result = framework.destroyInstance(instanceId)
       expect(result[instanceId]).to.be.undefined
@@ -401,5 +412,38 @@ describe('framework entry', () => {
       expect(Vm.prototype.a).a.function
       delete Vm.prototype.a
     })
+  })
+})
+
+describe('config', () => {
+  it('config is an object', () => {
+    init({})
+  })
+})
+
+describe.skip('freeze the prototypes of vdom', function () {
+  const { Document, Element, Comment, Listener } = config
+
+  before(() => {
+    runtime.freezePrototype()
+  })
+
+  it('Document.prototype', () => {
+    expect(Document.prototype).to.be.frozen
+  })
+
+  it('Element & Element.prototype', () => {
+    expect(Element).to.be.frozen
+    expect(Element.prototype).to.be.frozen
+  })
+
+  it('Comment & Comment.prototype', () => {
+    expect(Comment).to.be.frozen
+    expect(Comment.prototype).to.be.frozen
+  })
+
+  it('Listener & Listener.prototype', () => {
+    expect(Listener).to.be.frozen
+    expect(Listener.prototype).to.be.frozen
   })
 })

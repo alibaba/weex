@@ -35,6 +35,7 @@ export function initData (vm) {
   observe(data, vm)
 }
 
+/* istanbul ignore next */
 function noop () {
 }
 

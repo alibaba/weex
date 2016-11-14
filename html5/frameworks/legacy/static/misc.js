@@ -11,6 +11,7 @@ import {
 export function getRoot (id) {
   const instance = instanceMap[id]
   let result
+  /* istanbul ignore else */
   if (instance) {
     result = getRootElement(instance)
   }

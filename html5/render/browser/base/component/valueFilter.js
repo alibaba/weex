@@ -22,7 +22,7 @@ export function getFilters (key, config) {
     },
     string: function (val) {
       // string of a pure number or a number suffixed with a 'px' unit
-      if (val.match(/^\-?\d*\.?\d+(?:px)?$/)) {
+      if (val.match(/^-?\d*\.?\d+(?:px)?$/)) {
         return parseFloat(val) * config.scale + 'px'
       }
       if (key.match(/transform/) && val.match(/translate/)) {

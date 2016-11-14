@@ -83,9 +83,11 @@ def(
   function $remove (index) {
     /* istanbul ignore if */
     if (!this.length) return
+    /* istanbul ignore else */
     if (typeof index !== 'number') {
       index = this.indexOf(index)
     }
+    /* istanbul ignore else */
     if (index > -1) {
       this.splice(index, 1)
     }

@@ -5,6 +5,7 @@
  * virtual-DOM layer.
  */
 
+import * as shared from '../shared'
 import { Document, Element, Comment } from './vdom'
 import Listener from './listener'
 import init from './init'
@@ -18,7 +19,25 @@ const config = {
 
 Document.handler = config.sendTasks
 
-export {
+/* istanbul ignore next */
+function freezePrototype () {
+  shared.freezePrototype()
+
+  Object.freeze(Element)
+  Object.freeze(Comment)
+  Object.freeze(Listener)
+  Object.freeze(Document.prototype)
+  Object.freeze(Element.prototype)
+  Object.freeze(Comment.prototype)
+  Object.freeze(Listener.prototype)
+}
+
+export default {
+  setNativeConsole: shared.setNativeConsole,
+  resetNativeConsole: shared.resetNativeConsole,
+  setNativeTimer: shared.setNativeTimer,
+  resetNativeTimer: shared.resetNativeTimer,
+  freezePrototype,
   init,
   config
 }

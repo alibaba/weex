@@ -7,7 +7,7 @@ export {
   toArray,
   isObject,
   isPlainObject
-} from '../../../shared/utils'
+} from './shared'
 
 /**
  * Check if a string starts with $ or _
@@ -25,7 +25,7 @@ export function isReserved (str) {
 export const hasProto = '__proto__' in {}
 
 let _Set
-/* istanbul ignore if */
+/* istanbul ignore next */
 if (typeof Set !== 'undefined' && Set.toString().match(/native code/)) {
   // use native Set when available.
   _Set = Set
@@ -39,6 +39,9 @@ else {
     return this.set[key] !== undefined
   }
   _Set.prototype.add = function (key) {
+    if (key == null || this.set[key]) {
+      return
+    }
     this.set[key] = 1
   }
   _Set.prototype.clear = function () {
@@ -54,6 +57,7 @@ export { _Set }
  */
 
 export function createNewSet () {
+  /* istanbul ignore next */
   /* eslint-disable */
   if (typeof nativeSet === 'object') {
     return nativeSet.create()

@@ -26,6 +26,7 @@ export function receiveTasks (id, tasks) {
     tasks.forEach((task) => {
       const handler = jsHandlers[task.method]
       const args = [...task.args]
+      /* istanbul ignore else */
       if (typeof handler === 'function') {
         args.unshift(id)
         results.push(handler(...args))

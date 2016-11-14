@@ -8,13 +8,15 @@ import {
 } from 'weex-vdom-tester'
 
 // load env
-import '../../shared'
+import shared from '../../shared'
 import { Document, Element, Comment } from '../../runtime/vdom'
 import Listener from '../../runtime/listener'
 
 // load framework
 import * as defaultFramework from '../../frameworks/legacy'
 import { subversion } from '../../../package.json'
+
+shared.setNativeConsole()
 
 // mock config & global APIs
 global.callNativeHandler = function () {}

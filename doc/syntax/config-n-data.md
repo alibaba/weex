@@ -26,18 +26,20 @@ They all make Weex files more extendable and configurable and works easy with ot
 
 <!-- instance config and data -->
 <script type="config">
-  downgrade: {
-    ios: {
-      os: '9', // all of 9.x.x
-      app: '~5.3.2',
-      framework: '^1.3', // all of 1.3.x
-      deviceModel: ['AAAA', 'BBBB']
-    },
-    android: {
-      os: '*', // all of version
-      app: '^5',
-      framework: '',
-      deviceModel: ''
+  {
+    downgrade: {
+      ios: {
+        os: '9', // all of 9.x.x
+        app: '~5.3.2',
+        framework: '^1.3', // all of 1.3.x
+        deviceModel: ['AAAA', 'BBBB']
+      },
+      android: {
+        os: '*', // all of version
+        app: '^5',
+        framework: '',
+        deviceModel: ''
+      }
     }
   }
 </script>

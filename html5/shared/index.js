@@ -1,28 +1,14 @@
-import './setTimeout'
-import './promise'
-import './console'
+import './arrayFrom'
 import './objectAssign'
 import './objectSetPrototypeOf'
-import './arrayFrom'
 
-import {
-  extend,
-  def,
-  remove,
-  hasOwn,
-  bind,
-  toArray,
-  isObject,
-  isPlainObject
-} from './utils'
+// import promise hack and polyfills
+import './promise'
+import 'core-js/modules/es6.object.to-string'
+import 'core-js/modules/es6.string.iterator'
+import 'core-js/modules/web.dom.iterable'
+import 'core-js/modules/es6.promise'
 
-export {
-  extend,
-  def,
-  remove,
-  hasOwn,
-  bind,
-  toArray,
-  isObject,
-  isPlainObject
-}
+export * from './console'
+export * from './setTimeout'
+export * from './freeze'

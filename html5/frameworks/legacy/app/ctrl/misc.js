@@ -125,7 +125,7 @@ export function fireEvent (app, ref, type, e, domChanges) {
   console.debug(`[JS Framework] Fire a "${type}" event on an element(${ref}) in instance(${app.id})`)
   if (Array.isArray(ref)) {
     ref.some((ref) => {
-      return app.fireEvent(ref, type, e) !== false
+      return fireEvent(app, ref, type, e) !== false
     })
     return
   }
@@ -188,6 +188,7 @@ export function updateActions (app) {
  * @param  {array}  tasks
  */
 export function callTasks (app, tasks) {
+  /* istanbul ignore next */
   if (typof(tasks) !== 'array') {
     tasks = [tasks]
   }
@@ -229,6 +230,7 @@ function normalize (v, app) {
     case 'function':
       app.callbacks[++app.uid] = v
       return app.uid.toString()
+    /* istanbul ignore next */
     default:
       return JSON.stringify(v)
   }
