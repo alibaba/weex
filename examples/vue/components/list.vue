@@ -1,0 +1,112 @@
+<template>
+  <div>
+    <list class="list">
+      <cell
+        v-for="(v,i) in rows"
+        :index="i"
+        class="row"
+        @appear="onappear"
+        @disappear="ondisappear">
+        <div class="item">
+          <text class="item-title">row {{v.id}}</text>
+        </div>
+      </cell>
+    </list>
+    <text class="count" :value="'Appear items: ' + appearMin + ' ~ ' + appearMax"></text>
+  </div>
+</template>
+
+<style>
+  .list {
+    height:850px
+  }
+  .count {
+    font-size: 48px;
+    margin:10px;
+  }
+  .indicator {
+    height: 40px;
+    width: 40px;
+    color:#45b5f0;
+  }
+  .row {
+    width: 750px;
+  }
+  .item {
+    justify-content: center;
+    border-bottom-width: 2px;
+    border-bottom-color: #c0c0c0;
+    height: 100px;
+    padding:20px;
+  }
+  .item-title {
+  }
+</style>
+
+<script>
+  module.exports = {
+    methods: {
+      onappear: function (e) {
+        var appearId = this.rows[e.target.attr.index].id;
+        nativeLog('+++++', appearId);
+        var appearIds = this.appearIds;
+        appearIds.push(appearId);
+        this.getMinAndMaxIds(appearIds);
+      },
+      ondisappear:function (e) {
+        var disAppearId = this.rows[e.target.attr.index].id;
+        nativeLog('+++++', disAppearId);
+        var appearIds = this.appearIds;
+        var index = appearIds.indexOf(disAppearId);
+        if (index > -1) {
+          appearIds.splice(index, 1);
+        }
+        this.getMinAndMaxIds(appearIds);
+      },
+      getMinAndMaxIds:function (appearIds) {
+        appearIds.sort(function(a, b) {
+          return a - b;
+        });
+        this.appearIds = appearIds;
+        this.appearMax = appearIds[appearIds.length - 1];
+        this.appearMin = appearIds[0];
+      }
+    },
+    data: {
+      appearMin:1,
+      appearMax:1,
+      appearIds:[],
+      rows:[
+        {id: 1},
+        {id: 2},
+        {id: 3},
+        {id: 4},
+        {id: 5},
+        {id: 6},
+        {id: 7},
+        {id: 8},
+        {id: 9},
+        {id: 10},
+        {id: 11},
+        {id: 12},
+        {id: 13},
+        {id: 14},
+        {id: 15},
+        {id: 16},
+        {id: 17},
+        {id: 18},
+        {id: 19},
+        {id: 20},
+        {id: 21},
+        {id: 22},
+        {id: 23},
+        {id: 24},
+        {id: 25},
+        {id: 26},
+        {id: 27},
+        {id: 28},
+        {id: 29}
+      ]
+    }
+  }
+</script>

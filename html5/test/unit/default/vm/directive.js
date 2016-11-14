@@ -8,12 +8,12 @@ import {
   applyNaitveComponentOptions,
   bindSubVm,
   bindSubVmAfterInitialized
-} from '../../../../default/vm/directive'
+} from '../../../../frameworks/legacy/vm/directive'
 
 import {
   initState
-} from '../../../../default/core/state'
-import config from '../../../../default/config'
+} from '../../../../frameworks/legacy/core/state'
+import config from '../../../../frameworks/legacy/config'
 
 const { nativeComponentMap } = config
 const directive = {}

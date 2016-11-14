@@ -5,7 +5,7 @@ var body = document.createElement('div', {
 })
 
 var image = document.createElement('image', {
-  attr: { src: 'http://alibaba.github.io/weex/img/weex_logo_blue@3x.png' },
+  attr: { src: 'https://alibaba.github.io/weex/img/weex_logo_blue@3x.png' },
   classStyle: { width: 360, height: 82 }
 })
 

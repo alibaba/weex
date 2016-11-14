@@ -22,9 +22,6 @@ pids
 *.pid
 *.seed
 
-# build framework options by script
-html5/runtime/config.js
-
 # e2e test
 html5/test/e2e/reports
 html5/test/e2e/screenshots
@@ -32,6 +29,7 @@ html5/test/e2e/logs
 
 # Created by Weex Web Packer
 html5/browser/extend/packer.js
+html5/render/browser/extend/packer.js
 
 android/playground/app/gradlew
 android/playground/app/gradlew.bat

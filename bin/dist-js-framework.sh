@@ -15,7 +15,7 @@ rm -Rf src
 mkdir src
 cp ../../.babelrc .
 cp -Rf ../../html5/* src/
-rm -Rf src/browser
+rm -Rf src/render/browser
 rm -Rf src/test
 
 if [ $# -gt 0 ]; then

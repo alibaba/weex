@@ -7,11 +7,11 @@ chai.use(sinonChai)
 global.callNative = function () {}
 global.callAddElement = function () {}
 
-import * as bundle from '../../../../default/app/bundle'
-import * as register from '../../../../default/app/register'
-import { removeWeexPrefix } from '../../../../default/util'
-import { Document } from '../../../../vdom'
-import Listener from '../../../../vdom/listener'
+import * as bundle from '../../../../frameworks/legacy/app/bundle'
+import * as register from '../../../../frameworks/legacy/app/register'
+import { removeWeexPrefix } from '../../../../frameworks/legacy/util'
+import { Document } from '../../../../runtime/vdom'
+import Listener from '../../../../runtime/listener'
 
 describe('parsing a bundle file', () => {
   const componentTemplate = {

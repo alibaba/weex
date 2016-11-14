@@ -1,4 +1,8 @@
 {
+  "componentsPath": "./html5/render/browser/extend/components",
+  "apisPath": "./html5/render/browser/extend/api",
+  "loadersPath": "./html5/render/browser/extend/loader",
+  "packer": "./html5/render/browser/extend/packer.js",
   "components": [
     "image",
     "text",
@@ -16,16 +20,17 @@
     "web"
   ],
   "apis": [
+    "animation",
+    "clipboard",
     "dom",
     "event",
-    "pageInfo",
-    "stream",
+    "geolocation",
+    "globalEvent",
     "modal",
-    "animation",
-    "webview",
     "navigator",
+    "pageInfo",
     "storage",
-    "clipboard",
-    "geolocation"
+    "stream",
+    "webview"
   ]
 }

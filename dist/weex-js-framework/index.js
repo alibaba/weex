@@ -1,1 +1,1 @@
-import './src/native'
+import './src/render/native'

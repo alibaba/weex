@@ -1,13 +1,13 @@
 # Weex    
 Android[![Download](https://api.bintray.com/packages/alibabaweex/maven/weex_sdk/images/download.svg)](https://bintray.com/alibabaweex/maven/weex_sdk/_latestVersion)
-iOS[![Pod version](https://badge.fury.io/co/WeexSDK.svg)](https://cocoapods.org/pods/WeexSDK) 
+iOS[![Pod version](https://badge.fury.io/co/WeexSDK.svg)](https://cocoapods.org/pods/WeexSDK)
 HTML5[![npm version](https://badge.fury.io/js/weex-html5.svg)](https://www.npmjs.com/package/weex-html5)
 
 > A framework for building Mobile cross-platform UI.
 
 [![CircleCI](https://circleci.com/gh/alibaba/weex/tree/dev.svg?style=svg&circle-token=b83b047a3a01f6ec26458a455530a5ddc261925f)](https://circleci.com/gh/alibaba/weex/tree/dev) [![Gitter](https://img.shields.io/gitter/room/weexteam/cn.svg?maxAge=2592000)](https://gitter.im/weexteam) <sub>(English Gitter)</sub> [![Gitter](https://img.shields.io/gitter/room/weexteam/cn.svg?maxAge=2592000)](https://gitter.im/weexteam/cn) <sub>(Chinese 中文聊天室)</sub>
 
-Support Android 4.1 (API 16) and iOS 7.0+. See [Weex website](https://alibaba.github.io/weex/) for more information. 
+Support Android 4.1 (API 16) and iOS 7.0+. See [Weex website](https://alibaba.github.io/weex/) for more information.
 
 ## For Windows
 
@@ -26,12 +26,12 @@ Please ***INSTALL [Git for Windows](https://git-scm.com/download/win)*** and run
 * [Tutorial](https://alibaba.github.io/weex/doc/tutorial.html)
 * Doc: [English](https://alibaba.github.io/weex/doc/), [中文](https://github.com/weexteam/article/wiki/Weex%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3)
 
-### Android 
+### Android
 
 0. Prerequisites
     0. Install [Node.js](http://nodejs.org/) 4.0+
-    0. Under project root 
-        0. `npm install`, install project 
+    0. Under project root
+        0. `npm install`, install project
         0. `./start`
     0. Install [Android Environment](http://developer.android.com/training/basics/firstapp/index.html)
 0. Run playground, In Android Studio
@@ -49,8 +49,8 @@ On Android Platform , Weex code is executed in [weex_v8core](https://github.com/
 
 0. Prerequisites
 	0. Install [Node.js](http://nodejs.org/) 4.0+
-    0. Under project root 
-        0. `npm install`, install project 
+    0. Under project root
+        0. `npm install`, install project
         0. `./start`
     0. Install [iOS Environment](https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/AppStoreDistributionTutorial/Setup/Setup.html)
     0. Install [CocoaPods](https://guides.cocoapods.org/using/getting-started.html)
@@ -78,7 +78,7 @@ Weex team have developed a [DevTool](https://github.com/weexteam/weex-devtool) t
 See [FAQ](https://alibaba.github.io/weex/doc/faq.html) for more information.
 
 
-### Community based Weex knowledge site 
+### Community based Weex knowledge site
 
 * [weex article](https://github.com/weexteam/article/wiki) : article collection about Weex(文章集合)
 * [weex.help](http://weex.help/)  : 3rd forum about Weex(第三方Weex中文技术论坛)
@@ -87,4 +87,3 @@ See [FAQ](https://alibaba.github.io/weex/doc/faq.html) for more information.
 ## Contributing
 
 See [Weex Contributing Guide](./CONTRIBUTING.md) for more information.
-

@@ -1,6 +1,8 @@
 /* eslint-disable */
 
 // https://gist.github.com/WebReflection/5593554
+
+/* istanbul ignore if */
 if (!Object.setPrototypeOf) {
   Object.setPrototypeOf = (function(Object, magic) {
     var set;

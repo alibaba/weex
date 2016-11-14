@@ -2,8 +2,9 @@
 
 // Production steps of ECMA-262, Edition 6, 22.1.2.1
 // Reference: https://people.mozilla.org/~jorendorff/es6-draft.html#sec-array.from
+
+/* istanbul ignore if */
 if (!Array.from) {
-  console.log('make polyfill')
   Array.from = (function() {
     var toStr = Object.prototype.toString;
     var isCallable = function(fn) {

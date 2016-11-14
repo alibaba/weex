@@ -7,15 +7,40 @@ chai.use(sinonChai)
 global.callNative = function () {}
 global.callAddElement = function () {}
 
-import { Document } from '../../../vdom'
-import Listener from '../../../vdom/listener'
+import { Document } from '../../../runtime/vdom'
+import Listener from '../../../runtime/listener'
 
 global.callNative = function () {}
 global.callAddElement = function () {}
 
 describe('dom listener basic', () => {
+  it('works with no id', () => {
+    const doc = new Document(null, null, null)
+    doc.destroy()
+  })
+
   it('works with no handler', () => {
-    const doc = new Document('foo', null, null, Listener)
+    Document.handler = null
+    global.callNative = function () { return -1 }
+    global.callAddElement = function () { return -1 }
+
+    const doc = new Document('foo1', null, null)
+    doc.createBody('r')
+    doc.documentElement.appendChild(doc.body)
+    const el = doc.createElement('a')
+    doc.body.appendChild(el)
+    doc.destroy()
+  })
+
+  it('works with an handler', () => {
+    const doc = new Document('foo2', null, function () {})
+    doc.createBody('r')
+    doc.documentElement.appendChild(doc.body)
+    doc.destroy()
+  })
+
+  it('works with an handler', () => {
+    const doc = new Document('foo2', null, function () {})
     doc.createBody('r')
     doc.documentElement.appendChild(doc.body)
     doc.destroy()
@@ -34,6 +59,13 @@ describe('dom listener details', () => {
     doc.destroy()
   })
 
+  it('create document again', (done) => {
+    const documentElement = doc.createDocumentElement()
+
+    expect(documentElement).eql(doc.documentElement)
+    done()
+  })
+
   it('create body', (done) => {
     const body = doc.createBody('r', {
       attr: { a: 1 }, style: { b: 2 }
@@ -46,6 +78,109 @@ describe('dom listener details', () => {
       module: 'dom', method: 'createBody',
       args: [{ type: 'r', ref: '_root', attr: { a: 1 }, style: { b: 2 }}]
     }]])
+    done()
+  })
+
+  it('document appendChild', (done) => {
+    const el = doc.createElement('father')
+    const el2 = doc.createElement('child1')
+    const el3 = doc.createElement('child2')
+
+    el.appendChild(el2)
+    el.appendChild(el3)
+
+    doc.documentElement.appendChild(el)
+
+    expect(doc.documentElement.children.length).eql(1)
+    expect(doc.documentElement.children[0]).eql(el)
+
+    done()
+  })
+
+  it('document insertBefore', (done) => {
+    const body = doc.createBody('r', {
+      attr: { a: 1 }, style: { b: 2 }
+    })
+
+    doc.documentElement.insertBefore(body)
+
+    expect(spy.args.length).eql(1)
+    expect(spy.args[0]).eql([[{
+      module: 'dom', method: 'createBody',
+      args: [{ type: 'r', ref: '_root', attr: { a: 1 }, style: { b: 2 }}]
+    }]])
+    done()
+  })
+
+  it('document insertBefore with comment', (done) => {
+    const body = doc.createBody('r', {
+      attr: { a: 1 }, style: { b: 2 }
+    })
+    const el = doc.createComment('asd')
+
+    doc.documentElement.appendChild(el)
+    doc.documentElement.insertBefore(body, el)
+
+    expect(doc.documentElement.children.length).eql(2)
+    expect(doc.documentElement.children[0]).eql(body)
+    done()
+  })
+
+  it('document fireEvent with no element', (done) => {
+    doc.fireEvent(null)
+    done()
+  })
+
+  it('document fireEvent with domChanges', (done) => {
+    const el = doc.createElement('el', {
+      attr: { a: 1 }, style: { b: 2 }
+    })
+
+    doc.documentElement.appendChild(el)
+
+    doc.fireEvent(el, null, null, {})
+
+    expect(el.attr).eql({ a: 1 })
+    expect(el.style).eql({ b: 2 })
+
+    doc.fireEvent(el, null, null, {
+      attrs: { a: 1 }, style: { b: 2 }
+    })
+
+    expect(el.attr).eql({ a: 1 })
+    expect(el.style).eql({ b: 2 })
+
+    doc.fireEvent(el, null, null, {
+      attrs: { a: 2 }, style: { b: 3 }
+    })
+
+    expect(el.attr).eql({ a: 2 })
+    expect(el.style).eql({ b: 3 })
+    done()
+  })
+
+  it('toString has pureChildren', (done) => {
+    const el = doc.createElement('el')
+    const el1 = doc.createElement('el1')
+    el.appendChild(el1)
+    expect(el.toString()).eql('<el attr={} style={}><el1 attr={} style={}></el1></el>')
+
+    done()
+  })
+
+  it('removeChild', (done) => {
+    const el = doc.createElement('el')
+    const el1 = doc.createElement('el1')
+
+    el.removeChild(el1)
+    el.removeChild(el1, true)
+
+    done()
+  })
+
+  it('removeEvent', (done) => {
+    const el = doc.createElement('el')
+    el.removeEvent(null)
     done()
   })
 
@@ -230,5 +365,41 @@ describe('dom listener details', () => {
       { module: 'dom', method: 'addEvent', args: [el.ref, 'appear'] },
       { module: 'dom', method: 'removeEvent', args: [el.ref, 'appear'] }
     ])
+  })
+})
+
+describe('listener', () => {
+  let spy, listener
+
+  beforeEach(() => {
+    spy = sinon.spy()
+    listener = new Listener('1', spy)
+  })
+
+  it('removeElement many', () => {
+    listener.removeElement(['1', '2', '3', '4'])
+
+    expect(spy.args[0][0]).eql([
+      { module: 'dom', method: 'removeElement', args: ['1'] },
+      { module: 'dom', method: 'removeElement', args: ['2'] },
+      { module: 'dom', method: 'removeElement', args: ['3'] },
+      { module: 'dom', method: 'removeElement', args: ['4'] }
+    ])
+
+    listener = null
+  })
+
+  it('no-handler', () => {
+    listener = new Listener('1')
+    listener.handler(
+      { module: 'dom', method: 'removeElement', args: ['1'] },
+      spy
+    )
+    expect(spy).callCount(1)
+  })
+
+  afterEach(() => {
+    spy = null
+    listener = null
   })
 })

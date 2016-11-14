@@ -1,0 +1,9 @@
+{
+  "globals": {
+    "callNativeHandler": true,
+  },
+
+  "rules": {
+    "no-eval": "off"
+  }
+}

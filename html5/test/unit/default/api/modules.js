@@ -1,8 +1,8 @@
 import chai from 'chai'
 const { expect } = chai
 
-import * as modules from '../../../../default/api/modules'
-import { initModules, requireModule, clearModules } from '../../../../default/app/register'
+import * as modules from '../../../../frameworks/legacy/api/modules'
+import { initModules, requireModule, clearModules } from '../../../../frameworks/legacy/app/register'
 
 describe('built-in modules', () => {
   before(() => {

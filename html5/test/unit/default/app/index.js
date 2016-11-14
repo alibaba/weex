@@ -7,8 +7,8 @@ chai.use(sinonChai)
 global.callNative = function () {}
 global.callAddElement = function () {}
 
-import App from '../../../../default/app'
-import { Element } from '../../../../vdom'
+import App from '../../../../frameworks/legacy/app'
+import { Element } from '../../../../runtime/vdom'
 
 describe('App Instance', () => {
   const oriCallNative = global.callNative
@@ -57,6 +57,12 @@ describe('App Instance', () => {
       expect(app.requireModule).a.function
       expect(app.updateActions).a.function
       expect(app.callTasks).a.function
+    })
+
+    it('run apis', () => {
+      expect(app.requireModule('stream')).to.deep.equal({})
+      expect(app.updateActions()).to.be.undefined
+      expect(app.callTasks([])).to.be.undefined
     })
   })
 

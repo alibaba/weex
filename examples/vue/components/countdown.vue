@@ -1,0 +1,86 @@
+<template>
+  <scroller>
+    <panel title="Countdown" type="primary">
+      <countdown
+        @tick="tick($event, 'countdown1')"
+        :remain="countdown1.remain"
+        style="width: 750; margin-top: 20; margin-bottom: 20;">
+        <text class="ctno1">{{countdown1.time.D}}</text>
+        <text class="ctno1" style="background-color: #FFFFFF; color: #AAAAAA;">day(s)</text>
+        <text class="ctno1">{{countdown1.time.hh}}</text>
+        <text class="ctno1" style="background-color: #FFFFFF; color: #AAAAAA;">hour(s)</text>
+        <text class="ctno1">{{countdown1.time.mm}}</text>
+        <text class="ctno1" style="background-color: #FFFFFF; color: #AAAAAA;">minute(s)</text>
+        <text class="ctno1">{{countdown1.time.ss}}</text>
+        <text class="ctno1" style="background-color: #FFFFFF; color: #AAAAAA;">second(s)</text>
+      </countdown>
+
+      <countdown
+        @tick="tick($event, 'countdown2')"
+        :remain="countdown2.remain"
+        style="width: 600;">
+        <text class="ctno2">{{countdown2.time.MM}}</text>
+        <text class="ctno2" style="background-color: #FFFFFF; color: #AAAAAA;">:</text>
+        <text class="ctno2">{{countdown2.time.ss}}</text>
+      </countdown>
+    </panel>
+  </scroller>
+</template>
+
+<style>
+  .ctno1 {
+    border-radius: 8;
+    padding-top: 6;
+    padding-bottom: 6;
+    padding-right: 4;
+    padding-left: 4;
+    margin-left: 2;
+    margin-right: 2;
+    background-color: rgb(242, 222, 222);
+    color: rgb(169, 68, 66);
+  }
+
+  .ctno2 {
+    border-radius: 8;
+    padding-top: 30;
+    padding-bottom: 30;
+    padding-left: 16;
+    padding-right: 16;
+    background-color: rgb(217, 237, 247);
+    color: rgb(49, 112, 143);
+    text-align: center;
+    font-size: 40;
+  }
+</style>
+
+<script>
+  module.exports = {
+    data: {
+      countdown1: {
+        remain: 5000,
+        time: {
+          D: '0',
+          hh: '00',
+          mm: '00',
+          ss: '00'
+        }
+      },
+      countdown2: {
+        remain: 5000,
+        time: {
+          MM: '0',
+          ss: '0'
+        }
+      }
+    },
+    components: {
+      panel: require('weex-vue-components/panel.vue'),
+      countdown: require('weex-vue-components/countdown.vue')
+    },
+    methods: {
+      tick: function (e, k) {
+        this[k].time = JSON.parse(JSON.stringify(e))
+      }
+    }
+  }
+</script>

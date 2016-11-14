@@ -1,0 +1,125 @@
+<template>
+  <div>
+    <panel title="flex-direction" type="primary">
+      <div class="row" style="flex-direction: row;">
+        <style-item value="row" style="margin-right: 0;"></style-item>
+        <style-item type="1"></style-item>
+      </div>
+      <div class="row" style="flex-direction: column">
+        <style-item value="column"></style-item>
+        <style-item type="1"></style-item>
+      </div>
+    </panel>
+
+    <panel title="justify-content" type="primary">
+      <div class="row" style="justify-content: flex-start">
+        <style-item style="margin-right:0;"></style-item>
+        <style-item style="margin-right:0;" type="1"></style-item>
+        <style-item style="margin-right:0;"></style-item>
+      </div>
+      <div class="row" style="justify-content: flex-end">
+        <style-item style="margin-right:0;"></style-item>
+        <style-item style="margin-right:0;" type="1"></style-item>
+        <style-item style="margin-right:0;"></style-item>
+      </div>
+      <div class="row" style="justify-content: center">
+        <style-item style="margin-right:0;"></style-item>
+        <style-item style="margin-right:0;" type="1"></style-item>
+        <style-item style="margin-right:0;"></style-item>
+      </div>
+      <div class="row" style="justify-content: space-between">
+        <style-item style="margin-right:0;"></style-item>
+        <style-item style="margin-right:0;" type="1"></style-item>
+        <style-item style="margin-right:0;"></style-item>
+      </div>
+    </panel>
+
+    <panel title="align-items" type="primary">
+      <div class="row row-align" style="align-items: flex-start">
+        <style-item style="margin-right:0;"></style-item>
+        <style-item style="margin-right:0;" type="1"></style-item>
+        <style-item style="margin-right:0;"></style-item>
+      </div>
+      <div class="row row-align" style="align-items: flex-end">
+        <style-item style="margin-right:0;"></style-item>
+        <style-item style="margin-right:0;" type="1"></style-item>
+        <style-item style="margin-right:0;"></style-item>
+      </div>
+      <div class="row row-align" style="align-items: center">
+        <style-item style="margin-right:0;"></style-item>
+        <style-item style="margin-right:0;" type="1"></style-item>
+        <style-item style="margin-right:0;"></style-item>
+      </div>
+      <div class="row row-align" style="align-items: stretch">
+        <style-item style="margin-right:0;"></style-item>
+        <style-item style="margin-right:0;" type="1"></style-item>
+        <style-item style="margin-right:0;"></style-item>
+      </div>
+    </panel>
+
+    <panel title="flex" type="primary">
+      <div class="row" style="align-items: flex-start">
+        <style-item style="margin-right:0;" value="no flex"></style-item>
+        <style-item style="margin-right:0;" value="no flex" type="1"></style-item>
+        <style-item style="margin-right:0;" value="no flex"></style-item>
+      </div>
+      <div class="row" style="align-items: flex-start">
+        <style-item style="margin-right:0;" value="no flex"></style-item>
+        <style-item style="margin-right:0; flex:1;" type="1" value="flex:1"></style-item>
+        <style-item style="margin-right:0; flex:2;" value="flex:2"></style-item>
+      </div>
+      <div class="row" style="align-items: flex-start">
+        <style-item style="margin-right:0; flex:1;" value="flex:1"></style-item>
+        <style-item style="margin-right:0; flex:1;" type="1" value="flex:1"></style-item>
+        <style-item style="margin-right:0; flex:1;" value="flex:1"></style-item>
+      </div>
+      <div class="row" style="align-items: flex-start">
+        <style-item style="margin-right:0; flex:1;" value="flex:1"></style-item>
+        <style-item style="margin-right:0; flex:2;" type="1" value="flex:2"></style-item>
+        <style-item style="margin-right:0; flex:3;" value="flex:3"></style-item>
+      </div>
+    </panel>
+    
+    <panel title="flex-wrap" type="primary">
+      <div class="row" style="flex-wrap:wrap;background-color:grey;padding:10;">
+        <style-item value="1:wrap"></style-item>
+        <style-item value="2:wrap"></style-item>
+        <style-item value="3:wrap"></style-item>
+        <style-item value="4:wrap"></style-item>
+        <style-item value="5:wrap"></style-item>
+        <style-item value="6:wrap"></style-item>
+      </div>
+      <div class="row" style="flex-wrap:nowrap;background-color:grey;padding:10;">
+        <style-item value="1:nowrap"></style-item>
+        <style-item value="2:nowrap"></style-item>
+        <style-item value="3:nowrap"></style-item>
+        <style-item value="4:nowrap"></style-item>
+        <style-item value="5:nowrap"></style-item>
+        <style-item value="6:nowrap"></style-item>
+      </div>
+    </panel>
+  </div>
+</template>
+
+<style>
+  .row {
+    flex-direction: row;
+    margin-bottom: 10px;
+  }
+
+  .row-align {
+    height: 160px;
+    border-width: 3px;
+    border-color: #ddd;
+    border-style: solid;
+  }
+</style>
+
+<script>
+  module.exports = {
+    components: {
+      panel: require('weex-vue-components/panel.vue'),
+      styleItem: require('./style-item.vue')
+    }
+  }
+</script>

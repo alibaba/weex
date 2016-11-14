@@ -1,8 +1,8 @@
 {
   "name": "weex-js-framework",
-  "version": "0.16.17",
+  "version": "0.17.0-alpha2",
   "subversion": {
-    "framework": "0.16.17",
+    "framework": "0.17.0-alpha2",
     "transformer": ">=0.1.5 <0.4"
   },
   "description": "Weex JS Framework",
@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "core-js": "^2.4.0",
-    "semver": "^5.1.0"
+    "semver": "^5.1.0",
+    "weex-vue-framework": "0.1.8"
   }
 }

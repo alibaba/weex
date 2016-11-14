@@ -1,7 +1,7 @@
 import chai from 'chai'
 const { expect } = chai
 
-import * as util from '../../../../default/util'
+import * as util from '../../../../frameworks/legacy/util'
 
 describe('Util', () => {
   describe('isReserved', () => {
@@ -155,6 +155,13 @@ describe('Util', () => {
 
       util.def(obj, 'd', 1)
       expect(obj).eql({ a: 1, c: 1 })
+    })
+  })
+
+  describe('hyphenate', () => {
+    it('should hyphenate a camelCase string', () => {
+      const str = 'helloWorldWeex'
+      expect(util.hyphenate(str)).eql('hello-world-weex')
     })
   })
 })

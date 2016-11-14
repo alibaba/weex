@@ -12,10 +12,11 @@ import {
   requireModule,
   requireCustomComponent,
   registerCustomComponent
-} from '../../../../default/app/register'
+} from '../../../../frameworks/legacy/app/register'
 
 function Ctx () {
   this.customComponentMap = {}
+  this.callTasks = sinon.spy()
 }
 
 describe('register', () => {
@@ -107,6 +108,20 @@ describe('register', () => {
         args: ['object', 'function']
       })
     })
+
+    it('run registered module', () => {
+      initModules({
+        event: [{
+          name: 'openURL',
+          args: ['string']
+        }]
+      })
+      const event = requireModule(ctx, 'event')
+      expect(event).to.have.keys('openURL')
+
+      event.openURL('http://test.com')
+      expect(ctx.callTasks.callCount).to.be.equal(1)
+    })
   })
 
   describe('api', () => {
@@ -135,6 +150,32 @@ describe('register', () => {
       expect(ctx.$test2()).to.deep.equal({
         ctx: ctx,
         value: 'test2'
+      })
+    })
+
+    it('override api', () => {
+      initMethods(Ctx, {
+        $override: function () {
+          return {
+            ctx: this,
+            value: 'first'
+          }
+        }
+      })
+
+      initMethods(Ctx, {
+        $override: function () {
+          return {
+            ctx: this,
+            value: 'ignored'
+          }
+        }
+      })
+
+      expect(ctx.$override).to.be.a('Function')
+      expect(ctx.$override()).to.deep.equal({
+        ctx: ctx,
+        value: 'first'
       })
     })
   })

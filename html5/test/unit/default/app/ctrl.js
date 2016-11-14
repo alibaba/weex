@@ -7,10 +7,10 @@ chai.use(sinonChai)
 global.callNative = function () {}
 global.callAddElement = function () {}
 
-import * as ctrl from '../../../../default/app/ctrl'
-import Differ from '../../../../default/app/differ'
-import { Document } from '../../../../vdom'
-import Listener from '../../../../vdom/listener'
+import * as ctrl from '../../../../frameworks/legacy/app/ctrl'
+import Differ from '../../../../frameworks/legacy/app/differ'
+import { Document } from '../../../../runtime/vdom'
+import Listener from '../../../../runtime/listener'
 
 describe('the api of app', () => {
   let app
@@ -96,6 +96,9 @@ describe('the api of app', () => {
       expect(json.type).eql('div')
       expect(json.children.length).eql(1)
     })
+    it('from empty object', () => {
+      expect(ctrl.getRootElement({})).to.deep.equal({})
+    })
   })
 
   describe('fireEvent', () => {
@@ -110,6 +113,14 @@ describe('the api of app', () => {
     it('error', () => {
       const result = ctrl.fireEvent(app, '_rootTest', 'click')
       expect(result).to.be.an.instanceof(Error)
+    })
+
+    it('click on both root & _rootTest', () => {
+      ctrl.fireEvent(app, ['_root', '_rootTest'], 'click')
+      const task = spy1.lastCall.args[0][0]
+      expect(task.module).to.be.equal('dom')
+      expect(task.method).to.be.equal('updateFinish')
+      expect(task.args.length).to.be.equal(0)
     })
   })
 
@@ -147,6 +158,31 @@ describe('the api of app', () => {
     })
   })
 
+  describe('updateActions', () => {
+    let originalCallNative
+
+    before(() => {
+      originalCallNative = global.callNative
+      global.callNative = function () {}
+    })
+
+    after(() => {
+      global.callNative = originalCallNative
+    })
+
+    it('update actions in listener', () => {
+      app.doc.listener.updates = [
+        {
+          method () {},
+          args: [undefined, null, /\.x/i, new Date(), 2, '3', true, ['']]
+        }
+      ]
+      ctrl.updateActions(app)
+
+      expect(app.doc.listener.updates).to.deep.equal([])
+    })
+  })
+
   describe('refreshData', () => {
     it('a simple data', () => {
       const data = { b: 'c' }
@@ -157,6 +193,15 @@ describe('the api of app', () => {
       expect(task.module).to.be.equal('dom')
       expect(task.method).to.be.equal('refreshFinish')
       expect(task.args.length).to.be.equal(0)
+    })
+
+    it('call refresh with refreshData function', () => {
+      app.vm.refreshData = function () {
+        app.vm.data = 'hello'
+      }
+      const data = { b: 'c' }
+      ctrl.refresh(app, data)
+      expect(app.vm.data).to.equal('hello')
     })
 
     it('error', () => {
@@ -175,6 +220,32 @@ describe('the api of app', () => {
       expect(app.doc).to.be.null
       expect(app.customComponentMap).to.be.null
       expect(app.callbacks).to.be.null
+    })
+    it('the incomplete data', () => {
+      const appx = createApp()
+      delete appx.vm
+      ctrl.destroy(appx)
+      expect(appx.id).to.be.empty
+      expect(appx.blocks).to.be.null
+      expect(appx.vm).to.be.null
+      expect(appx.doc).to.be.null
+      expect(appx.customComponentMap).to.be.null
+      expect(appx.callbacks).to.be.null
+    })
+    it('clear vms', () => {
+      const appy = createApp()
+      appy.vm = {
+        $emit () {},
+        _watchers: [{ teardown () {} }],
+        _childrenVms: [{ $emit () {} }]
+      }
+      ctrl.destroy(appy)
+      expect(appy.id).to.be.empty
+      expect(appy.blocks).to.be.null
+      expect(appy.vm).to.be.null
+      expect(appy.doc).to.be.null
+      expect(appy.customComponentMap).to.be.null
+      expect(appy.callbacks).to.be.null
     })
   })
 })

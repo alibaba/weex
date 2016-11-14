@@ -11,6 +11,7 @@
         // FORMAT:
         // `name` key is the example filename without '.we'
         // Support sub directory, e.g. 'new-fashion/index'
+        {name: 'vue/index', title: 'Vue Examples'},
 
         // common
         {name: 'hello', title: 'Hello World'},

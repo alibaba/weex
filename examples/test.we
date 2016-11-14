@@ -1,0 +1,25 @@
+<template>
+  <scroller>
+    <div id="r">
+      <text>{{x}}</text>
+      <div style="height: 2000; background-color: #ff0000;"></div>
+      <text onclick="foo">{{x}}</text>
+    </div>
+  </scroller>
+</template>
+
+<script>
+  var dom = require('@weex-module/dom')
+  module.exports = {
+    data: function () {
+      return {
+        x: 1
+      }
+    },
+    methods: {
+      foo: function (e) {
+        dom.scrollToElement(this.$el('r'), { offset: 0 })
+      }
+    }
+  }
+</script>
