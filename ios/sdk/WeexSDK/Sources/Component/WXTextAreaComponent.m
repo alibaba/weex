@@ -126,6 +126,10 @@
             NSString * value = [WXConvert NSString:attributes[@"value"]];
             if (value) {
                 _textValue = value;
+                if([value length]>0)
+                {
+                    _placeHolderLabel.text = @"";
+                }
             }
         }
         
@@ -408,11 +412,13 @@
 - (void)setPlaceholderAttributedString
 {
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:_placeholderString];
+    UIFont *font = [WXUtility fontWithSize:_fontSize textWeight:_fontWeight textStyle:_fontStyle fontFamily:_fontFamily];
     if (_placeholderColor) {
         [attributedString addAttribute:NSForegroundColorAttributeName value:_placeholderColor range:NSMakeRange(0, _placeholderString.length)];
+        [attributedString addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, _placeholderString.length)];
     }
     _placeHolderLabel.backgroundColor = [UIColor clearColor];
-    CGSize expectedLabelSize = [_placeholderString boundingRectWithSize:CGSizeMake(_textView.frame.size.width/2, _textView.frame.size.height) options:NSStringDrawingUsesLineFragmentOrigin attributes:nil context:nil].size;
+    CGSize expectedLabelSize = [_placeholderString sizeWithFont:font constrainedToSize:CGSizeMake(296, FLT_MAX) lineBreakMode:_placeHolderLabel.lineBreakMode];
     _placeHolderLabel.clipsToBounds = NO;
     CGRect newFrame = _placeHolderLabel.frame;
     newFrame.size.height = ceil(expectedLabelSize.height);
