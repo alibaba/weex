@@ -82,7 +82,7 @@ function generateContent () {
         content.push(metaData.source)
         names.push('  ' + metaData.name)
       } else {
-        throw Error(framework, 'is not existed, confirm input correct framework name.')
+        throw Error('Framework "' framework + '" is not existed')
       }
     })
     var content = '// built by npm run build:frameworks:config\n\n' +
