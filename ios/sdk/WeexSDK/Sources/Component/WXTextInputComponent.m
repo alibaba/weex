@@ -210,7 +210,7 @@ WX_EXPORT_METHOD(@selector(blur))
 - (void)viewWillLoad {
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWasShown:)
-                                                 name:UIKeyboardDidShowNotification
+                                                 name:UIKeyboardWillShowNotification
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -224,7 +224,7 @@ WX_EXPORT_METHOD(@selector(blur))
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:_inputView];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardDidShowNotification
+                                                    name:UIKeyboardWillShowNotification
                                                   object:nil];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
@@ -479,9 +479,9 @@ WX_EXPORT_METHOD(@selector(blur))
     UIView *rootView = self.weexInstance.rootView;
     CGRect rect = _rootViewOriginFrame;
     CGRect rootViewFrame = rootView.frame;
-    CGRect inputFrame = [_inputView convertRect:_inputView.frame toView:rootView];
+    CGRect inputFrame = [_inputView.superview convertRect:_inputView.frame toView:rootView];
     if (movedUp) {
-        CGFloat offset = _keyboardSize.height - CGRectGetMaxY(rect) + CGRectGetMaxY(inputFrame);
+        CGFloat offset =inputFrame.origin.y-(rootViewFrame.size.height-_keyboardSize.height-inputFrame.size.height);
         if (offset > 0) {
             rect = (CGRect){
                 .origin.x = 0.f,
@@ -601,7 +601,7 @@ WX_EXPORT_METHOD(@selector(blur))
         .origin.y = CGRectGetMaxY(screenRect) - _keyboardSize.height - 54,
         .size = _keyboardSize
     };
-    CGRect inputFrame = [_inputView convertRect:_inputView.frame toView:rootView]
+    CGRect inputFrame = [_inputView.superview convertRect:_inputView.frame toView:rootView]
     ;
     if (keyboardRect.origin.y - inputFrame.size.height <= inputFrame.origin.y) {
         [self setViewMovedUp:YES];
