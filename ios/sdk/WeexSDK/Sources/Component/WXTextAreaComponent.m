@@ -384,8 +384,10 @@
 - (void)textViewDidChange:(UITextView *)textView
 {
     _placeHolderLabel.text = @"";
-    if (_inputEvent) {
-        [self fireEvent:@"input" params:@{@"value":textView.text}];
+    if (textView.markedTextRange == nil) {
+        if (_inputEvent) {
+            [self fireEvent:@"input" params:@{@"value":textView.text}];
+        }
     }
 }
 
@@ -396,7 +398,7 @@
     }
     if (_changeEvent) {
         if (![[textView text] isEqualToString:_changeEventString]) {
-            [self fireEvent:@"change" params:@{@"value":[textView text]} domChanges:@{@"attrs":@{@"value":[_textView text]}}];
+            [self fireEvent:@"change" params:@{@"value":[textView text]} domChanges:@{@"attrs":@{@"value":[textView text]}}];
         }
     }
     if (_blurEvent) {
