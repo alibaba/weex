@@ -76,8 +76,8 @@
     "modals": "^0.1.6",
     "scroll-to": "0.0.2",
     "semver": "^5.1.0",
-    "weex-components": "^0.2.0",
-    "weex-vue-framework": "^0.1.8"
+    "weex-vue-framework": "^0.1.8",
+    "weex-components": "^0.2.0"
   },
   "devDependencies": {
     "babel-core": "^6.17.0",
