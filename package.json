@@ -113,7 +113,7 @@
     "weex-loader": "^0.3.1",
     "weex-vdom-tester": "^0.1.2",
     "weex-vue-components": "^0.1.0",
-    "weex-vue-loader": "^0.1.1",
+    "weex-vue-loader": "^0.1.2",
     "wwp": "^0.3.0"
   }
 }
