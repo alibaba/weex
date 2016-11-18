@@ -33,6 +33,41 @@ const dom = {
   },
 
   /**
+   * getComponentRect
+   * @param {string} ref
+   * @param {function} callbackId
+   */
+  getComponentRect: function (ref, callbackId) {
+    const info = { result: false }
+
+    if (ref && ref === 'viewport') {
+      info.result = true
+      info.size = {
+        width: document.documentElement.clientWidth,
+        height: document.documentElement.clientHeight,
+        top: 0,
+        left: 0,
+        right: document.documentElement.clientWidth,
+        bottom: document.documentElement.clientHeight
+      }
+    }
+    else {
+      const elem = this.getComponentManager().getComponent(ref)
+      if (elem && elem.node) {
+        info.result = true
+        info.size = elem.node.getBoundingClientRect()
+      }
+    }
+
+    const message = info.result ? info : {
+      result: false,
+      errMsg: 'Illegal parameter'
+    }
+    this.sender.performCallback(callbackId, message)
+    return message
+  },
+
+  /**
    * for adding fontFace
    * @param {string} key fontFace
    * @param {object} styles rules
@@ -54,6 +89,9 @@ const meta = {
   dom: [{
     name: 'scrollToElement',
     args: ['string', 'object']
+  }, {
+    name: 'getComponentRect',
+    args: ['string', 'function']
   }, {
     name: 'addRule',
     args: ['string', 'object']

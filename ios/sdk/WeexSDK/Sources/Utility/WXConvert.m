@@ -173,7 +173,7 @@ WX_NUMBER_CONVERT(NSUInteger, unsignedIntegerValue)
         colorCache.countLimit = 64;
     });
     
-    if ([value isKindOfClass:[NSNull class]]) {
+    if ([value isKindOfClass:[NSNull class]] || !value) {
         return nil;
     }
     

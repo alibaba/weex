@@ -7,6 +7,7 @@ const proto = {
   create (nodeType) {
     const node = document.createElement(nodeType || 'div')
     node.classList.add('weex-droot')
+    node.classList.add('weex-container')
     return node
   },
 

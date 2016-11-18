@@ -10,6 +10,24 @@
         onchange="onchange"
         oninput="oninput"
       />
+      <input
+        type="date"
+        placeholder="date Input"
+        class="date"
+        autofocus="false"
+        value="2016-10-12"
+        max="2017-10-12"
+        min="2015-10-12"
+        onchange="onchange"
+      />
+      <input
+        type="time"
+        placeholder="time Input"
+        class="time"
+        autofocus="false"
+        value="10:13"
+        onchange="onchange"
+      />
       <text>oninput: {{txtInput}}</text>
       <text>onchange: {{txtChange}}</text>
     </wxc-panel>
@@ -19,6 +37,18 @@
 <style>
   .input {
     font-size: 60px;
+    height: 80px;
+    width: 400px;
+  }
+  .date {
+    marginBottom:20px;
+    font-size: 40px;
+    height: 80px;
+    width: 400px;
+  }
+  .time {
+    marginBottom:20px;
+    font-size: 40px;
     height: 80px;
     width: 400px;
   }

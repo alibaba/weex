@@ -116,6 +116,7 @@ Object.assign(Element.prototype, {
       moveIndex(node, this.children, this.children.indexOf(before), true)
       if (node.nodeType === 1) {
         const pureBefore = nextElement(before)
+        /* istanbul ignore next */
         const index = moveIndex(
           node,
           this.pureChildren,

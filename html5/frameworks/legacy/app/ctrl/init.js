@@ -63,7 +63,7 @@ export function init (app, code, data) {
   }
 
   // wrap IFFE and use strict mode
-  functionBody = `(function(){'use strict'; ${functionBody} })()`
+  functionBody = `(function(global){"use strict"; ${functionBody} })(Object.create(this))`
 
   // run code and get result
   const { WXEnvironment } = global
@@ -97,7 +97,6 @@ export function init (app, code, data) {
     const fn = new Function(
       'define',
       'require',
-      'document',
       'bootstrap',
       'register',
       'render',
@@ -116,7 +115,6 @@ export function init (app, code, data) {
     fn(
       bundleDefine,
       bundleRequire,
-      bundleDocument,
       bundleBootstrap,
       bundleRegister,
       bundleRender,
@@ -134,7 +132,6 @@ export function init (app, code, data) {
     const fn = new Function(
       'define',
       'require',
-      'document',
       'bootstrap',
       'register',
       'render',
@@ -149,7 +146,6 @@ export function init (app, code, data) {
     fn(
       bundleDefine,
       bundleRequire,
-      bundleDocument,
       bundleBootstrap,
       bundleRegister,
       bundleRender,
