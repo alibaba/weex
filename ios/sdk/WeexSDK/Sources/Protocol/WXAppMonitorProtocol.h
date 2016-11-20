@@ -14,6 +14,7 @@
 #define JSLIBVERSION        @"JSLibVersion"
 #define WXREQUESTTYPE       @"requestType"
 #define WXCONNECTIONTYPE    @"connectionType"
+#define WXCUSTOMMONITORINFO @"customMonitorInfo"
 
 #define SDKINITTIME         @"SDKInitTime"
 #define SDKINITINVOKETIME   @"SDKInitInvokeTime"
