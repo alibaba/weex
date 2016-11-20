@@ -91,6 +91,7 @@
         [self _setupNavBarWithStyles:_styles attributes:_attributes];
         [self _initCSSNodeWithStyles:_styles];
         [self _initViewPropertyWithStyles:_styles];
+        [self _initViewPropertyWithAttributes:_attributes];
         [self _handleBorders:styles isUpdating:NO];
     }
     
@@ -391,6 +392,7 @@
 {
     WXAssertMainThread();
     
+    [self _updateViewAttributes:attributes];
     [self _updateNavBarAttributes:attributes];
     
     [self updateAttributes:attributes];

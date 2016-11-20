@@ -9,6 +9,7 @@
 #import "WXComponent+Events.h"
 #import "WXComponent.h"
 #import "WXComponent_internal.h"
+#import "WXComponent+ViewManagement.h"
 #import "WXSDKInstance.h"
 #import "WXAssert.h"
 #import "WXUtility.h"
@@ -123,6 +124,7 @@ if ([removeEventName isEqualToString:@#eventName]) {\
 - (void)_initEvents:(NSArray *)events
 {
     NSArray *eventsCopy = [events copy];
+    [self touchGesture];
     for (NSString *addEventName in eventsCopy) {
         [self _addEventOnMainThread:addEventName];
     }
@@ -240,7 +242,7 @@ if ([removeEventName isEqualToString:@#eventName]) {\
         position[@"width"] = @(frame.size.width);
         position[@"height"] = @(frame.size.height);
     }
-
+    
     [self fireEvent:@"click" params:@{@"position":position}];
 }
 
@@ -585,6 +587,11 @@ if ([removeEventName isEqualToString:@#eventName]) {\
     if (_listenTouchStart) {
         [self fireTouchEvent:@"touchstart" withTouches:touches];
     }
+    if([_component isShouldHighLight])
+    {
+        [_component highLight];
+        [self fireTouchEvent:@"showunderlay" withTouches:touches];
+    }
 }
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
@@ -603,6 +610,11 @@ if ([removeEventName isEqualToString:@#eventName]) {\
     
     if (_listenTouchEnd) {
         [self fireTouchEvent:@"touchend" withTouches:touches];
+    }
+    if([_component isShouldHighLight])
+    {
+        [_component hideHighLight];
+        [self fireTouchEvent:@"hideunderlay" withTouches:touches];
     }
 }
 

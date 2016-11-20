@@ -38,6 +38,8 @@
     UIView *_view;
     CGFloat _opacity;
     WXVisibility  _visibility;
+    UIColor *_underlayColor;
+    CGFloat _activeOpacity;
     
     /**
      *  Events
@@ -151,6 +153,10 @@
 - (void)_initViewPropertyWithStyles:(NSDictionary *)styles;
 
 - (void)_updateViewStyles:(NSDictionary *)styles;
+
+- (void)_initViewPropertyWithAttributes:(NSDictionary *)attributes;
+
+- (void)_updateViewAttributes:(NSDictionary *)attributes;
 
 - (void)_initEvents:(NSArray *)events;
 

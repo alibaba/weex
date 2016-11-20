@@ -163,6 +163,61 @@
     }
 }
 
+
+- (void)_initViewPropertyWithAttributes:(NSDictionary *)attributes
+{
+    _underlayColor = attributes[@"underlaycolor"] ? [WXConvert UIColor:attributes[@"underlaycolor"]] : nil;
+    _activeOpacity = attributes[@"activeopacity"] ? [WXConvert CGFloat:attributes[@"activeopacity"]] : CGFLOAT_MAX;
+}
+
+- (void)_updateViewAttributes:(NSDictionary *)attributes
+{
+    if (attributes[@"underlaycolor"]) {
+        _underlayColor = [WXConvert UIColor:attributes[@"underlaycolor"]];
+    }
+    
+    if (attributes[@"activeopacity"]) {
+        _activeOpacity = [WXConvert CGFloat:attributes[@"activeopacity"]];
+    }
+}
+
+-(BOOL)isShouldHighLight
+{
+    if(_underlayColor || _activeOpacity != CGFLOAT_MAX)
+    {
+        return YES;
+    }
+    return NO;
+}
+
+-(void)highLight
+{
+    if(_underlayColor)
+    {
+        _layer.backgroundColor = _underlayColor.CGColor;
+        [self setNeedsDisplay];
+    }
+    if(_activeOpacity != CGFLOAT_MAX)
+    {
+        _layer.opacity = _activeOpacity;
+    }
+}
+
+
+-(void)hideHighLight
+{
+    if (!CGColorEqualToColor(_layer.backgroundColor,_backgroundColor.CGColor))
+    {
+        _layer.backgroundColor = _backgroundColor.CGColor;
+        [self setNeedsDisplay];
+    }
+    if(_activeOpacity != CGFLOAT_MAX)
+    {
+        _layer.opacity = _opacity;
+    }
+
+}
+
 - (void)_unloadViewWithReusing:(BOOL)isReusing
 {
     WXAssertMainThread();

@@ -10,4 +10,20 @@
 
 @interface WXComponent (ViewManagement)
 
+
+/**
+ * @abstract return YES ,the View should highlight, function should use when view has been rendered
+ **/
+-(BOOL)isShouldHighLight;
+
+/**
+ * @abstract tell the component mananger  highlight view
+ */
+-(void)highLight;
+
+/**
+ * @abstract tell the component mananger not highlight view
+ */
+-(void)hideHighLight;
+
 @end
