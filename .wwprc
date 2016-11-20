@@ -13,7 +13,8 @@
     "a",
     "embed",
     "spinner",
-    "web"
+    "web",
+    "neighbor"
   ],
   "apis": [
     "dom",
