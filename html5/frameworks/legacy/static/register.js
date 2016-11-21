@@ -23,6 +23,7 @@ export function registerComponents (components) {
       if (typeof name === 'string') {
         nativeComponentMap[name] = true
       }
+      /* istanbul ignore else */
       else if (typeof name === 'object' && typeof name.type === 'string') {
         nativeComponentMap[name.type] = name
       }
@@ -35,6 +36,7 @@ export function registerComponents (components) {
  * @param  {object} modules a object of modules
  */
 export function registerModules (modules) {
+  /* istanbul ignore else */
   if (typeof modules === 'object') {
     initModules(modules)
   }
@@ -45,6 +47,7 @@ export function registerModules (modules) {
  * @param  {object} apis a object of apis
  */
 export function registerMethods (methods) {
+  /* istanbul ignore else */
   if (typeof methods === 'object') {
     initMethods(Vm, methods)
   }

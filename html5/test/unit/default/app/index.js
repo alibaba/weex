@@ -58,6 +58,12 @@ describe('App Instance', () => {
       expect(app.updateActions).a.function
       expect(app.callTasks).a.function
     })
+
+    it('run apis', () => {
+      expect(app.requireModule('stream')).to.deep.equal({})
+      expect(app.updateActions()).to.be.undefined
+      expect(app.callTasks([])).to.be.undefined
+    })
   })
 
   describe('call tasks', () => {

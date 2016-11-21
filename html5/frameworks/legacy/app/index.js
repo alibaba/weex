@@ -28,4 +28,10 @@ App.prototype.callTasks = function (tasks) {
   callTasks(this, tasks)
 }
 
+/**
+ * Prevent modification of App and App.prototype
+ */
+Object.freeze(App)
+Object.freeze(App.prototype)
+
 export default App

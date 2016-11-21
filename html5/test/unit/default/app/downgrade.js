@@ -23,6 +23,12 @@ describe('downgrade', () => {
         expect(test).to.be.equal(should)
       })
     })
+
+    it('invalid version format', () => {
+      expect(Downgrade.normalizeVersion([])).to.be.equal('0.0.0')
+      expect(Downgrade.normalizeVersion({})).to.be.equal('0.0.0')
+      expect(Downgrade.normalizeVersion(2.0)).to.be.equal('0.0.0')
+    })
   })
 
   describe('getError', () => {

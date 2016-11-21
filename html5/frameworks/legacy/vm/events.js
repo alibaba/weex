@@ -98,6 +98,7 @@ export function $on (type, handler) {
   events[type] = handlerList
 
   // fixed old version lifecycle design
+  /* istanbul ignore if */
   if (type === 'hook:ready' && this._ready) {
     this.$emit('hook:ready')
   }

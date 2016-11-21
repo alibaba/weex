@@ -106,6 +106,7 @@ describe('bind and fire events', () => {
 
       const spyA = sinon.spy()
       const spyB = sinon.spy()
+
       vm.$on('customTypeA', spyA)
       subVm.$on('customTypeA', spyB)
 

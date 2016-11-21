@@ -157,4 +157,11 @@ describe('Util', () => {
       expect(obj).eql({ a: 1, c: 1 })
     })
   })
+
+  describe('hyphenate', () => {
+    it('should hyphenate a camelCase string', () => {
+      const str = 'helloWorldWeex'
+      expect(util.hyphenate(str)).eql('hello-world-weex')
+    })
+  })
 })

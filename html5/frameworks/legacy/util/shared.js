@@ -6,6 +6,7 @@
  */
 
 function extend (target, ...src) {
+  /* istanbul ignore else */
   if (typeof Object.assign === 'function') {
     Object.assign(target, ...src)
   }

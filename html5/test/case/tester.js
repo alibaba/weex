@@ -93,6 +93,31 @@ describe('test input and output', function () {
     it('promise case', () => checkOutput(app, 'promise'))
   })
 
+  describe('invalid usage', function () {
+    describe('strict mode', () => {
+      const readSource = name => getCode('throws/' + name + '.source.js')
+
+      let app
+      beforeEach(() => { app = createApp(runtime) })
+      afterEach(() => { app = null })
+
+      it('global variable 1', () => {
+        const sourceCode = readSource('global-variable1')
+        expect(() => app.$create(sourceCode)).to.throw(ReferenceError)
+      })
+
+      it('global variable 2', () => {
+        const sourceCode = readSource('global-variable2')
+        expect(() => app.$create(sourceCode)).to.throw(ReferenceError)
+      })
+
+      it('global variable 3', () => {
+        const sourceCode = readSource('global-variable3')
+        expect(() => app.$create(sourceCode)).to.throw(ReferenceError)
+      })
+    })
+  })
+
   describe('complex cases', function () {
     let app
 

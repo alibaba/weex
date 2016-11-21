@@ -5,10 +5,10 @@
 import './style/base.css'
 
 import { subversion } from '../../../../package.json'
-import { init, config as runtimeConfig } from '../../../runtime'
+import runtime from '../../../runtime'
 import frameworks from '../../../frameworks'
 
-runtimeConfig.frameworks = frameworks
+runtime.config.frameworks = frameworks
 const { framework, transformer } = subversion
 
 // register framework meta info
@@ -17,8 +17,8 @@ global.transformerVersion = transformer
 
 // init frameworks
 import Listener from '../dom/componentManager'
-runtimeConfig.Document.Listener = Listener
-const globalMethods = init(runtimeConfig)
+runtime.config.Document.Listener = Listener
+const globalMethods = runtime.init(runtime.config)
 
 // set global methods
 for (const methodName in globalMethods) {

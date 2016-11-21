@@ -10,7 +10,7 @@ const version = pkg.subversion.framework
 const date = new Date().toISOString().split('T')[0].replace(/\-/g, '')
 const banner = `\
 (this.nativeLog || function(s) {console.log(s)})('START JS FRAMEWORK: ${version} Build ${date}');
-var global = this, process = { env: {}};
+var global = this, process = { env: {}};var setTimeout = global.setTimeout;
 `
 
 export default {

@@ -109,12 +109,12 @@ export function check (config, deviceInfo) {
   if (typof(config) === 'function') {
     let customDowngrade = config.call(this, deviceInfo, {
       semver: semver,
-      normalizeVersion: this.normalizeVersion
+      normalizeVersion
     })
 
     customDowngrade = !!customDowngrade
 
-    result = customDowngrade ? this.getError('custom', '', 'custom params') : result
+    result = customDowngrade ? getError('custom', '', 'custom params') : result
   }
   else {
     config = isPlainObject(config) ? config : {}
@@ -132,18 +132,18 @@ export function check (config, deviceInfo) {
       const criteria = cObj[i]
 
       if (criteria && isVersion) {
-        const c = this.normalizeVersion(criteria)
-        const d = this.normalizeVersion(deviceInfo[i])
+        const c = normalizeVersion(criteria)
+        const d = normalizeVersion(deviceInfo[i])
 
         if (semver.satisfies(d, c)) {
-          result = this.getError(key, val, criteria)
+          result = getError(key, val, criteria)
           break
         }
       }
       else if (isDeviceModel) {
         const _criteria = typof(criteria) === 'array' ? criteria : [criteria]
         if (_criteria.indexOf(val) >= 0) {
-          result = this.getError(key, val, criteria)
+          result = getError(key, val, criteria)
           break
         }
       }

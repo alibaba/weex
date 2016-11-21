@@ -1,6 +1,6 @@
 let frameworks
 
-const versionRegExp = /^\s*\/\/ *(\{[^\}]*\}) *\r?\n/
+const versionRegExp = /^\s*\/\/ *(\{[^}]*\}) *\r?\n/
 
 /**
  * Detect a JS Bundle code and make sure which framework it's based to. Each JS

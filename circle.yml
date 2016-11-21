@@ -1,6 +1,6 @@
 machine:
   node:
-    version: 6
+    version: 7
   environment:
     GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
 test:

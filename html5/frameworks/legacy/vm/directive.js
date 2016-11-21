@@ -282,7 +282,7 @@ function bindEvents (vm, el, events) {
       handler = vm[handler]
       /* istanbul ignore if */
       if (!handler) {
-        console.debug(`[JS Framework] The method "${handler}" is not defined.`)
+        console.warn(`[JS Framework] The event handler "${handler}" is not defined.`)
       }
     }
     setEvent(vm, el, key, handler)
