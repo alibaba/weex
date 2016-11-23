@@ -204,8 +204,31 @@
  */
 package com.taobao.weex.dom;
 
+import com.taobao.weex.common.Constants;
+import com.taobao.weex.dom.flex.CSSLayout;
+
+import static com.taobao.weex.common.Constants.Event;
+
 /**
  * Created by sospartan on 7/27/16.
  */
 public class TestDomObject extends WXDomObject {
+  public TestDomObject(){
+    style = new WXStyle();
+    csslayout.dimensions[0] = 100;
+    csslayout.dimensions[0] = 50;
+    csslayout.position[CSSLayout.POSITION_LEFT] = 10;
+    csslayout.position[CSSLayout.POSITION_RIGHT] = 20;
+    csslayout.position[CSSLayout.POSITION_TOP] = 20;
+    csslayout.position[CSSLayout.POSITION_BOTTOM] = 30;
+    attr = new WXAttr();
+
+    event = new WXEvent();
+    event.add(Event.DISAPPEAR);
+    event.add(Event.APPEAR);
+    event.add(Event.CHANGE);
+    event.add(Event.BLUR);
+    event.add(Event.INPUT);
+    event.add(Event.FOCUS);
+  }
 }

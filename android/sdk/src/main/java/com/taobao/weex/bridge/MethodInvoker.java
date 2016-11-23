@@ -216,9 +216,11 @@ import java.lang.reflect.Type;
 public class MethodInvoker implements Invoker {
 
   final Method mMethod;
+  Type[] mParam;
 
   public MethodInvoker(Method method){
     mMethod = method;
+    mParam = mMethod.getGenericParameterTypes();
   }
 
   @Override
@@ -228,7 +230,10 @@ public class MethodInvoker implements Invoker {
 
   @Override
   public Type[] getParameterTypes() {
-    return mMethod.getGenericParameterTypes();
+    if(mParam ==null){
+      mParam = mMethod.getGenericParameterTypes();
+    }
+    return mParam;
   }
 
   @Override

@@ -45,9 +45,23 @@ chai.use(sinonChai)
 const callNativeSpy = sinon.spy()
 global.callNative = function () {}
 
+const callAddElementSpy = sinon.spy()
+global.callAddElement = function () {}
+
 describe('test input and output', () => {
   const oriCallNative = global.callNative
+  const oriCallAddElement = global.callAddElement
   const allDocs = {}
+
+  function callAddElementWrapper (name, ref, json, index, cbId) {
+    callAddElementSpy(ref, json, index)
+
+    const doc = allDocs[name]
+
+    doc.addElement(ref, json, index)
+
+    return callAddElementSpy.args.length
+  }
 
   function callNativeWrapper (name, tasks, cbId) {
     callNativeSpy(tasks)
@@ -84,14 +98,82 @@ describe('test input and output', () => {
   beforeEach(() => {
     callNativeSpy.reset()
     global.callNative = callNativeWrapper
+
+    callAddElementSpy.reset()
+    global.callAddElement = callAddElementWrapper
   })
 
   afterEach(() => {
     global.callNative = oriCallNative
+    global.callAddElement = oriCallAddElement
   })
 
   it('single case', () => {
     const name = 'foo'
+    const inputCode = readInput(name)
+    const outputCode = readOutput(name)
+    const doc = new Document(name)
+    allDocs[name] = doc
+
+    framework.createInstance(name, inputCode)
+    const expected = eval('(' + outputCode + ')')
+    const actual = doc.toJSON()
+    expect(actual).eql(expected)
+
+    framework.destroyInstance(name)
+    delete allDocs[name]
+  })
+
+  it('static1 case', () => {
+    const name = 'static1'
+    const inputCode = readInput(name)
+    const outputCode = readOutput(name)
+    const doc = new Document(name)
+    allDocs[name] = doc
+
+    framework.createInstance(name, inputCode)
+    const expected = eval('(' + outputCode + ')')
+    const actual = doc.toJSON()
+    expect(actual).eql(expected)
+
+    framework.destroyInstance(name)
+    delete allDocs[name]
+  })
+
+  it('static2 case', () => {
+    const name = 'static2'
+    const inputCode = readInput(name)
+    const outputCode = readOutput(name)
+    const doc = new Document(name)
+    allDocs[name] = doc
+
+    framework.createInstance(name, inputCode)
+    const expected = eval('(' + outputCode + ')')
+    const actual = doc.toJSON()
+    expect(actual).eql(expected)
+
+    framework.destroyInstance(name)
+    delete allDocs[name]
+  })
+
+  it('static3 case', () => {
+    const name = 'static3'
+    const inputCode = readInput(name)
+    const outputCode = readOutput(name)
+    const doc = new Document(name)
+    allDocs[name] = doc
+
+    framework.createInstance(name, inputCode)
+    const expected = eval('(' + outputCode + ')')
+    const actual = doc.toJSON()
+    expect(actual).eql(expected)
+
+    framework.destroyInstance(name)
+    delete allDocs[name]
+  })
+
+  it('static4 case', () => {
+    const name = 'static4'
     const inputCode = readInput(name)
     const outputCode = readOutput(name)
     const doc = new Document(name)
@@ -148,6 +230,7 @@ describe('test input and output', () => {
     framework.createInstance(name, inputCode)
     const expected = eval('(' + outputCode + ')')
     const actual = doc.toJSON()
+
     expect(actual).eql(expected)
 
     framework.destroyInstance(name)
@@ -340,6 +423,98 @@ describe('test input and output', () => {
     delete allDocs[name]
   })
 
+  it('append-root-event case', () => {
+    const name = 'append-root-event'
+    const inputCode = readInput(name)
+    const outputCode = readOutput(name)
+    const doc = new Document(name)
+    allDocs[name] = doc
+
+    framework.createInstance(name, inputCode)
+    const expected = eval('(' + outputCode + ')')
+    const actual = doc.toJSON()
+    expect(actual).eql(expected)
+
+    framework.callJS(name, [{
+      method: 'fireEvent',
+      args: [doc.body.children[0].ref, 'click', {}]
+    }])
+
+    expect(doc.body.children[0].attr.value).eql(2)
+
+    framework.destroyInstance(name)
+    delete allDocs[name]
+  })
+
+  it('clear-module case', () => {
+    const nameA = 'clear-moduleA'
+    const nameB = 'clear-moduleB'
+    const inputCodeA = readInput(nameA)
+    const outputCodeA = readOutput(nameA)
+    const inputCodeB = readInput(nameB)
+    const outputCodeB = readOutput(nameB)
+
+    const docA = new Document(nameA)
+    const docB = new Document(nameB)
+    allDocs[nameA] = docA
+    allDocs[nameB] = docB
+
+    framework.createInstance(nameA, inputCodeA)
+    framework.createInstance(nameB, inputCodeB)
+
+    const expectedB = eval('(' + outputCodeB + ')')
+    const actualB = docB.toJSON()
+    expect(actualB).eql(expectedB)
+
+    framework.destroyInstance(nameB)
+
+    framework.callJS(nameA, [{
+      method: 'fireEvent',
+      args: [docA.body.children[0].ref, 'click', {}]
+    }])
+
+    const expectedA = eval('(' + outputCodeA + ')')
+    const actualA = docA.toJSON()
+
+    expect(actualA).eql(expectedA)
+
+    framework.destroyInstance(nameA)
+    delete allDocs[nameA]
+    delete allDocs[nameB]
+  })
+
+  it('clear-dep-target case', () => {
+    const nameError = 'clear-dep-target-error'
+    const nameFine = 'clear-dep-target-fine'
+    const inputCodeError = readInput(nameError)
+    const inputCodeFine = readInput(nameFine)
+    const outputCodeFine = readOutput(nameFine)
+
+    const docError = new Document(nameError)
+    allDocs[nameError] = docError
+
+    // should throw
+    expect(() => {
+      framework.createInstance(nameError, inputCodeError)
+    }).to.throw(TypeError)
+
+    framework.destroyInstance(nameError)
+
+    const docFine = new Document(nameFine)
+    allDocs[nameFine] = docFine
+
+    // no throw
+    framework.createInstance(nameFine, inputCodeFine)
+
+    const expected = eval('(' + outputCodeFine + ')')
+    const actual = docFine.toJSON()
+    expect(actual).eql(expected)
+
+    framework.destroyInstance(nameFine)
+    delete allDocs[nameError]
+    delete allDocs[nameFine]
+  })
+
   it('if case', () => {
     const name = 'if'
     const inputCode = readInput(name)
@@ -356,8 +531,40 @@ describe('test input and output', () => {
     delete allDocs[name]
   })
 
+  it('if in root element case', () => {
+    const name = 'if-root'
+    const inputCode = readInput(name)
+    const outputCode = readOutput(name)
+    const doc = new Document(name)
+    allDocs[name] = doc
+
+    framework.createInstance(name, inputCode)
+    const expected = eval('(' + outputCode + ')')
+    const actual = doc.toJSON()
+    expect(actual).eql(expected)
+
+    framework.destroyInstance(name)
+    delete allDocs[name]
+  })
+
   it('repeat with index case', () => {
     const name = 'repeat-index'
+    const inputCode = readInput(name)
+    const outputCode = readOutput(name)
+    const doc = new Document(name)
+    allDocs[name] = doc
+
+    framework.createInstance(name, inputCode)
+    const expected = eval('(' + outputCode + ')')
+    const actual = doc.toJSON()
+    expect(actual).eql(expected)
+
+    framework.destroyInstance(name)
+    delete allDocs[name]
+  })
+
+  it('repeat in root element case', () => {
+    const name = 'repeat-root'
     const inputCode = readInput(name)
     const outputCode = readOutput(name)
     const doc = new Document(name)
@@ -528,6 +735,28 @@ describe('test input and output', () => {
 
     framework.destroyInstance(name)
     delete allDocs[name]
+  })
+
+  it('reset class style case', () => {
+    const name = 'reset-style'
+    const inputCode = readInput(name)
+    const outputCode = readOutput(name)
+    const doc = new Document(name)
+    allDocs[name] = doc
+
+    framework.createInstance(name, inputCode)
+    const expected = eval('(' + outputCode + ')')
+
+    framework.callJS(name, [{
+      method: 'fireEvent',
+      args: [doc.body.children[0].ref, 'click', {}]
+    }])
+
+    setTimeout(function () {
+      expect(doc.toJSON()).eql(expected)
+      framework.destroyInstance(name)
+      delete allDocs[name]
+    }, 32)
   })
 
   it('dynamic type case', () => {
@@ -800,11 +1029,23 @@ describe('test input and output', () => {
 
 describe('test callNative signals', () => {
   const oriCallNative = global.callNative
+  const oriCallAddElement = global.callAddElement
 
   function genCallNativeWrapper (count) {
     return (name, tasks, cbId) => {
       callNativeSpy(tasks)
       const length = callNativeSpy.args.length
+      if (length > count) {
+        return -1
+      }
+      return length
+    }
+  }
+
+  function genCallAddElementWrapper (count) {
+    return (name, ref, json, index, cbId) => {
+      callAddElementSpy(ref, json, index)
+      const length = callAddElementSpy.callCount
       if (length > count) {
         return -1
       }
@@ -826,10 +1067,12 @@ describe('test callNative signals', () => {
 
   beforeEach(() => {
     callNativeSpy.reset()
+    callAddElementSpy.reset()
   })
 
   afterEach(() => {
     global.callNative = oriCallNative
+    global.callAddElement = oriCallAddElement
   })
 
   it('signals control', function () {
@@ -840,10 +1083,14 @@ describe('test callNative signals', () => {
 
     function run (calls) {
       callNativeSpy.reset()
+      callAddElementSpy.reset()
       global.callNative = genCallNativeWrapper(calls)
+      global.callAddElement = genCallAddElementWrapper(calls)
+
       framework.createInstance(name + calls, inputCode)
+      expect(callNativeSpy.callCount).eql(2)
+      expect(callAddElementSpy.callCount).eql(calls + 1)
       framework.destroyInstance(name + calls)
-      expect(callNativeSpy.args.length).eql(calls + 2)
     }
 
     for (let i = 5; i < 60; i++) {
@@ -852,19 +1099,22 @@ describe('test callNative signals', () => {
   })
 
   it('long signals control', function () {
-    this.timeout(50000)
+    this.timeout(500000)
 
     const name = 'signals-long'
     const inputCode = readInput(name)
 
     function run (calls) {
       callNativeSpy.reset()
+      callAddElementSpy.reset()
       global.callNative = genCallNativeWrapper(calls)
+      global.callAddElement = genCallAddElementWrapper(calls)
       framework.createInstance(name + calls, inputCode)
       framework.destroyInstance(name + calls)
-      expect(callNativeSpy.args.length).eql(calls + 2)
-    }
 
+      expect(callNativeSpy.args.length).eql(2)
+      expect(callAddElementSpy.args.length).eql(calls + 1)
+    }
     run(10)
     run(30)
     run(90)

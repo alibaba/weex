@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -36,6 +38,7 @@ import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.appfram.navigator.IActivityNavBarSetter;
 import com.taobao.weex.common.IWXDebugProxy;
 import com.taobao.weex.common.WXRenderStrategy;
+import com.taobao.weex.ui.component.NestedContainer;
 import com.taobao.weex.utils.WXFileUtils;
 import com.taobao.weex.utils.WXLogUtils;
 
@@ -46,7 +49,12 @@ import java.net.URL;
 import java.util.HashMap;
 
 
-public class WXPageActivity extends WXBaseActivity implements IWXRenderListener, android.os.Handler.Callback {
+public class WXPageActivity extends WXBaseActivity implements IWXRenderListener, Handler.Callback, WXSDKInstance.NestedInstanceInterceptor {
+
+  @Override
+  public void onCreateNestInstance(WXSDKInstance instance, NestedContainer container) {
+    Log.d(TAG,"Nested Instance created.");
+  }
 
   private class NavigatorAdapter implements IActivityNavBarSetter {
 
@@ -171,6 +179,7 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
       mInstance = new WXSDKInstance(this);
       //        mInstance.setImgLoaderAdapter(new ImageAdapter(this));
       mInstance.registerRenderListener(this);
+      mInstance.setNestedInstanceInterceptor(this);
     }
     mContainer.post(new Runnable() {
       @Override
@@ -290,6 +299,16 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
 
   public void setCurrentWxPageActivity(Activity activity) {
     wxPageActivityInstance = activity;
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    Intent intent = new Intent("actionRequestPermissionsResult");
+    intent.putExtra("requestCode", requestCode);
+    intent.putExtra("permissions", permissions);
+    intent.putExtra("grantResults", grantResults);
+    LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
   }
 
   @Override

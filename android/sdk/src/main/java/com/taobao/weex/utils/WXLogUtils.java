@@ -110,6 +110,7 @@
  */
 package com.taobao.weex.utils;
 
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -119,13 +120,38 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 
 public class WXLogUtils {
 
-  public static String WEEX_TAG = "weex";
-  public static String WEEX_PERF_TAG = "weex_perf";
+  public static final String WEEX_TAG = "weex";
+  public static final String WEEX_PERF_TAG = "weex_perf";
+
+  public static boolean isShowLineNumber = false;
+
+  private static final String CLAZZ_NAME_DEBUG_TOOL = "com.taobao.weex.WXDebugTool";
+  private static final String CLAZZ_NAME_LOG_UTIL = "com.taobao.weex.devtools.common.LogUtil";
 
   private static StringBuilder builder = new StringBuilder(50);
+  private static HashMap<String, Class> clazzMaps = new HashMap<>(2);
+
+  static {
+    clazzMaps.put(CLAZZ_NAME_DEBUG_TOOL, loadClass(CLAZZ_NAME_DEBUG_TOOL));
+    clazzMaps.put(CLAZZ_NAME_LOG_UTIL, loadClass(CLAZZ_NAME_LOG_UTIL));
+  }
+
+  private static Class loadClass(String clazzName) {
+    Class<?> clazz = null;
+    try {
+      clazz = Class.forName(clazzName);
+      if (clazz != null) {
+        clazzMaps.put(clazzName, clazz);
+      }
+    } catch (ClassNotFoundException e) {
+      // ignore
+    }
+    return clazz;
+  }
 
   public static void renderPerformanceLog(String type, long time) {
     if (WXEnvironment.isApkDebugable() || WXEnvironment.isPerf()) {
@@ -136,55 +162,48 @@ public class WXLogUtils {
     }
   }
 
-  public static void d(String msg) {
-    if (WXEnvironment.isApkDebugable() && msg != null) {
+  private static void log(String tag, String msg, LogLevel level){
+    if (WXEnvironment.isApkDebugable() && msg != null && WXEnvironment.sLogLevel.compare(level) >= 0) {
       msg = getLineNumber() + msg;
-      Log.d(WEEX_TAG, msg);
-      writeConsoleLog("debug", msg);
-      sendLog(LogLevel.DEBUG, msg);
+      Log.println(level.getPriority(),tag, msg);
+      writeConsoleLog(level.getName(), msg);
+      sendLog(level, msg);
     }
+  }
+
+  public static void d(String msg) {
+    d(WEEX_TAG,msg);
+  }
+
+  public static void i(String msg) {
+    i(WEEX_TAG,msg);
   }
 
   public static void info(String msg) {
-    if (WXEnvironment.isApkDebugable() && msg != null) {
-      msg = getLineNumber() + msg;
-      Log.i(WEEX_TAG, msg);
-      writeConsoleLog("info", msg);
-      sendLog(LogLevel.INFO,msg);
-    }
+    i(WEEX_TAG,msg);
   }
 
   public static void v(String msg) {
-    if (WXEnvironment.isApkDebugable() && msg != null) {
-      msg = getLineNumber() + msg;
-      Log.v(WEEX_TAG, msg);
-      writeConsoleLog("verbose", msg);
-      sendLog(LogLevel.VERBOSE, msg);
-    }
+    v(WEEX_TAG,msg);
   }
 
   public static void w(String msg) {
-    if (WXEnvironment.isApkDebugable() && msg != null) {
-      msg = getLineNumber() + msg;
-      Log.w(WEEX_TAG, msg);
-      writeConsoleLog("warning", msg);
-      sendLog(LogLevel.WARN, msg);
-    }
+    w(WEEX_TAG,msg);
   }
 
   public static void e(String msg) {
-    if (WXEnvironment.isApkDebugable() && msg != null) {
-      msg = getLineNumber() + msg;
-      Log.e(WEEX_TAG, msg);
-      writeConsoleLog("error", msg);
-      sendLog(LogLevel.ERROR, msg);
-    }
+    e(WEEX_TAG,msg);
+  }
+
+  public static void d(String tag, byte[] msg) {
+    d(tag,new String(msg));
   }
 
   public static void d(String tag, String msg) {
-    if (WXEnvironment.isApkDebugable() && !TextUtils.isEmpty(msg)) {
+    if (WXEnvironment.isApkDebugable() && !TextUtils.isEmpty(msg) && WXEnvironment.sLogLevel.compare(LogLevel.DEBUG) >= 0) {
       msg = getLineNumber() + msg;
       Log.d(tag, msg);
+      /** This log method will be invoked from jni code, so try to extract loglevel from message. **/
       writeConsoleLog("debug", tag + ":" + msg);
       if(msg.contains(" | __")){
         String[] msgs=msg.split(" | __");
@@ -216,92 +235,75 @@ public class WXLogUtils {
   }
 
   public static void i(String tag, String msg) {
-    if (WXEnvironment.isApkDebugable() && msg != null) {
-      msg = getLineNumber() + msg;
-      Log.i(tag, msg);
-      writeConsoleLog("info", tag + ":" + msg);
-      sendLog(LogLevel.INFO, tag+":"+msg);
-    }
+    log(tag, msg,LogLevel.INFO);
   }
 
   public static void v(String tag, String msg) {
-    if (WXEnvironment.isApkDebugable() && msg != null) {
-      msg = getLineNumber() + msg;
-      Log.v(tag, msg);
-      writeConsoleLog("verbose", tag + ":" + msg);
-      sendLog(LogLevel.VERBOSE, tag+":"+msg);
-    }
+    log(tag, msg,LogLevel.VERBOSE);
   }
 
   public static void w(String tag, String msg) {
-    if (WXEnvironment.isApkDebugable() && msg != null) {
-      msg = getLineNumber() + msg;
-      Log.w(tag, msg);
-      writeConsoleLog("warning", tag + ":" + msg);
-      sendLog(LogLevel.WARN, tag+":"+msg);
-    }
+    log(tag, msg,LogLevel.WARN);
   }
 
   public static void e(String tag, String msg) {
-    if (WXEnvironment.isApkDebugable() && msg != null) {
-      msg = getLineNumber() + msg;
-      Log.e(tag, msg);
-      writeConsoleLog("error", tag + ":" + msg);
-      sendLog(LogLevel.ERROR, tag+":"+msg);
-    }
+    log(tag, msg,LogLevel.ERROR);
   }
 
+  /**
+   * 'p' for 'Performance', use {@link #WEEX_PERF_TAG}
+   * @param msg
+   */
   public static void p(String msg) {
-    if (WXEnvironment.isApkDebugable() && msg != null) {
-      msg = getLineNumber() + msg;
-      Log.d(WEEX_PERF_TAG, msg);
-      writeConsoleLog("debug", msg);
-    }
+    d(WEEX_PERF_TAG,msg);
   }
 
   public static void d(String prefix, Throwable e) {
-    if (WXEnvironment.isApkDebugable() && e != null) {
-      WXLogUtils.d(prefix + WXLogUtils.getStackTrace(e));
+    if (WXEnvironment.isApkDebugable()) {
+      d(prefix + getStackTrace(e));
     }
   }
 
   public static void i(String prefix, Throwable e) {
-    if (WXEnvironment.isApkDebugable() && e != null) {
-      WXLogUtils.info(prefix + WXLogUtils.getStackTrace(e));
+    if (WXEnvironment.isApkDebugable()) {
+      info(prefix + getStackTrace(e));
     }
   }
 
   public static void v(String prefix, Throwable e) {
-    if (WXEnvironment.isApkDebugable() && e != null) {
-      WXLogUtils.v(prefix + WXLogUtils.getStackTrace(e));
+    if (WXEnvironment.isApkDebugable()) {
+      v(prefix + getStackTrace(e));
     }
   }
 
   public static void w(String prefix, Throwable e) {
-    if (WXEnvironment.isApkDebugable() && e != null) {
-      WXLogUtils.w(prefix + WXLogUtils.getStackTrace(e));
+    if (WXEnvironment.isApkDebugable()) {
+      w(prefix + getStackTrace(e));
     }
   }
 
   public static void e(String prefix, Throwable e) {
-    if (WXEnvironment.isApkDebugable() && e != null) {
-      WXLogUtils.e(prefix + WXLogUtils.getStackTrace(e));
+    if (WXEnvironment.isApkDebugable()) {
+      e(prefix + getStackTrace(e));
     }
   }
 
+  /**
+   * 'p' for 'Performance', use {@link #WEEX_PERF_TAG}
+   */
   public static void p(String prefix, Throwable e) {
-    if (WXEnvironment.isApkDebugable() && e != null) {
-      WXLogUtils.p(prefix + WXLogUtils.getStackTrace(e));
+    if (WXEnvironment.isApkDebugable()) {
+      p(prefix + getStackTrace(e));
     }
   }
 
   public static void eTag(String tag, Throwable e) {
-    if (WXEnvironment.isApkDebugable() && e != null) {
-      WXLogUtils.e(tag, WXLogUtils.getStackTrace(e));
+    if (WXEnvironment.isApkDebugable()) {
+      e(tag, getStackTrace(e));
     }
   }
 
-  public static String getStackTrace(Throwable e) {
+  public static String getStackTrace(@Nullable Throwable e) {
     if (e == null) {
       return "";
     }
@@ -333,11 +335,13 @@ public class WXLogUtils {
   private static void writeConsoleLog(String level, String message) {
     if (WXEnvironment.isApkDebugable()) {
       try {
-        Class<?> cls = Class.forName("com.taobao.weex.devtools.common.LogUtil");
-        Method m = cls.getMethod("log", String.class, String.class);
-        m.invoke(cls, level, message);
+        Class<?> clazz = clazzMaps.get(CLAZZ_NAME_LOG_UTIL);
+        if (clazz != null) {
+          Method m = clazz.getMethod("log", String.class, String.class);
+          m.invoke(clazz, level, message);
+        }
       } catch (Exception e) {
-        Log.d(WEEX_TAG, "WXDebugTool not found!");
+        Log.d(WEEX_TAG, "LogUtil not found!");
       }
     }
   }
@@ -345,11 +349,13 @@ public class WXLogUtils {
   private static void sendLog(LogLevel level, String msg) {
     if(WXEnvironment.isApkDebugable()){
       try {
-        Class<?> cls = Class.forName("com.taobao.weex.WXDebugTool");
-        Method m = cls.getMethod("sendLog", LogLevel.class,String.class);
-        m.invoke(cls, level,msg);
+        Class<?> clazz = clazzMaps.get(CLAZZ_NAME_DEBUG_TOOL);
+        if (clazz != null) {
+          Method m = clazz.getMethod("sendLog", LogLevel.class,String.class);
+          m.invoke(clazz, level,msg);
+        }
       } catch (Exception e) {
-        Log.d("weex","WXDebugTool not found!");
+        Log.d(WEEX_TAG, "WXDebugTool not found!");
       }
     }
   }
@@ -363,7 +369,7 @@ public class WXLogUtils {
    * …… more stack trace element
    * */
   private static String getLineNumber() {
-    if (!WXEnvironment.isShowLineNumber()) {
+    if (!isShowLineNumber) {
       return "";
     }
     StackTraceElement[] stackTrace = new Throwable().getStackTrace();

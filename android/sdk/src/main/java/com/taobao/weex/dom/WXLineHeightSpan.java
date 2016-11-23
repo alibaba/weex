@@ -207,6 +207,7 @@ package com.taobao.weex.dom;
 import android.graphics.Paint;
 import android.text.style.LineHeightSpan;
 
+import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.utils.WXLogUtils;
 
 public class WXLineHeightSpan implements LineHeightSpan{
@@ -218,8 +219,10 @@ public class WXLineHeightSpan implements LineHeightSpan{
 
   @Override
   public void chooseHeight(CharSequence text, int start, int end, int spanstartv, int v, Paint.FontMetricsInt fm) {
-    WXLogUtils.d("LineHeight", text+" ; start "+start+"; end "+end+"; spanstartv "
-                               +spanstartv+"; v "+v+"; fm "+fm);
+    if(WXEnvironment.isApkDebugable()) {
+      WXLogUtils.d("LineHeight", text + " ; start " + start + "; end " + end + "; spanstartv "
+              + spanstartv + "; v " + v + "; fm " + fm);
+    }
     int halfLeading=(lineHeight-(fm.descent-fm.ascent))/2;
     fm.top-=halfLeading;
     fm.bottom+=halfLeading;

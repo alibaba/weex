@@ -29,16 +29,22 @@ function init (Weex) {
 
     this.data = data
 
-    // In some situation the root component should be implemented as
-    // its own type, otherwise it has to be a div component as a root.
+    // The root component should be implemented as a div component, as the scrollable
+    // components have performance issue compare to the original body scroll.
     if (!nodeType) {
-      nodeType = 'div'
+      console.warn(`[h5-render] no nodeType is specified, construct Root use 'droot' by default.`)
+      nodeType = 'droot'
     }
     else if (config.validRoots.indexOf(nodeType) === -1) {
-      console.warn('[h5-render] the root component type \'' + nodeType + '\' is not one of '
-        + 'the types in [' + config.validRoots + '] list. It is auto downgraded '
-        + 'to \'div\'.')
-      nodeType = 'div'
+      console.warn(`[h5-render] the root component type '${nodeType}' is not one of
+the types in [${config.validRoots}] list. It is auto downgraded
+to 'droot'.`)
+      nodeType = 'droot'
+    }
+    else if (config.downgrade.root) {
+      console.warn(`[h5-render] the root is downgrade to 'droot' due to the downgrade
+configuration of weex.`)
+      nodeType = 'droot'
     }
     else {
       if (!global.weex.getInstance(data.instanceId).embed) {
@@ -46,9 +52,17 @@ function init (Weex) {
           detectRootHeight(this)
         }.bind(this))
       }
-      !this.data.style.height && (this.data.style.height = '100%')
     }
 
+    if (nodeType === 'droot') {
+      data.style.height = ''
+    }
+    else if (nodeType === 'div') {
+      // do nothing.
+    }
+    else {
+      !data.style.height && (data.style.height = '100%')
+    }
     data.type = nodeType
     const cmp = cm.createElement(data)
     cmp.node.id = id

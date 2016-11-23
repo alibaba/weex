@@ -216,5 +216,18 @@ import java.util.Map;
  */
 public interface IWXUserTrackAdapter {
 
+  String MODULE_NAME = "weex";
+
+  //Performance
+  String LOAD = "load";
+
+  //Alarm
+  String JS_FRAMEWORK = "jsFramework";
+  String JS_DOWNLOAD = "jsDownload";
+  String DOM_MODULE = "domModule";
+  String JS_BRIDGE = "jsBridge";
+  String STREAM_MODULE = "streamModule";
+
+
   void commit(Context context, String eventId, String type, WXPerformance perf, Map<String, Serializable> params);
 }

@@ -8,7 +8,7 @@ let lazyloadTimer
 
 // fire lazyimg on images.
 function fire () {
-  lib.img.fire()
+  setTimeout(() => lib.img.fire(), 0)
 }
 
 // we don't know when all images are appended
@@ -20,20 +20,18 @@ function fire () {
 // is no way that any image element can miss it. See source
 // code in componentMangager.js.
 
-// component is not a dom element but a weex component.
-function startIfNeeded (component) {
-  if (component.data.type === 'image') {
-    if (!lazyloadTimer) {
-      lazyloadTimer = setTimeout(function () {
-        fire()
-        clearTimeout(lazyloadTimer)
-        lazyloadTimer = null
-      }, 16)
-    }
+// just for the image component to start lazyload.
+function startIfNeeded (target) {
+  if (!lazyloadTimer) {
+    lazyloadTimer = setTimeout(function () {
+      fire()
+      clearTimeout(lazyloadTimer)
+      lazyloadTimer = null
+    }, 16)
   }
 }
 
-// elementScope is a dom element.
+// for a scope of element, not for a image.
 function loadIfNeeded (elementScope) {
   const notPreProcessed = elementScope.querySelectorAll('[img-src]')
   // image elements which have attribute 'i-lazy-src' were elements
@@ -56,12 +54,15 @@ export function makeImageLazy (image, src) {
   fire()
 }
 
-export function fireLazyload (component) {
-  if (component instanceof HTMLElement) {
-    loadIfNeeded(component)
+export function fireLazyload (target) {
+  if (typeof target === 'object' && !(target instanceof HTMLElement)) {
+    target = target.node
   }
-  else {
-    startIfNeeded(component)
+  if (!target) {
+    return
   }
+  if (target.tagName.toLowerCase() === 'image') {
+    return startIfNeeded(target)
+  }
+  return loadIfNeeded(target)
 }
-

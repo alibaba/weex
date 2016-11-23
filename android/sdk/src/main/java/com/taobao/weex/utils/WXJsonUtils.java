@@ -213,6 +213,8 @@ import com.taobao.weex.common.WXRuntimeException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Tool for parse JSON
@@ -244,4 +246,25 @@ public class WXJsonUtils {
 
   }
 
+  /**
+   * Put the map info in the JSONObject to the container.
+   * This method check for null value in the JSONObject
+   * and won't put the null value in the container.
+   * As {@link ConcurrentHashMap#putAll(Map)} will throws an exception if the key or value to
+   * be put is null, it is necessary to invoke this method as replacement of
+   * {@link Map#putAll(Map)}
+   * @param container container to contain the JSONObject.
+   * @param rawValue jsonObject, contains map info.
+   */
+  public static void putAll(Map<String, Object> container, JSONObject rawValue) {
+    String key;
+    Object value;
+    for (Map.Entry<String, Object> entry : rawValue.entrySet()) {
+      key = entry.getKey();
+      value = entry.getValue();
+      if (key != null && value != null) {
+        container.put(key, value);
+      }
+    }
+  }
 }

@@ -1,875 +1,2046 @@
-// !$*UTF8*$!
-{
-	archiveVersion = 1;
-	classes = {
-	};
-	objectVersion = 46;
-	objects = {
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>archiveVersion</key>
+	<string>1</string>
+	<key>classes</key>
+	<dict/>
+	<key>objectVersion</key>
+	<string>46</string>
+	<key>objects</key>
+	<dict>
+		<key>0B3B6C05EE2F8A3B30DE551F</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>inputPaths</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXShellScriptBuildPhase</string>
+			<key>name</key>
+			<string>Copy Pods Resources</string>
+			<key>outputPaths</key>
+			<array/>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+			<key>shellPath</key>
+			<string>/bin/sh</string>
+			<key>shellScript</key>
+			<string>"${SRCROOT}/Pods/Target Support Files/Pods-WeexDemo/Pods-WeexDemo-resources.sh"
+</string>
+			<key>showEnvVarsInLog</key>
+			<string>0</string>
+		</dict>
+		<key>1888E2C5769382461DEDC97D</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.xcconfig</string>
+			<key>name</key>
+			<string>Pods-WeexUITestDemo.release.xcconfig</string>
+			<key>path</key>
+			<string>Pods/Target Support Files/Pods-WeexUITestDemo/Pods-WeexUITestDemo.release.xcconfig</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2278B1B1FCE894EDAF9F0171</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.xcconfig</string>
+			<key>name</key>
+			<string>Pods-WeexUITestDemo.debug.xcconfig</string>
+			<key>path</key>
+			<string>Pods/Target Support Files/Pods-WeexUITestDemo/Pods-WeexUITestDemo.debug.xcconfig</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>22E4D2883CC56188A2CA9C13</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.xcconfig</string>
+			<key>name</key>
+			<string>Pods-WeexDemo.uitest.xcconfig</string>
+			<key>path</key>
+			<string>Pods/Target Support Files/Pods-WeexDemo/Pods-WeexDemo.uitest.xcconfig</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2AE88A291C8544D7003329DE</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>2AE88A2A1C8544E6003329DE</string>
+				<string>2AE88A2B1C8544E6003329DE</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>scanner</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2AE88A2A1C8544E6003329DE</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>WXScannerVC.h</string>
+			<key>path</key>
+			<string>Scanner/WXScannerVC.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2AE88A2B1C8544E6003329DE</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>WXScannerVC.m</string>
+			<key>path</key>
+			<string>Scanner/WXScannerVC.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2AE88A2C1C8544E6003329DE</key>
+		<dict>
+			<key>fileRef</key>
+			<string>2AE88A2B1C8544E6003329DE</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>327BB19797F63D5309FB91BF</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>7475ACA01CD8444A0044E96C</string>
+				<string>7601607D735D7F8D88971230</string>
+				<string>E48C20F443AA337D1FE97622</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Frameworks</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>359BEE13DD78032A2CB791E8</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>inputPaths</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXShellScriptBuildPhase</string>
+			<key>name</key>
+			<string>Check Pods Manifest.lock</string>
+			<key>outputPaths</key>
+			<array/>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+			<key>shellPath</key>
+			<string>/bin/sh</string>
+			<key>shellScript</key>
+			<string>diff "${PODS_ROOT}/../Podfile.lock" "${PODS_ROOT}/Manifest.lock" &gt; /dev/null
+if [[ $? != 0 ]] ; then
+    cat &lt;&lt; EOM
+error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.
+EOM
+    exit 1
+fi
+</string>
+			<key>showEnvVarsInLog</key>
+			<string>0</string>
+		</dict>
+		<key>44B62843B46EC9EF8268ADA8</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>inputPaths</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXShellScriptBuildPhase</string>
+			<key>name</key>
+			<string>Copy Framework Resources</string>
+			<key>outputPaths</key>
+			<array/>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+			<key>shellPath</key>
+			<string>/bin/sh</string>
+			<key>shellScript</key>
+			<string>bash -l -c "ruby \"${SRCROOT}/Pods/Target Support Files/Pods-WeexDemo/copy-framework-resources.rb\""</string>
+			<key>showEnvVarsInLog</key>
+			<string>0</string>
+		</dict>
+		<key>567369891CE436EB000A646C</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>inputPaths</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXShellScriptBuildPhase</string>
+			<key>outputPaths</key>
+			<array/>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+			<key>shellPath</key>
+			<string>/bin/sh</string>
+			<key>shellScript</key>
+			<string>myFile="XcodeCoverage/exportenv.sh"
 
-/* Begin PBXBuildFile section */
-		2AE88A2C1C8544E6003329DE /* WXScannerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2AE88A2B1C8544E6003329DE /* WXScannerVC.m */; };
-		59EA0DA71D2E7D19004F904A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59EA0DA61D2E7D19004F904A /* Images.xcassets */; };
-		74CC79EB1C2B9E4700829368 /* UIViewController+WXDemoNaviBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 74CC79EA1C2B9E4700829368 /* UIViewController+WXDemoNaviBar.m */; };
-		775BEE801C1E8ECC008D1629 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 775BEE7F1C1E8ECC008D1629 /* main.m */; };
-		775BEE831C1E8ECC008D1629 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 775BEE821C1E8ECC008D1629 /* AppDelegate.m */; };
-		775BEE861C1E8ECC008D1629 /* WXDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 775BEE851C1E8ECC008D1629 /* WXDemoViewController.m */; };
-		775BEE8B1C1E8ECC008D1629 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 775BEE8A1C1E8ECC008D1629 /* Assets.xcassets */; };
-		775BEE991C1E8ECC008D1629 /* WeexDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 775BEE981C1E8ECC008D1629 /* WeexDemoTests.m */; };
-		84361D2F1CA10F8E00F43825 /* WXScannerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2AE88A2B1C8544E6003329DE /* WXScannerVC.m */; };
-		84361D331CA10F8E00F43825 /* WXDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 775BEE851C1E8ECC008D1629 /* WXDemoViewController.m */; };
-		84361D371CA10F8E00F43825 /* UIViewController+WXDemoNaviBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 74CC79EA1C2B9E4700829368 /* UIViewController+WXDemoNaviBar.m */; };
-		84361D381CA10F8E00F43825 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 775BEE821C1E8ECC008D1629 /* AppDelegate.m */; };
-		84361D3B1CA10F8E00F43825 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 775BEE7F1C1E8ECC008D1629 /* main.m */; };
-		84361D421CA10F8E00F43825 /* libPods-WeexDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7601607D735D7F8D88971230 /* libPods-WeexDemo.a */; };
-		84361D5B1CA10F8E00F43825 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 775BEE8A1C1E8ECC008D1629 /* Assets.xcassets */; };
-		84D7CAC71CE3266C00D48D46 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7475ACA01CD8444A0044E96C /* libsqlite3.0.tbd */; };
-		8A0B5EFFF75BF82EA481983D /* libPods-WeexUITestDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E48C20F443AA337D1FE97622 /* libPods-WeexUITestDemo.a */; };
-		DC5E503E1D0D97130059F0EB /* weex.png in Resources */ = {isa = PBXBuildFile; fileRef = DC5E503C1D0D97130059F0EB /* weex.png */; };
-		DC5E503F1D0D97130059F0EB /* weex@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DC5E503D1D0D97130059F0EB /* weex@2x.png */; };
-		DC65C4FA1CEB032F00B2F84F /* bundlejs in Resources */ = {isa = PBXBuildFile; fileRef = DC65C4F91CEB032F00B2F84F /* bundlejs */; };
-		DC6DD9D21CFE9BC400549297 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7475ACA01CD8444A0044E96C /* libsqlite3.0.tbd */; };
-		DCA812F91D0401420029BF62 /* WXSelectComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = DCABAFFA1D029748001C8592 /* WXSelectComponent.m */; };
-		DCA812FA1D0401500029BF62 /* WXEventModule.m in Sources */ = {isa = PBXBuildFile; fileRef = DCABB0001D02975E001C8592 /* WXEventModule.m */; };
-		DCA812FB1D0401570029BF62 /* WXImgLoaderDefaultImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = DCABAFFD1D029753001C8592 /* WXImgLoaderDefaultImpl.m */; };
-		DCABAFF31D029685001C8592 /* WXATLoggerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = DCABAFF01D029685001C8592 /* WXATLoggerPlugin.m */; };
-		DCABAFF41D029685001C8592 /* WXATViewHierarchyPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = DCABAFF21D029685001C8592 /* WXATViewHierarchyPlugin.m */; };
-		DCABAFFE1D029753001C8592 /* WXImgLoaderDefaultImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = DCABAFFD1D029753001C8592 /* WXImgLoaderDefaultImpl.m */; };
-		DCABB0011D02975E001C8592 /* WXEventModule.m in Sources */ = {isa = PBXBuildFile; fileRef = DCABB0001D02975E001C8592 /* WXEventModule.m */; };
-		DCD286E01CF491AC00C601CA /* weex-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = DCD286DF1CF491AC00C601CA /* weex-icon.png */; };
-		EAEC716BE3E43DBC8494EC51 /* libPods-WeexDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7601607D735D7F8D88971230 /* libPods-WeexDemo.a */; };
-/* End PBXBuildFile section */
+if [ -f "$myFile" ]; then
+XcodeCoverage/exportenv.sh
+fi</string>
+		</dict>
+		<key>59EA0DA61D2E7D19004F904A</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>folder.assetcatalog</string>
+			<key>path</key>
+			<string>Images.xcassets</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>59EA0DA71D2E7D19004F904A</key>
+		<dict>
+			<key>fileRef</key>
+			<string>59EA0DA61D2E7D19004F904A</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>5AF8846546DAC65CAC038806</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.xcconfig</string>
+			<key>name</key>
+			<string>Pods-WeexDemo.debug.xcconfig</string>
+			<key>path</key>
+			<string>Pods/Target Support Files/Pods-WeexDemo/Pods-WeexDemo.debug.xcconfig</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>5ED24D6A09B32268BB031206</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>inputPaths</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXShellScriptBuildPhase</string>
+			<key>name</key>
+			<string>Embed Pods Frameworks</string>
+			<key>outputPaths</key>
+			<array/>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+			<key>shellPath</key>
+			<string>/bin/sh</string>
+			<key>shellScript</key>
+			<string>"${SRCROOT}/Pods/Target Support Files/Pods-WeexDemo/Pods-WeexDemo-frameworks.sh"
+</string>
+			<key>showEnvVarsInLog</key>
+			<string>0</string>
+		</dict>
+		<key>65FBE990460776BDBC5B4ED2</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>inputPaths</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXShellScriptBuildPhase</string>
+			<key>name</key>
+			<string>Copy Framework Resources</string>
+			<key>outputPaths</key>
+			<array/>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+			<key>shellPath</key>
+			<string>/bin/sh</string>
+			<key>shellScript</key>
+			<string>bash -l -c "ruby \"${SRCROOT}/Pods/Target Support Files/Pods-WeexUITestDemo/copy-framework-resources.rb\""</string>
+			<key>showEnvVarsInLog</key>
+			<string>0</string>
+		</dict>
+		<key>7453E3641C9FA971001EB427</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>DemoDefine.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7475ACA01CD8444A0044E96C</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.text-based-dylib-definition</string>
+			<key>name</key>
+			<string>libsqlite3.0.tbd</string>
+			<key>path</key>
+			<string>usr/lib/libsqlite3.0.tbd</string>
+			<key>sourceTree</key>
+			<string>SDKROOT</string>
+		</dict>
+		<key>74CC79E91C2B9E4700829368</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>UIViewController+WXDemoNaviBar.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>74CC79EA1C2B9E4700829368</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>UIViewController+WXDemoNaviBar.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>74CC79EB1C2B9E4700829368</key>
+		<dict>
+			<key>fileRef</key>
+			<string>74CC79EA1C2B9E4700829368</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>74CC79EC1C2B9FC600829368</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>DCABAFF51D0296DB001C8592</string>
+				<string>D5ADF0861C77133B00597CA6</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Demo</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>74CC7A221C2C13BF00829368</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>inputPaths</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXShellScriptBuildPhase</string>
+			<key>name</key>
+			<string>Start Samples</string>
+			<key>outputPaths</key>
+			<array/>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+			<key>shellPath</key>
+			<string>/bin/sh</string>
+			<key>shellScript</key>
+			<string>set -x
 
-/* Begin PBXContainerItemProxy section */
-		775BEE951C1E8ECC008D1629 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 775BEE731C1E8ECC008D1629 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 775BEE7A1C1E8ECC008D1629;
-			remoteInfo = WeexDemo;
-		};
-/* End PBXContainerItemProxy section */
+if nc -w 5 -z localhost 12580 ; then
+    echo "Port 12580 already in use, server is running"
+else
+    open "$SRCROOT/../../start"
+fi
 
-/* Begin PBXFileReference section */
-		1888E2C5769382461DEDC97D /* Pods-WeexUITestDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeexUITestDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-WeexUITestDemo/Pods-WeexUITestDemo.release.xcconfig"; sourceTree = "<group>"; };
-		2278B1B1FCE894EDAF9F0171 /* Pods-WeexUITestDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeexUITestDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WeexUITestDemo/Pods-WeexUITestDemo.debug.xcconfig"; sourceTree = "<group>"; };
-		22E4D2883CC56188A2CA9C13 /* Pods-WeexDemo.uitest.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeexDemo.uitest.xcconfig"; path = "Pods/Target Support Files/Pods-WeexDemo/Pods-WeexDemo.uitest.xcconfig"; sourceTree = "<group>"; };
-		2AE88A2A1C8544E6003329DE /* WXScannerVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WXScannerVC.h; path = Scanner/WXScannerVC.h; sourceTree = "<group>"; };
-		2AE88A2B1C8544E6003329DE /* WXScannerVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WXScannerVC.m; path = Scanner/WXScannerVC.m; sourceTree = "<group>"; };
-		59EA0DA61D2E7D19004F904A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		5AF8846546DAC65CAC038806 /* Pods-WeexDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeexDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WeexDemo/Pods-WeexDemo.debug.xcconfig"; sourceTree = "<group>"; };
-		7453E3641C9FA971001EB427 /* DemoDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoDefine.h; sourceTree = "<group>"; };
-		7475ACA01CD8444A0044E96C /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
-		74CC79E91C2B9E4700829368 /* UIViewController+WXDemoNaviBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+WXDemoNaviBar.h"; sourceTree = "<group>"; };
-		74CC79EA1C2B9E4700829368 /* UIViewController+WXDemoNaviBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+WXDemoNaviBar.m"; sourceTree = "<group>"; };
-		7601607D735D7F8D88971230 /* libPods-WeexDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WeexDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		775BEE7B1C1E8ECC008D1629 /* WeexDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeexDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		775BEE7F1C1E8ECC008D1629 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		775BEE811C1E8ECC008D1629 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		775BEE821C1E8ECC008D1629 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		775BEE841C1E8ECC008D1629 /* WXDemoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WXDemoViewController.h; sourceTree = "<group>"; };
-		775BEE851C1E8ECC008D1629 /* WXDemoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WXDemoViewController.m; sourceTree = "<group>"; };
-		775BEE8A1C1E8ECC008D1629 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		775BEE8F1C1E8ECC008D1629 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		775BEE941C1E8ECC008D1629 /* WeexDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeexDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		775BEE981C1E8ECC008D1629 /* WeexDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WeexDemoTests.m; sourceTree = "<group>"; };
-		775BEE9A1C1E8ECC008D1629 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		84361D751CA10F8E00F43825 /* WeexUITestDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeexUITestDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		84361D761CA10F8F00F43825 /* WeexUITestDemo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "WeexUITestDemo-Info.plist"; path = "/Users/admin/Documents/03_project_git/01_Weex/weex-samples/ios/WeexUITestDemo-Info.plist"; sourceTree = "<absolute>"; };
-		9420131417A731ED089B0814 /* Pods-WeexDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeexDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-WeexDemo/Pods-WeexDemo.release.xcconfig"; sourceTree = "<group>"; };
-		DC5E503C1D0D97130059F0EB /* weex.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = weex.png; sourceTree = "<group>"; };
-		DC5E503D1D0D97130059F0EB /* weex@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "weex@2x.png"; sourceTree = "<group>"; };
-		DC65C4F91CEB032F00B2F84F /* bundlejs */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bundlejs; sourceTree = "<group>"; };
-		DCABAFEF1D029685001C8592 /* WXATLoggerPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WXATLoggerPlugin.h; path = debug/WXATLoggerPlugin.h; sourceTree = "<group>"; };
-		DCABAFF01D029685001C8592 /* WXATLoggerPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WXATLoggerPlugin.m; path = debug/WXATLoggerPlugin.m; sourceTree = "<group>"; };
-		DCABAFF11D029685001C8592 /* WXATViewHierarchyPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WXATViewHierarchyPlugin.h; path = debug/WXATViewHierarchyPlugin.h; sourceTree = "<group>"; };
-		DCABAFF21D029685001C8592 /* WXATViewHierarchyPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WXATViewHierarchyPlugin.m; path = debug/WXATViewHierarchyPlugin.m; sourceTree = "<group>"; };
-		DCABAFF91D029748001C8592 /* WXSelectComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WXSelectComponent.h; path = extend/component/WXSelectComponent.h; sourceTree = "<group>"; };
-		DCABAFFA1D029748001C8592 /* WXSelectComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WXSelectComponent.m; path = extend/component/WXSelectComponent.m; sourceTree = "<group>"; };
-		DCABAFFC1D029753001C8592 /* WXImgLoaderDefaultImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WXImgLoaderDefaultImpl.h; path = extend/handler/WXImgLoaderDefaultImpl.h; sourceTree = "<group>"; };
-		DCABAFFD1D029753001C8592 /* WXImgLoaderDefaultImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WXImgLoaderDefaultImpl.m; path = extend/handler/WXImgLoaderDefaultImpl.m; sourceTree = "<group>"; };
-		DCABAFFF1D02975E001C8592 /* WXEventModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WXEventModule.h; path = extend/module/WXEventModule.h; sourceTree = "<group>"; };
-		DCABB0001D02975E001C8592 /* WXEventModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WXEventModule.m; path = extend/module/WXEventModule.m; sourceTree = "<group>"; };
-		DCD286DF1CF491AC00C601CA /* weex-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "weex-icon.png"; path = "WeexDemo/weex-icon.png"; sourceTree = "<group>"; };
-		E48C20F443AA337D1FE97622 /* libPods-WeexUITestDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WeexUITestDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-/* End PBXFileReference section */
-
-/* Begin PBXFrameworksBuildPhase section */
-		775BEE781C1E8ECC008D1629 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DC6DD9D21CFE9BC400549297 /* libsqlite3.0.tbd in Frameworks */,
-				EAEC716BE3E43DBC8494EC51 /* libPods-WeexDemo.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		775BEE911C1E8ECC008D1629 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		84361D3C1CA10F8E00F43825 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				84D7CAC71CE3266C00D48D46 /* libsqlite3.0.tbd in Frameworks */,
-				84361D421CA10F8E00F43825 /* libPods-WeexDemo.a in Frameworks */,
-				8A0B5EFFF75BF82EA481983D /* libPods-WeexUITestDemo.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXFrameworksBuildPhase section */
-
-/* Begin PBXGroup section */
-		2AE88A291C8544D7003329DE /* scanner */ = {
-			isa = PBXGroup;
-			children = (
-				2AE88A2A1C8544E6003329DE /* WXScannerVC.h */,
-				2AE88A2B1C8544E6003329DE /* WXScannerVC.m */,
-			);
-			name = scanner;
-			sourceTree = "<group>";
-		};
-		327BB19797F63D5309FB91BF /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				7475ACA01CD8444A0044E96C /* libsqlite3.0.tbd */,
-				7601607D735D7F8D88971230 /* libPods-WeexDemo.a */,
-				E48C20F443AA337D1FE97622 /* libPods-WeexUITestDemo.a */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		74CC79EC1C2B9FC600829368 /* Demo */ = {
-			isa = PBXGroup;
-			children = (
-				DCABAFF51D0296DB001C8592 /* extend */,
-				D5ADF0861C77133B00597CA6 /* Source */,
-			);
-			name = Demo;
-			sourceTree = "<group>";
-		};
-		775BEE721C1E8ECC008D1629 = {
-			isa = PBXGroup;
-			children = (
-				775BEE7D1C1E8ECC008D1629 /* WeexDemo */,
-				775BEE971C1E8ECC008D1629 /* WeexDemoTests */,
-				775BEE7C1C1E8ECC008D1629 /* Products */,
-				A9E45DD060512F73B9F51C03 /* Pods */,
-				327BB19797F63D5309FB91BF /* Frameworks */,
-				DC65C4421CEB006C00B2F84F /* resource */,
-				84361D761CA10F8F00F43825 /* WeexUITestDemo-Info.plist */,
-			);
-			sourceTree = "<group>";
-		};
-		775BEE7C1C1E8ECC008D1629 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				775BEE7B1C1E8ECC008D1629 /* WeexDemo.app */,
-				775BEE941C1E8ECC008D1629 /* WeexDemoTests.xctest */,
-				84361D751CA10F8E00F43825 /* WeexUITestDemo.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		775BEE7D1C1E8ECC008D1629 /* WeexDemo */ = {
-			isa = PBXGroup;
-			children = (
-				74CC79EC1C2B9FC600829368 /* Demo */,
-				775BEE8A1C1E8ECC008D1629 /* Assets.xcassets */,
-				775BEE8F1C1E8ECC008D1629 /* Info.plist */,
-				59EA0DA61D2E7D19004F904A /* Images.xcassets */,
-				775BEE7E1C1E8ECC008D1629 /* Supporting Files */,
-			);
-			path = WeexDemo;
-			sourceTree = "<group>";
-		};
-		775BEE7E1C1E8ECC008D1629 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				775BEE7F1C1E8ECC008D1629 /* main.m */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		775BEE971C1E8ECC008D1629 /* WeexDemoTests */ = {
-			isa = PBXGroup;
-			children = (
-				775BEE981C1E8ECC008D1629 /* WeexDemoTests.m */,
-				775BEE9A1C1E8ECC008D1629 /* Info.plist */,
-			);
-			path = WeexDemoTests;
-			sourceTree = "<group>";
-		};
-		A9E45DD060512F73B9F51C03 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				5AF8846546DAC65CAC038806 /* Pods-WeexDemo.debug.xcconfig */,
-				9420131417A731ED089B0814 /* Pods-WeexDemo.release.xcconfig */,
-				22E4D2883CC56188A2CA9C13 /* Pods-WeexDemo.uitest.xcconfig */,
-				2278B1B1FCE894EDAF9F0171 /* Pods-WeexUITestDemo.debug.xcconfig */,
-				1888E2C5769382461DEDC97D /* Pods-WeexUITestDemo.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
-		D5ADF0861C77133B00597CA6 /* Source */ = {
-			isa = PBXGroup;
-			children = (
-				2AE88A291C8544D7003329DE /* scanner */,
-				DCABAFED1D029642001C8592 /* debug */,
-				74CC79E91C2B9E4700829368 /* UIViewController+WXDemoNaviBar.h */,
-				74CC79EA1C2B9E4700829368 /* UIViewController+WXDemoNaviBar.m */,
-				775BEE811C1E8ECC008D1629 /* AppDelegate.h */,
-				775BEE821C1E8ECC008D1629 /* AppDelegate.m */,
-				775BEE841C1E8ECC008D1629 /* WXDemoViewController.h */,
-				775BEE851C1E8ECC008D1629 /* WXDemoViewController.m */,
-				7453E3641C9FA971001EB427 /* DemoDefine.h */,
-			);
-			name = Source;
-			sourceTree = "<group>";
-		};
-		DC65C4421CEB006C00B2F84F /* resource */ = {
-			isa = PBXGroup;
-			children = (
-				DCD286DF1CF491AC00C601CA /* weex-icon.png */,
-				DC5E503C1D0D97130059F0EB /* weex.png */,
-				DC5E503D1D0D97130059F0EB /* weex@2x.png */,
-				DC65C4F91CEB032F00B2F84F /* bundlejs */,
-			);
-			name = resource;
-			sourceTree = "<group>";
-		};
-		DCABAFED1D029642001C8592 /* debug */ = {
-			isa = PBXGroup;
-			children = (
-				DCABAFEF1D029685001C8592 /* WXATLoggerPlugin.h */,
-				DCABAFF01D029685001C8592 /* WXATLoggerPlugin.m */,
-				DCABAFF11D029685001C8592 /* WXATViewHierarchyPlugin.h */,
-				DCABAFF21D029685001C8592 /* WXATViewHierarchyPlugin.m */,
-			);
-			name = debug;
-			sourceTree = "<group>";
-		};
-		DCABAFF51D0296DB001C8592 /* extend */ = {
-			isa = PBXGroup;
-			children = (
-				DCABAFF81D029716001C8592 /* component */,
-				DCABAFF71D0296E8001C8592 /* handler */,
-				DCABAFF61D0296E2001C8592 /* module */,
-			);
-			name = extend;
-			sourceTree = "<group>";
-		};
-		DCABAFF61D0296E2001C8592 /* module */ = {
-			isa = PBXGroup;
-			children = (
-				DCABAFFF1D02975E001C8592 /* WXEventModule.h */,
-				DCABB0001D02975E001C8592 /* WXEventModule.m */,
-			);
-			name = module;
-			sourceTree = "<group>";
-		};
-		DCABAFF71D0296E8001C8592 /* handler */ = {
-			isa = PBXGroup;
-			children = (
-				DCABAFFC1D029753001C8592 /* WXImgLoaderDefaultImpl.h */,
-				DCABAFFD1D029753001C8592 /* WXImgLoaderDefaultImpl.m */,
-			);
-			name = handler;
-			sourceTree = "<group>";
-		};
-		DCABAFF81D029716001C8592 /* component */ = {
-			isa = PBXGroup;
-			children = (
-				DCABAFF91D029748001C8592 /* WXSelectComponent.h */,
-				DCABAFFA1D029748001C8592 /* WXSelectComponent.m */,
-			);
-			name = component;
-			sourceTree = "<group>";
-		};
-/* End PBXGroup section */
-
-/* Begin PBXNativeTarget section */
-		775BEE7A1C1E8ECC008D1629 /* WeexDemo */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 775BEEA81C1E8ECC008D1629 /* Build configuration list for PBXNativeTarget "WeexDemo" */;
-			buildPhases = (
-				359BEE13DD78032A2CB791E8 /* Check Pods Manifest.lock */,
-				74CC7A221C2C13BF00829368 /* Start Samples */,
-				775BEE771C1E8ECC008D1629 /* Sources */,
-				775BEE781C1E8ECC008D1629 /* Frameworks */,
-				775BEE791C1E8ECC008D1629 /* Resources */,
-				0B3B6C05EE2F8A3B30DE551F /* Copy Pods Resources */,
-				5ED24D6A09B32268BB031206 /* Embed Pods Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = WeexDemo;
-			productName = WeexDemo;
-			productReference = 775BEE7B1C1E8ECC008D1629 /* WeexDemo.app */;
-			productType = "com.apple.product-type.application";
-		};
-		775BEE931C1E8ECC008D1629 /* WeexDemoTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 775BEEAB1C1E8ECC008D1629 /* Build configuration list for PBXNativeTarget "WeexDemoTests" */;
-			buildPhases = (
-				775BEE901C1E8ECC008D1629 /* Sources */,
-				775BEE911C1E8ECC008D1629 /* Frameworks */,
-				775BEE921C1E8ECC008D1629 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				775BEE961C1E8ECC008D1629 /* PBXTargetDependency */,
-			);
-			name = WeexDemoTests;
-			productName = WeexDemoTests;
-			productReference = 775BEE941C1E8ECC008D1629 /* WeexDemoTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		84361D261CA10F8E00F43825 /* WeexUITestDemo */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 84361D711CA10F8E00F43825 /* Build configuration list for PBXNativeTarget "WeexUITestDemo" */;
-			buildPhases = (
-				84361D271CA10F8E00F43825 /* Check Pods Manifest.lock */,
-				84361D291CA10F8E00F43825 /* Sources */,
-				84361D3C1CA10F8E00F43825 /* Frameworks */,
-				84361D431CA10F8E00F43825 /* Resources */,
-				84361D6F1CA10F8E00F43825 /* Copy Pods Resources */,
-				84361D701CA10F8E00F43825 /* Embed Pods Frameworks */,
-				567369891CE436EB000A646C /* ShellScript */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = WeexUITestDemo;
-			productName = WeexDemo;
-			productReference = 84361D751CA10F8E00F43825 /* WeexUITestDemo.app */;
-			productType = "com.apple.product-type.application";
-		};
-/* End PBXNativeTarget section */
-
-/* Begin PBXProject section */
-		775BEE731C1E8ECC008D1629 /* Project object */ = {
-			isa = PBXProject;
-			attributes = {
-				LastUpgradeCheck = 0710;
-				ORGANIZATIONNAME = taobao;
-				TargetAttributes = {
-					775BEE7A1C1E8ECC008D1629 = {
-						CreatedOnToolsVersion = 7.1.1;
-					};
-					775BEE931C1E8ECC008D1629 = {
-						CreatedOnToolsVersion = 7.1.1;
-						DevelopmentTeam = 445VCMGQD2;
-						TestTargetID = 775BEE7A1C1E8ECC008D1629;
-					};
-				};
-			};
-			buildConfigurationList = 775BEE761C1E8ECC008D1629 /* Build configuration list for PBXProject "WeexDemo" */;
-			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
-			hasScannedForEncodings = 0;
-			knownRegions = (
-				en,
-				Base,
-			);
-			mainGroup = 775BEE721C1E8ECC008D1629;
-			productRefGroup = 775BEE7C1C1E8ECC008D1629 /* Products */;
-			projectDirPath = "";
-			projectRoot = "";
-			targets = (
-				775BEE7A1C1E8ECC008D1629 /* WeexDemo */,
-				775BEE931C1E8ECC008D1629 /* WeexDemoTests */,
-				84361D261CA10F8E00F43825 /* WeexUITestDemo */,
-			);
-		};
-/* End PBXProject section */
-
-/* Begin PBXResourcesBuildPhase section */
-		775BEE791C1E8ECC008D1629 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DC5E503E1D0D97130059F0EB /* weex.png in Resources */,
-				DC5E503F1D0D97130059F0EB /* weex@2x.png in Resources */,
-				DCD286E01CF491AC00C601CA /* weex-icon.png in Resources */,
-				59EA0DA71D2E7D19004F904A /* Images.xcassets in Resources */,
-				DC65C4FA1CEB032F00B2F84F /* bundlejs in Resources */,
-				775BEE8B1C1E8ECC008D1629 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		775BEE921C1E8ECC008D1629 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		84361D431CA10F8E00F43825 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				84361D5B1CA10F8E00F43825 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		0B3B6C05EE2F8A3B30DE551F /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WeexDemo/Pods-WeexDemo-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		359BEE13DD78032A2CB791E8 /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		567369891CE436EB000A646C /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "myFile=\"XcodeCoverage/exportenv.sh\"\n\nif [ -f \"$myFile\" ]; then\nXcodeCoverage/exportenv.sh\nfi";
-		};
-		5ED24D6A09B32268BB031206 /* Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "
-";
-			showEnvVarsInLog = 0;
-		};
-		74CC7A221C2C13BF00829368 /* Start Samples */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Start Samples";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "set -x\n\nif nc -w 5 -z localhost 12580 ; then\n    echo \"Port 12580 already in use, server is running\"\nelse\n    open \"$SRCROOT/../../start\"\nfi\n\n";
-		};
-		84361D271CA10F8E00F43825 /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		84361D6F1CA10F8E00F43825 /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WeexUITestDemo/Pods-WeexUITestDemo-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		84361D701CA10F8E00F43825 /* Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WeexUITestDemo/Pods-WeexUITestDemo-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
-
-/* Begin PBXSourcesBuildPhase section */
-		775BEE771C1E8ECC008D1629 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DCABAFF31D029685001C8592 /* WXATLoggerPlugin.m in Sources */,
-				2AE88A2C1C8544E6003329DE /* WXScannerVC.m in Sources */,
-				775BEE861C1E8ECC008D1629 /* WXDemoViewController.m in Sources */,
-				74CC79EB1C2B9E4700829368 /* UIViewController+WXDemoNaviBar.m in Sources */,
-				DCABB0011D02975E001C8592 /* WXEventModule.m in Sources */,
-				775BEE831C1E8ECC008D1629 /* AppDelegate.m in Sources */,
-				DCABAFF41D029685001C8592 /* WXATViewHierarchyPlugin.m in Sources */,
-				775BEE801C1E8ECC008D1629 /* main.m in Sources */,
-				DCABAFFE1D029753001C8592 /* WXImgLoaderDefaultImpl.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		775BEE901C1E8ECC008D1629 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				775BEE991C1E8ECC008D1629 /* WeexDemoTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		84361D291CA10F8E00F43825 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DCA812FB1D0401570029BF62 /* WXImgLoaderDefaultImpl.m in Sources */,
-				DCA812FA1D0401500029BF62 /* WXEventModule.m in Sources */,
-				DCA812F91D0401420029BF62 /* WXSelectComponent.m in Sources */,
-				84361D2F1CA10F8E00F43825 /* WXScannerVC.m in Sources */,
-				84361D331CA10F8E00F43825 /* WXDemoViewController.m in Sources */,
-				84361D371CA10F8E00F43825 /* UIViewController+WXDemoNaviBar.m in Sources */,
-				84361D381CA10F8E00F43825 /* AppDelegate.m in Sources */,
-				84361D3B1CA10F8E00F43825 /* main.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		775BEE961C1E8ECC008D1629 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 775BEE7A1C1E8ECC008D1629 /* WeexDemo */;
-			targetProxy = 775BEE951C1E8ECC008D1629 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
-/* Begin XCBuildConfiguration section */
-		775BEEA61C1E8ECC008D1629 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_TESTABILITY = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_GENERATE_TEST_COVERAGE_FILES = YES;
-				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				MTL_ENABLE_DEBUG_INFO = YES;
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		775BEEA71C1E8ECC008D1629 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		775BEEA91C1E8ECC008D1629 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5AF8846546DAC65CAC038806 /* Pods-WeexDemo.debug.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/WeexDemo",
-					"$(PROJECT_DIR)",
-				);
-				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
-				INFOPLIST_FILE = WeexDemo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-licucore",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.taobao.WeexPlayground;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Debug;
-		};
-		775BEEAA1C1E8ECC008D1629 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9420131417A731ED089B0814 /* Pods-WeexDemo.release.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/WeexDemo",
-					"$(PROJECT_DIR)",
-				);
-				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
-				INFOPLIST_FILE = WeexDemo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-licucore",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.taobao.WeexPlayground;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Release;
-		};
-		775BEEAC1C1E8ECC008D1629 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				INFOPLIST_FILE = WeexDemoTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.taobao.WeexDemoTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WeexDemo.app/WeexDemo";
-			};
-			name = Debug;
-		};
-		775BEEAD1C1E8ECC008D1629 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				INFOPLIST_FILE = WeexDemoTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.taobao.WeexDemoTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WeexDemo.app/WeexDemo";
-			};
-			name = Release;
-		};
-		84361D721CA10F8E00F43825 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2278B1B1FCE894EDAF9F0171 /* Pods-WeexUITestDemo.debug.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/WeexDemo",
-					"$(PROJECT_DIR)",
-				);
-				GCC_GENERATE_TEST_COVERAGE_FILES = YES;
-				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(inherited)",
-					"COCOAPODS=1",
-					"UITEST=1",
-				);
-				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
-				INFOPLIST_FILE = "WeexUITestDemo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MODULE_NAME = NO;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-licucore",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.taobao.WeexDemo.uitest;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-			};
-			name = Debug;
-		};
-		84361D741CA10F8E00F43825 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1888E2C5769382461DEDC97D /* Pods-WeexUITestDemo.release.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/WeexDemo",
-					"$(PROJECT_DIR)",
-				);
-				GCC_GENERATE_TEST_COVERAGE_FILES = YES;
-				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = YES;
-				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
-				INFOPLIST_FILE = "WeexUITestDemo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MODULE_NAME = NO;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-licucore",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.taobao.WeexDemo.uitest;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-			};
-			name = Release;
-		};
-/* End XCBuildConfiguration section */
-
-/* Begin XCConfigurationList section */
-		775BEE761C1E8ECC008D1629 /* Build configuration list for PBXProject "WeexDemo" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				775BEEA61C1E8ECC008D1629 /* Debug */,
-				775BEEA71C1E8ECC008D1629 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		775BEEA81C1E8ECC008D1629 /* Build configuration list for PBXNativeTarget "WeexDemo" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				775BEEA91C1E8ECC008D1629 /* Debug */,
-				775BEEAA1C1E8ECC008D1629 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		775BEEAB1C1E8ECC008D1629 /* Build configuration list for PBXNativeTarget "WeexDemoTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				775BEEAC1C1E8ECC008D1629 /* Debug */,
-				775BEEAD1C1E8ECC008D1629 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		84361D711CA10F8E00F43825 /* Build configuration list for PBXNativeTarget "WeexUITestDemo" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				84361D721CA10F8E00F43825 /* Debug */,
-				84361D741CA10F8E00F43825 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-/* End XCConfigurationList section */
-	};
-	rootObject = 775BEE731C1E8ECC008D1629 /* Project object */;
-}
+</string>
+		</dict>
+		<key>7601607D735D7F8D88971230</key>
+		<dict>
+			<key>explicitFileType</key>
+			<string>archive.ar</string>
+			<key>includeInIndex</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>path</key>
+			<string>libPods-WeexDemo.a</string>
+			<key>sourceTree</key>
+			<string>BUILT_PRODUCTS_DIR</string>
+		</dict>
+		<key>775BEE721C1E8ECC008D1629</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>775BEE7D1C1E8ECC008D1629</string>
+				<string>775BEE971C1E8ECC008D1629</string>
+				<string>775BEE7C1C1E8ECC008D1629</string>
+				<string>A9E45DD060512F73B9F51C03</string>
+				<string>327BB19797F63D5309FB91BF</string>
+				<string>DC65C4421CEB006C00B2F84F</string>
+				<string>84361D761CA10F8F00F43825</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>775BEE731C1E8ECC008D1629</key>
+		<dict>
+			<key>attributes</key>
+			<dict>
+				<key>LastUpgradeCheck</key>
+				<string>0710</string>
+				<key>ORGANIZATIONNAME</key>
+				<string>taobao</string>
+				<key>TargetAttributes</key>
+				<dict>
+					<key>775BEE7A1C1E8ECC008D1629</key>
+					<dict>
+						<key>CreatedOnToolsVersion</key>
+						<string>7.1.1</string>
+					</dict>
+					<key>775BEE931C1E8ECC008D1629</key>
+					<dict>
+						<key>CreatedOnToolsVersion</key>
+						<string>7.1.1</string>
+						<key>DevelopmentTeam</key>
+						<string>445VCMGQD2</string>
+						<key>TestTargetID</key>
+						<string>775BEE7A1C1E8ECC008D1629</string>
+					</dict>
+				</dict>
+			</dict>
+			<key>buildConfigurationList</key>
+			<string>775BEE761C1E8ECC008D1629</string>
+			<key>compatibilityVersion</key>
+			<string>Xcode 3.2</string>
+			<key>developmentRegion</key>
+			<string>English</string>
+			<key>hasScannedForEncodings</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXProject</string>
+			<key>knownRegions</key>
+			<array>
+				<string>en</string>
+				<string>Base</string>
+			</array>
+			<key>mainGroup</key>
+			<string>775BEE721C1E8ECC008D1629</string>
+			<key>productRefGroup</key>
+			<string>775BEE7C1C1E8ECC008D1629</string>
+			<key>projectDirPath</key>
+			<string></string>
+			<key>projectReferences</key>
+			<array/>
+			<key>projectRoot</key>
+			<string></string>
+			<key>targets</key>
+			<array>
+				<string>775BEE7A1C1E8ECC008D1629</string>
+				<string>775BEE931C1E8ECC008D1629</string>
+				<string>84361D261CA10F8E00F43825</string>
+			</array>
+		</dict>
+		<key>775BEE761C1E8ECC008D1629</key>
+		<dict>
+			<key>buildConfigurations</key>
+			<array>
+				<string>775BEEA61C1E8ECC008D1629</string>
+				<string>775BEEA71C1E8ECC008D1629</string>
+			</array>
+			<key>defaultConfigurationIsVisible</key>
+			<string>0</string>
+			<key>defaultConfigurationName</key>
+			<string>Debug</string>
+			<key>isa</key>
+			<string>XCConfigurationList</string>
+		</dict>
+		<key>775BEE771C1E8ECC008D1629</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>DCABAFF31D029685001C8592</string>
+				<string>2AE88A2C1C8544E6003329DE</string>
+				<string>775BEE861C1E8ECC008D1629</string>
+				<string>74CC79EB1C2B9E4700829368</string>
+				<string>DCABB0011D02975E001C8592</string>
+				<string>775BEE831C1E8ECC008D1629</string>
+				<string>DCABAFF41D029685001C8592</string>
+				<string>775BEE801C1E8ECC008D1629</string>
+				<string>DCABAFFE1D029753001C8592</string>
+			</array>
+			<key>isa</key>
+			<string>PBXSourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>775BEE781C1E8ECC008D1629</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>DC6DD9D21CFE9BC400549297</string>
+				<string>EAEC716BE3E43DBC8494EC51</string>
+			</array>
+			<key>isa</key>
+			<string>PBXFrameworksBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>775BEE791C1E8ECC008D1629</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>DC5E503E1D0D97130059F0EB</string>
+				<string>DC5E503F1D0D97130059F0EB</string>
+				<string>DCD286E01CF491AC00C601CA</string>
+				<string>59EA0DA71D2E7D19004F904A</string>
+				<string>DC65C4FA1CEB032F00B2F84F</string>
+				<string>775BEE8B1C1E8ECC008D1629</string>
+			</array>
+			<key>isa</key>
+			<string>PBXResourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>775BEE7A1C1E8ECC008D1629</key>
+		<dict>
+			<key>buildConfigurationList</key>
+			<string>775BEEA81C1E8ECC008D1629</string>
+			<key>buildPhases</key>
+			<array>
+				<string>359BEE13DD78032A2CB791E8</string>
+				<string>74CC7A221C2C13BF00829368</string>
+				<string>775BEE771C1E8ECC008D1629</string>
+				<string>775BEE781C1E8ECC008D1629</string>
+				<string>775BEE791C1E8ECC008D1629</string>
+				<string>0B3B6C05EE2F8A3B30DE551F</string>
+				<string>5ED24D6A09B32268BB031206</string>
+				<string>44B62843B46EC9EF8268ADA8</string>
+			</array>
+			<key>buildRules</key>
+			<array/>
+			<key>dependencies</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXNativeTarget</string>
+			<key>name</key>
+			<string>WeexDemo</string>
+			<key>productName</key>
+			<string>WeexDemo</string>
+			<key>productReference</key>
+			<string>775BEE7B1C1E8ECC008D1629</string>
+			<key>productType</key>
+			<string>com.apple.product-type.application</string>
+		</dict>
+		<key>775BEE7B1C1E8ECC008D1629</key>
+		<dict>
+			<key>explicitFileType</key>
+			<string>wrapper.application</string>
+			<key>includeInIndex</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>path</key>
+			<string>WeexDemo.app</string>
+			<key>sourceTree</key>
+			<string>BUILT_PRODUCTS_DIR</string>
+		</dict>
+		<key>775BEE7C1C1E8ECC008D1629</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>775BEE7B1C1E8ECC008D1629</string>
+				<string>775BEE941C1E8ECC008D1629</string>
+				<string>84361D751CA10F8E00F43825</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Products</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>775BEE7D1C1E8ECC008D1629</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>74CC79EC1C2B9FC600829368</string>
+				<string>775BEE8A1C1E8ECC008D1629</string>
+				<string>775BEE8F1C1E8ECC008D1629</string>
+				<string>59EA0DA61D2E7D19004F904A</string>
+				<string>775BEE7E1C1E8ECC008D1629</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>WeexDemo</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>775BEE7E1C1E8ECC008D1629</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>775BEE7F1C1E8ECC008D1629</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Supporting Files</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>775BEE7F1C1E8ECC008D1629</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>main.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>775BEE801C1E8ECC008D1629</key>
+		<dict>
+			<key>fileRef</key>
+			<string>775BEE7F1C1E8ECC008D1629</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>775BEE811C1E8ECC008D1629</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>AppDelegate.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>775BEE821C1E8ECC008D1629</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>AppDelegate.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>775BEE831C1E8ECC008D1629</key>
+		<dict>
+			<key>fileRef</key>
+			<string>775BEE821C1E8ECC008D1629</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>775BEE841C1E8ECC008D1629</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>WXDemoViewController.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>775BEE851C1E8ECC008D1629</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>WXDemoViewController.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>775BEE861C1E8ECC008D1629</key>
+		<dict>
+			<key>fileRef</key>
+			<string>775BEE851C1E8ECC008D1629</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>775BEE8A1C1E8ECC008D1629</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>folder.assetcatalog</string>
+			<key>path</key>
+			<string>Assets.xcassets</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>775BEE8B1C1E8ECC008D1629</key>
+		<dict>
+			<key>fileRef</key>
+			<string>775BEE8A1C1E8ECC008D1629</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>775BEE8F1C1E8ECC008D1629</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.plist.xml</string>
+			<key>path</key>
+			<string>Info.plist</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>775BEE901C1E8ECC008D1629</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>775BEE991C1E8ECC008D1629</string>
+			</array>
+			<key>isa</key>
+			<string>PBXSourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>775BEE911C1E8ECC008D1629</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXFrameworksBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>775BEE921C1E8ECC008D1629</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXResourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>775BEE931C1E8ECC008D1629</key>
+		<dict>
+			<key>buildConfigurationList</key>
+			<string>775BEEAB1C1E8ECC008D1629</string>
+			<key>buildPhases</key>
+			<array>
+				<string>775BEE901C1E8ECC008D1629</string>
+				<string>775BEE911C1E8ECC008D1629</string>
+				<string>775BEE921C1E8ECC008D1629</string>
+			</array>
+			<key>buildRules</key>
+			<array/>
+			<key>dependencies</key>
+			<array>
+				<string>775BEE961C1E8ECC008D1629</string>
+			</array>
+			<key>isa</key>
+			<string>PBXNativeTarget</string>
+			<key>name</key>
+			<string>WeexDemoTests</string>
+			<key>productName</key>
+			<string>WeexDemoTests</string>
+			<key>productReference</key>
+			<string>775BEE941C1E8ECC008D1629</string>
+			<key>productType</key>
+			<string>com.apple.product-type.bundle.unit-test</string>
+		</dict>
+		<key>775BEE941C1E8ECC008D1629</key>
+		<dict>
+			<key>explicitFileType</key>
+			<string>wrapper.cfbundle</string>
+			<key>includeInIndex</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>path</key>
+			<string>WeexDemoTests.xctest</string>
+			<key>sourceTree</key>
+			<string>BUILT_PRODUCTS_DIR</string>
+		</dict>
+		<key>775BEE951C1E8ECC008D1629</key>
+		<dict>
+			<key>containerPortal</key>
+			<string>775BEE731C1E8ECC008D1629</string>
+			<key>isa</key>
+			<string>PBXContainerItemProxy</string>
+			<key>proxyType</key>
+			<string>1</string>
+			<key>remoteGlobalIDString</key>
+			<string>775BEE7A1C1E8ECC008D1629</string>
+			<key>remoteInfo</key>
+			<string>WeexDemo</string>
+		</dict>
+		<key>775BEE961C1E8ECC008D1629</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXTargetDependency</string>
+			<key>target</key>
+			<string>775BEE7A1C1E8ECC008D1629</string>
+			<key>targetProxy</key>
+			<string>775BEE951C1E8ECC008D1629</string>
+		</dict>
+		<key>775BEE971C1E8ECC008D1629</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>775BEE981C1E8ECC008D1629</string>
+				<string>775BEE9A1C1E8ECC008D1629</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>WeexDemoTests</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>775BEE981C1E8ECC008D1629</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>WeexDemoTests.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>775BEE991C1E8ECC008D1629</key>
+		<dict>
+			<key>fileRef</key>
+			<string>775BEE981C1E8ECC008D1629</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>775BEE9A1C1E8ECC008D1629</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.plist.xml</string>
+			<key>path</key>
+			<string>Info.plist</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>775BEEA61C1E8ECC008D1629</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>ALWAYS_SEARCH_USER_PATHS</key>
+				<string>NO</string>
+				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
+				<string>gnu++0x</string>
+				<key>CLANG_CXX_LIBRARY</key>
+				<string>libc++</string>
+				<key>CLANG_ENABLE_MODULES</key>
+				<string>YES</string>
+				<key>CLANG_ENABLE_OBJC_ARC</key>
+				<string>YES</string>
+				<key>CLANG_WARN_BOOL_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_CONSTANT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_DIRECT_OBJC_ISA_USAGE</key>
+				<string>YES_ERROR</string>
+				<key>CLANG_WARN_EMPTY_BODY</key>
+				<string>YES</string>
+				<key>CLANG_WARN_ENUM_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_INT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_OBJC_ROOT_CLASS</key>
+				<string>YES_ERROR</string>
+				<key>CLANG_WARN_UNREACHABLE_CODE</key>
+				<string>YES</string>
+				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
+				<string>YES</string>
+				<key>CODE_SIGN_IDENTITY</key>
+				<string>iPhone Developer</string>
+				<key>CODE_SIGN_IDENTITY[sdk=iphoneos*]</key>
+				<string>iPhone Developer</string>
+				<key>COPY_PHASE_STRIP</key>
+				<string>NO</string>
+				<key>DEBUG_INFORMATION_FORMAT</key>
+				<string>dwarf</string>
+				<key>ENABLE_STRICT_OBJC_MSGSEND</key>
+				<string>YES</string>
+				<key>ENABLE_TESTABILITY</key>
+				<string>YES</string>
+				<key>GCC_C_LANGUAGE_STANDARD</key>
+				<string>gnu99</string>
+				<key>GCC_DYNAMIC_NO_PIC</key>
+				<string>NO</string>
+				<key>GCC_GENERATE_TEST_COVERAGE_FILES</key>
+				<string>YES</string>
+				<key>GCC_INSTRUMENT_PROGRAM_FLOW_ARCS</key>
+				<string>YES</string>
+				<key>GCC_NO_COMMON_BLOCKS</key>
+				<string>YES</string>
+				<key>GCC_OPTIMIZATION_LEVEL</key>
+				<string>0</string>
+				<key>GCC_PREPROCESSOR_DEFINITIONS</key>
+				<array>
+					<string>DEBUG=1</string>
+					<string>$(inherited)</string>
+				</array>
+				<key>GCC_WARN_64_TO_32_BIT_CONVERSION</key>
+				<string>YES</string>
+				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
+				<string>YES_ERROR</string>
+				<key>GCC_WARN_UNDECLARED_SELECTOR</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
+				<string>YES_AGGRESSIVE</string>
+				<key>GCC_WARN_UNUSED_FUNCTION</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNUSED_VARIABLE</key>
+				<string>YES</string>
+				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+				<string>7.0</string>
+				<key>MTL_ENABLE_DEBUG_INFO</key>
+				<string>YES</string>
+				<key>ONLY_ACTIVE_ARCH</key>
+				<string>YES</string>
+				<key>SDKROOT</key>
+				<string>iphoneos</string>
+				<key>TARGETED_DEVICE_FAMILY</key>
+				<string>1,2</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Debug</string>
+		</dict>
+		<key>775BEEA71C1E8ECC008D1629</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>ALWAYS_SEARCH_USER_PATHS</key>
+				<string>NO</string>
+				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
+				<string>gnu++0x</string>
+				<key>CLANG_CXX_LIBRARY</key>
+				<string>libc++</string>
+				<key>CLANG_ENABLE_MODULES</key>
+				<string>YES</string>
+				<key>CLANG_ENABLE_OBJC_ARC</key>
+				<string>YES</string>
+				<key>CLANG_WARN_BOOL_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_CONSTANT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_DIRECT_OBJC_ISA_USAGE</key>
+				<string>YES_ERROR</string>
+				<key>CLANG_WARN_EMPTY_BODY</key>
+				<string>YES</string>
+				<key>CLANG_WARN_ENUM_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_INT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_OBJC_ROOT_CLASS</key>
+				<string>YES_ERROR</string>
+				<key>CLANG_WARN_UNREACHABLE_CODE</key>
+				<string>YES</string>
+				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
+				<string>YES</string>
+				<key>CODE_SIGN_IDENTITY</key>
+				<string>iPhone Distribution</string>
+				<key>CODE_SIGN_IDENTITY[sdk=iphoneos*]</key>
+				<string>iPhone Distribution</string>
+				<key>COPY_PHASE_STRIP</key>
+				<string>NO</string>
+				<key>DEBUG_INFORMATION_FORMAT</key>
+				<string>dwarf-with-dsym</string>
+				<key>ENABLE_NS_ASSERTIONS</key>
+				<string>NO</string>
+				<key>ENABLE_STRICT_OBJC_MSGSEND</key>
+				<string>YES</string>
+				<key>GCC_C_LANGUAGE_STANDARD</key>
+				<string>gnu99</string>
+				<key>GCC_NO_COMMON_BLOCKS</key>
+				<string>YES</string>
+				<key>GCC_WARN_64_TO_32_BIT_CONVERSION</key>
+				<string>YES</string>
+				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
+				<string>YES_ERROR</string>
+				<key>GCC_WARN_UNDECLARED_SELECTOR</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
+				<string>YES_AGGRESSIVE</string>
+				<key>GCC_WARN_UNUSED_FUNCTION</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNUSED_VARIABLE</key>
+				<string>YES</string>
+				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+				<string>7.0</string>
+				<key>MTL_ENABLE_DEBUG_INFO</key>
+				<string>NO</string>
+				<key>SDKROOT</key>
+				<string>iphoneos</string>
+				<key>TARGETED_DEVICE_FAMILY</key>
+				<string>1,2</string>
+				<key>VALIDATE_PRODUCT</key>
+				<string>YES</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Release</string>
+		</dict>
+		<key>775BEEA81C1E8ECC008D1629</key>
+		<dict>
+			<key>buildConfigurations</key>
+			<array>
+				<string>775BEEA91C1E8ECC008D1629</string>
+				<string>775BEEAA1C1E8ECC008D1629</string>
+			</array>
+			<key>defaultConfigurationIsVisible</key>
+			<string>0</string>
+			<key>defaultConfigurationName</key>
+			<string>Debug</string>
+			<key>isa</key>
+			<string>XCConfigurationList</string>
+		</dict>
+		<key>775BEEA91C1E8ECC008D1629</key>
+		<dict>
+			<key>baseConfigurationReference</key>
+			<string>5AF8846546DAC65CAC038806</string>
+			<key>buildSettings</key>
+			<dict>
+				<key>ASSETCATALOG_COMPILER_APPICON_NAME</key>
+				<string>AppIcon</string>
+				<key>ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME</key>
+				<string>LaunchImage</string>
+				<key>CODE_SIGN_IDENTITY</key>
+				<string>iPhone Developer</string>
+				<key>CODE_SIGN_IDENTITY[sdk=iphoneos*]</key>
+				<string>iPhone Developer</string>
+				<key>ENABLE_BITCODE</key>
+				<string>NO</string>
+				<key>FRAMEWORK_SEARCH_PATHS</key>
+				<array>
+					<string>$(inherited)</string>
+					<string>$(PROJECT_DIR)/WeexDemo</string>
+					<string>$(PROJECT_DIR)</string>
+				</array>
+				<key>GCC_TREAT_WARNINGS_AS_ERRORS</key>
+				<string>YES</string>
+				<key>INFOPLIST_FILE</key>
+				<string>WeexDemo/Info.plist</string>
+				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+				<string>7.0</string>
+				<key>LD_RUNPATH_SEARCH_PATHS</key>
+				<string>$(inherited) @executable_path/Frameworks</string>
+				<key>OTHER_LDFLAGS</key>
+				<array>
+					<string>$(inherited)</string>
+					<string>-licucore</string>
+				</array>
+				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
+				<string>com.taobao.WeexPlayground</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>PROVISIONING_PROFILE</key>
+				<string></string>
+				<key>TARGETED_DEVICE_FAMILY</key>
+				<string>1</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Debug</string>
+		</dict>
+		<key>775BEEAA1C1E8ECC008D1629</key>
+		<dict>
+			<key>baseConfigurationReference</key>
+			<string>9420131417A731ED089B0814</string>
+			<key>buildSettings</key>
+			<dict>
+				<key>ASSETCATALOG_COMPILER_APPICON_NAME</key>
+				<string>AppIcon</string>
+				<key>ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME</key>
+				<string>LaunchImage</string>
+				<key>CODE_SIGN_IDENTITY</key>
+				<string>iPhone Distribution</string>
+				<key>CODE_SIGN_IDENTITY[sdk=iphoneos*]</key>
+				<string>iPhone Distribution</string>
+				<key>ENABLE_BITCODE</key>
+				<string>NO</string>
+				<key>FRAMEWORK_SEARCH_PATHS</key>
+				<array>
+					<string>$(inherited)</string>
+					<string>$(PROJECT_DIR)/WeexDemo</string>
+					<string>$(PROJECT_DIR)</string>
+				</array>
+				<key>GCC_TREAT_WARNINGS_AS_ERRORS</key>
+				<string>YES</string>
+				<key>INFOPLIST_FILE</key>
+				<string>WeexDemo/Info.plist</string>
+				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+				<string>7.0</string>
+				<key>LD_RUNPATH_SEARCH_PATHS</key>
+				<string>$(inherited) @executable_path/Frameworks</string>
+				<key>OTHER_LDFLAGS</key>
+				<array>
+					<string>$(inherited)</string>
+					<string>-licucore</string>
+				</array>
+				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
+				<string>com.taobao.WeexPlayground</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>PROVISIONING_PROFILE</key>
+				<string></string>
+				<key>TARGETED_DEVICE_FAMILY</key>
+				<string>1</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Release</string>
+		</dict>
+		<key>775BEEAB1C1E8ECC008D1629</key>
+		<dict>
+			<key>buildConfigurations</key>
+			<array>
+				<string>775BEEAC1C1E8ECC008D1629</string>
+				<string>775BEEAD1C1E8ECC008D1629</string>
+			</array>
+			<key>defaultConfigurationIsVisible</key>
+			<string>0</string>
+			<key>defaultConfigurationName</key>
+			<string>Debug</string>
+			<key>isa</key>
+			<string>XCConfigurationList</string>
+		</dict>
+		<key>775BEEAC1C1E8ECC008D1629</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>BUNDLE_LOADER</key>
+				<string>$(TEST_HOST)</string>
+				<key>INFOPLIST_FILE</key>
+				<string>WeexDemoTests/Info.plist</string>
+				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+				<string>7.0</string>
+				<key>LD_RUNPATH_SEARCH_PATHS</key>
+				<string>$(inherited) @executable_path/Frameworks @loader_path/Frameworks</string>
+				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
+				<string>com.taobao.WeexDemoTests</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>TEST_HOST</key>
+				<string>$(BUILT_PRODUCTS_DIR)/WeexDemo.app/WeexDemo</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Debug</string>
+		</dict>
+		<key>775BEEAD1C1E8ECC008D1629</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>BUNDLE_LOADER</key>
+				<string>$(TEST_HOST)</string>
+				<key>INFOPLIST_FILE</key>
+				<string>WeexDemoTests/Info.plist</string>
+				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+				<string>7.0</string>
+				<key>LD_RUNPATH_SEARCH_PATHS</key>
+				<string>$(inherited) @executable_path/Frameworks @loader_path/Frameworks</string>
+				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
+				<string>com.taobao.WeexDemoTests</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>TEST_HOST</key>
+				<string>$(BUILT_PRODUCTS_DIR)/WeexDemo.app/WeexDemo</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Release</string>
+		</dict>
+		<key>84361D261CA10F8E00F43825</key>
+		<dict>
+			<key>buildConfigurationList</key>
+			<string>84361D711CA10F8E00F43825</string>
+			<key>buildPhases</key>
+			<array>
+				<string>84361D271CA10F8E00F43825</string>
+				<string>84361D291CA10F8E00F43825</string>
+				<string>84361D3C1CA10F8E00F43825</string>
+				<string>84361D431CA10F8E00F43825</string>
+				<string>84361D6F1CA10F8E00F43825</string>
+				<string>84361D701CA10F8E00F43825</string>
+				<string>567369891CE436EB000A646C</string>
+				<string>65FBE990460776BDBC5B4ED2</string>
+			</array>
+			<key>buildRules</key>
+			<array/>
+			<key>dependencies</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXNativeTarget</string>
+			<key>name</key>
+			<string>WeexUITestDemo</string>
+			<key>productName</key>
+			<string>WeexDemo</string>
+			<key>productReference</key>
+			<string>84361D751CA10F8E00F43825</string>
+			<key>productType</key>
+			<string>com.apple.product-type.application</string>
+		</dict>
+		<key>84361D271CA10F8E00F43825</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>inputPaths</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXShellScriptBuildPhase</string>
+			<key>name</key>
+			<string>Check Pods Manifest.lock</string>
+			<key>outputPaths</key>
+			<array/>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+			<key>shellPath</key>
+			<string>/bin/sh</string>
+			<key>shellScript</key>
+			<string>diff "${PODS_ROOT}/../Podfile.lock" "${PODS_ROOT}/Manifest.lock" &gt; /dev/null
+if [[ $? != 0 ]] ; then
+    cat &lt;&lt; EOM
+error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.
+EOM
+    exit 1
+fi
+</string>
+			<key>showEnvVarsInLog</key>
+			<string>0</string>
+		</dict>
+		<key>84361D291CA10F8E00F43825</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>DCA812FB1D0401570029BF62</string>
+				<string>DCA812FA1D0401500029BF62</string>
+				<string>DCA812F91D0401420029BF62</string>
+				<string>84361D2F1CA10F8E00F43825</string>
+				<string>84361D331CA10F8E00F43825</string>
+				<string>84361D371CA10F8E00F43825</string>
+				<string>84361D381CA10F8E00F43825</string>
+				<string>84361D3B1CA10F8E00F43825</string>
+			</array>
+			<key>isa</key>
+			<string>PBXSourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>84361D2F1CA10F8E00F43825</key>
+		<dict>
+			<key>fileRef</key>
+			<string>2AE88A2B1C8544E6003329DE</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>84361D331CA10F8E00F43825</key>
+		<dict>
+			<key>fileRef</key>
+			<string>775BEE851C1E8ECC008D1629</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>84361D371CA10F8E00F43825</key>
+		<dict>
+			<key>fileRef</key>
+			<string>74CC79EA1C2B9E4700829368</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>84361D381CA10F8E00F43825</key>
+		<dict>
+			<key>fileRef</key>
+			<string>775BEE821C1E8ECC008D1629</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>84361D3B1CA10F8E00F43825</key>
+		<dict>
+			<key>fileRef</key>
+			<string>775BEE7F1C1E8ECC008D1629</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>84361D3C1CA10F8E00F43825</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>84D7CAC71CE3266C00D48D46</string>
+				<string>84361D421CA10F8E00F43825</string>
+				<string>8A0B5EFFF75BF82EA481983D</string>
+			</array>
+			<key>isa</key>
+			<string>PBXFrameworksBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>84361D421CA10F8E00F43825</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7601607D735D7F8D88971230</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>84361D431CA10F8E00F43825</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>84361D5B1CA10F8E00F43825</string>
+			</array>
+			<key>isa</key>
+			<string>PBXResourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>84361D5B1CA10F8E00F43825</key>
+		<dict>
+			<key>fileRef</key>
+			<string>775BEE8A1C1E8ECC008D1629</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>84361D6F1CA10F8E00F43825</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>inputPaths</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXShellScriptBuildPhase</string>
+			<key>name</key>
+			<string>Copy Pods Resources</string>
+			<key>outputPaths</key>
+			<array/>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+			<key>shellPath</key>
+			<string>/bin/sh</string>
+			<key>shellScript</key>
+			<string>"${SRCROOT}/Pods/Target Support Files/Pods-WeexUITestDemo/Pods-WeexUITestDemo-resources.sh"
+</string>
+			<key>showEnvVarsInLog</key>
+			<string>0</string>
+		</dict>
+		<key>84361D701CA10F8E00F43825</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>inputPaths</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXShellScriptBuildPhase</string>
+			<key>name</key>
+			<string>Embed Pods Frameworks</string>
+			<key>outputPaths</key>
+			<array/>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+			<key>shellPath</key>
+			<string>/bin/sh</string>
+			<key>shellScript</key>
+			<string>"${SRCROOT}/Pods/Target Support Files/Pods-WeexUITestDemo/Pods-WeexUITestDemo-frameworks.sh"
+</string>
+			<key>showEnvVarsInLog</key>
+			<string>0</string>
+		</dict>
+		<key>84361D711CA10F8E00F43825</key>
+		<dict>
+			<key>buildConfigurations</key>
+			<array>
+				<string>84361D721CA10F8E00F43825</string>
+				<string>84361D741CA10F8E00F43825</string>
+			</array>
+			<key>defaultConfigurationIsVisible</key>
+			<string>0</string>
+			<key>defaultConfigurationName</key>
+			<string>Debug</string>
+			<key>isa</key>
+			<string>XCConfigurationList</string>
+		</dict>
+		<key>84361D721CA10F8E00F43825</key>
+		<dict>
+			<key>baseConfigurationReference</key>
+			<string>2278B1B1FCE894EDAF9F0171</string>
+			<key>buildSettings</key>
+			<dict>
+				<key>ASSETCATALOG_COMPILER_APPICON_NAME</key>
+				<string>AppIcon</string>
+				<key>CODE_SIGN_IDENTITY</key>
+				<string>iPhone Developer</string>
+				<key>CODE_SIGN_IDENTITY[sdk=iphoneos*]</key>
+				<string>iPhone Developer</string>
+				<key>ENABLE_BITCODE</key>
+				<string>NO</string>
+				<key>FRAMEWORK_SEARCH_PATHS</key>
+				<array>
+					<string>$(inherited)</string>
+					<string>$(PROJECT_DIR)/WeexDemo</string>
+					<string>$(PROJECT_DIR)</string>
+				</array>
+				<key>GCC_GENERATE_TEST_COVERAGE_FILES</key>
+				<string>YES</string>
+				<key>GCC_INSTRUMENT_PROGRAM_FLOW_ARCS</key>
+				<string>YES</string>
+				<key>GCC_PREPROCESSOR_DEFINITIONS</key>
+				<array>
+					<string>$(inherited)</string>
+					<string>COCOAPODS=1</string>
+					<string>UITEST=1</string>
+				</array>
+				<key>GCC_TREAT_WARNINGS_AS_ERRORS</key>
+				<string>YES</string>
+				<key>INFOPLIST_FILE</key>
+				<string>WeexUITestDemo-Info.plist</string>
+				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+				<string>7.0</string>
+				<key>LD_RUNPATH_SEARCH_PATHS</key>
+				<string>$(inherited) @executable_path/Frameworks</string>
+				<key>MODULE_NAME</key>
+				<string>NO</string>
+				<key>OTHER_LDFLAGS</key>
+				<array>
+					<string>$(inherited)</string>
+					<string>-licucore</string>
+				</array>
+				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
+				<string>com.taobao.WeexDemo.uitest</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>PROVISIONING_PROFILE</key>
+				<string></string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Debug</string>
+		</dict>
+		<key>84361D741CA10F8E00F43825</key>
+		<dict>
+			<key>baseConfigurationReference</key>
+			<string>1888E2C5769382461DEDC97D</string>
+			<key>buildSettings</key>
+			<dict>
+				<key>ASSETCATALOG_COMPILER_APPICON_NAME</key>
+				<string>AppIcon</string>
+				<key>CODE_SIGN_IDENTITY</key>
+				<string>iPhone Developer</string>
+				<key>CODE_SIGN_IDENTITY[sdk=iphoneos*]</key>
+				<string>iPhone Developer</string>
+				<key>ENABLE_BITCODE</key>
+				<string>NO</string>
+				<key>FRAMEWORK_SEARCH_PATHS</key>
+				<array>
+					<string>$(inherited)</string>
+					<string>$(PROJECT_DIR)/WeexDemo</string>
+					<string>$(PROJECT_DIR)</string>
+				</array>
+				<key>GCC_GENERATE_TEST_COVERAGE_FILES</key>
+				<string>YES</string>
+				<key>GCC_INSTRUMENT_PROGRAM_FLOW_ARCS</key>
+				<string>YES</string>
+				<key>GCC_TREAT_WARNINGS_AS_ERRORS</key>
+				<string>YES</string>
+				<key>INFOPLIST_FILE</key>
+				<string>WeexUITestDemo-Info.plist</string>
+				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+				<string>7.0</string>
+				<key>LD_RUNPATH_SEARCH_PATHS</key>
+				<string>$(inherited) @executable_path/Frameworks</string>
+				<key>MODULE_NAME</key>
+				<string>NO</string>
+				<key>OTHER_LDFLAGS</key>
+				<array>
+					<string>$(inherited)</string>
+					<string>-licucore</string>
+				</array>
+				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
+				<string>com.taobao.WeexDemo.uitest</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>PROVISIONING_PROFILE</key>
+				<string></string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Release</string>
+		</dict>
+		<key>84361D751CA10F8E00F43825</key>
+		<dict>
+			<key>explicitFileType</key>
+			<string>wrapper.application</string>
+			<key>includeInIndex</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>path</key>
+			<string>WeexUITestDemo.app</string>
+			<key>sourceTree</key>
+			<string>BUILT_PRODUCTS_DIR</string>
+		</dict>
+		<key>84361D761CA10F8F00F43825</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.plist.xml</string>
+			<key>name</key>
+			<string>WeexUITestDemo-Info.plist</string>
+			<key>path</key>
+			<string>/Users/admin/Documents/03_project_git/01_Weex/weex-samples/ios/WeexUITestDemo-Info.plist</string>
+			<key>sourceTree</key>
+			<string>&lt;absolute&gt;</string>
+		</dict>
+		<key>84D7CAC71CE3266C00D48D46</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7475ACA01CD8444A0044E96C</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>8A0B5EFFF75BF82EA481983D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>E48C20F443AA337D1FE97622</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>9420131417A731ED089B0814</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.xcconfig</string>
+			<key>name</key>
+			<string>Pods-WeexDemo.release.xcconfig</string>
+			<key>path</key>
+			<string>Pods/Target Support Files/Pods-WeexDemo/Pods-WeexDemo.release.xcconfig</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>A9E45DD060512F73B9F51C03</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>5AF8846546DAC65CAC038806</string>
+				<string>9420131417A731ED089B0814</string>
+				<string>22E4D2883CC56188A2CA9C13</string>
+				<string>2278B1B1FCE894EDAF9F0171</string>
+				<string>1888E2C5769382461DEDC97D</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Pods</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>D5ADF0861C77133B00597CA6</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>2AE88A291C8544D7003329DE</string>
+				<string>DCABAFED1D029642001C8592</string>
+				<string>74CC79E91C2B9E4700829368</string>
+				<string>74CC79EA1C2B9E4700829368</string>
+				<string>775BEE811C1E8ECC008D1629</string>
+				<string>775BEE821C1E8ECC008D1629</string>
+				<string>775BEE841C1E8ECC008D1629</string>
+				<string>775BEE851C1E8ECC008D1629</string>
+				<string>7453E3641C9FA971001EB427</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Source</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DC5E503C1D0D97130059F0EB</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>image.png</string>
+			<key>path</key>
+			<string>weex.png</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DC5E503D1D0D97130059F0EB</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>image.png</string>
+			<key>path</key>
+			<string>weex@2x.png</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DC5E503E1D0D97130059F0EB</key>
+		<dict>
+			<key>fileRef</key>
+			<string>DC5E503C1D0D97130059F0EB</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>DC5E503F1D0D97130059F0EB</key>
+		<dict>
+			<key>fileRef</key>
+			<string>DC5E503D1D0D97130059F0EB</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>DC65C4421CEB006C00B2F84F</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>DCD286DF1CF491AC00C601CA</string>
+				<string>DC5E503C1D0D97130059F0EB</string>
+				<string>DC5E503D1D0D97130059F0EB</string>
+				<string>DC65C4F91CEB032F00B2F84F</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>resource</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DC65C4F91CEB032F00B2F84F</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>folder</string>
+			<key>path</key>
+			<string>bundlejs</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DC65C4FA1CEB032F00B2F84F</key>
+		<dict>
+			<key>fileRef</key>
+			<string>DC65C4F91CEB032F00B2F84F</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>DC6DD9D21CFE9BC400549297</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7475ACA01CD8444A0044E96C</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>DCA812F91D0401420029BF62</key>
+		<dict>
+			<key>fileRef</key>
+			<string>DCABAFFA1D029748001C8592</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>DCA812FA1D0401500029BF62</key>
+		<dict>
+			<key>fileRef</key>
+			<string>DCABB0001D02975E001C8592</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>DCA812FB1D0401570029BF62</key>
+		<dict>
+			<key>fileRef</key>
+			<string>DCABAFFD1D029753001C8592</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>DCABAFED1D029642001C8592</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>DCABAFEF1D029685001C8592</string>
+				<string>DCABAFF01D029685001C8592</string>
+				<string>DCABAFF11D029685001C8592</string>
+				<string>DCABAFF21D029685001C8592</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>debug</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DCABAFEF1D029685001C8592</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>WXATLoggerPlugin.h</string>
+			<key>path</key>
+			<string>debug/WXATLoggerPlugin.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DCABAFF01D029685001C8592</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>WXATLoggerPlugin.m</string>
+			<key>path</key>
+			<string>debug/WXATLoggerPlugin.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DCABAFF11D029685001C8592</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>WXATViewHierarchyPlugin.h</string>
+			<key>path</key>
+			<string>debug/WXATViewHierarchyPlugin.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DCABAFF21D029685001C8592</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>WXATViewHierarchyPlugin.m</string>
+			<key>path</key>
+			<string>debug/WXATViewHierarchyPlugin.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DCABAFF31D029685001C8592</key>
+		<dict>
+			<key>fileRef</key>
+			<string>DCABAFF01D029685001C8592</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>DCABAFF41D029685001C8592</key>
+		<dict>
+			<key>fileRef</key>
+			<string>DCABAFF21D029685001C8592</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>DCABAFF51D0296DB001C8592</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>DCABAFF81D029716001C8592</string>
+				<string>DCABAFF71D0296E8001C8592</string>
+				<string>DCABAFF61D0296E2001C8592</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>extend</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DCABAFF61D0296E2001C8592</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>DCABAFFF1D02975E001C8592</string>
+				<string>DCABB0001D02975E001C8592</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>module</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DCABAFF71D0296E8001C8592</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>DCABAFFC1D029753001C8592</string>
+				<string>DCABAFFD1D029753001C8592</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>handler</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DCABAFF81D029716001C8592</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>DCABAFF91D029748001C8592</string>
+				<string>DCABAFFA1D029748001C8592</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>component</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DCABAFF91D029748001C8592</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>WXSelectComponent.h</string>
+			<key>path</key>
+			<string>extend/component/WXSelectComponent.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DCABAFFA1D029748001C8592</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>WXSelectComponent.m</string>
+			<key>path</key>
+			<string>extend/component/WXSelectComponent.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DCABAFFC1D029753001C8592</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>WXImgLoaderDefaultImpl.h</string>
+			<key>path</key>
+			<string>extend/handler/WXImgLoaderDefaultImpl.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DCABAFFD1D029753001C8592</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>WXImgLoaderDefaultImpl.m</string>
+			<key>path</key>
+			<string>extend/handler/WXImgLoaderDefaultImpl.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DCABAFFE1D029753001C8592</key>
+		<dict>
+			<key>fileRef</key>
+			<string>DCABAFFD1D029753001C8592</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>DCABAFFF1D02975E001C8592</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>WXEventModule.h</string>
+			<key>path</key>
+			<string>extend/module/WXEventModule.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DCABB0001D02975E001C8592</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>WXEventModule.m</string>
+			<key>path</key>
+			<string>extend/module/WXEventModule.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DCABB0011D02975E001C8592</key>
+		<dict>
+			<key>fileRef</key>
+			<string>DCABB0001D02975E001C8592</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>DCD286DF1CF491AC00C601CA</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>image.png</string>
+			<key>name</key>
+			<string>weex-icon.png</string>
+			<key>path</key>
+			<string>WeexDemo/weex-icon.png</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DCD286E01CF491AC00C601CA</key>
+		<dict>
+			<key>fileRef</key>
+			<string>DCD286DF1CF491AC00C601CA</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>E48C20F443AA337D1FE97622</key>
+		<dict>
+			<key>explicitFileType</key>
+			<string>archive.ar</string>
+			<key>includeInIndex</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>path</key>
+			<string>libPods-WeexUITestDemo.a</string>
+			<key>sourceTree</key>
+			<string>BUILT_PRODUCTS_DIR</string>
+		</dict>
+		<key>EAEC716BE3E43DBC8494EC51</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7601607D735D7F8D88971230</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+	</dict>
+	<key>rootObject</key>
+	<string>775BEE731C1E8ECC008D1629</string>
+</dict>
+</plist>

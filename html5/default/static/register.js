@@ -1,12 +1,16 @@
 import Vm from '../vm'
 import config from '../config'
+import {
+  initModules,
+  initMethods
+} from '../app/register'
 
 const {
   nativeComponentMap
 } = config
 
 /**
- * register the name of each native component
+ * Register the name of each native component.
  * @param  {array} components array of name
  */
 export function registerComponents (components) {
@@ -27,22 +31,24 @@ export function registerComponents (components) {
 }
 
 /**
- * register the name and methods of each module
+ * Register the name and methods of each module.
  * @param  {object} modules a object of modules
  */
 export function registerModules (modules) {
   if (typeof modules === 'object') {
-    Vm.registerModules(modules)
+    initModules(modules)
   }
 }
 
 /**
- * register the name and methods of each api
+ * Register the name and methods of each api.
  * @param  {object} apis a object of apis
  */
-export function registerMethods (apis) {
-  if (typeof apis === 'object') {
-    Vm.registerMethods(apis)
+export function registerMethods (methods) {
+  if (typeof methods === 'object') {
+    initMethods(Vm, methods)
   }
 }
+
+// @todo: Hack for this framework only. Will be re-designed or removed later.
 global.registerMethods = registerMethods

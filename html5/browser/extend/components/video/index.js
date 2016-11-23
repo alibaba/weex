@@ -7,7 +7,8 @@ function getProto (Weex) {
   return {
     create () {
       const node = document.createElement('video')
-      node.classList.add('weex-video', 'weex-element')
+      node.classList.add('weex-video')
+      node.classList.add('weex-element')
       node.controls = true
       node.autoplay = this.autoPlay
       node.setAttribute('play-status', this.playStatus)

@@ -205,18 +205,22 @@
 package com.taobao.weex.ui.component;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.TypedValue;
 import android.widget.CompoundButton;
 
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
-import com.taobao.weex.common.WXDomPropConstant;
+import com.taobao.weex.common.Component;
+import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.view.WXSwitchView;
 import com.taobao.weex.utils.WXUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+
+@Component(lazyload = false)
 
 public class WXSwitch extends WXComponent<WXSwitchView>{
 
@@ -230,8 +234,8 @@ public class WXSwitch extends WXComponent<WXSwitchView>{
   }
 
   @Override
-  protected WXSwitchView initComponentHostView(Context context) {
-    WXSwitchView view = new WXSwitchView(mContext);
+  protected WXSwitchView initComponentHostView(@NonNull Context context) {
+    WXSwitchView view = new WXSwitchView(context);
     view.setTextSize(TypedValue.COMPLEX_UNIT_PX,22);
     return view;
   }
@@ -240,7 +244,7 @@ public class WXSwitch extends WXComponent<WXSwitchView>{
   @Override
   public void addEvent(String type) {
     super.addEvent(type);
-    if (type != null && type.equals(WXEventType.CHANGE) && getHostView() != null) {
+    if (type != null && type.equals(Constants.Event.CHANGE) && getHostView() != null) {
       getHostView().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -251,7 +255,7 @@ public class WXSwitch extends WXComponent<WXSwitchView>{
           Map<String, Object> attrsChanges = new HashMap<>();
           attrsChanges.put("checked",Boolean.toString(isChecked));
           domChanges.put("attrs",attrsChanges);
-          WXSDKManager.getInstance().fireEvent(mInstanceId, mDomObj.ref, WXEventType.CHANGE, params,domChanges);
+          WXSDKManager.getInstance().fireEvent(getInstanceId(), getDomObject().getRef(), Constants.Event.CHANGE, params,domChanges);
         }
       });
     }
@@ -268,7 +272,7 @@ public class WXSwitch extends WXComponent<WXSwitchView>{
   @Override
   protected boolean setProperty(String key, Object param) {
     switch (key) {
-      case WXDomPropConstant.WX_ATTR_SWITCH_CHECKED:
+      case Constants.Name.CHECKED:
         Boolean result = WXUtils.getBoolean(param,null);
         if (result != null)
           setChecked(result);
@@ -277,7 +281,7 @@ public class WXSwitch extends WXComponent<WXSwitchView>{
     return super.setProperty(key, param);
   }
 
-  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SWITCH_CHECKED)
+  @WXComponentProp(name = Constants.Name.CHECKED)
   public void setChecked(boolean checked) {
     getHostView().setChecked(checked);
   }

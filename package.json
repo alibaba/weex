@@ -33,14 +33,14 @@
   "scripts": {
     "postinstall": "bash ./bin/install-hooks.sh",
     "build:config": "node build/config.frameworks.js",
-    "build:browser": "webpack --config build/webpack.browser.config.js",
+    "build:browser": "wwp && webpack --config build/webpack.browser.config.js",
     "build:common": "webpack --config build/webpack.common.config.js",
     "build:native": "webpack --config build/webpack.native.config.js",
     "build:examples": "webpack --config build/webpack.examples.config.js",
     "build:test": "webpack --config build/webpack.test.config.js",
     "dist:browser": "npm run build:browser && npm run build:common && bash ./bin/dist-browser.sh",
     "dist": "npm run dist:browser",
-    "dev:browser": "webpack --watch --config build/webpack.browser.config.js",
+    "dev:browser": "wwp && webpack --watch --config build/webpack.browser.config.js",
     "dev:native": "webpack --watch --config build/webpack.native.config.js",
     "dev:examples": "webpack --watch --config build/webpack.examples.config.js",
     "dev:test": "webpack --watch --config build/webpack.test.config.js",
@@ -59,8 +59,8 @@
     "copy": "npm run copy:js && npm run copy:examples"
   },
   "subversion": {
-    "browser": "0.3.2",
-    "framework": "0.15.2",
+    "browser": "0.4.0",
+    "framework": "0.16.17",
     "transformer": ">=0.1.5 <0.4"
   },
   "dependencies": {
@@ -70,7 +70,7 @@
     "envd": "^0.1.1",
     "httpurl": "^0.1.1",
     "lazyimg": "^0.1.2",
-    "modals": "^0.1.5",
+    "modals": "^0.1.6",
     "scroll-to": "0.0.2",
     "semver": "^5.1.0",
     "weex-components": "^0.2.0"
@@ -100,6 +100,7 @@
     "style-loader": "^0.13.1",
     "uglify-js": "^2.6.4",
     "webpack": "^1.13.1",
-    "weex-loader": "^0.3.1"
+    "weex-loader": "^0.3.1",
+    "wwp": "^0.2.0"
   }
 }

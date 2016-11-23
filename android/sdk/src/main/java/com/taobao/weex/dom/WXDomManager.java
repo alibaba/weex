@@ -213,12 +213,12 @@ import android.text.TextUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.common.Constants;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.common.WXThread;
 import com.taobao.weex.ui.WXRenderManager;
 import com.taobao.weex.utils.FontDO;
 import com.taobao.weex.utils.TypefaceUtil;
-import com.taobao.weex.utils.WXConst;
 import com.taobao.weex.utils.WXUtils;
 
 import java.util.Iterator;
@@ -235,7 +235,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class WXDomManager {
 
   private WXThread mDomThread;
-  private Handler mDomHandler;
+  /** package **/ Handler mDomHandler;
   private WXRenderManager mWXRenderManager;
   private ConcurrentHashMap<String, WXDomStatement> mDomRegistries;
 
@@ -288,7 +288,7 @@ public final class WXDomManager {
         || mDomThread.getLooper() == null) {
       return;
     }
-    mDomHandler.post(task);
+    mDomHandler.post(WXThread.secure(task));
   }
 
   /**
@@ -360,7 +360,7 @@ public final class WXDomManager {
    * Invoke {@link WXDomStatement} for removing the specified {@link WXDomObject}.
    *
    * @param instanceId {@link com.taobao.weex.WXSDKInstance#mInstanceId} for the instance
-   * @param ref {@link WXDomObject#ref} of the dom.
+   * @param ref of the dom.
    */
   //removeElement(ref:String)
   void removeDom(String instanceId, String ref) {
@@ -379,8 +379,8 @@ public final class WXDomManager {
    * Invoke {@link WXDomStatement} for moving the specific {@link WXDomObject} to a new parent.
    *
    * @param instanceId {@link com.taobao.weex.WXSDKInstance#mInstanceId} for the instance
-   * @param ref {@link WXDomObject#ref} of the dom to be moved.
-   * @param parentRef {@link WXDomObject#ref} of the new parent DOM node
+   * @param ref of the dom to be moved.
+   * @param parentRef of the new parent DOM node
    * @param index the index of the dom to be inserted in the new parent.
    */
   void moveDom(String instanceId, String ref, String parentRef, int index) {
@@ -395,13 +395,13 @@ public final class WXDomManager {
   }
 
   /**
-   * Invoke {@link WXDomStatement} for updating the {@link WXDomObject#attr} according to the
+   * Invoke {@link WXDomStatement} for updating the attributes according to the
    * given attribute.
    *
    * @param instanceId {@link com.taobao.weex.WXSDKInstance#mInstanceId} for the instance
-   * @param ref {@link WXDomObject#ref} of the dom.
+   * @param ref of the dom.
    * @param attr the new attribute. This attribute is only a part of the full attribute, and will be
-   *             merged into {@link WXDomObject#attr}
+   *             merged into attributes
    */
   void updateAttrs(String instanceId, String ref, JSONObject attr) {
     if (!isDomThread()) {
@@ -437,9 +437,9 @@ public final class WXDomManager {
    * WXDomObject}.
    *
    * @param instanceId {@link com.taobao.weex.WXSDKInstance#mInstanceId} for the instance
-   * @param ref {@link WXDomObject#ref} of the dom.
+   * @param ref of the dom.
    * @param type the type of the event, this may be a plain event defined in
-   * {@link com.taobao.weex.ui.component.WXEventType} or a gesture defined in {@link com.taobao
+   * {@link com.taobao.weex.common.Constants.Event} or a gesture defined in {@link com.taobao
    * .weex.ui.view.gesture.WXGestureType}
    */
   void addEvent(String instanceId, String ref, String type) {
@@ -457,9 +457,9 @@ public final class WXDomManager {
    * Invoke the {@link WXDomStatement} for removing the event listener of the corresponding {@link
    * WXDomObject}.
    * @param instanceId {@link com.taobao.weex.WXSDKInstance#mInstanceId} for the instance
-   * @param ref {@link WXDomObject#ref} of the dom.
+   * @param ref of the dom.
    * @param type the type of the event, this may be a plain event defined in
-   * {@link com.taobao.weex.ui.component.WXEventType} or a gesture defined in {@link com.taobao
+   * {@link com.taobao.weex.common.Constants.Event} or a gesture defined in {@link com.taobao
    * .weex.ui.view.gesture.WXGestureType}
    */
   void removeEvent(String instanceId, String ref, String type) {
@@ -477,7 +477,7 @@ public final class WXDomManager {
    * Invoke the {@link WXDomStatement} for scrolling the given view to the specified position.
    * @param instanceId {@link com.taobao.weex.WXSDKInstance#mInstanceId} for the instance to
    *                                                                    scroll.
-   * @param ref {@link WXDomObject#ref} of the dom.
+   * @param ref of the dom.
    * @param options the specified position
    */
   void scrollToDom(String instanceId, String ref, JSONObject options) {
@@ -554,7 +554,7 @@ public final class WXDomManager {
   }
 
   public void addRule(final String type,final JSONObject jsonObject) {
-    if (WXConst.FONT_FACE.equals(type)) {
+    if (Constants.Name.FONT_FACE.equals(type)) {
       FontDO fontDO = parseFontDO(jsonObject);
       if (fontDO != null && !TextUtils.isEmpty(fontDO.getFontFamilyName())) {
         FontDO cacheFontDO = TypefaceUtil.getFontDO(fontDO.getFontFamilyName());
@@ -572,8 +572,8 @@ public final class WXDomManager {
     if(jsonObject == null) {
       return null;
     }
-    String src = jsonObject.getString(WXConst.FONT_SRC);
-    String name = jsonObject.getString(WXConst.FONT_FAMILY);
+    String src = jsonObject.getString(Constants.Name.SRC);
+    String name = jsonObject.getString(Constants.Name.FONT_FAMILY);
     return new FontDO(name, src);
   }
 }

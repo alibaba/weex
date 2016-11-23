@@ -204,11 +204,10 @@
  */
 package com.taobao.weex.common;
 
+import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.bridge.Invoker;
 import com.taobao.weex.bridge.MethodInvoker;
 import com.taobao.weex.bridge.ModuleFactory;
-import com.taobao.weex.common.WXModule;
-import com.taobao.weex.common.WXModuleAnno;
 import com.taobao.weex.utils.WXLogUtils;
 
 import java.lang.annotation.Annotation;
@@ -232,7 +231,9 @@ public class TypeModuleFactory<T extends WXModule> implements ModuleFactory<T> {
   }
 
   private void generateMethodMap() {
-    WXLogUtils.d(TAG, "extractMethodNames");
+    if(WXEnvironment.isApkDebugable()) {
+      WXLogUtils.d(TAG, "extractMethodNames:" + mClazz.getSimpleName());
+    }
     ArrayList<String> methods = new ArrayList<>();
     HashMap<String, Invoker> methodMap = new HashMap<>();
     try {

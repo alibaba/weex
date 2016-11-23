@@ -1,19 +1,21 @@
 import { instanceMap } from './map'
+import {
+  getRootElement
+} from '../app/ctrl'
 
 /**
- * get a whole element tree of an instance
- * for debugging
- * @param  {string} instanceId
+ * Get a whole element tree of an instance for debugging.
+ * @param  {string} id
  * @return {object} a virtual dom tree
  */
-export function getRoot (instanceId) {
-  const instance = instanceMap[instanceId]
+export function getRoot (id) {
+  const instance = instanceMap[id]
   let result
   if (instance) {
-    result = instance.getRootElement()
+    result = getRootElement(instance)
   }
   else {
-    result = new Error(`invalid instance id "${instanceId}"`)
+    result = new Error(`invalid instance id "${id}"`)
   }
   return result
 }

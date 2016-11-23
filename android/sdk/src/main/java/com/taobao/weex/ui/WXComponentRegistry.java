@@ -223,27 +223,28 @@ public class WXComponentRegistry {
   private static Map<String, IFComponentHolder> sTypeComponentMap = new HashMap<>();
   private static ArrayList<Map<String, String>> sComponentInfos=new ArrayList<>();
 
-  public static boolean registerComponent(final String type, final IFComponentHolder holder, Map<String, String> componentInfo) throws WXException {
+  public static boolean registerComponent(final String type, final IFComponentHolder holder, final Map<String, String> componentInfo) throws WXException {
     if (holder == null || TextUtils.isEmpty(type)) {
       return false;
     }
-    if (componentInfo == null){
-      componentInfo = new HashMap<>();
-    }
 
-    componentInfo.put("type",type);
-    final Map<String, String> registerInfo = componentInfo;
     //execute task in js thread to make sure register order is same as the order invoke register method.
-    WXBridgeManager.getInstance().getJSHandler()
-    .post(new Runnable() {
+    WXBridgeManager.getInstance()
+        .post(new Runnable() {
       @Override
       public void run() {
         try {
+          Map<String, String> registerInfo = componentInfo;
+          if (registerInfo == null){
+            registerInfo = new HashMap<>();
+          }
+
+          registerInfo.put("type",type);
           registerNativeComponent(type, holder);
           registerJSComponent(registerInfo);
           sComponentInfos.add(registerInfo);
         } catch (WXException e) {
-          WXLogUtils.e("", e);
+          WXLogUtils.e("register component error:", e);
         }
 
       }
@@ -274,7 +275,7 @@ public class WXComponentRegistry {
   }
 
   public static void reload(){
-    WXBridgeManager.getInstance().getJSHandler().post(new Runnable() {
+    WXBridgeManager.getInstance().post(new Runnable() {
       @Override
       public void run() {
         try {

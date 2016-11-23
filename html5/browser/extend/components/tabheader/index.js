@@ -393,7 +393,7 @@ function init (Weex) {
     style: extend(Object.create(Atomic.prototype.style), style)
   })
 
-  Weex.registerComponent('tabHeader', TabHeader)
+  Weex.registerComponent('tabheader', TabHeader)
 }
 
 export default { init }

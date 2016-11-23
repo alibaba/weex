@@ -205,6 +205,7 @@
 package com.taobao.weex.ui.component;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import com.taobao.weex.WXSDKInstance;
@@ -237,7 +238,7 @@ public class WXDiv extends WXVContainer<WXFrameLayout> {
   }
 
   @Override
-  protected WXFrameLayout initComponentHostView(Context context) {
+  protected WXFrameLayout initComponentHostView(@NonNull Context context) {
     return new WXFrameLayout(context);
   }
 

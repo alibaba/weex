@@ -1,6 +1,28 @@
 let nativeModules = {}
 
-function assignModules (modules, ifReplace) {
+// for testing
+
+/**
+ * for testing
+ */
+export function getModule (moduleName) {
+  return nativeModules[moduleName]
+}
+
+/**
+ * for testing
+ */
+export function clearModules () {
+  nativeModules = {}
+}
+
+// for framework
+
+/**
+ * init modules for an app instance
+ * the second param determines whether to replace an existed method
+ */
+export function initModules (modules, ifReplace) {
   for (const moduleName in modules) {
     // init `modules[moduleName][]`
     let methods = nativeModules[moduleName]
@@ -24,8 +46,11 @@ function assignModules (modules, ifReplace) {
   }
 }
 
-function assignApis (Ctor, apis) {
-  const p = Ctor.prototype
+/**
+ * init app methods
+ */
+export function initMethods (Vm, apis) {
+  const p = Vm.prototype
 
   for (const apiName in apis) {
     if (!p.hasOwnProperty(apiName)) {
@@ -34,59 +59,37 @@ function assignApis (Ctor, apis) {
   }
 }
 
-export function clearModules () {
-  nativeModules = {}
-}
-
-export function getModule (moduleName) {
-  return nativeModules[moduleName]
-}
+// for app
 
 /**
- * @context a instance of AppInstance
+ * get a module of methods for an app instance
  */
-export function requireModule (moduleName) {
-  const methods = nativeModules[moduleName]
+export function requireModule (app, name) {
+  const methods = nativeModules[name]
   const target = {}
-
   for (const methodName in methods) {
-    target[methodName] = (...args) => this.callTasks({
-      module: moduleName,
+    target[methodName] = (...args) => app.callTasks({
+      module: name,
       method: methodName,
       args: args
     })
   }
-
   return target
 }
 
 /**
- * @context Vm
+ * get a custom component options
  */
-export function registerModules (modules, ifReplace) {
-  assignModules(modules, ifReplace)
-}
-
-/**
- * @context Vm
- */
-export function registerMethods (apis) {
-  assignApis(this, apis)
-}
-
-/**
- * @context a instance of AppInstance
- */
-export function requireComponent (name) {
-  const { customComponentMap } = this
+export function requireCustomComponent (app, name) {
+  const { customComponentMap } = app
   return customComponentMap[name]
 }
 
 /**
- * @context a instance of AppInstance
+ * register a custom component options
  */
-export function registerComponent (name, def) {
-  const { customComponentMap } = this
+export function registerCustomComponent (app, name, def) {
+  const { customComponentMap } = app
 
   if (customComponentMap[name]) {
     console.error(`[JS Framework] define a component(${name}) that already exists`)

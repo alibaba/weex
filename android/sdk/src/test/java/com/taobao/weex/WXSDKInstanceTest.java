@@ -204,22 +204,34 @@
  */
 package com.taobao.weex;
 
+import android.view.View;
 import com.taobao.weappplus_sdk.BuildConfig;
+import com.taobao.weex.bridge.WXBridgeManagerTest;
 import com.taobao.weex.common.WXPerformance;
 import com.taobao.weex.common.WXRenderStrategy;
+import com.taobao.weex.dom.WXDomManager;
+import com.taobao.weex.dom.WXDomManagerTest;
+import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.component.*;
 import com.taobao.weex.utils.WXFileUtils;
+import com.taobao.weex.utils.WXSoInstallMgrSdk;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import org.junit.runners.Suite;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
+import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowApplication;
+import org.robolectric.shadows.ShadowLooper;
 
 import static org.powermock.api.mockito.PowerMockito.*;
 import static org.junit.Assert.*;
@@ -234,26 +246,72 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 19)
 @PowerMockIgnore({ "org.mockito.*", "org.robolectric.*", "android.*" })
-@PrepareForTest(WXFileUtils.class)
+@PrepareForTest({WXFileUtils.class,WXSoInstallMgrSdk.class})
 public class WXSDKInstanceTest {
   @Rule
   public PowerMockRule rule = new PowerMockRule();
 
   public static WXSDKInstance createInstance(){
     WXSDKInstance instance =  new WXSDKInstance(Robolectric.setupActivity(TestActivity.class));
+    instance.registerRenderListener(new IWXRenderListener() {
+      @Override
+      public void onViewCreated(WXSDKInstance instance, View view) {
+
+      }
+
+      @Override
+      public void onRenderSuccess(WXSDKInstance instance, int width, int height) {
+
+      }
+
+      @Override
+      public void onRefreshSuccess(WXSDKInstance instance, int width, int height) {
+
+      }
+
+      @Override
+      public void onException(WXSDKInstance instance, String errCode, String msg) {
+
+      }
+    });
     instance.mInstanceId = "1";
     instance.mContext = Robolectric.setupActivity(TestActivity.class);
+
     return instance;
   }
 
+  public static void setupRoot(WXSDKInstance instance){
+    WXDomObject domObject = new WXDomObject();
+    WXDomObject.prepareGod(domObject);
+    WXVContainer comp = (WXVContainer) WXComponentFactory.newInstance(instance, domObject, null);
+
+    WXComponent root = WXDivTest.create(comp);
+    comp.addChild(root);
+    comp.createView(null, -1);
+
+    instance.onViewCreated(comp);
+    ShadowLooper.idleMainLooper();
+  }
+
   WXSDKInstance mInstance;
+
   @Before
   public void setup() throws Exception {
+    mockStatic(WXSoInstallMgrSdk.class);
+    when(WXSoInstallMgrSdk.initSo("weexv8", 1, null)).thenReturn(true);
     WXSDKEngine.initialize(RuntimeEnvironment.application,new InitConfig.Builder().build());
-    mInstance = new WXSDKInstance(Robolectric.setupActivity(TestActivity.class));
+    mInstance = createInstance();
+    WXBridgeManagerTest.getLooper().idle();
 
     mockStatic(WXFileUtils.class);
     when(WXFileUtils.loadAsset(null,null)).thenReturn("{}");
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    WXBridgeManagerTest.getLooper().idle();
+    WXDomManagerTest.getLooper().idle();
+    mInstance.destroy();
   }
 
 
@@ -262,9 +320,20 @@ public class WXSDKInstanceTest {
     assertEquals(WXFileUtils.loadAsset(null,null),"{}");
 
     mInstance.render("{}",null,null,null);
+
   }
 
+  @Test
+  public void testSetSize() throws Exception {
+    setupRoot(mInstance);
+    mInstance.setSize(10,10);
+  }
 
+  @Test
+  public void testRenderEvent() throws Exception {
+    mInstance.onRenderError("test","test");
+    mInstance.onRenderSuccess(10,10);
+  }
 
   @Test
   public void testRenderByUrl() throws Exception {

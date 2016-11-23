@@ -12,10 +12,11 @@
 export { init } from './init'
 
 export {
-  updateActions,
+  refresh,
   destroy,
   getRootElement,
   fireEvent,
   callback,
-  refreshData
+  updateActions,
+  callTasks
 } from './misc'

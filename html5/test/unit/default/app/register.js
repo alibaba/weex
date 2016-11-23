@@ -5,13 +5,13 @@ const { expect } = chai
 chai.use(sinonChai)
 
 import {
-  registerComponent,
-  requireComponent,
-  registerModules,
-  requireModule,
   getModule,
   clearModules,
-  registerMethods
+  initModules,
+  initMethods,
+  requireModule,
+  requireCustomComponent,
+  registerCustomComponent
 } from '../../../../default/app/register'
 
 function Ctx () {
@@ -23,13 +23,6 @@ describe('register', () => {
 
   before(() => {
     clearModules()
-
-    Ctx.prototype.requireModule = requireModule
-    Ctx.prototype.registerComponent = registerComponent
-    Ctx.prototype.requireComponent = requireComponent
-    Ctx.registerModules = registerModules
-    Ctx.registerMethods = registerMethods
-
     ctx = new Ctx()
   })
 
@@ -42,9 +35,8 @@ describe('register', () => {
       const def = {
         a: 'b'
       }
-
-      ctx.registerComponent('componentA', def)
-      expect(ctx.requireComponent('componentA')).to.deep.equal(def)
+      registerCustomComponent(ctx, 'componentA', def)
+      expect(requireCustomComponent(ctx, 'componentA')).to.deep.equal(def)
     })
 
     it('with a existing name', () => {
@@ -52,7 +44,7 @@ describe('register', () => {
         a: 'b'
       }
       sinon.stub(console, 'error')
-      ctx.registerComponent('componentA', def)
+      registerCustomComponent(ctx, 'componentA', def)
       expect(console.error).callCount(1)
       console.error.restore()
     })
@@ -60,19 +52,17 @@ describe('register', () => {
 
   describe('module', () => {
     it('with a old format', () => {
-      Ctx.registerModules({
+      initModules({
         dom: [
           'createBody',
           'addElement'
         ]
       })
-
-      expect(ctx.requireModule('dom'))
-        .to.have.any.keys('createBody', 'addElement')
+      expect(requireModule(ctx, 'dom')).to.have.any.keys('createBody', 'addElement')
     })
 
     it('with a new format', () => {
-      Ctx.registerModules({
+      initModules({
         dom: [
           {
             name: 'moveElement',
@@ -86,14 +76,12 @@ describe('register', () => {
           }
         ]
       })
-
-      expect(ctx.requireModule('dom'))
-        .to.have.all.keys('createBody', 'addElement', 'moveElement')
-      expect(ctx.requireModule('stream')).to.have.all.keys('sendMtop')
+      expect(requireModule(ctx, 'dom')).to.have.all.keys('createBody', 'addElement', 'moveElement')
+      expect(requireModule(ctx, 'stream')).to.have.all.keys('sendMtop')
     })
 
     it('with a existed module.method', () => {
-      Ctx.registerModules({
+      initModules({
         dom: [
           {
             name: 'moveElement',
@@ -101,8 +89,7 @@ describe('register', () => {
           }
         ]
       }, true)
-
-      Ctx.registerModules({
+      initModules({
         stream: [
           {
             name: 'sendMtop',
@@ -110,7 +97,6 @@ describe('register', () => {
           }
         ]
       })
-
       expect(getModule('dom').moveElement).to.deep.equal({
         name: 'moveElement',
         args: ['string', 'string', 'string']
@@ -125,7 +111,7 @@ describe('register', () => {
 
   describe('api', () => {
     it('a common api', () => {
-      Ctx.registerMethods({
+      initMethods(Ctx, {
         $test1: function () {
           return {
             ctx: this,

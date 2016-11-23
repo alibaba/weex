@@ -219,7 +219,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.ui.component.WXComponent;
-import com.taobao.weex.ui.component.WXEventType;
 import com.taobao.weex.ui.view.gesture.WXGestureType.GestureInfo;
 import com.taobao.weex.ui.view.gesture.WXGestureType.HighLevelGesture;
 import com.taobao.weex.ui.view.gesture.WXGestureType.LowLevelGesture;
@@ -288,7 +287,7 @@ public class WXGesture implements OnTouchListener {
 
   /**
    * Handle low-level gesture
-   * @param WXGestureType possible low-level gesture, defined in {@link WXEventType}
+   * @param WXGestureType possible low-level gesture, defined in {@link com.taobao.weex.common.Constants.Event}
    * @param motionEvent motionEvent, which contains all pointers event in a period of time
    * @return true if this event is handled, otherwise false.
    */
@@ -296,7 +295,7 @@ public class WXGesture implements OnTouchListener {
     if (component.containsGesture(WXGestureType)) {
       List<Map<String, Object>> list = createFireEventParam(motionEvent);
       for (Map<String, Object> map : list) {
-        WXSDKManager.getInstance().fireEvent(component.mInstanceId, component.mDomObj.ref,
+        component.getInstance().fireEvent(component.getDomObject().getRef(),
                                              WXGestureType.toString(), map);
       }
       return true;
@@ -306,7 +305,7 @@ public class WXGesture implements OnTouchListener {
   }
 
   /**
-   * Create a list of event for {@link WXSDKManager#fireEvent(String, String, String, Map)}.
+   * Create a list of event for {@link com.taobao.weex.WXSDKInstance#fireEvent(String, String, Map, Map)}.
    * As there is a batch mechanism in MotionEvent, so this method returns a list.
    * @param motionEvent motionEvent, which contains all pointers event in a period of time
    * @return List of Map, which contains touch object.
@@ -531,10 +530,10 @@ public class WXGesture implements OnTouchListener {
     public void onLongPress(MotionEvent e) {
       if (component.containsGesture(HighLevelGesture.LONG_PRESS)) {
         List<Map<String, Object>> list = createFireEventParam(e);
-        WXSDKManager.getInstance().fireEvent(component.mInstanceId,
-                                             component.mDomObj.ref,
-                                             HighLevelGesture.LONG_PRESS.toString(),
-                                             list.get(list.size() - 1));
+        component.getInstance().fireEvent(
+            component.getDomObject().getRef(),
+            HighLevelGesture.LONG_PRESS.toString(),
+            list.get(list.size() - 1));
       }
     }
 
@@ -546,12 +545,12 @@ public class WXGesture implements OnTouchListener {
         if (panDownTime != e1.getEventTime()) {
           panDownTime = e1.getEventTime();
           scrolling = true;
-          WXSDKManager.getInstance().fireEvent(component.mInstanceId,
-                                               component.mDomObj.ref, HighLevelGesture.PAN_START.toString(),
+          component.getInstance().fireEvent(
+                                               component.getDomObject().getRef(), HighLevelGesture.PAN_START.toString(),
                                                createFireEventParam(e1, CUR_EVENT));
         } else {
-          WXSDKManager.getInstance().fireEvent(component.mInstanceId,
-                                               component.mDomObj.ref, HighLevelGesture.PAN_MOVE.toString(),
+          component.getInstance().fireEvent(
+                                               component.getDomObject().getRef(), HighLevelGesture.PAN_MOVE.toString(),
                                                createFireEventParam(e2, CUR_EVENT));
         }
         result = true;
@@ -566,7 +565,7 @@ public class WXGesture implements OnTouchListener {
           } else {
             param.put(GestureInfo.DIRECTION, distanceY > 0 ? "up" : "down");
           }
-          WXSDKManager.getInstance().fireEvent(component.mInstanceId, component.mDomObj.ref,
+          component.getInstance().fireEvent( component.getDomObject().getRef(),
                                                HighLevelGesture.SWIPE.toString(), param);
           result = true;
         }

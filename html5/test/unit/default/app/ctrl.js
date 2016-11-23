@@ -5,6 +5,7 @@ const { expect } = chai
 chai.use(sinonChai)
 
 global.callNative = function () {}
+global.callAddElement = function () {}
 
 import * as ctrl from '../../../../default/app/ctrl'
 import Differ from '../../../../default/app/differ'
@@ -36,8 +37,6 @@ describe('the api of app', () => {
     app.doc.createBody('div')
     // app.bootstrap.returns()
 
-    Object.assign(app, ctrl)
-
     return app
   }
 
@@ -64,7 +63,7 @@ describe('the api of app', () => {
 
     it('a simple bundle', () => {
       app.requireModule = () => {}
-      app.init(`
+      ctrl.init(app, `
         define('main', function (r, e, m) {
           e.template = {
             "type": "container",
@@ -83,7 +82,7 @@ describe('the api of app', () => {
       // expect(app.define.calledOnce).to.be.true
       // expect(app.bootstrap.calledOnce).to.be.true
 
-      const task = spy1.firstCall.args[0][0]
+      const task = spy1.lastCall.args[0][0]
       expect(task.module).to.be.equal('dom')
       expect(task.method).to.be.equal('createFinish')
       expect(task.args.length).to.be.equal(0)
@@ -92,27 +91,24 @@ describe('the api of app', () => {
 
   describe('getRootElement', () => {
     it('from a simple', () => {
-      const json = app.getRootElement()
-      expect(json).to.deep.equal({
-        ref: '_root',
-        type: 'div',
-        attr: {},
-        style: {}
-      })
+      const json = ctrl.getRootElement(app)
+      expect(json.ref).eql('_root')
+      expect(json.type).eql('div')
+      expect(json.children.length).eql(1)
     })
   })
 
   describe('fireEvent', () => {
     it('click on root', () => {
-      app.fireEvent('_root', 'click')
-      const task = spy1.firstCall.args[0][0]
+      ctrl.fireEvent(app, '_root', 'click')
+      const task = spy1.lastCall.args[0][0]
       expect(task.module).to.be.equal('dom')
       expect(task.method).to.be.equal('updateFinish')
       expect(task.args.length).to.be.equal(0)
     })
 
     it('error', () => {
-      const result = app.fireEvent('_rootTest', 'click')
+      const result = ctrl.fireEvent(app, '_rootTest', 'click')
       expect(result).to.be.an.instanceof(Error)
     })
   })
@@ -120,7 +116,7 @@ describe('the api of app', () => {
   describe('callback', () => {
     it('with a simple data', () => {
       const data = { a: 'b' }
-      app.callback('1', data, true)
+      ctrl.callback(app, '1', data, true)
       expect(spy2.calledOnce).to.be.true
       expect(spy2.args[0][0]).to.deep.equal(data)
       expect(app.callbacks[1]).to.be.a('function')
@@ -133,12 +129,12 @@ describe('the api of app', () => {
 
     it('multiple called', () => {
       const data = { a: 'b' }
-      app.callback('1', data, true)
+      ctrl.callback(app, '1', data, true)
       expect(spy2.calledTwice).to.be.true
       expect(spy2.args[0][0]).to.deep.equal(data)
       expect(app.callbacks[1]).to.be.a('function')
 
-      app.callback('1', data, false)
+      ctrl.callback(app, '1', data, false)
       expect(spy2.calledThrice).to.be.true
       expect(spy2.args[0][0]).to.deep.equal(data)
       expect(app.callbacks[1]).to.be.undefined
@@ -146,7 +142,7 @@ describe('the api of app', () => {
 
     it('error', () => {
       const data = null
-      const result = app.callback('1', data, true)
+      const result = ctrl.callback(app, '1', data, true)
       expect(result).to.be.an.instanceof(Error)
     })
   })
@@ -154,10 +150,10 @@ describe('the api of app', () => {
   describe('refreshData', () => {
     it('a simple data', () => {
       const data = { b: 'c' }
-      app.refreshData(data)
-      expect(app.vm).to.deep.equal(data)
+      ctrl.refresh(app, data)
+      expect(app.vm.b).to.deep.equal(data.b)
 
-      const task = spy1.firstCall.args[0][0]
+      const task = spy1.lastCall.args[0][0]
       expect(task.module).to.be.equal('dom')
       expect(task.method).to.be.equal('refreshFinish')
       expect(task.args.length).to.be.equal(0)
@@ -165,14 +161,14 @@ describe('the api of app', () => {
 
     it('error', () => {
       const data = null
-      const result = app.refreshData(data)
+      const result = ctrl.refresh(app, data)
       expect(result).to.be.an.instanceof(Error)
     })
   })
 
   describe('destory', () => {
     it('the simple data', () => {
-      app.destroy()
+      ctrl.destroy(app)
       expect(app.id).to.be.empty
       expect(app.blocks).to.be.null
       expect(app.vm).to.be.null

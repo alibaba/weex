@@ -21,7 +21,6 @@ Document.prototype.addElement = function (parentRef, config, index) {
 
 function appendToDoc (doc, config, parentRef, index) {
   const parent = doc.refs[parentRef]
-
   const el = new Element(config)
   doc.refs[el.ref] = el
   el.parentRef = parentRef

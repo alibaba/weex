@@ -1,13 +1,6 @@
 /**
  * @fileOverview
  * ViewModel template parser & data-binding process
- *
- * required:
- * index.js: Vm
- * dom-helper.js: createElement, createBlock
- * dom-helper.js: attachTarget, moveTarget, removeTarget
- * directive.js: bindElement, bindSubVm, setId, watch
- * events.js: $on
  */
 
 import {
@@ -37,9 +30,7 @@ import {
 } from './dom-helper'
 
 /**
- * build(externalDirs)
- *   createVm()
- *   merge(externalDirs, dirs)
+ * build()
  *   compile(template, parentNode)
  *     if (type is content) create contentNode
  *     else if (dirs have v-for) foreach -> create context
@@ -94,6 +85,10 @@ function compile (vm, target, dest, meta) {
     return
   }
 
+  if (target.attr && target.attr.hasOwnProperty('static')) {
+    vm._static = true
+  }
+
   if (targetIsFragment(target)) {
     compileFragment(vm, target, dest, meta)
     return
@@ -107,12 +102,22 @@ function compile (vm, target, dest, meta) {
 
   if (targetNeedCheckRepeat(target, meta)) {
     console.debug('[JS Framework] compile "repeat" logic by', target)
-    compileRepeat(vm, target, dest)
+    if (dest.type === 'document') {
+      console.warn('[JS Framework] The root element does\'t support `repeat` directive!')
+    }
+    else {
+      compileRepeat(vm, target, dest)
+    }
     return
   }
   if (targetNeedCheckShown(target, meta)) {
     console.debug('[JS Framework] compile "if" logic by', target)
-    compileShown(vm, target, dest, meta)
+    if (dest.type === 'document') {
+      console.warn('[JS Framework] The root element does\'t support `if` directive!')
+    }
+    else {
+      compileShown(vm, target, dest, meta)
+    }
     return
   }
   const typeGetter = meta.type || target.type
@@ -302,6 +307,9 @@ function compileCustomComponent (vm, component, target, dest, type, meta) {
   const Ctor = vm.constructor
   const subVm = new Ctor(type, component, vm, dest, undefined, {
     'hook:init': function () {
+      if (vm._static) {
+        this._static = vm._static
+      }
       setId(vm, null, target.id, this)
       // bind template earlier because of lifecycle issues
       this._externalBinding = {
@@ -318,7 +326,7 @@ function compileCustomComponent (vm, component, target, dest, type, meta) {
       }
     }
   })
-  bindSubVmAfterInitialized(vm, subVm, target)
+  bindSubVmAfterInitialized(vm, subVm, target, dest)
 }
 
 /**
@@ -452,7 +460,7 @@ function bindRepeat (vm, target, fragBlock, info) {
   const list = watchBlock(vm, fragBlock, getter, 'repeat',
     (data) => {
       console.debug('[JS Framework] the "repeat" item has changed', data)
-      if (!fragBlock) {
+      if (!fragBlock || !data) {
         return
       }
 
@@ -603,5 +611,8 @@ function mergeContext (context, mergedData) {
   initData(newContext)
   initComputed(newContext)
   newContext._realParent = context
+  if (context._static) {
+    newContext._static = context._static
+  }
   return newContext
 }

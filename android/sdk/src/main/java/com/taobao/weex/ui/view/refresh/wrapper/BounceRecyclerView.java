@@ -210,6 +210,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.taobao.weex.common.WXThread;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.list.WXCell;
 import com.taobao.weex.ui.view.listview.WXRecyclerView;
@@ -222,6 +223,11 @@ public class BounceRecyclerView extends BaseBounceView<WXRecyclerView> {
   private RecyclerViewBaseAdapter adapter = null;
   private Stack<View> headerViewStack = new Stack<>();
   private Stack<WXCell> headComponentStack = new Stack<>();
+
+  @Override
+  public boolean postDelayed(Runnable action, long delayMillis) {
+    return super.postDelayed(WXThread.secure(action), delayMillis);
+  }
 
   public BounceRecyclerView(Context context, int orientation) {
     super(context, orientation);

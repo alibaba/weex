@@ -1,3 +1,16 @@
+/**
+ * @fileOverview
+ * Everything about component event which includes event object, event listener,
+ * event emitter and lifecycle hooks.
+ */
+
+/**
+ * Event object definition. An event object has `type`, `timestamp` and
+ * `detail` from which a component emit. The event object could be dispatched to
+ * parents or broadcasted to children except `this.stop()` is called.
+ * @param {string} type
+ * @param {any}    detail
+ */
 function Evt (type, detail) {
   if (detail instanceof Evt) {
     return detail
@@ -8,14 +21,27 @@ function Evt (type, detail) {
   this.type = type
 
   let shouldStop = false
+
+  /**
+   * stop dispatch and broadcast
+   */
   this.stop = function () {
     shouldStop = true
   }
+
+  /**
+   * check if it can't be dispatched or broadcasted
+   */
   this.hasStopped = function () {
     return shouldStop
   }
 }
 
+/**
+ * Emit an event but not broadcast down or dispatch up.
+ * @param  {string} type
+ * @param  {any}    detail
+ */
 export function $emit (type, detail) {
   const events = this._vmEvents
   const handlerList = events[type]
@@ -27,6 +53,11 @@ export function $emit (type, detail) {
   }
 }
 
+/**
+ * Emit an event and dispatch it up.
+ * @param  {string} type
+ * @param  {any}    detail
+ */
 export function $dispatch (type, detail) {
   const evt = new Evt(type, detail)
   this.$emit(type, evt)
@@ -36,6 +67,11 @@ export function $dispatch (type, detail) {
   }
 }
 
+/**
+ * Emit an event and broadcast it down.
+ * @param  {string} type
+ * @param  {any}    detail
+ */
 export function $broadcast (type, detail) {
   const evt = new Evt(type, detail)
   this.$emit(type, evt)
@@ -47,6 +83,11 @@ export function $broadcast (type, detail) {
   }
 }
 
+/**
+ * Add event listener.
+ * @param  {string}   type
+ * @param  {function} handler
+ */
 export function $on (type, handler) {
   if (!type || typeof handler !== 'function') {
     return
@@ -62,6 +103,11 @@ export function $on (type, handler) {
   }
 }
 
+/**
+ * Remove event listener.
+ * @param  {string}   type
+ * @param  {function} handler
+ */
 export function $off (type, handler) {
   if (!type) {
     return
@@ -78,8 +124,15 @@ export function $off (type, handler) {
   handlerList.$remove(handler)
 }
 
-const LIFE_CYCLE_TYPES = ['init', 'created', 'ready']
+const LIFE_CYCLE_TYPES = ['init', 'created', 'ready', 'destroyed']
 
+/**
+ * Init events:
+ * 1. listen `events` in component options & `externalEvents`.
+ * 2. bind lifecycle hooks.
+ * @param  {Vm}     vm
+ * @param  {object} externalEvents
+ */
 export function initEvents (vm, externalEvents) {
   const options = vm._options || {}
   const events = options.events || {}
@@ -94,6 +147,10 @@ export function initEvents (vm, externalEvents) {
   })
 }
 
+/**
+ * Bind event related methods to ViewModel instance.
+ * @param  {Vm} vm
+ */
 export function mixinEvents (vm) {
   vm.$emit = $emit
   vm.$dispatch = $dispatch

@@ -15,7 +15,8 @@ const DEFAULT_RESIZE_MODE = 'stretch'
 const proto = {
   create () {
     const node = document.createElement('div')
-    node.classList.add('weex-img', 'weex-element')
+    node.classList.add('weex-img')
+    node.classList.add('weex-element')
     return node
   },
 

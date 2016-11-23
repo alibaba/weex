@@ -234,7 +234,11 @@ public class WXFileUtilsTest {
 
   @Test
   public void testLoadFileContent() throws Exception {
-    File file = new File("build/intermediates/bundles/debug/assets/test");
+    File folder = new File("build/intermediates/bundles/debug");
+    if(!folder.exists()){
+      folder = new File("build/intermediates/bundles/release");
+    }
+    File file = new File(folder,"assets/test");
     System.out.println(file.getAbsolutePath());
     if(!file.exists()){
       file.createNewFile();
