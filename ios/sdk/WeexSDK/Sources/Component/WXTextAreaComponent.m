@@ -126,7 +126,8 @@
             NSString * value = [WXConvert NSString:attributes[@"value"]];
             if (value) {
                 _textValue = value;
-                if([value length] > 0) {
+                if([value length] > 0)
+                {
                     _placeHolderLabel.text = @"";
                 }
             }
