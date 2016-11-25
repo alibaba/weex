@@ -2,6 +2,8 @@
 <a href="https://github.com/weexteam/article/issues/25"  class="weex-translate">cn</a>
 
 
+<a href="https://github.com/weexteam/article/issues/25"  class="weex-translate">cn</a>
+
 When you need to use the new features or to customize specific features, you can rely on the Source SDK for development。
 
 ## Prerequisites
