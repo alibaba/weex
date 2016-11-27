@@ -37,7 +37,7 @@
   },
   "scripts": {
     "postinstall": "bash ./bin/install-hooks.sh",
-    "build:native": "rollup -c build/rollup.config.js",
+    "build:native": "rollup -c build/rollup.config.js $1",
     "build:browser": "wwp && rollup -c build/rollup.browser.config.js",
     "build:browser:common": "rollup -c build/rollup.browser.common.config.js",
     "build:examples": "webpack --config build/webpack.examples.config.js",
