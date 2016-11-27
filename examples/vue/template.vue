@@ -26,10 +26,10 @@
       img: '//gw.alicdn.com/tps/i2/TB1DpsmMpXXXXabaXXX20ySQVXX-512-512.png_400x400.jpg'
     },
     components: {
-      panel: require('weex-vue-components/panel.vue'),
-      hn: require('weex-vue-components/hn.vue'),
-      tip: require('weex-vue-components/tip.vue'),
-      button: require('weex-vue-components/button.vue')
+      panel: require('./include/panel.vue'),
+      hn: require('./include/hn.vue'),
+      tip: require('./include/tip.vue'),
+      button: require('./include/button.vue')
     },
     methods: {
       toast: function() {

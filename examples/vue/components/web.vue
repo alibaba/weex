@@ -48,7 +48,7 @@
   var webview = require('@weex-module/webview');
   module.exports = {
     components: {
-      button: require('weex-vue-components/button.vue')
+      button: require('../include/button.vue')
     },
     methods: {
       goback: function() {

@@ -15,8 +15,8 @@
       img: '//gw.alicdn.com/tps/i2/TB1DpsmMpXXXXabaXXX20ySQVXX-512-512.png_400x400.jpg'
     },
     components: {
-      panel: require('weex-vue-components/panel.vue'),
-      tip: require('weex-vue-components/tip.vue')
+      panel: require('../include/panel.vue'),
+      tip: require('../include/tip.vue')
     }
   }
 </script>

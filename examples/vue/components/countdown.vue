@@ -74,8 +74,8 @@
       }
     },
     components: {
-      panel: require('weex-vue-components/panel.vue'),
-      countdown: require('weex-vue-components/countdown.vue')
+      panel: require('../include/panel.vue'),
+      countdown: require('../include/countdown.vue')
     },
     methods: {
       tick: function (e, k) {

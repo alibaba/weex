@@ -17,8 +17,8 @@
   module.exports = {
     data: {},
     components: {
-      panel: require('weex-vue-components/panel.vue'),
-      button: require('weex-vue-components/button.vue')
+      panel: require('../include/panel.vue'),
+      button: require('../include/button.vue')
     },
     methods: {
       toast: function(msg, duration) {

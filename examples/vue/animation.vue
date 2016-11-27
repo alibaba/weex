@@ -36,8 +36,8 @@
       isStop: true
     },
     components: {
-      panel: require('weex-vue-components/panel.vue'),
-      button: require('weex-vue-components/button.vue')
+      panel: require('./include/panel.vue'),
+      button: require('./include/button.vue')
     },
     methods: {
       anim: function(styles, timingFunction, duration, callback) {

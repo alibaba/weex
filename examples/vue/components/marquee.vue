@@ -53,8 +53,8 @@
       }
     },
     components: {
-      panel: require('weex-vue-components/panel.vue'),
-      marquee: require('weex-vue-components/marquee.vue')
+      panel: require('../include/panel.vue'),
+      marquee: require('../include/marquee.vue')
     },
     methods: {
       marqueeChange: function (e) {

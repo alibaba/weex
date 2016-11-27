@@ -29,9 +29,9 @@
       tips : '',
     },
     components: {
-      panel: require('weex-vue-components/panel.vue'),
-      tip: require('weex-vue-components/tip.vue'),
-      button: require('weex-vue-components/button.vue')
+      panel: require('../include/panel.vue'),
+      tip: require('../include/tip.vue'),
+      button: require('../include/button.vue')
     },
     ready : function() {
       this.tips = "1. Just click COPY button. It will auto generate a string with random text, and copy to system clipboard. \n 2. do copy in another app, then come back and click PASTE button."

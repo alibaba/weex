@@ -32,7 +32,7 @@
       getAllKeysResult:'loading'
     },
     components: {
-      panel: require('weex-vue-components/panel.vue')
+      panel: require('../include/panel.vue')
     },
     created: function() {
       var me = this

@@ -30,9 +30,9 @@
       baseURL: '',
     },
     components: {
-      panel: require('weex-vue-components/panel.vue'),
-      navpage: require('weex-vue-components/navpage.vue'),
-      button: require('weex-vue-components/button.vue')
+      panel: require('../include/panel.vue'),
+      navpage: require('../include/navpage.vue'),
+      button: require('../include/button.vue')
     },
     created: function() {
       this.$getConfig(function (config) {

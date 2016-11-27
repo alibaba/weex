@@ -26,7 +26,7 @@
       playStatus: 'play'
     },
     components: {
-      button: require('weex-vue-components/button.vue')
+      button: require('../include/button.vue')
     },
     methods: {
       pause: function() {

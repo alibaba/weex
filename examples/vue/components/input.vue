@@ -31,7 +31,7 @@
       txtChange: ''
     },
     components: {
-      panel: require('weex-vue-components/panel.vue')
+      panel: require('../include/panel.vue')
     },
     methods: {
       onchange: function(event) {

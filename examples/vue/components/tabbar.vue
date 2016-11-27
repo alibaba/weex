@@ -43,7 +43,7 @@
       ],
     },
     components: {
-      tabbar: require('weex-vue-components/tabbar.vue')
+      tabbar: require('../include/tabbar.vue')
     },
     created: function() {
       var baseURL = getBaseURL(this)
