@@ -1,29 +1,10 @@
 'use strict'
 
-import { extend } from '../utils'
+import { throttle } from '../utils'
 
-const componentsInScroller = []
-const componentsOutOfScroller = []
+const watchedComponents = []
 let listened = false
-let direction = 'up'
 let scrollY = 0
-
-export function watchIfNeeded (component) {
-  if (needWatch(component)) {
-    if (component.isInScrollable()) {
-      componentsInScroller.push(component)
-    }
-    else {
-      componentsOutOfScroller.push(component)
-    }
-    if (!listened) {
-      listened = true
-      // const handler = throttle(onScroll, 25)
-      const handler = throttle(onScroll, 100)
-      window.addEventListener('scroll', handler, false)
-    }
-  }
-}
 
 function needWatch (component) {
   const events = component.data.event
@@ -35,116 +16,61 @@ function needWatch (component) {
   return false
 }
 
-function onScroll (e) {
-  // If the scroll event is dispatched from a scrollable component
-  // implemented through scrollerjs, then the appear/disappear events
-  // should be treated specially by handleScrollerScroll.
-  if (e.originalType === 'scrolling') {
-    handleScrollerScroll(e)
-  }
-  else {
-    handleWindowScroll()
-  }
-}
-
-function handleScrollerScroll (e) {
-  const cmps = componentsInScroller
-  const len = cmps.length
-  direction = e.direction
-  for (let i = 0; i < len; i++) {
-    const component = cmps[i]
-    const appear = isComponentInScrollerAppear(component)
-    if (appear && !component._appear) {
-      component._appear = true
-      fireEvent(component, 'appear')
-    }
-    else if (!appear && component._appear) {
-      component._appear = false
-      fireEvent(component, 'disappear')
+export function watchIfNeeded (component) {
+  if (needWatch(component)) {
+    watchedComponents.push(component)
+    if (!listened) {
+      listened = true
+      const handler = throttle(onScroll, 100)
+      window.addEventListener('scroll', handler, false)
     }
   }
 }
 
-function handleWindowScroll () {
-  const y = window.scrollY
-  direction = y >= scrollY ? 'up' : 'down'
-  scrollY = y
-
-  const len = componentsOutOfScroller.length
-  if (len === 0) {
-    return
-  }
-  for (let i = 0; i < len; i++) {
-    const component = componentsOutOfScroller[i]
-    const appear = isComponentInWindow(component)
-    if (appear && !component._appear) {
-      component._appear = true
-      fireEvent(component, 'appear')
-    }
-    else if (!appear && component._appear) {
-      component._appear = false
-      fireEvent(component, 'disappear')
-    }
-  }
-}
-
-function isComponentInScrollerAppear (component) {
-  let parentScroller = component._parentScroller
-  const cmpRect = component.node.getBoundingClientRect()
-  if (!isComponentInWindow(component)) {
-    return false
-  }
-  while (parentScroller) {
-    const parentRect = parentScroller.node.getBoundingClientRect()
-    if (!(cmpRect.right > parentRect.left
-        && cmpRect.left < parentRect.right
-        && cmpRect.bottom > parentRect.top
-        && cmpRect.top < parentRect.bottom)) {
-      return false
-    }
-    parentScroller = parentScroller._parentScroller
-  }
-  return true
-}
-
-function isComponentInWindow (component) {
+export function isComponentInWindow (component) {
   const rect = component.node.getBoundingClientRect()
   return rect.right > 0 && rect.left < window.innerWidth &&
          rect.bottom > 0 && rect.top < window.innerHeight
 }
 
-function fireEvent (component, type) {
-  const evt = document.createEvent('HTMLEvents')
-  const data = { direction: direction }
-  evt.initEvent(type, false, false)
-  evt.data = data
-  extend(evt, data)
-  component.node.dispatchEvent(evt)
+export function hasIntersection (rect, ctRect) {
+  return (rect.left < ctRect.right && rect.right > ctRect.left)
+    && (rect.top < ctRect.bottom && rect.bottom > ctRect.top)
 }
 
-function throttle (func, wait) {
-  let context, args, result
-  let timeout = null
-  let previous = 0
-  const later = function () {
-    previous = Date.now()
-    timeout = null
-    result = func.apply(context, args)
+export function isComponentAppear (component) {
+  // NOTE: no more support embeded scrollers.
+  const parentScroller = component.getParentScroller()
+  if (!parentScroller) {
+    return isComponentInWindow(component)
   }
-  return function () {
-    const now = Date.now()
-    const remaining = wait - (now - previous)
-    context = this
-    args = arguments
-    if (remaining <= 0) {
-      clearTimeout(timeout)
-      timeout = null
-      previous = now
-      result = func.apply(context, args)
+  return isComponentInWindow(component)
+    && hasIntersection(
+      component.node.getBoundingClientRect(),
+      parentScroller.node.getBoundingClientRect())
+}
+
+function onScroll (e) {
+  let direction
+  // NOTE: this condition strongly relies on the scroller's implementation.
+  if (e.originalType === 'scrolling') {
+    direction = e.direction
+  }
+  else {
+    // NOTE: only VERTICAL window scroll can be detected.
+    const y = window.scrollY
+    direction = y >= scrollY ? 'up' : 'down'
+    scrollY = y
+  }
+  const len = watchedComponents.length
+  for (let i = 0; i < len; i++) {
+    const component = watchedComponents[i]
+    const appear = isComponentAppear(component)
+    if (appear) {
+      component.dispatchEvent('appear', { direction })
     }
-    else if (!timeout) {
-      timeout = setTimeout(later, remaining)
+    else if (!appear) {
+      component.dispatchEvent('disappear', { direction })
     }
-    return result
   }
 }
