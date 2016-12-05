@@ -8,15 +8,6 @@ import * as position from './position'
 import flexbox from './flexbox'
 import { makeImageLazy, fireLazyload } from './lazyload'
 
-// function hasIntersection (rect, ctRect) {
-//   const iW = window.innerWidth
-//   const iH = window.innerHeight
-//   ctRect.right = ctRect.right > iW ? iW : ctRect.right
-//   ctRect.bottom = ctRect.bottom > iH ? iH : ctRect.bottom
-//   return (rect.left < ctRect.right && rect.right > ctRect.left)
-//     && (rect.top < ctRect.bottom && rect.bottom > ctRect.top)
-// }
-
 const appearEvts = ['appear', 'disappear']
 
 /**
@@ -167,17 +158,6 @@ Component.prototype = {
     }
     // trigger 'appear' event in the next tick.
     setTimeout(() => {
-      // const rect = this.node.getBoundingClientRect()
-      // const parent = this.getParentScroller()
-      // const parentNode = parent
-      //   ? parent.node
-      //   : this.getRootContainer()
-      // const ctRect = parentNode.getBoundingClientRect()
-      // const ctR = {}
-      // ; ['left', 'right', 'top', 'bottom'].forEach(attr => {
-      //   ctR[attr] = ctRect[attr]
-      // })
-
       if (isComponentAppear(this)) {
         this.dispatchEvent('appear', { direction: '' })
       }
