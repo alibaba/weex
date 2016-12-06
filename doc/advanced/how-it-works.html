@@ -1737,7 +1737,7 @@ bootstrap(&apos;@weex-component/main&apos;)
 <p><strong>Component</strong> is an element in the screen which have a certain view and behavior. It could be configured with some attributes and style properties, and could response user interactions. There are some common components like <code>&lt;div&gt;</code>, <code>&lt;text&gt;</code>, <code>&lt;image&gt;</code> etc.</p>
 <p><strong>Module</strong> is a set of APIs which could be called from JS Framework. Some of them also have to make async callbacks to JS Framework, for example: send HTTP request.</p>
 <p>During a Weex instance works, Native RenderEngine receives all kinds of module API calls from JS Framework. These calls will create or update components for view and use client-side features like <code>toast</code>. When a user interaction or module API callback happens, It will call <code>callJS()</code> from JS Framework. These jobs could walk through the Weex instance lifecycle till the instance is destroyed. As is shown in the architecture figure, H5 RenderEngine is a special RenderEngine with almost the same functions as native RenderEngines. </p>
-<p><img src="../gtms02.alicdn.com/tps/i2/TB1ootBMpXXXXXrXXXXwi60UVXX-596-397.png" alt="arch"><br>Weex Architecture </p>
+<p><img src="//gtms02.alicdn.com/tps/i2/TB1ootBMpXXXXXrXXXXwi60UVXX-596-397.png" alt="arch"><br>Weex Architecture </p>
 <h3 id="call-native-from-javascript">call native from javascript</h3>
 <pre><code>[JS Framework]
 &#x2193; callNative
@@ -1752,7 +1752,7 @@ user interactions
 &#x2193; callJS
 [JS Framework]
 </code></pre><h3 id="render-flow">Render Flow</h3>
-<p><img src="../gtms03.alicdn.com/tps/i3/TB1_SA4MXXXXXXGaXXXpZ8UVXXX-519-337.png" alt="render flow"><br>Weex Render Flow </p>
+<p><img src="//gtms03.alicdn.com/tps/i3/TB1_SA4MXXXXXXGaXXXpZ8UVXXX-519-337.png" alt="render flow"><br>Weex Render Flow </p>
 <ol>
 <li>Input is virtual dom.</li>
 <li><strong>Build Tree</strong>. Parse JSON data (virtual dom) to a Render Tree (RT).</li>
