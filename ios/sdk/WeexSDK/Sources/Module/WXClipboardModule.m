@@ -13,6 +13,10 @@
 WX_EXPORT_METHOD(@selector(setString:))
 WX_EXPORT_METHOD(@selector(getString:))
 
+- (dispatch_queue_t)targetExecuteQueue {
+    return dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+}
+
 - (void)setString:(NSString *)content
 {
     UIPasteboard *clipboard = [UIPasteboard generalPasteboard];
