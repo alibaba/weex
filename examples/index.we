@@ -36,6 +36,7 @@
         {name: 'module/stream-demo', title: 'Stream'},
         {name: 'module/storage-demo',title:'Storage'},
         {name: 'module/clipboard', title: 'Clipboard'},
+        {name: 'module/picker-demo', title: 'Picker'},
 
         // showcase
         {name: 'showcase/new-fashion/index', title: 'Activity'},
