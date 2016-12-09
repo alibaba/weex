@@ -30,7 +30,12 @@ export function registerElement (type, methods) {
 
   // Init prototype.
   XElement.prototype = Object.create(Element.prototype)
-  XElement.prototype.constructor = Element
+  Object.defineProperty(XElement.prototype, 'constructor', {
+    configurable: false,
+    enumerable: false,
+    writable: false,
+    value: Element
+  })
 
   // Add methods to prototype.
   methods.forEach(methodName => {

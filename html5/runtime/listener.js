@@ -187,7 +187,8 @@ Object.assign(Listener.prototype, {
     return this.addActions({
       component: type,
       method,
-      args: [ref, ...args]
+      ref: ref,
+      args: [...args]
     })
   },
 

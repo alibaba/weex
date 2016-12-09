@@ -384,6 +384,21 @@ describe('framework entry', () => {
       })
       expect(defaultConfig.nativeComponentMap).not.contain.keys('e')
     })
+
+    it('with methods', () => {
+      const components = [{
+        type: 'x',
+        methods: ['foo', 'bar']
+      }, {
+        type: 'y',
+        methods: []
+      }, {
+        type: 'z',
+        methods: null
+      }]
+      framework.registerComponents(components)
+      expect(defaultConfig.nativeComponentMap).to.contain.keys('x', 'y', 'z')
+    })
   })
 
   describe('register modules', () => {

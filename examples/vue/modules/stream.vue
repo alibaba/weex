@@ -29,14 +29,16 @@
 <script>
   var stream = require('@weex-module/stream');
   module.exports = {
-    data: {
-      getJsonpResult: 'loading...',
-      getResult: 'loading...',
-      postResult: 'loading...',
-      putResult: 'loading...',
-      deleteResult: 'loading...',
-      headResult: 'loading...',
-      patchResult: 'loading...',
+    data: function () {
+      return {
+        getJsonpResult: 'loading...',
+        getResult: 'loading...',
+        postResult: 'loading...',
+        putResult: 'loading...',
+        deleteResult: 'loading...',
+        headResult: 'loading...',
+        patchResult: 'loading...'
+      }
     },
     components: {
       panel: require('../include/panel.vue')
@@ -50,7 +52,7 @@
       var DELETE_URL = 'http://httpbin.org/delete';
       var HEAD_URL = 'http://httpbin.org/status/418';
       var PATCH_URL = 'http://httpbin.org/patch';
-      
+
       stream.fetch({
         method: 'GET',
         url: GET_URL_JSONP,
@@ -131,7 +133,7 @@
         console.log('get in progress:'+response.length);
         me.deleteResult = "bytes received:"+response.length;
       });
-      
+
       stream.fetch({
         method: 'HEAD',
         url: HEAD_URL,

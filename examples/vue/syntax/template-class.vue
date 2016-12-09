@@ -23,6 +23,7 @@
     methods: {
       update: function (e) {
         this.x = 'b'
+        console.log('x', this.x)
       }
     }
   }

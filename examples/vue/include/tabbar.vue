@@ -1,6 +1,5 @@
 <template>
-  <div
-    class="wrapper">
+  <div class="wrapper">
     <embed
       v-for="item in tabItems"
       :src="item.src"
@@ -8,44 +7,43 @@
       :style="{ visibility: item.visibility }"
       class="content"
       ></embed>
-    <div
-      class="tabbar"
-      append="tree">
+    <div class="tabbar" append="tree">
       <tabitem
         v-for="item in tabItems"
         :index="item.index"
         :icon="item.icon"
         :title="item.title"
         :titleColor="item.titleColor"
-        @tabItemOnClick="tabItemOnClick"></tabItem>
+        @tabItemOnClick="tabItemOnClick"
+        ></tabItem>
     </div>
   </div>
 </template>
 
 <style>
-  .wrapper { 
-    width: 750; 
-    position: absolute; 
-    top: 0; 
-    left: 0; 
-    right: 0; 
+  .wrapper {
+    width: 750;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     bottom: 0;
   }
-  .content { 
-    position: absolute; 
+  .content {
+    position: absolute;
     top: 0;
-    left: 0; 
-    right: 0; 
-    bottom: 0; 
-    margin-top: 0;  
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin-top: 0;
     margin-bottom: 88;
   }
-  .tabbar { 
-    flex-direction: row; 
-    position: fixed; 
-    bottom: 0; 
-    left: 0; 
-    right: 0;  
+  .tabbar {
+    flex-direction: row;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
     height: 88;
   }
 </style>
@@ -88,7 +86,7 @@
             tabItem.visibility = 'hidden';
           }
         }
-      },  
+      },
     }
   }
 </script>

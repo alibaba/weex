@@ -15,7 +15,9 @@
 <script>
   var modal = require('@weex-module/modal')
   module.exports = {
-    data: {},
+    data: function () {
+      return {}
+    },
     components: {
       panel: require('../include/panel.vue'),
       button: require('../include/button.vue')
@@ -54,7 +56,7 @@
           'okTitle': okTitle,
           'cancelTitle': cancelTitle
         }, function(result) {
-          modal.toast({ message: "Click Confirm  " + result })
+          modal.toast({ message: "Click Confirm  " + JSON.stringify(result) })
         })
       },
       prompt: function() {
@@ -63,7 +65,7 @@
           'okTitle': 'ok',
           'cancelTitle': 'cancel'
         }, function(result) {
-          modal.toast({ message: "Click Prompt  " + result })
+          modal.toast({ message: "Click Prompt  " + JSON.stringify(result) })
         })
       }
     }

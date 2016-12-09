@@ -44,8 +44,10 @@
 
 <script>
   module.exports = {
-    data: {
-      img: '//gw.alicdn.com/tps/i2/TB1DpsmMpXXXXabaXXX20ySQVXX-512-512.png_400x400.jpg'
+    data: function () {
+      return {
+        img: '//gw.alicdn.com/tps/i2/TB1DpsmMpXXXXabaXXX20ySQVXX-512-512.png_400x400.jpg'
+      }
     },
     components: {
       panel: require('../include/panel.vue'),

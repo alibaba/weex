@@ -22,7 +22,7 @@
     padding-bottom: 36px;
     border-radius: 10px;
   }
-  
+
   .tip-txt{
     font-size: 28px;
   }

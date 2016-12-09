@@ -16,12 +16,15 @@
 
 <script>
   module.exports = {
-    data: {
-      list: []
+    data: function () {
+      return {
+        list: []
+      }
     },
     mounted: function () {
       function custom(e) {
         this.list.push('custom: ' + JSON.stringify(e))
+        console.log(this.list)
       }
 
       this.$emit('custom', {x: 1})

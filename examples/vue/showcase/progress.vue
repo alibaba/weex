@@ -22,9 +22,11 @@
 <script>
   var INC = 20;
   module.exports = {
-    data: {
-      fullW: 600,
-      w: 40
+    data: function () {
+      return {
+        fullW: 600,
+        w: 40
+      }
     },
     components: {
       panel: require('../include/panel.vue')

@@ -23,6 +23,7 @@
     methods: {
       toggle: function (e) {
         this.flag = !this.flag
+        console.log('this.flag:', this.flag)
       }
     }
   }

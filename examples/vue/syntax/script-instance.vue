@@ -21,9 +21,11 @@
 
 <script>
   module.exports = {
-    data: {
-      x: 1,
-      y: 2
+    data: function () {
+      return {
+        x: 1,
+        y: 2
+      }
     },
     methods: {
       foo: function () {

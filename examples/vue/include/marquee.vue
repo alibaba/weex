@@ -37,17 +37,17 @@
     },
     created: function () {
       if (this.interval > 0 && this.step > 0 && this.duration > 0) {
-        this.run();  
+        this.run()
       }
     },
     methods: {
       run: function () {
         if (this.outofview) {
-          setTimeout(this.run.bind(this), this.interval);
+          setTimeout(this.run.bind(this), this.interval)
         } else {
           setTimeout(function () {
-            this.animation(this.run.bind(this));
-          }.bind(this), this.interval);
+            this.animation(this.run.bind(this))
+          }.bind(this), this.interval)
         }
       },
       animation: function (cb) {
@@ -68,10 +68,10 @@
         }.bind(this));
       },
       appeared: function() {
-        this.outofview = false;
+        this.outofview = false
       },
       disappeared: function() {
-        this.outofview = true;
+        this.outofview = true
       }
     }
   }

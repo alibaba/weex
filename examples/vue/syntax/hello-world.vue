@@ -38,6 +38,7 @@
     methods: {
       update: function (e) {
         this.target = 'Weex'
+        console.log('target:', this.target)
       }
     }
   }

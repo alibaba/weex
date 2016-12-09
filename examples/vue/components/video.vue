@@ -5,8 +5,8 @@
            auto-play="true" :playStatus="playStatus">
     </video>
     <div style="flex-direction: row; justify-content: center;">
-      <button value="Pause" @click="pause"></button>
-      <button value="Play" @click="play" type="primary" style="margin-left:20px;"></button>
+      <button value="Pause" @click.native="pause"></button>
+      <button value="Play" @click.native="play" type="primary" style="margin-left:20px;"></button>
     </div>
   </scroller>
 </template>
@@ -22,8 +22,10 @@
 <script>
   var modal = require('@weex-module/modal')
   module.exports = {
-    data: {
-      playStatus: 'play'
+    data: function () {
+      return {
+        playStatus: 'play'
+      }
     },
     components: {
       button: require('../include/button.vue')
@@ -31,9 +33,11 @@
     methods: {
       pause: function() {
         this.playStatus = 'pause'
+        modal.toast({ 'message': 'click pause' })
       },
       play: function() {
         this.playStatus = 'play'
+        modal.toast({ 'message': 'click play' })
       },
       onpause: function(e) {
         this.playStatus = e.playStatus

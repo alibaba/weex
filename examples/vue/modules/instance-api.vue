@@ -8,8 +8,10 @@
 
 <script>
   module.exports = {
-    data: {
-      config: ''
+    data: function () {
+      return {
+        config: ''
+      }
     },
     components: {
       panel: require('../include/panel.vue')

@@ -87,75 +87,77 @@
         }, 1000)
       }
     },
-    data: {
-      refresh_display: 'hide',
-      loading_display: 'hide',
-      sections: [
-        {
-          title: 'Header 1',
-          items: [
-            {id: 1},
-            {id: 2},
-            {id: 3},
-            {id: 4},
-            {id: 5}
-          ]
-        },
-        {
-          title: 'Header 2',
-          items: [
-            {id: 6},
-            {id: 7},
-            {id: 8},
-            {id: 9},
-            {id: 10},
-            {id: 11}
-          ]
-        }
-      ],
-      moreSections: [
-        {
-          title: 'Header 3',
-          items: [
-            {id: 12},
-            {id: 13},
-            {id: 14},
-            {id: 15},
-            {id: 16},
-            {id: 17},
-            {id: 18}
-          ]
-        },
-        {
-          title: 'Header 4',
-          items: [
-            {id: 19},
-            {id: 20},
-            {id: 21},
-            {id: 22}
-          ]
-        },
-        {
-          title: 'Header 5',
-          items: [
+    data: function () {
+      return {
+        refresh_display: 'hide',
+        loading_display: 'hide',
+        sections: [
+          {
+            title: 'Header 1',
+            items: [
+              {id: 1},
+              {id: 2},
+              {id: 3},
+              {id: 4},
+              {id: 5}
+            ]
+          },
+          {
+            title: 'Header 2',
+            items: [
+              {id: 6},
+              {id: 7},
+              {id: 8},
+              {id: 9},
+              {id: 10},
+              {id: 11}
+            ]
+          }
+        ],
+        moreSections: [
+          {
+            title: 'Header 3',
+            items: [
+              {id: 12},
+              {id: 13},
+              {id: 14},
+              {id: 15},
+              {id: 16},
+              {id: 17},
+              {id: 18}
+            ]
+          },
+          {
+            title: 'Header 4',
+            items: [
+              {id: 19},
+              {id: 20},
+              {id: 21},
+              {id: 22}
+            ]
+          },
+          {
+            title: 'Header 5',
+            items: [
             {id: 23},
             {id: 24},
             {id: 25},
             {id: 26},
             {id: 27}
-          ]
-        },
-        {
-          title: 'Header 6',
-          items: [
+            ]
+          },
+          {
+            title: 'Header 6',
+            items: [
             {id: 28},
             {id: 29},
             {id: 30},
             {id: 31},
             {id: 32}
+            ]
+          }
           ]
-        }
-      ]
+      }
     }
   }
 </script>
