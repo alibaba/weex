@@ -370,15 +370,15 @@ ComponentManager.prototype = {
   },
 
   createFinish (callback) {
-    // TODO
+    window.dispatchEvent(new Event('create-finish'))
   },
 
   updateFinish (callback) {
-    // TODO
+    window.dispatchEvent(new Event('update-finish'))
   },
 
   refreshFinish (callback) {
-    // TODO
+    window.dispatchEvent(new Event('refresh-finish'))
   }
 
 }
