@@ -1,0 +1,314 @@
+<!--
+this is a Todo-MVC demo
+http://todomvc.com/
+-->
+
+<template>
+    <list class="todo-list">
+        <cell>
+            <div class="app-title-wrap">
+                <text class="app-title">todos</text>
+            </div>
+        </cell>
+        <cell>
+            <div class="todo-area">
+                <div class="todo-input-wrap">
+                    <div class="finish-toggle" onclick="toggleAll">
+                        <image class="total-toggle" style="visibility:{{itemsStatus===0?'visible':'hidden'}};" src="https://gw.alicdn.com/tfs/TB1teYxKFXXXXb8aXXXXXXXXXXX-77-51.jpg"></image>
+                        <image class="total-toggle" style="visibility:{{itemsStatus===1?'visible':'hidden'}};" src="https://gw.alicdn.com/tfs/TB1CnoDJFXXXXb6XVXXXXXXXXXX-77-51.jpg"></image>
+                    </div>
+                    <input class="todo-input" type="text" id="todo-input" oninput="syncValue" placeholder="What needs to be done?" value="{{newInputValue}}" />
+                    <text class="submit-btn" value="add" onclick="finishInput"></text>
+                </div>
+            </div>
+        </cell>
+        <cell>
+            <div repeat="{{(k, v) in todosToShow}}">
+                <todo-item data-idx="{{k}}" data-item="{{v}}"></todo-item>
+            </div>
+        </cell>
+        <cell style="visibility: {{todos.length > 0 ? 'visible':'hidden'}}">
+            <div class="info-text-wrap">
+                <text class="info-text">{{activeTodoNum}} {{activeTodoNum>1?'items':'item'}} left</text>
+            </div>
+        </cell>
+        <cell style="visibility: {{todos.length > 0 ? 'visible':'hidden'}}">
+            <div class="sorting-wrap">
+                <div class="sorting">
+                    <text class="btn {{currentFilter=='all'?'btn-active':''}}" value="all" onclick="showAll"></text>
+                    <text class="btn {{currentFilter=='opened'?'btn-active':''}}" value="opened" onclick="showOpened"></text>
+                    <text class="btn {{currentFilter=='completed'?'btn-active':''}}" value="completed" onclick="showComplete"></text>
+                    <text class="btn" value="clean" onclick="cleanCompletedTodos"></text>
+                </div>
+            </div>
+        </cell>
+    </list>
+</template>
+
+<script>
+    // 引入button
+    require('weex-components');
+
+    module.exports = {
+        "data":{
+            newInputValue:"",
+            todos:[
+
+            ],
+            currentFilter:"all"
+        },
+        computed:{
+            activeTodoNum:{
+                get:function() {
+                    var num = 0;
+                    for (var i = 0;i<this.todos.length;i++) {
+                        if (this.todos[i].status==='item-doing') {
+                            num++;
+                        }
+                    }
+                    return num;
+                }
+            },
+            itemsStatus: {
+                get: function() {
+                    if (this.todos == 0) {
+                        return 0;
+                    }
+                    var result = 1;
+                    for (var j = 0;j<this.todos.length;j++) {
+                        if (this.todos[j].status==='item-doing') {
+                            result = 0;
+                            break;
+                        }
+                    }
+                    return result;
+                }
+            },
+            todosToShow:{
+                get: function() {
+                    var todosToShow = [];
+                    var currentFilter = this.currentFilter;
+                    switch (currentFilter) {
+                        case "opened":
+                            for (var j = 0;j<this.todos.length;j++) {
+                                if (this.todos[j].status==='item-doing') {
+                                    todosToShow.push(this.todos[j]);
+                                }
+                            }
+                            break;
+                        case "completed":
+                            for (var k = 0;k<this.todos.length;k++) {
+                                if (this.todos[k].status==='item-done') {
+                                    todosToShow.push(this.todos[k]);
+                                }
+                            }
+                            break;
+                        case "all":
+                        default:
+                            for (var i = 0;i<this.todos.length;i++) {
+                                todosToShow.push(this.todos[i]);
+                            }
+                            break;
+                    }
+                    return todosToShow;
+                }
+            }
+        },
+        methods:{
+            toggleAll: function() {
+                if (this.itemsStatus === 0) {
+                    var status = 'item-done';
+                } else {
+                    status = 'item-doing';
+                }
+                for (var i = 0;i<this.todos.length;i++) {
+                    this.todos[i].status = status;
+                }
+            },
+            showAll: function() {
+                var vm = this;
+                vm.currentFilter = 'all';
+                vm._app.updateActions();
+            },
+            showOpened: function() {
+                var vm = this;
+                vm.currentFilter = 'opened';
+                vm._app.updateActions();
+            },
+            showComplete: function() {
+                var vm = this;
+                vm.currentFilter = 'completed';
+                vm._app.updateActions();
+            },
+            cleanCompletedTodos: function() {
+                for (var i = this.todos.length - 1;i>=0;i--) {
+                    if (this.todos[i].status === 'item-done') {
+                        this.__removeItemByIdx(i);
+                    }
+                }
+            },
+            syncValue: function(e) {
+                var txt = e.value;
+                this.newInputValue = txt;
+            },
+            finishInput: function() {
+                var txt = this.newInputValue;
+                if (txt.trim().length>0) {
+                    this.todos.push({
+                        "status":"item-doing",
+                        "content":txt.trim()
+                    });
+                    this.newInputValue = '';
+                }
+            },
+
+            __removeItemByIdx:function(idx) {
+                this.todos.splice(idx,1);
+            }
+        },
+        ready: function() {
+            // monitor item deletion
+            this.$on('item-deleted', function(e) {
+                var todoidx = e.detail.idx;
+                this.__removeItemByIdx(todoidx);
+            });
+        }
+    }
+</script>
+
+<style>
+    .todo-list {
+        flex-direction: column;
+        height:100%;
+        width:750px;
+        background-color: #f5f5f5;
+    }
+    .app-title {
+        margin-top:50px;
+        margin-bottom:50px;
+        font-size:120px;
+        text-align: center;
+        color:rgba(175, 47, 47, 0.15);
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    .todo-input-wrap {
+        display: flex;
+        flex-direction: row;
+        background-color:#fff;
+        border-top-width: 1px;
+        border-bottom-width: 1px;
+        border-style:solid;
+        border-color:#ccc;
+    }
+    .finish-toggle {
+        flex:2;
+        height:120px;
+        line-height:120px;/* not support */
+        overflow: hidden;
+        font-size:60px;
+        text-align:center;
+        font-weight:bold;
+        color:#e6e6e6;
+        flex-direction: row;
+        justify-content:center;
+        align-items:center;
+    }
+    .total-toggle {
+        position:absolute;
+        top:45px;
+        left:45px;
+        width:45px;
+        height:30px;
+    }
+    .todo-input {
+        height:120px;
+        flex:7;
+        font-weight:100;/* not support */
+        font-size:40px;
+        margin-left:20px;
+        border-width:0;
+        /*border-style:solid;!* border style need to be write separately *!*/
+        /*border-color:#ccc;*/
+        font-style:italic;/* not support */
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;/* this feature is not supported on Android */
+        /*box-shadow:1px 1px 0 #999;!* not support *!*/
+    }
+    .blank {
+        flex:1;
+    }
+    /**
+    * .todo-item .todo-status css style not supported
+    */
+    .todo-list {
+        width:750%;
+    }
+
+
+    .info-text-wrap {
+        flex-direction: column;
+        justify-content:center;
+        width:750px;
+        height:80px;
+        background-color:#fff;
+    }
+    .info-text {
+        width:700px;
+        height:40px;
+        line-height:40px;
+        font-size:30px;
+        padding-left:50px;
+        color:#ccc;
+    }
+    .sorting-wrap {
+        width:750px;
+        height:80px;
+        background-color:#fff;
+    }
+    .sorting {
+        display: flex;
+        flex-direction: row;
+        justify-content:space-between;
+        width:550px;
+        margin-left:100px;
+        margin-right:100px;
+        height:80px;
+    }
+    .btn {
+        border-radius: 3px;
+        align-items:center;
+        margin-left:1px;
+        margin-top:15px;
+        height:50px;
+        padding-top:5px;
+        padding-left:10px;
+        padding-right:10px;
+        font-size:30px;
+        border-color:#fff;
+        border-width:1px;
+        border-style:solid;
+        color:#ccc;
+    }
+    .btn-active {
+        border-color:#999;
+        border-width:1px;
+        border-style:solid;
+        color:#999;
+    }
+    .submit-btn {
+        border-radius: 5px;
+        align-items:center;
+        margin-left:1px;
+        margin-right:10px;
+        margin-top:35px;
+        height:50px;
+        padding-top:5px;
+        padding-left:10px;
+        padding-right:10px;
+        font-size:30px;
+        border-color:#ccc;
+        border-width:1px;
+        border-style:solid;
+        color:#999;
+    }
+
+</style>
