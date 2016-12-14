@@ -26,7 +26,7 @@ Sender.prototype = {
   // perform a callback to jsframework.
   performCallback: function (callbackId, data, keepAlive) {
     const args = [callbackId]
-    data && args.push(data)
+    data !== undefined && args.push(data)
     keepAlive && args.push(keepAlive)
     _send(this.instanceId, {
       method: 'callback',

@@ -69,13 +69,17 @@
     "core-js": "^2.4.0",
     "cubicbezier": "^0.1.1",
     "envd": "^0.1.1",
+    "flatpickr": "^2.2.3",
     "httpurl": "^0.1.1",
     "lazyimg": "^0.1.3",
     "modals": "^0.1.6",
+    "moment": "^2.17.0",
     "scroll-to": "0.0.2",
     "semver": "^5.1.0",
+    "weex-components": "^0.2.0",
     "weex-vue-framework": "2.0.5-weex.1",
-    "weex-components": "^0.2.0"
+    "iscroll": "^5.2.0",
+    "pikaday": "^1.5.1"
   },
   "devDependencies": {
     "babel-core": "^6.17.0",

@@ -31,6 +31,7 @@
     "pageInfo",
     "storage",
     "stream",
-    "webview"
+    "webview",
+    "picker"
   ]
 }
