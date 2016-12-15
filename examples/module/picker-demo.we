@@ -1,0 +1,102 @@
+<template>
+    <scroller>
+        <wxc-panel title="picker module" type="primary">
+            <text style="margin-bottom: 20px;">pick value: {{value}}</text>
+            <wxc-button type="primary" onclick="{{pick}}" value="single pick" style="margin-bottom: 20px;"></wxc-button>
+            <wxc-button type="primary" onclick="{{pickDate}}" value="pickDate" style="margin-bottom: 20px;"></wxc-button>
+            <wxc-button type="primary" onclick="{{pickTime}}" value="pickTime"></wxc-button>
+        </wxc-panel>
+
+        <wxc-panel title="input component" type="primary">
+            <text>onchange: {{txtChange}}</text>
+            <input
+                    type="date"
+                    placeholder="select date"
+                    class="input"
+                    autofocus="false"
+                    value=""
+                    onchange="onchange"
+                    max = "2029-11-28"
+                    min = "2015-11-28"
+            />
+            <input
+                    type="time"
+                    placeholder="select time"
+                    class="input"
+                    autofocus="false"
+                    value=""
+                    onchange="onchange"
+            />
+        </wxc-panel>
+    </scroller>
+</template>
+
+<style>
+    .input {
+        font-size: 60px;
+        height: 80px;
+        width: 400px;
+    }
+</style>
+
+<script>
+    require('weex-components');
+    module.exports = {
+        data: {
+            value: '',
+            index: 0,
+            txtChange: ''
+        },
+        methods: {
+            pick: function() {
+                var picker = require('@weex-module/picker');
+                var items = new Array("Saab","Volvo","BMW");
+                var self = this;
+                picker.pick({
+                    'items':items,
+                    'index':self.index
+                },function (ret) {
+                    var result = ret.result;
+                    if(result == 'success')
+                    {
+                        self.value = items[ret.data];
+                        self.index = ret.data;
+                    }
+                });
+
+            },
+            pickDate: function() {
+                var picker = require('@weex-module/picker');
+                var self = this;
+                picker.pickDate({
+                    'value':'2016-11-28',
+                    'max':'2029-11-28',
+                    'min':'2015-11-28'
+                },function (ret) {
+                    var result = ret.result;
+                    if(result == 'success')
+                    {
+                        self.value = ret.data;
+                    }
+                });
+            },
+            pickTime: function() {
+                var picker = require('@weex-module/picker');
+                var self = this;
+                picker.pickTime({
+                    'value':'19:24'
+                },function (ret) {
+                    var result = ret.result;
+                    if(result == 'success')
+                    {
+                        self.value = ret.data;
+                    }
+                });
+            },
+            onchange: function(event) {
+                this.txtChange = event.value;
+                console.log('onchange', event.value);
+            }
+        }
+    }
+</script>

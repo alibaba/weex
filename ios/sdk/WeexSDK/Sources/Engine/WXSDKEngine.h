@@ -55,6 +55,14 @@
 + (void)registerHandler:(id)handler withProtocol:(Protocol *)protocol;
 
 /**
+ * @abstract Returns a given handler instance for specific protocol
+ *
+ * @param protocol The protocol to confirm
+ *
+ */
++ (id)handlerForProtocol:(Protocol *)protocol;
+
+/**
  * @abstract Initializes the global sdk enviroment
  *
  * @discussion Injects main.js in app bundle as default JSFramework script.
@@ -90,6 +98,14 @@
  *
  **/
 + (WXSDKInstance *)topInstance;
+
+/**
+ * @abstract Add custom envionment variables 
+ * @discuss These variables can be obtained by $getConfig().env
+ *
+ **/
++ (void)setCustomEnvironment:(NSDictionary *)environment;
++ (NSDictionary *)customEnvironment;
 
 /**
  * @abstract Connects to websocket for collecting log

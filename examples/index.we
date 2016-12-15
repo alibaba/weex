@@ -41,7 +41,9 @@
         {name: 'module/modal', title: 'Modal'},
         {name: 'module/stream-demo', title: 'Stream'},
         {name: 'module/storage-demo',title:'Storage'},
-        // {name: 'module/clipboard', title: 'Clipboard'}, // 0.8 , developing
+        {name: 'module/picker-demo',title:'Picker'},
+        {name: 'module/componentRect',title:'componentRect'},
+        {name: 'module/clipboard', title: 'Clipboard'},
 
         // showcase
         {name: 'showcase/new-fashion/index', title: 'Activity'},
@@ -53,3 +55,4 @@
     }
   }
 </script>
+

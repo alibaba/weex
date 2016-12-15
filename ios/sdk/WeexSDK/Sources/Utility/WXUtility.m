@@ -12,6 +12,7 @@
 #import "WXAppConfiguration.h"
 #import "WXThreadSafeMutableDictionary.h"
 #import "WXRuleManager.h"
+#import "WXSDKEngine.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
 #import <sys/utsname.h>
@@ -183,6 +184,10 @@ static BOOL WXNotStat;
                                     @"scale":@(scale),
                                     @"logLevel":[WXLog logLevelString] ?: @"error"
                                 }];
+    if ([WXSDKEngine customEnvironment]) {
+        [data addEntriesFromDictionary:[WXSDKEngine customEnvironment]];
+    }
+    
     return data;
 }
 

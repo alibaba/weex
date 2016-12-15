@@ -1,45 +1,139 @@
 <template>
-  <scroller>
-    <wxc-panel title="input" type="primary">
-      <input
-        type="text"
-        placeholder="Text Input"
-        class="input"
-        autofocus="true"
-        value=""
-        onchange="onchange"
-        oninput="oninput"
-      />
-      <text>oninput: {{txtInput}}</text>
-      <text>onchange: {{txtChange}}</text>
-    </wxc-panel>
-  </scroller>
+    <div>
+        <div>
+            <text style="font-size: 40px">oninput: {{txtInput}}</text>
+            <text style="font-size: 40px">onchange: {{txtChange}}</text>
+        </div>
+        <scroller>
+            <wxc-panel title="input type = text" type="primary">
+                <input
+                        type="text"
+                        placeholder="Input Text"
+                        class="input"
+                        autofocus="{{autofocus}}"
+                        value=""
+                        onchange="onchange"
+                        oninput="oninput"
+                />
+            </wxc-panel>
+
+            <wxc-panel title="input type = password" type="primary">
+                <input
+                        type="password"
+                        placeholder="Input Password"
+                        class="input"
+                        onchange="onchange"
+                        oninput="oninput"
+                />
+            </wxc-panel>
+
+            <wxc-panel title="input type = url" type="primary">
+                <input
+                        type="url"
+                        placeholder="Input URL"
+                        class="input"
+                        onchange="onchange"
+                        oninput="oninput"
+                />
+            </wxc-panel>
+
+            <wxc-panel title="input type = email" type="primary">
+                <input
+                        type="email"
+                        placeholder="Input Email"
+                        class="input"
+                        onchange="onchange"
+                        oninput="oninput"
+                />
+            </wxc-panel>
+
+            <wxc-panel title="input type = tel" type="primary">
+                <input
+                        type="tel"
+                        placeholder="Input Tel"
+                        class="input"
+                        onchange="onchange"
+                        oninput="oninput"
+                />
+            </wxc-panel>
+
+            <wxc-panel title="input type = time" type="primary">
+                <input
+                        type="time"
+                        placeholder="Input Time"
+                        class="input"
+                        onchange="onchange"
+                        oninput="oninput"
+                />
+            </wxc-panel>
+
+            <wxc-panel title="input type = date" type="primary">
+                <input
+                        type="date"
+                        placeholder="Input Date"
+                        class="input"
+                        onchange="onchange"
+                        oninput="oninput"
+                        max="2017-12-12"
+                        min="2015-01-01"
+                />
+            </wxc-panel>
+
+            <wxc-panel title="function focus() & blur()" type="primary">
+                <div style="flex-direction: row;margin-bottom: 16px;justify-content: space-between">
+                    <wxc-button value="Focus" type="primary" onclick="{{focus}}"></wxc-button>
+                    <wxc-button value="Blur" type="primary" onclick="{{blur}}"></wxc-button>
+                </div>
+
+                <input
+                        type="text"
+                        placeholder="Input1"
+                        class="input"
+                        value=""
+                        id="input1"
+                />
+            </wxc-panel>
+        </scroller>
+    </div>
 </template>
 
 <style>
-  .input {
-    font-size: 60px;
-    height: 80px;
-    width: 400px;
-  }
+    .input {
+        font-size: 60px;
+        height: 80px;
+        width: 750px;
+    }
 </style>
 
 <script>
-  require('weex-components');
-  module.exports = {
-    data: {
-      txtInput: '',
-      txtChange: ''
-    },
-    methods: {
-      onchange: function(event) {
-        this.txtChange = event.value;
-        console.log('onchange', event.value);
-      },
-      oninput: function(event) {
-        this.txtInput = event.value;
-        console.log('oninput', event.value);
-      }
-    }
-  };
+    require('weex-components');
+    module.exports = {
+        data: {
+            txtInput: '',
+            txtChange: '',
+            autofocus: false,
+        },
+        methods: {
+            ready : function () {
+                var self = this;
+                setTimeout(function () {
+                    self.autofocus = true;
+                },1000);
+            },
+            onchange: function (event) {
+                this.txtChange = event.value;
+                console.log('onchange', event.value);
+            },
+            oninput: function (event) {
+                this.txtInput = event.value;
+                console.log('oninput', event.value);
+            },
+            focus: function () {
+                this.$el('input1').focus();
+            },
+            blur: function () {
+                this.$el('input1').blur();
+            }
+        }
+    };
 </script>

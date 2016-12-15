@@ -81,9 +81,6 @@
 @property (nonatomic, assign) CGSize keyboardSize;
 @property (nonatomic, assign) CGRect rootViewOriginFrame;
 
-//private
-@property(nonatomic) NSRange selectedRange; //save selectedrange. because re layout change textview selectedRange
-
 @end
 
 @implementation WXTextAreaComponent {
@@ -91,6 +88,9 @@
     UIEdgeInsets _padding;
     NSTextStorage* _textStorage;
 }
+
+WX_EXPORT_METHOD(@selector(focus))
+WX_EXPORT_METHOD(@selector(blur))
 
 - (instancetype)initWithRef:(NSString *)ref type:(NSString *)type styles:(NSDictionary *)styles attributes:(NSDictionary *)attributes events:(NSArray *)events weexInstance:(WXSDKInstance *)weexInstance
 {
@@ -235,6 +235,20 @@
     [_textView setClipsToBounds:YES];
 }
 
+-(void)focus
+{
+    if (self.textView) {
+        [self.textView becomeFirstResponder];
+    }
+}
+
+-(void)blur
+{
+    if (self.textView) {
+        [self.textView resignFirstResponder];
+    }
+}
+
 #pragma mark - private method
 -(UIColor *)convertColor:(id)value
 {
@@ -248,14 +262,6 @@
         color = [UIColor blackColor];
     }
     return color;
-}
-
--(void)correctCursor
-{
-    if(self.selectedRange.location != 0 && self.textView.selectedRange.location != self.selectedRange.location)
-    {
-        self.textView.selectedRange = self.selectedRange;
-    }
 }
 
 #pragma mark - add-remove Event
@@ -317,7 +323,6 @@
         if (value) {
             _textValue = value;
             _textView.text = _textValue;
-            [self correctCursor];
             if([value length] > 0) {
                 _placeHolderLabel.text = @"";
             }
@@ -422,23 +427,21 @@
     }else{
         [self setPlaceholderAttributedString];
     }
-    self.selectedRange = textView.selectedRange;
     if (textView.markedTextRange == nil) {
         if (_inputEvent) {
-            [self fireEvent:@"input" params:@{@"value":textView.text}];
+            [self fireEvent:@"change" params:@{@"value":[textView text]} domChanges:@{@"attrs":@{@"value":[textView text]}}];
         }
     }
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
-    self.selectedRange = NSMakeRange(0, 0);
     if (![textView.text length]) {
         [self setPlaceholderAttributedString];
     }
     if (_changeEvent) {
         if (![[textView text] isEqualToString:_changeEventString]) {
-            [self fireEvent:@"change" params:@{@"value":[textView text]} domChanges:@{@"attrs":@{@"value":[_textView text]}}];
+            [self fireEvent:@"change" params:@{@"value":[textView text]} domChanges:@{@"attrs":@{@"value":[textView text]}}];
         }
     }
     if (_blurEvent) {
