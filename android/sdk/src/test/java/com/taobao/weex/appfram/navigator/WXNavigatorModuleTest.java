@@ -208,11 +208,13 @@ import com.taobao.weappplus_sdk.BuildConfig;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKInstanceTest;
+import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.bridge.WXBridgeManager;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
@@ -235,6 +237,7 @@ import static org.mockito.Mockito.*;
 public class WXNavigatorModuleTest {
 
   WXNavigatorModule module;
+  JSCallback callback;
 
   @Rule
   public PowerMockRule rule = new PowerMockRule();
@@ -242,6 +245,7 @@ public class WXNavigatorModuleTest {
   @Before
   public void setUp() throws Exception {
     mockStatic(WXSDKEngine.class);
+    callback = Mockito.mock(JSCallback.class);
 
 
     module = new WXNavigatorModule();
@@ -299,58 +303,58 @@ public class WXNavigatorModuleTest {
 
   @Test
   public void testPush() throws Exception {
-    module.push("{}","");
-    module.push("{'url':'kdkdkdkdkd'}","");
+    module.push("{}",callback);
+    module.push("{'url':'kdkdkdkdkd'}",callback);
     mockSetter();
-    module.push("{}","");
+    module.push("{}",callback);
   }
 
 
   @Test
   public void testPop() throws Exception {
     mockSetter();
-    module.pop("{}","");
+    module.pop("{}",callback);
   }
 
   @Test
   public void testSetNavBarRightItem() throws Exception {
     mockSetter();
-    module.setNavBarRightItem("{}","");
+    module.setNavBarRightItem("{}",callback);
   }
 
   @Test
   public void testClearNavBarRightItem() throws Exception {
     mockSetter();
-    module.clearNavBarRightItem("{}","");
+    module.clearNavBarRightItem("{}",callback);
   }
 
   @Test
   public void testSetNavBarLeftItem() throws Exception {
     mockSetter();
-    module.setNavBarLeftItem("{}","");
+    module.setNavBarLeftItem("{}",callback);
   }
 
   @Test
   public void testClearNavBarLeftItem() throws Exception {
     mockSetter();
-    module.clearNavBarLeftItem("{}","");
+    module.clearNavBarLeftItem("{}",callback);
   }
 
   @Test
   public void testSetNavBarMoreItem() throws Exception {
     mockSetter();
-    module.setNavBarMoreItem("{}","");
+    module.setNavBarMoreItem("{}",callback);
   }
 
   @Test
   public void testClearNavBarMoreItem() throws Exception {
     mockSetter();
-    module.clearNavBarMoreItem("{}","");
+    module.clearNavBarMoreItem("{}",callback);
   }
 
   @Test
   public void testSetNavBarTitle() throws Exception {
     mockSetter();
-    module.setNavBarTitle("{}","");
+    module.setNavBarTitle("{}",callback);
   }
 }

@@ -12,7 +12,6 @@ buildscript {
     }
 }
 
-
 allprojects {
     repositories {
         mavenCentral()
@@ -25,13 +24,14 @@ apply plugin: 'com.github.hierynomus.license'
 apply plugin: 'checkstyle'
 
 ext.disableCov = project.hasProperty('disableCov') ? project.getProperty('disableCov') : 'false'
-
 if(!disableCov.toBoolean()){
     apply plugin: 'com.vanniktech.android.junit.jacoco'
     junitJacoco {
         excludes = ['com/taobao/weex/dom/flex/**','com/taobao/weex/ui/view/refresh/circlebar/**']
     }
 }
+
+project.ext.set("androidTargetSDK",project.hasProperty('targetSDK') ? project.getProperty('targetSDK') as int : 21 )
 
 task checkstyle(type: Checkstyle) {
     configFile file("${project.rootDir}/config/quality/checkstyle.xml") // Where my checkstyle config is...
@@ -42,14 +42,13 @@ task checkstyle(type: Checkstyle) {
     exclude '**/test/**'
     exclude '**/com/taobao/weex/dom/flex/**'
     classpath = files()
-    
 }
 
 checkstyle {
     toolVersion = '6.9'
 }
 
-version = "0.7.0"
+version = "0.9.0"
 
 android {
     compileSdkVersion 23
@@ -73,7 +72,7 @@ android {
         buildConfigField "String", "buildJavascriptFrameworkVersion", "\"${jsfmVersion}\""
         buildConfigField "String", "buildVersion", "\"${version}\""
         minSdkVersion 14
-        targetSdkVersion 19
+        targetSdkVersion project.androidTargetSDK
         versionCode 1
         versionName "1.0"
         ndk {

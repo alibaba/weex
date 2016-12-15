@@ -209,12 +209,12 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.common.Component;
+import com.taobao.weex.annotation.Component;
 import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.component.list.WXListComponent;
-import com.taobao.weex.ui.view.WXBaseRefreshLayout;
 import com.taobao.weex.ui.view.WXFrameLayout;
+import com.taobao.weex.ui.view.WXLoadingLayout;
 import com.taobao.weex.ui.view.refresh.core.WXSwipeLayout;
 import com.taobao.weex.ui.view.refresh.wrapper.BaseBounceView;
 import com.taobao.weex.utils.WXUtils;
@@ -225,19 +225,21 @@ import com.taobao.weex.utils.WXUtils;
 @Component(lazyload = false)
 public class WXLoading extends WXBaseRefresh implements WXSwipeLayout.WXOnLoadingListener {
 
+  public static final String HIDE = "hide";
+
   public WXLoading(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
     super(instance, node, parent, lazy);
   }
 
   @Override
   protected WXFrameLayout initComponentHostView(@NonNull Context context) {
-    return new WXBaseRefreshLayout(context);
+    return new WXLoadingLayout(context);
   }
 
   @Override
   public void onLoading() {
     if (getDomObject().getEvents().contains(Constants.Event.ONLOADING)) {
-      getInstance().fireEvent(getRef(), Constants.Event.ONLOADING);
+      fireEvent(Constants.Event.ONLOADING);
     }
   }
 
@@ -256,7 +258,7 @@ public class WXLoading extends WXBaseRefresh implements WXSwipeLayout.WXOnLoadin
   @WXComponentProp(name = Constants.Name.DISPLAY)
   public void setDisplay(String display) {
     if (!TextUtils.isEmpty(display)) {
-      if (display.equals("hide")) {
+      if (display.equals(HIDE)) {
         if (getParent() instanceof WXListComponent || getParent() instanceof WXScroller) {
           if (((BaseBounceView)getParent().getHostView()).getSwipeLayout().isRefreshing()) {
             ((BaseBounceView) getParent().getHostView()).finishPullLoad();

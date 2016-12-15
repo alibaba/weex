@@ -215,5 +215,5 @@ public interface Invoker {
 
   Type[] getParameterTypes();
 
-  boolean isRunInUIThread();
+  boolean isRunOnUIThread();
 }

@@ -208,6 +208,7 @@ import com.taobao.weex.adapter.IWXDebugAdapter;
 import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
 import com.taobao.weex.adapter.IWXUserTrackAdapter;
+import com.taobao.weex.adapter.URIAdapter;
 import com.taobao.weex.appfram.storage.IWXStorageAdapter;
 
 /**
@@ -219,6 +220,7 @@ public class InitConfig {
   private IWXUserTrackAdapter utAdapter;
   private IWXDebugAdapter debugAdapter;
   private IWXStorageAdapter storageAdapter;
+  private URIAdapter mURIAdapter;
   private String framework;
 
   public IWXHttpAdapter getHttpAdapter() {
@@ -244,7 +246,9 @@ public class InitConfig {
     return storageAdapter;
   }
 
-
+  public URIAdapter getURIAdapter() {
+    return mURIAdapter;
+  }
 
   private InitConfig() {
   }
@@ -255,6 +259,7 @@ public class InitConfig {
     IWXUserTrackAdapter utAdapter;
     IWXDebugAdapter debugAdapter;
     IWXStorageAdapter storageAdapter;
+    URIAdapter mURIAdapter;
     String framework;
     public Builder(){
 
@@ -285,6 +290,11 @@ public class InitConfig {
       return this;
     }
 
+    public Builder setURIAdapter(URIAdapter URIAdapter) {
+      mURIAdapter = URIAdapter;
+      return this;
+    }
+
     public Builder setFramework(String framework){
       this.framework=framework;
       return this;
@@ -298,6 +308,7 @@ public class InitConfig {
       config.debugAdapter=this.debugAdapter;
       config.storageAdapter = this.storageAdapter;
       config.framework=this.framework;
+      config.mURIAdapter = this.mURIAdapter;
       return config;
     }
   }

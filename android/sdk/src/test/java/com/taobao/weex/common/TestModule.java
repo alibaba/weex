@@ -205,6 +205,7 @@
 package com.taobao.weex.common;
 
 import com.taobao.weex.WXSDKEngine;
+import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.bridge.JSCallback;
 
 /**
@@ -212,12 +213,12 @@ import com.taobao.weex.bridge.JSCallback;
  */
 public class TestModule extends WXSDKEngine.DestroyableModule {
 
-  @WXModuleAnno
+  @JSMethod
   public void testMethod(String arg){
 
   }
 
-  @WXModuleAnno(runOnUIThread=true)
+  @JSMethod(uiThread=true)
   public void testCallbackMethod(String arg, JSCallback callback){
 
   }

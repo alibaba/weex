@@ -204,10 +204,11 @@
  */
 package com.taobao.weex.bridge;
 
+import android.content.Intent;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.Destroyable;
 import com.taobao.weex.common.WXException;
@@ -215,10 +216,10 @@ import com.taobao.weex.common.WXModule;
 import com.taobao.weex.dom.WXDomModule;
 import com.taobao.weex.ui.module.WXTimerModule;
 import com.taobao.weex.utils.WXLogUtils;
-import com.taobao.weex.utils.WXReflectionUtils;
 
-import java.lang.reflect.Type;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 
 /**
@@ -233,6 +234,7 @@ public class WXModuleManager {
    */
   private static Map<String, ModuleFactory> sModuleFactoryMap = new HashMap<>();
   private static Map<String, WXModule> sGlobalModuleMap = new HashMap<>();
+  private static Map<String, WXDomModule> sDomModuleMap = new HashMap<>();
 
   /**
    * module object dictionary
@@ -301,12 +303,12 @@ public class WXModuleManager {
 
   static boolean registerJSModule(String moduleName, ModuleFactory factory) {
     Map<String, Object> modules = new HashMap<>();
-    modules.put(moduleName, factory.getMethodNames());
+    modules.put(moduleName, factory.getMethods());
     WXSDKManager.getInstance().registerModules(modules);
     return true;
   }
 
-  static boolean callModuleMethod(String instanceId, String moduleStr, String methodStr, JSONArray args) {
+  static boolean callModuleMethod(final String instanceId, String moduleStr, String methodStr, JSONArray args) {
     ModuleFactory factory = sModuleFactoryMap.get(moduleStr);
     if(factory == null){
       WXLogUtils.e("[WXModuleManager] module factory not found.");
@@ -316,58 +318,14 @@ public class WXModuleManager {
     if (wxModule == null) {
       return false;
     }
-    wxModule.mWXSDKInstance = WXSDKManager.getInstance().getSDKInstance(instanceId);
+    WXSDKInstance instance = WXSDKManager.getInstance().getSDKInstance(instanceId);
+    wxModule.mWXSDKInstance = instance;
 
-    Map<String, Invoker> methodsMap = factory.getMethodMap();
-    if (methodsMap == null) {
-      WXLogUtils.e("[WXModuleManager] callModuleMethod methodsMap is null.");
-      return false;
-    }
-    final Invoker invoker = methodsMap.get(methodStr);
+    final Invoker invoker = factory.getMethodInvoker(methodStr);
     try {
-      Type[] paramClazzs = invoker.getParameterTypes();
-      final Object[] params = new Object[paramClazzs.length];
-      Object value;
-      Type paramClazz;
-      for (int i = 0; i < paramClazzs.length; i++) {
-        paramClazz = paramClazzs[i];
-        if(i>=args.size()){
-          if(!paramClazz.getClass().isPrimitive()) {
-            params[i] = null;
-            continue;
-          }else {
-            WXLogUtils.e("[WXModuleManager] module method argument list not match.");
-            return false;
-          }
-        }
-        value = args.get(i);
-
-        if (paramClazz == JSONObject.class) {
-          params[i] = value;
-        } else if(JSCallback.class == paramClazz){
-          if(value instanceof String){
-            params[i] = new SimpleJSCallback(instanceId,(String)value);
-          }else{
-            throw new Exception("Parameter type not match.");
-          }
-        } else {
-          params[i] = WXReflectionUtils.parseArgument(paramClazz,value);
-        }
-      }
-      if (invoker.isRunInUIThread()) {
-        WXSDKManager.getInstance().postOnUiThread(new Runnable() {
-          @Override
-          public void run() {
-            try {
-              invoker.invoke(wxModule, params);
-            } catch (Exception e) {
-              WXLogUtils.e("callModuleMethod >>> invoke module:", e);
-            }
-          }
-        }, 0);
-      } else {
-        invoker.invoke(wxModule, params);
-      }
+      instance
+          .getNativeInvokeHelper()
+          .invoke(wxModule,invoker,args);
     } catch (Exception e) {
       WXLogUtils.e("callModuleMethod >>> invoke module:" + moduleStr + ", method:" + methodStr + " failed. ", e);
       return false;
@@ -408,7 +366,142 @@ public class WXModuleManager {
     return wxModule;
   }
 
+  /**Hook Activity life cycle callback begin***/
+
+
+  public static void onActivityCreate(String instanceId){
+
+    HashMap<String, WXModule> modules = sInstanceModuleMap.get(instanceId);
+    if(modules!=null) {
+      for (String key : modules.keySet()) {
+        WXModule module = modules.get(key);
+        if (module != null) {
+          module.onActivityCreate();
+        } else {
+          WXLogUtils.w("onActivityCreate can not find the " + key + " module");
+        }
+      }
+    }
+
+  }
+
+  public static void onActivityStart(String instanceId){
+
+    HashMap<String, WXModule> modules = sInstanceModuleMap.get(instanceId);
+    if(modules!=null) {
+      for (String key : modules.keySet()) {
+        WXModule module = modules.get(key);
+        if (module != null) {
+          module.onActivityStart();
+        } else {
+          WXLogUtils.w("onActivityStart can not find the " + key + " module");
+        }
+      }
+    }
+  }
+
+  public static void onActivityPause(String instanceId){
+    HashMap<String, WXModule> modules = sInstanceModuleMap.get(instanceId);
+    if(modules!=null) {
+      for (String key : modules.keySet()) {
+        WXModule module = modules.get(key);
+        if (module != null) {
+          module.onActivityPause();
+        } else {
+          WXLogUtils.w("onActivityPause can not find the " + key + " module");
+        }
+      }
+    }
+  }
+
+  public static void onActivityResume(String instanceId){
+    HashMap<String, WXModule> modules = sInstanceModuleMap.get(instanceId);
+    if(modules!=null) {
+      for (String key : modules.keySet()) {
+        WXModule module = modules.get(key);
+        if (module != null) {
+          module.onActivityResume();
+        } else {
+          WXLogUtils.w("onActivityResume can not find the " + key + " module");
+        }
+      }
+    }
+  }
+
+  public static void onActivityStop(String instanceId){
+    HashMap<String, WXModule> modules = sInstanceModuleMap.get(instanceId);
+    if(modules!=null) {
+      for (String key : modules.keySet()) {
+        WXModule module = modules.get(key);
+        if (module != null) {
+          module.onActivityStop();
+        } else {
+          WXLogUtils.w("onActivityStop can not find the " + key + " module");
+        }
+      }
+    }
+  }
+
+  public static void onActivityDestroy(String instanceId){
+    HashMap<String, WXModule> modules = sInstanceModuleMap.get(instanceId);
+    if(modules!=null) {
+      for (String key : modules.keySet()) {
+        WXModule module = modules.get(key);
+        if (module != null) {
+          module.onActivityDestroy();
+        } else {
+          WXLogUtils.w("onActivityDestroy can not find the " + key + " module");
+        }
+      }
+    }
+  }
+
+  public static boolean onActivityBack(String instanceId){
+    HashMap<String, WXModule> modules = sInstanceModuleMap.get(instanceId);
+    if(modules!=null) {
+      for (String key : modules.keySet()) {
+        WXModule module = modules.get(key);
+        if (module != null) {
+          return module.onActivityBack();
+        } else {
+          WXLogUtils.w("onActivityCreate can not find the " + key + " module");
+        }
+      }
+    }
+    return false;
+  }
+
+  public static void onActivityResult(String instanceId,int requestCode, int resultCode, Intent data){
+
+    HashMap<String, WXModule> modules = sInstanceModuleMap.get(instanceId);
+    if(modules!=null) {
+      for (String key : modules.keySet()) {
+        WXModule module = modules.get(key);
+        if (module != null) {
+          module.onActivityResult(requestCode, resultCode, data);
+        } else {
+          WXLogUtils.w("onActivityResult can not find the " + key + " module");
+        }
+      }
+    }
+  }
+
+  public static void onRequestPermissionsResult(String instanceId ,int requestCode, String[] permissions, int[] grantResults) {
+    HashMap<String, WXModule> modules = sInstanceModuleMap.get(instanceId);
+    if(modules!=null) {
+      for (String key : modules.keySet()) {
+        WXModule module = modules.get(key);
+        if (module != null) {
+          module.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        } else {
+          WXLogUtils.w("onActivityResult can not find the " + key + " module");
+        }
+      }
+    }
+  }
+
   public static void destroyInstanceModules(String instanceId) {
+    sDomModuleMap.remove(instanceId);
     HashMap<String, WXModule> moduleMap = sInstanceModuleMap.remove(instanceId);
     if (moduleMap == null || moduleMap.size() < 1) {
       return;
@@ -425,33 +518,25 @@ public class WXModuleManager {
     }
   }
 
-  public static void reload(){
-    if(sModuleFactoryMap!=null){
-      Set<String> keys=sModuleFactoryMap.keySet();
-      for(String key:keys){
-        registerJSModule(key,sModuleFactoryMap.get(key));
-      }
+  public static void createDomModule(WXSDKInstance instance){
+    if(instance != null) {
+      sDomModuleMap.put(instance.getInstanceId(), new WXDomModule(instance));
     }
   }
 
-  private static class SimpleJSCallback implements JSCallback{
-    String mInstanceId;
-    String mCallbackId;
+  public static void destoryDomModule(String instanceID){
+    sDomModuleMap.remove(instanceID);
+  }
 
-    SimpleJSCallback(String instanceId,String callbackId){
-      this.mCallbackId = callbackId;
-      this.mInstanceId = instanceId;
-    }
+  public static WXDomModule getDomModule(String instanceId){
+    return sDomModuleMap.get(instanceId);
+  }
 
-
-    @Override
-    public void invoke(Object data) {
-      WXBridgeManager.getInstance().callbackJavascript(mInstanceId,mCallbackId,data,false);
-    }
-
-    @Override
-    public void invokeAndKeepAlive(Object data) {
-      WXBridgeManager.getInstance().callbackJavascript(mInstanceId,mCallbackId,data,true);
+  public static void reload(){
+    if (sModuleFactoryMap != null && sModuleFactoryMap.size() > 0) {
+      for (Map.Entry<String, ModuleFactory> entry : sModuleFactoryMap.entrySet()) {
+        registerJSModule(entry.getKey(), entry.getValue());
+      }
     }
   }
 

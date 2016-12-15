@@ -207,7 +207,7 @@ package com.taobao.weex.ui.component;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.common.Component;
+import com.taobao.weex.annotation.Component;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.view.WXFrameLayout;
 
@@ -233,6 +233,16 @@ public class WXBaseRefresh extends WXVContainer<WXFrameLayout> {
   @Override
   protected WXFrameLayout initComponentHostView(@NonNull Context context) {
     return new WXFrameLayout(context);
+  }
+
+  @Override
+  protected void setHostLayoutParams(WXFrameLayout host, int width, int height, int left, int right, int top, int bottom) {
+    if (getParent() instanceof Scrollable) {
+      //do nothing
+      return;
+    }else{
+      super.setHostLayoutParams(host, width, height, left, right, top, bottom);
+    }
   }
 
   @Override

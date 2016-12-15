@@ -219,9 +219,12 @@ public class SingleFunctionParser<V> extends FunctionParser<String, List<V>> {
     V map(String raw);
   }
 
-  /**
-   * Construct a function parser
+  public interface NonUniformMapper<V>{
+     List<V> map(List<String> raw);
+  }
 
+  /**
+   * Construct a function parser for uniform parameters.
    * @param source the raw string representation of a group of function(s)
    * @param mapper the mapping rule between string and corresponding type of object.
    */
@@ -235,6 +238,22 @@ public class SingleFunctionParser<V> extends FunctionParser<String, List<V>> {
           list.add(mapper.map(item));
         }
         map.put(functionName, list);
+        return map;
+      }
+    });
+  }
+
+  /**
+   * Construct a function parser for non-uniform parameters.
+   * @param source the raw string representation of a group of function(s)
+   * @param mapper the mapping rule between string and corresponding type of object.
+   */
+  public SingleFunctionParser(@NonNull String source, @NonNull final NonUniformMapper<V> mapper) {
+    super(source, new Mapper<String, List<V>>() {
+      @Override
+      public Map<String, List<V>> map(String functionName, List<String> raw) {
+        Map<String, List<V>> map = new HashMap<String, List<V>>();
+        map.put(functionName, mapper.map(raw));
         return map;
       }
     });

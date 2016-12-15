@@ -220,10 +220,6 @@ import com.taobao.weex.utils.WXLogUtils;
 public class WXComponentFactory {
 
   public static WXComponent newInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent) {
-    return newInstance(instance, node, parent, false);
-  }
-
-  public static WXComponent newInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
     if (instance == null || node == null || TextUtils.isEmpty(node.getType()) ) {
       return null;
     }
@@ -243,7 +239,7 @@ public class WXComponentFactory {
     }
 
     try {
-      return holder.createInstance(instance, node, parent, lazy);
+      return holder.createInstance(instance, node, parent);
     } catch (Exception e) {
       WXLogUtils.e("WXComponentFactory Exception type:[" + node.getType() + "] ", e);
     }

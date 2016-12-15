@@ -205,7 +205,7 @@
 package com.taobao.weex.ui.component;
 
 import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.common.Component;
+import com.taobao.weex.annotation.Component;
 import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.component.list.WXCell;
@@ -223,8 +223,12 @@ public class WXHeader extends WXCell {
 
   public WXHeader(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
     super(instance, node, parent, lazy);
-    lazy(false);
     setSticky(Constants.Value.STICKY);
+  }
+
+  @Override
+  public boolean isLazy() {
+    return false;
   }
 
   @Override

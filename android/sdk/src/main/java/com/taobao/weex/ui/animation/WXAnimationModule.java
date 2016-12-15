@@ -228,8 +228,8 @@ import android.view.animation.LinearInterpolator;
 
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.common.WXModule;
-import com.taobao.weex.common.WXModuleAnno;
 import com.taobao.weex.dom.WXDomHandler;
 import com.taobao.weex.dom.WXDomTask;
 import com.taobao.weex.ui.component.WXComponent;
@@ -246,7 +246,7 @@ import java.util.List;
 
 public class WXAnimationModule extends WXModule {
 
-  @WXModuleAnno
+  @JSMethod
   public void transition(@Nullable String ref, @Nullable String animation, @Nullable String callBack) {
     if(!TextUtils.isEmpty(ref)&&!TextUtils.isEmpty(animation)) {
       Message msg = Message.obtain();
@@ -321,7 +321,6 @@ public class WXAnimationModule extends WXModule {
       animator = ObjectAnimator.ofPropertyValuesHolder(
           target, holders.toArray(new PropertyValuesHolder[holders.size()]));
       animator.setStartDelay(animation.delay);
-      final IntEvaluator intEvaluator=new IntEvaluator();
       if (target.getLayoutParams() != null &&
           (!TextUtils.isEmpty(style.width) || !TextUtils.isEmpty(style.height))) {
         DimensionUpdateListener listener = new DimensionUpdateListener(target);

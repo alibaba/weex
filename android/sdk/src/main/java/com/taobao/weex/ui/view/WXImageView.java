@@ -205,108 +205,23 @@
 package com.taobao.weex.ui.view;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapShader;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.Shader;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.view.MotionEvent;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.taobao.weex.ui.view.border.BorderDrawable;
 import com.taobao.weex.ui.view.gesture.WXGesture;
 import com.taobao.weex.ui.view.gesture.WXGestureObservable;
-import com.taobao.weex.utils.WXViewUtils;
+import com.taobao.weex.utils.ImageDrawable;
+
+import java.util.Arrays;
 
 public class WXImageView extends ImageView implements WXGestureObservable {
 
-  private class ImageClipDrawable extends Drawable {
-
-    private
-    @NonNull
-    Paint mPaint;
-    private
-    @NonNull
-    final Drawable mOriginal;
-
-    private ImageClipDrawable(@NonNull Drawable original) {
-      mOriginal = original;
-      mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    }
-
-    @Override
-    public void draw(Canvas canvas) {
-      Bitmap bitmap;
-      if (mOriginal instanceof BitmapDrawable &&
-          (bitmap = ((BitmapDrawable) mOriginal).getBitmap()) != null) {
-        Path path;
-        RectF bounds = new RectF(getBounds());
-        BorderDrawable borderDrawable;
-        if ((borderDrawable = WXViewUtils.getBorderDrawable(WXImageView.this)) != null) {
-          path = borderDrawable.getContentPath(getPaddingTop(),
-                                               getPaddingRight(),
-                                               getPaddingBottom(),
-                                               getPaddingLeft(),
-                                               bounds);
-        } else {
-          path = new Path();
-          path.addRect(bounds, Path.Direction.CW);
-        }
-        Matrix matrix = new Matrix();
-        matrix.setScale(bounds.width() / bitmap.getWidth(),
-                        bounds.height() / bitmap.getHeight());
-        BitmapShader bitmapShader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-        bitmapShader.setLocalMatrix(matrix);
-        mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setShader(bitmapShader);
-        canvas.drawPath(path, mPaint);
-      } else {
-        //TODO Not strictly clip according to background-clip:border-box
-        mOriginal.draw(canvas);
-      }
-    }
-
-    @Override
-    public void setAlpha(int i) {
-      mOriginal.setAlpha(i);
-    }
-
-    @Override
-    public void setColorFilter(ColorFilter colorFilter) {
-      mOriginal.setColorFilter(colorFilter);
-    }
-
-    @Override
-    public int getOpacity() {
-      return mOriginal.getOpacity();
-    }
-
-    @Override
-    protected void onBoundsChange(Rect bounds) {
-      mOriginal.setBounds(bounds);
-      ImageClipDrawable.this.invalidateSelf();
-    }
-
-    @Override
-    public int getIntrinsicWidth() {
-      return mOriginal.getIntrinsicWidth();
-    }
-
-    @Override
-    public int getIntrinsicHeight() {
-      return mOriginal.getIntrinsicHeight();
-    }
-  }
-
   private WXGesture wxGesture;
+  private float[] borderRadius;
+  private boolean gif;
 
   public WXImageView(Context context) {
     super(context);
@@ -318,39 +233,28 @@ public class WXImageView extends ImageView implements WXGestureObservable {
     setImageDrawable(drawable);
   }
 
-  public void setImageDrawable(Drawable drawable,boolean isGif) {
-    if (drawable != null) {
-      if(isGif){
-        super.setImageDrawable(drawable);
-      }else{
-        super.setImageDrawable(new ImageClipDrawable(drawable));
+  public void setImageDrawable(Drawable drawable, boolean isGif) {
+    this.gif = isGif;
+    ViewGroup.LayoutParams layoutParams;
+    if ((layoutParams = getLayoutParams()) != null) {
+      Drawable wrapDrawable = ImageDrawable.createImageDrawable(drawable,
+                                                                getScaleType(), borderRadius,
+                                                                layoutParams.width - getPaddingLeft() - getPaddingRight(),
+                                                                layoutParams.height - getPaddingTop() - getPaddingBottom(),
+                                                                isGif);
+      if (wrapDrawable instanceof ImageDrawable) {
+        ImageDrawable imageDrawable = (ImageDrawable) wrapDrawable;
+        if (!Arrays.equals(imageDrawable.getCornerRadii(), borderRadius)) {
+          imageDrawable.setCornerRadii(borderRadius);
+        }
       }
-    } else {
-      super.setImageDrawable(null);
-    }
-    if (getScaleType() == ScaleType.MATRIX && getDrawable() != null) {
-      Matrix matrix = getImageMatrix();
-      int dwidth = getDrawable().getIntrinsicWidth();
-      int dheight = getDrawable().getIntrinsicHeight();
-
-      int vwidth = getWidth() - getPaddingLeft() - getPaddingRight();
-      int vheight = getHeight() - getPaddingTop() - getPaddingBottom();
-
-      float scale;
-      if (dwidth * vheight > vwidth * dheight) {
-        scale = (float) vheight / (float) dheight;
-      } else {
-        scale = (float) vwidth / (float) dwidth;
-      }
-
-      matrix.setScale(scale, scale);
-      setImageMatrix(matrix);
+      super.setImageDrawable(wrapDrawable);
     }
   }
 
   @Override
   public void setImageDrawable(Drawable drawable) {
-    setImageDrawable(drawable,false);
+    setImageDrawable(drawable, false);
   }
 
   @Override
@@ -367,4 +271,15 @@ public class WXImageView extends ImageView implements WXGestureObservable {
     return result;
   }
 
+  public void setBorderRadius(@NonNull float[] borderRadius) {
+    this.borderRadius = borderRadius;
+  }
+
+  @Override
+  protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+    super.onLayout(changed, left, top, right, bottom);
+    if (changed) {
+      setImageDrawable(getDrawable(), gif);
+    }
+  }
 }

@@ -250,11 +250,15 @@ public class WXSliderTest {
   };
 
   public static WXSlider create() throws IllegalAccessException, InstantiationException, InvocationTargetException {
-    return (WXSlider) new SimpleComponentHolder(WXSlider.class).createInstance(WXSDKInstanceTest.createInstance(), new TestDomObject(), WXDivTest.create(), false);
+    return (WXSlider) new SimpleComponentHolder(WXSlider.class).createInstance(WXSDKInstanceTest.createInstance(), new TestDomObject(), WXDivTest.create());
   }
 
   public static WXIndicator createIndicator() throws IllegalAccessException, InstantiationException, InvocationTargetException {
-    return (WXIndicator) new SimpleComponentHolder(WXIndicator.class).createInstance(WXSDKInstanceTest.createInstance(), new TestDomObject(), WXDivTest.create(), false);
+    return (WXIndicator) new SimpleComponentHolder(WXIndicator.class).createInstance(WXSDKInstanceTest.createInstance(), new TestDomObject(), WXDivTest.create());
+  }
+
+  public static WXIndicator createIndicator(WXVContainer container) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+    return (WXIndicator) new SimpleComponentHolder(WXIndicator.class).createInstance(WXSDKInstanceTest.createInstance(), new TestDomObject(), container);
   }
 
   @Before
@@ -277,7 +281,7 @@ public class WXSliderTest {
     component.addChild(ComponentTest.createComponent(new TestDomObject(),component,TestComponent.class));
     component.addChild(ComponentTest.createComponent(new TestDomObject(),component,TestComponent.class));
 
-    WXIndicator indicator = new WXIndicator(component.mInstance,new TestDomObject(),component,false);
+    WXIndicator indicator = new WXIndicator(component.getInstance(),new TestDomObject(),component,false);
     ComponentTest.create(indicator);
     component.addChild(indicator);
     ComponentTest.create(component);
@@ -304,8 +308,7 @@ public class WXSliderTest {
 
   @Test
   public void testIndicator() throws Exception {
-    WXIndicator indicator = createIndicator();
-    indicator.mParent = component;
+    WXIndicator indicator = createIndicator(component);
     ComponentTest.create(indicator);
     component.addChild(indicator);
     ComponentTest.setProperty(indicator,IPROPS,IVALUES);

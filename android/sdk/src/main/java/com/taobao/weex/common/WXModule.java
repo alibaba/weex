@@ -204,7 +204,11 @@
  */
 package com.taobao.weex.common;
 
+import android.content.Intent;
+
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.ui.component.WXComponent;
 
 /**
  * All modules must extend this class
@@ -220,4 +224,36 @@ public abstract class WXModule implements IWXObject {
 
 
   public WXSDKInstance mWXSDKInstance;
+
+
+  protected final WXComponent findComponent(String ref){
+    if(mWXSDKInstance != null && ref != null){
+      return WXSDKManager.getInstance()
+          .getWXRenderManager()
+          .getWXComponent(mWXSDKInstance.getInstanceId(), ref);
+    }
+    return null;
+  }
+
+  /** hook the Activity life cycle to Instance module**/
+  public void onActivityResult(int requestCode, int resultCode, Intent data){}
+
+  public void onActivityCreate(){}
+
+  public void onActivityStart(){}
+
+  public void onActivityPause(){}
+
+  public void onActivityResume(){}
+
+  public void onActivityStop(){}
+
+  public void onActivityDestroy(){}
+
+  public boolean onActivityBack() {return false;}
+
+  public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {}
+
+    /** end **/
+
 }

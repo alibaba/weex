@@ -372,9 +372,6 @@ public class WXSwipeLayout extends FrameLayout implements NestedScrollingParent 
     if ((!mPullRefreshEnable && !mPullLoadEnable)) {
       return false;
     }
-    if (mRefreshing) {
-      return true;
-    }
     return super.onInterceptTouchEvent(ev);
   }
 

@@ -32,9 +32,9 @@ import com.taobao.weex.dom.flex.CSSConstants;
 import com.taobao.weex.dom.flex.CSSNode;
 import com.taobao.weex.dom.flex.FloatUtil;
 import com.taobao.weex.dom.flex.MeasureOutput;
-import com.taobao.weex.dom.flex.Spacing;
 import com.taobao.weex.ui.component.WXText;
 import com.taobao.weex.ui.component.WXTextDecoration;
+import com.taobao.weex.utils.WXDomUtils;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXResourceUtils;
 
@@ -75,9 +75,9 @@ public class WXTextDomObject extends WXDomObject {
    * Object for calculating text's width and height. This class is an anonymous class of
    * implementing {@link com.taobao.weex.dom.flex.CSSNode.MeasureFunction}
    */
-  private static final CSSNode.MeasureFunction TEXT_MEASURE_FUNCTION = new CSSNode.MeasureFunction() {
+  /** package **/ static final CSSNode.MeasureFunction TEXT_MEASURE_FUNCTION = new CSSNode.MeasureFunction() {
     @Override
-    public void measure(CSSNode node, float width, MeasureOutput measureOutput) {
+    public void measure(CSSNode node, float width, @NonNull MeasureOutput measureOutput) {
       WXTextDomObject textDomObject = (WXTextDomObject) node;
       if (CSSConstants.isUndefined(width)) {
         width = node.cssstyle.maxWidth;
@@ -134,6 +134,10 @@ public class WXTextDomObject extends WXDomObject {
     setMeasureFunction(TEXT_MEASURE_FUNCTION);
   }
 
+  public TextPaint getTextPaint() {
+    return mTextPaint;
+  }
+
   /**
    * Prepare the text {@link Spanned} for calculating text's size. This is done by setting
    * various text span to the text.
@@ -151,7 +155,8 @@ public class WXTextDomObject extends WXDomObject {
   @Override
   public void layoutAfter() {
     if (hasBeenMeasured) {
-      if (layout != null && !FloatUtil.floatsEqual(getTextContentWidth(), previousWidth)) {
+      if (layout != null &&
+          !FloatUtil.floatsEqual(WXDomUtils.getContentWidth(this), previousWidth)) {
         recalculateLayout();
       }
     } else {
@@ -209,36 +214,10 @@ public class WXTextDomObject extends WXDomObject {
   }
 
   /**
-   * Get the content width of the dom.
-   * @return the width of the dom that excludes left-padding and right-padding.
-   */
-  private float getTextContentWidth() {
-    float rawWidth = getLayoutWidth();
-    float leftPadding, rightPadding, leftBorder, rightBorder;
-    Spacing padding = getPadding();
-    Spacing border = getBorder();
-
-    if (!CSSConstants.isUndefined((leftPadding = padding.get(Spacing.LEFT)))) {
-      rawWidth -= leftPadding;
-    }
-    if (!CSSConstants.isUndefined((rightPadding = padding.get(Spacing.RIGHT)))) {
-      rawWidth -= rightPadding;
-    }
-
-    if (!CSSConstants.isUndefined(leftBorder = border.get(Spacing.LEFT))) {
-      rawWidth -= leftBorder;
-    }
-    if (!CSSConstants.isUndefined(rightBorder = border.get(Spacing.RIGHT))) {
-      rawWidth -= rightBorder;
-    }
-    return rawWidth;
-  }
-
-  /**
    * RecalculateLayout.
    */
   private void recalculateLayout() {
-    float contentWidth = getTextContentWidth();
+    float contentWidth = WXDomUtils.getContentWidth(this);
     if (contentWidth > 0) {
       spanned = createSpanned(mText);
       layout = createLayout(contentWidth, true, layout);
@@ -309,7 +288,7 @@ public class WXTextDomObject extends WXDomObject {
     Layout layout;
     if (!FloatUtil.floatsEqual(previousWidth, textWidth) || previousLayout == null) {
       layout = new StaticLayout(spanned, mTextPaint, (int) Math.ceil(textWidth),
-                                Layout.Alignment.ALIGN_NORMAL, 1, 0, true);
+                                Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
     } else {
       layout = previousLayout;
     }
@@ -323,7 +302,7 @@ public class WXTextDomObject extends WXDomObject {
                                         mTextPaint, layout.getWidth(), textOverflow);
         spanned = createSpanned(text);
         return new StaticLayout(spanned, mTextPaint, (int) Math.ceil(textWidth),
-                                Layout.Alignment.ALIGN_NORMAL, 1, 0, true);
+                                Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
       }
     }
     return layout;
@@ -360,7 +339,7 @@ public class WXTextDomObject extends WXDomObject {
    * @return if forceToDesired is false, it will be the minimum value of the width of text and
    * outerWidth in case of outerWidth is defined, in other case, it will be outer width.
    */
-  private float getTextWidth(TextPaint textPaint,float outerWidth, boolean forceToDesired) {
+  /** package **/ float getTextWidth(TextPaint textPaint,float outerWidth, boolean forceToDesired) {
     float textWidth;
     if (forceToDesired) {
       textWidth = outerWidth;
@@ -467,5 +446,4 @@ public class WXTextDomObject extends WXDomObject {
     }
     return result;
   }
-
 }

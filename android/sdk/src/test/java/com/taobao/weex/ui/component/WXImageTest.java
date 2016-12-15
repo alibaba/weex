@@ -120,6 +120,7 @@ import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKInstanceTest;
 import com.taobao.weex.common.Constants;
 import com.taobao.weex.common.WXImageSharpen;
+import com.taobao.weex.dom.TestDomObject;
 import com.taobao.weex.dom.WXAttr;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.view.WXImageView;
@@ -130,6 +131,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -157,10 +159,10 @@ public class WXImageTest {
   public void setUp() throws Exception {
 
     mInstance = WXSDKInstanceTest.createInstance();
-    mDomObject = PowerMockito.mock(WXDomObject.class);
-    PowerMockito.when(mDomObject.clone()).thenReturn(mDomObject);
+    mDomObject = new TestDomObject();
+    PowerMockito.when(Mockito.spy(mDomObject).clone()).thenReturn(mDomObject);
     mWXDiv = PowerMockito.mock(WXDiv.class);
-    mWXImage = new WXImage(mInstance, mDomObject, mWXDiv, true);
+    mWXImage = new WXImage(mInstance, mDomObject, mWXDiv);
 
   }
 
@@ -226,9 +228,8 @@ public class WXImageTest {
 
   @Test
   public void testSetSrc() throws Exception {
-    mWXImage.mDomObj = new WXDomObject();
-    mWXImage.mDomObj.attr = PowerMockito.mock(WXAttr.class);
-    PowerMockito.when(mWXImage.mDomObj.attr.getImageSharpen()).thenReturn(WXImageSharpen.SHARPEN);
+    TestDomObject.setAttribute((WXDomObject)mWXImage.getDomObject(),PowerMockito.mock(WXAttr.class));
+    PowerMockito.when(mWXImage.getDomObject().getAttrs().getImageSharpen()).thenReturn(WXImageSharpen.SHARPEN);
     mWXImage.setSrc("");
 
   }

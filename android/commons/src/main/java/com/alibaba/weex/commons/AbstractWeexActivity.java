@@ -204,6 +204,7 @@
  */
 package com.alibaba.weex.commons;
 
+import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
@@ -212,8 +213,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import com.alibaba.weex.commons.util.ScreenUtil;
+
 import com.alibaba.weex.commons.util.AssertUtil;
+import com.alibaba.weex.commons.util.ScreenUtil;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRenderStrategy;
@@ -237,6 +239,8 @@ public abstract class AbstractWeexActivity extends AppCompatActivity implements 
     super.onCreate(savedInstanceState);
     createWeexInstance();
     mInstance.onActivityCreate();
+    getWindow().setFormat(PixelFormat.TRANSLUCENT);
+
     mWxAnalyzerDelegate = new WXAnalyzerDelegate(this);
     mWxAnalyzerDelegate.onCreate();
   }

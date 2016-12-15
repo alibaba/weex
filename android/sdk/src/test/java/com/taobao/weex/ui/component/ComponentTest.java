@@ -204,6 +204,8 @@
  */
 package com.taobao.weex.ui.component;
 
+import android.view.View;
+
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.dom.TestDomObject;
 import com.taobao.weex.dom.WXDomObject;
@@ -218,9 +220,24 @@ import java.util.Map;
  */
 public class ComponentTest {
   public static void create(WXComponent comp){
+    create(comp,null);
+  }
+  public static void create(WXComponent comp,View view){
     TestDomObject domObject = new TestDomObject();
-    WXVContainer parent = comp.getParent() == null?WXDivTest.create():comp.getParent();
-    comp.createView(parent,1);
+    WXVContainer parent;
+
+    if((parent = comp.getParent())!=null){
+      if(view != null) {
+        comp.mHost = view;
+      }else{
+        comp.createView();
+      }
+    }else{
+      parent = WXDivTest.create();
+      parent.addChild(comp);
+      parent.createChildViewAt(-1);
+    }
+
     comp.setLayout(domObject);
 
     domObject = new TestDomObject();
@@ -260,7 +277,7 @@ public class ComponentTest {
 
   public static <T> T createComponent(WXDomObject dom, WXVContainer parent, Class<T> type) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
      return type
-         .getConstructor(WXSDKInstance.class,WXDomObject.class,WXVContainer.class,boolean.class)
-        .newInstance(parent.mInstance,dom,parent,false);
+         .getConstructor(WXSDKInstance.class,WXDomObject.class,WXVContainer.class)
+        .newInstance(parent.getInstance(),dom,parent);
   }
 }

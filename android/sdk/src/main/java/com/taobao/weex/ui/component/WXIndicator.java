@@ -208,10 +208,11 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.common.Component;
+import com.taobao.weex.annotation.Component;
 import com.taobao.weex.common.Constants;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomObject;
@@ -238,6 +239,13 @@ public class WXIndicator extends WXComponent<WXCircleIndicator> {
 
   public WXIndicator(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
     super(instance, dom, parent, isLazy);
+  }
+
+  @Override
+  protected void setHostLayoutParams(WXCircleIndicator host, int width, int height, int left, int right, int top, int bottom) {
+      FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, height);
+      params.setMargins(left, top, right, bottom);
+      host.setLayoutParams(params);
   }
 
   @Override

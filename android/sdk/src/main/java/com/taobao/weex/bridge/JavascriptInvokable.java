@@ -202,18 +202,13 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.common;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package com.taobao.weex.bridge;
 
 /**
- * Created by sospartan on 6/12/16.
+ * Created by sospartan on 11/11/2016.
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Component {
-  boolean lazyload() default true;
+
+public interface JavascriptInvokable {
+  String[] getMethods();
+  Invoker getMethodInvoker(String name);
 }

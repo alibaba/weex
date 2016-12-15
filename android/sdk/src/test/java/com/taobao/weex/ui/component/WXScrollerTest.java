@@ -208,6 +208,7 @@ import android.view.ViewGroup;
 import com.taobao.weappplus_sdk.BuildConfig;
 import com.taobao.weex.WXSDKInstanceTest;
 import com.taobao.weex.dom.TestDomObject;
+import com.taobao.weex.dom.WXScrollerDomObject;
 import com.taobao.weex.ui.view.WXScrollView;
 import org.junit.After;
 import org.junit.Before;
@@ -230,7 +231,7 @@ public class WXScrollerTest {
   public static WXScroller create(){
     WXDiv div = WXDivTest.create();
     ComponentTest.create(div);
-    WXScroller component = new WXScroller(WXSDKInstanceTest.createInstance(),new TestDomObject(),div,false);
+    WXScroller component = new WXScroller(WXSDKInstanceTest.createInstance(),new WXScrollerDomObject(),div);
     div.addChild(component);
     return component;
   }

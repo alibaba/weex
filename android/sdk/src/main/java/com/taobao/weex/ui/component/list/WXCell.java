@@ -211,7 +211,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.common.Component;
+import com.taobao.weex.annotation.Component;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.flex.CSSLayout;
 import com.taobao.weex.ui.component.WXVContainer;
@@ -224,10 +224,12 @@ import com.taobao.weex.ui.view.WXFrameLayout;
 
 public class WXCell extends WXVContainer<WXFrameLayout> {
 
-    public int lastLocationY = -1;
+    private int mLastLocationY = 0;
     private ViewGroup mRealView;
     private View mTempStickyView;
     private View mHeadView;
+    private boolean mLazy = true;
+
 
     @Deprecated
     public WXCell(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
@@ -238,6 +240,14 @@ public class WXCell extends WXVContainer<WXFrameLayout> {
         super(instance, dom, parent,true );
     }
 
+    @Override
+    public boolean isLazy() {
+        return mLazy;
+    }
+
+    public void lazy(boolean lazy) {
+        mLazy = lazy;
+    }
 
     /**
      * If Cell is Sticky, need wraped FrameLayout
@@ -256,6 +266,14 @@ public class WXCell extends WXVContainer<WXFrameLayout> {
         }
     }
 
+    public int getLocationFromStart(){
+        return mLastLocationY;
+    }
+
+    public void setLocationFromStart(int l){
+        mLastLocationY = l;
+    }
+
     @Override
     public ViewGroup getRealView() {
         return mRealView;
@@ -272,8 +290,8 @@ public class WXCell extends WXVContainer<WXFrameLayout> {
         getHostView().removeView(mHeadView);
         mRealView = (ViewGroup) mHeadView;
         mTempStickyView = new FrameLayout(getContext());
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams((int) getDomObject().csslayout.dimensions[CSSLayout.DIMENSION_WIDTH],
-                (int) getDomObject().csslayout.dimensions[CSSLayout.DIMENSION_HEIGHT]);
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams((int) getDomObject().getLayoutWidth(),
+                (int) getDomObject().getLayoutHeight());
         getHostView().addView(mTempStickyView, lp);
         mHeadView.setTranslationX(headerViewOffsetX);
         mHeadView.setTranslationY(headerViewOffsetY);

@@ -205,9 +205,6 @@
 package com.taobao.weex.ui.component;
 
 import android.view.ViewGroup;
-import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.common.Component;
-import com.taobao.weex.dom.WXDomObject;
 
 /**
  * Created by sospartan on 7/5/16.

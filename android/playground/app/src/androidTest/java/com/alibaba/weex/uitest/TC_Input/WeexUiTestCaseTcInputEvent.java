@@ -150,9 +150,9 @@ public class WeexUiTestCaseTcInputEvent extends ActivityInstrumentationTestCase2
                if(listEventView.size()!=0){
 
                    for(View view :listEventView){
-                       if (view instanceof WXTextView){
-                           Log.e(TAG, "WXTextView get = " + ((WXTextView) view).getText().toString());
-                       }
+//                       if (view instanceof WXTextView && null != view){
+//                           Log.e(TAG, "WXTextView get = " + ((WXTextView) view).getText().toString());
+//                       }
 
                        String hintText = "";
 

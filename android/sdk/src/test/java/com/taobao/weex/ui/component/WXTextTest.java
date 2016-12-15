@@ -208,11 +208,13 @@ import com.taobao.weappplus_sdk.BuildConfig;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.Constants;
+import com.taobao.weex.dom.TestDomObject;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.WXTextDomObject;
 import com.taobao.weex.dom.flex.Spacing;
 
 import com.taobao.weex.ui.SimpleComponentHolder;
+import org.apache.tools.ant.taskdefs.EchoXML;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -250,10 +252,10 @@ public class WXTextTest {
         Mockito.when(mParentDomObj.getPadding()).thenReturn(new Spacing());
         Mockito.when(mParentDomObj.getBorder()).thenReturn(new Spacing());
         Mockito.when(mParentDomObj.clone()).thenReturn(mParentDomObj);
-        mParentDomObj.ref = "_root";
+        TestDomObject.setRef(mParentDomObj,WXDomObject.ROOT);
 
         mDomObject = Mockito.spy(new WXTextDomObject());
-        mDomObject.ref = "1";
+        TestDomObject.setRef(mDomObject,"1");
         mDomObject.addEvent(Constants.Event.CLICK);
         Mockito.when(mDomObject.clone()).thenReturn(mDomObject);
         Mockito.when(mDomObject.getPadding()).thenReturn(new Spacing());
@@ -262,16 +264,30 @@ public class WXTextTest {
         Mockito.when(mDomObject.getLayoutWidth()).thenReturn(100f);
         Mockito.when(mDomObject.getLayoutHeight()).thenReturn(100f);
 
-        mParent = new WXDiv(instance, mParentDomObj, null, false);
-        mParent.createView(null, -1);
-        mWXText = new WXText(instance, mDomObject, mParent, false);
+        mParent = new WXDiv(instance, mParentDomObj, null);
+        mParent.createView();
+        mWXText = new WXText(instance, mDomObject, mParent);
         mWXText.bindHolder(new SimpleComponentHolder(WXText.class));
         assertNotNull(instance.getContext());
     }
 
     @Test
+    public void testSetProperties() throws Exception {
+        mWXText.setProperty(Constants.Name.LINES,null);
+        mWXText.setProperty(Constants.Name.FONT_SIZE,null);
+        mWXText.setProperty(Constants.Name.FONT_WEIGHT,null);
+        mWXText.setProperty(Constants.Name.FONT_STYLE,null);
+        mWXText.setProperty(Constants.Name.COLOR,null);
+        mWXText.setProperty(Constants.Name.TEXT_DECORATION,null);
+        mWXText.setProperty(Constants.Name.FONT_FAMILY,null);
+        mWXText.setProperty(Constants.Name.TEXT_ALIGN,null);
+        mWXText.setProperty(Constants.Name.TEXT_OVERFLOW,null);
+        mWXText.setProperty(Constants.Name.LINE_HEIGHT,null);
+    }
+
+    @Test
     public void testCreateView(){
-        mWXText.createView(mParent, -1);
+        mWXText.createView();
         assertNotNull(mWXText.getHostView());
     }
 
