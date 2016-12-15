@@ -40,7 +40,8 @@
     [self registerModule:@"storage" withClass:NSClassFromString(@"WXStorageModule")];
     [self registerModule:@"clipboard" withClass:NSClassFromString(@"WXClipboardModule")];
     [self registerModule:@"globalEvent" withClass:NSClassFromString(@"WXGlobalEventModule")];
-	[self registerModule:@"canvas" withClass:NSClassFromString(@"WXCanvasModule")];
+    [self registerModule:@"canvas" withClass:NSClassFromString(@"WXCanvasModule")];
+    [self registerModule:@"picker" withClass:NSClassFromString(@"WXPickerModule")];
 }
 
 + (void)registerModule:(NSString *)name withClass:(Class)clazz
@@ -99,13 +100,16 @@
     WXAssert(name && clazz, @"Fail to register the component, please check if the parameters are correct ！");
     
     [WXComponentFactory registerComponent:name withClass:clazz withPros:properties];
-    
+    NSDictionary *dict = [WXComponentFactory componentMethodMapsWithName:name];
     if (properties) {
         NSMutableDictionary *props = [properties mutableCopy];
         props[@"type"] = name;
+        if ([dict[@"methods"] count]) {
+            [props addEntriesFromDictionary:dict];
+        }
         [[WXSDKManager bridgeMgr] registerComponents:@[props]];
     } else {
-        [[WXSDKManager bridgeMgr] registerComponents:@[name]];
+        [[WXSDKManager bridgeMgr] registerComponents:@[dict]];
     }
 }
 

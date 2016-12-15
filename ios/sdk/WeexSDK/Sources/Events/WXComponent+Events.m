@@ -122,8 +122,7 @@ if ([removeEventName isEqualToString:@#eventName]) {\
 
 - (void)_initEvents:(NSArray *)events
 {
-    NSArray *eventsCopy = [events copy];
-    for (NSString *addEventName in eventsCopy) {
+    for (NSString *addEventName in events) {
         [self _addEventOnMainThread:addEventName];
     }
 }

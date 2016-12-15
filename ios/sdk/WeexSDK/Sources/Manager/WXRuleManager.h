@@ -14,4 +14,5 @@
 + (WXRuleManager *)sharedInstance;
 - (void)addRule:(NSString *)type rule:(NSDictionary *)rule;
 - (WXThreadSafeMutableDictionary *)getRule:(NSString *)type;
+- (void)removeRule:(NSString *)type rule:(NSDictionary *)rule;
 @end

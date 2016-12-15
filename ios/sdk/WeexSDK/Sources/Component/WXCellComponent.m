@@ -22,7 +22,7 @@
     self = [super initWithRef:ref type:type styles:styles attributes:attributes events:events weexInstance:weexInstance];
     
     if (self) {
-        _async = YES;
+        _async = attributes[@"async"] ? [WXConvert BOOL:attributes[@"async"]] : YES;
         _lazyCreateView = YES;
         _isNeedJoinLayoutSystem = NO;
     }

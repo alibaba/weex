@@ -149,7 +149,7 @@
         NSString *parentRef = [ref toString];
         NSInteger insertIndex = [[index toNumber] integerValue];
         
-         WXLogDebug(@"callAddElement...%@, %@, %@, %ld", instanceIdString, parentRef, componentData, insertIndex);
+         WXLogDebug(@"callAddElement...%@, %@, %@, %ld", instanceIdString, parentRef, componentData, (long)insertIndex);
         
         return callAddElement(instanceIdString, parentRef, componentData, insertIndex);
     };

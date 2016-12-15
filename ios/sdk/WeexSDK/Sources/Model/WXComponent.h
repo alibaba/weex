@@ -11,6 +11,18 @@
 
 @class WXSDKInstance;
 
+/**
+ * @abstract the component callback , result can be string or dictionary.
+ * @discussion callback data to js, the id of callback function will be removed to save memory.
+ */
+typedef void (^WXCallback)(_Nonnull id result);
+
+/**
+ * @abstract the component callback , result can be string or dictionary.
+ * @discussion callback data to js, you can specify the keepAlive parameter to keep callback function id keepalive or not. If the keepAlive is true, it won't be removed unitl instance destroyed, so you can call it repetitious.
+ */
+typedef void (^WXKeepAliveCallback)(_Nonnull id result, BOOL keepAlive);
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface WXComponent : NSObject
@@ -214,6 +226,13 @@ NS_ASSUME_NONNULL_BEGIN
  * @discussion This will insert subcomponent's view to the view hierachy by default, it can be overrided to change the view hierachy. The method is called on the main thread.
  */
 - (void)insertSubview:(WXComponent *)subcomponent atIndex:(NSInteger)index;
+
+/**
+ * @abstract Tells the component that a subcomponent's view is about to be removed.
+ *
+ * @discussion The method is called on the main thread.
+ */
+- (void)willRemoveSubview:(WXComponent *)component;
 
 /**
  * @abstract Remove the component's view from its superview.

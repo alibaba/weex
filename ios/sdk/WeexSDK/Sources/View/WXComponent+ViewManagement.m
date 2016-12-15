@@ -48,6 +48,11 @@
     }
 }
 
+- (void)willRemoveSubview:(WXComponent *)component
+{
+    WXAssertMainThread();
+}
+
 - (void)removeFromSuperview
 {
     WXAssertMainThread();

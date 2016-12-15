@@ -47,7 +47,9 @@
     [object animation:component args:@{@"duration":@500, @"timingFunction":@"ease-in-out", @"styles":@{@"transform":@"rotate(90deg)"}} callback:nil];
     [TestSupportUtils waitSecs:1];
     
-    XCTAssert(CATransform3DEqualToTransform(component.layer.transform, CATransform3DMakeAffineTransform(CGAffineTransformRotate(CGAffineTransformIdentity, M_PI / 2))));
+    CGFloat angle = [(NSNumber *)[component.layer valueForKeyPath:@"transform.rotation.z"] floatValue];
+    
+    XCTAssert(fabs(angle - M_PI_2) < 0.00001);
 }
 
 - (void)testAnimationTranslate {

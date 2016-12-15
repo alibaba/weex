@@ -31,8 +31,19 @@ static WXRuleManager *_sharedInstance = nil;
     return _sharedInstance;
 }
 
-- (void)addRule:(NSString*)type rule:(NSDictionary *)rule {
-    
+- (void)removeRule:(NSString *)type rule:(NSDictionary *)rule
+{
+    if ([type isEqualToString:@"fontFace"]) {
+        if (rule[@"fontFamily"]) {
+            [_fontStorage removeObjectForKey:rule[@"fontFamily"]];
+        } else {
+            [_fontStorage removeAllObjects];
+        }
+    }
+}
+
+- (void)addRule:(NSString*)type rule:(NSDictionary *)rule
+{
     if ([type isEqualToString:@"fontFace"] && [rule[@"src"] isKindOfClass:[NSString class]]) {
         if (rule[@"src"] && rule[@"fontFamily"] && ![WXUtility isBlankString:rule[@"src"]]) {
             NSString *ruleSrc = [WXConvert NSString:rule[@"src"]];
@@ -84,13 +95,13 @@ static WXRuleManager *_sharedInstance = nil;
             
             __weak typeof(self) weakSelf = self;
             [WXUtility getIconfont:fontURL completion:^(NSURL * _Nonnull url, NSError * _Nullable error) {
-                if (!error && !url) {
+                if (!error && url) {
                     // load success
                     NSMutableDictionary * dictForFontFamily = [weakSelf.fontStorage objectForKey:rule[@"fontFamily"]];
                     [dictForFontFamily setObject:url forKey:@"localSrc"];
                     [weakSelf.fontStorage setObject:url forKey: dictForFontFamily];
                 } else {
-                     //there was some errors during loading
+                    //there was some errors during loading
                     WXLogError(@"load font failed %@",error.description);
                 }
             }];

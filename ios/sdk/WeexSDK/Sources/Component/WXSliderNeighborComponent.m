@@ -190,7 +190,6 @@
 - (NSInteger)circularCarouselItemCount
 {
     NSInteger count = 0;
-    //slightly arbitrary number, chosen for aesthetic reasons
     CGFloat spacing = [self valueForOption:WXSliderNeighborOptionSpacing withDefault:1.0];
     CGFloat width = _vertical ? self.bounds.size.height: self.bounds.size.width;
     count = MIN(MAX_VISIBLE_ITEMS, MAX(12, ceil(width / (spacing * _itemWidth)) * M_PI));
@@ -312,8 +311,6 @@
     
     //enable/disable interaction
     view.superview.userInteractionEnabled = (!_centerItemWhenSelected || index == self.currentItemIndex);
-    
-    //account for retina
     view.superview.layer.rasterizationScale = [UIScreen mainScreen].scale;
     
     [view layoutIfNeeded];
@@ -341,8 +338,6 @@
     }
     showBackfaces = !![self valueForOption:WXSliderNeighborOptionShowBackfaces withDefault:showBackfaces];
     
-    //we can't just set the layer.doubleSided property because it doesn't block interaction
-    //instead we'll calculate if the view is front-facing based on the transform
     view.superview.hidden = !(showBackfaces ?: (transform.m33 > 0.0));
 }
 
@@ -1463,16 +1458,16 @@ NSComparisonResult sliderNeighorCompareViewDepth(UIView *view1, UIView *view2, W
     if (!subcomponent->_lazyCreateView || (self->_lazyCreateView && [self isViewLoaded])) {
         UIView *view = subcomponent.view;
         
-        if(index < 0) {
-            [self.items addObject:view];
-        } else {
-            [self.items insertObject:view atIndex:index];
-        }
-        
         WXSliderNeighborView *sliderView = (WXSliderNeighborView *)self.view;
         if ([view isKindOfClass:[WXIndicatorView class]]) {
             [sliderView addSubview:view];
             return;
+        }
+        
+        if(index < 0) {
+            [self.items addObject:view];
+        } else {
+            [self.items insertObject:view atIndex:index];
         }
         
         subcomponent.isViewFrameSyncWithCalculated = NO;
@@ -1532,7 +1527,7 @@ NSComparisonResult sliderNeighorCompareViewDepth(UIView *view1, UIView *view2, W
     }
     
     [self.sliderView setCurrentItemIndex:_index];
-    [self updateSliderPage];
+    [self updateSliderPage:YES];
 }
 
 #pragma mark styles update
@@ -1648,18 +1643,9 @@ NSComparisonResult sliderNeighorCompareViewDepth(UIView *view1, UIView *view2, W
     if (CGRectIsNull(_itemRect)) {
         _itemRect = view.frame;
     }
-    
-    CGAffineTransform transfrom = CGAffineTransformIdentity;
-    if (index != [self.sliderView currentItemIndex]) {
-        
-//        transfrom = CGAffineTransformConcat(transfrom,CGAffineTransformMakeScale((1-self->neighborSpace/_itemRect.size.width), 1.0));
-        
-        view.transform = CGAffineTransformScale(transfrom, self->neighborScale, self->neighborScale);
-        view.alpha = self->neighborAlpha;
-    } else {
-        view.transform = CGAffineTransformScale(transfrom, 0.85, 0.9);
+    if (index == [self.items count] - 1) {
+        [self updateSliderPage:NO];
     }
-    
     
     return view;
 }
@@ -1677,7 +1663,7 @@ NSComparisonResult sliderNeighorCompareViewDepth(UIView *view1, UIView *view2, W
 
 - (void)sliderNeighborDidEndScrollingAnimation:(WXSliderNeighborView *)sliderNeighbor
 {
-        [self updateSliderPage];
+    [self updateSliderPage:YES];
 }
 
 - (void)sliderNeighbor:(WXSliderNeighborView *)sliderView didScrollToItemAtIndex:(NSInteger)index
@@ -1700,40 +1686,26 @@ NSComparisonResult sliderNeighorCompareViewDepth(UIView *view1, UIView *view2, W
     }
 }
 
-- (CGFloat)sliderNeighbor:(WXSliderNeighborView *)sliderNeighbor valueForOption:(WXSliderNeighborOption)option withDefault:(CGFloat)value
+- (void)updateSliderPage:(BOOL)animate
 {
-    switch (option) {
-        case WXSliderNeighborOptionSpacing:
-            return (1+self->neighborSpace/_sliderView.itemWidth/1.5);
-            break;
-            
-        default:
-            break;
-    }
-    
-    return  value;
-}
-
-- (void)updateSliderPage
-{
-    UIView * currentView  = [self.sliderView itemViewAtIndex:[_sliderView currentItemIndex]];
-    UIView * lastView  = [self.sliderView itemViewAtIndex:[_sliderView lastItemIndex]];
-    UIView * nextView  = [self.sliderView itemViewAtIndex:[_sliderView nextItemIndex]];
+    __block UIView * currentView  = [self.sliderView itemViewAtIndex:[_sliderView currentItemIndex]];
+    __block UIView * lastView  = [self.sliderView itemViewAtIndex:[_sliderView lastItemIndex]];
+    __block UIView * nextView  = [self.sliderView itemViewAtIndex:[_sliderView nextItemIndex]];
     
     __block CGAffineTransform transfrom = CGAffineTransformIdentity;
     float duration = 0;
     __weak typeof(self) weakSelf = self;
-    if ((self->neighborScale - 0) > CGFLOAT_MIN) {
+    if (animate) {
         duration = 0.3;
     }
+    
     [UIView animateWithDuration:duration animations:^{
         __strong typeof(self) strongSelf = weakSelf;
         if (strongSelf) {
             currentView.alpha = 1.0;
             
             if (fabs(strongSelf->neighborScale - 0) > CGFLOAT_MIN) {
-                transfrom = CGAffineTransformConcat(transfrom,CGAffineTransformMakeScale(0.88, 0.9));
-               
+                transfrom = CGAffineTransformConcat(transfrom,CGAffineTransformMakeScale(0.9, 0.9));
             }
             currentView.transform = transfrom;
             transfrom = CGAffineTransformIdentity;
@@ -1742,11 +1714,11 @@ NSComparisonResult sliderNeighorCompareViewDepth(UIView *view1, UIView *view2, W
                 strongSelf->neighborScale = 0.8;
             }
             
+            CGFloat tx = 0.5*_itemRect.size.width*((1-self->neighborScale)+(1-0.9))-self->neighborSpace;
             transfrom = CGAffineTransformConcat(transfrom, CGAffineTransformMakeScale(strongSelf->neighborScale, strongSelf->neighborScale));
-            lastView.transform = transfrom;
-            nextView.transform = transfrom;
+            nextView.transform = CGAffineTransformConcat(transfrom,  CGAffineTransformMakeTranslation(-tx, 0));
+            lastView.transform = CGAffineTransformConcat(transfrom,  CGAffineTransformMakeTranslation(tx, 0));
             lastView.alpha = strongSelf->neighborAlpha;
-            
             nextView.alpha = strongSelf->neighborAlpha;
         }
     }];

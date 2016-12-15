@@ -425,6 +425,19 @@
     }
 }
 
+- (void)willRemoveSubview:(WXComponent *)component
+{
+    UIView *view = component.view;
+    
+    if(self.childrenView && [self.childrenView containsObject:view]){
+        [self.childrenView removeObject:view];
+    }
+    
+    WXSliderView *sliderView = (WXSliderView *)_view;
+    [sliderView removeItemView:view];
+    [sliderView setCurrentIndex:0];
+}
+
 - (void)updateAttributes:(NSDictionary *)attributes
 {
     if (attributes[@"autoPlay"]) {

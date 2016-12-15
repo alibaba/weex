@@ -131,7 +131,6 @@
     if (!CGRectEqualToRect(newFrame, _calculatedFrame)) {
         isFrameChanged = YES;
         _calculatedFrame = newFrame;
-        [self _recomputeBorderRadius];
         [dirtyComponents addObject:self];
     }
     

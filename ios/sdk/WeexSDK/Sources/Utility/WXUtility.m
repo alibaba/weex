@@ -25,6 +25,8 @@
 
 void WXPerformBlockOnMainThread(void (^ _Nonnull block)())
 {
+    if (!block) return;
+    
     if ([NSThread isMainThread]) {
         block();
     } else {
@@ -36,6 +38,8 @@ void WXPerformBlockOnMainThread(void (^ _Nonnull block)())
 
 void WXPerformBlockSyncOnMainThread(void (^ _Nonnull block)())
 {
+    if (!block) return;
+    
     if ([NSThread isMainThread]) {
         block();
     } else {
@@ -43,6 +47,11 @@ void WXPerformBlockSyncOnMainThread(void (^ _Nonnull block)())
             block();
         });
     }
+}
+
+void WXPerformBlockOnThread(void (^ _Nonnull block)(), NSThread *thread)
+{
+    [WXUtility performBlock:block onThread:thread];
 }
 
 void WXSwizzleInstanceMethod(Class class, SEL original, SEL replaced)
@@ -128,6 +137,26 @@ CGPoint WXPixelPointResize(CGPoint value)
 }
 static BOOL WXNotStat;
 @implementation WXUtility
+
++ (void)performBlock:(void (^)())block onThread:(NSThread *)thread
+{
+    if (!thread || !block) return;
+    
+    if ([NSThread currentThread] == thread) {
+        block();
+    } else {
+        [self performSelector:@selector(_performBlock:)
+                     onThread:thread
+                   withObject:[block copy]
+                waitUntilDone:NO];
+    }
+}
+
++ (void)_performBlock:(void (^)())block
+{
+    block();
+}
+
 
 + (NSDictionary *)getEnvironment
 {
@@ -320,19 +349,23 @@ static BOOL WXNotStat;
     WXThreadSafeMutableDictionary *fontFamilyDic = fontFace[fontFamily];
     if (fontFamilyDic[@"localSrc"]){
         NSString *fpath = [((NSURL*)fontFamilyDic[@"localSrc"]) path];
-        CGDataProviderRef fontDataProvider = CGDataProviderCreateWithFilename([fpath UTF8String]);
-        CGFontRef customfont = CGFontCreateWithDataProvider(fontDataProvider);
-        
-        CGDataProviderRelease(fontDataProvider);
-        NSString *fontName = (__bridge NSString *)CGFontCopyFullName(customfont);
-        CFErrorRef error;
-        CTFontManagerRegisterGraphicsFont(customfont, &error);
-        if (error){
-            CTFontManagerUnregisterGraphicsFont(customfont, &error);
+        if ([self isFileExist:fpath]) {
+            CGDataProviderRef fontDataProvider = CGDataProviderCreateWithFilename([fpath UTF8String]);
+            CGFontRef customfont = CGFontCreateWithDataProvider(fontDataProvider);
+            
+            CGDataProviderRelease(fontDataProvider);
+            NSString *fontName = (__bridge NSString *)CGFontCopyFullName(customfont);
+            CFErrorRef error;
             CTFontManagerRegisterGraphicsFont(customfont, &error);
+            if (error){
+                CTFontManagerUnregisterGraphicsFont(customfont, &error);
+                CTFontManagerRegisterGraphicsFont(customfont, &error);
+            }
+            CGFontRelease(customfont);
+            font = [UIFont fontWithName:fontName size:fontSize];
+        }else {
+            [[WXRuleManager sharedInstance] removeRule:@"fontFace" rule:@{@"fontFamily": fontFamily}];
         }
-        CGFontRelease(customfont);
-        font = [UIFont fontWithName:fontName size:fontSize];
     }
     if (!font) {
         if (fontFamily) {

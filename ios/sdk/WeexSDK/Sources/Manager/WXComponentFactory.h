@@ -25,6 +25,10 @@
  */
 + (void)registerComponents:(NSArray *)components;
 
++ (NSMutableDictionary *)componentMethodMapsWithName:(NSString *)name;
+
++ (SEL)methodWithComponentName:(NSString *)name withMethod:(NSString *)method;
+
 /**
  * @abstract Unregister all the components
  */

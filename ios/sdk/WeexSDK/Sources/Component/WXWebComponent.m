@@ -46,6 +46,10 @@
 
 @implementation WXWebComponent
 
+WX_EXPORT_METHOD(@selector(goBack))
+WX_EXPORT_METHOD(@selector(reload))
+WX_EXPORT_METHOD(@selector(goForward))
+
 - (instancetype)initWithRef:(NSString *)ref type:(NSString *)type styles:(NSDictionary *)styles attributes:(NSDictionary *)attributes events:(NSArray *)events weexInstance:(WXSDKInstance *)weexInstance
 {
     if (self = [super initWithRef:ref type:type styles:styles attributes:attributes events:events weexInstance:weexInstance]) {

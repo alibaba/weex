@@ -46,19 +46,16 @@
     module.exports = {
         methods: {
             goback: function() {
-                var $webview = require('@weex-module/webview');
                 var webElement = this.$el('webview');
-                $webview.goBack(webElement.ref);           
-             },
+                webElement.goBack();           
+            },
             goforward: function() {
-                var $webview = require('@weex-module/webview');
-                var webElement = this.$el('webview');
-                $webview.goForward(webElement.ref); 
+                var webElement = this.$el('webview');   
+                webElement.goForward();
             },
             refresh: function() {
-                var $webview = require('@weex-module/webview');
-                var webElement = this.$el('webview');
-                $webview.reload(webElement.ref); 
+                var webElement = this.$el('webview');   
+                webElement.reload();
             },
             startload: function(e) {
 

@@ -82,6 +82,12 @@ extern void WXPerformBlockOnMainThread( void (^ _Nonnull block)());
 extern void WXPerformBlockSyncOnMainThread( void (^ _Nonnull block)());
 
 /**
+ * @abstract execute action block on the specific thread.
+ *
+ */
+extern void WXPerformBlockOnThread(void (^ _Nonnull block)(), NSThread *_Nonnull thread);
+
+/**
  * @abstract swizzling methods.
  *
  */
@@ -92,6 +98,8 @@ extern void WXSwizzleInstanceMethodWithBlock(_Nonnull Class class, _Nonnull SEL 
 extern _Nonnull SEL WXSwizzledSelectorForSelector(_Nonnull SEL selector);
 
 @interface WXUtility : NSObject
+
++ (void)performBlock:(void (^_Nonnull)())block onThread:(NSThread *_Nonnull)thread;
 
 + (void)setNotStat:(BOOL)notStat;
 + (BOOL)notStat;

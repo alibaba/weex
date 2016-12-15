@@ -60,6 +60,9 @@ typedef enum : NSUInteger {
 @end
 
 @implementation WXModalUIModule
+{
+    NSMutableSet *_alertViews;
+}
 
 @synthesize weexInstance;
 
@@ -67,6 +70,26 @@ WX_EXPORT_METHOD(@selector(toast:))
 WX_EXPORT_METHOD(@selector(alert:callback:))
 WX_EXPORT_METHOD(@selector(confirm:callback:))
 WX_EXPORT_METHOD(@selector(prompt:callback:))
+
+- (instancetype)init
+{
+    if (self = [super init]) {
+        _alertViews = [NSMutableSet setWithCapacity:1];
+    }
+    
+    return self;
+}
+
+- (void)dealloc
+{
+    if (WX_SYS_VERSION_LESS_THAN(@"8.0")) {
+        for (UIAlertView *alerView in _alertViews) {
+            alerView.delegate = nil;
+        }
+    }
+    
+    [_alertViews removeAllObjects];
+}
 
 #pragma mark - Toast
 
@@ -272,6 +295,7 @@ static const CGFloat WXToastDefaultPadding = 30.0;
         textField.placeholder = defaultText;
     }
     objc_setAssociatedObject(alertView, &WXModalCallbackKey, [callback copy], OBJC_ASSOCIATION_COPY_NONATOMIC);
+    [_alertViews addObject:alertView];
     
     WXPerformBlockOnMainThread(^{
         [alertView show];
@@ -283,7 +307,7 @@ static const CGFloat WXToastDefaultPadding = 30.0;
     WXModuleCallback callback = objc_getAssociatedObject(alertView, &WXModalCallbackKey);
     if (!callback) return;
     
-    NSString *result = @"";
+    id result = @"";
     switch (alertView.tag) {
         case WXModalTypeAlert: {
             result = @"";
@@ -297,13 +321,15 @@ static const CGFloat WXToastDefaultPadding = 30.0;
         case WXModalTypePrompt: {
             NSString *clickTitle = [alertView buttonTitleAtIndex:buttonIndex];
             NSString *text= [[alertView textFieldAtIndex:0] text] ?: @"";
-            result = [WXUtility JSONString:@{ @"result": clickTitle, @"data": text }];
+            result = @{ @"result": clickTitle, @"data": text };
         }
         default:
             break;
     }
     
     callback(result);
+    
+    [_alertViews removeObject:alertView];
 }
 
 - (NSString*)stringValue:(id)value

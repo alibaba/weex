@@ -63,9 +63,10 @@ WX_NUMBER_CONVERT(NSUInteger, unsignedIntegerValue)
         return value;
     } else if([value isKindOfClass:[NSNumber class]]){
         return [((NSNumber *)value) stringValue];
-    } else {
+    } else if (value != nil) {
         WXLogError(@"Convert Error:%@ can not be converted to string", value);
     }
+    
     return nil;
 }
 
