@@ -218,29 +218,46 @@ static dispatch_queue_t WXImageUpdateQueue;
             WXLogDebug(@"Updating image:%@, component:%@", self.imageSrc, self.ref);
             NSDictionary *userInfo = @{@"imageQuality":@(weakSelf.imageQuality), @"imageSharp":@(weakSelf.imageSharp)};
             
-            dispatch_async(dispatch_get_main_queue(), ^{
-                weakSelf.imageOperation = [[weakSelf imageLoader] downloadImageWithURL:imageSrc imageFrame:weakSelf.calculatedFrame userInfo:userInfo completed:^(UIImage *image, NSError *error, BOOL finished) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        __strong typeof(self) strongSelf = weakSelf;
-                        
-                        if (weakSelf.imageLoadEvent) {
-                            [strongSelf fireEvent:@"load" params:@{ @"success": error? @"false" : @"true"}];
-                        }
-                        if (error) {
-                            downloadFailed(imageSrc, error);
-                            return ;
-                        }
-                        
-                        if (![imageSrc isEqualToString:strongSelf.imageSrc]) {
-                            return ;
-                        }
-                        
-                        if ([strongSelf isViewLoaded]) {
-                            ((UIImageView *)strongSelf.view).image = image;
-                        }
-                    });
-                }];
-            });
+            if ([weakSelf.imageSrc rangeOfString:@"/Users/"].location !=NSNotFound ||
+                [weakSelf.imageSrc rangeOfString:@"/var/"].location !=NSNotFound)
+            {
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    
+                    __strong typeof(self) strongSelf = weakSelf;
+                    
+                    UIImage *img = [[UIImage alloc]initWithContentsOfFile:weakSelf.imageSrc];
+                    ((UIImageView *)strongSelf.view).image = img;
+                    
+                });
+                
+            }
+            else{
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    weakSelf.imageOperation = [[weakSelf imageLoader] downloadImageWithURL:imageSrc imageFrame:weakSelf.calculatedFrame userInfo:userInfo completed:^(UIImage *image, NSError *error, BOOL finished) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            __strong typeof(self) strongSelf = weakSelf;
+                            
+                            if (weakSelf.imageLoadEvent) {
+                                [strongSelf fireEvent:@"load" params:@{ @"success": error? @"false" : @"true"}];
+                            }
+                            if (error) {
+                                downloadFailed(imageSrc, error);
+                                return ;
+                            }
+                            
+                            if (![imageSrc isEqualToString:strongSelf.imageSrc]) {
+                                return ;
+                            }
+                            
+                            if ([strongSelf isViewLoaded]) {
+                                ((UIImageView *)strongSelf.view).image = image;
+                            }
+                        });
+                    }];
+                });
+            }
         }
         if (!weakSelf.imageSrc && !weakSelf.placeholdSrc) {
             dispatch_async(dispatch_get_main_queue(), ^{
