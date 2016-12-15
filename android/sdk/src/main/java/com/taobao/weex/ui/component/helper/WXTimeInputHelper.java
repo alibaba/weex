@@ -202,184 +202,108 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package com.taobao.weex.common;
+package com.taobao.weex.ui.component.helper;
 
-public class Constants {
-  public interface Orientation{
-    int HORIZONTAL = 0;
-    int VERTICAL = 1;
-  }
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.DialogInterface;
+import android.widget.DatePicker;
+import android.widget.TextView;
+import android.widget.TimePicker;
 
-  public interface Name {
-    String HREF = "href";
-    String WIDTH = "width";
-    String MIN_WIDTH = "minWidth";
-    String MAX_WIDTH = "maxWidth";
-    String HEIGHT = "height";
-    String MIN_HEIGHT = "minHeight";
-    String MAX_HEIGHT = "maxHeight";
-    String ALIGN_ITEMS = "alignItems";
-    String ALIGN_SELF = "alignSelf";
-    String FLEX = "flex";
-    String FLEX_DIRECTION = "flexDirection";
-    String JUSTIFY_CONTENT = "justifyContent";
-    String FLEX_WRAP = "flexWrap";
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
-    String MARGIN = "margin";
-    String MARGIN_TOP = "marginTop";
-    String MARGIN_LEFT = "marginLeft";
-    String MARGIN_RIGHT = "marginRight";
-    String MARGIN_BOTTOM = "marginBottom";
-    String PADDING = "padding";
-    String PADDING_TOP = "paddingTop";
-    String PADDING_LEFT = "paddingLeft";
-    String PADDING_RIGHT = "paddingRight";
-    String PADDING_BOTTOM = "paddingBottom";
+/**
+ * Created by moxun on 16/10/12.
+ */
 
-    String LEFT = "left";
-    String TOP = "top";
-    String RIGHT = "right";
-    String BOTTOM = "bottom";
+public class WXTimeInputHelper {
+    public static void pickDate(String max, String min, final TextView target) {
+        target.setEnabled(false);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(parseDate(target.getText().toString()));
+        final DatePickerDialog dialog = new DatePickerDialog(
+                target.getContext(),
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        int realMonth = monthOfYear + 1;
+                        String realMonthString = realMonth < 10 ? "0" + realMonth : String.valueOf(realMonth);
+                        String result = year + "-" + realMonthString + "-" + dayOfMonth;
+                        target.setText(result);
+                        target.setEnabled(true);
+                    }
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+        );
 
+        final DatePicker datePicker = dialog.getDatePicker();
+        if (min != null) {
+            datePicker.setMinDate(parseDate(min).getTime());
+        }
+        if (max != null) {
+            datePicker.setMaxDate(parseDate(max).getTime());
+        }
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                target.setEnabled(true);
+            }
+        });
+        dialog.show();
+    }
 
-    String BACKGROUND_COLOR = "backgroundColor";
-    String OPACITY = "opacity";
-    String BORDER_RADIUS = "borderRadius";
-    String BORDER_WIDTH = "borderWidth";
-    String BORDER_COLOR = "borderColor";
-    String BORDER_STYLE = "borderStyle";
-    String BORDER_TOP_WIDTH = "borderTopWidth";
-    String BORDER_RIGHT_WIDTH = "borderRightWidth";
-    String BORDER_BOTTOM_WIDTH = "borderBottomWidth";
-    String BORDER_LEFT_WIDTH = "borderLeftWidth";
-    String BORDER_TOP_COLOR = "borderTopColor";
-    String BORDER_RIGHT_COLOR = "borderRightColor";
-    String BORDER_BOTTOM_COLOR = "borderBottomColor";
-    String BORDER_LEFT_COLOR = "borderLeftColor";
-    String BORDER_TOP_LEFT_RADIUS = "borderTopLeftRadius";
-    String BORDER_TOP_RIGHT_RADIUS = "borderTopRightRadius";
-    String BORDER_BOTTOM_RIGHT_RADIUS = "borderBottomRightRadius";
-    String BORDER_BOTTOM_LEFT_RADIUS = "borderBottomLeftRadius";
-    String BORDER_RIGHT_STYLE = "borderRightStyle";
-    String BORDER_BOTTOM_STYLE = "borderBottomStyle";
-    String BORDER_LEFT_STYLE = "borderLeftStyle";
-    String BORDER_TOP_STYLE = "borderTopStyle";
+    public static void pickTime(final TextView target) {
+        target.setEnabled(false);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(parseTime(target.getText().toString()));
+        TimePickerDialog dialog = new TimePickerDialog(
+                target.getContext(),
+                new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        String h = hourOfDay < 10 ? "0" + hourOfDay : String.valueOf(hourOfDay);
+                        String m = minute < 10 ? "0" + minute : String.valueOf(minute);
+                        target.setText(h + ":" + m);
+                        target.setEnabled(true);
+                    }
+                },
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE),
+                false
+        );
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                target.setEnabled(true);
+            }
+        });
+        dialog.show();
+    }
 
-    String POSITION = "position";
+    private static Date parseDate(String s) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        try {
+            return format.parse(s);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return new Date();
+    }
 
-    String TEXT_DECORATION = "textDecoration";
-    String TEXT_ALIGN = "textAlign";
-    String FONT_WEIGHT = "fontWeight";
-    String FONT_STYLE = "fontStyle";
-    String FONT_SIZE = "fontSize";
-    String COLOR = "color";
-    String LINES = "lines";
-    String FONT_FAMILY = "fontFamily";
-    String TEXT_OVERFLOW = "textOverflow";
-    String ELLIPSIS = "ellipsis";
-    String LINE_HEIGHT ="lineHeight";
-    String DISABLED = "disabled";
-    String VALUE = "value";
-    String IMAGE_QUALITY = "imageQuality";
-    String QUALITY = "quality";
-    String SRC = "src";
-    String PLACE_HOLDER ="placeHolder";
-    String RESIZE_MODE = "resizeMode";
-    String SHOW_INDICATORS = "showIndicators";
-    String AUTO_PLAY = "autoPlay";
-    String SHOW_SCROLLBAR = "showScrollbar";
-    String SCROLL_DIRECTION = "scrollDirection";
-    String SCOPE = "scope";
-    String LOADMORERETRY = "loadmoreretry";
-    String LOADMOREOFFSET = "loadmoreoffset";
-    String RECYCLE_IMAGE = "recycleImage";
-    String OVERFLOW = "overflow";
-    String TYPE = "type";
-    String PLACEHOLDER = "placeholder";
-    String PLACEHOLDER_COLOR = "placeholderColor";
-    String AUTOFOCUS = "autofocus";
-    String SINGLELINE = "singleline";
-    String MAX_LENGTH = "maxLength";
-    String MAXLENGTH ="maxlength";
-    String ROWS = "rows";
-    String CHECKED = "checked";
-    String VISIBILITY = "visibility";
-    String ITEM_COLOR = "itemColor";
-    String ITEM_SELECTED_COLOR = "itemSelectedColor";
-    String ITEM_SIZE = "itemSize";
-    String DISPLAY = "display";
-    String SHOW_LOADING = "show-loading";
-    String SUFFIX = "suffix";
-    String RESIZE = "resize";
-    String IMAGE_SHARPEN = "imageSharpen";
-    String SHARPEN = "sharpen";
-    String PREFIX = "prefix";
-    String INDEX = "index";
-    String INTERVAL = "interval";
-    String PLAY_STATUS = "playStatus";
-    String FONT_FACE = "fontFace";
-    String MAX = "max";
-    String MIN = "min";
-  }
-
-  public interface Value {
-
-    String STICKY = "sticky";
-    String FIXED = "fixed";
-    String LEFT = "left";
-    String RIGHT = "right";
-    String CENTER = "center";
-    String BOLD = "bold";
-    String ITALIC = "italic";
-    String ORIGINAL = "original";
-    String LOW = "low";
-    String NORMAL = "normal";
-    String HIGH = "high";
-    String VISIBLE = "visible";
-    String HIDDEN = "hidden";
-    String TEXT = "text";
-    String PASSWORD = "password";
-    String TEL = "tel";
-    String EMAIL = "email";
-    String URL = "url";
-    String DATE = "date";
-    String TIME = "time";
-    String DATETIME = "datetime";
-    String PLAY = "play";
-    String PAUSE = "pause";
-    String STOP = "stop";
-  }
-
-  public interface Event {
-
-    String CLICK = "click";
-    String APPEAR = "appear";
-    String DISAPPEAR = "disappear";
-    String LOADMORE = "loadmore";
-    String FOCUS = "focus";
-    String BLUR = "blur";
-    String INPUT = "input";
-    String VIEWAPPEAR = "viewappear";
-    String VIEWDISAPPEAR = "viewdisappear";
-    String START = "start";
-    String PAUSE = "pause";
-    String FINISH = "finish";
-    String FAIL = "fail";
-    String ERROR = "error";
-    String RECEIVEDTITLE = "receivedtitle";
-    String PAGEFINISH = "pagefinish";
-    String PAGESTART = "pagestart";
-    String ONREFRESH = "refresh";
-    String ONLOADING = "loading";
-    String ONLOAD = "load";
-    String CHANGE = "change";
-    String ONPULLING_DOWN = "pullingdown";
-  }
-
-  public interface Scheme{
-    String FILE = "file";
-    String HTTPS = "https";
-    String HTTP = "http";
-    String LOCAL = "local";
-  }
+    private static Date parseTime(String s) {
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        try {
+            return format.parse(s);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return new Date();
+    }
 }
