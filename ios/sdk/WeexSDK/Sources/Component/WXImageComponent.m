@@ -14,6 +14,7 @@
 #import "WXType.h"
 #import "WXConvert.h"
 #import "WXURLRewriteProtocol.h"
+#import "WXImageUtils.h"
 
 @interface WXImageView : UIImageView
 
@@ -34,6 +35,7 @@ static dispatch_queue_t WXImageUpdateQueue;
 
 @property (nonatomic, strong) NSString *imageSrc;
 @property (nonatomic, strong) NSString *placeholdSrc;
+@property (nonatomic, assign) CGFloat blurRadius;
 @property (nonatomic, assign) UIViewContentMode resizeMode;
 @property (nonatomic, assign) WXImageQuality imageQuality;
 @property (nonatomic, assign) WXImageSharp imageSharp;
@@ -57,6 +59,9 @@ static dispatch_queue_t WXImageUpdateQueue;
             _imageSrc = [[WXConvert NSString:attributes[@"src"]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         } else {
             WXLogWarning(@"image src is nil");
+        }
+        if (attributes[@"blur"]) {
+            _blurRadius = [WXConvert CGFloat:attributes[@"blur"]];
         }
         [self configPlaceHolder:attributes];
         _resizeMode = [WXConvert UIViewContentMode:attributes[@"resize"]];
@@ -109,6 +114,10 @@ static dispatch_queue_t WXImageUpdateQueue;
     if (attributes[@"src"]) {
         _imageSrc = [[WXConvert NSString:attributes[@"src"]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         [self updateImage];
+    }
+    
+    if (attributes[@"blur"]) {
+        _blurRadius = [WXConvert CGFloat:attributes[@"blur"]];
     }
     
     [self configPlaceHolder:attributes];
@@ -246,6 +255,9 @@ static dispatch_queue_t WXImageUpdateQueue;
         __weak typeof(self) weakSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
             weakSelf.imageOperation = [[weakSelf imageLoader] downloadImageWithURL:newURL imageFrame:weakSelf.calculatedFrame userInfo:userInfo completed:^(UIImage *image, NSError *error, BOOL finished) {
+                if (_blurRadius > 0 && image) {
+                    image = [WXImageUtils toGaussianBluredImage:image blurRadius:_blurRadius];
+                }
                 dispatch_async(dispatch_get_main_queue(), ^{
                     __strong typeof(self) strongSelf = weakSelf;
                     
