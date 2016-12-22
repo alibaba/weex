@@ -70,6 +70,7 @@
     "cubicbezier": "^0.1.1",
     "envd": "^0.1.1",
     "httpurl": "^0.1.1",
+    "iscroll": "^5.2.0",
     "lazyimg": "^0.1.3",
     "modals": "^0.1.6",
     "scroll-to": "0.0.2",

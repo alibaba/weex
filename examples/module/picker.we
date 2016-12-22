@@ -1,0 +1,36 @@
+<template>
+  <div class="container" onclick="pick"><text>选择日期:</text><text class="date" value="{{date}}"></text></div>
+</template>
+
+<script>
+  var picker = require('@weex-module/picker');
+  module.exports = {
+    data: {
+      date: ''
+    },
+    methods: {
+      pick: function() {
+        var data = ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"]
+        var self = this;
+        picker.pick(data, 0, function(index){
+          self.date = data[index]
+        })
+      }
+    }
+  }
+</script>
+
+<style>
+  .container{
+    padding: 100;
+  }
+  .date{
+    margin-top: 10px;
+    width: 200;
+    height: 40;
+    border-width: 1;
+    border-color: #34495e;
+
+
+  }
+</style>
