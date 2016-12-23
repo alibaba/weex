@@ -1,7 +1,3 @@
-.weex-mask-placeholder {
-  height: 0;
-}
-
 .weex-mask {
   positon: fixed;
   width: 100%;

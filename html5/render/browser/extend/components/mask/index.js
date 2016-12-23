@@ -9,22 +9,18 @@ const proto = {
     const node = document.createElement('div')
     node.classList.add('weex-mask')
     node.classList.add('weex-container')
-    this.placeholder = document.createElement('div')
-    this.placeholder.classList.add('weex-mask-placeholder')
+    node.style.visibility = 'hidden'
     return node
   },
 
   onAppend () {
     Component.prototype.onAppend.call(this)
-    this.node.parentNode.insertBefore(this.placeholder, this.node)
     const ct = this.getComponentManager().getWeexInstance().getRoot()
     ct.insertBefore(this.node, ct.firstChild)
     this.node.style.position = 'fixed'
-  },
-
-  onRemove () {
-    this.placeholder.parentNode.removeChild(this.placeholder)
-    this.placeholder = null
+    setTimeout(() => {
+      this.node.style.visibility = 'visible'
+    }, 0)
   }
 }
 
@@ -48,6 +44,7 @@ const style = {
         const a = val
         this.node.style.backgroundColor = `rgba(${r}, ${g}, ${b}, ${a})`
       }
+      this.node.style.visibility = 'visible'
     }, 0)
   }
 }
