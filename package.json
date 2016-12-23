@@ -111,7 +111,7 @@
     "webpack": "^1.13.1",
     "weex-components": "^0.2.0",
     "weex-loader": "^0.4.0",
-    "weex-vdom-tester": "^0.1.2",
+    "weex-vdom-tester": "^0.2.0",
     "wwp": "^0.3.0"
   }
 }

@@ -9,6 +9,7 @@ global.callAddElement = function () {}
 
 import App from '../../../../frameworks/legacy/app'
 import { Element } from '../../../../runtime/vdom'
+import CallbackManager from '../../../../runtime/callback-manager'
 
 describe('App Instance', () => {
   const oriCallNative = global.callNative
@@ -35,7 +36,8 @@ describe('App Instance', () => {
   })
 
   beforeEach(() => {
-    app = new App(Date.now() + '')
+    const id = Date.now() + ''
+    app = new App(id, {}, new CallbackManager(id))
   })
 
   after(() => {

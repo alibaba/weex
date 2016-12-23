@@ -1,8 +1,9 @@
 import { expect } from 'chai'
 import sinon from 'sinon'
 
-// import '../../../shared'
-import { MessageEvent, BroadcastChannel } from '../../../shared/BroadcastChannel'
+import service from '../../../services/broadcast-channel/index'
+import { MessageEvent } from '../../../services/broadcast-channel/message-event'
+const { BroadcastChannel } = service.create('foo')
 
 describe('BroadcastChannel', () => {
   it('is a function', () => {

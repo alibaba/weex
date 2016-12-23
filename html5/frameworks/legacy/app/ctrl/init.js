@@ -15,7 +15,6 @@ import {
   register
 } from '../bundle/index'
 import { updateActions } from './misc'
-import { BroadcastChannel } from '../../../../shared/BroadcastChannel'
 
 /**
  * Init an app by run code witgh data
@@ -23,7 +22,7 @@ import { BroadcastChannel } from '../../../../shared/BroadcastChannel'
  * @param  {string} code
  * @param  {object} data
  */
-export function init (app, code, data) {
+export function init (app, code, data, services) {
   console.debug('[JS Framework] Intialize an instance with:\n', data)
   let result
 
@@ -50,14 +49,6 @@ export function init (app, code, data) {
   /* istanbul ignore next */
   const bundleRequireModule = name => app.requireModule(removeWeexPrefix(name))
 
-  const appBroadcastChannel = name => {
-    const channel = new BroadcastChannel(name)
-    if (app.channels) {
-      app.channels[name] = channel
-    }
-    return channel
-  }
-
   const weexGlobalObject = {
     config: app.options,
     define: bundleDefine,
@@ -81,17 +72,17 @@ export function init (app, code, data) {
   else if (code) {
     functionBody = code.toString()
   }
-
   // wrap IFFE and use strict mode
   functionBody = `(function(global){"use strict"; ${functionBody} })(Object.create(this))`
 
   // run code and get result
   const { WXEnvironment } = global
+  const timerAPIs = {}
   /* istanbul ignore if */
   if (WXEnvironment && WXEnvironment.platform !== 'Web') {
     // timer APIs polyfill in native
     const timer = app.requireModule('timer')
-    const timerAPIs = {
+    Object.assign(timerAPIs, {
       setTimeout: (...args) => {
         const handler = function () {
           args[0](...args.slice(2))
@@ -112,77 +103,42 @@ export function init (app, code, data) {
       clearInterval: (n) => {
         timer.clearInterval(n)
       }
-    }
-
-    const fn = new Function(
-      'define',
-      'require',
-      'bootstrap',
-      'register',
-      'render',
-      '__weex_define__', // alias for define
-      '__weex_bootstrap__', // alias for bootstrap
-      '__weex_document__', // alias for bootstrap
-      '__weex_require__',
-      '__weex_viewmodel__',
-      'BroadcastChannel',
-      'weex',
-      'setTimeout',
-      'setInterval',
-      'clearTimeout',
-      'clearInterval',
-      functionBody
-    )
-
-    fn(
-      bundleDefine,
-      bundleRequire,
-      bundleBootstrap,
-      bundleRegister,
-      bundleRender,
-      bundleDefine,
-      bundleBootstrap,
-      bundleDocument,
-      bundleRequireModule,
-      bundleVm,
-      appBroadcastChannel,
-      weexGlobalObject,
-      timerAPIs.setTimeout,
-      timerAPIs.setInterval,
-      timerAPIs.clearTimeout,
-      timerAPIs.clearInterval)
+    })
   }
-  else {
-    const fn = new Function(
-      'define',
-      'require',
-      'bootstrap',
-      'register',
-      'render',
-      '__weex_define__', // alias for define
-      '__weex_bootstrap__', // alias for bootstrap
-      '__weex_document__', // alias for bootstrap
-      '__weex_require__',
-      '__weex_viewmodel__',
-      'BroadcastChannel',
-      'weex',
-      functionBody
-    )
-
-    fn(
-      bundleDefine,
-      bundleRequire,
-      bundleBootstrap,
-      bundleRegister,
-      bundleRender,
-      bundleDefine,
-      bundleBootstrap,
-      bundleDocument,
-      bundleRequireModule,
-      bundleVm,
-      BroadcastChannel,
-      weexGlobalObject)
-  }
+  // run code and get result
+  const globalObjects = Object.assign({
+    define: bundleDefine,
+    require: bundleRequire,
+    bootstrap: bundleBootstrap,
+    register: bundleRegister,
+    render: bundleRender,
+    __weex_define__: bundleDefine, // alias for define
+    __weex_bootstrap__: bundleBootstrap, // alias for bootstrap
+    __weex_document__: bundleDocument,
+    __weex_require__: bundleRequireModule,
+    __weex_viewmodel__: bundleVm,
+    weex: weexGlobalObject
+  }, timerAPIs, services)
+  callFunction(globalObjects, functionBody)
 
   return result
+}
+
+/**
+ * Call a new function body with some global objects.
+ * @param  {object} globalObjects
+ * @param  {string} code
+ * @return {any}
+ */
+function callFunction (globalObjects, body) {
+  const globalKeys = []
+  const globalValues = []
+  for (const key in globalObjects) {
+    globalKeys.push(key)
+    globalValues.push(globalObjects[key])
+  }
+  globalKeys.push(body)
+
+  const result = new Function(...globalKeys)
+  return result(...globalValues)
 }

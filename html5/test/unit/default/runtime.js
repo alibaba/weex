@@ -168,7 +168,7 @@ describe('framework entry', () => {
       expect(frameworks.xxx.createInstance.callCount).equal(1)
       expect(frameworks.yyy.createInstance.callCount).equal(0)
       expect(frameworks.Weex.createInstance.callCount).equal(0)
-      expect(frameworks.xxx.createInstance.firstCall.args).eql([
+      expect(frameworks.xxx.createInstance.firstCall.args.slice(0, 4)).eql([
         instanceId + '~',
         code,
         { bundleVersion: '0.3.1', env: {}},
@@ -191,7 +191,7 @@ describe('framework entry', () => {
       expect(frameworks.xxx.createInstance.callCount).equal(2)
       expect(frameworks.yyy.createInstance.callCount).equal(0)
       expect(frameworks.Weex.createInstance.callCount).equal(1)
-      expect(frameworks.Weex.createInstance.firstCall.args).eql([
+      expect(frameworks.Weex.createInstance.firstCall.args.slice(0, 4)).eql([
         instanceId + '~~~',
         code,
         { bundleVersion: undefined, env: {}},
@@ -212,7 +212,7 @@ describe('framework entry', () => {
       expect(frameworks.xxx.createInstance.callCount).equal(2)
       expect(frameworks.yyy.createInstance.callCount).equal(1)
       expect(frameworks.Weex.createInstance.callCount).equal(1)
-      expect(frameworks.yyy.createInstance.firstCall.args).eql([
+      expect(frameworks.yyy.createInstance.firstCall.args.slice(0, 4)).eql([
         instanceId + '~~~~',
         code,
         { bundleVersion: undefined, env: {}},
@@ -225,7 +225,7 @@ describe('framework entry', () => {
       expect(frameworks.xxx.createInstance.callCount).equal(2)
       expect(frameworks.yyy.createInstance.callCount).equal(1)
       expect(frameworks.Weex.createInstance.callCount).equal(2)
-      expect(frameworks.Weex.createInstance.secondCall.args).eql([
+      expect(frameworks.Weex.createInstance.secondCall.args.slice(0, 4)).eql([
         instanceId + '~~~~~',
         code,
         { bundleVersion: undefined, env: {}},
@@ -238,7 +238,7 @@ describe('framework entry', () => {
       expect(frameworks.xxx.createInstance.callCount).equal(2)
       expect(frameworks.yyy.createInstance.callCount).equal(1)
       expect(frameworks.Weex.createInstance.callCount).equal(3)
-      expect(frameworks.Weex.createInstance.thirdCall.args).eql([
+      expect(frameworks.Weex.createInstance.thirdCall.args.slice(0, 4)).eql([
         instanceId + '~~~~~~',
         code,
         { bundleVersion: undefined, env: {}},

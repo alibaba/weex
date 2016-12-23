@@ -11,6 +11,7 @@ import {
 import shared from '../../shared'
 import { Document, Element, Comment } from '../../runtime/vdom'
 import Listener from '../../runtime/listener'
+import CallbackManager from '../../runtime/callback-manager'
 
 // load framework
 import * as defaultFramework from '../../frameworks/legacy'
@@ -27,13 +28,16 @@ global.callAddElement = function (id, ref, json, index) {
   return callNativeHandler(id, [{ module: 'dom', method: 'addElement', args: [ref, json, index] }])
 }
 
+export { CallbackManager }
+
 // create test driver runtime
 export function createRuntime () {
   const config = {
     Document, Element, Comment, Listener,
     sendTasks (...args) {
       return callNativeHandler(...args)
-    }
+    },
+    CallbackManager
   }
 
   Document.Listener = Listener
