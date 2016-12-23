@@ -1,6 +1,6 @@
 <template>
 	<div style="flex-direction:column; background-color:#ffffff;width:750;height:600;border-width:0;">
-		<slider-neighbor style="width:750;height:400;" neighbor-scale="0.7" interval="3000" neighbor-alpha="0.8" auto-play="{{attr_auto_play}}">
+		<slider-neighbor style="width:750;height:400;" neighbor-scale="0.7" current-item-scale="0.85" neighbor-translation-tx="80" interval="3000" neighbor-alpha="0.8" auto-play="{{attr_auto_play}}">
 			<image style="width:650;background-color:#FFFFDF;height:400;" src="https://gw.alicdn.com/tps/TB1dzanMVXXXXXQXVXXXXXXXXXX-573-412.png"></image>
 			<image style="width:650;background-color:#FFFFDF;height:400;" src="https://gw.alicdn.com/tps/TB1p9CCMVXXXXa_XFXXXXXXXXXX-450-340.png"></image>
 			<image style="width:650;background-color:#FFFFDF;height:400;" src="https://gw.alicdn.com/tps/TB1zpSiMVXXXXchXFXXXXXXXXXX-448-338.png"></image>
