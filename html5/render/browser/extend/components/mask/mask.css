@@ -1,0 +1,10 @@
+.weex-mask-placeholder {
+  height: 0;
+}
+
+.weex-mask {
+  positon: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 999999999;
+}
