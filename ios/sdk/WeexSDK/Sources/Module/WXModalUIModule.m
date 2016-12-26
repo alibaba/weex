@@ -327,7 +327,12 @@ static const CGFloat WXToastDefaultPadding = 30.0;
             break;
     }
     
-    callback(result);
+    NSDictionary *dicResult = [WXUtility objectFromJSON:result];
+    if(!dicResult)
+    {
+        dicResult = @{};
+    }
+    callback(dicResult);
     
     [_alertViews removeObject:alertView];
 }
