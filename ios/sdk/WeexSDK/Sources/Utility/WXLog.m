@@ -41,6 +41,11 @@
 #define XCODE_COLORS_RESET_BG   XCODE_COLORS_ESCAPE_SEQ "bg;" // Clear any background color
 #define XCODE_COLORS_RESET      XCODE_COLORS_ESCAPE_SEQ ";"  // Clear any foreground or background color
 
+#ifdef DEBUG
+#define WXInnerLog(format, ...) printf("[%s] %s [第%d行] %s\n", __TIME__, __FUNCTION__, __LINE__, [[NSString stringWithFormat:format, ## __VA_ARGS__] UTF8String]);
+#else
+#define WXInnerLog(format, ...)
+#endif
 
 #ifdef DEBUG
 static const WXLogLevel defaultLogLevel = WXLogLevelLog;
@@ -149,7 +154,7 @@ static id<WXLogProtocol> _externalLog;
     [[WXSDKManager bridgeMgr] logToWebSocket:flagString message:message];
     
     if ([WXLog logLevel] & flag) {
-        NSLog(@"%@", logMessage);
+        WXInnerLog(@"%@", logMessage);
     }
 }
 
