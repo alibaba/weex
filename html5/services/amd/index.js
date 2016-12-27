@@ -48,10 +48,9 @@ const amdService = {
         // weex-vue-loader will generate no deps.
         // if (servMod.deps) {
         // }
-        if (servMod.cached) {
-          return servMod.cached
+        if (!servMod.cached) {
+          servMod.cached = servMod.factory()
         }
-        servMod.cached = servMod.factory()
         return servMod.cached
       }
     }
