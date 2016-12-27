@@ -17,6 +17,7 @@
     "location": false,
     "callNative": false,
     "callAddElement":false,
+    "callNativeModule": false,
     "callJS": false
   },
 

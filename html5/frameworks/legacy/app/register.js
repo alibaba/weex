@@ -59,7 +59,24 @@ export function initMethods (Vm, apis) {
   }
 }
 
-// for app
+/**
+ * Send module tasks
+ */
+function sendModuleTask (app, name, methodName, args) {
+  if (typeof callNativeModule === 'function') {
+    if (process.env.NODE_ENV === 'development') {
+      console.debug(`[JS Framework] callNativeModule ${name}#${methodName}`)
+    }
+    return callNativeModule(app.id, name, methodName, args, {}, '-1')
+  }
+  if (app && typeof app.callTasks === 'function') {
+    return app.callTasks({
+      module: name,
+      method: methodName,
+      args: args
+    })
+  }
+}
 
 /**
  * get a module of methods for an app instance
@@ -68,10 +85,19 @@ export function requireModule (app, name) {
   const methods = nativeModules[name]
   const target = {}
   for (const methodName in methods) {
-    target[methodName] = (...args) => app.callTasks({
-      module: name,
-      method: methodName,
-      args: args
+    Object.defineProperty(target, methodName, {
+      configurable: true,
+      enumerable: true,
+      get: function moduleGetter () {
+        return (...args) => {
+          return sendModuleTask(app, name, methodName, args)
+        }
+      },
+      set: function moduleSetter (value) {
+        if (typeof value === 'function') {
+          return sendModuleTask(app, name, methodName, [value])
+        }
+      }
     })
   }
   return target
