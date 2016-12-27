@@ -33,6 +33,10 @@ const amdService = {
         if (mod[name]) {
           console.warn(`already defined module: '${name}'`)
         }
+        if (typeof deps === 'function') {
+          factory = deps
+          deps = []
+        }
         mod[name] = { name, factory, cached: false, deps }
       },
 
@@ -45,12 +49,13 @@ const amdService = {
         if (!servMod) {
           return new Error(`module '${name}' is not defined.`)
         }
-        // weex-vue-loader will generate no deps.
-        // if (servMod.deps) {
-        // }
-        if (!servMod.cached) {
-          servMod.cached = servMod.factory()
+        if (servMod.cached) {
+          return servMod.cached
         }
+        const exports = {}
+        const module = { exports }
+        const ret = servMod.factory(require, exports, module)
+        servMod.cached = ret || module.exports
         return servMod.cached
       }
     }
