@@ -22,6 +22,7 @@ const amdService = {
     const mod = {}
     modules[id] = mod
     const amdObject = {
+
       /**
        * define a module.
        * @param  {String} name: module name.
@@ -53,14 +54,12 @@ const amdService = {
         }
         const exports = {}
         const module = { exports }
-        const ret = servMod.factory(require, exports, module)
+        const ret = servMod.factory(amdObject.require, exports, module)
         servMod.cached = ret || module.exports
         return servMod.cached
       }
     }
-    // add define and require to global.
-    amdObject.instance = { define: amdObject.define, require: amdObject.require }
-    return amdObject
+    return { instance: amdObject }
   },
 
   destroy: (id, env) => {
