@@ -108,6 +108,11 @@
 
 #pragma mark - WXBridgeProtocol
 
+- (void)executeJavascript:(NSString *)script
+{
+    [self callJSMethod:@"evalFramework" args:@[script]];
+}
+
 - (void)executeJSFramework:(NSString *)frameworkScript
 {
     [self callJSMethod:@"evalFramework" args:@[frameworkScript]];
