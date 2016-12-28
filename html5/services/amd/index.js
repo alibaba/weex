@@ -59,7 +59,7 @@ const amdService = {
       }
     }
     // add define and require to global.
-    amdObject.instance = { define, require }
+    amdObject.instance = { define: amdObject.define, require: amdObject.require }
     return amdObject
   },
 
