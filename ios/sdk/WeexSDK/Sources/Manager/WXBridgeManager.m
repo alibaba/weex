@@ -206,7 +206,7 @@ void WXPerformBlockOnBridgeThread(void (^block)())
 {
     if (!name || !serviceScriptUrl || !options) return;
     __weak typeof(self) weakSelf = self;
-    WXResourceRequest *request = [WXResourceRequest requestWithURL:serviceScriptUrl resourceType:WXResourceTypeMainBundle referrer:@"" cachePolicy:NSURLRequestUseProtocolCachePolicy];
+    WXResourceRequest *request = [WXResourceRequest requestWithURL:serviceScriptUrl resourceType:WXResourceTypeServiceBundle referrer:@"" cachePolicy:NSURLRequestUseProtocolCachePolicy];
     WXResourceLoader *mainBundleLoader = [[WXResourceLoader alloc] initWithRequest:request];;
     mainBundleLoader.onFinished = ^(WXResourceResponse *response, NSData *data) {
         __strong typeof(weakSelf) strongSelf = weakSelf;

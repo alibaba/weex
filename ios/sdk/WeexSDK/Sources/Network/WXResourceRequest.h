@@ -10,6 +10,7 @@
 
 typedef enum : NSUInteger {
     WXResourceTypeMainBundle,
+    WXResourceTypeServiceBundle,
     WXResourceTypeImage,
     WXResourceTypeFont,
     WXResourceTypeVideo,
