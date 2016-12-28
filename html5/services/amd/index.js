@@ -31,7 +31,7 @@ const amdService = {
        */
       define (name, deps, factory) {
         if (mod[name]) {
-          console.warn(`already defined module: '${name}'`)
+          console.warn(`[amdService] already defined module: '${name}'`)
         }
         if (typeof deps === 'function') {
           factory = deps
@@ -47,7 +47,7 @@ const amdService = {
       require (name) {
         const servMod = mod[name]
         if (!servMod) {
-          return new Error(`module '${name}' is not defined.`)
+          return console.warn(`[amdService] module '${name}' is not defined.`)
         }
         if (servMod.cached) {
           return servMod.cached
