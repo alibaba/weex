@@ -18,7 +18,22 @@ runtime.setNativeConsole()
 import Vm from '../../../frameworks/legacy/vm'
 import { clearModules, getModule } from '../../../frameworks/legacy/app/register'
 
+const testingEnv = {
+  scale: 2,
+  appVersion: '1.8.3',
+  deviceModel: 'x86_64',
+  appName: 'WeexDemo',
+  platform: 'iOS',
+  osVersion: '9.3',
+  weexVersion: '0.7.0',
+  deviceHeight: 1334,
+  logLevel: 'log',
+  deviceWidth: 750
+}
+const oriEnv = global.WXEnvironment
+global.WXEnvironment = testingEnv
 const framework = init(config)
+global.WXEnvironment = oriEnv
 
 function clearRefs (json) {
   delete json.ref

@@ -249,6 +249,21 @@ describe('parsing a bundle file', () => {
         )
         expect(result).instanceof(Error)
       })
+
+      it('with viewport config', () => {
+        bundle.bootstrap(
+          app,
+          '@weex-component/undefined',
+          {
+            viewport: { width: 640 }
+          }
+        )
+        expect(callTasksSpy.callCount).to.be.equal(1)
+        const tasks = callTasksSpy.lastCall.args[0]
+        expect(tasks[0].module).to.be.equal('meta')
+        expect(tasks[0].method).to.be.equal('setViewport')
+        expect(tasks[0].args).to.deep.equal([{ width: 640 }])
+      })
     })
   })
 

@@ -4,7 +4,9 @@ import path from 'path'
 // load test driver
 import {
   Runtime,
-  Instance
+  Instance,
+  DEFAULT_ENV,
+  DEFAULT_CSS_UNIT
 } from 'weex-vdom-tester'
 
 // load env
@@ -29,6 +31,8 @@ global.callAddElement = function (id, ref, json, index) {
 }
 
 init()
+global.WXEnvironment = DEFAULT_ENV
+global.CSS_UNIT = DEFAULT_CSS_UNIT
 
 // create test driver runtime
 export function createRuntime () {

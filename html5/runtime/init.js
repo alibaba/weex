@@ -121,6 +121,28 @@ function adaptInstance (methodName, nativeMethodName) {
 }
 
 export default function init (config) {
+  const env = global.WXEnvironment
+  if (env) {
+    const scale = 2 // 750 by default currently
+    // @todo: support viewport config
+    const units = {
+      REM: 12 * scale,
+      VW: env.deviceWidth / 100,
+      VH: env.deviceHeight / 100,
+      VMIN: Math.min(env.deviceWidth, env.deviceHeight) / 100,
+      VMAX: Math.max(env.deviceWidth, env.deviceHeight) / 100,
+      CM: 96 / 2.54 * scale,
+      MM: 96 / 25.4 * scale,
+      Q: 96 / 25.4 / 4 * scale,
+      IN: 96 * scale,
+      PT: 96 / 72 * scale,
+      PC: 96 / 6 * scale,
+      PX: scale
+    }
+    Object.freeze(units)
+    global.CSS_UNIT = units
+  }
+
   frameworks = config.frameworks || {}
   initTaskHandler()
 

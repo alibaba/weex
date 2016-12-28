@@ -84,6 +84,7 @@ describe('test input and output', function () {
     it('dynamic id case', () => checkOutput(app, 'dynamic-id'))
 
     it('reset style case', () => checkOutput(app, 'reset-style'))
+    it('CSS unit case', () => checkOutput(app, 'css-unit'))
     it('dynamic type case', () => checkOutput(app, 'dynamic-type'))
     it('dynamic property case', () => checkOutput(app, 'dynamic-property'))
 
