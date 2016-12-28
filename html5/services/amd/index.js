@@ -22,7 +22,6 @@ const amdService = {
     const mod = {}
     modules[id] = mod
     const amdObject = {
-
       /**
        * define a module.
        * @param  {String} name: module name.
@@ -59,6 +58,8 @@ const amdService = {
         return servMod.cached
       }
     }
+    // add define and require to global.
+    amdObject.instance = { define, require }
     return amdObject
   },
 
