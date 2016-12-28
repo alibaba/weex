@@ -18,7 +18,11 @@ export function getFilters (key, config) {
   }
   return {
     number: function (val) {
-      return val * config.scale + 'px'
+      val = val * config.scale
+      if (key.match(/^borderWidth/) && val < 1) {
+        return '1px'
+      }
+      return val + 'px'
     },
     string: function (val) {
       // string of a pure number or a number suffixed with a 'px' unit
@@ -28,6 +32,12 @@ export function getFilters (key, config) {
       if (key.match(/transform/) && val.match(/translate/)) {
         return val.replace(/\d*\.?\d+px/g, function (match) {
           return parseInt(parseFloat(match) * config.scale) + 'px'
+        })
+      }
+      if (key.match(/^border$/) && val.match(/^\d+(?:px)?\s+/)) {
+        val = val.replace(/^(\d+(?:px)?)/, function ($0, $1) {
+          const v = parseFloat($1) * config.scale
+          return (v < 1 ? 1 : v) + 'px'
         })
       }
       return val
