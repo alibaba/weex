@@ -124,6 +124,11 @@
     [[WXSDKManager bridgeMgr] registerService:name withService:serviceScript withOptions:options];
 }
 
++ (void)registerService:(NSString *)name withScriptUrl:(NSURL *)serviceScriptUrl WithOptions:(NSDictionary *)options
+{
+    [[WXSDKManager bridgeMgr] registerService:name withServiceUrl:serviceScriptUrl withOptions:options];
+}
+
 + (void)unregisterService:(NSString *)name
 {
     [[WXSDKManager bridgeMgr] unregisterService:name];

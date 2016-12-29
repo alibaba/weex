@@ -76,6 +76,15 @@
 - (void)registerService:(NSString *)name withService:(NSString *)serviceScript withOptions:(NSDictionary *)options;
 
 /**
+ *  Register JS service Script
+ *  @param name         :   service name
+ *  @param scriptUrl    :   script url
+ *  @param options      :   service options
+ **/
+
+-(void)registerService:(NSString *)name withServiceUrl:(NSURL *)serviceScriptUrl withOptions:(NSDictionary *)options;
+
+/**
  *  Unregister JS service Script
  *  @param script    :   script code
  **/
