@@ -457,12 +457,12 @@ do {\
     }\
     NSString *styleDirection3Prop = WX_NSSTRING(WX_CONCAT_TRIPLE(border, direction3, prop));\
     if (styles[styleDirection3Prop]) {\
-        _border##direction3##prop = [WXConvert WXPixelType:styles[styleDirection3Prop] scaleFactor:self.weexInstance.pixelScaleFactor];\
+        _border##direction3##prop = [WXConvert WXPixelType:styles[styleDirection2Prop] scaleFactor:self.weexInstance.pixelScaleFactor];\
         needsDisplay = YES;\
     }\
     NSString *styleDirection4Prop = WX_NSSTRING(WX_CONCAT_TRIPLE(border, direction4, prop));\
     if (styles[styleDirection4Prop]) {\
-        _border##direction4##prop = [WXConvert WXPixelType:styles[styleDirection4Prop] scaleFactor:self.weexInstance.pixelScaleFactor];\
+        _border##direction4##prop = [WXConvert WXPixelType:styles[styleDirection2Prop] scaleFactor:self.weexInstance.pixelScaleFactor];\
         needsDisplay = YES;\
     }\
     if (needsDisplay && updating) {\

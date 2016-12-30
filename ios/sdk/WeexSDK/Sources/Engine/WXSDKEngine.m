@@ -24,6 +24,8 @@
 #import "WXAssert.h"
 #import "WXLog.h"
 #import "WXUtility.h"
+#import "WXWebSocketDefaultImpl.h"
+#import "WXWebSocketHandler.h"
 
 @implementation WXSDKEngine
 
@@ -46,6 +48,7 @@
     [self registerModule:@"canvas" withClass:NSClassFromString(@"WXCanvasModule")];
     [self registerModule:@"picker" withClass:NSClassFromString(@"WXPickerModule")];
     [self registerModule:@"meta" withClass:NSClassFromString(@"WXMetaModule")];
+    [self registerModule:@"WebSocket" withClass:NSClassFromString(@"WXWebSocketModule")];
 }
 
 + (void)registerModule:(NSString *)name withClass:(Class)clazz
@@ -119,14 +122,9 @@
 
 
 # pragma mark Service Register
-+ (void)registerService:(NSString *)name withScript:(NSString *)serviceScript withOptions:(NSDictionary *)options
++ (void)registerService:(NSString *)name withScript:(NSString *)serviceScript WithOptions:(NSDictionary *)options
 {
     [[WXSDKManager bridgeMgr] registerService:name withService:serviceScript withOptions:options];
-}
-
-+ (void)registerService:(NSString *)name withScriptUrl:(NSURL *)serviceScriptUrl WithOptions:(NSDictionary *)options
-{
-    [[WXSDKManager bridgeMgr] registerService:name withServiceUrl:serviceScriptUrl withOptions:options];
 }
 
 + (void)unregisterService:(NSString *)name
@@ -142,6 +140,7 @@
     [self registerHandler:[WXResourceRequestHandlerDefaultImpl new] withProtocol:@protocol(WXResourceRequestHandler)];
     [self registerHandler:[WXNavigationDefaultImpl new] withProtocol:@protocol(WXNavigationProtocol)];
     [self registerHandler:[WXURLRewriteDefaultImpl new] withProtocol:@protocol(WXURLRewriteProtocol)];
+    [self registerHandler:[WXWebSocketDefaultImpl new] withProtocol:@protocol(WXWebSocketHandler)];
 }
 
 + (void)registerHandler:(id)handler withProtocol:(Protocol *)protocol

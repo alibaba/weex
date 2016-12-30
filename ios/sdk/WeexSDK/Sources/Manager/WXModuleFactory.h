@@ -26,12 +26,12 @@
  * @param method The module method
  *
  **/
-+ (SEL)selectorWithModuleName:(NSString *)name methodName:(NSString *)method isSync:(BOOL *)isSync;
++ (SEL)methodWithModuleName:(NSString *)name withMethod:(NSString *)method;
 
 /**
  * @abstract Registers a module for a given name and the implemented class
  *
- * @param name The module name to register
+ * @param module The module name to register
  *
  * @param clazz The module class to register
  *

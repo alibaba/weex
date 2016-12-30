@@ -6,10 +6,11 @@
  * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
  */
 
-#import <JavaScriptCore/JavaScriptCore.h>
+#import "SRWebSocket.h"
+#import <objc/runtime.h>
 
-@interface JSValue (Weex)
+@interface SRWebSocket (Weex)
 
-+ (JSValue *)wx_valueWithReturnValueFromInvocation:(NSInvocation *)invocation inContext:(JSContext *)context;
+@property (nonatomic, copy) NSString *identifier;
 
 @end

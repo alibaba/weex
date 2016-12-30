@@ -70,23 +70,16 @@ parts = [parts subarrayWithRange:(NSRange){0, parts.count - 1}];\
 
 #define WX_FONT_DOWNLOAD_DIR [[WXUtility cacheDirectory] stringByAppendingPathComponent:[NSString stringWithFormat:@"wxdownload"]]
 
-#define WX_EXPORT_METHOD_INTERNAL(method, token) \
-+ (NSString *)WX_CONCAT_WRAPPER(token, __LINE__) { \
-    return NSStringFromSelector(method); \
-}
-
 /**
  *  @abstract export public method
  */
-#define WX_EXPORT_METHOD(method) WX_EXPORT_METHOD_INTERNAL(method,wx_export_method_)
 
-/**
- *  @abstract export public method, support sync return value
- *  @warning the method can only be called on js thread
- */
-#define WX_EXPORT_METHOD_SYNC(method) WX_EXPORT_METHOD_INTERNAL(method,wx_export_method_sync_)
+#define WX_EXPORT_METHOD(method) \
++ (NSString *)WX_CONCAT_WRAPPER(wx_export_method_, __LINE__) { \
+return NSStringFromSelector(method); \
+}
 
-/** extern "C" makes a function-name in C++ have 'C' linkage (compiler does not mangle the name)
+/** extern "C" makes a function-name in C++ have 'C' linkage (compiler does not mangle the name) 
  * so that client C code can link to (i.e use) your function using a 'C' compatible header file that contains just the declaration of your function.
  *  http://stackoverflow.com/questions/1041866/in-c-source-what-is-the-effect-of-extern-c
  */

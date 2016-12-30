@@ -7,7 +7,7 @@
  */
 
 #import <XCTest/XCTest.h>
-#import "WXCallJSMethod.h"
+#import "WXBridgeMethod.h"
 #import "WXSDKInstance.h"
 
 @interface WXBridgeMethodTests : XCTestCase
@@ -29,29 +29,36 @@
 - (void)testExample {
     // This is an example of a functional test case.
     // Use XCTAssert and related functions to verify your tests produce the correct results.
-    WXSDKInstance *instance = [[WXSDKInstance alloc] init];
     
-    WXCallJSMethod *method = [[WXCallJSMethod alloc] initWithModuleName:@"dom" methodName:@"test" arguments:@[@"1", @"2", @"3"] instance:instance];
+    NSDictionary *data = @{@"module":@"dom", @"method":@"test", @"args":@[@"1", @"2", @"3"]};
+    WXBridgeMethod *method = [[WXBridgeMethod alloc] initWithInstance:@"0" data:[NSMutableDictionary dictionaryWithDictionary:data]];
     
-    NSDictionary *task = [method callJSTask];
-    XCTAssertEqualObjects(task[@"module"], @"dom");
-    XCTAssertEqualObjects(task[@"method"], @"test");
+    NSDictionary *desc = [method dataDesc];
+    XCTAssertEqualObjects(desc[@"module"], @"dom");
+    XCTAssertEqualObjects(desc[@"method"], @"test");
     
-    NSArray *args = task[@"args"];
+    NSArray *args = desc[@"args"];
     XCTAssertTrue(args.count == 3);
     XCTAssertEqualObjects(args[0], @"1");
     XCTAssertEqualObjects(args[1], @"2");
     XCTAssertEqualObjects(args[2], @"3");
     
-    WXCallJSMethod *method2 = [[WXCallJSMethod alloc] initWithModuleName:nil methodName:nil arguments:nil instance:[[WXSDKInstance alloc] init]];
+    method = [[WXBridgeMethod alloc] initWithInstance:@"1" data:[NSMutableDictionary dictionary]];
     
-    task = [method2 callJSTask];
-    XCTAssertEqualObjects(task[@"module"], @"");
-    XCTAssertEqualObjects(task[@"method"], @"");
+    desc = [method dataDesc];
+    XCTAssertEqualObjects(desc[@"module"], @"");
+    XCTAssertEqualObjects(desc[@"method"], @"");
     
-    args = task[@"args"];
+    args = desc[@"args"];
     XCTAssertNotNil(args);
     XCTAssertTrue(args.count == 0);
+}
+
+- (void)testPerformanceExample {
+    // This is an example of a performance test case.
+    [self measureBlock:^{
+        // Put the code you want to measure the time of here.
+    }];
 }
 
 @end

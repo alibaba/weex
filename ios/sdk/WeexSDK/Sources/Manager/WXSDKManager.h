@@ -20,6 +20,11 @@
 + (WXBridgeManager *)bridgeMgr;
 
 /**
+ * @abstract Returns module manager
+ **/
++ (WXModuleManager *)moduleMgr;
+
+/**
  * @abstract Returns weex instance for specific identifier
  **/
 + (WXSDKInstance *)instanceForID:(NSString *)identifier;
@@ -38,10 +43,5 @@
  * @abstract unload
  **/
 + (void)unload;
-
-/**
- * @abstract Returns module manager
- **/
-+ (WXModuleManager *)moduleMgr DEPRECATED_MSG_ATTRIBUTE();
 
 @end

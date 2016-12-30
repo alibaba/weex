@@ -6,15 +6,11 @@
  * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
  */
 
+#import <Foundation/Foundation.h>
 #import "WXBridgeMethod.h"
 
-@interface WXCallJSMethod : WXBridgeMethod
+@interface WXModuleManager : NSObject
 
-- (instancetype)initWithModuleName:(NSString *)moduleName
-                        methodName:(NSString *)methodName
-                         arguments:(NSArray *)arguments
-                          instance:(WXSDKInstance *)instance;
-
-- (NSDictionary *)callJSTask;
+- (void)dispatchMethod:(WXBridgeMethod *)method;
 
 @end

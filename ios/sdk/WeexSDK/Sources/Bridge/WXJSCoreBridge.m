@@ -20,7 +20,6 @@
 #import <sys/utsname.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 #import "WXPolyfillSet.h"
-#import "JSValue+Weex.h"
 
 #import <dlfcn.h>
 
@@ -150,6 +149,7 @@
 {
     id callAddElementBlock = ^(JSValue *instanceId, JSValue *ref, JSValue *element, JSValue *index, JSValue *ifCallback) {
         
+        // Temporary here , in order to improve performance, will be refactored next version.
         NSString *instanceIdString = [instanceId toString];
         NSDictionary *componentData = [element toDictionary];
         NSString *parentRef = [ref toString];
@@ -161,38 +161,6 @@
     };
 
     _jsContext[@"callAddElement"] = callAddElementBlock;
-}
-
-- (void)registerCallNativeModule:(WXJSCallNativeModule)callNativeModuleBlock
-{
-    _jsContext[@"callNativeModule"] = ^JSValue *(JSValue *instanceId, JSValue *moduleName, JSValue *methodName, JSValue *args, JSValue *options) {
-        NSString *instanceIdString = [instanceId toString];
-        NSString *moduleNameString = [moduleName toString];
-        NSString *methodNameString = [methodName toString];
-        NSArray *argsArray = [args toArray];
-        NSDictionary *optionsDic = [options toDictionary];
-        
-        WXLogDebug(@"callNativeModule...%@,%@,%@,%@", instanceIdString, moduleNameString, methodNameString, argsArray);
-        
-        NSInvocation *invocation = callNativeModuleBlock(instanceIdString, moduleNameString, methodNameString, argsArray, optionsDic);
-        JSValue *returnValue = [JSValue wx_valueWithReturnValueFromInvocation:invocation inContext:[JSContext currentContext]];
-        return returnValue;
-    };
-}
-
-- (void)registerCallNativeComponent:(WXJSCallNativeComponent)callNativeComponentBlock
-{
-    _jsContext[@"callNativeComponent"] = ^void(JSValue *instanceId, JSValue *componentName, JSValue *methodName, JSValue *args, JSValue *options) {
-        NSString *instanceIdString = [instanceId toString];
-        NSString *componentNameString = [componentName toString];
-        NSString *methodNameString = [methodName toString];
-        NSArray *argsArray = [args toArray];
-        NSDictionary *optionsDic = [options toDictionary];
-        
-        WXLogDebug(@"callNativeModule...%@,%@,%@,%@", instanceIdString, componentNameString, methodNameString, argsArray);
-        
-        callNativeComponentBlock(instanceIdString, componentNameString, methodNameString, argsArray, optionsDic);
-    };
 }
 
 - (JSValue*)exception

@@ -11,11 +11,7 @@
 #import "WXLog.h"
 #import "WXAssert.h"
 #import "WXBridgeMethod.h"
-#import "WXCallJSMethod.h"
-#import "WXSDKManager.h"
 #import "WXServiceFactory.h"
-#import "WXResourceRequest.h"
-#import "WXResourceLoader.h"
 
 @interface WXBridgeManager ()
 
@@ -194,7 +190,7 @@ void WXPerformBlockOnBridgeThread(void (^block)())
     });
 }
 
-- (void)callJsMethod:(WXCallJSMethod *)method
+- (void)executeJsMethod:(WXBridgeMethod *)method
 {
     if (!method) return;
     
@@ -202,25 +198,6 @@ void WXPerformBlockOnBridgeThread(void (^block)())
     WXPerformBlockOnBridgeThread(^(){
         [weakSelf.bridgeCtx executeJsMethod:method];
     });
-}
-
--(void)registerService:(NSString *)name withServiceUrl:(NSURL *)serviceScriptUrl withOptions:(NSDictionary *)options
-{
-    if (!name || !serviceScriptUrl || !options) return;
-    __weak typeof(self) weakSelf = self;
-    WXResourceRequest *request = [WXResourceRequest requestWithURL:serviceScriptUrl resourceType:WXResourceTypeServiceBundle referrer:@"" cachePolicy:NSURLRequestUseProtocolCachePolicy];
-    WXResourceLoader *serviceBundleLoader = [[WXResourceLoader alloc] initWithRequest:request];;
-    serviceBundleLoader.onFinished = ^(WXResourceResponse *response, NSData *data) {
-        __strong typeof(weakSelf) strongSelf = weakSelf;
-        NSString *jsServiceString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        [strongSelf registerService:name withService:jsServiceString withOptions:options];
-    };
-    
-    serviceBundleLoader.onFailed = ^(NSError *loadError) {
-        WXLogError(@"No script URL found");
-    };
-    
-    [serviceBundleLoader start];
 }
 
 - (void)registerService:(NSString *)name withService:(NSString *)serviceScript withOptions:(NSDictionary *)options
@@ -280,24 +257,28 @@ void WXPerformBlockOnBridgeThread(void (^block)())
     }
     
     NSArray *args = @[ref, type, params?:@{}, domChanges?:@{}];
-    WXSDKInstance *instance = [WXSDKManager instanceForID:instanceId];
-    
-    WXCallJSMethod *method = [[WXCallJSMethod alloc] initWithModuleName:nil methodName:@"fireEvent" arguments:args instance:instance];
-    [self callJsMethod:method];
+    NSMutableDictionary *methodDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                       @"fireEvent", @"method",
+                                       args, @"args", nil];
+    WXBridgeMethod *method = [[WXBridgeMethod alloc] initWithInstance:instanceId data:methodDict];
+    [self executeJsMethod:method];
 }
 
-- (void)callBack:(NSString *)instanceId funcId:(NSString *)funcId params:(id)params keepAlive:(BOOL)keepAlive
-{
+- (void)callBack:(NSString *)instanceId funcId:(NSString *)funcId params:(id)params keepAlive:(BOOL)keepAlive {
     NSArray *args = nil;
     if (keepAlive) {
         args = @[[funcId copy], params? [params copy]:@"\"{}\"", @true];
     }else {
         args = @[[funcId copy], params? [params copy]:@"\"{}\""];
     }
-    WXSDKInstance *instance = [WXSDKManager instanceForID:instanceId];
-
-    WXCallJSMethod *method = [[WXCallJSMethod alloc] initWithModuleName:@"jsBridge" methodName:@"callback" arguments:args instance:instance];
-    [self callJsMethod:method];
+    NSMutableDictionary *methodDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                       @"callback", @"method",
+                                       @"jsBridge",@"module",
+                                       args, @"args", nil];
+    
+    WXBridgeMethod *method = [[WXBridgeMethod alloc] initWithInstance:instanceId data:methodDict];
+    
+    [self executeJsMethod:method];
 }
 
 - (void)callBack:(NSString *)instanceId funcId:(NSString *)funcId params:(id)params
@@ -332,18 +313,6 @@ void WXPerformBlockOnBridgeThread(void (^block)())
     __weak typeof(self) weakSelf = self;
     WXPerformBlockOnBridgeThread(^(){
         [weakSelf.bridgeCtx resetEnvironment];
-    });
-}
-
-#pragma mark - Deprecated
-
-- (void)executeJsMethod:(WXCallJSMethod *)method
-{
-    if (!method) return;
-    
-    __weak typeof(self) weakSelf = self;
-    WXPerformBlockOnBridgeThread(^(){
-        [weakSelf.bridgeCtx executeJsMethod:method];
     });
 }
 

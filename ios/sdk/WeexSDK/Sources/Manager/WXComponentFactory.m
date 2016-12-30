@@ -117,7 +117,7 @@
     void (^mBlock)(id, id, BOOL *) = ^(id mKey, id mObj, BOOL * mStop) {
         [methods addObject:mKey];
     };
-    [config.asyncMethods enumerateKeysAndObjectsUsingBlock:mBlock];
+    [config.methods enumerateKeysAndObjectsUsingBlock:mBlock];
     [_configLock unlock];
     
     return dict;
@@ -132,8 +132,8 @@
     
     [_configLock lock];
     config = [_componentConfigs objectForKey:name];
-    if (config.asyncMethods) {
-        selStr = [config.asyncMethods objectForKey:method];
+    if (config.methods) {
+        selStr = [config.methods objectForKey:method];
     }
     if (selStr) {
         selector = NSSelectorFromString(selStr);

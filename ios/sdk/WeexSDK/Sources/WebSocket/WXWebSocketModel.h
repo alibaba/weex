@@ -8,10 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-@interface TestSupportUtils : NSObject
-/**
- *设置等待时间
- */
-+(void)waitSecs:(NSTimeInterval)secs;
+@interface WXWebSocketModel : NSObject
+
+@property (nonatomic, copy) NSString  *url;
+@property (nonatomic, copy) NSString  *protocol;
+@property (nonatomic, copy) NSString *identifier;
+@property (nonatomic, strong) id webSocket;
 
 @end

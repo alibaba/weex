@@ -7,11 +7,8 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "WXWebSocketHandler.h"
 
-@interface TestSupportUtils : NSObject
-/**
- *设置等待时间
- */
-+(void)waitSecs:(NSTimeInterval)secs;
+@interface WXWebSocketDefaultImpl : NSObject<WXWebSocketHandler>
 
 @end

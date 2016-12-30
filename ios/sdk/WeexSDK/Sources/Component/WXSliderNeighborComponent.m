@@ -1393,8 +1393,6 @@ NSComparisonResult sliderNeighorCompareViewDepth(UIView *view1, UIView *view2, W
 @property (nonatomic, assign) BOOL  sliderChangeEvent;
 @property (nonatomic, assign) NSInteger currentIndex;
 @property (nonatomic) CGRect itemRect;
-@property (nonatomic, assign) BOOL scrollable;
-
 @end
 
 @implementation WXSliderNeighborComponent
@@ -1432,7 +1430,6 @@ NSComparisonResult sliderNeighorCompareViewDepth(UIView *view1, UIView *view2, W
             _interval = [attributes[@"interval"] integerValue];
         }
     
-        _scrollable = attributes[@"scrollable"] ? [WXConvert BOOL:attributes[@"scrollable"]] : YES;
     }
     self.cssNode->style.flex_direction = CSS_FLEX_DIRECTION_ROW;
     
@@ -1469,7 +1466,6 @@ NSComparisonResult sliderNeighorCompareViewDepth(UIView *view1, UIView *view2, W
     _sliderView.delegate = self;
     _sliderView.dataSource = self;
     _sliderView.contentView.clipsToBounds = YES;
-    _sliderView.scrollEnabled = _scrollable;
     if (_autoPlay) {
         [self _startAutoPlayTimer];
     } else {
@@ -1563,11 +1559,6 @@ NSComparisonResult sliderNeighorCompareViewDepth(UIView *view1, UIView *view2, W
     
     if (attributes[@"neighborSpace"]) {
         [self setNeighborSpace:attributes];
-    }
-    
-    if (attributes[@"scrollable"]) {
-        _scrollable = attributes[@"scrollable"] ? [WXConvert BOOL:attributes[@"scrollable"]] : YES;
-        ((WXSliderNeighborView *)self.view).scrollEnabled = _scrollable;
     }
     
     [self.sliderView setCurrentItemIndex:_index];

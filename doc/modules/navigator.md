@@ -13,7 +13,7 @@ A series of navigator operation apis like `push`, `pop`.
 #### Arguments
 
 * `options`*(object)*: some options.
-  * `url`*(string)*: The URL of the weex page to push.
+  * `url`*(stirng)*: The URL of the weex page to push.
   * `animated`*(string)*:  `true`if the weex page is push through animation, otherwise, `false`.
 * `callback`*(object)*: the callback function after executing this action.  
 

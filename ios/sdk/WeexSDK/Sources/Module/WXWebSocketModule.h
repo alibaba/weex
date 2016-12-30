@@ -1,3 +1,4 @@
+
 /**
  * Created by Weex.
  * Copyright (c) 2016, Alibaba, Inc. All rights reserved.
@@ -7,11 +8,9 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "WXModuleProtocol.h"
+#import "SRWebSocket.h"
 
-@interface TestSupportUtils : NSObject
-/**
- *设置等待时间
- */
-+(void)waitSecs:(NSTimeInterval)secs;
+@interface WXWebSocketModule : NSObject <WXModuleProtocol,SRWebSocketDelegate>
 
 @end

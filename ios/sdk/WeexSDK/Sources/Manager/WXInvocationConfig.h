@@ -17,11 +17,11 @@
 /**
  *  The methods map
  **/
-@property (nonatomic, strong) NSMutableDictionary *asyncMethods;
-@property (nonatomic, strong) NSMutableDictionary *syncMethods;
+@property (nonatomic, strong) NSMutableDictionary   *methods;
 
 + (instancetype)sharedInstance;
 - (instancetype)initWithName:(NSString *)name class:(NSString *)clazz;
 - (void)registerMethods;
-
+- (void)dispatchMethod:(WXBridgeMethod*)method;
+- (NSInvocation*)invocationWithTargetMethod:(id)target method:(WXBridgeMethod*)method;
 @end

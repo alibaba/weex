@@ -11,6 +11,7 @@
 #import "WXSDKInstance.h"
 #import "WXSDKManager.h"
 #import "WXSDKInstance_private.h"
+#import "WXModuleManager.h"
 #import "WXMonitor.h"
 #import "WXSDKError.h"
 #import "WXComponentFactory.h"
@@ -39,8 +40,7 @@
 {
     
     if (self = [super init]) {
-        _asyncMethods = [NSMutableDictionary new];
-        _syncMethods = [NSMutableDictionary new];
+        _methods = [NSMutableDictionary new];
     }
     
     return self;
@@ -48,11 +48,92 @@
 
 - (instancetype)initWithName:(NSString *)name class:(NSString *)clazz
 {
-    if (self = [self init]) {
+    if (self = [super init]) {
+        _methods = [NSMutableDictionary new];
         _name = name;
         _clazz = clazz;
     }
     return self;
+}
+
+- (void)dispatchMethod:(WXBridgeMethod *)method
+{
+    if(method.targets) {
+        WXSDKInstance *weexInstance = [WXSDKManager instanceForID:method.instance];
+        [[weexInstance componentManager] dispatchComponentMethod:method];
+    }
+    if (method.module) {
+        [[WXSDKManager moduleMgr] dispatchMethod:method];
+    }
+}
+
+- (NSInvocation*)invocationWithTargetMethod:(id)target method:(WXBridgeMethod*)method
+{
+    if (!target) {
+        NSString *errorMessage = [NSString stringWithFormat:@"%@ doesn't exist！",method.targets[@"component"]?:method.module];
+        WX_MONITOR_FAIL(WXMTJSBridge, WX_ERR_INVOKE_NATIVE, errorMessage);
+        
+        return nil;
+    }
+    SEL selector = nil;
+    if ([target conformsToProtocol:NSProtocolFromString(@"WXModuleProtocol")]) {
+        selector = [WXModuleFactory methodWithModuleName:method.module withMethod:method.method];
+    }else if ([target isKindOfClass:NSClassFromString(@"WXComponent")]) {
+        selector = [WXComponentFactory methodWithComponentName:method.targets[@"component"] withMethod:method.method];
+    }
+    
+    // neither a component nor a module
+    if (!selector) {
+        NSString *errorMessage = [NSString stringWithFormat:@"%@ is not a component or module", method.targets[@"component"]?:method.module];
+        WX_MONITOR_FAIL(WXMTJSBridge, WX_ERR_INVOKE_NATIVE, errorMessage);
+        return nil;
+    }
+    
+    NSArray *arguments = method.arguments;
+    NSMethodSignature *signature = [target methodSignatureForSelector:selector];
+    if (!signature) {
+        NSString *errorMessage = [NSString stringWithFormat:@"%@, method：%@ doesn't exist", method.targets[@"component"]?:method.module, method.method];
+        WX_MONITOR_FAIL(WXMTJSBridge, WX_ERR_INVOKE_NATIVE, errorMessage);
+        return nil;
+    }
+    
+    if (signature.numberOfArguments - 2 < method.arguments.count) {
+        NSString *errorMessage = [NSString stringWithFormat:@"%@, the parameters in calling method [%@] and registered method [%@] are not consistent！", method.targets[@"component"]?:method.module, method.method, NSStringFromSelector(selector)];
+        WX_MONITOR_FAIL(WXMTJSBridge, WX_ERR_INVOKE_NATIVE, errorMessage);
+        return nil;
+    }
+    
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+    invocation.target = target;
+    invocation.selector = selector;
+    NSString *instanceId = method.instance;
+    void **freeList = NULL;
+    
+    NSMutableArray *blockArray = [NSMutableArray array];
+    WX_ALLOC_FLIST(freeList, arguments.count);
+    for (int i = 0; i < arguments.count; i ++ ) {
+        id obj = arguments[i];
+        const char *parameterType = [signature getArgumentTypeAtIndex:i + 2];
+        static const char *blockType = @encode(typeof(^{}));
+        id argument;
+        if (!strcmp(parameterType, blockType)) {
+            // callback
+            argument = [^void(NSString *result, BOOL keepAlive) {
+                [[WXSDKManager bridgeMgr]callBack:instanceId funcId:(NSString *)obj params:result keepAlive:keepAlive];
+            } copy];
+            
+            // retain block
+            [blockArray addObject:argument];
+            [invocation setArgument:&argument atIndex:i + 2];
+        } else {
+            argument = obj;
+            WX_ARGUMENTS_SET(invocation, signature, i, argument, freeList);
+        }
+    }
+    [invocation retainArguments];
+    WX_FREE_FLIST(freeList, arguments.count);
+    
+    return invocation;
 }
 
 - (void)registerMethods
@@ -69,14 +150,8 @@
         Method *methodList = class_copyMethodList(object_getClass(currentClass), &methodCount);
         for (unsigned int i = 0; i < methodCount; i++) {
             NSString *selStr = [NSString stringWithCString:sel_getName(method_getName(methodList[i])) encoding:NSUTF8StringEncoding];
-            BOOL isSyncMethod;
-            if ([selStr hasPrefix:@"wx_export_method_sync_"]) {
-                isSyncMethod = YES;
-            } else if ([selStr hasPrefix:@"wx_export_method_"]) {
-                isSyncMethod = NO;
-            } else {
-                continue;
-            }
+            
+            if (![selStr hasPrefix:@"wx_export_method_"]) continue;
             
             NSString *name = nil, *method = nil;
             SEL selector = NSSelectorFromString(selStr);
@@ -96,8 +171,7 @@
                 name = method;
             }
             
-            NSMutableDictionary *methods = isSyncMethod ? _syncMethods : _asyncMethods;
-            [methods setObject:method forKey:name];
+            [_methods setObject:method forKey:name];
         }
         
         free(methodList);
