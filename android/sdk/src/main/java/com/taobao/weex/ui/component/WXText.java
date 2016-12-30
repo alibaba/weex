@@ -231,19 +231,19 @@ public class WXText extends WXComponent<WXTextView> {
 
   public static class Creator implements ComponentCreator {
 
-    public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-      return new WXText(instance, node, parent, lazy);
+    public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+      return new WXText(instance, node, parent);
     }
   }
 
   @Deprecated
   public WXText(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
-    this(instance, dom, parent, isLazy);
+    this(instance, dom, parent);
   }
 
   public WXText(WXSDKInstance instance, WXDomObject node,
-                WXVContainer parent, boolean lazy) {
-    super(instance, node, parent, lazy);
+                WXVContainer parent) {
+    super(instance, node, parent);
   }
 
   @Override
@@ -309,5 +309,16 @@ public class WXText extends WXComponent<WXTextView> {
       getHostView().setTextLayout(layout);
       getHostView().invalidate();
     }
+  }
+
+  @Override
+  protected Object convertEmptyProperty(String propName) {
+    switch (propName) {
+      case Constants.Name.FONT_SIZE:
+        return WXText.sDEFAULT_SIZE;
+      case Constants.Name.COLOR:
+        return "black";
+    }
+    return super.convertEmptyProperty(propName);
   }
 }

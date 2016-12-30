@@ -223,18 +223,18 @@ import java.lang.reflect.InvocationTargetException;
 public class WXDiv extends WXVContainer<WXFrameLayout> {
 
   public static class Ceator implements ComponentCreator {
-    public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-      return new WXDiv(instance,node,parent,lazy);
+    public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+      return new WXDiv(instance,node,parent);
     }
   }
 
   @Deprecated
   public WXDiv(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
-    this(instance,dom,parent,isLazy);
+    this(instance,dom,parent);
   }
 
-  public WXDiv(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
-    super(instance, node, parent, lazy);
+  public WXDiv(WXSDKInstance instance, WXDomObject node, WXVContainer parent) {
+    super(instance, node, parent);
   }
 
   @Override

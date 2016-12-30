@@ -1,13 +1,12 @@
 package com.alibaba.weex;
 
-import com.google.zxing.client.android.CaptureActivity;
-
 import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -23,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.weex.commons.AbstractWeexActivity;
+import com.google.zxing.client.android.CaptureActivity;
 import com.taobao.weex.WXRenderErrorCode;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.WXSDKInstance;
@@ -51,6 +51,7 @@ public class IndexActivity extends AbstractWeexActivity {
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
     toolbar.setTitle("WEEX");
     setSupportActionBar(toolbar);
+    getWindow().setFormat(PixelFormat.TRANSLUCENT);
 
     mProgressBar = (ProgressBar) findViewById(R.id.index_progressBar);
     mTipView = (TextView) findViewById(R.id.index_tip);
@@ -138,12 +139,14 @@ public class IndexActivity extends AbstractWeexActivity {
 
   @Override
   public void onRenderSuccess(WXSDKInstance wxsdkInstance, int i, int i1) {
+    super.onRenderSuccess(wxsdkInstance,i,i1);
     mProgressBar.setVisibility(View.GONE);
     mTipView.setVisibility(View.GONE);
   }
 
   @Override
   public void onException(WXSDKInstance wxsdkInstance, String s, String s1) {
+    super.onException(wxsdkInstance,s,s1);
     mProgressBar.setVisibility(View.GONE);
     mTipView.setVisibility(View.VISIBLE);
     if (TextUtils.equals(s, WXRenderErrorCode.WX_NETWORK_ERROR)) {

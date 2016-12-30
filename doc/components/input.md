@@ -1,6 +1,5 @@
 # &lt;input&gt;
 <span class="weex-version">0.4</span>
-<a href="https://github.com/weexteam/article/issues/45"  class="weex-translate">cn</a>
 
 
 ### Summary

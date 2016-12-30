@@ -9,11 +9,14 @@
 #import "WXModuleManager.h"
 #import "WXModuleProtocol.h"
 #import "WXUtility.h"
+#import "WXAssert.h"
 #import "WXModuleFactory.h"
 #import "WXSDKError.h"
 #import "WXMonitor.h"
 #import "WXSDKManager.h"
 #import "WXThreadSafeMutableDictionary.h"
+#import "WXInvocationConfig.h"
+
 #import <objc/message.h>
 
 @interface WXModuleManager ()
@@ -56,56 +59,8 @@
 
 - (void)_executeModuleMethod:(id)module withMethod:(WXBridgeMethod *)method
 {
-    if (!module) return;
-    
-    SEL selector = [WXModuleFactory methodWithModuleName:method.module withMethod:method.method];
-    NSArray *arguments = method.arguments;
-    
-    NSMethodSignature *signature = [module methodSignatureForSelector:selector];
-    if (!signature) {
-        NSString *errorMessage = [NSString stringWithFormat:@"Module:%@, method：%@ doesn't exist", method.module, method.method];
-        WX_MONITOR_FAIL(WXMTJSBridge, WX_ERR_INVOKE_NATIVE, errorMessage);
-        return;
-    }
-    
-    if (signature.numberOfArguments - 2 != method.arguments.count) {
-        NSString *errorMessage = [NSString stringWithFormat:@"Module:%@, the parameters in calling method [%@] and registered method [%@] are not consistent！", method.module, method.method, NSStringFromSelector(selector)];
-        WX_MONITOR_FAIL(WXMTJSBridge, WX_ERR_INVOKE_NATIVE, errorMessage);
-        return;
-    }
-    
-    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-    invocation.target = module;
-    invocation.selector = selector;
-    NSString* instanceId = method.instance;
-    
-    void **freeList = NULL;
-    WX_ALLOC_FLIST(freeList, arguments.count);
-    
-    NSMutableArray *blockArray = [NSMutableArray array];
-    for (int i = 0; i < arguments.count; i++) {
-        id obj = arguments[i];
-        const char *parameterType = [signature getArgumentTypeAtIndex:i + 2];
-        static const char *blockType = @encode(typeof(^{}));
-        id argument;
-        if (!strcmp(parameterType, blockType)) {
-            // callback
-            argument = [^void(NSString *result, BOOL keepAlive) {
-                [[WXSDKManager bridgeMgr]callBack:instanceId funcId:(NSString *)obj params:result keepAlive:keepAlive];
-            } copy];
-            
-            // retain block
-            [blockArray addObject:argument];
-            [invocation setArgument:&argument atIndex:i + 2];
-        } else {
-            argument = obj;
-            WX_ARGUMENTS_SET(invocation, signature, i, argument, freeList);
-        }
-    }
-    [invocation retainArguments];
+    NSInvocation *invocation = [[WXInvocationConfig sharedInstance] invocationWithTargetMethod:module method:method];
     [invocation invoke];
-    
-    WX_FREE_FLIST(freeList, arguments.count);
 }
 
 #pragma mark Public Methods
@@ -126,20 +81,31 @@
     WXSDKInstance *weexInstance = [WXSDKManager instanceForID:method.instance];
     id<WXModuleProtocol> moduleInstance = [weexInstance moduleForClass:module];
     
-    // attach target thread
-    NSThread *targetThread = nil;
-    if([moduleInstance respondsToSelector:@selector(targetExecuteThread)]){
-        targetThread = [moduleInstance targetExecuteThread];
-    } else {
-        targetThread = [NSThread mainThread];
-    }
-    
-    //execute module method
+    // dispatch to user specified queue or thread, default is main thread
     __weak typeof(self) weakSelf = self;
     dispatch_block_t dipatchMethodBlock = ^ (){
         [weakSelf _executeModuleMethod:moduleInstance withMethod:method];
     };
-    [self _executeModuleThead:targetThread withBlock:dipatchMethodBlock];
+    
+    NSThread *targetThread = nil;
+    dispatch_queue_t targetQueue = nil;
+    if([moduleInstance respondsToSelector:@selector(targetExecuteQueue)]){
+        targetQueue = [moduleInstance targetExecuteQueue] ?: dispatch_get_main_queue();
+    } else if([moduleInstance respondsToSelector:@selector(targetExecuteThread)]){
+        targetThread = [moduleInstance targetExecuteThread] ?: [NSThread mainThread];
+    } else {
+        targetThread = [NSThread mainThread];
+    }
+    
+    WXAssert(targetQueue || targetThread, @"No queue or thread found for module:%@", moduleInstance);
+    
+    if (targetQueue) {
+        dispatch_async(targetQueue, dipatchMethodBlock);
+    } else {
+        WXPerformBlockOnThread(^{
+            dipatchMethodBlock();
+        }, targetThread);
+    }
 }
 
 @end

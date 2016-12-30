@@ -12,7 +12,6 @@
 @class WXTouchGestureRecognizer;
 @class WXThreadSafeCounter;
 
-
 /**
  * The following variables and methods are used in Weex INTERNAL logic.
  * @warning These variables and methods must never be called or overridden.
@@ -111,9 +110,9 @@
 - (void)_removeFromSupercomponent;
 - (void)_moveToSupercomponent:(WXComponent *)newSupercomponent atIndex:(NSUInteger)index;
 
-- (void)_updateStylesOnComponentThread:(NSDictionary *)styles;
+- (void)_updateStylesOnComponentThread:(NSDictionary *)styles resetStyles:(NSMutableArray *)resetStyles;
 - (void)_updateAttributesOnComponentThread:(NSDictionary *)attributes;
-- (void)_updateStylesOnMainThread:(NSDictionary *)styles;
+- (void)_updateStylesOnMainThread:(NSDictionary *)styles resetStyles:(NSMutableArray *)resetStyles;
 - (void)_updateAttributesOnMainThread:(NSDictionary *)attributes;
 
 - (void)_addEventOnComponentThread:(NSString *)eventName;
@@ -143,15 +142,17 @@
 
 - (void)_updateCSSNodeStyles:(NSDictionary *)styles;
 
-- (void)_recomputeCSSNodeChildren;
+- (void)_resetCSSNodeStyles:(NSArray *)styles;
 
-- (void)_recomputeBorderRadius;
+- (void)_recomputeCSSNodeChildren;
 
 - (void)_handleBorders:(NSDictionary *)styles isUpdating:(BOOL)updating;
 
 - (void)_initViewPropertyWithStyles:(NSDictionary *)styles;
 
 - (void)_updateViewStyles:(NSDictionary *)styles;
+
+- (void)_resetStyles:(NSArray *)styles;
 
 - (void)_initEvents:(NSArray *)events;
 
@@ -162,5 +163,7 @@
 - (void)_updateNavBarAttributes:(NSDictionary *)attributes;
 
 - (void)_handleFirstScreenTime;
+
+- (void)_resetNativeBorderRadius;
 
 @end

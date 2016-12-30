@@ -216,6 +216,7 @@ import android.widget.FrameLayout;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.adapter.URIAdapter;
 import com.taobao.weex.common.Component;
 import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.WXDomObject;
@@ -400,7 +401,8 @@ public class WXVideo extends WXComponent<FrameLayout> {
     }
 
     if (!TextUtils.isEmpty(src)) {
-      mWrapper.setVideoURI(Uri.parse(src));
+      WXSDKInstance instance = getInstance();
+      mWrapper.setVideoURI(instance.rewriteUri(Uri.parse(src), URIAdapter.VIDEO));
       mWrapper.getProgressBar().setVisibility(View.VISIBLE);
     }
   }

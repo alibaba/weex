@@ -8,7 +8,7 @@ android {
         applicationId "com.alibaba.weex"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 5
+        versionCode 13
         versionName "0.5.2.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk{
@@ -74,6 +74,13 @@ dependencies {
     /*source dependency*/
     compile project(':weex_sdk')
     debugCompile project(':weex_debug')
+
+    //https://github.com/weexteam/weex-analyzer-android
+    //Weex-Analyzer provides several convenient tools such as Memory Monitor
+    // to optimize your application. It's not available by default,you can
+    // set WXAnalyzerDelegate#DEBUG==true to enable it
+    debugCompile 'com.taobao.android:weex_analyzer:0.1.0.5'
+
     compile project(':commons')
     compile 'com.taobao.android:dexposed:0.1.8'
     compile 'com.loopj.android:android-async-http:1.4.9@aar'
@@ -90,5 +97,5 @@ dependencies {
     compile 'com.android.support:support-annotations:23.2.1'
     compile 'com.jakewharton.scalpel:scalpel:1.1.2'
     //compile 'com.google.android.gms:play-services-appindexing:8.1.0'
-    compile 'com.taobao.android:weex_inspector:0.0.8.1'
+    compile 'com.taobao.android:weex_inspector:0.8.0.0@aar'
 }

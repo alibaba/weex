@@ -48,6 +48,11 @@
     }
 }
 
+- (void)willRemoveSubview:(WXComponent *)component
+{
+    WXAssertMainThread();
+}
+
 - (void)removeFromSuperview
 {
     WXAssertMainThread();
@@ -103,7 +108,6 @@
         _layer.backgroundColor = _backgroundColor.CGColor;
         [self setNeedsDisplay];
     }
-    
     if (styles[@"opacity"]) {
         _opacity = [WXConvert CGFloat:styles[@"opacity"]];
         _layer.opacity = _opacity;
@@ -155,6 +159,13 @@
             _layer.transform = [[WXTransform new] getTransform:_transform withView:_view withOrigin:_transformOrigin];
             [_layer setNeedsDisplay];
         }
+    }
+}
+
+-(void)_resetStyles:(NSArray *)styles
+{
+    if (styles && [styles containsObject:@"backgroundColor"]) {
+        _backgroundColor = [UIColor clearColor];
     }
 }
 

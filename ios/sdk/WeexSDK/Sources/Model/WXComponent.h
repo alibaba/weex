@@ -11,6 +11,18 @@
 
 @class WXSDKInstance;
 
+/**
+ * @abstract the component callback , result can be string or dictionary.
+ * @discussion callback data to js, the id of callback function will be removed to save memory.
+ */
+typedef void (^WXCallback)(_Nonnull id result);
+
+/**
+ * @abstract the component callback , result can be string or dictionary.
+ * @discussion callback data to js, you can specify the keepAlive parameter to keep callback function id keepalive or not. If the keepAlive is true, it won't be removed unitl instance destroyed, so you can call it repetitious.
+ */
+typedef void (^WXKeepAliveCallback)(_Nonnull id result, BOOL keepAlive);
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface WXComponent : NSObject
@@ -216,6 +228,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)insertSubview:(WXComponent *)subcomponent atIndex:(NSInteger)index;
 
 /**
+ * @abstract Tells the component that a subcomponent's view is about to be removed.
+ *
+ * @discussion The method is called on the main thread.
+ */
+- (void)willRemoveSubview:(WXComponent *)component;
+
+/**
  * @abstract Remove the component's view from its superview.
  *
  * @discussion The method is called on the main thread.
@@ -263,6 +282,14 @@ NS_ASSUME_NONNULL_BEGIN
  * @discussion It can be overrided to handle specific style updating. The method is called on the main thread.
  **/
 - (void)updateStyles:(NSDictionary *)styles;
+
+/**
+ * @abstract Called when component's style are reset
+ *
+ * @param elements The reset style's elements
+ * @discussion It can be overrided to handle specific style reseting. The method is called on the main thread.
+ **/
+- (void)resetStyles:(NSArray *)styles;
 
 /**
  * @abstract Called when component's attributes are updated

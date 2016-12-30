@@ -151,16 +151,18 @@
     };
     
     _embedInstance.onFailed = ^(NSError *error) {
-        if (weakSelf.errorView) {
-            return ;
-        }
-        
-        WXErrorView *errorView = [[WXErrorView alloc]initWithFrame:CGRectMake(0.0f, 0.0f, 135.0f, 130.0f)];
-        errorView.center = CGPointMake(weakSelf.view.bounds.size.width / 2.0f, weakSelf.view.bounds.size.height / 2.0f);
-        errorView.delegate = weakSelf;
-        [weakSelf.view addSubview:errorView];
-        
-        weakSelf.errorView = errorView;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (weakSelf.errorView) {
+                return ;
+            }
+            
+            WXErrorView *errorView = [[WXErrorView alloc]initWithFrame:CGRectMake(0.0f, 0.0f, 135.0f, 130.0f)];
+            errorView.center = CGPointMake(weakSelf.view.bounds.size.width / 2.0f, weakSelf.view.bounds.size.height / 2.0f);
+            errorView.delegate = weakSelf;
+            [weakSelf.view addSubview:errorView];
+            
+            weakSelf.errorView = errorView;
+        });
     };
     
     _embedInstance.renderFinish = ^(UIView *view) {

@@ -205,6 +205,7 @@
 package com.taobao.weex.ui;
 
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.ViewGroup;
@@ -215,13 +216,13 @@ import android.widget.ScrollView;
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.WXRenderStrategy;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.flex.Spacing;
 import com.taobao.weex.ui.animation.WXAnimationBean;
 import com.taobao.weex.ui.animation.WXAnimationModule;
 import com.taobao.weex.ui.component.Scrollable;
-import com.taobao.weex.ui.component.WXBasicComponentType;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXComponentFactory;
 import com.taobao.weex.ui.component.WXScroller;
@@ -317,6 +318,7 @@ class WXRenderStatement {
     frameLayout.setLayoutParams(layoutParams);
     frameLayout.setBackgroundColor(Color.TRANSPARENT);
 
+    mGodComponent.getRealView().addOnLayoutChangeListener(getWXSDKInstance());
     WXComponent component = generateComponentTree(dom, mGodComponent);
     mGodComponent.addChild(component);
     mRegistry.put(component.getRef(), component);
@@ -381,10 +383,11 @@ class WXRenderStatement {
     if (parent == null || component == null) {
       return;
     }
+    
+    parent.addChild(component, index);
     component.createView(parent, index);
     component.applyLayoutAndEvent(component);
     component.bindData(component);
-    parent.addChild(component, index);
   }
 
   /**
@@ -399,7 +402,6 @@ class WXRenderStatement {
     clearRegistryForComponent(component);
     parent.remove(component);
     mRegistry.remove(ref);
-    component.destroy();
     return component;
   }
 
@@ -548,7 +550,7 @@ class WXRenderStatement {
       return null;
     }
     WXComponent component = WXComponentFactory.newInstance(mWXSDKInstance, dom,
-                                                           parent, parent.isLazy());
+                                                           parent);
 
     mRegistry.put(dom.getRef(), component);
     if (component instanceof WXVContainer) {
@@ -568,5 +570,25 @@ class WXRenderStatement {
 
   void startAnimation(@NonNull String ref, @NonNull WXAnimationBean animationBean, @Nullable String callBack) {
     WXAnimationModule.startAnimation(mWXSDKInstance, mRegistry.get(ref), animationBean, callBack);
+  }
+
+  public void getComponentSize(String ref, String callback) {
+    WXComponent component = mRegistry.get(ref);
+    Map<String, Object> options = new HashMap<>();
+    if (component != null) {
+      Map<String, String> size = new HashMap<>();
+      Rect sizes = component.getComponentSize();
+      size.put("width", String.valueOf(WXViewUtils.getWebPxByWidth(sizes.width())));
+      size.put("height", String.valueOf(WXViewUtils.getWebPxByWidth(sizes.height())));
+      size.put("bottom",String.valueOf(WXViewUtils.getWebPxByWidth(sizes.bottom)));
+      size.put("left",String.valueOf(WXViewUtils.getWebPxByWidth(sizes.left)));
+      size.put("right",String.valueOf(WXViewUtils.getWebPxByWidth(sizes.right)));
+      size.put("top",String.valueOf(WXViewUtils.getWebPxByWidth(sizes.top)));
+      options.put("size", size);
+      options.put("result", true);
+    } else {
+      options.put("errMsg", "Component does not exist");
+    }
+    WXSDKManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callback, options);
   }
 }

@@ -219,6 +219,10 @@ public class WXSDKManagerTest {
     WXSDKManager.getInstance().mWXRenderManager = rm;
   }
 
+  public static void setInstance(WXSDKManager m){
+    WXSDKManager.setInstance(m);
+  }
+
   @Before
   public void setUp() throws Exception {
 

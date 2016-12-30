@@ -48,8 +48,8 @@ dl, ol, ul {
     float: left;
     margin-right: 5px;
     margin-left: 10px;    
-    margin-top: 29px;    
-    background: url("http://alibaba.github.io/weex/img/weex_logo_blue@3x.png") no-repeat;
+    margin-top: 29px;
+    background: url("//alibaba.github.io/weex/img/weex_logo_blue@3x.png") no-repeat;
     height: 33px;
     width: 145px;
     background-position: 0px 0px;
@@ -129,7 +129,7 @@ a.weex-translate{
 }
 
 a.weex-translate.incomplete{
-  background-color: #777;                    
+  background-color: #777;
 }
 
 .wx-v{

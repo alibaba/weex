@@ -207,6 +207,8 @@ package com.taobao.weex.utils;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import com.taobao.weappplus_sdk.BuildConfig;
+import com.taobao.weex.WXSDKInstanceTest;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -225,9 +227,9 @@ public class TypefaceUtilTest {
 
   @Test
   public void testPutFontDO() throws Exception {
-    FontDO font = new FontDO("test","url('test')");
+    FontDO font = new FontDO("test","url('local:///test')", WXSDKInstanceTest.createInstance());
     TypefaceUtil.putFontDO(font);
-    assertEquals(TypefaceUtil.getFontDO("test").getUrl(),"test");
+    assertEquals(TypefaceUtil.getFontDO("test").getUrl(),"local:///test");
 
   }
 

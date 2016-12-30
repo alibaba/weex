@@ -9,11 +9,11 @@
 #import "WXComponentFactory.h"
 #import "WXAssert.h"
 #import "WXLog.h"
+#import "WXInvocationConfig.h"
 
-@interface WXComponentConfig : NSObject
+#import <objc/runtime.h>
 
-@property (nonatomic, strong) NSString *name;
-@property (nonatomic, strong) NSString *clazz;
+@interface WXComponentConfig : WXInvocationConfig
 @property (nonatomic, strong) NSDictionary *properties;
 
 - (instancetype)initWithName:(NSString *)name class:(NSString *)clazz pros:(NSDictionary *)pros;
@@ -24,13 +24,19 @@
 
 - (instancetype)initWithName:(NSString *)name class:(NSString *)clazz pros:(NSDictionary *)pros
 {
-    if (self = [super init]) {
-        _name = name;
-        _clazz = clazz;
+    if (self = [super initWithName:name class:clazz]) {
         _properties = pros;
     }
     
     return self;
+}
+
+- (BOOL)isValid
+{
+    if (self.name == nil || self.clazz == nil) {
+        return NO;
+    }
+    return YES;
 }
 
 @end
@@ -87,19 +93,69 @@
     return [[self sharedInstance] getComponentConfigs];
 }
 
++ (SEL)methodWithComponentName:(NSString *)name withMethod:(NSString *)method
+{
+    return [[self sharedInstance] _methodWithComponnetName:name withMethod:method];
+}
+
++ (NSMutableDictionary *)componentMethodMapsWithName:(NSString *)name
+{
+    return [[self sharedInstance] _componentMethodMapsWithName:name];
+}
+
 #pragma mark Private
+
+- (NSMutableDictionary *)_componentMethodMapsWithName:(NSString *)name
+{
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    NSMutableArray *methods = [NSMutableArray array];
+    
+    [_configLock lock];
+    [dict setValue:methods forKey:@"methods"];
+    
+    WXComponentConfig *config = _componentConfigs[name];
+    void (^mBlock)(id, id, BOOL *) = ^(id mKey, id mObj, BOOL * mStop) {
+        [methods addObject:mKey];
+    };
+    [config.methods enumerateKeysAndObjectsUsingBlock:mBlock];
+    [_configLock unlock];
+    
+    return dict;
+}
+
+- (SEL)_methodWithComponnetName:(NSString *)name withMethod:(NSString *)method
+{
+    WXAssert(name && method, @"Fail to find selector with module name and method, please check if the parameters are correct ！");
+    
+    NSString *selStr = nil; SEL selector = nil;
+    WXComponentConfig *config = nil;
+    
+    [_configLock lock];
+    config = [_componentConfigs objectForKey:name];
+    if (config.methods) {
+        selStr = [config.methods objectForKey:method];
+    }
+    if (selStr) {
+        selector = NSSelectorFromString(selStr);
+    }
+    [_configLock unlock];
+    
+    return selector;
+}
 
 - (NSDictionary *)getComponentConfigs {
     NSMutableDictionary *componentDic = [[NSMutableDictionary alloc] init];
     void (^componentBlock)(id, id, BOOL *) = ^(id mKey, id mObj, BOOL * mStop) {
         WXComponentConfig *componentConfig = (WXComponentConfig *)mObj;
-        NSMutableDictionary *configDic = [[NSMutableDictionary alloc] init];
-        [configDic setObject:componentConfig.name forKey:@"name"];
-        [configDic setObject:componentConfig.clazz forKey:@"clazz"];
-        if (componentConfig.properties) {
-            [configDic setObject:componentConfig.properties forKey:@"pros"];
+        if ([componentConfig isValid]) {
+            NSMutableDictionary *configDic = [[NSMutableDictionary alloc] init];
+            [configDic setObject:componentConfig.name forKey:@"name"];
+            [configDic setObject:componentConfig.clazz forKey:@"clazz"];
+            if (componentConfig.properties) {
+                [configDic setObject:componentConfig.properties forKey:@"pros"];
+            }
+            [componentDic setObject:configDic forKey:componentConfig.name];
         }
-        [componentDic setObject:configDic forKey:componentConfig.name];
     };
     [_componentConfigs enumerateKeysAndObjectsUsingBlock:componentBlock];
     return componentDic;
@@ -141,9 +197,10 @@
     
     config = [[WXComponentConfig alloc] initWithName:name class:NSStringFromClass(clazz) pros:pros];
     [_componentConfigs setValue:config forKey:name];
+    [config registerMethods];
+    
     [_configLock unlock];
 }
-
 
 - (void)registerComponents:(NSArray *)components
 {

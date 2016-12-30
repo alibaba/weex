@@ -7,6 +7,7 @@
  */
 
 #import "WXNetworkDefaultImpl.h"
+#import "WXAppConfiguration.h"
 
 @interface WXNetworkCallbackInfo : NSObject
 
@@ -40,7 +41,12 @@
     info.compeletionCallback = compeletionCallback;
     
     if (!_session) {
-        _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]
+        NSURLSessionConfiguration *urlSessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+        if ([WXAppConfiguration customizeProtocolClasses] && [WXAppConfiguration customizeProtocolClasses].count > 0) {
+            NSArray *defaultProtocols = urlSessionConfig.protocolClasses;
+            urlSessionConfig.protocolClasses = [[WXAppConfiguration customizeProtocolClasses] arrayByAddingObjectsFromArray:defaultProtocols];
+        }
+        _session = [NSURLSession sessionWithConfiguration:urlSessionConfig
                                                  delegate:self
                                             delegateQueue:[NSOperationQueue mainQueue]];
     }

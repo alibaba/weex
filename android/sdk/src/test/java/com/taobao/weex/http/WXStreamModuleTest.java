@@ -206,6 +206,8 @@ package com.taobao.weex.http;
 
 import android.os.Looper;
 import android.telecom.Call;
+
+import com.taobao.weex.WXSDKInstanceTest;
 import com.taobao.weex.adapter.DefaultWXHttpAdapter;
 import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.bridge.JSCallback;
@@ -281,6 +283,12 @@ public class WXStreamModuleTest {
     assert   !(boolean)cb.mData.get("ok");
   }
 
+  private WXStreamModule createModule(IWXHttpAdapter adapter){
+    WXStreamModule m = new WXStreamModule(adapter);
+    m.mWXSDKInstance = WXSDKInstanceTest.createInstance();
+    return m;
+  }
+
   @Test
   public void testFetchSuccessFinish() throws Exception{
     IWXHttpAdapter adapter = new IWXHttpAdapter() {
@@ -290,7 +298,7 @@ public class WXStreamModuleTest {
       }
     };
 
-    WXStreamModule streamModule = new WXStreamModule(adapter);
+    WXStreamModule streamModule = createModule(adapter);
     Callback cb = new Callback();
     streamModule.fetch("{'url':'http://www.taobao.com'}",cb,null);
 
@@ -309,7 +317,7 @@ public class WXStreamModuleTest {
       }
     };
 
-    WXStreamModule streamModule = new WXStreamModule(adapter);
+    WXStreamModule streamModule = createModule(adapter);
     Callback cb = new Callback();
     streamModule.fetch("{'url':'http://www.taobao.com'}",null,cb);
 
@@ -318,7 +326,7 @@ public class WXStreamModuleTest {
 
   @Test
   public void testFetchRequestHttpbinCallback() throws Exception{
-    WXStreamModule streamModule = new WXStreamModule(new DefaultWXHttpAdapter());
+    WXStreamModule streamModule = createModule(new DefaultWXHttpAdapter());
     JSCallback progress = mock(JSCallback.class);
     JSCallback finish = mock(JSCallback.class);
     System.out.print("request start "+System.currentTimeMillis());
@@ -331,7 +339,7 @@ public class WXStreamModuleTest {
 
   @Test
   public void testFetchStatus() throws Exception{
-    WXStreamModule streamModule = new WXStreamModule(new IWXHttpAdapter() {
+    WXStreamModule streamModule = createModule(new IWXHttpAdapter() {
       @Override
       public void sendRequest(WXRequest request, OnHttpListener listener) {
         WXResponse response = new WXResponse();
@@ -347,7 +355,7 @@ public class WXStreamModuleTest {
     streamModule.fetch("{method: 'POST',url: 'http://httpbin.org/post',type:'json'}",finish,null);
     assertEquals(finish.mData.get(WXStreamModule.STATUS_TEXT),Status.ERR_CONNECT_FAILED);
 
-    streamModule = new WXStreamModule(new IWXHttpAdapter() {
+    streamModule = createModule(new IWXHttpAdapter() {
       @Override
       public void sendRequest(WXRequest request, OnHttpListener listener) {
         WXResponse response = new WXResponse();

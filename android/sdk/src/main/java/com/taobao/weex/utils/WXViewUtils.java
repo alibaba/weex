@@ -237,16 +237,28 @@ public class WXViewUtils {
    * System chooses an opaque format (no alpha bits required)
    */
   public static final int OPAQUE = -1;
+  public static final int DIMENSION_UNSET = -1;
   private static final boolean mUseWebPx = false;
 
-  public static int getWeexHeight(String instanceId) {
+  public static int getWeexHeight(String instanceId){
+    return getWeexHeight(instanceId, true);
+  }
+
+  public static int getWeexHeight(String instanceId, boolean useDefault) {
     WXSDKInstance instance = WXSDKManager.getInstance().getSDKInstance(instanceId);
     if (instance != null) {
       int weexHeight = instance.getWeexHeight();
       if (weexHeight >= 0 || weexHeight == -2) {
         return weexHeight;
       }
-      return getScreenHeight(WXEnvironment.sApplication);
+      else {
+        if(useDefault) {
+          return getScreenHeight(WXEnvironment.sApplication);
+        }
+        else {
+          return weexHeight;
+        }
+      }
     }
     return -3;
   }
@@ -275,14 +287,24 @@ public class WXViewUtils {
 
   }
 
-  public static int getWeexWidth(String instanceId) {
+  public static int getWeexWidth(String instanceId){
+    return getWeexWidth(instanceId, true);
+  }
+
+  public static int getWeexWidth(String instanceId, boolean useDefault) {
     WXSDKInstance instance = WXSDKManager.getInstance().getSDKInstance(instanceId);
     if (instance != null) {
       int weexWidth = instance.getWeexWidth();
       if (weexWidth >= 0 || weexWidth == -2) {
         return weexWidth;
       }
-      return getScreenWidth(WXEnvironment.sApplication);
+      else {
+        if (useDefault) {
+          return getScreenWidth(WXEnvironment.sApplication);
+        } else {
+          return weexWidth;
+        }
+      }
     }
     return -3;
   }

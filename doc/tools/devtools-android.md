@@ -1,5 +1,7 @@
 # Devtools for Android
 
+[![GitHub release](https://img.shields.io/github/release/weexteam/weex_devtools_android.svg)](https://github.com/weexteam/weex_devtools_android/releases)   [![Codacy Badge](https://api.codacy.com/project/badge/Grade/af0790bf45c9480fb0ec90ad834b89a3)](https://www.codacy.com/app/weex_devtools/weex_devtools_android?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=weexteam/weex_devtools_android&amp;utm_campaign=Badge_Grade) 	[![Code Climate](https://codeclimate.com/github/weexteam/weex_devtools_android/badges/gpa.svg)](https://codeclimate.com/github/weexteam/weex_devtools_android) [![Issue Count](https://codeclimate.com/github/weexteam/weex_devtools_android/badges/issue_count.svg)](https://codeclimate.com/github/weexteam/weex_devtools_android) [![GitHub issues](https://img.shields.io/github/issues/weexteam/weex_devtools_android.svg)](https://github.com/weexteam/weex_devtools_android/issues)  [ ![Download](https://api.bintray.com/packages/alibabaweex/maven/weex_inspector/images/download.svg) ](https://bintray.com/alibabaweex/maven/weex_inspector/_latestVersion)
+
 Weex devtools is a custom devtools for weex that implements [Chrome Debugging Protocol](https://developer.chrome.com/devtools/docs/debugger-protocol) inspired by [Stetho](https://github.com/facebook/stetho), it is designed to help you quickly inspect your app and debug your JS bundle source in a chrome web page.At present The devtools consist of two part : `Inspector` and `Debugger`. If you want it work well, you must install a `weex-devtool` as debug server.
 
 - **Inspector**
@@ -41,7 +43,7 @@ There are two choices to set the dependency, the Choice A is recommanded if you 
   * *A - aar dependency from jcenter*.
   ````
   dependencies {
-          compile 'com.taobao.android:weex_inspector:0.0.2.7'
+          compile 'com.taobao.android:weex_inspector:0.0.8.1'
   }
   ````
 I strongly recommend you use the latest version since both weex sdk and devtools are developed iteratively and rapidly. See the release version list [here](https://github.com/weexteam/weex_devtools_android/releases). All the release version will publish to the [jcenter repo](https://bintray.com/alibabaweex/maven/weex_inspector).
@@ -54,6 +56,15 @@ I strongly recommend you use the latest version since both weex sdk and devtools
           compile project(':inspector')
   }
   ````
+
+##### Version compatibility
+
+| weex sdk | weex inspector | debug server |
+|----------|----------------|--------------|
+|0.8.0.1+  | 0.0.8.1        |0.2.39+       |
+|0.7.0+    | 0.0.7.13       |0.2.38        |
+|0.6.0+    | 0.0.2.2        |              |
+
 
 #### Initialize in your XXXApplication file.
 ````
@@ -102,4 +113,4 @@ client.networkInterceptors().add(new OkHttpInterceptor());
   The network inspection only support OKHttpClient right now!!! If you want to use the network inspection to catch your bundle request, you must change your bundle server ip to the real server ip.
   
 #### Known Issues
- You can report issues and bugs [here](https://github.com/weexteam/weex_devtools_android/issues). We will replay as soon as possible.
+ You can report issues and bugs [here](https://github.com/weexteam/weex_devtools_android/issues). We will reply as soon as possible.

@@ -1,6 +1,5 @@
 # Virtual DOM APIs
 <span class="weex-version">0.4</span>
-<a href="https://github.com/weexteam/article/wiki/%E6%AC%A2%E8%BF%8E%E5%8F%82%E4%B8%8EWeex%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91"  class="weex-translate incomplete">cn</a>
 
 ## `Document`
 
@@ -100,11 +99,11 @@ Removes a child. The parameter `preserved` means whether destroy the removed nod
 
 ##### `setAttr(key: string, value: string, silent: boolean?)`
 
-If `slient` is truthy, it won't cause native calls. Used for handling event with virtual-DOM changes.
+If `silent` is true, it won't cause native calls. Used for handling event with virtual-DOM changes.
 
 ##### `setStyle(key: string, value: string, silent: boolean?)`
 
-The `slient` parameter is just same as `setAttr` method.
+The `silent` parameter is just same as `setAttr` method.
 
 ##### `setClassStyle(classStyle: Object)`
 

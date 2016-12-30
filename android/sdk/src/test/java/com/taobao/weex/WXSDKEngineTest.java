@@ -265,7 +265,7 @@ public class WXSDKEngineTest {
     assertTrue(WXSDKEngine.registerComponent("test", TestComponent.class,true));
     assertTrue(WXSDKEngine.registerComponent("test1",TestComponent.class));
     assertTrue(WXSDKEngine.registerComponent(TestComponent.class,false,"testA","testB","testC"));
-    Map<String,String> compInfo = new HashMap<>();
+    Map<String,Object> compInfo = new HashMap<>();
     assertFalse(WXSDKEngine.registerComponent(compInfo,TestComponent.class));
   }
 

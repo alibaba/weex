@@ -1,7 +1,6 @@
 # Tutorial
 
 <span class="weex-version">0.4</span>
-<a href="https://github.com/weexteam/article/issues/4"  class="weex-translate">cn</a>
 
 We will make a simple but realistic list, in which the technologies Weex uses will be shown. This form of list also works for a lot of e-commercial apps and mobile sites.
 
@@ -60,7 +59,7 @@ weex tech_list.we
 
 A browser window will be opened automatically to display the running result like below     (weex-toolkit version should be greater than 0.1.0, use `weex --version` to check it):
 
-![weex html5 render](http://gtms02.alicdn.com/tps/i2/TB1y151LVXXXXXXaXXXoRYgWVXX-495-584.jpg)
+![weex html5 render](https://gtms02.alicdn.com/tps/i2/TB1y151LVXXXXXXaXXXoRYgWVXX-495-584.jpg)
 
 ## Introduce to Weex Syntax
 
@@ -68,9 +67,9 @@ So it's time for introducing the syntax.
 
 Given the content of `tech_list.we`, Weex source code is composed of three parts -- *template*, *style*, and *script*, just like html, css, and javascript for the Web.
 
-Template is the skeleton that gives Weex structure. It is composed of tags which surround content and apply meaning to it. Weex has two types of tag, opening tag & closing tag. We call every pair of opening tags & closing tags a Weex tag. Tags have *attributes*, different attribute has different meaning, for example, `class` attribute makes it possible to define equal styles for multiple tags, `onclick` attribute makes the tag respond to click event.
+Template is the skeleton that gives Weex structure. It is composed of tags which surround content and apply meaning to it. Tags have *attributes*, different attribute means different feature, for example, `class` attribute makes it possible to define the same styles for multiple tags, `onclick` attribute makes the tag respond to click event.
 
-Style describes how Weex tags are to be displayed. We like you, love the CSS, so we try to keep consistent with CSS standard as possible. Weex Style supports a lot of CSS features, like margin, padding, fixed and so on. Better yet, flexbox layout (flex) is well supported in Weex Style.
+Style describes how Weex tags are to be displayed. We prefer CSS very much. So we try to keep consistent with CSS standard as possible. Weex Style supports a lot of CSS features, like margin, padding, fixed and so on. Better yet, flexbox layout (flex) is well supported in Weex Style.
 
 Script adds *data* & *logic* to Weex tags, helping you easily access local or remote data and update tags. You can also define some methods for your tag to respond to different events. Weex Script organization learns a lot from CommonJS module style.
 

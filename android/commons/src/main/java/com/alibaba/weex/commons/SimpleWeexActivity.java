@@ -223,11 +223,11 @@ public abstract class SimpleWeexActivity extends AbstractWeexActivity {
 
   @Override
   public void onRenderSuccess(WXSDKInstance instance, int width, int height) {
-
+    super.onRenderSuccess(instance,width,height);
   }
 
   @Override
   public void onException(WXSDKInstance instance, String errCode, String msg) {
-
+    super.onException(instance,errCode,msg);
   }
 }

@@ -113,13 +113,15 @@ package com.taobao.weex;
 import com.taobao.weex.common.WXModule;
 import com.taobao.weex.common.WXModuleAnno;
 
+import java.util.Map;
+
 /**
  * Created by lixinke on 16/8/25.
  */
 public class WXGlobalEventModule extends WXModule {
 
 
-  @WXModuleAnno
+  @WXModuleAnno(runOnUIThread = false)
   public void addEventListener(String eventName, String callback) {
     mWXSDKInstance.addEventListener(eventName,callback);
   }
@@ -128,8 +130,15 @@ public class WXGlobalEventModule extends WXModule {
     mWXSDKInstance.removeEventListener(eventName,callback);
   }
 
-  @WXModuleAnno
+  @WXModuleAnno(runOnUIThread = false)
   public void removeEventListener(String eventName){
     mWXSDKInstance.removeEventListener(eventName);
+  }
+
+
+  @Override
+  public void addEventListener(String eventName, String callback, Map<String, Object> options) {
+    super.addEventListener(eventName, callback, options);
+    addEventListener(eventName,callback);
   }
 }

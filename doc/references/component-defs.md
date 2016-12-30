@@ -1,6 +1,5 @@
 # Component Definition
 <span class="weex-version">0.4</span>
-<a href="https://github.com/weexteam/article/issues/31"  class="weex-translate">cn</a>
 
 A component definition is a set of options to describe a component. It's always assigned to `module.exports` in `<script>`.
 
