@@ -1,10 +1,9 @@
 # Special Element
 <span class="weex-version">0.4</span>
-<a href="https://github.com/weexteam/article/issues/36"  class="weex-translate">cn</a>
 
 ## &lt;content&gt;
 
-The element serves as content distribution outlest in a composed component template. The element itself will be replaced.
+The element serves as content distribution outlet in a composed component template. The element itself will be replaced.
 
 alias: `<slot>`
 

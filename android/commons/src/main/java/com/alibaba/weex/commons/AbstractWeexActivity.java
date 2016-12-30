@@ -204,14 +204,18 @@
  */
 package com.alibaba.weex.commons;
 
+import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import com.alibaba.weex.commons.util.ScreenUtil;
+
 import com.alibaba.weex.commons.util.AssertUtil;
+import com.alibaba.weex.commons.util.ScreenUtil;
 import com.taobao.weex.IWXRenderListener;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRenderStrategy;
@@ -228,11 +232,17 @@ public abstract class AbstractWeexActivity extends AppCompatActivity implements 
   private ViewGroup mContainer;
   private WXSDKInstance mInstance;
 
+  protected WXAnalyzerDelegate mWxAnalyzerDelegate;
+
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     createWeexInstance();
     mInstance.onActivityCreate();
+    
+    mWxAnalyzerDelegate = new WXAnalyzerDelegate(this);
+    mWxAnalyzerDelegate.onCreate();
+    getWindow().setFormat(PixelFormat.TRANSLUCENT);
   }
 
   protected final void setContainer(ViewGroup container){
@@ -307,6 +317,9 @@ public abstract class AbstractWeexActivity extends AppCompatActivity implements 
     if(mInstance!=null){
       mInstance.onActivityStart();
     }
+    if(mWxAnalyzerDelegate != null){
+      mWxAnalyzerDelegate.onStart();
+    }
   }
 
   @Override
@@ -314,6 +327,9 @@ public abstract class AbstractWeexActivity extends AppCompatActivity implements 
     super.onResume();
     if(mInstance!=null){
       mInstance.onActivityResume();
+    }
+    if(mWxAnalyzerDelegate != null){
+      mWxAnalyzerDelegate.onResume();
     }
   }
 
@@ -323,6 +339,9 @@ public abstract class AbstractWeexActivity extends AppCompatActivity implements 
     if(mInstance!=null){
       mInstance.onActivityPause();
     }
+    if(mWxAnalyzerDelegate != null){
+      mWxAnalyzerDelegate.onPause();
+    }
   }
 
   @Override
@@ -330,6 +349,9 @@ public abstract class AbstractWeexActivity extends AppCompatActivity implements 
     super.onStop();
     if(mInstance!=null){
       mInstance.onActivityStop();
+    }
+    if(mWxAnalyzerDelegate != null){
+      mWxAnalyzerDelegate.onStop();
     }
   }
 
@@ -339,10 +361,20 @@ public abstract class AbstractWeexActivity extends AppCompatActivity implements 
     if(mInstance!=null){
       mInstance.onActivityDestroy();
     }
+    if(mWxAnalyzerDelegate != null){
+      mWxAnalyzerDelegate.onDestroy();
+    }
   }
 
   @Override
   public void onViewCreated(WXSDKInstance wxsdkInstance, View view) {
+    View wrappedView = null;
+    if(mWxAnalyzerDelegate != null){
+      wrappedView = mWxAnalyzerDelegate.onWeexViewCreated(wxsdkInstance,view);
+    }
+    if(wrappedView != null){
+      view = wrappedView;
+    }
     if (mContainer != null) {
       mContainer.removeAllViews();
       mContainer.addView(view);
@@ -354,5 +386,27 @@ public abstract class AbstractWeexActivity extends AppCompatActivity implements 
   @Override
   public void onRefreshSuccess(WXSDKInstance wxsdkInstance, int i, int i1) {
 
+  }
+
+  @Override
+  @CallSuper
+  public void onRenderSuccess(WXSDKInstance instance, int width, int height) {
+    if(mWxAnalyzerDelegate  != null){
+      mWxAnalyzerDelegate.onWeexRenderSuccess(instance);
+    }
+  }
+
+  @Override
+  @CallSuper
+  public void onException(WXSDKInstance instance, String errCode, String msg) {
+    if(mWxAnalyzerDelegate != null){
+      mWxAnalyzerDelegate.onException(instance,errCode,msg);
+    }
+  }
+
+  @Override
+  @CallSuper
+  public boolean onKeyUp(int keyCode, KeyEvent event) {
+    return (mWxAnalyzerDelegate != null && mWxAnalyzerDelegate.onKeyUp(keyCode,event)) || super.onKeyUp(keyCode, event);
   }
 }

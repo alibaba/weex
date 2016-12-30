@@ -1,6 +1,5 @@
 # Syntax
 <span class="weex-version">0.4</span>
-<a href="https://github.com/weexteam/article/issues/8"  class="weex-translate">cn</a>
 
 
 *The syntax of Weex is deeply inspired from [Vue.js](http://vuejs.org/), an elegant JavaScript framework with component system and reactive data binding.*

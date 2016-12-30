@@ -1,6 +1,5 @@
 # storage
 <span class="weex-version">0.7</span>
-<a href="https://github.com/weexteam/article/wiki/%E6%AC%A2%E8%BF%8E%E5%8F%82%E4%B8%8EWeex%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91"  class="weex-translate incomplete">cn</a>
 
 ## Summary
 
@@ -24,7 +23,7 @@ or update that key's value if it already exists.
 ```js
 var storage = require('@weex-module/storage');
 storage.setItem('bar', 'bar-value', function(e) {
-  // callback.'e' is an object that contains 'result' and 'data'. e.result indicate wether `setItem` is succeed.
+  // callback.'e' is an object that contains 'result' and 'data'. e.result indicate whether `setItem` is succeed.
   // e.data will return 'undefined' if success or 'invalid_param' if your key/value is ""/null.
 });
 ```

@@ -1,6 +1,5 @@
 # Common Style
 <span class="weex-version">0.4</span>
-<a href="https://github.com/weexteam/article/issues/23"  class="weex-translate">cn</a>
 
 All of weex tags share some common style rules
 
@@ -31,6 +30,7 @@ you can use the definition below in weex box model.
     - `border-right-style`: values `solid` | `dashed` | `dotted`, default value `solid`
     - `border-bottom-style`: values `solid` | `dashed` | `dotted`, default value `solid`
   - `border-width`: [length](styles/units/length.md) type, non-negative, default value `0`
+    **DO NOT** use `border-width:1`. There is a default viewport `<viewport width="750">`, if the actual width of a device is 720px, then `border-width:1` will be `border-width:0.96`. As weex **do not** support sub-pixel, this border would not be rendered.
     - `border-left-width`: [length](styles/units/length.md) type, non-negative, default value `0`
     - `border-top-width`: [length](styles/units/length.md) type, non-negative, default value `0`
     - `border-right-width`: [length](styles/units/length.md) type, non-negative, default value `0`
@@ -41,6 +41,8 @@ you can use the definition below in weex box model.
     - `border-right-color`: [color](styles/units/color.md) type, default value `#000000`
     - `border-bottom-color`: [color](styles/units/color.md) type, default value `#000000`
   - `border-radius`: [length](styles/units/length.md) type, default value `0`, (rounded borders to elements , default value is 0 meaning right angle )
+
+  Although the the default overflow style is `overflow:hidden` in android, a view will not be clipped by its parents' `border-radius`. This only happens on Android, it works fine on iOS.
     - `border-bottom-left-radius`: [length](styles/units/length.md) type, non-negative, default value `0`
     - `border-bottom-right-radius`: [length](styles/units/length.md) type, non-negative, default value `0`
     - `border-top-left-radius`: [length](styles/units/length.md) type, non-negative, default value `0`

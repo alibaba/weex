@@ -49,6 +49,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.facebook.fresco:fresco:0.10.0'
 
+    provided 'com.taobao.android:weex_analyzer:0.1.0.5'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.hamcrest:hamcrest-core:1.3'

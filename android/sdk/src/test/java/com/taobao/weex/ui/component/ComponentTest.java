@@ -260,7 +260,7 @@ public class ComponentTest {
 
   public static <T> T createComponent(WXDomObject dom, WXVContainer parent, Class<T> type) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
      return type
-         .getConstructor(WXSDKInstance.class,WXDomObject.class,WXVContainer.class,boolean.class)
-        .newInstance(parent.mInstance,dom,parent,false);
+         .getConstructor(WXSDKInstance.class,WXDomObject.class,WXVContainer.class)
+        .newInstance(parent.mInstance,dom,parent);
   }
 }

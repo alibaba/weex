@@ -7,11 +7,20 @@
  */
 
 #import <Foundation/Foundation.h>
+
 #import "WXThreadSafeMutableDictionary.h"
+#import "WXSDKInstance.h"
 
 @interface WXRuleManager : NSObject
 
+@property(nonatomic, weak)WXSDKInstance *instance;
+
 + (WXRuleManager *)sharedInstance;
+
 - (void)addRule:(NSString *)type rule:(NSDictionary *)rule;
+
 - (WXThreadSafeMutableDictionary *)getRule:(NSString *)type;
+
+- (void)removeRule:(NSString *)type rule:(NSDictionary *)rule;
+
 @end

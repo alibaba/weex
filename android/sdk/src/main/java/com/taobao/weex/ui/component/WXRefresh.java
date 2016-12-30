@@ -213,8 +213,8 @@ import com.taobao.weex.common.Component;
 import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.component.list.WXListComponent;
-import com.taobao.weex.ui.view.WXBaseRefreshLayout;
 import com.taobao.weex.ui.view.WXFrameLayout;
+import com.taobao.weex.ui.view.WXRefreshLayout;
 import com.taobao.weex.ui.view.refresh.core.WXSwipeLayout;
 import com.taobao.weex.ui.view.refresh.wrapper.BaseBounceView;
 import com.taobao.weex.utils.WXUtils;
@@ -240,7 +240,7 @@ public class WXRefresh extends WXBaseRefresh implements WXSwipeLayout.WXOnRefres
 
   @Override
   protected WXFrameLayout initComponentHostView(@NonNull Context context) {
-    return new WXBaseRefreshLayout(context);
+    return new WXRefreshLayout(context);
   }
 
   @Override

@@ -1,6 +1,5 @@
 # stream
 <span class="weex-version">0.4</span>
-<a href="https://github.com/weexteam/article/issues/53"  class="weex-translate">cn</a>
 
 
 ## Summary

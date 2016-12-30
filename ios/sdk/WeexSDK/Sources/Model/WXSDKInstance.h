@@ -19,9 +19,16 @@ extern NSString *const bundleUrlOptionKey;
 @property (nonatomic, weak) UIViewController *viewController;
 
 /**
- * The rootView which the weex bundle is rendered at.
+ * The Native root container used to bear the view rendered by weex file. 
+ * The root view is controlled by WXSDKInstance, so you can only get it, but not change it.
  **/
 @property (nonatomic, strong) UIView *rootView;
+
+/**
+ * Component can freeze the rootview frame through the variable isRootViewFrozen
+ * If Component want to freeze the rootview frame, set isRootViewFrozen YES, weex will not change the rootview frame when layout,or set NO.
+ **/
+@property (nonatomic, assign) BOOL isRootViewFrozen;
 
 /**
  * The scriptURL of weex bundle.
@@ -56,6 +63,21 @@ typedef NS_ENUM(NSInteger, WXState) {//state.code
     WeexInstanceDestroy
 };
 
+
+typedef NS_ENUM(NSInteger, WXErrorType) {//error.domain
+    TemplateErrorType = 1,
+};
+
+typedef NS_ENUM(NSInteger, WXErrorCode) {//error.code
+    PlatformErrorCode = 1000,
+    OSVersionErrorCode,
+    AppVersionErrorCode,
+    WeexSDKVersionErrorCode,
+    DeviceModelErrorCode,
+    FrameworkVersionErrorCode,
+};
+
+
 @property (nonatomic, assign) WXState state;
 
 /**
@@ -66,11 +88,11 @@ typedef NS_ENUM(NSInteger, WXState) {//state.code
 @property (nonatomic, copy) void (^onCreate)(UIView *);
 
 /**
- *  The callback triggered when the instance finishes refreshing weex view.
+ *  The callback triggered when the root container's frame has changed.
  *
  *  @param view The rootView.
  **/
-@property (nonatomic, copy) void (^refreshFinish)(UIView *);
+@property (nonatomic, copy) void (^onLayoutChange)(UIView *);
 
 /**
  *  The callback triggered when the instance finishes rendering.
@@ -80,24 +102,11 @@ typedef NS_ENUM(NSInteger, WXState) {//state.code
 @property (nonatomic, copy) void (^renderFinish)(UIView *);
 
 /**
- *  The callback triggered when the instance finishes updating.
+ *  The callback triggered when the instance finishes refreshing weex view.
  *
  *  @param view The rootView.
  **/
-@property (nonatomic, copy) void (^updateFinish)(UIView *);
-
-
-typedef NS_ENUM(NSInteger, WXErrorType) {//error.domain
-    TemplateErrorType = 1,
-};
-typedef NS_ENUM(NSInteger, WXErrorCode) {//error.code
-    PlatformErrorCode = 1000,
-    OSVersionErrorCode,
-    AppVersionErrorCode,
-    WeexSDKVersionErrorCode,
-    DeviceModelErrorCode,
-    FrameworkVersionErrorCode,
-};
+@property (nonatomic, copy) void (^refreshFinish)(UIView *);
 
 /**
  *  The callback triggered when the instance fails to render.
@@ -151,8 +160,6 @@ typedef NS_ENUM(NSInteger, WXErrorCode) {//error.code
 /**
  * Renders weex view with source string of bundle and some others.
  *
- * @param url The source string of bundle rendered to a weex view.
- *
  * @param options The params passed by user, sometimes you should pass the value of "bundleUrl".
  *
  * @param data The data the bundle needs when rendered.
@@ -192,6 +199,11 @@ typedef NS_ENUM(NSInteger, WXErrorCode) {//error.code
 - (void)fireGlobalEvent:(NSString *)eventName params:(NSDictionary *)params;
 
 /**
+ * complete url based with bundle url
+ */
+- (NSURL *)completeURL:(NSString *)url;
+
+/**
  * application performance statistics
  */
 @property (nonatomic, strong) NSString *bizType;
@@ -202,11 +214,11 @@ typedef NS_ENUM(NSInteger, WXErrorCode) {//error.code
 
 @property (nonatomic, strong) NSDictionary *properties DEPRECATED_MSG_ATTRIBUTE();
 @property (nonatomic, assign) NSTimeInterval networkTime DEPRECATED_MSG_ATTRIBUTE();
+@property (nonatomic, copy) void (^updateFinish)(UIView *);
 
 - (void)finishPerformance DEPRECATED_MSG_ATTRIBUTE();
 
 - (void)reloadData:(id)data  DEPRECATED_MSG_ATTRIBUTE("Use refreshInstance: method instead.");
-
-- (void)creatFinish;
+- (void)creatFinish DEPRECATED_MSG_ATTRIBUTE();
 
 @end

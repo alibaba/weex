@@ -248,7 +248,7 @@ public class WXVideoTest {
 
   public static WXVideo create() throws IllegalAccessException, InstantiationException, InvocationTargetException {
     return (WXVideo) new SimpleComponentHolder(WXVideo.class)
-        .createInstance(WXSDKInstanceTest.createInstance(), new TestDomObject(), WXDivTest.create(), false);
+        .createInstance(WXSDKInstanceTest.createInstance(), new TestDomObject(), WXDivTest.create());
   }
 
   @Before

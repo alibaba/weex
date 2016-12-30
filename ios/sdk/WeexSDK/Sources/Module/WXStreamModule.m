@@ -11,6 +11,7 @@
 #import "WXUtility.h"
 #import "WXHandlerFactory.h"
 #import "WXNetworkProtocol.h"
+#import "WXURLRewriteProtocol.h"
 
 @implementation WXStreamModule
 
@@ -30,12 +31,12 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:method];
     [request setTimeoutInterval:60.0];
+    [request setValue:[WXUtility userAgent] forHTTPHeaderField:@"User-Agent"];
     for (NSString *key in header) {
         NSString *value = [header objectForKey:key];
         [request setValue:value forHTTPHeaderField:key];
     }
     [request setHTTPBody:[body dataUsingEncoding:NSUTF8StringEncoding]];
-    [request setValue:[WXUtility userAgent] forHTTPHeaderField:@"User-Agent"];
     
     id<WXNetworkProtocol> networkHandler = [WXHandlerFactory handlerForProtocol:@protocol(WXNetworkProtocol)];
     
@@ -66,6 +67,9 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
         method = @"GET";
     }
     NSString *urlStr = [options objectForKey:@"url"];
+    NSMutableString *newUrlStr = [urlStr mutableCopy];
+    WX_REWRITE_URL(urlStr, WXResourceTypeLink, self.weexInstance, &newUrlStr)
+    
     if (!options || [WXUtility isBlankString:urlStr]) {
         [callbackRsp setObject:@(-1) forKey:@"status"];
         [callbackRsp setObject:@false forKey:@"ok"];
@@ -73,12 +77,13 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
         
         return;
     }
+    urlStr = newUrlStr;
     NSDictionary *headers = [options objectForKey:@"headers"];
-    NSString *body = [options objectForKey:@"body"];
     NSString *type = [options objectForKey:@"type"];
     NSURL *url = [NSURL URLWithString:urlStr];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:method];
+    [request setValue:[WXUtility userAgent] forHTTPHeaderField:@"User-Agent"];
     
     if ([options valueForKey:@"timeout"]){
         //ms
@@ -89,9 +94,27 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
         NSString *value = [headers objectForKey:header];
         [request setValue:value forHTTPHeaderField:header];
     }
-    [request setHTTPBody:[body dataUsingEncoding:NSUTF8StringEncoding]];
-    [request setValue:[WXUtility userAgent] forHTTPHeaderField:@"User-Agent"];
 
+    if ([options objectForKey:@"body"]) {
+        NSData * body = nil;
+        if ([[options objectForKey:@"body"] isKindOfClass:[NSString class]]) {
+            // compatible with the string body
+            body = [[options objectForKey:@"body"] dataUsingEncoding:NSUTF8StringEncoding];
+        }
+        if ([[options objectForKey:@"body"] isKindOfClass:[NSDictionary class]]) {
+            body = [[WXUtility JSONString:[options objectForKey:@"body"]] dataUsingEncoding:NSUTF8StringEncoding];
+        }
+        if (!body) {
+            [callbackRsp setObject:@(-1) forKey:@"status"];
+            [callbackRsp setObject:@false forKey:@"ok"];
+            callback(callbackRsp);
+                
+            return;
+        }
+        
+        [request setHTTPBody:body];
+    }
+  
     [callbackRsp setObject:@{ @"OPENED": @1 } forKey:@"readyState"];
     
     progressCallback(callbackRsp, TRUE);
@@ -149,7 +172,7 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
                             if ([type isEqualToString:@"jsonp"]) {
                                 NSUInteger start = [responseData rangeOfString:@"("].location + 1 ;
                                 NSUInteger end = [responseData rangeOfString:@")" options:NSBackwardsSearch].location;
-                                if (end > start) {
+                                if (end < [responseData length] && end > start) {
                                     responseData = [responseData substringWithRange:NSMakeRange(start, end-start)];
                                 }
                             }

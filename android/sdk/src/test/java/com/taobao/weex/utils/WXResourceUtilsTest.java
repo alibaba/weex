@@ -301,10 +301,10 @@ public class WXResourceUtilsTest {
 
     //can't match
     color = WXResourceUtils.getColor("rgb(256, 256, 256)");
-    assertEquals(color, Integer.MIN_VALUE);
+    assertEquals(color, 0xffffffff);
 
     color = WXResourceUtils.getColor("rgb(-1, 255, 255)");
-    assertEquals(color, Integer.MIN_VALUE);
+    assertEquals(color, 0xff00ffff);
   }
 
   @Test

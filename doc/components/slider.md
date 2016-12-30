@@ -1,6 +1,5 @@
 # &lt;slider&gt;
 <span class="weex-version">0.4</span>
-<a href="https://github.com/weexteam/article/issues/47"  class="weex-translate">cn</a>
 
 
 ### Summary
@@ -14,6 +13,7 @@ It supports all kinds of weex components as its slides, especially the `indicato
 ### Attributes
 
 - `auto-play`: &lt;boolean&gt; `true` | `false`. This value determines whether the slides plays automatically after the page rendering finished. The default value is `false`.
+- `interval`: &lt;number&gt; millisecond. This value determines time interval for each page displayed in slider.
 - `index`: &lt;number&gt; . This value determines the  index of current shown slide. The default value is `0`.
 
 Other attributes please check out the [common attributes](../references/common-attrs.md).

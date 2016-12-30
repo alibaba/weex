@@ -1,9 +1,8 @@
 # How to debug in html5 renderer ?
-<a href="https://github.com/weexteam/article/wiki/%E6%AC%A2%E8%BF%8E%E5%8F%82%E4%B8%8EWeex%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91"  class="weex-translate incomplete">cn</a>
 
 Since weex-html5 can run on a modern mobile browser, it's naturally supported to debug weex-html5 code in browsers' dev tools. Use browser's devTools to iterate, debug and profile your weex-html5 app. Take chrome's debug tool as a example:
 
-![chrome's debug tool](http://gw.alicdn.com/mt/TB1V1hIMpXXXXaHXVXXXXXXXXXX-983-730.png)
+![chrome's debug tool](//gw.alicdn.com/mt/TB1V1hIMpXXXXaHXVXXXXXXXXXX-983-730.png)
 
 ## Elements
 
@@ -11,7 +10,7 @@ Use elements' panel to inspect the layout and design of the weex-html5 page, and
 
 ## Console
 
-You can use `console.log` to log infomation on console, but it's hightly recommended to use `nativeLog` instead, since nativeLog can run on a native platform besides on a browser. The defect of `nativeLog` is that it's not supported to trace it from the console to the source file which the `nativeLog` is called in, therefore in this situation you'd better use `console.log`, and you should make sure this code will not run on native platform (otherwise a exception or a crash will be caused).
+You can use `console.log` to log information on console, but it's highly recommended to use `nativeLog` instead, since nativeLog can run on a native platform based on a browser. The defect of `nativeLog` is that it's not supported to trace it from the console to the source file which the `nativeLog` is called in, therefore in this situation you'd better use `console.log`, and you should make sure this code will not run on native platform (otherwise a exception or a crash will be caused).
 
 ## Breakpoints
 
