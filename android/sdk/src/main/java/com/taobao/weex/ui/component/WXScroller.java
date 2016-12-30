@@ -204,17 +204,21 @@
  */
 package com.taobao.weex.ui.component;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.common.Component;
 import com.taobao.weex.common.Constants;
 import com.taobao.weex.common.OnWXScrollListener;
@@ -253,10 +257,11 @@ public class WXScroller extends WXVContainer<ViewGroup> implements WXScrollViewL
   public static final String DIRECTION = "direction";
   protected int mOrientation = Constants.Orientation.VERTICAL;
   private List<WXComponent> mRefreshs=new ArrayList<>();
+  private String mLoadMoreRetry = "";
 
   public static class Creator implements ComponentCreator {
-    public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-      return new WXScroller(instance,node,parent,lazy);
+    public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+      return new WXScroller(instance,node,parent);
     }
   }
   /**
@@ -277,12 +282,12 @@ public class WXScroller extends WXVContainer<ViewGroup> implements WXScrollViewL
 
   @Deprecated
   public WXScroller(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
-    this(instance,dom,parent,isLazy);
+    this(instance,dom,parent);
   }
 
   public WXScroller(WXSDKInstance instance, WXDomObject node,
-                    WXVContainer parent, boolean lazy) {
-    super(instance, node, parent, lazy);
+                    WXVContainer parent) {
+    super(instance, node, parent);
     stickyHelper = new WXStickyHelper(this);
   }
 
@@ -506,6 +511,23 @@ public class WXScroller extends WXVContainer<ViewGroup> implements WXScrollViewL
       });
       host = scrollerView;
     }
+
+    host.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+      @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+      @Override
+      public void onGlobalLayout() {
+        procAppear(0,0,0,0);
+        View view;
+        if( (view = getHostView()) == null){
+          return;
+        }
+        if(Build.VERSION.SDK_INT >=  Build.VERSION_CODES.JELLY_BEAN) {
+          view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        }else{
+          view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+        }
+      }
+    });
     return host;
   }
 
@@ -575,7 +597,7 @@ public class WXScroller extends WXVContainer<ViewGroup> implements WXScrollViewL
 
     item.setWatchEvent(event,isWatch);
 
-    procAppear(1,1,0,0);//check current components appearance status.
+    procAppear(0,0,0,0);//check current components appearance status.
   }
 
   /**
@@ -604,12 +626,10 @@ public class WXScroller extends WXVContainer<ViewGroup> implements WXScrollViewL
 
   @Override
   public void scrollTo(WXComponent component,int offset) {
-    int offsetIntF = (int) WXViewUtils.getRealPxByWidth(offset);
-
     int viewYInScroller=component.getAbsoluteY() - getAbsoluteY();
     int viewXInScroller=component.getAbsoluteX() - getAbsoluteX();
 
-    scrollBy(viewXInScroller - getScrollX()+offsetIntF,viewYInScroller - getScrollY() + offsetIntF);
+    scrollBy(viewXInScroller - getScrollX() + offset,viewYInScroller - getScrollY() + offset);
   }
 
   /**
@@ -707,10 +727,14 @@ public class WXScroller extends WXVContainer<ViewGroup> implements WXScrollViewL
         if (WXEnvironment.isApkDebugable()) {
           WXLogUtils.d("[WXScroller-onScroll] offScreenY :" + offScreenY);
         }
-
-        if (mContentHeight != contentH) {
+        String loadMoreRetry = getDomObject().getAttrs().getLoadMoreRetry();
+        if (loadMoreRetry == null) {
+          loadMoreRetry = mLoadMoreRetry;
+        }
+        if (mContentHeight != contentH || !mLoadMoreRetry.equals(loadMoreRetry)) {
           getInstance().fireEvent(getDomObject().getRef(), Constants.Event.LOADMORE);
           mContentHeight = contentH;
+          mLoadMoreRetry = loadMoreRetry;
         }
       }
     } catch (Exception e) {
@@ -719,4 +743,8 @@ public class WXScroller extends WXVContainer<ViewGroup> implements WXScrollViewL
 
   }
 
+  @JSMethod
+  public void resetLoadmore() {
+    mLoadMoreRetry = "";
+  }
 }

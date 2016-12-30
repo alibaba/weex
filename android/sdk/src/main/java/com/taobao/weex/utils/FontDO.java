@@ -205,8 +205,11 @@
 package com.taobao.weex.utils;
 
 import android.graphics.Typeface;
+import android.net.Uri;
 
 import com.taobao.weex.WXEnvironment;
+import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.adapter.URIAdapter;
 import com.taobao.weex.common.Constants;
 
 import java.net.URI;
@@ -224,19 +227,21 @@ public class FontDO {
   public final static int STATE_SUCCESS = 2;
   public final static int STATE_FAILED = 3;
 
-  public final static int TYPE_LOCAL = 0;
+  public final static int TYPE_UNKNOWN = 0;
   public final static int TYPE_NETWORK = 1;
   public final static int TYPE_FILE = 2;
+  public final static int TYPE_LOCAL = 3;
 
-  public FontDO (String fontFamilyName, String src) {
+
+  public FontDO (String fontFamilyName, String src, WXSDKInstance instance) {
     this.mFontFamilyName = fontFamilyName;
-    parseSrc(src);
+    parseSrc(src,instance);
   }
   public String getFontFamilyName() {
     return mFontFamilyName;
   }
 
-  private void parseSrc(String src) {
+  private void parseSrc(String src, WXSDKInstance instance) {
     src = (src != null )? src.trim() : "";
     if (src.isEmpty()) {
       mState = STATE_INVALID;
@@ -245,19 +250,25 @@ public class FontDO {
     }
 
     if (src.matches("^url\\('.*'\\)$")) {
-      mUrl = src.substring(5, src.length() - 2);
+      String url = src.substring(5, src.length() - 2);
+      Uri uri = Uri.parse(url);
+      if( instance != null){
+        uri = instance.rewriteUri(uri,URIAdapter.FONT);
+      }
+      mUrl = uri.toString();
       try {
-        URI uri = URI.create(mUrl);
+
         String scheme = uri.getScheme();
-        //TODO: use bundle url to process relative path. see #497
         if (Constants.Scheme.HTTP.equals(scheme) ||
                 Constants.Scheme.HTTPS.equals(scheme)) {
           mType = TYPE_NETWORK;
         } else if (Constants.Scheme.FILE.equals(scheme)) {
           mType = TYPE_FILE;
           mUrl = uri.getPath();
-        } else {
+        } else if (Constants.Scheme.LOCAL.equals(scheme)){
           mType = TYPE_LOCAL;
+        } else {
+          mType = TYPE_UNKNOWN;
         }
         mState = STATE_INIT;
       } catch (Exception e) {

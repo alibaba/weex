@@ -315,6 +315,15 @@ public class WXPerformance {
   public long actualNetworkTime;
   public long packageSpendTime;
   public long syncTaskTime;
+  /**
+   * view hierarchy
+   */
+  public int maxDeepViewLayer;
+  /**
+   * 1:true
+   * 0:false
+   */
+  public int useScroller=0;
 
   /**
    * component Count
@@ -344,10 +353,19 @@ public class WXPerformance {
   /**
    * Error message
    */
+  @Deprecated
   public String errMsg;
+  private StringBuilder mErrMsgBuilder;
+
+  public String args="";
 
   public String connectionType;
   public String requestType;
+
+
+  public WXPerformance(){
+    mErrMsgBuilder=new StringBuilder();
+  }
 
   public Map<String,Double> getMeasureMap(){
     Map<String,Double> quotas = new HashMap<>();
@@ -369,6 +387,8 @@ public class WXPerformance {
     quotas.put("syncTaskTime",(double)syncTaskTime);
     quotas.put("packageSpendTime",(double)packageSpendTime);
     quotas.put("SDKInitTime",(double)WXEnvironment.sSDKInitTime);
+    quotas.put("maxDeepViewLayer", (double) maxDeepViewLayer);
+    quotas.put("useScroller", (double) useScroller);
     return quotas;
   }
 
@@ -407,7 +427,9 @@ public class WXPerformance {
         "syncTaskTime",
         "pureNetworkTime",
         "actualNetworkTime",
-        "firstScreenJSFExecuteTime"};
+        "firstScreenJSFExecuteTime",
+        "maxDeepViewLayer",
+        "useScroller"};
   }
 
   @Override
@@ -431,7 +453,8 @@ public class WXPerformance {
              + ",SDKInitTime:"+ WXEnvironment.sSDKInitTime
              + ",totalTime:" + totalTime + ",JSLibVersion:" + JSLibVersion + ",WXSDKVersion:" + WXSDKVersion
              + ",errCode:" + errCode + ",renderFailedDetail:" + renderFailedDetail
-             + ",errMsg:" + errMsg;
+             + ",arg:" + args
+             + ",errMsg:" + getErrMsg();
     }
     return super.toString();
   }
@@ -444,5 +467,13 @@ public class WXPerformance {
               + " firstScreenJSFExecuteTime:" + firstScreenJSFExecuteTime
               + " componentCount:" + componentCount
               + "  totalTime:" + totalTime;
+  }
+
+  public String getErrMsg() {
+    return mErrMsgBuilder.toString();
+  }
+
+  public void appendErrMsg(CharSequence msg) {
+    mErrMsgBuilder.append(msg);
   }
 }

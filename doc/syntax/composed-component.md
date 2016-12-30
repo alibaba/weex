@@ -1,6 +1,5 @@
 # Composed Component
 <span class="weex-version">0.4</span>
-<a href="https://github.com/weexteam/article/issues/2"  class="weex-translate">cn</a>
 
 If some part of weex file is reused often, you could create a composed component represent these part.
 

@@ -219,7 +219,7 @@ import static org.junit.Assert.*;
 public class WXHeaderTest {
 
   public static WXHeader create(WXVContainer parent) throws IllegalAccessException, InstantiationException, InvocationTargetException {
-    return (WXHeader) new SimpleComponentHolder(WXHeader.class).createInstance(WXSDKInstanceTest.createInstance(), new TestDomObject(), parent, false);
+    return (WXHeader) new SimpleComponentHolder(WXHeader.class).createInstance(WXSDKInstanceTest.createInstance(), new TestDomObject(), parent);
   }
 
 }

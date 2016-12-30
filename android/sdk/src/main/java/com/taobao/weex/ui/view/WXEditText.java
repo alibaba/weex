@@ -207,6 +207,7 @@ package com.taobao.weex.ui.view;
 import android.content.Context;
 import android.os.Build;
 import android.view.MotionEvent;
+import android.view.ViewParent;
 import android.widget.EditText;
 
 import com.taobao.weex.common.WXThread;
@@ -219,6 +220,7 @@ import com.taobao.weex.ui.view.gesture.WXGestureObservable;
 public class WXEditText extends EditText implements WXGestureObservable {
 
   private WXGesture wxGesture;
+  private int mLines = 1;
 
   public WXEditText(Context context) {
     super(context);
@@ -235,10 +237,32 @@ public class WXEditText extends EditText implements WXGestureObservable {
   }
 
   @Override
+  public void setLines(int lines) {
+    super.setLines(lines);
+    mLines = lines;
+  }
+
+  @Override
   public boolean onTouchEvent(MotionEvent event) {
     boolean result = super.onTouchEvent(event);
     if (wxGesture != null) {
       result |= wxGesture.onTouch(this, event);
+    }
+
+    ViewParent parent = getParent();
+    if(parent != null){
+      switch (event.getAction() & MotionEvent.ACTION_MASK){
+        case MotionEvent.ACTION_DOWN:
+          if(mLines < getLineCount()) {
+            //scrollable
+            parent.requestDisallowInterceptTouchEvent(true);
+          }
+          break;
+        case MotionEvent.ACTION_UP:
+        case MotionEvent.ACTION_CANCEL:
+          parent.requestDisallowInterceptTouchEvent(false);
+          break;
+      }
     }
     return result;
   }

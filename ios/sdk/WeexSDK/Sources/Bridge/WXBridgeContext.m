@@ -25,6 +25,7 @@
 #import "WXSDKInstance_private.h"
 #import "WXThreadSafeMutableArray.h"
 #import "WXAppConfiguration.h"
+#import "WXInvocationConfig.h"
 
 #define SuppressPerformSelectorLeakWarning(Stuff) \
 do { \
@@ -88,6 +89,11 @@ _Pragma("clang diagnostic pop") \
         // Temporary here , in order to improve performance, will be refactored next version.
         WXSDKInstance *instance = [WXSDKManager instanceForID:instanceId];
         
+        if (!instance) {
+            WXLogInfo(@"instance not found, maybe already destroyed");
+            return -1;
+        }
+        
         WXPerformBlockOnComponentThread(^{
             WXComponentManager *manager = instance.componentManager;
             if (!manager.isValid) {
@@ -98,7 +104,6 @@ _Pragma("clang diagnostic pop") \
         });
         
         return 0;
-
     }];
     
     return _jsBridge;
@@ -136,7 +141,7 @@ _Pragma("clang diagnostic pop") \
 
 #pragma mark JS Bridge Management
 
-- (NSInteger)invokeNative:(NSString *)instance tasks:(NSArray *)tasks callback:(NSString *)callback
+- (NSInteger)invokeNative:(NSString *)instance tasks:(NSArray *)tasks callback:(NSString __unused*)callback
 {
     WXAssertBridgeThread();
     
@@ -153,19 +158,7 @@ _Pragma("clang diagnostic pop") \
     for (NSDictionary *task in tasks) {
         WXBridgeMethod *method = [[WXBridgeMethod alloc] initWihData:task];
         method.instance = instance;
-        [[WXSDKManager moduleMgr] dispatchMethod:method];
-    }
-    
-    NSMutableArray *sendQueue = [self.sendQueue valueForKey:instance];
-    if (!sendQueue) {
-        WXLogError(@"No send queue for instance:%@", instance);
-        return -1;
-    }
-    
-    if (![callback isEqualToString:@"undefined"] && ![callback isEqualToString:@"-1"] && callback) {
-        WXBridgeMethod *method = [self _methodWithCallback:callback];
-        method.instance = instance;
-        [sendQueue addObject:method];
+        [[WXInvocationConfig sharedInstance] dispatchMethod:method];
     }
     
     [self performSelector:@selector(_sendQueueLoop) withObject:nil];

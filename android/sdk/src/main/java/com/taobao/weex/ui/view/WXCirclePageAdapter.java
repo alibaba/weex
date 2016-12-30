@@ -217,83 +217,68 @@ import java.util.List;
 public class WXCirclePageAdapter extends PagerAdapter {
 
   /**
-   * Number of sub item
-   */
-  private int realCount;
-  /**
    * Subviews
    */
-  private List<View> views;
+  private List<View> views = new ArrayList<>();
+  private List<View> shadow = new ArrayList<>();
+  private boolean needLoop = true;
 
-  public WXCirclePageAdapter(List<View> views) {
+  public WXCirclePageAdapter(List<View> views, boolean needLoop) {
     super();
-    this.views = views;
-    this.realCount = views.size();
+    this.views = new ArrayList<>(views);
+    this.needLoop = needLoop;
   }
 
   public WXCirclePageAdapter() {
+    this(true);
+  }
+
+  public WXCirclePageAdapter(boolean needLoop) {
     super();
-    this.views = new ArrayList<>();
-    this.realCount = 0;
+    this.needLoop = needLoop;
   }
 
   public void addPageView(View view) {
     if (WXEnvironment.isApkDebugable()) {
       WXLogUtils.d("onPageSelected >>>> addPageView");
     }
-    if (views == null) {
-      views = new ArrayList<>();
-    }
     views.add(view);
-    this.realCount = views.size();
+    ensureShadow();
   }
 
   public void removePageView(View view) {
     if (WXEnvironment.isApkDebugable()) {
       WXLogUtils.d("onPageSelected >>>> removePageView");
     }
-    if (views == null) {
-      views = new ArrayList<>();
-    }
     views.remove(view);
-    this.realCount = views.size();
+    ensureShadow();
   }
 
   public void replacePageView(View oldView, View newView) {
     if (WXEnvironment.isApkDebugable()) {
       WXLogUtils.d("onPageSelected >>>> replacePageView");
     }
-    if (views == null) {
-      views = new ArrayList<>();
-    }
 
     int index = views.indexOf(oldView);
     views.remove(index);
     views.add(index, newView);
-    this.realCount = views.size();
+    ensureShadow();
   }
 
   @Override
   public int getCount() {
-    // if count less than 3,the circle doesn't work as expected.
-    int count = getRealCount();
-    if (count > 2) {
-      return count * 110;
-    } else {
-      return count;
-    }
-
+    return shadow.size();
   }
 
   public int getRealCount() {
-    return realCount;
+    return views.size();
   }
 
   @Override
   public Object instantiateItem(ViewGroup container, int position) {
     View pageView = null;
     try {
-      pageView = views.get(position % getRealCount());
+      pageView = shadow.get(position);
       if (WXEnvironment.isApkDebugable()) {
         WXLogUtils.d("onPageSelected >>>> instantiateItem >>>>> position:" + position + ",position % getRealCount()" + position % getRealCount());
       }
@@ -324,11 +309,51 @@ public class WXCirclePageAdapter extends PagerAdapter {
 
   @Override
   public int getItemPosition(Object object) {
-    int position = views.indexOf(object);
-    return position == -1 ? POSITION_NONE : position;
+    return POSITION_NONE;
+  }
+
+  public int getItemIndex(Object object) {
+    if (object instanceof View) {
+      return views.indexOf(object);
+    } else {
+      return -1;
+    }
   }
 
   public List<View> getViews(){
     return views;
+  }
+
+  private void ensureShadow() {
+    List<View> temp = new ArrayList<>();
+    if (needLoop && views.size() > 2) {
+      temp.add(0, views.get(views.size() - 1));
+      for (View view : views) {
+        temp.add(view);
+      }
+      temp.add(views.get(0));
+    } else {
+      temp.addAll(views);
+    }
+    shadow.clear();
+    notifyDataSetChanged();
+    shadow.addAll(temp);
+    notifyDataSetChanged();
+  }
+
+  public int getRealPosition(int shadowPosition) {
+    if (shadowPosition < 0 || shadowPosition >= shadow.size()) {
+      return -1;
+    } else {
+      return getItemIndex(shadow.get(shadowPosition));
+    }
+  }
+
+  public int getFirst() {
+    if (needLoop && views.size() > 2) {
+      return 1;
+    } else {
+      return 0;
+    }
   }
 }

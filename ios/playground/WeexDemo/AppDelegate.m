@@ -70,7 +70,6 @@
 {
     [WXAppConfiguration setAppGroup:@"AliApp"];
     [WXAppConfiguration setAppName:@"WeexDemo"];
-    [WXAppConfiguration setAppVersion:@"1.8.3"];
     [WXAppConfiguration setExternalUserAgent:@"ExternalUA"];
     
     [WXSDKEngine initSDKEnviroment];

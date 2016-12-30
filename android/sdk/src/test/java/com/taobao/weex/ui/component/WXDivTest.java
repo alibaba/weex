@@ -242,7 +242,7 @@ public class WXDivTest {
     }
 
     public static WXDiv create(WXVContainer parent){
-        WXDiv div = new WXDiv(WXSDKInstanceTest.createInstance(),new TestDomObject(),parent,false);
+        WXDiv div = new WXDiv(WXSDKInstanceTest.createInstance(),new TestDomObject(),parent);
         return div;
     }
 
@@ -259,7 +259,7 @@ public class WXDivTest {
         Mockito.when(spy.clone()).thenReturn(divDom);
         divDom.ref = "1";
 
-        mWXDiv = new WXDiv(instance, divDom, null, false);
+        mWXDiv = new WXDiv(instance, divDom, null);
         mWXDiv.initView();
     }
 
@@ -272,7 +272,7 @@ public class WXDivTest {
         Mockito.when(testDom.getPadding()).thenReturn(new Spacing());
         Mockito.when(testDom.clone()).thenReturn(testDom);
         testDom.ref = "2";
-        WXText child1 = new WXText(instance, testDom, mWXDiv, false);
+        WXText child1 = new WXText(instance, testDom, mWXDiv);
         child1.initView();
 
         mWXDiv.addChild(child1, 0);
@@ -283,7 +283,7 @@ public class WXDivTest {
         Mockito.when(testDom2.getPadding()).thenReturn(new Spacing());
         Mockito.when(testDom2.clone()).thenReturn(testDom2);
         testDom2.ref = "3";
-        child2 = new WXText(instance, testDom2, mWXDiv, false);
+        child2 = new WXText(instance, testDom2, mWXDiv);
         child2.initView();
 
         mWXDiv.addChild(child2, -1);
@@ -295,7 +295,7 @@ public class WXDivTest {
         Mockito.when(testDom3.getPadding()).thenReturn(new Spacing());
         Mockito.when(testDom3.clone()).thenReturn(testDom3);
         testDom3.ref = "4";
-        WXText child3 = new WXText(instance, testDom3, mWXDiv, false);
+        WXText child3 = new WXText(instance, testDom3, mWXDiv);
         child3.initView();
 
         mWXDiv.addChild(child3, 1);

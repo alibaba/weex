@@ -206,6 +206,11 @@ package com.taobao.weex.utils;
 
 import android.text.TextUtils;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.taobao.weex.bridge.JSCallback;
+import com.taobao.weex.bridge.JSCallbackCreator;
+import com.taobao.weex.bridge.WXModuleManager;
 import com.taobao.weex.common.IWXObject;
 
 import java.lang.reflect.Field;
@@ -230,6 +235,38 @@ public class WXReflectionUtils {
     } else {
       return JSON.parseObject(value instanceof String ? (String) value : JSON.toJSONString(value), paramClazz);
     }
+  }
+
+
+  public static Object[] prepareArguments(Type[] paramClazzs, JSONArray args, JSCallbackCreator creator) throws Exception {
+    Object[] params = new Object[paramClazzs.length];
+    Object value;
+    Type paramClazz;
+    for (int i = 0; i < paramClazzs.length; i++) {
+      paramClazz = paramClazzs[i];
+      if(i>=args.size()){
+        if(!paramClazz.getClass().isPrimitive()) {
+          params[i] = null;
+          continue;
+        }else {
+          throw new Exception("[prepareArguments] method argument list not match.");
+        }
+      }
+      value = args.get(i);
+
+      if (paramClazz == JSONObject.class) {
+        params[i] = value;
+      } else if(JSCallback.class == paramClazz){
+        if(value instanceof String){
+          params[i] = creator.create((String)value);
+        }else{
+          throw new Exception("Parameter type not match.");
+        }
+      } else {
+        params[i] = WXReflectionUtils.parseArgument(paramClazz,value);
+      }
+    }
+    return params;
   }
 
   public static void setValue(Object obj, String fieldName, Object value) {

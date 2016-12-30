@@ -1,5 +1,4 @@
 # How to preview weex code in browser ?
-<a href="https://github.com/weexteam/article/issues/43"  class="weex-translate">cn</a>
 
 
 ## weex-toolkit
@@ -28,5 +27,5 @@ weex xxx.we
 
 A browser window will be opened automatically to display the page you want to preview:
 
-![preview page](http://gtms02.alicdn.com/tps/i2/TB1y151LVXXXXXXaXXXoRYgWVXX-495-584.jpg)
+![preview page](//gtms02.alicdn.com/tps/i2/TB1y151LVXXXXXXaXXXoRYgWVXX-495-584.jpg)
 

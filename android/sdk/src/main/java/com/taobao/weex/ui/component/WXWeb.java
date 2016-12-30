@@ -205,11 +205,13 @@
 package com.taobao.weex.ui.component;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.adapter.URIAdapter;
 import com.taobao.weex.common.Component;
 import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.WXDomObject;
@@ -224,7 +226,6 @@ import java.util.Map;
 public class WXWeb extends WXComponent {
 
     protected IWebView mWebView;
-    private String mUrl;
 
     @Deprecated
     public WXWeb(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
@@ -314,9 +315,8 @@ public class WXWeb extends WXComponent {
         if (TextUtils.isEmpty(url) || getHostView() == null) {
             return;
         }
-        mUrl = url;
         if (!TextUtils.isEmpty(url)) {
-            loadUrl(url);
+            loadUrl(getInstance().rewriteUri(Uri.parse(url), URIAdapter.WEB).toString());
         }
     }
 

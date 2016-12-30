@@ -40,13 +40,27 @@
 /******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ 0:
+/***/ function(module, exports, __webpack_require__) {
+
+	var __weex_template__ = __webpack_require__(191)
+
+	__weex_define__('@weex-component/3bfdbb5ef29172e6db527e1bc85ec8fd', [], function(__weex_require__, __weex_exports__, __weex_module__) {
+
+	    __weex_module__.exports.template = __weex_template__
+
+	})
+
+	__weex_bootstrap__('@weex-component/3bfdbb5ef29172e6db527e1bc85ec8fd',undefined,undefined)
+
+/***/ },
+
+/***/ 191:
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/fbf11910b018341d4b4a270e96ff1a0b", [], function(__weex_require__, __weex_exports__, __weex_module__){
-
-	;__weex_module__.exports.template={
+	module.exports = {
 	  "type": "div",
 	  "children": [
 	    {
@@ -60,10 +74,7 @@
 	    }
 	  ]
 	}
-	})
-	;__weex_bootstrap__("@weex-component/fbf11910b018341d4b4a270e96ff1a0b", {
-	  "transformerVersion": "0.3.1"
-	},undefined)
 
 /***/ }
-/******/ ]);
+
+/******/ });

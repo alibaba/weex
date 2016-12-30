@@ -321,7 +321,6 @@ public class WXAnimationModule extends WXModule {
       animator = ObjectAnimator.ofPropertyValuesHolder(
           target, holders.toArray(new PropertyValuesHolder[holders.size()]));
       animator.setStartDelay(animation.delay);
-      final IntEvaluator intEvaluator=new IntEvaluator();
       if (target.getLayoutParams() != null &&
           (!TextUtils.isEmpty(style.width) || !TextUtils.isEmpty(style.height))) {
         DimensionUpdateListener listener = new DimensionUpdateListener(target);

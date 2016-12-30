@@ -204,10 +204,10 @@
  */
 package com.taobao.weex.bridge;
 
+import android.content.Intent;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.Destroyable;
 import com.taobao.weex.common.WXException;
@@ -217,7 +217,6 @@ import com.taobao.weex.ui.module.WXTimerModule;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXReflectionUtils;
 
-import java.lang.reflect.Type;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -306,7 +305,7 @@ public class WXModuleManager {
     return true;
   }
 
-  static boolean callModuleMethod(String instanceId, String moduleStr, String methodStr, JSONArray args) {
+  static boolean callModuleMethod(final String instanceId, String moduleStr, String methodStr, JSONArray args) {
     ModuleFactory factory = sModuleFactoryMap.get(moduleStr);
     if(factory == null){
       WXLogUtils.e("[WXModuleManager] module factory not found.");
@@ -325,35 +324,15 @@ public class WXModuleManager {
     }
     final Invoker invoker = methodsMap.get(methodStr);
     try {
-      Type[] paramClazzs = invoker.getParameterTypes();
-      final Object[] params = new Object[paramClazzs.length];
-      Object value;
-      Type paramClazz;
-      for (int i = 0; i < paramClazzs.length; i++) {
-        paramClazz = paramClazzs[i];
-        if(i>=args.size()){
-          if(!paramClazz.getClass().isPrimitive()) {
-            params[i] = null;
-            continue;
-          }else {
-            WXLogUtils.e("[WXModuleManager] module method argument list not match.");
-            return false;
-          }
+      final Object[] params = WXReflectionUtils.prepareArguments(
+          invoker.getParameterTypes(),
+          args,
+          new JSCallbackCreator() {
+        @Override
+        public JSCallback create(String callbackId) {
+          return new SimpleJSCallback(instanceId,callbackId);
         }
-        value = args.get(i);
-
-        if (paramClazz == JSONObject.class) {
-          params[i] = value;
-        } else if(JSCallback.class == paramClazz){
-          if(value instanceof String){
-            params[i] = new SimpleJSCallback(instanceId,(String)value);
-          }else{
-            throw new Exception("Parameter type not match.");
-          }
-        } else {
-          params[i] = WXReflectionUtils.parseArgument(paramClazz,value);
-        }
-      }
+      });
       if (invoker.isRunInUIThread()) {
         WXSDKManager.getInstance().postOnUiThread(new Runnable() {
           @Override
@@ -361,7 +340,7 @@ public class WXModuleManager {
             try {
               invoker.invoke(wxModule, params);
             } catch (Exception e) {
-              WXLogUtils.e("callModuleMethod >>> invoke module:", e);
+              throw new RuntimeException(e);
             }
           }
         }, 0);
@@ -408,6 +387,19 @@ public class WXModuleManager {
     return wxModule;
   }
 
+  public static void onActivityResult(String instanceId,int requestCode, int resultCode, Intent data){
+
+    HashMap<String, WXModule> modules = sInstanceModuleMap.get(instanceId);
+    for( String key : modules.keySet()){
+      WXModule module =  modules.get(key);
+       if( module != null) {
+         module.onActivityResult(requestCode, resultCode, data);
+       }else{
+         WXLogUtils.w("onActivityResult can not find the "+ key +" module");
+       }
+    }
+  }
+
   public static void destroyInstanceModules(String instanceId) {
     HashMap<String, WXModule> moduleMap = sInstanceModuleMap.remove(instanceId);
     if (moduleMap == null || moduleMap.size() < 1) {
@@ -431,27 +423,6 @@ public class WXModuleManager {
       for(String key:keys){
         registerJSModule(key,sModuleFactoryMap.get(key));
       }
-    }
-  }
-
-  private static class SimpleJSCallback implements JSCallback{
-    String mInstanceId;
-    String mCallbackId;
-
-    SimpleJSCallback(String instanceId,String callbackId){
-      this.mCallbackId = callbackId;
-      this.mInstanceId = instanceId;
-    }
-
-
-    @Override
-    public void invoke(Object data) {
-      WXBridgeManager.getInstance().callbackJavascript(mInstanceId,mCallbackId,data,false);
-    }
-
-    @Override
-    public void invokeAndKeepAlive(Object data) {
-      WXBridgeManager.getInstance().callbackJavascript(mInstanceId,mCallbackId,data,true);
     }
   }
 

@@ -1,7 +1,7 @@
 package com.alibaba.weex.uitest.TC_AG;
 import com.alibaba.weex.WXPageActivity;
 import com.alibaba.weex.util.TestFlow;
-import java.util.HashMap;
+import java.util.TreeMap;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,7 +13,7 @@ public class AG_CommonEvent_Image_Onclick extends TestFlow {
 	@Before
 	public void setUp() throws InterruptedException {
 		super.setUp();
-		HashMap testMap = new <String, Object> HashMap();
+		TreeMap testMap = new <String, Object> TreeMap();
 		testMap.put("testComponet", "AG_CommonEvent");
 		testMap.put("testChildCaseInit", "AG_CommonEvent_Image_Onclick");
 		super.setTestMap(testMap);

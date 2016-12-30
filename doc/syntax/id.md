@@ -1,6 +1,5 @@
 # Find an Element
 <span class="weex-version">0.4</span>
-<a href="https://github.com/weexteam/article/issues/3"  class="weex-translate">cn</a>
 
 In Weex, we may set the `id` property for a particular element, just as unique identification of a particular element.
 

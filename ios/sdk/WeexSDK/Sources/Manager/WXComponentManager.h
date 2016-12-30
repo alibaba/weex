@@ -6,6 +6,7 @@
  * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
  */
 
+@class WXBridgeMethod;
 @class WXSDKInstance;
 @class WXComponent;
 
@@ -106,6 +107,7 @@ extern void WXPerformBlockOnComponentThread(void (^block)());
  **/
 - (void)scrollToComponent:(NSString *)ref options:(NSDictionary *)options;
 
+- (void)dispatchComponentMethod:(WXBridgeMethod*)method;
 
 ///--------------------------------------
 /// @name Life Cycle

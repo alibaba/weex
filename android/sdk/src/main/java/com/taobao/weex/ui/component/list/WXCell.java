@@ -224,10 +224,12 @@ import com.taobao.weex.ui.view.WXFrameLayout;
 
 public class WXCell extends WXVContainer<WXFrameLayout> {
 
-    public int lastLocationY = -1;
+    private int mLastLocationY = 0;
     private ViewGroup mRealView;
     private View mTempStickyView;
     private View mHeadView;
+    private boolean mLazy = true;
+
 
     @Deprecated
     public WXCell(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
@@ -238,6 +240,14 @@ public class WXCell extends WXVContainer<WXFrameLayout> {
         super(instance, dom, parent,true );
     }
 
+    @Override
+    public boolean isLazy() {
+        return mLazy;
+    }
+
+    public void lazy(boolean lazy) {
+        mLazy = lazy;
+    }
 
     /**
      * If Cell is Sticky, need wraped FrameLayout
@@ -254,6 +264,14 @@ public class WXCell extends WXVContainer<WXFrameLayout> {
             mRealView = view;
             return view;
         }
+    }
+
+    public int getLocationFromStart(){
+        return mLastLocationY;
+    }
+
+    public void setLocationFromStart(int l){
+        mLastLocationY = l;
     }
 
     @Override

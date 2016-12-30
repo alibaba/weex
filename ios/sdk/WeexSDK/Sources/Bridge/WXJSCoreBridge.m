@@ -127,13 +127,13 @@
 
 - (void)registerCallNative:(WXJSCallNative)callNative
 {
-    NSInteger (^callNativeBlock)(JSValue *, JSValue *, JSValue *) = ^(JSValue *instance, JSValue *tasks, JSValue *callback){
+    JSValue* (^callNativeBlock)(JSValue *, JSValue *, JSValue *) = ^JSValue*(JSValue *instance, JSValue *tasks, JSValue *callback){
         NSString *instanceId = [instance toString];
         NSArray *tasksArray = [tasks toArray];
         NSString *callbackId = [callback toString];
         
         WXLogDebug(@"Calling native... instance:%@, tasks:%@, callback:%@", instanceId, tasksArray, callbackId);
-        return callNative(instanceId, tasksArray, callbackId);
+        return [JSValue valueWithInt32:(int32_t)callNative(instanceId, tasksArray, callbackId) inContext:[JSContext currentContext]];
     };
     
     _jsContext[@"callNative"] = callNativeBlock;
@@ -149,9 +149,9 @@
         NSString *parentRef = [ref toString];
         NSInteger insertIndex = [[index toNumber] integerValue];
         
-         WXLogDebug(@"callAddElement...%@, %@, %@, %ld", instanceIdString, parentRef, componentData, insertIndex);
+         WXLogDebug(@"callAddElement...%@, %@, %@, %ld", instanceIdString, parentRef, componentData, (long)insertIndex);
         
-        return callAddElement(instanceIdString, parentRef, componentData, insertIndex);
+        return [JSValue valueWithInt32:(int32_t)callAddElement(instanceIdString, parentRef, componentData, insertIndex) inContext:[JSContext currentContext]];
     };
 
     _jsContext[@"callAddElement"] = callAddElementBlock;

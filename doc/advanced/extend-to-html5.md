@@ -1,6 +1,5 @@
 ## Extend Weex HTML5
 <span class="weex-version">0.4</span>
-<a href="https://github.com/weexteam/article/issues/11"  class="weex-translate">cn</a>
 
 ### Intro
 

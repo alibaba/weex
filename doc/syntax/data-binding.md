@@ -1,6 +1,5 @@
 # Data-Binding
 <span class="weex-version">0.4</span>
-<a href="https://github.com/weexteam/article/issues/5"  class="weex-translate">cn</a>
 
 In Weex, we use the *mustache* syntax `{{...}}` to bind data in `<template>` which are defined in `<script>`. Once data and template is bound, the data changes will influence the corresponding template content immediately and automatically.
 
@@ -211,6 +210,32 @@ example2.items = []
 ```
 
 * [See more about display logic control](./display-logic.md)
+
+### `static`
+
+`static` attribute can cancel the data binding, and the data changes will not be synchronized to UI.
+
+```html
+<template>
+  <div static>
+    <text>{{ word }}</text>
+  </div>
+</template>
+
+<script>
+  module.exports = {
+    ready: function() {
+      this.word = 'Data changes'
+    },
+    data: {
+      word: 'Hello, static'
+    }
+  }
+</script>
+```
+
+As shown above, after the `static` attribute is added, the rendering result will be `Hello, static`, which is equivalent to rendering a static node. The change of the data `word` in ready function will not be listened, so the text value will not change. 
+`static` property is designed to reduce the long list or pure static page memory overhead. Be careful with it, as it will likely break your page logic.
 
 Next, let's have a look at [style and class](./style-n-class.md).
 

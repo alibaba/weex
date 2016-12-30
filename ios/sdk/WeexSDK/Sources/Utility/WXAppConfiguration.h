@@ -41,5 +41,10 @@
 + (void)setJSFrameworkVersion:(NSString *)JSFrameworkVersion;
 
 
+/*
+ *  @abstract customizeProtocolClasses
+ */
++ (NSArray*)customizeProtocolClasses;
++ (void)setCustomizeProtocolClasses:(NSArray*)customizeProtocolClasses;
 
 @end

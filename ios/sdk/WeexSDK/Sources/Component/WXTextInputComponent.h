@@ -8,7 +8,8 @@
 
 #import "WXComponent.h"
 #import "WXTextComponentProtocol.h"
+#import "WXDatePickerManager.h"
 
-@interface WXTextInputComponent : WXComponent<WXTextComponentProtocol, UITextFieldDelegate>
+@interface WXTextInputComponent : WXComponent<WXTextComponentProtocol, UITextFieldDelegate,WXDatePickerManagerDelegate>
 
 @end

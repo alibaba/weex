@@ -214,5 +214,9 @@ public interface IFComponentHolder extends ComponentCreator {
     /** Prepare component if not a lazy load componnet.**/
     void loadIfNonLazy();
 
-    Invoker getMethod(String name);
+    Invoker getPropertyInvoker(String name);
+
+    Invoker getMethodInvoker(String name);
+
+    String[] getMethods();
 }

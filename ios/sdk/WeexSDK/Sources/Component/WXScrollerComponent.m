@@ -54,6 +54,13 @@
     css_node_t *_scrollerCSSNode;
 }
 
+WX_EXPORT_METHOD(@selector(resetLoadmore))
+
+- (void)resetLoadmore
+{
+    _previousLoadMoreContentHeight=0;
+}
+
 - (css_node_t *)scrollerCSSNode
 {
     return _scrollerCSSNode;
@@ -128,10 +135,10 @@
 {
     if ([self isViewLoaded]) {
         [self setContentSize:_contentSize];
+        [self adjustSticky];
+        [self handleAppear];
     }
     
-    [self adjustSticky];
-    [self handleAppear];
     [_loadingComponent resizeFrame];
 }
 
@@ -203,9 +210,12 @@
 
 - (void)adjustSticky
 {
+    if (![self isViewLoaded]) {
+        return;
+    }
     CGFloat scrollOffsetY = ((UIScrollView *)self.view).contentOffset.y;
     for(WXComponent *component in self.stickyArray) {
-        if (CGPointEqualToPoint(component->_absolutePosition, CGPointZero)) {
+        if (isnan(component->_absolutePosition.x) && isnan(component->_absolutePosition.y)) {
             component->_absolutePosition = [component.supercomponent.view convertPoint:component.view.frame.origin toView:self.view];
         }
         CGPoint relativePosition = component->_absolutePosition;
@@ -455,6 +465,9 @@
 
 - (void)handleAppear
 {
+    if (![self isViewLoaded]) {
+        return;
+    }
     UIScrollView *scrollView = (UIScrollView *)self.view;
     CGFloat vx = scrollView.contentInset.left + scrollView.contentOffset.x;
     CGFloat vy = scrollView.contentInset.top + scrollView.contentOffset.y;
@@ -471,17 +484,20 @@
 - (void)scrollToTarget:(WXScrollToTarget *)target scrollRect:(CGRect)rect
 {
     WXComponent *component = target.target;
+    if (![component isViewLoaded]) {
+        return;
+    }
     
     CGFloat ctop;
-    if (component.supercomponent) {
-        ctop = [component.supercomponent->_view convertPoint:component->_view.frame.origin toView:_view].y;
+    if (component && component->_view && component->_view.superview) {
+        ctop = [component->_view.superview convertPoint:component->_view.frame.origin toView:_view].y;
     } else {
         ctop = 0.0;
     }
     CGFloat cbottom = ctop + CGRectGetHeight(component.calculatedFrame);
     CGFloat cleft;
-    if (component.supercomponent) {
-        cleft = [component.supercomponent->_view convertPoint:component->_view.frame.origin toView:_view].x;
+    if (component && component->_view && component->_view.superview) {
+        cleft = [component->_view.superview convertPoint:component->_view.frame.origin toView:_view].x;
     } else {
         cleft = 0.0;
     }

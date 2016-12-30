@@ -14,6 +14,7 @@
 @property (nonatomic, strong) NSString  *module;
 @property (nonatomic, strong) NSString  *method;
 @property (nonatomic, strong) NSArray   *arguments;
+@property (nonatomic, strong) NSDictionary *targets;
 
 - (instancetype)initWihData:(NSDictionary *)data;
 

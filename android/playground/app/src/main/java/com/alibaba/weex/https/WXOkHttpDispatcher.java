@@ -5,7 +5,6 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 
-import com.taobao.weex.devtools.inspector.network.OkHttpInterceptor;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -33,7 +32,6 @@ public class WXOkHttpDispatcher {
 
   private static OkHttpClient defaultOkHttpClient() {
     OkHttpClient client = new OkHttpClient();
-    client.networkInterceptors().add(new OkHttpInterceptor());
     client.setConnectTimeout(DEFAULT_CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
     client.setReadTimeout(DEFAULT_READ_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
     client.setWriteTimeout(DEFAULT_WRITE_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);

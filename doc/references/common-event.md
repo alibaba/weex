@@ -1,6 +1,5 @@
 # Common Events
 <span class="weex-version">0.4</span>
-<a href="https://github.com/weexteam/article/issues/33"  class="weex-translate">cn</a>
 
 ## Click event
 

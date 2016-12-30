@@ -228,7 +228,7 @@ public class AppearanceHelper {
 
   private Rect mVisibleRect = new Rect();
 
-  private final int mCellPositionInScrollable;
+  private int mCellPositionInScrollable;
 
   /**
    * @param awareChild child to notify when appearance changed.
@@ -240,6 +240,10 @@ public class AppearanceHelper {
   public AppearanceHelper(WXComponent awareChild, int cellPositionInScrollable) {
     mAwareChild = awareChild;
     mCellPositionInScrollable = cellPositionInScrollable;
+  }
+
+  public void setCellPosition(int pos){
+    mCellPositionInScrollable = pos;
   }
 
   public int getCellPositionINScollable() {

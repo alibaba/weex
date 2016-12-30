@@ -50,14 +50,18 @@ use -e to set the entry of these bundles. and the url of "index.we" will display
 ![devtools-main](https://img.alicdn.com/tps/TB13fwSKFXXXXXDaXXXXXXXXXXX-887-828.png "connecting (multiple) devices")
 
 ### Inspector
- Inspector can be used to show your `Element` \ `NetWork` \ `Console log` \ `ScreenCast` \ `BoxModel` \ `Native View` and so on.
+ Inspector can be used to show your `Element` \ `Network` \ `Console log` \ `ScreenCast` \ `BoxModel` \ `Native View` and so on.
 
 ![devtools-inspector](https://img.alicdn.com/tps/TB1O.nwKFXXXXX8XpXXXXXXXXXX-1436-811.png "devtools-inspector")
 
 #### Element
-![inspector-element](https://img.alicdn.com/tps/TB1.02bKFXXXXXwaXXXXXXXXXXX-2880-1800.png "inspector-element")
+##### native view element
+![native-element](https://img.alicdn.com/tps/TB16L3ENXXXXXcsXVXXXXXXXXXX-2878-1798.png "native-element")
 
-#### NetWork
+##### weex dom element
+![dom-element](https://img.alicdn.com/tps/TB1TsMuNXXXXXcsaXXXXXXXXXXX-2450-1460.png "dom-element")
+
+#### Network
 
 ##### show the total time and latency
 ![inspector-network](https://img.alicdn.com/tps/TB1NjO_KFXXXXcaaXXXXXXXXXXX-2880-1800.png "inspector-network")

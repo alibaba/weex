@@ -82,6 +82,12 @@ extern void WXPerformBlockOnMainThread( void (^ _Nonnull block)());
 extern void WXPerformBlockSyncOnMainThread( void (^ _Nonnull block)());
 
 /**
+ * @abstract execute action block on the specific thread.
+ *
+ */
+extern void WXPerformBlockOnThread(void (^ _Nonnull block)(), NSThread *_Nonnull thread);
+
+/**
  * @abstract swizzling methods.
  *
  */
@@ -92,6 +98,8 @@ extern void WXSwizzleInstanceMethodWithBlock(_Nonnull Class class, _Nonnull SEL 
 extern _Nonnull SEL WXSwizzledSelectorForSelector(_Nonnull SEL selector);
 
 @interface WXUtility : NSObject
+
++ (void)performBlock:(void (^_Nonnull)())block onThread:(NSThread *_Nonnull)thread;
 
 + (void)setNotStat:(BOOL)notStat;
 + (BOOL)notStat;
@@ -325,5 +333,29 @@ CGPoint WXPixelPointResize(CGPoint value);
  *
  */
 + (NSString *_Nullable)uuidString;
+
+/**
+ *  @abstract convert date string with formatter yyyy-MM-dd to date.
+ *
+ */
++ (NSDate *_Nullable)dateStringToDate:(NSString *_Nullable)dateString;
+
+/**
+ *  @abstract convert time string with formatter HH:mm to date.
+ *
+ */
++ (NSDate *_Nullable)timeStringToDate:(NSString *_Nullable)timeString;
+
+/**
+ *  @abstract convert date to date string with formatter yyyy-MM-dd .
+ *
+ */
++ (NSString *_Nullable)dateToString:(NSDate *_Nullable)date;
+
+/**
+ *  @abstract convert date to time string with formatter HH:mm .
+ *
+ */
++ (NSString *_Nullable)timeToString:(NSDate *_Nullable)date;
 
 @end
