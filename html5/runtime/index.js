@@ -8,10 +8,12 @@
 import * as shared from '../shared'
 import { Document, Element, Comment } from './vdom'
 import Listener from './listener'
+import { TaskCenter } from './task-center'
 import init from './init'
 
 const config = {
   Document, Element, Comment, Listener,
+  TaskCenter,
   sendTasks (...args) {
     return global.callNative(...args)
   }

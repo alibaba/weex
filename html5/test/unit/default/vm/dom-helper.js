@@ -1,9 +1,6 @@
 import chai from 'chai'
 const { expect } = chai
 
-global.callNative = function () {}
-global.callAddElement = function () {}
-
 import {
   createElement,
   createBlock,
@@ -104,10 +101,13 @@ describe('help attach target', () => {
   })
 
   it('attach body to documentElement', () => {
+    const oriCallnative = global.callNative
+    global.callNative = function () {}
     const target = createBody(vm, 'bar')
     const dest = vm._app.doc.documentElement
     attachTarget(vm, target, dest)
     expect(dest.children).eql([target])
+    global.callNative = oriCallnative
   })
 
   it('attach element to body', () => {
@@ -329,12 +329,15 @@ describe('help remove target', () => {
   })
 
   it('remove body', () => {
+    const oriCallnative = global.callNative
+    global.callNative = function () {}
     const parent = vm._app.doc.documentElement
     const element = createBody(vm, 'baz')
     parent.appendChild(element)
     expect(parent.children).eql([element])
     removeTarget(vm, element)
     expect(parent.children).eql([])
+    global.callNative = oriCallnative
   })
 
   it('remove element', () => {

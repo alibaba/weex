@@ -29,6 +29,7 @@ export function removeDoc (id) {
 }
 
 /**
+ * @deprecated
  * Get listener by document id.
  * @param {string} id
  * @return {object} listener
@@ -37,6 +38,19 @@ export function getListener (id) {
   const doc = docMap[id]
   if (doc && doc.listener) {
     return doc.listener
+  }
+  return null
+}
+
+/**
+ * Get TaskCenter instance by id.
+ * @param {string} id
+ * @return {object} TaskCenter
+ */
+export function getTaskCenter (id) {
+  const doc = docMap[id]
+  if (doc && doc.taskCenter) {
+    return doc.taskCenter
   }
   return null
 }
@@ -88,12 +102,25 @@ export function appendBody (doc, node, before) {
       delete doc.nodeMap[node.nodeId]
     }
     documentElement.pureChildren.push(node)
-    doc.listener.createBody(node)
+    sendBody(doc, node)
   }
   else {
     node.parentNode = documentElement
     doc.nodeMap[node.ref] = node
   }
+}
+
+function sendBody (doc, node) {
+  const body = node.toJSON()
+  const children = body.children
+  delete body.children
+  let result = doc.taskCenter.send('dom', { action: 'createBody' }, [body])
+  if (children) {
+    children.forEach(child => {
+      result = doc.taskCenter.send('dom', { action: 'addElement' }, [body.ref, child, -1])
+    })
+  }
+  return result
 }
 
 /**

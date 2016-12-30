@@ -1,3 +1,4 @@
+import { init as initTaskHandler } from './task-center'
 import { registerElement } from './vdom/element-types'
 
 let frameworks
@@ -143,6 +144,7 @@ export default function init (config) {
   }
 
   frameworks = config.frameworks || {}
+  initTaskHandler()
 
   // Init each framework by `init` method and `config` which contains three
   // virtual-DOM Class: `Document`, `Element` & `Comment`, and a JS bridge method:

@@ -1,4 +1,4 @@
-import { getListener } from './operation'
+import { getTaskCenter } from './operation'
 
 let Element
 
@@ -40,9 +40,9 @@ export function registerElement (type, methods) {
   // Add methods to prototype.
   methods.forEach(methodName => {
     XElement.prototype[methodName] = function (...args) {
-      const listener = getListener(this.docId)
-      if (listener) {
-        listener.callComponentMethod(this.ref, type, methodName, args)
+      const taskCenter = getTaskCenter(this.docId)
+      if (taskCenter) {
+        taskCenter.send('component', { ref: this.ref, component: type, method: methodName }, args)
       }
     }
   })

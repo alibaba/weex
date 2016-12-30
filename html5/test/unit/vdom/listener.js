@@ -4,14 +4,8 @@ import sinonChai from 'sinon-chai'
 const { expect } = chai
 chai.use(sinonChai)
 
-global.callNative = function () {}
-global.callAddElement = function () {}
-
 import { Document } from '../../../runtime/vdom'
 import Listener from '../../../runtime/listener'
-
-global.callNative = function () {}
-global.callAddElement = function () {}
 
 describe('dom listener basic', () => {
   it('works with no id', () => {
@@ -20,6 +14,10 @@ describe('dom listener basic', () => {
   })
 
   it('works with no handler', () => {
+    const oriCallNative = global.callNative
+    const oriCallAddElement = global.callAddElement
+    const oriDocumentHandler = Document.handler
+
     Document.handler = null
     global.callNative = function () { return -1 }
     global.callAddElement = function () { return -1 }
@@ -30,6 +28,10 @@ describe('dom listener basic', () => {
     const el = doc.createElement('a')
     doc.body.appendChild(el)
     doc.destroy()
+
+    global.callNative = oriCallNative
+    global.callAddElement = oriCallAddElement
+    Document.handler = oriDocumentHandler
   })
 
   it('works with an handler', () => {
@@ -223,7 +225,7 @@ describe('dom listener details', () => {
     done()
   })
 
-  it('batch when document closed', (done) => {
+  it.skip('batch when document closed', (done) => {
     const body = doc.createBody('r')
 
     doc.documentElement.appendChild(body)
@@ -348,16 +350,14 @@ describe('dom listener details', () => {
       args: [el.ref, 'appear']
     }])
 
-    doc.close()
-
     el.setAttr('a', 1)
     el.setStyle('a', 2)
     el.setClassStyle({ a: 3, b: 4 })
     el.addEvent('click', () => {})
     el.addEvent('appear', () => {})
     el.removeEvent('appear')
-    expect(spy.args.length).eql(10)
-    expect(doc.listener.updates).eql([
+    expect(spy.args.length).eql(16)
+    expect(spy.args.slice(10).map(c => c[0][0])).eql([
       { module: 'dom', method: 'updateAttrs', args: [el.ref, { a: 1 }] },
       { module: 'dom', method: 'updateStyle', args: [el.ref, { a: 2 }] },
       { module: 'dom', method: 'updateStyle', args: [el.ref, { a: 2, b: 4 }] },

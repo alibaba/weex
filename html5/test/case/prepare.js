@@ -13,6 +13,7 @@ import {
 import shared from '../../shared'
 import { Document, Element, Comment } from '../../runtime/vdom'
 import Listener from '../../runtime/listener'
+import { TaskCenter, init } from '../../runtime/task-center'
 
 // load framework
 import * as defaultFramework from '../../frameworks/legacy'
@@ -29,6 +30,7 @@ global.callAddElement = function (id, ref, json, index) {
   return callNativeHandler(id, [{ module: 'dom', method: 'addElement', args: [ref, json, index] }])
 }
 
+init()
 global.WXEnvironment = DEFAULT_ENV
 global.CSS_UNIT = DEFAULT_CSS_UNIT
 
@@ -36,6 +38,7 @@ global.CSS_UNIT = DEFAULT_CSS_UNIT
 export function createRuntime () {
   const config = {
     Document, Element, Comment, Listener,
+    TaskCenter,
     sendTasks (...args) {
       return callNativeHandler(...args)
     }

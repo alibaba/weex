@@ -1,8 +1,5 @@
 import { expect } from 'chai'
 
-global.callNative = function () {}
-global.callAddElement = function () {}
-
 import vanilla from '../../../frameworks/vanilla'
 import runtime from '../../../runtime'
 

@@ -4,9 +4,6 @@ import sinonChai from 'sinon-chai'
 const { expect } = chai
 chai.use(sinonChai)
 
-global.callNative = function () {}
-global.callAddElement = function () {}
-
 import {
   Document,
   Element,
@@ -15,19 +12,6 @@ import {
   registerElement,
   clearElementTypes
 } from '../../../runtime/vdom'
-
-global.callNative = function () {}
-global.callAddElement = function () {}
-
-const tempHandler = Document.handler
-
-before(() => {
-  Document.handler = global.callNative
-})
-
-after(() => {
-  Document.handler = tempHandler
-})
 
 describe('document constructor', () => {
   it('create & destroy document', () => {

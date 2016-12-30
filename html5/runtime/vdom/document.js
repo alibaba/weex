@@ -7,6 +7,7 @@ import '../../shared/objectAssign'
 import Comment from './comment'
 import Element from './element'
 import Listener from '../listener'
+import { TaskCenter } from '../task-center'
 import { createHandler } from '../handler'
 import { addDoc, removeDoc, appendBody, setBody } from './operation'
 
@@ -18,7 +19,8 @@ export default function Document (id, url, handler) {
   addDoc(id, this)
   this.nodeMap = {}
   const L = Document.Listener || Listener
-  this.listener = new L(id, handler || createHandler(id, Document.handler))
+  this.listener = new L(id, handler || createHandler(id, Document.handler)) // deprecated
+  this.taskCenter = new TaskCenter(id, handler ? (id, ...args) => handler(...args) : Document.handler)
   this.createDocumentElement()
 }
 

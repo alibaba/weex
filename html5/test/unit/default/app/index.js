@@ -4,43 +4,21 @@ import sinonChai from 'sinon-chai'
 const { expect } = chai
 chai.use(sinonChai)
 
-global.callNative = function () {}
-global.callAddElement = function () {}
-
 import App from '../../../../frameworks/legacy/app'
-import { Element } from '../../../../runtime/vdom'
+import { Element, Document } from '../../../../runtime/vdom'
 
 describe('App Instance', () => {
-  const oriCallNative = global.callNative
-  const oriCallAddElement = global.callAddElement
-  const callNativeSpy = sinon.spy()
-  const callAddElementSpy = sinon.spy()
+  const oriDocumentHandler = Document.handler
+  const sendTasksSpy = sinon.spy()
   let app
 
-  before(() => {
-    global.callNative = (id, tasks, callbackId) => {
-      callNativeSpy(id, tasks, callbackId)
-      /* istanbul ignore if */
-      if (callbackId !== '-1') {
-        app.callbacks[callbackId] && app.callbacks[callbackId]()
-      }
-    }
-    global.callAddElement = (name, ref, json, index, callbackId) => {
-      callAddElementSpy(name, ref, json, index, callbackId)
-      /* istanbul ignore if */
-      if (callbackId !== '-1') {
-        app.callbacks[callbackId] && app.callbacks[callbackId]()
-      }
-    }
-  })
-
   beforeEach(() => {
+    Document.handler = sendTasksSpy
     app = new App(Date.now() + '')
   })
 
-  after(() => {
-    global.callNative = oriCallNative
-    global.callAddElement = oriCallAddElement
+  afterEach(() => {
+    Document.handler = oriDocumentHandler
   })
 
   describe('normal check', () => {
@@ -75,7 +53,7 @@ describe('App Instance', () => {
       }]
 
       app.callTasks(tasks)
-      expect(callNativeSpy.lastCall.args[1]).to.deep.equal(tasks)
+      expect(sendTasksSpy.lastCall.args[1]).to.deep.equal(tasks)
     })
 
     it('with callback', (done) => {
@@ -86,7 +64,7 @@ describe('App Instance', () => {
       }]
 
       app.callTasks(tasks)
-      expect(callNativeSpy.lastCall.args[1]).to.deep.equal(tasks)
+      expect(sendTasksSpy.lastCall.args[1]).to.deep.equal(tasks)
       done()
     })
 
@@ -98,8 +76,8 @@ describe('App Instance', () => {
       }]
 
       app.callTasks(tasks)
-      expect(callNativeSpy.lastCall.args[1]).to.deep.equal(tasks)
-      expect(callNativeSpy.lastCall.args[1][0].args[0]).to.be.a('string')
+      expect(sendTasksSpy.lastCall.args[1]).to.deep.equal(tasks)
+      expect(sendTasksSpy.lastCall.args[1][0].args[0]).to.be.a('string')
       done()
     })
 
@@ -114,8 +92,8 @@ describe('App Instance', () => {
       }]
 
       app.callTasks(tasks)
-      expect(callNativeSpy.lastCall.args[1]).to.deep.equal(tasks)
-      expect(callNativeSpy.lastCall.args[1][0].args[0]).to.be.equal('1')
+      expect(sendTasksSpy.lastCall.args[1]).to.deep.equal(tasks)
+      expect(sendTasksSpy.lastCall.args[1][0].args[0]).to.be.equal('1')
       done()
     })
 
@@ -129,8 +107,8 @@ describe('App Instance', () => {
       app.doc.close()
 
       app.callTasks(tasks)
-      expect(callNativeSpy.lastCall.args[1]).to.deep.equal(tasks)
-      expect(callNativeSpy.lastCall.args[1][0].args[0]).to.be.a('string')
+      expect(sendTasksSpy.lastCall.args[1]).to.deep.equal(tasks)
+      expect(sendTasksSpy.lastCall.args[1][0].args[0]).to.be.a('string')
       done()
     })
   })
