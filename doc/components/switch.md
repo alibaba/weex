@@ -18,7 +18,7 @@ Other attributes please check out the [common attributes](../references/common-a
 
 ### Styles
 
-**Notes:** There are several style properties that you mustn't use on this component, mostly have impact on the layout. Here are all the invalid properties:
+**Notes:** There are several style properties that you should not use on this component, mostly have impact on the layout. Here are all the invalid properties:
 
 - `width`
 - `height`
@@ -28,7 +28,7 @@ Other attributes please check out the [common attributes](../references/common-a
 - `padding` and `padding-xx`s
 - `border` and `border-xx`s
 
-**Notes:** Specially the `width` and `height` related properties is not configurable and the size of this component is fixed to `100x60` (for the design width 750px).
+**Notes:** If the container of `<switch>` is not set to `align-items:flex-start`, the switch in android will be stretched. 
 
 ### Events
 
