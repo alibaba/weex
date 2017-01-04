@@ -56,6 +56,12 @@ Other attributes please check out the [common attributes](../references/common-a
 
 **Notes:** `<input>` does not support the common-event `click`. Please listen to the `input` or `change` event instead.
 
+### Methods
+- `focus()`
+The `focus()` method is used to give focus to an input component and tigger soft keybord(if it can be focused).
+- `blur()`
+The `blur()` method is used to remove focus from an input component and close soft keybord(if it has focus).
+
 ### Parameters of events' object
 
 - for ``input`` and ``change`` events:
@@ -67,8 +73,10 @@ Other attributes please check out the [common attributes](../references/common-a
 ### Example
 
 ```
+<template>
 <div>
   <input
+    id="input"
     type="url"
     autofocus="true"
     placeholder="..."
@@ -76,4 +84,14 @@ Other attributes please check out the [common attributes](../references/common-a
     style="placeholder-color: #666666;">
   </input>
 </div>
+</template>
+<script>
+module.exports = {
+    methods : {
+        ready: function(e) {
+            this.$el('input').blur();
+        }
+    }
+}
+</script>
 ```
