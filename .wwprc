@@ -1,0 +1,31 @@
+{
+  "components": [
+    "image",
+    "text",
+    "scrollable",
+    "slider",
+    "indicator",
+    "tabheader",
+    "input",
+    "textarea",
+    "video",
+    "switch",
+    "a",
+    "embed",
+    "spinner",
+    "web"
+  ],
+  "apis": [
+    "dom",
+    "event",
+    "pageInfo",
+    "stream",
+    "modal",
+    "animation",
+    "webview",
+    "navigator",
+    "storage",
+    "clipboard",
+    "geolocation"
+  ]
+}

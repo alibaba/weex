@@ -1,5 +1,3 @@
-import { typof } from '../../util'
-import Vm from '../../vm'
 import {
   isWeexComponent,
   isWeexModule,
@@ -7,89 +5,85 @@ import {
   isNpmModule,
   removeWeexPrefix,
   removeJSSurfix
-} from './misc'
+} from '../../util'
+import {
+  registerCustomComponent,
+  requireCustomComponent,
+  initModules
+} from '../register'
 
-let commonModules = {}
-
-export function clearCommonModules () {
-  commonModules = {}
-}
-
-// define(name, factory) for primary usage
-// or
-// define(name, deps, factory) for compatibility
-// Notice: DO NOT use function define() {},
-// it will cause error after builded by webpack
-export const define = function (name, deps, factory) {
+/**
+ * define(name, factory) for primary usage
+ * or
+ * define(name, deps, factory) for compatibility
+ * Notice: DO NOT use function define() {},
+ * it will cause error after builded by webpack
+ */
+export const defineFn = function (app, name, ...args) {
   console.debug(`[JS Framework] define a component ${name}`)
 
-  if (typof(deps) === 'function') {
-    factory = deps
-    deps = []
+  // adapt args:
+  // 1. name, deps[], factory()
+  // 2. name, factory()
+  // 3. name, definition{}
+  let factory, definition
+  if (args.length > 1) {
+    definition = args[1]
+  }
+  else {
+    definition = args[0]
+  }
+  if (typeof definition === 'function') {
+    factory = definition
+    definition = null
   }
 
-  const _require = (name) => {
-    let cleanName
-
-    if (isWeexComponent(name)) {
-      cleanName = removeWeexPrefix(name)
-      return this.requireComponent(cleanName)
+  // resolve definition from factory
+  if (factory) {
+    const r = (name) => {
+      if (isWeexComponent(name)) {
+        const cleanName = removeWeexPrefix(name)
+        return requireCustomComponent(app, cleanName)
+      }
+      if (isWeexModule(name)) {
+        const cleanName = removeWeexPrefix(name)
+        return app.requireModule(cleanName)
+      }
+      if (isNormalModule(name) || isNpmModule(name)) {
+        const cleanName = removeJSSurfix(name)
+        return app.commonModules[cleanName]
+      }
     }
-    if (isWeexModule(name)) {
-      cleanName = removeWeexPrefix(name)
-      return this.requireModule(cleanName)
-    }
-    if (isNormalModule(name)) {
-      cleanName = removeJSSurfix(name)
-      return commonModules[name]
-    }
-    if (isNpmModule(name)) {
-      cleanName = removeJSSurfix(name)
-      return commonModules[name]
-    }
+    const m = { exports: {}}
+    factory(r, m.exports, m)
+    definition = m.exports
   }
-  const _module = { exports: {}}
 
-  let cleanName
+  // apply definition
   if (isWeexComponent(name)) {
-    cleanName = removeWeexPrefix(name)
-
-    factory(_require, _module.exports, _module)
-
-    this.registerComponent(cleanName, _module.exports)
+    const cleanName = removeWeexPrefix(name)
+    registerCustomComponent(app, cleanName, definition)
   }
   else if (isWeexModule(name)) {
-    cleanName = removeWeexPrefix(name)
-
-    factory(_require, _module.exports, _module)
-
-    Vm.registerModules({
-      [cleanName]: _module.exports
-    })
+    const cleanName = removeWeexPrefix(name)
+    initModules({ [cleanName]: definition })
   }
   else if (isNormalModule(name)) {
-    cleanName = removeJSSurfix(name)
-
-    factory(_require, _module.exports, _module)
-
-    commonModules[cleanName] = _module.exports
+    const cleanName = removeJSSurfix(name)
+    app.commonModules[cleanName] = definition
   }
   else if (isNpmModule(name)) {
-    cleanName = removeJSSurfix(name)
-
-    factory(_require, _module.exports, _module)
-
-    const exports = _module.exports
-    if (exports.template ||
-        exports.style ||
-        exports.methods) {
+    const cleanName = removeJSSurfix(name)
+    if (definition.template ||
+        definition.style ||
+        definition.methods) {
       // downgrade to old define method (define('componentName', factory))
       // the exports contain one key of template, style or methods
       // but it has risk!!!
-      this.registerComponent(cleanName, exports)
+      registerCustomComponent(app, cleanName, definition)
     }
     else {
-      commonModules[cleanName] = _module.exports
+      app.commonModules[cleanName] = definition
     }
   }
 }
@@ -97,7 +91,7 @@ export const define = function (name, deps, factory) {
 /**
  * @deprecated
  */
-export function register (type, options) {
+export function register (app, type, options) {
   console.warn('[JS Framework] Register is deprecated, please install lastest transformer.')
-  this.registerComponent(type, options)
+  registerCustomComponent(app, type, options)
 }

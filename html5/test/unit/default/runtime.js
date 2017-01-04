@@ -10,6 +10,7 @@ import framework from '../../../runtime'
 import frameworks from '../../../runtime/config'
 import config from '../../../default/config'
 import Vm from '../../../default/vm'
+import { clearModules, getModule } from '../../../default/app/register'
 
 function clearRefs (json) {
   delete json.ref
@@ -20,15 +21,25 @@ function clearRefs (json) {
 
 describe('framework entry', () => {
   const oriCallNative = global.callNative
+  const oriCallAddElement = global.callAddElement
   const callNativeSpy = sinon.spy()
+  const callAddElementSpy = sinon.spy()
   const instanceId = Date.now() + ''
 
   before(() => {
-    sinon.stub(Vm, 'registerModules')
-    sinon.stub(Vm, 'registerMethods')
-
     global.callNative = (id, tasks, callbackId) => {
       callNativeSpy(id, tasks, callbackId)
+      /* istanbul ignore if */
+      if (callbackId !== '-1') {
+        framework.callJS(id, [{
+          method: 'callback',
+          args: [callbackId, null, true]
+        }])
+      }
+    }
+
+    global.callAddElement = (name, id, ref, json, index, callbackId) => {
+      callAddElementSpy(name, ref, json, index, callbackId)
       /* istanbul ignore if */
       if (callbackId !== '-1') {
         framework.callJS(id, [{
@@ -40,15 +51,13 @@ describe('framework entry', () => {
   })
 
   afterEach(() => {
-    Vm.registerModules.reset()
-    Vm.registerMethods.reset()
     callNativeSpy.reset()
+    callAddElementSpy.reset()
   })
 
   after(() => {
-    Vm.registerModules.restore()
-    Vm.registerMethods.restore()
     global.callNative = oriCallNative
+    global.callAddElement = oriCallAddElement
   })
 
   describe('createInstance', () => {
@@ -88,7 +97,8 @@ describe('framework entry', () => {
       `
       framework.createInstance(instanceId, code)
 
-      expect(callNativeSpy.callCount).to.be.equal(3)
+      expect(callNativeSpy.callCount).to.be.equal(2)
+      expect(callAddElementSpy.callCount).to.be.equal(1)
 
       expect(callNativeSpy.firstCall.args[0]).to.be.equal(instanceId)
       expect(callNativeSpy.firstCall.args[1]).to.deep.equal([{
@@ -103,25 +113,18 @@ describe('framework entry', () => {
       }])
       // expect(callNativeSpy.firstCall.args[2]).to.not.equal('-1')
 
-      expect(callNativeSpy.secondCall.args[0]).to.be.equal(instanceId)
-      delete callNativeSpy.secondCall.args[1][0].args[1].ref
-      expect(callNativeSpy.secondCall.args[1]).to.deep.equal([{
-        module: 'dom',
-        method: 'addElement',
-        args: ['_root', {
-          type: 'text',
-          attr: {
-            value: 'Hello World'
-          },
-          style: {}
-        },
-          0
-        ]
-      }])
+      expect(callAddElementSpy.firstCall.args[0]).to.be.equal(instanceId)
+      delete callAddElementSpy.firstCall.args[1].ref
+      expect(callAddElementSpy.firstCall.args[1]).to.deep.equal({
+        type: 'text',
+        attr: { value: 'Hello World' },
+        style: {}
+      })
+
       // expect(callNativeSpy.secondCall.args[2]).to.not.equal('-1')
 
-      expect(callNativeSpy.thirdCall.args[0]).to.be.equal(instanceId)
-      expect(callNativeSpy.thirdCall.args[1]).to.deep.equal([{
+      expect(callNativeSpy.secondCall.args[0]).to.be.equal(instanceId)
+      expect(callNativeSpy.secondCall.args[1]).to.deep.equal([{
         module: 'dom',
         method: 'createFinish',
         args: []
@@ -136,22 +139,108 @@ describe('framework entry', () => {
     })
 
     it('js bundle format version checker', function () {
-      const spy = sinon.spy()
+      const weexFramework = frameworks.Weex
+      frameworks.Weex = {
+        init: function () {},
+        createInstance: sinon.spy()
+      }
       frameworks.xxx = {
         init: function () {},
-        createInstance: spy
+        createInstance: sinon.spy()
       }
-      const code = `// {"framework":"xxx","version":"0.3.1"}
+      frameworks.yyy = {
+        init: function () {},
+        createInstance: sinon.spy()
+      }
+
+      // test framework xxx
+      let code = `// {"framework":"xxx","version":"0.3.1"}
       'This is a piece of JavaScript from a third-party Framework...'`
       framework.createInstance(instanceId + '~', code)
-      expect(spy.callCount).equal(1)
-      expect(spy.firstCall.args).eql([
+      expect(frameworks.xxx.createInstance.callCount).equal(1)
+      expect(frameworks.yyy.createInstance.callCount).equal(0)
+      expect(frameworks.Weex.createInstance.callCount).equal(0)
+      expect(frameworks.xxx.createInstance.firstCall.args).eql([
         instanceId + '~',
         code,
         { bundleVersion: '0.3.1' },
         undefined
       ])
-      delete framework.xxx
+
+      // also support spaces in JSON string
+      // also ignore spaces between double-slash and JSON string
+      code = `//{ "framework":"xxx" }
+      'This is a piece of JavaScript from a third-party Framework...'`
+      framework.createInstance(instanceId + '~~', code)
+      expect(frameworks.xxx.createInstance.callCount).equal(2)
+      expect(frameworks.yyy.createInstance.callCount).equal(0)
+      expect(frameworks.Weex.createInstance.callCount).equal(0)
+
+      // also support non-strict JSON format
+      code = `// {framework:"xxx",'version':"0.3.1"}
+      'This is a piece of JavaScript from a third-party Framework...'`
+      framework.createInstance(instanceId + '~~~', code)
+      expect(frameworks.xxx.createInstance.callCount).equal(2)
+      expect(frameworks.yyy.createInstance.callCount).equal(0)
+      expect(frameworks.Weex.createInstance.callCount).equal(1)
+      expect(frameworks.Weex.createInstance.firstCall.args).eql([
+        instanceId + '~~~',
+        code,
+        { bundleVersion: undefined },
+        undefined
+      ])
+
+      // test framework yyy
+      /* eslint-disable */
+      code = `
+
+
+
+        // {"framework":"yyy"}
+
+'JS Bundle with space and empty lines behind'` // modified from real generated code from tb
+      /* eslint-enable */
+      framework.createInstance(instanceId + '~~~~', code)
+      expect(frameworks.xxx.createInstance.callCount).equal(2)
+      expect(frameworks.yyy.createInstance.callCount).equal(1)
+      expect(frameworks.Weex.createInstance.callCount).equal(1)
+      expect(frameworks.yyy.createInstance.firstCall.args).eql([
+        instanceId + '~~~~',
+        code,
+        { bundleVersion: undefined },
+        undefined
+      ])
+
+      // test framework Weex (wrong format at the middle)
+      code = `'Some JS bundle code here ... // {"framework":"xxx"}\n ... end.'`
+      framework.createInstance(instanceId + '~~~~~', code)
+      expect(frameworks.xxx.createInstance.callCount).equal(2)
+      expect(frameworks.yyy.createInstance.callCount).equal(1)
+      expect(frameworks.Weex.createInstance.callCount).equal(2)
+      expect(frameworks.Weex.createInstance.secondCall.args).eql([
+        instanceId + '~~~~~',
+        code,
+        { bundleVersion: undefined },
+        undefined
+      ])
+
+      // test framework Weex (without any JSON string in comment)
+      code = `'Some JS bundle code here'`
+      framework.createInstance(instanceId + '~~~~~~', code)
+      expect(frameworks.xxx.createInstance.callCount).equal(2)
+      expect(frameworks.yyy.createInstance.callCount).equal(1)
+      expect(frameworks.Weex.createInstance.callCount).equal(3)
+      expect(frameworks.Weex.createInstance.thirdCall.args).eql([
+        instanceId + '~~~~~~',
+        code,
+        { bundleVersion: undefined },
+        undefined
+      ])
+
+      // revert frameworks
+      delete frameworks.xxx
+      delete frameworks.yyy
+      frameworks.Weex = weexFramework
     })
   })
 
@@ -283,6 +372,7 @@ describe('framework entry', () => {
 
   describe('register modules', () => {
     it('with object of modules', () => {
+      clearModules()
       const modules = {
         a: [{
           name: 'b',
@@ -291,12 +381,8 @@ describe('framework entry', () => {
       }
 
       framework.registerModules(modules)
-      expect(Vm.registerModules.firstCall.args[0]).to.be.deep.equal(modules)
-    })
-
-    it('with non-object', () => {
-      framework.registerModules(1)
-      expect(Vm.registerModules.callCount).to.be.equal(0)
+      expect(getModule('b')).an.object
+      clearModules()
     })
   })
 
@@ -307,12 +393,8 @@ describe('framework entry', () => {
       }
 
       framework.registerMethods(methods)
-      expect(Vm.registerMethods.firstCall.args[0]).to.be.deep.equal(methods)
-    })
-
-    it('with non-object', () => {
-      framework.registerMethods(1)
-      expect(Vm.registerMethods.callCount).to.be.equal(0)
+      expect(Vm.prototype.a).a.function
+      delete Vm.prototype.a
     })
   })
 })

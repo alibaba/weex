@@ -54,6 +54,13 @@
     css_node_t *_scrollerCSSNode;
 }
 
+WX_EXPORT_METHOD(@selector(resetLoadmore))
+
+- (void)resetLoadmore
+{
+    _previousLoadMoreContentHeight=0;
+}
+
 - (css_node_t *)scrollerCSSNode
 {
     return _scrollerCSSNode;
@@ -292,10 +299,11 @@
 {
     UIScrollView *scrollView = (UIScrollView *)self.view;
     CGPoint contentOffset = scrollView.contentOffset;
+    CGFloat scaleFactor = self.weexInstance.pixelScaleFactor;
     
     if (_scrollDirection == WXScrollDirectionHorizontal) {
         CGFloat contentOffetX = [component.supercomponent.view convertPoint:component.view.frame.origin toView:self.view].x;
-        contentOffetX += offset * WXScreenResizeRadio();
+        contentOffetX += offset * scaleFactor;
         
         if (contentOffetX > scrollView.contentSize.width - scrollView.frame.size.width) {
             contentOffset.x = scrollView.contentSize.width - scrollView.frame.size.width;
@@ -304,7 +312,7 @@
         }
     } else {
         CGFloat contentOffetY = [component.supercomponent.view convertPoint:component.view.frame.origin toView:self.view].y;
-        contentOffetY += offset * WXScreenResizeRadio();
+        contentOffetY += offset * scaleFactor;
         
         if (contentOffetY > scrollView.contentSize.height - scrollView.frame.size.height) {
             contentOffset.y = scrollView.contentSize.height - scrollView.frame.size.height;

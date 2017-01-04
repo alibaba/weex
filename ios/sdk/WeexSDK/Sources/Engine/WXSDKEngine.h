@@ -60,13 +60,13 @@
  * @discussion Injects main.js in app bundle as default JSFramework script.
  *
  **/
-+ (void)initSDKEnviroment;
++ (void)initSDKEnvironment;
 
 /**
  * @abstract Initializes the enviroment with a given JSFramework script.
  *
  **/
-+ (void)initSDKEnviroment:(NSString *)script;
++ (void)initSDKEnvironment:(NSString *)script;
 
 /**
  * @abstract Unloads the bridge context
@@ -106,5 +106,12 @@
  *
  */
 + (void)connectDevToolServer:(NSString *)URL;
+
+@end
+
+@interface WXSDKEngine (Deprecated)
+
++ (void)initSDKEnviroment DEPRECATED_MSG_ATTRIBUTE("To fix typo, use initSDKEnvironment method instead.");
++ (void)initSDKEnviroment:(NSString *)script DEPRECATED_MSG_ATTRIBUTE("To fix typo,  use initSDKEnvironment: method instead.");
 
 @end

@@ -205,11 +205,13 @@
 package com.taobao.weex.ui.component.list;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.common.Component;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.flex.CSSLayout;
 import com.taobao.weex.ui.component.WXVContainer;
@@ -218,6 +220,8 @@ import com.taobao.weex.ui.view.WXFrameLayout;
 /**
  * Root component for components in {@link WXListComponent}
  */
+@Component(lazyload = false)
+
 public class WXCell extends WXVContainer<WXFrameLayout> {
 
     public int lastLocationY = -1;
@@ -239,7 +243,7 @@ public class WXCell extends WXVContainer<WXFrameLayout> {
      * If Cell is Sticky, need wraped FrameLayout
      */
     @Override
-    protected WXFrameLayout initComponentHostView(Context context) {
+    protected WXFrameLayout initComponentHostView(@NonNull Context context) {
         if (isSticky()) {
             WXFrameLayout view = new WXFrameLayout(context);
             mRealView = new WXFrameLayout(context);
@@ -267,7 +271,7 @@ public class WXCell extends WXVContainer<WXFrameLayout> {
         int headerViewOffsetY = getParent().getHostView().getTop();
         getHostView().removeView(mHeadView);
         mRealView = (ViewGroup) mHeadView;
-        mTempStickyView = new FrameLayout(mContext);
+        mTempStickyView = new FrameLayout(getContext());
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams((int) getDomObject().csslayout.dimensions[CSSLayout.DIMENSION_WIDTH],
                 (int) getDomObject().csslayout.dimensions[CSSLayout.DIMENSION_HEIGHT]);
         getHostView().addView(mTempStickyView, lp);

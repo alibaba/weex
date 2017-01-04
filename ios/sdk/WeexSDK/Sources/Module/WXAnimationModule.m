@@ -57,7 +57,7 @@ WX_EXPORT_METHOD(@selector(transition:args:callback:))
     for (NSString *property in styles) {
         if ([property isEqualToString:@"transform"]) {
             NSString *transformOrigin = styles[@"transformOrigin"];
-            WXTransform *wxTransform = [WXTransform new];
+            WXTransform *wxTransform = [[WXTransform alloc] initWithInstance:self.weexInstance];
             transform = [wxTransform getTransform:styles[property] withView:view withOrigin:transformOrigin isTransformRotate:NO];
             rotateAngle = [wxTransform getRotateAngle];
             if (rotateAngle > M_PI+0.0001) {
@@ -75,10 +75,10 @@ WX_EXPORT_METHOD(@selector(transition:args:callback:))
             opacity = [styles[property] floatValue];
             isAnimateOpacity = YES;
         } else if ([property isEqualToString:@"width"]) {
-            newFrame = CGRectMake(newFrame.origin.x, newFrame.origin.y, [WXConvert WXPixelType:styles[property]], newFrame.size.height);
+            newFrame = CGRectMake(newFrame.origin.x, newFrame.origin.y, [WXConvert WXPixelType:styles[property] scaleFactor:self.weexInstance.pixelScaleFactor], newFrame.size.height);
             isAnimateFrame = YES;
         } else if ([property isEqualToString:@"height"]) {
-            newFrame = CGRectMake(newFrame.origin.x, newFrame.origin.y, newFrame.size.width, [WXConvert WXPixelType:styles[property]]);
+            newFrame = CGRectMake(newFrame.origin.x, newFrame.origin.y, newFrame.size.width, [WXConvert WXPixelType:styles[property] scaleFactor:self.weexInstance.pixelScaleFactor]);
             isAnimateFrame = YES;
         }
     }

@@ -422,6 +422,7 @@ public class WXPerformance {
              + ",componentCount:" + componentCount
              + ",syncTaskTime:" + syncTaskTime
              + ",pureNetworkTime:" + pureNetworkTime
+             + ",networkTime:" + networkTime
              + ",actualNetworkTime:" + actualNetworkTime
              + ",packageSpendTime:" + packageSpendTime
              + ",connectionType:" + connectionType
@@ -433,5 +434,15 @@ public class WXPerformance {
              + ",errMsg:" + errMsg;
     }
     return super.toString();
+  }
+  public String getPerfData(){
+      return  "networkTime:" + networkTime
+              + " actualNetworkTime:" + actualNetworkTime
+              + " connectionType:" + connectionType
+              + " requestType:" + requestType
+              + " firstScreenRenderTime:" + screenRenderTime
+              + " firstScreenJSFExecuteTime:" + firstScreenJSFExecuteTime
+              + " componentCount:" + componentCount
+              + "  totalTime:" + totalTime;
   }
 }

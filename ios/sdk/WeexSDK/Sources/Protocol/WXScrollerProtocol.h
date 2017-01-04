@@ -52,5 +52,7 @@
 
 - (void)setContentInset:(UIEdgeInsets)contentInset;
 
+- (void)resetLoadmore;
+
 @end
 

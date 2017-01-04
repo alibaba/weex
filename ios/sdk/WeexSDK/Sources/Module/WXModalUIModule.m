@@ -307,7 +307,7 @@ static const CGFloat WXToastDefaultPadding = 30.0;
     WXModuleCallback callback = objc_getAssociatedObject(alertView, &WXModalCallbackKey);
     if (!callback) return;
     
-    NSString *result = @"";
+    id result = @"";
     switch (alertView.tag) {
         case WXModalTypeAlert: {
             result = @"";

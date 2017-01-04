@@ -41,7 +41,8 @@ function hide (refresh) {
 const proto = {
   create () {
     const node = document.createElement('div')
-    node.classList.add('weex-container', 'weex-refresh')
+    node.classList.add('weex-container')
+    node.classList.add('weex-refresh')
     return node
   },
 

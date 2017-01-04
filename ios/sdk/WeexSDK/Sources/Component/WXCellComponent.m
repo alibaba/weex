@@ -55,6 +55,13 @@
     };
 }
 
+- (void)updateAttributes:(NSDictionary *)attributes
+{
+    if (attributes[@"async"]) {
+        _async = [WXConvert BOOL:attributes[@"async"]];
+    }
+}
+
 - (void)_moveToSupercomponent:(WXComponent *)newSupercomponent atIndex:(NSUInteger)index
 {
     if (self.list == newSupercomponent) {

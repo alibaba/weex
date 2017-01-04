@@ -1,36 +1,37 @@
 import { instanceMap } from './map'
+import {
+  fireEvent,
+  callback
+} from '../app/ctrl'
 
 const jsHandlers = {
-  fireEvent: function fireEvent (instanceId, ref, type, data, domChanges) {
-    const instance = instanceMap[instanceId]
-    return instance.fireEvent(ref, type, data, domChanges)
+  fireEvent: (id, ...args) => {
+    return fireEvent(instanceMap[id], ...args)
   },
-
-  callback: function callback (instanceId, funcId, data, ifLast) {
-    const instance = instanceMap[instanceId]
-    return instance.callback(funcId, data, ifLast)
+  callback: (id, ...args) => {
+    return callback(instanceMap[id], ...args)
   }
 }
 
 /**
- * accept calls from native (event or callback)
+ * Accept calls from native (event or callback).
  *
- * @param  {string} instanceId
+ * @param  {string} id
  * @param  {array} tasks list with `method` and `args`
  */
-export function receiveTasks (instanceId, tasks) {
-  const instance = instanceMap[instanceId]
+export function receiveTasks (id, tasks) {
+  const instance = instanceMap[id]
   if (instance && Array.isArray(tasks)) {
     const results = []
     tasks.forEach((task) => {
       const handler = jsHandlers[task.method]
       const args = [...task.args]
       if (typeof handler === 'function') {
-        args.unshift(instanceId)
+        args.unshift(id)
         results.push(handler(...args))
       }
     })
     return results
   }
-  return new Error(`invalid instance id "${instanceId}" or tasks`)
+  return new Error(`invalid instance id "${id}" or tasks`)
 }

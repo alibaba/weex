@@ -161,6 +161,7 @@ static NSThread *WXComponentThread;
     WXAssertParam(data);
     
     _rootComponent = [self _buildComponentForData:data];
+
     [self _initRootCSSNode];
     
     __weak typeof(self) weakSelf = self;
@@ -312,6 +313,29 @@ static css_node_t * rootNodeGetChild(void *context, int i)
 
 #pragma mark Updating
 
+#pragma mark Reset
+-(BOOL)isShouldReset:(id )value
+{
+    if([value isKindOfClass:[NSString class]]) {
+        if(!value || [@"" isEqualToString:value]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+-(void)filterStyles:(NSDictionary *)styles normalStyles:(NSMutableDictionary *)normalStyles resetStyles:(NSMutableArray *)resetStyles
+{
+    for (NSString *key in styles) {
+        id value = [styles objectForKey:key];
+        if([self isShouldReset:value]) {
+            [resetStyles addObject:key];
+        }else{
+            [normalStyles setObject:styles[key] forKey:key];
+        }
+    }
+}
+
 - (void)updateStyles:(NSDictionary *)styles forComponent:(NSString *)ref
 {
     WXAssertParam(styles);
@@ -320,9 +344,12 @@ static css_node_t * rootNodeGetChild(void *context, int i)
     WXComponent *component = [_indexDict objectForKey:ref];
     WXAssertComponentExist(component);
     
-    [component _updateStylesOnComponentThread:styles];
+    NSMutableDictionary *normalStyles = [NSMutableDictionary new];
+    NSMutableArray *resetStyles = [NSMutableArray new];
+    [self filterStyles:styles normalStyles:normalStyles resetStyles:resetStyles];
+    [component _updateStylesOnComponentThread:normalStyles resetStyles:resetStyles];
     [self _addUITask:^{
-        [component _updateStylesOnMainThread:styles];
+        [component _updateStylesOnMainThread:normalStyles resetStyles:resetStyles];
     }];
 }
 
@@ -547,7 +574,6 @@ static css_node_t * rootNodeGetChild(void *context, int i)
 - (void)_layoutAndSyncUI
 {
     [self _layout];
-    
     if(_uiTaskQueue.count > 0){
         [self _syncUITasks];
         _noTaskTickCount = 0;
@@ -632,7 +658,9 @@ static css_node_t * rootNodeGetChild(void *context, int i)
                               WXRoundPixelValue(_rootCSSNode->layout.dimensions[CSS_WIDTH]),
                               WXRoundPixelValue(_rootCSSNode->layout.dimensions[CSS_HEIGHT]));
     WXPerformBlockOnMainThread(^{
-        self.weexInstance.rootView.frame = frame;
+        if(!self.weexInstance.isRootViewFrozen) {
+            self.weexInstance.rootView.frame = frame;
+        }
     });
     
     resetNodeLayout(_rootCSSNode);

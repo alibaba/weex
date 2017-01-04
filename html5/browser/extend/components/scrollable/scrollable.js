@@ -47,13 +47,12 @@ function getProto (Weex) {
   function create (nodeType) {
     const Scroll = lib.scroll
     const node = Component.prototype.create.call(this, nodeType)
-    node.classList.add('weex-container', 'scrollable-wrap')
+    node.classList.add('weex-container')
+    node.classList.add('scrollable-wrap')
     this.scrollElement = document.createElement('div')
-    this.scrollElement.classList.add(
-      'weex-container',
-      'scrollable-element',
-      'dir-' + this.direction
-    )
+    this.scrollElement.classList.add('weex-container')
+    this.scrollElement.classList.add('scrollable-element')
+    this.scrollElement.classList.add('dir-' + this.direction)
 
     this.scrollElement.style.webkitBoxOrient = directionMap[this.direction][1]
     this.scrollElement.style.webkitFlexDirection = directionMap[this.direction][0]

@@ -207,7 +207,7 @@ package com.taobao.weex.dom;
 import android.text.Layout;
 import android.text.TextUtils;
 
-import com.taobao.weex.common.WXDomPropConstant;
+import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.flex.CSSAlign;
 import com.taobao.weex.dom.flex.CSSFlexDirection;
 import com.taobao.weex.dom.flex.CSSJustify;
@@ -219,13 +219,12 @@ import com.taobao.weex.utils.WXUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Store value of component style
  *
  */
-public class WXStyle extends ConcurrentHashMap<String, Object> {
+public class WXStyle extends SafePutConcurrentHashMap<String, Object> {
 
   private static final long serialVersionUID = 611132641365274134L;
   public static final int UNSET = -1;
@@ -233,7 +232,7 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
    * text-decoration
    **/
   public static WXTextDecoration getTextDecoration(Map<String, Object> style) {
-    Object obj = style.get(WXDomPropConstant.WX_TEXTDECORATION);
+    Object obj = style.get(Constants.Name.TEXT_DECORATION);
     if (obj == null) {
       return WXTextDecoration.NONE;
     }
@@ -251,7 +250,7 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
     if (style == null) {
       return "";
     }
-    Object temp = style.get(WXDomPropConstant.WX_COLOR);
+    Object temp = style.get(Constants.Name.COLOR);
     return temp == null ? "" : temp.toString();
   }
 
@@ -260,12 +259,12 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
     if (style == null) {
       return typeface;
     }
-    Object temp = style.get(WXDomPropConstant.WX_FONTWEIGHT);
+    Object temp = style.get(Constants.Name.FONT_WEIGHT);
     if (temp == null) {
       return typeface;
     }
     String fontWeight = temp.toString();
-    if (fontWeight.equals(WXDomPropConstant.WX_FONTWEIGHT_BOLD)) {
+    if (fontWeight.equals(Constants.Value.BOLD)) {
       typeface = android.graphics.Typeface.BOLD;
     }
     return typeface;
@@ -276,12 +275,12 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
     if (style == null) {
       return typeface;
     }
-    Object temp = style.get(WXDomPropConstant.WX_FONTSTYLE);
+    Object temp = style.get(Constants.Name.FONT_STYLE);
     if (temp == null) {
       return typeface;
     }
     String fontWeight = temp.toString();
-    if (fontWeight.equals(WXDomPropConstant.WX_FONTSTYLE_ITALIC)) {
+    if (fontWeight.equals(Constants.Value.ITALIC)) {
       typeface = android.graphics.Typeface.ITALIC;
     }
     return typeface;
@@ -291,7 +290,7 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
     if (style == null) {
       return (int) WXViewUtils.getRealPxByWidth(WXText.sDEFAULT_SIZE);
     }
-    int fontSize = WXUtils.getInt(style.get(WXDomPropConstant.WX_FONTSIZE));
+    int fontSize = WXUtils.getInt(style.get(Constants.Name.FONT_SIZE));
     if (fontSize <= 0) {
       fontSize = WXText.sDEFAULT_SIZE;
     }
@@ -302,7 +301,7 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
     String fontFamily = null;
     if (style != null) {
       Object temp;
-      temp = style.get(WXDomPropConstant.WX_FONTFAMILY);
+      temp = style.get(Constants.Name.FONT_FAMILY);
       if (temp != null) {
         fontFamily = temp.toString();
       }
@@ -312,14 +311,14 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
 
   public static Layout.Alignment getTextAlignment(Map<String, Object> style){
     Layout.Alignment alignment= Layout.Alignment.ALIGN_NORMAL;
-    String textAlign= (String) style.get(WXDomPropConstant.WX_TEXTALIGN);
-    if(TextUtils.equals(WXDomPropConstant.WX_TEXTALIGN_LEFT,textAlign)){
+    String textAlign= (String) style.get(Constants.Name.TEXT_ALIGN);
+    if(TextUtils.equals(Constants.Value.LEFT,textAlign)){
       alignment= Layout.Alignment.ALIGN_NORMAL;
     }
-    else if(TextUtils.equals(WXDomPropConstant.WX_TEXTALIGN_CENTER,textAlign)){
+    else if(TextUtils.equals(Constants.Value.CENTER,textAlign)){
       alignment=Layout.Alignment.ALIGN_CENTER;
     }
-    else if(TextUtils.equals(WXDomPropConstant.WX_TEXTALIGN_RIGHT,textAlign)){
+    else if(TextUtils.equals(Constants.Value.RIGHT,textAlign)){
       alignment= Layout.Alignment.ALIGN_OPPOSITE;
     }
     return alignment;
@@ -327,22 +326,22 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
 
   public static TextUtils.TruncateAt getTextOverflow(Map<String, Object> style){
     TextUtils.TruncateAt truncateAt=null;
-    String ellipse = (String) style.get(WXDomPropConstant.WX_TEXT_OVERFLOW);
-    if(TextUtils.equals(WXDomPropConstant.WX_TEXT_ELLIPSIS,ellipse)){
+    String ellipse = (String) style.get(Constants.Name.TEXT_OVERFLOW);
+    if(TextUtils.equals(Constants.Name.ELLIPSIS,ellipse)){
       truncateAt = TextUtils.TruncateAt.END;
     }
     return truncateAt;
   }
 
   public static int getLines(Map<String, Object> style) {
-    return WXUtils.getInt(style.get(WXDomPropConstant.WX_LINES));
+    return WXUtils.getInt(style.get(Constants.Name.LINES));
   }
 
   public static int getLineHeight(Map<String, Object> style){
     if (style == null) {
       return UNSET;
     }
-    int lineHeight = WXUtils.getInt(style.get(WXDomPropConstant.WX_TEXT_LINE_HEIGHT));
+    int lineHeight = WXUtils.getInt(style.get(Constants.Name.LINE_HEIGHT));
     if (lineHeight <= 0) {
       lineHeight = UNSET;
       return lineHeight;
@@ -353,7 +352,7 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
    * flexbox
    **/
   public CSSAlign getAlignItems() {
-    Object alignItems = get(WXDomPropConstant.WX_ALIGNITEMS);
+    Object alignItems = get(Constants.Name.ALIGN_ITEMS);
     if (alignItems == null) {
       return CSSAlign.STRETCH;
     }
@@ -361,7 +360,7 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
   }
 
   public CSSAlign getAlignSelf() {
-    Object alignSelf = get(WXDomPropConstant.WX_ALIGNSELF);
+    Object alignSelf = get(Constants.Name.ALIGN_SELF);
     if (alignSelf == null) {
       return CSSAlign.AUTO;
     }
@@ -369,11 +368,11 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
   }
 
   public float getFlex() {
-    return WXUtils.getFloat(get(WXDomPropConstant.WX_FLEX));
+    return WXUtils.getFloat(get(Constants.Name.FLEX));
   }
 
   public CSSFlexDirection getFlexDirection() {
-    Object flexDirection = get(WXDomPropConstant.WX_FLEXDIRECTION);
+    Object flexDirection = get(Constants.Name.FLEX_DIRECTION);
     if (flexDirection == null) {
       return CSSFlexDirection.COLUMN;
     }
@@ -381,7 +380,7 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
   }
 
   public CSSJustify getJustifyContent() {
-    Object justifyContent = get(WXDomPropConstant.WX_JUSTIFYCONTENT);
+    Object justifyContent = get(Constants.Name.JUSTIFY_CONTENT);
     if (justifyContent == null) {
       return CSSJustify.FLEX_START;
     }
@@ -389,7 +388,7 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
   }
 
   public CSSWrap getCSSWrap() {
-    Object cssWrap = get(WXDomPropConstant.WX_FLEXWRAP);
+    Object cssWrap = get(Constants.Name.FLEX_WRAP);
     if (cssWrap == null) {
       return CSSWrap.NOWRAP;
     }
@@ -400,34 +399,34 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
    * base
    **/
   public float getWidth() {
-    return WXUtils.getFloat(get(WXDomPropConstant.WX_WIDTH));
+    return WXUtils.getFloat(get(Constants.Name.WIDTH));
   }
 
   public float getMinWidth() {
-    return WXUtils.getFloat(get(WXDomPropConstant.WX_MINWIDTH));
+    return WXUtils.getFloat(get(Constants.Name.MIN_WIDTH));
   }
 
   public float getMaxWidth() {
-    return WXUtils.getFloat(get(WXDomPropConstant.WX_MAXWIDTH));
+    return WXUtils.getFloat(get(Constants.Name.MAX_WIDTH));
   }
 
   public float getHeight() {
-    return WXUtils.getFloat(get(WXDomPropConstant.WX_HEIGHT));
+    return WXUtils.getFloat(get(Constants.Name.HEIGHT));
   }
 
   public float getMinHeight() {
-    return WXUtils.getFloat(get(WXDomPropConstant.WX_MINHEIGHT));
+    return WXUtils.getFloat(get(Constants.Name.MIN_HEIGHT));
   }
 
   public float getMaxHeight() {
-    return WXUtils.getFloat(get(WXDomPropConstant.WX_MAXHEIGHT));
+    return WXUtils.getFloat(get(Constants.Name.MAX_HEIGHT));
   }
 
   /*
    * border
    **/
   public float getBorderRadius() {
-    float temp = WXUtils.getFloat(get(WXDomPropConstant.WX_BORDERRADIUS));
+    float temp = WXUtils.getFloat(get(Constants.Name.BORDER_RADIUS));
     if (WXUtils.isUndefined(temp)) {
       return Float.NaN;
     }
@@ -435,7 +434,7 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
   }
 
   public float getBorderTopWidth() {
-    return getBorderWidth(WXDomPropConstant.WX_BORDER_TOP_WIDTH);
+    return getBorderWidth(Constants.Name.BORDER_TOP_WIDTH);
   }
 
   private float getBorderWidth(String key) {
@@ -448,7 +447,7 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
 
   //TODO fix : only when set backgroundColor
   public float getBorderWidth() {
-    float temp = WXUtils.getFloat(get(WXDomPropConstant.WX_BORDERWIDTH));
+    float temp = WXUtils.getFloat(get(Constants.Name.BORDER_WIDTH));
     if (WXUtils.isUndefined(temp)) {
       return Float.NaN;
     }
@@ -456,24 +455,24 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
   }
 
   public float getBorderRightWidth() {
-    return getBorderWidth(WXDomPropConstant.WX_BORDER_RIGHT_WIDTH);
+    return getBorderWidth(Constants.Name.BORDER_RIGHT_WIDTH);
   }
 
   public float getBorderBottomWidth() {
-    return getBorderWidth(WXDomPropConstant.WX_BORDER_BOTTOM_WIDTH);
+    return getBorderWidth(Constants.Name.BORDER_BOTTOM_WIDTH);
   }
 
   public float getBorderLeftWidth() {
-    return getBorderWidth(WXDomPropConstant.WX_BORDER_LEFT_WIDTH);
+    return getBorderWidth(Constants.Name.BORDER_LEFT_WIDTH);
   }
 
   public String getBorderColor() {
-    Object color = get(WXDomPropConstant.WX_BORDERCOLOR);
+    Object color = get(Constants.Name.BORDER_COLOR);
     return color == null ? null : color.toString();
   }
 
   public String getBorderStyle() {
-    Object borderStyle = get(WXDomPropConstant.WX_BORDERSTYLE);
+    Object borderStyle = get(Constants.Name.BORDER_STYLE);
     return borderStyle == null ? null : borderStyle.toString();
   }
 
@@ -481,33 +480,33 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
    * margin
    **/
   public float getMarginTop() {
-    float temp = WXUtils.getFloat(get(WXDomPropConstant.WX_MARGINTOP));
+    float temp = WXUtils.getFloat(get(Constants.Name.MARGIN_TOP));
     if (WXUtils.isUndefined(temp)) {
-      temp = WXUtils.getFloat(get(WXDomPropConstant.WX_MARGIN));
+      temp = WXUtils.getFloat(get(Constants.Name.MARGIN));
     }
     return temp;
   }
 
   public float getMarginLeft() {
-    float temp = WXUtils.getFloat(get(WXDomPropConstant.WX_MARGINLEFT));
+    float temp = WXUtils.getFloat(get(Constants.Name.MARGIN_LEFT));
     if (WXUtils.isUndefined(temp)) {
-      temp = WXUtils.getFloat(get(WXDomPropConstant.WX_MARGIN));
+      temp = WXUtils.getFloat(get(Constants.Name.MARGIN));
     }
     return temp;
   }
 
   public float getMarginRight() {
-    float temp = WXUtils.getFloat(get(WXDomPropConstant.WX_MARGINRIGHT));
+    float temp = WXUtils.getFloat(get(Constants.Name.MARGIN_RIGHT));
     if (WXUtils.isUndefined(temp)) {
-      temp = WXUtils.getFloat(get(WXDomPropConstant.WX_MARGIN));
+      temp = WXUtils.getFloat(get(Constants.Name.MARGIN));
     }
     return temp;
   }
 
   public float getMarginBottom() {
-    float temp = WXUtils.getFloat(get(WXDomPropConstant.WX_MARGINBOTTOM));
+    float temp = WXUtils.getFloat(get(Constants.Name.MARGIN_BOTTOM));
     if (WXUtils.isUndefined(temp)) {
-      temp = WXUtils.getFloat(get(WXDomPropConstant.WX_MARGIN));
+      temp = WXUtils.getFloat(get(Constants.Name.MARGIN));
     }
     return temp;
   }
@@ -516,33 +515,33 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
    * padding
    **/
   public float getPaddingTop() {
-    float temp = WXUtils.getFloat(get(WXDomPropConstant.WX_PADDINGTOP));
+    float temp = WXUtils.getFloat(get(Constants.Name.PADDING_TOP));
     if (WXUtils.isUndefined(temp)) {
-      temp = WXUtils.getFloat(get(WXDomPropConstant.WX_PADDING));
+      temp = WXUtils.getFloat(get(Constants.Name.PADDING));
     }
     return temp;
   }
 
   public float getPaddingLeft() {
-    float temp = WXUtils.getFloat(get(WXDomPropConstant.WX_PADDINGLEFT));
+    float temp = WXUtils.getFloat(get(Constants.Name.PADDING_LEFT));
     if (WXUtils.isUndefined(temp)) {
-      temp = WXUtils.getFloat(get(WXDomPropConstant.WX_PADDING));
+      temp = WXUtils.getFloat(get(Constants.Name.PADDING));
     }
     return temp;
   }
 
   public float getPaddingRight() {
-    float temp = WXUtils.getFloat(get(WXDomPropConstant.WX_PADDINGRIGHT));
+    float temp = WXUtils.getFloat(get(Constants.Name.PADDING_RIGHT));
     if (WXUtils.isUndefined(temp)) {
-      temp = WXUtils.getFloat(get(WXDomPropConstant.WX_PADDING));
+      temp = WXUtils.getFloat(get(Constants.Name.PADDING));
     }
     return temp;
   }
 
   public float getPaddingBottom() {
-    float temp = WXUtils.getFloat(get(WXDomPropConstant.WX_PADDINGBOTTOM));
+    float temp = WXUtils.getFloat(get(Constants.Name.PADDING_BOTTOM));
     if (WXUtils.isUndefined(temp)) {
-      temp = WXUtils.getFloat(get(WXDomPropConstant.WX_PADDING));
+      temp = WXUtils.getFloat(get(Constants.Name.PADDING));
     }
     return temp;
   }
@@ -551,7 +550,7 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
    * position
    **/
   public CSSPositionType getPosition() {
-    Object position = get(WXDomPropConstant.WX_POSITION);
+    Object position = get(Constants.Name.POSITION);
     if (position == null) {
       return CSSPositionType.RELATIVE;
     }
@@ -559,42 +558,42 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
   }
 
   public boolean isSticky() {
-    Object position = get(WXDomPropConstant.WX_POSITION);
+    Object position = get(Constants.Name.POSITION);
     if (position == null) {
       return false;
     }
-    return position.toString().equals(WXDomPropConstant.WX_POSITION_STICKY);
+    return position.toString().equals(Constants.Value.STICKY);
   }
 
   public boolean isFixed() {
-    Object position = get(WXDomPropConstant.WX_POSITION);
+    Object position = get(Constants.Name.POSITION);
     if (position == null) {
       return false;
     }
-    return position.toString().equals(WXDomPropConstant.WX_POSITION_FIXED);
+    return position.toString().equals(Constants.Value.FIXED);
   }
 
   public float getLeft() {
-    return WXUtils.getFloat(get(WXDomPropConstant.WX_POSITION_LFET));
+    return WXUtils.getFloat(get(Constants.Name.LEFT));
   }
 
   public float getTop() {
-    return WXUtils.getFloat(get(WXDomPropConstant.WX_POSITION_TOP));
+    return WXUtils.getFloat(get(Constants.Name.TOP));
   }
 
   public float getRight() {
-    return WXUtils.getFloat(get(WXDomPropConstant.WX_POSITION_RIGHT));
+    return WXUtils.getFloat(get(Constants.Name.RIGHT));
   }
 
   public float getBottom() {
-    return WXUtils.getFloat(get(WXDomPropConstant.WX_POSITION_BOTTOM));
+    return WXUtils.getFloat(get(Constants.Name.BOTTOM));
   }
 
   /*
    * others
    **/
   public String getBackgroundColor() {
-    Object temp = get(WXDomPropConstant.WX_BACKGROUNDCOLOR);
+    Object temp = get(Constants.Name.BACKGROUND_COLOR);
     return temp == null ? "" : temp.toString();
   }
 
@@ -607,7 +606,7 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
   }
 
   public float getOpacity() {
-    Object object = get(WXDomPropConstant.WX_OPACITY);
+    Object object = get(Constants.Name.OPACITY);
     float opacity = 1;
     if (object == null) {
       return opacity;
@@ -616,7 +615,7 @@ public class WXStyle extends ConcurrentHashMap<String, Object> {
   }
 
   public String getOverflow() {
-    Object obj = get(WXDomPropConstant.WX_OVERFLOW);
-    return obj == null ? WXDomPropConstant.WX_OVERFLOW_VISIBLE : obj.toString();
+    Object obj = get(Constants.Name.OVERFLOW);
+    return obj == null ? Constants.Value.VISIBLE : obj.toString();
   }
 }

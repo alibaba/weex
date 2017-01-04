@@ -12,8 +12,10 @@
 #import "WXComponentFactory.h"
 
 #import "WXAppConfiguration.h"
-#import "WXNetworkDefaultImpl.h"
+#import "WXResourceRequestHandlerDefaultImpl.h"
 #import "WXNavigationDefaultImpl.h"
+#import "WXURLRewriteDefaultImpl.h"
+
 #import "WXSDKManager.h"
 #import "WXSDKError.h"
 #import "WXMonitor.h"
@@ -42,6 +44,7 @@
     [self registerModule:@"globalEvent" withClass:NSClassFromString(@"WXGlobalEventModule")];
     [self registerModule:@"canvas" withClass:NSClassFromString(@"WXCanvasModule")];
     [self registerModule:@"picker" withClass:NSClassFromString(@"WXPickerModule")];
+    [self registerModule:@"meta" withClass:NSClassFromString(@"WXMetaModule")];
 }
 
 + (void)registerModule:(NSString *)name withClass:(Class)clazz
@@ -100,10 +103,10 @@
     WXAssert(name && clazz, @"Fail to register the component, please check if the parameters are correct ！");
     
     [WXComponentFactory registerComponent:name withClass:clazz withPros:properties];
-    NSDictionary *dict = [WXComponentFactory componentMethodMapsWithName:name];
+    NSMutableDictionary *dict = [WXComponentFactory componentMethodMapsWithName:name];
+    dict[@"type"] = name;
     if (properties) {
         NSMutableDictionary *props = [properties mutableCopy];
-        props[@"type"] = name;
         if ([dict[@"methods"] count]) {
             [props addEntriesFromDictionary:dict];
         }
@@ -118,8 +121,9 @@
 // register some default handlers when the engine initializes.
 + (void)_registerDefaultHandlers
 {
-    [self registerHandler:[WXNetworkDefaultImpl new] withProtocol:@protocol(WXNetworkProtocol)];
+    [self registerHandler:[WXResourceRequestHandlerDefaultImpl new] withProtocol:@protocol(WXResourceRequestHandler)];
     [self registerHandler:[WXNavigationDefaultImpl new] withProtocol:@protocol(WXNavigationProtocol)];
+    [self registerHandler:[WXURLRewriteDefaultImpl new] withProtocol:@protocol(WXURLRewriteProtocol)];
 }
 
 + (void)registerHandler:(id)handler withProtocol:(Protocol *)protocol
@@ -131,14 +135,14 @@
 
 # pragma mark SDK Initialize
 
-+ (void)initSDKEnviroment
++ (void)initSDKEnvironment
 {
     WX_MONITOR_PERF_START(WXPTInitalize)
     WX_MONITOR_PERF_START(WXPTInitalizeSync)
     
     NSString *filePath = [[NSBundle mainBundle] pathForResource:@"main" ofType:@"js"];
     NSString *script = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-    [WXSDKEngine initSDKEnviroment:script];
+    [WXSDKEngine initSDKEnvironment:script];
     
     WX_MONITOR_PERF_END(WXPTInitalizeSync)
     
@@ -168,7 +172,7 @@
 #endif
 }
 
-+ (void)initSDKEnviroment:(NSString *)script
++ (void)initSDKEnvironment:(NSString *)script
 {
     if (!script || script.length <= 0) {
         WX_MONITOR_FAIL(WXMTJSFramework, WX_ERR_JSFRAMEWORK_LOAD, @"framework loading is failure!");
@@ -256,6 +260,20 @@
         [self registerHandler:mObj withProtocol:NSProtocolFromString(mKey)];
     };
     [handlers enumerateKeysAndObjectsUsingBlock:handlerBlock];
+}
+
+@end
+
+@implementation WXSDKEngine (Deprecated)
+
++ (void)initSDKEnviroment
+{
+    [self initSDKEnvironment];
+}
+
++ (void)initSDKEnviroment:(NSString *)script
+{
+    [self initSDKEnvironment:script];
 }
 
 @end

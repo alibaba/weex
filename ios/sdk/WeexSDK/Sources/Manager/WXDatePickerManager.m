@@ -10,6 +10,7 @@
 #import <UIKit/UIDatePicker.h>
 #import <UIKit/UIKit.h>
 #import "WXConvert.h"
+#import "WXUtility.h"
 
 #define WXPickerHeight 266
 
@@ -79,7 +80,7 @@
             NSString *value = [WXConvert NSString:attributes[@"value"]];
             if(value)
             {
-                NSDate *date = [self inputDateStringToDate:value];
+                NSDate *date = [WXUtility dateStringToDate:value];
                 if(date)
                 {
                     self.datePicker.date =date;
@@ -88,7 +89,7 @@
             NSString *max = [WXConvert NSString:attributes[@"max"]];
             if(max)
             {
-                NSDate *date = [self inputDateStringToDate:max];
+                NSDate *date = [WXUtility dateStringToDate:max];
                 if(date)
                 {
                     self.datePicker.maximumDate =date;
@@ -97,7 +98,7 @@
             NSString *min = [WXConvert NSString:attributes[@"min"]];
             if(min)
             {
-                NSDate *date = [self inputDateStringToDate:min];
+                NSDate *date = [WXUtility dateStringToDate:min];
                 if(date)
                 {
                     self.datePicker.minimumDate =date;
@@ -109,7 +110,7 @@
             NSString *value = [WXConvert NSString:attributes[@"value"]];
             if(value)
             {
-                NSDate *date = [self inputTimeStringToDate:value];
+                NSDate *date = [WXUtility timeStringToDate:value];
                 if(date)
                 {
                     self.datePicker.date = date;
@@ -134,7 +135,7 @@
             NSString *value = [WXConvert NSString:attributes[@"value"]];
             if(value)
             {
-                NSDate *date = [self inputDateStringToDate:value];
+                NSDate *date = [WXUtility dateStringToDate:value];
                 if(date)
                 {
                     self.datePicker.date =date;
@@ -143,7 +144,7 @@
             NSString *max = [WXConvert NSString:attributes[@"max"]];
             if(max)
             {
-                NSDate *date = [self inputDateStringToDate:max];
+                NSDate *date = [WXUtility dateStringToDate:max];
                 if(date)
                 {
                     self.datePicker.maximumDate =date;
@@ -152,7 +153,7 @@
             NSString *min = [WXConvert NSString:attributes[@"min"]];
             if(min)
             {
-                NSDate *date = [self inputDateStringToDate:min];
+                NSDate *date = [WXUtility dateStringToDate:min];
                 if(date)
                 {
                     self.datePicker.minimumDate =date;
@@ -164,7 +165,7 @@
             NSString *value = [WXConvert NSString:attributes[@"value"]];
             if(value)
             {
-                NSDate *date = [self inputTimeStringToDate:value];
+                NSDate *date = [WXUtility timeStringToDate:value];
                 if(date)
                 {
                     self.datePicker.date = date;
@@ -237,46 +238,14 @@
         NSString *value = @"";
         if([_type isEqualToString:@"time"])
         {
-            value = [self timeToString:self.datePicker.date];
+            value = [WXUtility timeToString:self.datePicker.date];
         }else if([_type isEqualToString:@"date"])
         {
-            value = [self dateToString:self.datePicker.date];
+            value = [WXUtility dateToString:self.datePicker.date];
         }
         [self.delegate fetchDatePickerValue:value];
     }
     
-}
-
--(NSDate *)inputDateStringToDate:(NSString *)dateString
-{
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
-    [formatter setDateFormat:@"yyyy-MM-dd"];
-    NSDate *date=[formatter dateFromString:dateString];
-    return date;
-}
-
--(NSDate *)inputTimeStringToDate:(NSString *)dateString
-{
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
-    [formatter setDateFormat:@"HH:mm"];
-    NSDate *date=[formatter dateFromString:dateString];
-    return date;
-}
-
--(NSString *)dateToString:(NSDate *)date
-{
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-    NSString *str = [dateFormatter stringFromDate:date];
-    return str;
-}
-
--(NSString *)timeToString:(NSDate *)date
-{
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"HH:mm"];
-    NSString *str = [dateFormatter stringFromDate:date];
-    return str;
 }
 
 @end

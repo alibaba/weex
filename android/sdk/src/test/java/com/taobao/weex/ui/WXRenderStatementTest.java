@@ -237,7 +237,6 @@ public class WXRenderStatementTest {
         PowerMockito.mockStatic(WXComponentFactory.class);
         PowerMockito.when(TextUtils.isEmpty("124")).thenReturn(true);
         PowerMockito.when(WXSoInstallMgrSdk.initSo(null, 1, null)).thenReturn(true);
-//        WXSDKEngine.init(RuntimeEnvironment.application);
         WXSDKInstance instance = Mockito.mock(WXSDKInstance.class);
         mWXRenderStatement = new WXRenderStatement(instance);
     }

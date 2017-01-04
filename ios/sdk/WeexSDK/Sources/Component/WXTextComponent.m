@@ -50,6 +50,10 @@
     
     if ([self.wx_component _needsDrawBorder]) {
         [self.wx_component _drawBorderWithContext:context size:bounds.size];
+    } else {
+        WXPerformBlockOnMainThread(^{
+            [self.wx_component _resetNativeBorderRadius];
+        });
     }
     NSLayoutManager *layoutManager = _textStorage.layoutManagers.firstObject;
     NSTextContainer *textContainer = layoutManager.textContainers.firstObject;
@@ -71,7 +75,7 @@
 {
     if (_textStorage != textStorage) {
         _textStorage = textStorage;
-        [self setNeedsDisplay];
+        [self.wx_component setNeedsDisplay];
     }
 }
 
@@ -101,7 +105,7 @@
     UIColor *_color;
     NSString *_fontFamily;
     CGFloat _fontSize;
-    WXTextWeight _fontWeight;
+    CGFloat _fontWeight;
     WXTextStyle _fontStyle;
     NSUInteger _lines;
     NSTextAlignment _textAlign;
@@ -114,7 +118,7 @@
     pthread_mutexattr_t _textStorageMutexAttr;
 }
 
-static BOOL _isUsingTextStorageLock = YES;
+static BOOL _isUsingTextStorageLock = NO;
 + (void)useTextStorageLock:(BOOL)isUsingTextStorageLock
 {
     _isUsingTextStorageLock = isUsingTextStorageLock;
@@ -150,6 +154,8 @@ static BOOL _isUsingTextStorageLock = YES;
     }
 }
 
+
+
 #define WX_STYLE_FILL_TEXT(key, prop, type, needLayout)\
 do {\
     id value = styles[@#key];\
@@ -162,18 +168,30 @@ do {\
     }\
 } while(0);
 
+#define WX_STYLE_FILL_TEXT_PIXEL(key, prop, needLayout)\
+do {\
+    id value = styles[@#key];\
+    if (value) {\
+        _##prop = [WXConvert WXPixelType:value scaleFactor:self.weexInstance.pixelScaleFactor];\
+        [self setNeedsRepaint];\
+    if (needLayout) {\
+        [self setNeedsLayout];\
+    }\
+}\
+} while(0);
+
 - (void)fillCSSStyles:(NSDictionary *)styles
 {
     WX_STYLE_FILL_TEXT(color, color, UIColor, NO)
     WX_STYLE_FILL_TEXT(fontFamily, fontFamily, NSString, YES)
-    WX_STYLE_FILL_TEXT(fontSize, fontSize, WXPixelType, YES)
+    WX_STYLE_FILL_TEXT_PIXEL(fontSize, fontSize, YES)
     WX_STYLE_FILL_TEXT(fontWeight, fontWeight, WXTextWeight, YES)
     WX_STYLE_FILL_TEXT(fontStyle, fontStyle, WXTextStyle, YES)
     WX_STYLE_FILL_TEXT(lines, lines, NSUInteger, YES)
     WX_STYLE_FILL_TEXT(textAlign, textAlign, NSTextAlignment, NO)
     WX_STYLE_FILL_TEXT(textDecoration, textDecoration, WXTextDecoration, YES)
     WX_STYLE_FILL_TEXT(textOverflow, textOverflow, NSString, NO)
-    WX_STYLE_FILL_TEXT(lineHeight, lineHeight, WXPixelType, YES)
+    WX_STYLE_FILL_TEXT_PIXEL(lineHeight, lineHeight, YES)
     
     UIEdgeInsets padding = {
         WXFloorPixelValue(self.cssNode->style.padding[CSS_TOP] + self.cssNode->style.border[CSS_TOP]),
@@ -306,7 +324,7 @@ do {\
     }
     
     // set font
-    UIFont *font = [WXUtility fontWithSize:_fontSize textWeight:_fontWeight textStyle:_fontStyle fontFamily:_fontFamily];
+    UIFont *font = [WXUtility fontWithSize:_fontSize textWeight:_fontWeight textStyle:_fontStyle fontFamily:_fontFamily scaleFactor:self.weexInstance.pixelScaleFactor];
     if (font) {
         [attributedString addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, string.length)];
     }
@@ -403,9 +421,9 @@ do {\
     [self syncTextStorageForView];
 }
 
-- (void)_updateStylesOnComponentThread:(NSDictionary *)styles
+- (void)_updateStylesOnComponentThread:(NSDictionary *)styles resetStyles:(NSMutableArray *)resetStyles
 {
-    [super _updateStylesOnComponentThread:styles];
+    [super _updateStylesOnComponentThread:styles resetStyles:(NSMutableArray *)resetStyles];
     
     [self fillCSSStyles:styles];
     
@@ -427,6 +445,20 @@ do {\
     return super.description;
 }
 #endif
+ 
+- (void)_resetCSSNodeStyles:(NSArray *)styles
+{
+    [super _resetCSSNodeStyles:styles];
+    if ([styles containsObject:@"color"]) {
+        _color = [UIColor blackColor];
+        [self setNeedsRepaint];
+    }
+    if ([styles containsObject:@"fontSize"]) {
+        _fontSize = WX_TEXT_FONT_SIZE;
+        [self setNeedsRepaint];
+        [self setNeedsLayout];
+    }
+}
 
 @end
 

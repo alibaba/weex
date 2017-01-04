@@ -2,6 +2,8 @@
 
 import scroll from 'scroll-to'
 
+let camelToKebab, appendStyle
+
 const dom = {
   /**
    * scrollToElement
@@ -28,6 +30,23 @@ const dom = {
         console.log('scroll end.')
       })
     }
+  },
+
+  /**
+   * for adding fontFace
+   * @param {string} key fontFace
+   * @param {object} styles rules
+   */
+  addRule: function (key, styles) {
+    key = camelToKebab(key)
+    let stylesText = ''
+    for (const k in styles) {
+      if (styles.hasOwnProperty(k)) {
+        stylesText += camelToKebab(k) + ':' + styles[k] + ';'
+      }
+    }
+    const styleText = `@${key}{${stylesText}}`
+    appendStyle(styleText, 'dom-added-rules')
   }
 }
 
@@ -35,11 +54,16 @@ const meta = {
   dom: [{
     name: 'scrollToElement',
     args: ['string', 'object']
+  }, {
+    name: 'addRule',
+    args: ['string', 'object']
   }]
 }
 
 export default {
   init: function (Weex) {
+    camelToKebab = Weex.utils.camelToKebab
+    appendStyle = Weex.utils.appendStyle
     Weex.registerApiModule('dom', dom, meta)
   }
 }

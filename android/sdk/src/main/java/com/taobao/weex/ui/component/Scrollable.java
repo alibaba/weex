@@ -214,16 +214,25 @@ import com.taobao.weex.dom.WXDomObject;
  */
 public interface Scrollable {
 
-  public void bindStickStyle(WXComponent component);
-  public void unbindStickStyle(WXComponent component);
-  public void bindAppearEvent(WXComponent component);
-  public void bindDisappearEvent(WXComponent component);
-  public void unbindAppearEvent(WXComponent component);
-  public void unbindDisappearEvent(WXComponent component);
-  public ViewGroup getView();
-  public void scrollTo(WXComponent component,int offset);
-  public String getRef();
+  void bindStickStyle(WXComponent component);
 
-  public int getScrollY();
-  public int getScrollX();
+  void unbindStickStyle(WXComponent component);
+
+  void bindAppearEvent(WXComponent component);
+
+  void bindDisappearEvent(WXComponent component);
+
+  void unbindAppearEvent(WXComponent component);
+
+  void unbindDisappearEvent(WXComponent component);
+
+  ViewGroup getView();
+
+  void scrollTo(WXComponent component, int offset);
+
+  String getRef();
+
+  int getScrollY();
+
+  int getScrollX();
 }

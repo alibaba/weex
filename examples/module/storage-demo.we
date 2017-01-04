@@ -9,8 +9,6 @@
         <text>{{getItemResult}}</text>
       </wxc-panel>
 
-
-
       <wxc-panel title="length">
         <text>{{lengthResult}}</text>
       </wxc-panel>
@@ -43,7 +41,6 @@ module.exports = {
     var storage = require('@weex-module/storage');
     var me = this;
 
-
     //setItem
     storage.setItem('foo','foo-value',function(e){
       console.log('set [foo<->foo-value]:'+JSON.stringify(e));
@@ -63,7 +60,6 @@ module.exports = {
       console.log('get bar result:'+JSON.stringify(e));
       me.getItemResult += 'get bar,value is '+e.data;
     });
-
 
     //length
     storage.length(function(e){

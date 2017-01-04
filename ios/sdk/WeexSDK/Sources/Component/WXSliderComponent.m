@@ -18,6 +18,7 @@
 
 @protocol WXSliderViewDelegate <UIScrollViewDelegate>
 
+- (void)sliderView:(WXSliderView *)sliderView sliderViewDidScroll:(UIScrollView *)scrollView;
 - (void)sliderView:(WXSliderView *)sliderView didScrollToItemAtIndex:(NSInteger)index;
 
 @end
@@ -263,6 +264,9 @@
     if (itemView) {
         self.currentIndex = itemView.tag;
     }
+    if (self.delegate && [self.delegate respondsToSelector:@selector(sliderView:sliderViewDidScroll:)]) {
+        [self.delegate sliderView:self sliderViewDidScroll:self.scrollView];
+    }
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
@@ -289,7 +293,10 @@
 @property (nonatomic, assign) BOOL  autoPlay;
 @property (nonatomic, assign) NSUInteger interval;
 @property (nonatomic, assign) NSInteger index;
+@property (nonatomic, assign) CGFloat lastOffsetXRatio;
+@property (nonatomic, assign) CGFloat offsetXAccuracy;
 @property (nonatomic, assign) BOOL  sliderChangeEvent;
+@property (nonatomic, assign) BOOL  sliderScrollEvent;
 @property (nonatomic, strong) NSMutableArray *childrenView;
 
 @end
@@ -305,8 +312,10 @@
 {
     if (self = [super initWithRef:ref type:type styles:styles attributes:attributes events:events weexInstance:weexInstance]) {
         _sliderChangeEvent = NO;
+        _sliderScrollEvent = NO;
         _interval = 3000;
         _childrenView = [NSMutableArray new];
+        _lastOffsetXRatio = 0;
         
         if (attributes[@"autoPlay"]) {
             _autoPlay = [attributes[@"autoPlay"] boolValue];
@@ -318,6 +327,10 @@
         
         if (attributes[@"index"]) {
             _index = [attributes[@"index"] integerValue];
+        }
+        
+        if (attributes[@"offsetXAccuracy"]) {
+            _offsetXAccuracy = [WXConvert CGFloat:attributes[@"offsetXAccuracy"]];
         }
         
         self.cssNode->style.flex_direction = CSS_FLEX_DIRECTION_ROW;
@@ -444,6 +457,10 @@
         self.currentIndex = _index;
         [_sliderView scroll2ItemView:self.currentIndex animated:YES];
     }
+    
+    if (attributes[@"offsetXAccuracy"]) {
+        _offsetXAccuracy = [WXConvert CGFloat:attributes[@"offsetXAccuracy"]];
+    }
 }
 
 - (void)addEvent:(NSString *)eventName
@@ -451,12 +468,18 @@
     if ([eventName isEqualToString:@"change"]) {
         _sliderChangeEvent = YES;
     }
+    if ([eventName isEqualToString:@"scroll"]) {
+        _sliderScrollEvent = YES;
+    }
 }
 
 - (void)removeEvent:(NSString *)eventName
 {
     if ([eventName isEqualToString:@"change"]) {
         _sliderChangeEvent = NO;
+    }
+    if ([eventName isEqualToString:@"scroll"]) {
+        _sliderScrollEvent = NO;
     }
 }
 
@@ -509,10 +532,24 @@
     }
 }
 
+#pragma mark ScrollView Delegate
+
+- (void)sliderView:(WXSliderView *)sliderView sliderViewDidScroll:(UIScrollView *)scrollView
+{
+    if (_sliderScrollEvent) {
+        CGFloat width = scrollView.frame.size.width;
+        CGFloat XDeviation = scrollView.frame.origin.x - (scrollView.contentOffset.x - width);
+        CGFloat offsetXRatio = (XDeviation / width);
+        if (ABS(offsetXRatio - _lastOffsetXRatio) >= _offsetXAccuracy) {
+            _lastOffsetXRatio = offsetXRatio;
+            [self fireEvent:@"scroll" params:@{@"offsetXRatio":[NSNumber numberWithFloat:offsetXRatio]} domChanges:nil];
+        }
+    }
+}
+
 - (void)sliderView:(WXSliderView *)sliderView didScrollToItemAtIndex:(NSInteger)index
 {
     self.currentIndex = index;
-    
     if (_sliderChangeEvent) {
         [self fireEvent:@"change" params:@{@"index":@(index)} domChanges:@{@"attrs": @{@"index": @(index)}}];
     }

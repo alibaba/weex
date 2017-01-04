@@ -61,7 +61,7 @@
 //style
 @property (nonatomic) WXPixelType fontSize;
 @property (nonatomic) WXTextStyle fontStyle;
-@property (nonatomic) WXTextWeight fontWeight;
+@property (nonatomic) CGFloat fontWeight;
 @property (nonatomic, strong) NSString *fontFamily;
 @property (nonatomic, copy) NSString *inputType;
 
@@ -70,7 +70,6 @@
 @property (nonatomic) BOOL focusEvent;
 @property (nonatomic) BOOL blurEvent;
 @property (nonatomic) BOOL changeEvent;
-@property (nonatomic) BOOL clickEvent;
 @property (nonatomic, strong) NSString *changeEventString;
 @property (nonatomic, assign) CGSize keyboardSize;
 @property (nonatomic, assign) CGRect rootViewOriginFrame;
@@ -99,7 +98,6 @@ WX_EXPORT_METHOD(@selector(blur))
         _focusEvent = NO;
         _blurEvent = NO;
         _changeEvent = NO;
-        _clickEvent = NO;
         
         _inputView = [[WXTextInputView alloc] init];
         _datePickerManager = [[WXDatePickerManager alloc] init];
@@ -144,8 +142,9 @@ WX_EXPORT_METHOD(@selector(blur))
         if (styles[@"color"]) {
             [_inputView setTextColor:[WXConvert UIColor:styles[@"color"]]];
         }
+        
         if (styles[@"fontSize"]) {
-            _fontSize = [WXConvert WXPixelType:styles[@"fontSize"]];
+            _fontSize = [WXConvert WXPixelType:styles[@"fontSize"] scaleFactor:self.weexInstance.pixelScaleFactor];
         }
         if (styles[@"fontWeight"]) {
             _fontWeight = [WXConvert WXTextWeight:styles[@"fontWeight"]];
@@ -211,7 +210,7 @@ WX_EXPORT_METHOD(@selector(blur))
 {
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWasShown:)
-                                                 name:UIKeyboardDidShowNotification
+                                                 name:UIKeyboardWillShowNotification
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -241,6 +240,21 @@ WX_EXPORT_METHOD(@selector(blur))
     }
 }
 
+#pragma mark - private method
+-(UIColor *)convertColor:(id)value
+{
+    UIColor *color = [WXConvert UIColor:value];
+    if(value) {
+        NSString *str = [WXConvert NSString:value];
+        if(str && [@"" isEqualToString:str]) {
+            color = [UIColor blackColor];
+        }
+    }else {
+        color = [UIColor blackColor];
+    }
+    return color;
+}
+
 #pragma mark - Add Event
 - (void)addEvent:(NSString *)eventName
 {
@@ -255,9 +269,6 @@ WX_EXPORT_METHOD(@selector(blur))
     }
     if ([eventName isEqualToString:@"change"]) {
         _changeEvent = YES;
-    }
-    if ([eventName isEqualToString:@"click"]) {
-        _clickEvent = YES;
     }
 }
 
@@ -276,9 +287,6 @@ WX_EXPORT_METHOD(@selector(blur))
     }
     if ([eventName isEqualToString:@"change"]) {
         _changeEvent = NO;
-    }
-    if ([eventName isEqualToString:@"click"]) {
-        _clickEvent = NO;
     }
 }
 
@@ -327,10 +335,10 @@ WX_EXPORT_METHOD(@selector(blur))
 - (void)updateStyles:(NSDictionary *)styles
 {
     if (styles[@"color"]) {
-        [_inputView setTextColor:[WXConvert UIColor:styles[@"color"]]];
+       [_inputView setTextColor:[WXConvert UIColor:styles[@"color"]]];
     }
     if (styles[@"fontSize"]) {
-        _fontSize = [WXConvert WXPixelType:styles[@"fontSize"]];
+        _fontSize = [WXConvert WXPixelType:styles[@"fontSize"] scaleFactor:self.weexInstance.pixelScaleFactor];
     }
     if (styles[@"fontWeight"]) {
         _fontWeight = [WXConvert WXTextWeight:styles[@"fontWeight"]];
@@ -394,6 +402,18 @@ WX_EXPORT_METHOD(@selector(blur))
     };
 }
 
+-(UIColor *)covertColor:(id)value
+{
+    UIColor *color = [WXConvert UIColor:value];
+    if(value) {
+        NSString *str = [WXConvert NSString:value];
+        if(str && [@"" isEqualToString:str]) {
+            color = [UIColor blackColor];
+        }
+    }
+    return color;
+}
+
 #pragma mark -
 #pragma mark WXDatePickerManagerDelegate
 -(void)fetchDatePickerValue:(NSString *)value
@@ -426,9 +446,6 @@ WX_EXPORT_METHOD(@selector(blur))
     _changeEventString = [textField text];
     if (_focusEvent) {
         [self fireEvent:@"focus" params:nil];
-    }
-    if (_clickEvent) {
-        [self fireEvent:@"click" params:nil];
     }
 }
 
@@ -472,9 +489,9 @@ WX_EXPORT_METHOD(@selector(blur))
     UIView *rootView = self.weexInstance.rootView;
     CGRect rect = _rootViewOriginFrame;
     CGRect rootViewFrame = rootView.frame;
-    CGRect inputFrame = [_inputView convertRect:_inputView.frame toView:rootView];
+    CGRect inputFrame = [_inputView.superview convertRect:_inputView.frame toView:rootView];
     if (movedUp) {
-        CGFloat offset = _keyboardSize.height - CGRectGetMaxY(rect) + CGRectGetMaxY(inputFrame);
+        CGFloat offset =inputFrame.origin.y-(rootViewFrame.size.height-_keyboardSize.height-inputFrame.size.height);
         if (offset > 0) {
             rect = (CGRect){
                 .origin.x = 0.f,
@@ -511,7 +528,7 @@ WX_EXPORT_METHOD(@selector(blur))
 
 - (void)setTextFont
 {
-    UIFont *font = [WXUtility fontWithSize:_fontSize textWeight:_fontWeight textStyle:_fontStyle fontFamily:_fontFamily];
+    UIFont *font = [WXUtility fontWithSize:_fontSize textWeight:_fontWeight textStyle:_fontStyle fontFamily:_fontFamily scaleFactor:self.weexInstance.pixelScaleFactor];
     [_inputView setFont:font];
 }
 
@@ -594,10 +611,10 @@ WX_EXPORT_METHOD(@selector(blur))
         .origin.y = CGRectGetMaxY(screenRect) - _keyboardSize.height - 54,
         .size = _keyboardSize
     };
-    CGRect inputFrame = [_inputView convertRect:_inputView.frame toView:rootView]
-    ;
+    CGRect inputFrame = [_inputView.superview convertRect:_inputView.frame toView:rootView];
     if (keyboardRect.origin.y - inputFrame.size.height <= inputFrame.origin.y) {
         [self setViewMovedUp:YES];
+        self.weexInstance.isRootViewFrozen = YES;
     }
 }
 
@@ -609,6 +626,7 @@ WX_EXPORT_METHOD(@selector(blur))
     UIView * rootView = self.weexInstance.rootView;
     if (rootView.frame.origin.y < 0) {
         [self setViewMovedUp:NO];
+        self.weexInstance.isRootViewFrozen = NO;
     }
 }
 
@@ -617,4 +635,15 @@ WX_EXPORT_METHOD(@selector(blur))
     [_inputView resignFirstResponder];
 }
 
+#pragma mark -reset color
+- (void)resetStyles:(NSArray *)styles
+{
+    if ([styles containsObject:@"color"]) {
+        [_inputView setTextColor:[UIColor blackColor]];
+    }
+    if ([styles containsObject:@"fontSize"]) {
+        _fontSize = WX_TEXT_FONT_SIZE;
+        [self setTextFont];
+    }
+}
 @end

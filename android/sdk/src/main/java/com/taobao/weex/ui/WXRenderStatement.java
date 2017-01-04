@@ -227,6 +227,7 @@ import com.taobao.weex.ui.component.WXComponentFactory;
 import com.taobao.weex.ui.component.WXScroller;
 import com.taobao.weex.ui.component.WXVContainer;
 import com.taobao.weex.utils.WXLogUtils;
+import com.taobao.weex.utils.WXViewUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -301,8 +302,7 @@ class WXRenderStatement {
       return null;
     }
     WXDomObject domObject = new WXDomObject();
-    domObject.type = WXBasicComponentType.DIV;
-    domObject.ref = "god";
+    WXDomObject.prepareGod(domObject);
     mGodComponent = (WXVContainer) WXComponentFactory.newInstance(mWXSDKInstance, domObject, null);
     mGodComponent.createView(null, -1);
     if (mGodComponent == null) {
@@ -365,7 +365,11 @@ class WXRenderStatement {
     parent.addChild(component, index);
   }
 
-  WXComponent createComponentOnDomThread(WXDomObject dom, String parentRef, int index) {
+  @Nullable WXComponent createComponentOnDomThread(WXDomObject dom, String parentRef, int index) {
+    WXComponent comp = mRegistry.get(parentRef);
+    if(comp == null || !(comp instanceof WXVContainer)){
+      return null;
+    }
     return generateComponentTree(dom, (WXVContainer) mRegistry.get(parentRef));
   }
 
@@ -407,7 +411,7 @@ class WXRenderStatement {
    * Clear registry information that current instance contains.
    */
   private void clearRegistryForComponent(WXComponent component) {
-    WXComponent removedComponent = mRegistry.remove(component.getDomObject().ref);
+    WXComponent removedComponent = mRegistry.remove(component.getDomObject().getRef());
     if (removedComponent != null) {
       removedComponent.removeAllEvent();
       removedComponent.removeStickyStyle();
@@ -492,11 +496,15 @@ class WXRenderStatement {
       return;
     }
 
-    int offsetInt = 0;
+    float offsetFloat = 0;
     if (options != null) {
       String offset = options.get("offset") == null ? "0" : options.get("offset").toString();
       if (offset != null) {
-        offsetInt = Integer.parseInt(offset);
+        try {
+          offsetFloat = WXViewUtils.getRealPxByWidth(Float.parseFloat(offset));
+        }catch (Exception e ){
+           WXLogUtils.e("Float parseFloat error :"+e.getMessage());
+        }
       }
     }
 
@@ -504,7 +512,7 @@ class WXRenderStatement {
     if (scroller == null) {
       return;
     }
-    scroller.scrollTo(component,offsetInt);
+    scroller.scrollTo(component,(int)offsetFloat);
   }
 
   /**
@@ -542,7 +550,7 @@ class WXRenderStatement {
     WXComponent component = WXComponentFactory.newInstance(mWXSDKInstance, dom,
                                                            parent, parent.isLazy());
 
-    mRegistry.put(dom.ref, component);
+    mRegistry.put(dom.getRef(), component);
     if (component instanceof WXVContainer) {
       WXVContainer parentC = (WXVContainer) component;
       int count = dom.childCount();

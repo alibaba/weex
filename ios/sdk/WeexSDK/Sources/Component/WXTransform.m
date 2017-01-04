@@ -9,12 +9,14 @@
 #import "WXTransform.h"
 #import "math.h"
 #import "WXUtility.h"
+#import "WXSDKInstance.h"
 
 @interface WXTransform()
 
 @property (nonatomic, weak) UIView *view;
 @property (nonatomic, assign) float rotateAngle;
 @property (nonatomic, assign) BOOL isTransformRotate;
+@property (nonatomic, weak) WXSDKInstance *weexInstance;
 
 @end
 
@@ -22,9 +24,15 @@
 
 - (instancetype)init
 {
+    return [self initWithInstance:nil];
+}
+
+- (instancetype)initWithInstance:(WXSDKInstance *)weexInstance;
+{
     if (self = [super init]) {
         _isTransformRotate = YES;
         _rotateAngle = 0.0;
+        _weexInstance = weexInstance;
     }
     
     return self;
@@ -124,14 +132,14 @@
                 if ([value hasSuffix:@"%"]) {
                     val *= width / 100;
                 } else {
-                    val = WXPixelResize(val);
+                    val = WXPixelScale(val, self.weexInstance.pixelScaleFactor);
                 }
                 x = val;
             } else {
                 if ([value hasSuffix:@"%"]) {
                     val *= height / 100;
                 } else {
-                    val = WXPixelResize(val);
+                    val = WXPixelScale(val, self.weexInstance.pixelScaleFactor);
                 }
                 y = val;
             }
@@ -139,7 +147,9 @@
     }
     x -= width / 2.0;
     y -= height / 2.0;
-    return CGPointMake(round(x / WXScreenResizeRadio()), round(y / WXScreenResizeRadio()));
+    
+    CGFloat scaleFactor = self.weexInstance.pixelScaleFactor;
+    return CGPointMake(round(x / scaleFactor), round(y / scaleFactor));
 }
 
 // Angle in radians
@@ -159,7 +169,7 @@
     if ([value[0] hasSuffix:@"%"] && _view) {
         x *= _view.bounds.size.width / 100;
     } else {
-        x = WXPixelResize(x);
+        x = WXPixelScale(x, self.weexInstance.pixelScaleFactor);
     }
 
     double y = 0;
@@ -169,7 +179,7 @@
         if ([value[1] hasSuffix:@"%"] && _view) {
             y *= _view.bounds.size.height / 100;
         } else {
-            y = WXPixelResize(y);
+            y = WXPixelScale(y, self.weexInstance.pixelScaleFactor);
         }
     }
     _transform = CGAffineTransformTranslate(_transform, x, y);

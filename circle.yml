@@ -7,10 +7,12 @@ test:
   override:
     - npm run test
     - cd android/playground && ./gradlew assembleDebug
+    - cd android/sdk && ./gradlew clean testDebugUnitTest -PdisableCov=true
+  post:
     - cp -r android/playground/app/build/outputs $CIRCLE_ARTIFACTS # playground artifacts
-    - cp -r android/sdk/build/outputs/ $CIRCLE_ARTIFACTS # sdk artifacts
-    - cd android/playground && ./gradlew testDebugUnitTest jacocoTestReportDebug
-    - cp -r android/sdk/build/reports/ $CIRCLE_ARTIFACTS/reports
+    - cp -r android/sdk/build/ $CIRCLE_ARTIFACTS/build
+    - cd android/sdk && bash <(curl -s https://codecov.io/bash)
+
 dependencies:
   cache_directories:
     - "node_modules"

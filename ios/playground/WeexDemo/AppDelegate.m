@@ -71,10 +71,9 @@
 {
     [WXAppConfiguration setAppGroup:@"AliApp"];
     [WXAppConfiguration setAppName:@"WeexDemo"];
-    [WXAppConfiguration setAppVersion:@"1.8.3"];
     [WXAppConfiguration setExternalUserAgent:@"ExternalUA"];
     
-    [WXSDKEngine initSDKEnviroment];
+    [WXSDKEngine initSDKEnvironment];
     
     [WXSDKEngine registerHandler:[WXImgLoaderDefaultImpl new] withProtocol:@protocol(WXImgLoaderProtocol)];
     [WXSDKEngine registerHandler:[WXEventModule new] withProtocol:@protocol(WXEventModuleProtocol)];

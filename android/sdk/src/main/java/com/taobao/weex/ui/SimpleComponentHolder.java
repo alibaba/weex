@@ -204,6 +204,7 @@
  */
 package com.taobao.weex.ui;
 
+import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.bridge.Invoker;
 import com.taobao.weex.bridge.MethodInvoker;
@@ -229,31 +230,39 @@ public class SimpleComponentHolder implements IFComponentHolder{
   public static final String TAG = "SimpleComponentHolder";
   private final Class<? extends WXComponent> mClz;
   private Map<String, Invoker> mMethods;
-  private ComponentCreator mCeator;
+  private ComponentCreator mCreator;
 
   static class ClazzComponentCreator implements ComponentCreator{
 
-    private final Constructor<? extends WXComponent> mConstructor;
+    private Constructor<? extends WXComponent> mConstructor;
+    private final Class<? extends WXComponent> mCompClz;
 
     ClazzComponentCreator(Class<? extends WXComponent> c){
+      mCompClz = c;
+    }
+
+    private void loadConstructor(){
+      Class<? extends WXComponent> c = mCompClz;
       Constructor<? extends WXComponent> constructor;
       try {
         constructor = c.getConstructor(WXSDKInstance.class, WXDomObject.class, WXVContainer.class, boolean.class);
       } catch (NoSuchMethodException e) {
+        WXLogUtils.d("ClazzComponentCreator","Use deprecated component constructor");
         try {
           //compatible deprecated constructor
           constructor = c.getConstructor(WXSDKInstance.class, WXDomObject.class, WXVContainer.class,String.class, boolean.class);
         } catch (NoSuchMethodException e1) {
-          e1.printStackTrace();
           throw new WXRuntimeException("Can't find constructor of component.");
         }
-        e.printStackTrace();
       }
       mConstructor = constructor;
     }
 
     @Override
     public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+      if(mConstructor == null){
+        loadConstructor();
+      }
       int parameters = mConstructor.getParameterTypes().length;
       WXComponent component;
       if(parameters == 4){
@@ -272,7 +281,7 @@ public class SimpleComponentHolder implements IFComponentHolder{
 
   public SimpleComponentHolder(Class<? extends WXComponent> clz,ComponentCreator customCreator) {
     this.mClz = clz;
-    this.mCeator = customCreator;
+    this.mCreator = customCreator;
   }
 
   @Override
@@ -290,13 +299,20 @@ public class SimpleComponentHolder implements IFComponentHolder{
   }
 
   private synchronized void generate(){
-    WXLogUtils.d(TAG,"Generate Component:"+mClz.getSimpleName());
+    if(WXEnvironment.isApkDebugable()) {
+      WXLogUtils.d(TAG, "Generate Component:" + mClz.getSimpleName());
+    }
+
+    mMethods = getMethods(mClz);
+  }
+
+  static Map<String,Invoker> getMethods(Class clz){
     HashMap<String, Invoker> methods = new HashMap<>();
 
     Annotation[] annotations;
     Annotation anno;
     try {
-      for (Method method : mClz.getMethods()) {
+      for (Method method : clz.getMethods()) {
         try {
           annotations = method.getDeclaredAnnotations();
           for (int i = 0, annotationsCount = annotations.length;
@@ -308,8 +324,7 @@ public class SimpleComponentHolder implements IFComponentHolder{
               break;
             }
           }
-        } catch (ArrayIndexOutOfBoundsException e) {
-          e.printStackTrace();
+        } catch (ArrayIndexOutOfBoundsException | IncompatibleClassChangeError e) {
           //ignore: getDeclaredAnnotations may throw this
         }
       }
@@ -317,15 +332,14 @@ public class SimpleComponentHolder implements IFComponentHolder{
       e.printStackTrace();
       //ignore: getMethods may throw this
     }
-
-    mMethods = methods;
+    return methods;
   }
 
 
 
   @Override
   public synchronized WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-    WXComponent component = mCeator.createInstance(instance,node,parent,lazy);
+    WXComponent component = mCreator.createInstance(instance,node,parent,lazy);
 
     component.bindHolder(this);
     return component;

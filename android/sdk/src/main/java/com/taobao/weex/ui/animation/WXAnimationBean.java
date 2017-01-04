@@ -212,6 +212,7 @@ import android.util.Pair;
 import android.util.Property;
 import android.view.View;
 
+import com.taobao.weex.common.Constants;
 import com.taobao.weex.utils.FunctionParser;
 import com.taobao.weex.utils.WXDataStructureUtil;
 import com.taobao.weex.utils.WXUtils;
@@ -232,6 +233,8 @@ public class WXAnimationBean {
   public final static String EASE_IN_OUT = "ease-in-out";
   public final static String EASE_IN = "ease-in";
   public final static String EASE_OUT = "ease-out";
+  public final static String CUBIC_BEZIER = "cubic-bezier";
+  public final static int NUM_CUBIC_PARAM = 4;
   public long delay;
   public long duration;
   public String timingFunction;
@@ -246,7 +249,9 @@ public class WXAnimationBean {
     public final static String WX_SCALE_X = "scaleX";
     public final static String WX_SCALE_Y = "scaleY";
     public final static String WX_SCALE = "scale";
-    public final static String BACKGROUND_COLOR = "backgroundColor";
+    public final static String BACKGROUND_COLOR = Constants.Name.BACKGROUND_COLOR;
+    public final static String WIDTH = Constants.Name.WIDTH;
+    public final static String HEIGHT = Constants.Name.HEIGHT;
     public final static String TOP = "top";
     public final static String BOTTOM = "bottom";
     public final static String RIGHT = "right";
@@ -273,6 +278,8 @@ public class WXAnimationBean {
 
     public String opacity;
     public String backgroundColor;
+    public String width;
+    public String height;
     public String transform;
     public String transformOrigin;
     private Map<Property<View, Float>, Float> transformMap = new HashMap<>();

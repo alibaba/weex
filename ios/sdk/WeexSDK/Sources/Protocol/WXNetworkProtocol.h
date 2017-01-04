@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "WXModuleProtocol.h"
 
+__attribute__ ((deprecated("Use WXResourceRequestHandler instead")))
 @protocol WXNetworkProtocol <NSObject>
 
 /**

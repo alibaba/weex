@@ -31,7 +31,7 @@ import com.taobao.weex.utils.WXSoInstallMgrSdk;
 
 public class IndexActivity extends AbstractWeexActivity {
 
-  private static final int CAMARA_PERMISSION_REQUEST_CODE = 0x1;
+  private static final int CAMERA_PERMISSION_REQUEST_CODE = 0x1;
   private static final String TAG = "IndexActivity";
   private static final String DEFAULT_IP = "your_current_IP";
   private static String CURRENT_IP= DEFAULT_IP; // your_current_IP
@@ -116,7 +116,7 @@ public class IndexActivity extends AbstractWeexActivity {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
           Toast.makeText(this, "please give me the permission", Toast.LENGTH_SHORT).show();
         } else {
-          ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMARA_PERMISSION_REQUEST_CODE);
+          ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
         }
       } else {
         startActivity(new Intent(this, CaptureActivity.class));
@@ -129,7 +129,7 @@ public class IndexActivity extends AbstractWeexActivity {
   @Override
   public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    if (requestCode == CAMARA_PERMISSION_REQUEST_CODE && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+    if (requestCode == CAMERA_PERMISSION_REQUEST_CODE && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
       startActivity(new Intent(this, CaptureActivity.class));
     } else {
       Toast.makeText(this, "request camara permission fail!", Toast.LENGTH_SHORT).show();

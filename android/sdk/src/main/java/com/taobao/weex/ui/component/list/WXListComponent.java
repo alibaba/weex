@@ -208,6 +208,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -219,13 +220,14 @@ import android.widget.ImageView;
 
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.common.Component;
+import com.taobao.weex.common.Constants;
 import com.taobao.weex.common.OnWXScrollListener;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.component.AppearanceHelper;
 import com.taobao.weex.ui.component.Scrollable;
 import com.taobao.weex.ui.component.WXComponent;
-import com.taobao.weex.ui.component.WXEventType;
 import com.taobao.weex.ui.component.WXLoading;
 import com.taobao.weex.ui.component.WXRefresh;
 import com.taobao.weex.ui.component.WXVContainer;
@@ -256,31 +258,35 @@ import java.util.regex.Pattern;
  * {@link #onViewRecycled(ListBaseViewHolder)}. In other situations, the association may not valid
  * or not even exist.
  */
+@Component(lazyload = false)
+
 public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
         IRecyclerAdapterListener<ListBaseViewHolder>,IOnLoadMoreListener,Scrollable {
 
-    public static final String TRANSFORM = "transform";
-    private String TAG = "WXListComponent";
-    private int mListCellCount = 0;
-    private String mLoadMoreRetry = "";
-    private ArrayList<ListBaseViewHolder> recycleViewList = new ArrayList<>();
-    private static final Pattern transformPattern = Pattern.compile("([a-z]+)\\(([0-9\\.]+),?([0-9\\.]+)?\\)");
+  public static final String TRANSFORM = "transform";
+  public static final String LOADMOREOFFSET = "loadmoreoffset";
+  private String TAG = "WXListComponent";
+  private int mListCellCount = 0;
+  private String mLoadMoreRetry = "";
+  private ArrayList<ListBaseViewHolder> recycleViewList = new ArrayList<>();
+  private static final Pattern transformPattern = Pattern.compile("([a-z]+)\\(([0-9\\.]+),?([0-9\\.]+)?\\)");
 
-    private List<WXComponent> mAppearComponents = new ArrayList<>();
-    private ArrayMap<String, Long> mRefToViewType;
-    private SparseArray<ArrayList<WXComponent>> mViewTypes;
+  private Map<String, AppearanceHelper> mAppearComponents = new HashMap<>();
 
-    protected BounceRecyclerView bounceRecyclerView;
+  private ArrayMap<String, Long> mRefToViewType;
+  private SparseArray<ArrayList<WXComponent>> mViewTypes;
 
-    private static final int MAX_VIEWTYPE_ALLOW_CACHE = 9;
-    private static boolean mAllowCacheViewHolder = true;
-    private static boolean mDownForBidCacheViewHolder = false;
+  protected BounceRecyclerView bounceRecyclerView;
 
-    /**
-     * Map for storing component that is sticky.
-     **/
-    private Map<String, HashMap<String, WXComponent>> mStickyMap = new HashMap<>();
-    private WXStickyHelper stickyHelper;
+  private static final int MAX_VIEWTYPE_ALLOW_CACHE = 9;
+  private static boolean mAllowCacheViewHolder = true;
+  private static boolean mDownForBidCacheViewHolder = false;
+
+  /**
+   * Map for storing component that is sticky.
+   **/
+  private Map<String, HashMap<String, WXComponent>> mStickyMap = new HashMap<>();
+  private WXStickyHelper stickyHelper;
 
   @Deprecated
   public WXListComponent(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
@@ -302,13 +308,13 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
     @Override
     protected MeasureOutput measure(int width, int height) {
         int screenH = WXViewUtils.getScreenHeight(WXEnvironment.sApplication);
-        int weexH = WXViewUtils.getWeexHeight(mInstanceId);
+        int weexH = WXViewUtils.getWeexHeight(getInstanceId());
         int outHeight = height > (weexH >= screenH ? screenH : weexH) ? weexH - mAbsoluteY : height;
         return super.measure(width, outHeight);
     }
 
     protected int getOrientation(){
-        return VERTICAL;
+        return Constants.Orientation.VERTICAL;
     }
 
     @Override
@@ -369,14 +375,14 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
                 WXLogUtils.e(TAG, "Invaild transform expression:" + match);
             }
         }
-        return new TransformItemDecoration(getOrientation() == VERTICAL, opacity, translateX, translateY, rotate, scaleX, scaleY);
+        return new TransformItemDecoration(getOrientation() == Constants.Orientation.VERTICAL, opacity, translateX, translateY, rotate, scaleX, scaleY);
     }
 
     @Override
-    protected BounceRecyclerView initComponentHostView(Context context) {
+    protected BounceRecyclerView initComponentHostView(@NonNull Context context) {
         bounceRecyclerView = new BounceRecyclerView(context, getOrientation());
 
-        String transforms = (String) mDomObj.attr.get(TRANSFORM);
+        String transforms = (String) getDomObject().getAttrs().get(TRANSFORM);
         if (transforms != null) {
             bounceRecyclerView.getInnerView().addItemDecoration(parseTransforms(transforms));
         }
@@ -402,7 +408,7 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
                     }
                     recycleViewList.clear();
                 }
-              List<OnWXScrollListener> listeners = mInstance.getWXScrollListeners();
+              List<OnWXScrollListener> listeners = getInstance().getWXScrollListeners();
               if (listeners != null && listeners.size() > 0) {
                 for (OnWXScrollListener listener : listeners) {
                   if (listener != null) {
@@ -419,7 +425,7 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                List<OnWXScrollListener> listeners = mInstance.getWXScrollListeners();
+                List<OnWXScrollListener> listeners = getInstance().getWXScrollListeners();
                 if(listeners!=null && listeners.size()>0){
                     for (OnWXScrollListener listener : listeners) {
                         if (listener != null) {
@@ -442,24 +448,63 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
       stickyHelper.unbindStickStyle(component,mStickyMap);
   }
 
+  private @Nullable WXComponent findDirectListChild(WXComponent comp){
+    WXComponent parent;
+    if(comp == null || (parent = comp.getParent()) == null){
+      return null;
+    }
+
+    if(parent instanceof WXListComponent){
+      return comp;
+    }
+
+    return findDirectListChild(parent);
+  }
+
+  @Override
+  protected boolean setProperty(String key, Object param) {
+    switch (key){
+      case LOADMOREOFFSET:
+        return true;
+    }
+    return super.setProperty(key, param);
+  }
+
+  private void setAppearanceWatch(WXComponent component, int event, boolean enable) {
+    AppearanceHelper item = mAppearComponents.get(component.getRef());
+    if (item != null) {
+      item.setWatchEvent(event, enable);
+    } else if (!enable) {
+      //Do nothing if disable target not exist.
+    } else {
+      WXComponent dChild = findDirectListChild(component);
+      int index = mChildren.indexOf(dChild);
+      if (index != -1) {
+        item = new AppearanceHelper(component, index);
+        item.setWatchEvent(event, true);
+        mAppearComponents.put(component.getRef(), item);
+      }
+    }
+  }
+
   @Override
   public void bindAppearEvent(WXComponent component) {
-//TODO
+    setAppearanceWatch(component, AppearanceHelper.APPEAR,true);
   }
 
   @Override
   public void bindDisappearEvent(WXComponent component) {
-//TODO
+    setAppearanceWatch(component, AppearanceHelper.DISAPPEAR,true);
   }
 
   @Override
   public void unbindAppearEvent(WXComponent component) {
-//TODO
+    setAppearanceWatch(component, AppearanceHelper.APPEAR,false);
   }
 
   @Override
   public void unbindDisappearEvent(WXComponent component) {
-//TODO
+    setAppearanceWatch(component, AppearanceHelper.DISAPPEAR,false);
   }
 
   @Override
@@ -486,7 +531,7 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
       view.postDelayed(new Runnable() {
         @Override
         public void run() {
-          if(mOrientation == VERTICAL){
+          if(getOrientation() == Constants.Orientation.VERTICAL){
             int scrollY = cellComp.getHostView().getTop()+offset;
             view.smoothScrollBy(0,scrollY );
           }else{
@@ -621,38 +666,31 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
     if(view != null) {
       view.getAdapter().notifyItemInserted(adapterPosition);
     }
-
-    if(hasAppearAndDisappearEvent(child)){
-      mAppearComponents.add(child);
-      child.registerAppearEvent = true;
-    }
   }
 
     /**
      * Setting refresh view and loading view
      * @param child the refresh_view or loading_view
      */
-    private boolean checkRefreshOrLoading(WXComponent child) {
+    private boolean checkRefreshOrLoading(final WXComponent child) {
 
         if (child instanceof WXRefresh) {
-            mHost.setOnRefreshListener((WXRefresh)child);
-            final WXComponent temp = child;
-            mHost.postDelayed(new Runnable() {
+            getHostView().setOnRefreshListener((WXRefresh)child);
+            getHostView().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mHost.setHeaderView(temp.getView());
+                    getHostView().setHeaderView(child);
                 }
             },100);
             return true;
         }
 
         if (child instanceof WXLoading) {
-            mHost.setOnLoadingListener((WXLoading)child);
-            final WXComponent temp = child;
-            mHost.postDelayed(new Runnable() {
+            getHostView().setOnLoadingListener((WXLoading)child);
+            getHostView().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mHost.setFooterView(temp.getView());
+                    getHostView().setFooterView(child);
                 }
             },100);
             return true;
@@ -660,25 +698,6 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
 
         return false;
     }
-
-
-    private boolean hasAppearAndDisappearEvent(WXComponent child) {
-
-    if(child.getDomObject().containsEvent(WXEventType.APPEAR) || child.getDomObject().containsEvent(WXEventType.DISAPPEAR)){
-      return true;
-    }else if(child instanceof WXVContainer){
-      WXVContainer container=(WXVContainer)child;
-      for(int i=0;i<container.childCount();i++){
-        WXComponent component=container.getChild(i);
-        if(hasAppearAndDisappearEvent(component)){
-          return true;
-        }
-      }
-    }
-
-    return false;
-  }
-
 
     /**
      * RecyclerView manage its children in a way that different from {@link WXVContainer}. Therefore,
@@ -708,16 +727,21 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
 
     @Override
     public void remove(WXComponent child, boolean destroy) {
-        int index = mChildren.indexOf(child);
-        if (destroy) {
-            child.detachViewAndClearPreInfo();
-        }
-        unBindViewType(child);
-        getHostView().getAdapter().notifyItemRemoved(index);
-        if (WXEnvironment.isApkDebugable()) {
-            WXLogUtils.d(TAG, "removeChild child at " + index);
-        }
-        super.remove(child, destroy);
+      int index = mChildren.indexOf(child);
+      if (destroy) {
+        child.detachViewAndClearPreInfo();
+      }
+      unBindViewType(child);
+
+      BounceRecyclerView view = getHostView();
+      if(view == null){
+        return;
+      }
+      view.getAdapter().notifyItemRemoved(index);
+      if (WXEnvironment.isApkDebugable()) {
+        WXLogUtils.d(TAG, "removeChild child at " + index);
+      }
+      super.remove(child, destroy);
     }
 
     @Override
@@ -737,7 +761,9 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
         long begin=System.currentTimeMillis();
         holder.setComponentUsing(false);
         recycleViewList.add(holder);
-        WXLogUtils.d(TAG, "Recycle holder " +(System.currentTimeMillis()-begin)+"  Thread:"+Thread.currentThread().getName());
+        if(WXEnvironment.isApkDebugable()) {
+            WXLogUtils.d(TAG, "Recycle holder " + (System.currentTimeMillis() - begin) + "  Thread:" + Thread.currentThread().getName());
+        }
     }
 
     /**
@@ -754,17 +780,19 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
         if ( component == null
                 || (component instanceof WXRefresh)
                 || (component instanceof WXLoading)
-                || (component.mDomObj!=null && component.mDomObj.isFixed())
+                || (component.getDomObject()!=null && component.getDomObject().isFixed())
                 ) {
-
-            WXLogUtils.d(TAG, "Bind WXRefresh & WXLoading " + holder);
+            if(WXEnvironment.isApkDebugable()) {
+                WXLogUtils.d(TAG, "Bind WXRefresh & WXLoading " + holder);
+            }
             return;
         }
 
-        if (component != null
-            && holder.getComponent() != null
+        if (component != null&& holder.getComponent() != null
                 && holder.getComponent() instanceof WXCell) {
-            holder.getComponent().bindData(component);
+
+                holder.getComponent().bindData(component);
+//              holder.getComponent().refreshData(component);
         }
 
     }
@@ -794,7 +822,7 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
                         || component.isUsing()) {
                     continue;
                 }
-                if (component.mDomObj!=null && component.mDomObj.isFixed()) {
+                if (component.getDomObject()!=null && component.getDomObject().isFixed()) {
                     return createVHForFakeComponent(viewType);
                 } else {
                     if (component instanceof WXCell) {
@@ -813,7 +841,9 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
                 }
             }
         }
-        WXLogUtils.e(TAG, "Cannot find request viewType: " + viewType);
+        if(WXEnvironment.isApkDebugable()) {
+            WXLogUtils.e(TAG, "Cannot find request viewType: " + viewType);
+        }
         return createVHForFakeComponent(viewType);
     }
 
@@ -896,8 +926,8 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
     private int generateViewType(WXComponent component) {
         long id;
         try {
-            id = Integer.parseInt(component.getDomObject().ref);
-            String type = component.getDomObject().attr.getScope();
+            id = Integer.parseInt(component.getDomObject().getRef());
+            String type = component.getDomObject().getAttrs().getScope();
 
             if (!TextUtils.isEmpty(type)) {
                 if (mRefToViewType == null) {
@@ -932,7 +962,9 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
 
     @Override
     public boolean onFailedToRecycleView(ListBaseViewHolder holder) {
-        WXLogUtils.d(TAG, "Failed to recycle " + holder);
+        if(WXEnvironment.isApkDebugable()) {
+            WXLogUtils.d(TAG, "Failed to recycle " + holder);
+        }
         return false;
     }
 
@@ -940,7 +972,7 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
     public long getItemId(int position) {
         long id;
         try {
-            id = Long.parseLong(getChild(position).getDomObject().ref);
+            id = Long.parseLong(getChild(position).getDomObject().getRef());
         } catch (RuntimeException e) {
             WXLogUtils.e(TAG, WXLogUtils.getStackTrace(e));
             id = RecyclerView.NO_ID;
@@ -951,18 +983,18 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
     @Override
     public void onLoadMore(int offScreenY) {
       try {
-        String offset = mDomObj.attr.getLoadMoreOffset();
+        String offset = getDomObject().getAttrs().getLoadMoreOffset();
 
             if (TextUtils.isEmpty(offset)) {
                 offset="0";
             }
 
         if (offScreenY < Integer.parseInt(offset)) {
-          String loadMoreRetry = mDomObj.attr.getLoadMoreRetry();
+          String loadMoreRetry = getDomObject().getAttrs().getLoadMoreRetry();
 
           if (mListCellCount != mChildren.size()
               || mLoadMoreRetry == null || !mLoadMoreRetry.equals(loadMoreRetry)) {
-            WXSDKManager.getInstance().fireEvent(mInstanceId, mDomObj.ref, WXEventType.LIST_LOAD_MORE);
+            getInstance().fireEvent(getDomObject().getRef(), Constants.Event.LOADMORE);
             mListCellCount = mChildren.size();
             mLoadMoreRetry = loadMoreRetry;
           }
@@ -972,43 +1004,47 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
       }
     }
 
-    @Override
-    public void notifyAppearStateChange(int firstVisible, int lastVisible,int directionX,int directionY) {
-        List<WXComponent> unRegisterKeys = new ArrayList<>();
-
-        //notify appear state
-        for (int i = 0, len = mAppearComponents.size(); i < len; i++) {
-            WXComponent value = mAppearComponents.get(i);
-          int key=mChildren.indexOf(value);
-            if (!value.registerAppearEvent) {
-                unRegisterKeys.add(value);
-                continue;
-            }
-            if (key >= firstVisible && key <= lastVisible && !value.appearState) {
-              String direction=directionY>0?"up":"down";
-                value.notifyAppearStateChange(WXEventType.APPEAR,direction);
-                value.appearState = true;
-            } else if ((key < firstVisible || key > lastVisible) && value.appearState) {
-              String direction=directionY>0?"up":"down";
-              value.notifyAppearStateChange(WXEventType.DISAPPEAR,direction);
-              value.appearState = false;
-            }
-        }
-
-        //remove unregister Event
-        for (int i = 0, len = unRegisterKeys.size(); i < len; i++) {
-            mAppearComponents.remove(unRegisterKeys.get(i));
-        }
+  @Override
+  public void notifyAppearStateChange(int firstVisible, int lastVisible, int directionX, int directionY) {
+    //notify appear state
+    Iterator<AppearanceHelper> it = mAppearComponents.values().iterator();
+    String direction = directionY > 0 ? "up" : "down";
+    if (getOrientation() == Constants.Orientation.HORIZONTAL) {
+      direction = directionX > 0 ? "left" : "right";
     }
 
-  public void unbindAppearComponents(WXComponent component) {
-        mAppearComponents.remove(component);
+    while (it.hasNext()) {
+      AppearanceHelper item = it.next();
+      WXComponent component = item.getAwareChild();
+
+      if (!item.isWatch()) {
+        continue;
+      }
+
+      boolean outOfVisibleRange = item.getCellPositionINScollable() < firstVisible || item.getCellPositionINScollable() > lastVisible;
+
+      View view = component.getHostView();
+      if (view == null) {
+        continue;
+      }
+
+      boolean visible = (!outOfVisibleRange) && item.isViewVisible();
+
+      int result = item.setAppearStatus(visible);
+      if (WXEnvironment.isApkDebugable()) {
+        WXLogUtils.d("appear", "item " + item.getCellPositionINScollable() + " result " + result);
+      }
+      if (result == AppearanceHelper.RESULT_NO_CHANGE) {
+        continue;
+      }
+      component.notifyAppearStateChange(result == AppearanceHelper.RESULT_APPEAR ? Constants.Event.APPEAR : Constants.Event.DISAPPEAR, direction);
     }
+  }
 
     private void recycleImage(View view) {
         if (view instanceof ImageView) {
-            if (mInstance.getImgLoaderAdapter() != null) {
-                mInstance.getImgLoaderAdapter().setImage(null, (ImageView) view,
+            if (getInstance().getImgLoaderAdapter() != null) {
+                getInstance().getImgLoaderAdapter().setImage(null, (ImageView) view,
                         null, null);
             } else {
                 if (WXEnvironment.isApkDebugable()) {
@@ -1026,7 +1062,7 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
 
     @NonNull
     private ListBaseViewHolder createVHForFakeComponent(int viewType) {
-        FrameLayout view = new FrameLayout(mContext);
+        FrameLayout view = new FrameLayout(getContext());
         view.setBackgroundColor(Color.WHITE);
         view.setLayoutParams(new FrameLayout.LayoutParams(0, 0));
         return new ListBaseViewHolder(view, viewType);

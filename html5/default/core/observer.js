@@ -256,7 +256,7 @@ export function set (obj, key, val) {
     while (i--) {
       const vm = ob.vms[i]
       proxy(vm, key)
-      vm.$forceUpdate()
+      // vm.$forceUpdate()
     }
   }
   return val
@@ -279,7 +279,7 @@ export function del (obj, key) {
   if (!ob) {
     if (obj._isVue) {
       delete obj._data[key]
-      obj.$forceUpdate()
+      // obj.$forceUpdate()
     }
     return
   }
@@ -289,7 +289,7 @@ export function del (obj, key) {
     while (i--) {
       const vm = ob.vms[i]
       unproxy(vm, key)
-      vm.$forceUpdate()
+      // vm.$forceUpdate()
     }
   }
 }

@@ -208,11 +208,15 @@ import android.app.Application;
 import android.content.pm.ApplicationInfo;
 import android.test.mock.MockApplication;
 import com.taobao.weex.adapter.IWXHttpAdapter;
+import com.taobao.weex.bridge.WXBridgeManagerTest;
 import com.taobao.weex.common.TestModule;
 import com.taobao.weex.common.TestModuleFactory;
 import com.taobao.weex.dom.TestDomObject;
 import com.taobao.weex.http.WXStreamModule;
 import com.taobao.weex.ui.component.TestComponent;
+import com.taobao.weex.ui.component.WXComponent;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -238,6 +242,11 @@ public class WXSDKEngineTest {
 
   }
 
+  @After
+  public void tearDown() throws Exception {
+    WXBridgeManagerTest.getLooper().idle();
+  }
+
   @Test
   public void testInit() throws Exception {
     assertFalse(WXSDKEngine.isInitialized());
@@ -252,7 +261,7 @@ public class WXSDKEngineTest {
 
   @Test
   public void testRegisterComponent() throws Exception {
-    assertFalse(WXSDKEngine.registerComponent(null,null,true));
+    assertFalse(WXSDKEngine.registerComponent(null,(Class<? extends WXComponent>) null,true));
     assertTrue(WXSDKEngine.registerComponent("test", TestComponent.class,true));
     assertTrue(WXSDKEngine.registerComponent("test1",TestComponent.class));
     assertTrue(WXSDKEngine.registerComponent(TestComponent.class,false,"testA","testB","testC"));

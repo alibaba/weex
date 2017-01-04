@@ -9,7 +9,7 @@
 #import <XCTest/XCTest.h>
 #import "WXStreamModule.h"
 #import <WeexSDK/WeexSDK.h>
-#import "WXNetworkDefaultImpl.h"
+#import "WXResourceRequestHandlerDefaultImpl.h"
 
 @interface WXStreamModuleTests : XCTestCase
 @property (nonatomic, strong)  WXStreamModule *streamModule;
@@ -22,7 +22,7 @@
 - (void)setUp {
     [super setUp];
     _streamModule = [[WXStreamModule alloc] init];
-    [WXSDKEngine registerHandler:[WXNetworkDefaultImpl new] withProtocol:@protocol(WXNetworkProtocol)];
+    [WXSDKEngine registerHandler:[WXResourceRequestHandlerDefaultImpl new] withProtocol:@protocol(WXResourceRequestHandler)];
     _exp = [self expectationWithDescription:@"SendRequestSuccess Unit Test Error!"];
 }
 

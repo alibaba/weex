@@ -3,46 +3,49 @@
  * instance controls from native
  *
  * - init bundle
- * - fire event
- * - callback
- * - destroy
  *
  * corresponded with the API of instance manager (framework.js)
  */
 
-import { bind } from '../../../utils'
-
+import Vm from '../../../../default/vm'
+import { removeWeexPrefix } from '../../../../default/util'
 import {
-  define,
+  defineFn,
   bootstrap,
   register
 } from '../bundle'
+import { updateActions } from '../../../../default/app/ctrl/misc'
 
-export function init (code, data) {
+/**
+ * Init an app by run code witgh data
+ * @param  {object} app
+ * @param  {string} code
+ * @param  {object} data
+ */
+export function init (app, code, data) {
   console.debug('[JS Framework] Intialize an instance with:\n', data)
-
   let result
-  // @see: lib/app/bundle.js
-  const bundleDefine = bind(define, this)
+
+  // prepare app env methods
+  const bundleDefine = (...args) => defineFn(app, ...args)
   const bundleBootstrap = (name, config, _data) => {
-    result = bootstrap(this, name, config, _data || data)
-    this.updateActions()
-    this.doc.listener.createFinish()
-    console.debug(`[JS Framework] After intialized an instance(${this.id})`)
+    result = bootstrap(app, name, config, _data || data)
+    updateActions(app)
+    app.doc.listener.createFinish()
+    console.debug(`[JS Framework] After intialized an instance(${app.id})`)
   }
-
-  // backward(register/render)
-  const bundleRegister = bind(register, this)
+  const bundleVm = Vm
+  const bundleRegister = (...args) => register(app, ...args)
   const bundleRender = (name, _data) => {
-    result = bootstrap(this, name, {}, _data)
+    result = bootstrap(app, name, {}, _data)
   }
-
   const bundleRequire = name => _data => {
-    result = bootstrap(this, name, {}, _data)
+    result = bootstrap(app, name, {}, _data)
   }
+  const bundleDocument = app.doc
+  const bundleRequireModule = name => app.requireModule(removeWeexPrefix(name))
 
-  const bundleDocument = this.doc
-
+  // prepare code
   let functionBody
   /* istanbul ignore if */
   if (typeof code === 'function') {
@@ -54,6 +57,7 @@ export function init (code, data) {
     functionBody = code.toString()
   }
 
+  // run code and get result
   const { WXEnvironment } = global
 
   if (WXEnvironment) {
@@ -66,6 +70,9 @@ export function init (code, data) {
       'render',
       '__weex_define__', // alias for define
       '__weex_bootstrap__', // alias for bootstrap
+      '__weex_document__', // alias for bootstrap
+      '__weex_require__',
+      '__weex_viewmodel__',
       functionBody
     )
 
@@ -77,7 +84,10 @@ export function init (code, data) {
       bundleRegister,
       bundleRender,
       bundleDefine,
-      bundleBootstrap)
+      bundleBootstrap,
+      bundleDocument,
+      bundleRequireModule,
+      bundleVm)
   }
 
   return result

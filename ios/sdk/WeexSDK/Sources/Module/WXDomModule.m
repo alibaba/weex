@@ -161,7 +161,9 @@ WX_EXPORT_METHOD(@selector(getComponentRect:callback:))
     }
     
     [self performSelectorOnRuleManager:^{
+        [WXRuleManager sharedInstance].instance = weexInstance;
         [[WXRuleManager sharedInstance] addRule:type rule:rule];
+        
     }];
 }
 
@@ -171,17 +173,17 @@ WX_EXPORT_METHOD(@selector(getComponentRect:callback:))
         NSMutableDictionary * callbackRsp = [[NSMutableDictionary alloc] init];
         UIView *rootView = manager.weexInstance.rootView;
         CGRect rootRect = [rootView.superview convertRect:rootView.frame toView:rootView.superview.superview];
-        CGFloat scale = WXScreenScale();
+        CGFloat scaleFactor = self.weexInstance.pixelScaleFactor;
         if ([ref isEqualToString:@"viewport"]) {
             [callbackRsp setObject:@(true) forKey:@"result"];
             [callbackRsp setObject:@{
-                                     @"width":@(rootRect.size.width * scale),
-                                     @"height":@(rootRect.size.height * scale),
-                                     @"bottom":@(CGRectGetMaxY(rootRect) * scale),
-                                     @"left":@(rootRect.origin.x * scale),
-                                     @"right":@(CGRectGetMaxX(rootRect) * scale),
-                                     @"top":@(rootRect.origin.y * scale)
-                                    } forKey:@"size"];
+                                     @"width":@(rootRect.size.width / scaleFactor),
+                                     @"height":@(rootRect.size.height / scaleFactor),
+                                     @"bottom":@(CGRectGetMaxY(rootRect) / scaleFactor),
+                                     @"left":@(rootRect.origin.x / scaleFactor),
+                                     @"right":@(CGRectGetMaxX(rootRect) / scaleFactor),
+                                     @"top":@(rootRect.origin.y / scaleFactor)
+                                     } forKey:@"size"];
             callback(callbackRsp, false);
         }else {
             WXComponent *component = [manager componentForRef:ref];
@@ -193,12 +195,12 @@ WX_EXPORT_METHOD(@selector(getComponentRect:callback:))
                     CGRect componentRect = [component.view.superview convertRect:component.calculatedFrame toView:rootView.superview.superview];
                     [callbackRsp setObject:@(true)forKey:@"result"];
                     [callbackRsp setObject:@{
-                                             @"width":@(componentRect.size.width * scale),
-                                             @"height":@(componentRect.size.height * scale),
-                                             @"bottom":@(CGRectGetMaxY(componentRect) * scale),
-                                             @"left":@(componentRect.origin.x*scale),
-                                             @"right":@(CGRectGetMaxX(componentRect) * scale),
-                                             @"top":@(componentRect.origin.y * scale)
+                                             @"width":@(componentRect.size.width / scaleFactor),
+                                             @"height":@(componentRect.size.height / scaleFactor),
+                                             @"bottom":@(CGRectGetMaxY(componentRect) / scaleFactor),
+                                             @"left":@(componentRect.origin.x / scaleFactor),
+                                             @"right":@(CGRectGetMaxX(componentRect) / scaleFactor),
+                                             @"top":@(componentRect.origin.y / scaleFactor)
                                              } forKey:@"size"];
                 }
                 callback(callbackRsp, false);

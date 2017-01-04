@@ -3,6 +3,8 @@ package com.alibaba.weex.util;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.test.InstrumentationTestCase;
+import android.test.TouchUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -135,4 +137,11 @@ public class ViewUtil{
         view.measure(w, h);
         return (view.getMeasuredHeight());
     }
+
+    public static void dragQuarterScreenUp(InstrumentationTestCase test, Activity activity) {
+
+        TouchUtils.dragQuarterScreenUp(test, activity);
+    }
+
+
 }

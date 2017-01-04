@@ -35,6 +35,10 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
 
 #pragma mark - Export
 
+- (dispatch_queue_t)targetExecuteQueue {
+    return [WXStorageModule storageQueue];
+}
+
 - (void)length:(WXModuleCallback)callback
 {
     callback(@{@"result":@"success",@"data":@([[WXStorageModule memory] count])});
@@ -61,38 +65,26 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
         return ;
     }
     
-    __weak typeof(self) weakSelf = self;
-    dispatch_async([WXStorageModule storageQueue], ^{
-        WXStorageModule *strongSelf = weakSelf;
-        NSString *value = [strongSelf.memory objectForKey:key];
-        if ([WXStorageNullValue isEqualToString:value]) {
-            value = [[WXUtility globalCache] objectForKey:key];
-            if (!value) {
-                dispatch_async([WXStorageModule storageQueue], ^{
-                    WXStorageModule *strongSelf = weakSelf;
-                    NSString *filePath = [WXStorageModule filePathForKey:key];
-                    NSString *contents = [WXUtility stringWithContentsOfFile:filePath];
-                    if (contents) {
-                        [[WXUtility globalCache] setObject:contents forKey:key cost:contents.length];
-                        [self updateTimestampForKey:key];
-                        [self updateIndexForKey:key];
-                        callback(@{@"result":@"success",@"data":contents});
-                    } else {
-                        [strongSelf.memory removeObjectForKey:key];
-                        callback(@{@"result":@"failed"});
-                    }
-                });
-                return;
+    NSString *value = [self.memory objectForKey:key];
+    if ([WXStorageNullValue isEqualToString:value]) {
+        value = [[WXUtility globalCache] objectForKey:key];
+        if (!value) {
+            NSString *filePath = [WXStorageModule filePathForKey:key];
+            NSString *contents = [WXUtility stringWithContentsOfFile:filePath];
+            if (contents) {
+                [[WXUtility globalCache] setObject:contents forKey:key cost:contents.length];
+                value = contents;
             }
         }
-        if (!value) {
-            callback(@{@"result":@"failed"});
-            return ;
-        }
-        [self updateTimestampForKey:key];
-        [self updateIndexForKey:key];
-        callback(@{@"result":@"success",@"data":value});
-    });
+    }
+    if (!value) {
+        [self executeRemoveItem:key];
+        callback(@{@"result":@"failed"});
+        return;
+    }
+    [self updateTimestampForKey:key];
+    [self updateIndexForKey:key];
+    callback(@{@"result":@"success",@"data":value});
 }
 
 - (void)setItem:(NSString *)key value:(NSString *)value callback:(WXModuleCallback)callback
@@ -162,16 +154,12 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
         callback(@{@"result":@"failed",@"data":@"invalid_param"});
         return ;
     }
-    __weak typeof(self) weakSelf = self;
-    dispatch_async([WXStorageModule storageQueue], ^{
-        WXStorageModule *strongSelf = weakSelf;
-        BOOL removed = [strongSelf executeRemoveItem:key];
-        if (removed) {
-            callback(@{@"result":@"success"});
-        } else {
-            callback(@{@"result":@"failed"});
-        }
-    });
+    BOOL removed = [self executeRemoveItem:key];
+    if (removed) {
+        callback(@{@"result":@"success"});
+    } else {
+        callback(@{@"result":@"failed"});
+    }
 }
 
 - (BOOL)executeRemoveItem:(NSString *)key {
@@ -188,7 +176,7 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
         [self.memory removeObjectForKey:key];
         NSDictionary *dict = [self.memory copy];
         [self write:dict toFilePath:[WXStorageModule filePath]];
-    }else{
+    } else {
         return NO;
     }
     [self removeInfoForKey:key];
@@ -197,46 +185,40 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
 }
 
 #pragma mark - Utils
-
 - (void)setObject:(NSString *)obj forKey:(NSString *)key persistent:(BOOL)persistent callback:(WXModuleCallback)callback {
-    __weak typeof(self) weakSelf = self;
-    dispatch_async([WXStorageModule storageQueue], ^{
-        WXStorageModule *strongSelf = weakSelf;
-        NSString *filePath = [WXStorageModule filePathForKey:key];
-        if (obj.length <= WXStorageLineLimit) {
-            if ([WXStorageNullValue isEqualToString:strongSelf.memory[key]]) {
-                [[WXUtility globalCache] removeObjectForKey:key];
-                [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
-            }
-            strongSelf.memory[key] = obj;
-            NSDictionary *dict = [strongSelf.memory copy];
-            [strongSelf write:dict toFilePath:[WXStorageModule filePath]];
-            [strongSelf setInfo:@{@"persistent":@(persistent),@"size":@(obj.length)} ForKey:key];
-            [strongSelf updateIndexForKey:key];
-            [self checkStorageLimit];
-            callback(@{@"result":@"success"});
-            return;
+    NSString *filePath = [WXStorageModule filePathForKey:key];
+    if (obj.length <= WXStorageLineLimit) {
+        if ([WXStorageNullValue isEqualToString:self.memory[key]]) {
+            [[WXUtility globalCache] removeObjectForKey:key];
+            [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
         }
-        
-        [[WXUtility globalCache] setObject:obj forKey:key cost:obj.length];
-        
-        if (![WXStorageNullValue isEqualToString:strongSelf.memory[key]]) {
-            strongSelf.memory[key] = WXStorageNullValue;
-            WXStorageModule *strongSelf = weakSelf;
-            NSDictionary *dict = [strongSelf.memory copy];
-            [strongSelf write:dict toFilePath:[WXStorageModule filePath]];
-        }
-        
-        dispatch_async([WXStorageModule storageQueue], ^{
-            [obj writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:NULL];
-        });
-        
+        self.memory[key] = obj;
+        NSDictionary *dict = [self.memory copy];
+        [self write:dict toFilePath:[WXStorageModule filePath]];
         [self setInfo:@{@"persistent":@(persistent),@"size":@(obj.length)} ForKey:key];
         [self updateIndexForKey:key];
-        
         [self checkStorageLimit];
         callback(@{@"result":@"success"});
+        return;
+    }
+    
+    [[WXUtility globalCache] setObject:obj forKey:key cost:obj.length];
+    
+    if (![WXStorageNullValue isEqualToString:self.memory[key]]) {
+        self.memory[key] = WXStorageNullValue;
+        NSDictionary *dict = [self.memory copy];
+        [self write:dict toFilePath:[WXStorageModule filePath]];
+    }
+    
+    dispatch_async([WXStorageModule storageQueue], ^{
+        [obj writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:NULL];
     });
+    
+    [self setInfo:@{@"persistent":@(persistent),@"size":@(obj.length)} ForKey:key];
+    [self updateIndexForKey:key];
+    
+    [self checkStorageLimit];
+    callback(@{@"result":@"success"});
 }
 
 - (void)checkStorageLimit {

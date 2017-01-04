@@ -210,6 +210,7 @@ import android.text.TextUtils;
 
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.WXRuntimeException;
+import com.taobao.weex.common.WXThread;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.flex.Spacing;
 import com.taobao.weex.ui.animation.WXAnimationBean;
@@ -256,7 +257,7 @@ public class WXRenderManager {
   }
 
   public void postOnUiThread(Runnable runnable, long delayMillis) {
-    mWXRenderHandler.postDelayed(runnable, delayMillis);
+    mWXRenderHandler.postDelayed(WXThread.secure(runnable), delayMillis);
   }
 
   /**
@@ -275,7 +276,7 @@ public class WXRenderManager {
 
   //TODO Use runnable temporarily
   public void runOnThread(final String instanceId, final IWXRenderTask task) {
-    mWXRenderHandler.post(new Runnable() {
+    mWXRenderHandler.post(WXThread.secure(new Runnable() {
 
       @Override
       public void run() {
@@ -284,10 +285,10 @@ public class WXRenderManager {
         }
         task.execute();
       }
-    });
+    }));
   }
 
-  public void createInstance(WXSDKInstance instance) {
+  public void registerInstance(WXSDKInstance instance) {
     mRegistries.put(instance.getInstanceId(), new WXRenderStatement(instance));
   }
 
@@ -342,7 +343,7 @@ public class WXRenderManager {
     statement.addComponent(dom, parentRef, index);
   }
 
-  public WXComponent createComponentOnDomThread(String instanceId, WXDomObject dom, String parentRef, int index) {
+  public @Nullable WXComponent createComponentOnDomThread(String instanceId, WXDomObject dom, String parentRef, int index) {
     WXRenderStatement statement = mRegistries.get(instanceId);
     if (statement == null) {
       return null;

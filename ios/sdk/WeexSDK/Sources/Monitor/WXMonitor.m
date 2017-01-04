@@ -93,16 +93,15 @@ static WXThreadSafeMutableDictionary *globalPerformanceDict;
     if (instance.userInfo[@"weex_bundlejs_requestType"]) {
         commitDict[@"requestType"] = instance.userInfo[@"weex_bundlejs_requestType"];
     }
-#if DEBUG
+    if (instance.userInfo[WXCUSTOMMONITORINFO]) {
+        commitDict[WXCUSTOMMONITORINFO] = instance.userInfo[WXCUSTOMMONITORINFO];
+    }
     WXPerformBlockOnComponentThread(^{
         commitDict[@"componentCount"] = @([instance numberOfComponents]);
         WXPerformBlockOnMainThread(^{
-#endif
     [self commitPerformanceWithDict:commitDict instance:instance];
-#if DEBUG
         });
     });
-#endif
 }
 
 + (void)commitPerformanceWithDict:(NSMutableDictionary *)commitDict instance:(WXSDKInstance *)instance

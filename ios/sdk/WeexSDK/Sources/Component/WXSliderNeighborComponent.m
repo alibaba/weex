@@ -1557,7 +1557,7 @@ NSComparisonResult sliderNeighorCompareViewDepth(UIView *view1, UIView *view2, W
 }
 
 - (void)setNeighborSpace:(NSDictionary *)attributes{
-    self->neighborSpace = [WXConvert WXPixelType:@(25)];
+    self->neighborSpace = [WXConvert WXPixelType:@(25) scaleFactor:self.weexInstance.pixelScaleFactor   ];
 }
 
 - (void)setNeighborAlpha:(NSDictionary *)attributes {

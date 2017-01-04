@@ -8,6 +8,7 @@
 
 #import "WXComponent+ViewManagement.h"
 #import "WXComponent_internal.h"
+#import "WXComponent+GradientColor.h"
 #import "WXAssert.h"
 #import "WXView.h"
 #import "WXSDKInstance_private.h"
@@ -93,6 +94,7 @@
 - (void)_initViewPropertyWithStyles:(NSDictionary *)styles
 {
     _backgroundColor = styles[@"backgroundColor"] ? [WXConvert UIColor:styles[@"backgroundColor"]] : [UIColor clearColor];
+    _backgroundImage = styles[@"backgroundImage"] ? [[WXConvert NSString:styles[@"backgroundImage"]]stringByReplacingOccurrencesOfString:@" " withString:@""]: nil;
     _opacity = styles[@"opacity"] ? [WXConvert CGFloat:styles[@"opacity"]] : 1.0;
     _clipToBounds = styles[@"overflow"] ? [WXConvert WXClipType:styles[@"overflow"]] : NO;
     _visibility = styles[@"visibility"] ? [WXConvert WXVisibility:styles[@"visibility"]] : WXVisibilityShow;
@@ -107,6 +109,14 @@
         _backgroundColor = [WXConvert UIColor:styles[@"backgroundColor"]];
         _layer.backgroundColor = _backgroundColor.CGColor;
         [self setNeedsDisplay];
+    }
+    
+    if (styles[@"backgroundImage"]) {
+        _backgroundImage = styles[@"backgroundImage"] ? [[WXConvert NSString:styles[@"backgroundImage"]]stringByReplacingOccurrencesOfString:@" " withString:@""]: nil;
+        
+        if (_backgroundImage) {
+            [self setGradientLayer];
+        }
     }
     
     if (styles[@"opacity"]) {
@@ -157,9 +167,16 @@
     if (styles[@"transform"]) {
         if (!CGRectEqualToRect(self.calculatedFrame, CGRectZero)) {
             _transform = [WXConvert NSString:styles[@"transform"]];
-            _layer.transform = [[WXTransform new] getTransform:_transform withView:_view withOrigin:_transformOrigin];
+            _layer.transform = [[[WXTransform alloc] initWithInstance:self.weexInstance] getTransform:_transform withView:_view withOrigin:_transformOrigin];
             [_layer setNeedsDisplay];
         }
+    }
+}
+
+-(void)_resetStyles:(NSArray *)styles
+{
+    if (styles && [styles containsObject:@"backgroundColor"]) {
+        _backgroundColor = [UIColor clearColor];
     }
 }
 

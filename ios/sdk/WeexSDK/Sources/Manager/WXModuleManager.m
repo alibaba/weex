@@ -9,6 +9,7 @@
 #import "WXModuleManager.h"
 #import "WXModuleProtocol.h"
 #import "WXUtility.h"
+#import "WXAssert.h"
 #import "WXModuleFactory.h"
 #import "WXSDKError.h"
 #import "WXMonitor.h"
@@ -80,20 +81,31 @@
     WXSDKInstance *weexInstance = [WXSDKManager instanceForID:method.instance];
     id<WXModuleProtocol> moduleInstance = [weexInstance moduleForClass:module];
     
-    // attach target thread
-    NSThread *targetThread = nil;
-    if([moduleInstance respondsToSelector:@selector(targetExecuteThread)]){
-        targetThread = [moduleInstance targetExecuteThread];
-    } else {
-        targetThread = [NSThread mainThread];
-    }
-    
-    //execute module method
+    // dispatch to user specified queue or thread, default is main thread
     __weak typeof(self) weakSelf = self;
     dispatch_block_t dipatchMethodBlock = ^ (){
         [weakSelf _executeModuleMethod:moduleInstance withMethod:method];
     };
-    [self _executeModuleThead:targetThread withBlock:dipatchMethodBlock];
+    
+    NSThread *targetThread = nil;
+    dispatch_queue_t targetQueue = nil;
+    if([moduleInstance respondsToSelector:@selector(targetExecuteQueue)]){
+        targetQueue = [moduleInstance targetExecuteQueue] ?: dispatch_get_main_queue();
+    } else if([moduleInstance respondsToSelector:@selector(targetExecuteThread)]){
+        targetThread = [moduleInstance targetExecuteThread] ?: [NSThread mainThread];
+    } else {
+        targetThread = [NSThread mainThread];
+    }
+    
+    WXAssert(targetQueue || targetThread, @"No queue or thread found for module:%@", moduleInstance);
+    
+    if (targetQueue) {
+        dispatch_async(targetQueue, dipatchMethodBlock);
+    } else {
+        WXPerformBlockOnThread(^{
+            dipatchMethodBlock();
+        }, targetThread);
+    }
 }
 
 @end

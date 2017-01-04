@@ -165,7 +165,7 @@
 
 
 // OpenGL ES methods map
-#define WX_CANVAS_PIXEL(name, index) WXPixelType name = [WXConvert WXPixelType:params[index]];
+#define WX_CANVAS_PIXEL(name, index) WXPixelType name = [WXConvert WXPixelType:params[index] scaleFactor:self.weexInstance.pixelScaleFactor];
 #define WX_CANVAS_CGFLOAT(name, index) CGFloat name = [WXConvert CGFloat:params[index]];
 #define WX_CANVAS_PARAMS_CHECK(num) if ([params count] < num) return;
 
@@ -196,10 +196,10 @@
         CGFloat sy = [WXConvert CGFloat:curParams[1]];
         CGFloat sw = [WXConvert CGFloat:curParams[2]];
         CGFloat sh = [WXConvert CGFloat:curParams[3]];
-        CGFloat dx = [WXConvert WXPixelType:curParams[4]];
-        CGFloat dy = [WXConvert WXPixelType:curParams[5]];
-        CGFloat dw = [WXConvert WXPixelType:curParams[6]];
-        CGFloat dh = [WXConvert WXPixelType:curParams[7]];
+        CGFloat dx = [WXConvert WXPixelType:curParams[4] scaleFactor:self.weexInstance.pixelScaleFactor];
+        CGFloat dy = [WXConvert WXPixelType:curParams[5] scaleFactor:self.weexInstance.pixelScaleFactor];
+        CGFloat dw = [WXConvert WXPixelType:curParams[6] scaleFactor:self.weexInstance.pixelScaleFactor];
+        CGFloat dh = [WXConvert WXPixelType:curParams[7] scaleFactor:self.weexInstance.pixelScaleFactor];
 
         geometrys[i * 4] = GLKVector3Make(dx, dh + dy, 1);
         geometrys[i * 4 + 1] = GLKVector3Make(dw + dx, dh + dy, 1);
@@ -221,7 +221,7 @@
                                                [WXConvert CGFloat:curParams[16]]
             );
             // Because the params are base on 750, so we should make scale for the transform matrix
-            matrix = GLKMatrix3Scale(matrix, 1, 1, WXScreenResizeRadio());
+            matrix = GLKMatrix3Scale(matrix, 1, 1, self.weexInstance.pixelScaleFactor);
             geometrys[i * 4] = GLKMatrix3MultiplyVector3(matrix, geometrys[i * 4]);
             geometrys[i * 4 + 1] = GLKMatrix3MultiplyVector3(matrix, geometrys[i * 4 + 1]);
             geometrys[i * 4 + 2] = GLKMatrix3MultiplyVector3(matrix, geometrys[i * 4 + 2]);
@@ -311,7 +311,7 @@
 - (void) setLineWidth:(NSArray *)params
 {
     WX_CANVAS_PARAMS_CHECK(1);
-    _curLineWidth = [WXConvert WXPixelType:params[0]];
+    _curLineWidth = [WXConvert WXPixelType:params[0] scaleFactor:self.weexInstance.pixelScaleFactor];
 }
 
 // ["M", 0, 0, "L", 100, 100, "L", 0, 100, "L", 0, 0] it made a triangle
@@ -327,7 +327,7 @@
 
     for (GLint i = 0; i < params.count; i += 3) {
         NSString *type = [WXConvert NSString:params[i]];
-        points[pointIndex] = GLKVector2Make([WXConvert WXPixelType:params[i + 1]], [WXConvert WXPixelType:params[i + 2]]);
+        points[pointIndex] = GLKVector2Make([WXConvert WXPixelType:params[i + 1] scaleFactor:self.weexInstance.pixelScaleFactor], [WXConvert WXPixelType:params[i + 2] scaleFactor:self.weexInstance.pixelScaleFactor]);
 
         if ([type isEqualToString:@"L"]) {
             if (isLastMove) {

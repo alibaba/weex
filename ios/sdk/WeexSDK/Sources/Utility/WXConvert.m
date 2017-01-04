@@ -70,11 +70,11 @@ WX_NUMBER_CONVERT(NSUInteger, unsignedIntegerValue)
     return nil;
 }
 
-+ (WXPixelType)WXPixelType:(id)value
++ (WXPixelType)WXPixelType:(id)value scaleFactor:(CGFloat)scaleFactor
 {
     CGFloat pixel = [self CGFloat:value];
     
-    return pixel * WXScreenResizeRadio();
+    return pixel * scaleFactor;
 }
 
 #pragma mark CSS Layout
@@ -352,6 +352,14 @@ WX_NUMBER_CONVERT(NSUInteger, unsignedIntegerValue)
         }
         
         if ([rgba hasPrefix:@"#"]) {
+            // #fff
+            if ([rgba length] == 4) {
+              unichar f =   [rgba characterAtIndex:1];
+              unichar s =   [rgba characterAtIndex:2];
+              unichar t =   [rgba characterAtIndex:3];
+              rgba = [NSString stringWithFormat:@"#%C%C%C%C%C%C", f, f, s, s, t, t];
+            }
+            
             // 3. #rrggbb
             uint32_t colorValue = 0;
             sscanf(rgba.UTF8String, "#%x", &colorValue);
@@ -470,16 +478,35 @@ WX_NUMBER_CONVERT(NSUInteger, unsignedIntegerValue)
     return WXTextStyleNormal;
 }
 
-+ (WXTextWeight)WXTextWeight:(id)value
++ (CGFloat)WXTextWeight:(id)value
 {
     if([value isKindOfClass:[NSString class]]){
         NSString *string = (NSString *)value;
         if ([string isEqualToString:@"normal"])
-            return WXTextWeightNormal;
+            return WX_SYS_VERSION_LESS_THAN(@"8.2")?0:UIFontWeightRegular;
         else if ([string isEqualToString:@"bold"])
-            return WXTextWeightBold;
+            return WX_SYS_VERSION_LESS_THAN(@"8.2")?0.4:UIFontWeightBold;
+        else if ([string isEqualToString:@"100"])
+            return WX_SYS_VERSION_LESS_THAN(@"8.2")?-0.8:UIFontWeightUltraLight;
+        else if ([string isEqualToString:@"200"])
+            return WX_SYS_VERSION_LESS_THAN(@"8.2")?-0.6:UIFontWeightThin;
+        else if ([string isEqualToString:@"300"])
+            return WX_SYS_VERSION_LESS_THAN(@"8.2")?-0.4:UIFontWeightLight;
+        else if ([string isEqualToString:@"400"])
+            return WX_SYS_VERSION_LESS_THAN(@"8.2")?0:UIFontWeightRegular;
+        else if ([string isEqualToString:@"500"])
+            return WX_SYS_VERSION_LESS_THAN(@"8.2")?0.23:UIFontWeightMedium;
+        else if ([string isEqualToString:@"600"])
+            return WX_SYS_VERSION_LESS_THAN(@"8.2")?0.3:UIFontWeightSemibold;
+        else if ([string isEqualToString:@"700"])
+            return WX_SYS_VERSION_LESS_THAN(@"8.2")?0.4:UIFontWeightBold;
+        else if ([string isEqualToString:@"800"])
+            return WX_SYS_VERSION_LESS_THAN(@"8.2")?0.56:UIFontWeightHeavy;
+        else if ([string isEqualToString:@"900"])
+            return WX_SYS_VERSION_LESS_THAN(@"8.2")?0.62:UIFontWeightBlack;
+
     }
-    return WXTextWeightNormal;
+    return WX_SYS_VERSION_LESS_THAN(@"8.2")?0:UIFontWeightRegular;
 }
 
 + (WXTextDecoration)WXTextDecoration:(id)value
@@ -626,6 +653,48 @@ WX_NUMBER_CONVERT(NSUInteger, unsignedIntegerValue)
     }
     
     return  WXVisibilityShow;
+}
+
+#pragma mark Gradient Color
+
++ (WXGradientType)gradientType:(id)value
+{
+    WXGradientType type = WXGradientTypeToRight;
+    
+    if ([value isKindOfClass:[NSString class]]) {
+        NSString *string = (NSString *)value;
+        
+        if ([string isEqualToString:@"totop"]) {
+            type = WXGradientTypeToTop;
+        }
+        else if ([string isEqualToString:@"tobottom"]) {
+            type = WXGradientTypeToBottom;
+        }
+        else if ([string isEqualToString:@"toleft"]) {
+            type = WXGradientTypeToLeft;
+        }
+        if ([string isEqualToString:@"toright"]) {
+            type = WXGradientTypeToRight;
+        }
+        else if ([string isEqualToString:@"totopleft"]) {
+            type = WXGradientTypeToTopleft;
+        }
+        else if ([string isEqualToString:@"tobottomright"]) {
+            type = WXGradientTypeToBottomright;
+        }
+    }
+    return type;
+}
+
+@end
+
+@implementation WXConvert (Deprecated)
+
++ (WXPixelType)WXPixelType:(id)value
+{
+    CGFloat pixel = [self CGFloat:value];
+    
+    return pixel * WXScreenResizeRadio();
 }
 
 @end

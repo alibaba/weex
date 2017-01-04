@@ -36,6 +36,7 @@
     self.edgesForExtendedLayout = UIRectEdgeNone;
     [self setupNaviBar];
     
+#if !(TARGET_IPHONE_SIMULATOR)
     self.session = [[AVCaptureSession alloc]init];
     [_session setSessionPreset:AVCaptureSessionPresetHigh];
     AVCaptureDevice * device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
@@ -51,7 +52,7 @@
     _captureLayer = [AVCaptureVideoPreviewLayer layerWithSession:_session];
     _captureLayer.videoGravity=AVLayerVideoGravityResizeAspectFill;
     _captureLayer.frame=self.view.layer.bounds;
-    
+#endif
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -176,7 +177,7 @@
 {
     if ([url.scheme isEqualToString:@"ws"]) {
         [WXSDKEngine connectDebugServer:url.absoluteString];
-        [WXSDKEngine initSDKEnviroment];
+        [WXSDKEngine initSDKEnvironment];
         
         return YES;
     }
