@@ -66,6 +66,7 @@ const proto = {
   create () {
     const node = document.createElement('div')
     node.classList.add('slider')
+    node.classList.add('weex-container')
     node.style.position = 'relative'
     node.style.overflow = 'hidden'
     return node
