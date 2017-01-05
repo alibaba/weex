@@ -27,11 +27,16 @@
     "event",
     "geolocation",
     "globalEvent",
+    "meta",
     "modal",
     "navigator",
     "pageInfo",
     "storage",
     "stream",
-    "webview"
+    "webview",
+    "webSocket"
+  ],
+  "npm": [
+    "weex-picker"
   ]
 }

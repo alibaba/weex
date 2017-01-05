@@ -50,7 +50,7 @@ const proto = {
       indicator.classList.add('weex-indicator')
       indicator.style.boxSizing = 'border-box'
       indicator.style.margin = '0 '
-                              + (DEFAULT_MARGIN_SIZE * this.data.scale)
+                              + DEFAULT_MARGIN_SIZE
                               + 'px'
       indicator.style.width = this.itemSize + 'px'
       indicator.style.height = this.itemSize + 'px'
@@ -95,8 +95,7 @@ const style = {
   },
 
   itemSize (val) {
-    val = parseInt(val) * this.data.scale
-          || DEFAULT_ITEM_SIZE * this.data.scale
+    val = parseInt(val) || DEFAULT_ITEM_SIZE
     this.itemSize = val
     this.node.style.height = val + 'px'
     for (let i = 0, l = this.items.length; i < l; i++) {
@@ -106,43 +105,37 @@ const style = {
   },
 
   width (val) {
-    val = parseInt(val) * this.data.scale || parseInt(this.sliderWidth)
+    val = parseInt(val) || parseInt(this.sliderWidth)
     this.virtualWrapperWidth = val
   },
 
   height (val) {
-    val = parseInt(val) * this.data.scale || parseInt(this.sliderHeight)
+    val = parseInt(val) || parseInt(this.sliderHeight)
     this.virtualWrapperHeight = val
   },
 
   top (val) {
-    val = this.virtualWrapperHeight / 2 - this.itemSize / 2
-        + val * this.data.scale
+    val = this.virtualWrapperHeight / 2 - this.itemSize / 2 + val
     this.node.style.bottom = ''
     this.node.style.top = val + 'px'
   },
 
   bottom (val) {
-    val = this.virtualWrapperHeight / 2 - this.itemSize / 2
-        + val * this.data.scale
+    val = this.virtualWrapperHeight / 2 - this.itemSize / 2 + val
     this.node.style.top = ''
     this.node.style.bottom = val + 'px'
   },
 
   left (val) {
     val = this.virtualWrapperWidth / 2
-          - (this.itemSize + 2 * DEFAULT_MARGIN_SIZE * this.data.scale)
-              * this.amount / 2
-          + val * this.data.scale
+          - (this.itemSize + 2 * DEFAULT_MARGIN_SIZE) * this.amount / 2 + val
     this.node.style.right = ''
     this.node.style.left = val + 'px'
   },
 
   right (val) {
     val = this.virtualWrapperWidth / 2
-          - (this.itemSize + 2 * DEFAULT_MARGIN_SIZE * this.data.scale)
-              * this.amount / 2
-          + val * this.data.scale
+          - (this.itemSize + 2 * DEFAULT_MARGIN_SIZE) * this.amount / 2 + val
     this.node.style.left = ''
     this.node.style.right = val + 'px'
   }

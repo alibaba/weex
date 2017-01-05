@@ -65,6 +65,10 @@ const _weexInstance = {}
 
 function noop () {}
 
+function setupViewport (width) {
+  document.querySelector('meta[name=viewport]').setAttribute('content', `width=${width}, user-scalable=no`)
+}
+
 ; (function initializeWithUrlParams () {
   // in casperjs the protocol is file.
   if (location.protocol.match(/file/)) {
@@ -107,11 +111,13 @@ export default function Weex (options) {
   this.bundleUrl = options.bundleUrl || location.href
   this.instanceId = options.appId
   this.rootId = options.rootId || (DEFAULT_ROOT_ID + utils.getRandom(10))
-  this.designWidth = options.designWidth || DEFAULT_DESIGN_WIDTH
   this.jsonpCallback = options.jsonpCallback || DEFAULT_JSONP_CALLBACK_NAME
   this.source = options.source
   this.loader = options.loader
   this.embed = options.embed
+
+  // init viewport
+  setupViewport(DEFAULT_DESIGN_WIDTH)
 
   // downgrade options.
   const dg = options.downgrade || []
@@ -120,7 +126,6 @@ export default function Weex (options) {
   })
 
   this.data = options.data
-  this.scale = this.width / this.designWidth
   receiver.init(this)
   this.sender = new Sender(this)
 

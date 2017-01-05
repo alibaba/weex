@@ -7,7 +7,7 @@ const proto = {
   create () {
     const node = document.createElement('div')
     node.classList.add('weex-container')
-    node.style.fontSize = DEFAULT_FONT_SIZE * this.data.scale + 'px'
+    node.style.fontSize = DEFAULT_FONT_SIZE + 'px'
     this.textNode = document.createElement('span')
     // Give the developers the ability to control space
     // and line-breakers.

@@ -101,7 +101,7 @@ const style = {
     if (Number.isNaN(val) || val < 0) {
       return console.warn('[h5-render] <loading>\'s height (' + val + ') is invalid.')
     }
-    this.clamp = val * this.data.scale
+    this.clamp = val
   }
 }
 
@@ -110,7 +110,7 @@ function init (Weex) {
   const extend = Weex.utils.extend
 
   function Loading (data) {
-    this.clamp = (data.style.height || DEFAULT_CLAMP) * data.scale
+    this.clamp = (data.style.height || DEFAULT_CLAMP)
     !data.style.alignItems && (data.style.alignItems = DEFAULT_ALIGN_ITEMS)
     !data.style.justifyContent
       && (data.style.justifyContent = DEFAULT_JUSTIFY_CONTENT)

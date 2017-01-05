@@ -174,7 +174,7 @@ const style = {
     if (isNaN(val) || val < 0) {
       val = this.options.width
     }
-    this.width = val * this.data.scale
+    this.width = val
     this.setSize()
   },
 
@@ -186,7 +186,7 @@ const style = {
     if (isNaN(val) || val < 0) {
       val = this.options.height
     }
-    this.height = val * this.data.scale
+    this.height = val
     this.setSize()
   }
 }
@@ -220,8 +220,8 @@ function init (Weex) {
     this.checked = data.attr.checked
         && data.attr.checked !== 'false'
     this.data = data
-    this.width = this.options.width * data.scale
-    this.height = this.options.height * data.scale
+    this.width = this.options.width
+    this.height = this.options.height
     Atomic.call(this, data)
   }
   Switch.prototype = Object.create(Atomic.prototype)

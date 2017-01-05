@@ -59,7 +59,7 @@ const attr = {
 
 const style = {
   width: function (val) {
-    val = parseFloat(val) * this.data.scale
+    val = parseFloat(val)
     if (val < 0 || isNaN(val)) {
       val = DEFAULT_SIZE
     }
@@ -67,7 +67,7 @@ const style = {
   },
 
   height: function (val) {
-    val = parseFloat(val) * this.data.scale
+    val = parseFloat(val)
     if (val < 0 || isNaN(val)) {
       val = DEFAULT_SIZE
     }

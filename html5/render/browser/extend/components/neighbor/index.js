@@ -115,8 +115,8 @@ function _doRender (slider) {
   loadImg(slider)
   slider.total = slider.slides.length
   slider.currentIndex = 0
-  const width = slider.data.style.width * slider.data.scale || 0
-  const height = slider.data.style.height * slider.data.scale || 0
+  const width = slider.data.style.width || 0
+  const height = slider.data.style.height || 0
   slider.width = parseFloat(width) || slider.node.getBoundingClientRect().width
   slider.height = parseFloat(height) || slider.node.getBoundingClientRect().height
 
@@ -256,14 +256,12 @@ const proto = {
     const componentManager = this.getComponentManager()
 
     const children = this.data.children
-    const scale = this.data.scale
     const fragment = document.createDocumentFragment()
 
     if (children && children.length) {
       for (let i = 0; i < children.length; i++) {
         let child
         const data = children[i]
-        data.scale = scale
         data.instanceId = this.data.instanceId
         // 'indicator' maybe the last child of this component.
         if (data.type !== 'indicator') {
@@ -271,8 +269,8 @@ const proto = {
           child.node.classList.add('weex-neighbor-item')
           const width = (data.style || {}).width || this.data.style.width
           const height = (data.style || {}).height || this.data.style.height
-          child.node.style.marginTop = -(height / 2 * scale) + 'px'
-          child.node.style.marginLeft = -(width / 2 * scale) + 'px'
+          child.node.style.marginTop = -(height / 2) + 'px'
+          child.node.style.marginLeft = -(width / 2) + 'px'
           this.slides.push(child)
           fragment.appendChild(child.node)
           child.parentRef = this.data.ref
@@ -294,7 +292,6 @@ const proto = {
 
   appendChild (data) {
     const children = this.data.children
-    const scale = this.data.scale
     const componentManager = this.getComponentManager()
     let child
 
@@ -311,8 +308,8 @@ const proto = {
       child.node.classList.add('weex-neighbor-item')
       const width = (data.style || {}).width || this.data.style.width
       const height = (data.style || {}).height || this.data.style.height
-      child.node.style.marginTop = -(height / 2 * scale) + 'px'
-      child.node.style.marginLeft = -(width / 2 * scale) + 'px'
+      child.node.style.marginTop = -(height / 2) + 'px'
+      child.node.style.marginLeft = -(width / 2) + 'px'
       this.slides.push(child)
       resetOutsideSlides(this, [])
       this.node.appendChild(child.node)
@@ -332,7 +329,6 @@ const proto = {
 
   insertBefore (child, before) {
     const children = this.data.children
-    const scale = this.data.scale
     let i = 0
     let slidesIdx = 0
     let isAppend = false
@@ -358,8 +354,8 @@ const proto = {
     const data = child.data
     const width = (data.style || {}).width || this.data.style.width
     const height = (data.style || {}).height || this.data.style.height
-    child.node.style.marginTop = -(height / 2 * scale) + 'px'
-    child.node.style.marginLeft = -(width / 2 * scale) + 'px'
+    child.node.style.marginTop = -(height / 2) + 'px'
+    child.node.style.marginLeft = -(width / 2) + 'px'
     if (isAppend) {
       this.node.appendChild(child.node)
       this.slides.push(child)
@@ -559,8 +555,8 @@ const attr = {
 
   neighborSpace (val) {
     const ns = parseFloat(val)
-    if (!isNaN(ns) && ns >= 0 && ns < 375) {
-      this.neighborSpace = ns * this.data.scale
+    if (!isNaN(ns) && ns >= 0) {
+      this.neighborSpace = ns
     }
     else {
       console.warn(`[h5-render] invalid value for 'neighbor-space' of slider-neighbor: ${val}.`)
@@ -620,7 +616,7 @@ function init (Weex) {
     this.isDomRendering = true
     this.currentIndex = 0
 
-    this.neighborSpace = DEFAULT_NEIGHBOR_SPACE * data.scale
+    this.neighborSpace = DEFAULT_NEIGHBOR_SPACE
     this.neighborAlpha = DEFAULT_NEIGHBOR_ALPHA
     this.neighborScale = DEFAULT_NEIGHBOR_SCALE
 

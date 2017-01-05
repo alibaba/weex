@@ -13,7 +13,7 @@ const dom = {
    */
   scrollToElement: function (ref, options) {
     !options && (options = {})
-    const offset = (Number(options.offset) || 0) * this.scale
+    const offset = Number(options.offset) || 0
     const elem = this.getComponentManager().getComponent(ref)
     if (!elem) {
       return console.error(`[h5-render] component of ref ${ref} doesn't exist.`)

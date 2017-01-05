@@ -1,85 +1,22 @@
-<style>
-	.cnx-searchbar-item {
-	  width: 750;
-	  height: 80;
-	  font-size: 30;
-	}
-</style>
 <template>
-	<div class="cnx-searchbar">
-    <div class="search-wrap">
-	    <image
-	     src="https://gw.alicdn.com/tps/TB18o6iLXXXXXXaaXXXXXXXXXXX-31-30.png"
-	     class="search-icon">
-	     </image>
-
-		 <input
-		  type="text"
-		  value="{{value}}"
-		  class="cnx-searchbar-item"
-		  id="search-input"
-		  placeholder="{{placeholder}}"
-		  oninput="_handleInput"
-		  onchange="_handleChange">
-		  </input>
-
-      <image
-        src="https://gw.alicdn.com/tps/TB1V6TCLXXXXXaUXpXXXXXXXXXX-28-28.png"
-        class="clear-btn"
-        onclick="_handleClear"
-       if="{{bClear}}">
-       </image>
-    </div>
-
-    <div class="cancel-btn" if="{{bClear}}" onclick="_handleClear">
-      <text style="font-size:30px;color:#00aaee;">取消</text>
-    </div>
-
+  <div>
+    <div class="in"></div>
   </div>
-
 </template>
 
+<style>
+  .in {
+    width: 300px;
+    height: 100px;
+    background-color: green;
+  }
+</style>
+
 <script>
-	module.exports = {
-		data: function(){
-		  return {
-		    placeholder: '搜索',
-		    value: '',
-		    key : ''
-		  }
-		},
-
-		ready : function(){
-		  this.input = this.$el('search-input');
-		},
-
-		methods: {
-		  _handleInput: function(e){
-		    this.value = e.value;
-		    this.$dispatch('cnx-searchbar-input', {
-	                           value: e.value,
-	                           key : this.key
-		                      });
-		  },
-
-		 	_handleChange : function(e){
-        this.value = e.value;
-
-        this.$dispatch('cnx-searchbar-change', {
-					value : e.value,
-					key : this.key
-        })
-		  },
-		  _handleClear: function(e) {
-        this.value = '';
-		  }
-		},
-
-		computed : {
-	    bClear : function(){
-        return this.value !== '';    
-	    }
-		}
-	}
-
+  var meta = require('@weex-module/meta')
+  module.exports = {
+    created: function () {
+      meta.setViewport({ width: 1120 })
+    }
+  }
 </script>

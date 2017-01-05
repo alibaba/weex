@@ -110,7 +110,6 @@ ComponentManager.prototype = {
     }
 
     data.instanceId = this.id
-    data.scale = this.getWeexInstance().scale
     const component = new ComponentType(data, nodeType)
     const ref = data.ref
     this.componentMap[ref] = component
