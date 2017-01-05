@@ -11,7 +11,8 @@ for (const serviceName in services) {
   runtime.service.register(serviceName, services[serviceName])
 }
 
-runtime.freezePrototype()
+// Cancel to freeze the prototype
+// runtime.freezePrototype()
 runtime.setNativeConsole()
 
 // register framework meta info
