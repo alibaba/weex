@@ -12,6 +12,9 @@ const webSocketIns = {
       instance = undefined
       callback = { }
     }
+    if (protocol === '') {
+      protocol = undefined
+    }
     const self = this
     instance = new WebSocket(url, protocol)
     instance.onopen = function (e) {
@@ -79,7 +82,7 @@ const webSocketIns = {
 }
 
 const meta = {
-  WebSocket: [{
+  webSocket: [{
     name: 'WebSocket',
     args: ['string', 'string']
   }, {
