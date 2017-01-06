@@ -226,8 +226,38 @@ public abstract class WXVContainer<T extends ViewGroup> extends WXComponent<T> {
     this(instance,dom,parent,isLazy);
   }
 
+  @Deprecated
   public WXVContainer(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
-    super(instance, node, parent, lazy);
+    super(instance, node, parent);
+  }
+
+  public WXVContainer(WXSDKInstance instance, WXDomObject node, WXVContainer parent) {
+    super(instance, node, parent);
+  }
+
+  /**
+   * Container will get focus before any of its descendants.
+   */
+  public void interceptFocus() {
+    T host = getHostView();
+    if (host != null) {
+      host.setFocusable(true);
+      host.setFocusableInTouchMode(true);
+      host.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+      host.requestFocus();
+    }
+  }
+
+  /**
+   * Container will can not receive focus
+   */
+  public void ignoreFocus() {
+    T host = getHostView();
+    if (host != null) {
+      host.setFocusable(false);
+      host.setFocusableInTouchMode(false);
+      host.clearFocus();
+    }
   }
 
   /**
@@ -250,15 +280,6 @@ public abstract class WXVContainer<T extends ViewGroup> extends WXComponent<T> {
       for (int i = 0; i < count; i++) {
         getChild(i).applyLayoutAndEvent(((WXVContainer)component).getChild(i));
       }
-    }
-  }
-
-  @Override
-  public void lazy(boolean lazy) {
-    super.lazy(lazy);
-    int count = childCount();
-    for (int i = 0; i < count; i++) {
-      getChild(i).lazy(lazy);
     }
   }
 

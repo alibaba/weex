@@ -238,6 +238,12 @@
     
     [super _insertSubcomponent:subcomponent atIndex:index];
     
+    if (![subcomponent isKindOfClass:[WXHeaderComponent class]]
+        && ![subcomponent isKindOfClass:[WXCellComponent class]]) {
+        // Don't insert section if subcomponent is not header or cell
+        return;
+    }
+    
     NSIndexPath *indexPath = [self indexPathForSubIndex:index];
     if (_sections.count <= indexPath.section) {
         WXSection *section = [WXSection new];
@@ -397,11 +403,14 @@
 
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    WXLogDebug(@"Did end displaying cell:%@, at index path:%@", cell, indexPath);
     NSArray *visibleIndexPaths = [tableView indexPathsForVisibleRows];
     if (![visibleIndexPaths containsObject:indexPath]) {
-        WXCellComponent *cell = [self cellForIndexPath:indexPath];
-        // Must invoke synchronously otherwise it will remove the view just added.
-        [cell _unloadViewWithReusing:YES];
+        if (cell.contentView.subviews.count > 0) {
+            UIView *wxCellView = [cell.contentView.subviews firstObject];
+            // Must invoke synchronously otherwise it will remove the view just added.
+            [wxCellView.wx_component _unloadViewWithReusing:YES];
+        }
     }
 }
 
@@ -505,6 +514,11 @@
     }
     
     return rowNumber;
+}
+
+- (void)resetLoadmore{
+    [super resetLoadmore];
+    _previousLoadMoreRowNumber=0;
 }
 
 #pragma mark Private

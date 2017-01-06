@@ -250,11 +250,11 @@ public class WXSliderTest {
   };
 
   public static WXSlider create() throws IllegalAccessException, InstantiationException, InvocationTargetException {
-    return (WXSlider) new SimpleComponentHolder(WXSlider.class).createInstance(WXSDKInstanceTest.createInstance(), new TestDomObject(), WXDivTest.create(), false);
+    return (WXSlider) new SimpleComponentHolder(WXSlider.class).createInstance(WXSDKInstanceTest.createInstance(), new TestDomObject(), WXDivTest.create());
   }
 
   public static WXIndicator createIndicator() throws IllegalAccessException, InstantiationException, InvocationTargetException {
-    return (WXIndicator) new SimpleComponentHolder(WXIndicator.class).createInstance(WXSDKInstanceTest.createInstance(), new TestDomObject(), WXDivTest.create(), false);
+    return (WXIndicator) new SimpleComponentHolder(WXIndicator.class).createInstance(WXSDKInstanceTest.createInstance(), new TestDomObject(), WXDivTest.create());
   }
 
   @Before

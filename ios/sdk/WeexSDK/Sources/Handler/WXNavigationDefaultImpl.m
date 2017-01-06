@@ -41,7 +41,8 @@
     return imageLoader;
 }
 
-- (id)navigationControllerOfContainer:(UIViewController *)container{
+- (id)navigationControllerOfContainer:(UIViewController *)container
+{
     return container.navigationController;
 }
 
@@ -95,7 +96,6 @@
 - (void)setNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated
                  withContainer:(UIViewController *)container
 {
-    //If weex launchs in the WXBaseViewController, the navigationBar is hidden according to our design.
     if (![container isKindOfClass:[WXBaseViewController class]]) {
         return;
     }

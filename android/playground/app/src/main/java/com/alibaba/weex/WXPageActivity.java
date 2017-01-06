@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
@@ -132,7 +133,7 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
     setContentView(R.layout.activity_wxpage);
     setCurrentWxPageActivity(this);
     WXSDKEngine.setActivityNavBarSetter(new NavigatorAdapter());
-
+    getWindow().setFormat(PixelFormat.TRANSLUCENT);
     mUri = getIntent().getData();
     Bundle bundle = getIntent().getExtras();
     if (mUri == null && bundle == null) {
@@ -245,6 +246,7 @@ public class WXPageActivity extends WXBaseActivity implements IWXRenderListener,
 
     mInstance = new WXSDKInstance(this);
     mInstance.registerRenderListener(this);
+    mInstance.setBundleUrl(url);
 
     WXHttpTask httpTask = new WXHttpTask();
     httpTask.url = url;

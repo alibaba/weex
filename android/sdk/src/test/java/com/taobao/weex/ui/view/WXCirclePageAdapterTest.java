@@ -266,7 +266,7 @@ public class WXCirclePageAdapterTest {
     testAddPageView();
     ViewPager viewPager = new ViewPager(child.getContext());
     viewPager.setAdapter(adapter);
-    Object obj = adapter.instantiateItem(viewPager,adapter.getRealCount()*10-1);
+    Object obj = adapter.instantiateItem(viewPager,adapter.getRealCount());
     assertEquals(child,obj);
   }
 
@@ -279,5 +279,15 @@ public class WXCirclePageAdapterTest {
 
     assertEquals(adapter.getRealCount(),3);
     
+  }
+
+  @Test
+  public void testGetRealPosition() throws Exception {
+    testAddPageView();
+    assertEquals(adapter.getRealPosition(0), adapter.getRealCount() - 1);
+    assertEquals(adapter.getRealPosition(1), 0);
+    assertEquals(adapter.getRealPosition(adapter.getRealCount() + 1), 0);
+    assertEquals(adapter.getRealPosition(100), -1);
+    assertEquals(adapter.getRealPosition(-1), -1);
   }
 }

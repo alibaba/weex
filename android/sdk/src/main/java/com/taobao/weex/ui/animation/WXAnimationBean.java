@@ -446,7 +446,7 @@ public class WXAnimationBean {
     private static float parsePercentOrPx(String raw, int unit) {
       final int precision = 1;
       int suffix;
-      if ((suffix = raw.lastIndexOf(FunctionParser.PERCENT)) != -1) {
+      if ((suffix = raw.lastIndexOf(WXUtils.PERCENT)) != -1) {
         return parsePercent(raw.substring(0, suffix), unit, precision);
       } else if ((suffix = raw.lastIndexOf(PX)) != -1) {
         return WXViewUtils.getRealPxByWidth(WXUtils.fastGetFloat(raw.substring(0, suffix), precision));

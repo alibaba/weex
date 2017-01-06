@@ -12,6 +12,7 @@
 #import "WXLayer.h"
 #import "WXUtility.h"
 #import "WXConvert.h"
+#import <pthread/pthread.h>
 
 @interface WXText : UIView
 
@@ -49,8 +50,11 @@
     
     if ([self.wx_component _needsDrawBorder]) {
         [self.wx_component _drawBorderWithContext:context size:bounds.size];
+    } else {
+        WXPerformBlockOnMainThread(^{
+            [self.wx_component _resetNativeBorderRadius];
+        });
     }
-    
     NSLayoutManager *layoutManager = _textStorage.layoutManagers.firstObject;
     NSTextContainer *textContainer = layoutManager.textContainers.firstObject;
     
@@ -71,7 +75,7 @@
 {
     if (_textStorage != textStorage) {
         _textStorage = textStorage;
-        [self setNeedsDisplay];
+        [self.wx_component setNeedsDisplay];
     }
 }
 
@@ -108,6 +112,16 @@
     WXTextDecoration _textDecoration;
     NSString *_textOverflow;
     CGFloat _lineHeight;
+    
+   
+    pthread_mutex_t _textStorageMutex;
+    pthread_mutexattr_t _textStorageMutexAttr;
+}
+
+static BOOL _isUsingTextStorageLock = NO;
++ (void)useTextStorageLock:(BOOL)isUsingTextStorageLock
+{
+    _isUsingTextStorageLock = isUsingTextStorageLock;
 }
 
 - (instancetype)initWithRef:(NSString *)ref
@@ -119,11 +133,25 @@
 {
     self = [super initWithRef:ref type:type styles:styles attributes:attributes events:events weexInstance:weexInstance];
     if (self) {
+        if (_isUsingTextStorageLock) {
+            pthread_mutexattr_init(&_textStorageMutexAttr);
+            pthread_mutexattr_settype(&_textStorageMutexAttr, PTHREAD_MUTEX_RECURSIVE);
+            pthread_mutex_init(&_textStorageMutex, &_textStorageMutexAttr);
+        }
+        
         [self fillCSSStyles:styles];
         [self fillAttributes:attributes];
     }
     
     return self;
+}
+
+- (void)dealloc
+{
+    if (_isUsingTextStorageLock) {
+        pthread_mutex_destroy(&_textStorageMutex);
+        pthread_mutexattr_destroy(&_textStorageMutexAttr);
+    }
 }
 
 #define WX_STYLE_FILL_TEXT(key, prop, type, needLayout)\
@@ -176,7 +204,13 @@ do {\
 
 - (void)setNeedsRepaint
 {
+    if (_isUsingTextStorageLock) {
+        pthread_mutex_lock(&_textStorageMutex);
+    }
     _textStorage = nil;
+    if (_isUsingTextStorageLock) {
+        pthread_mutex_unlock(&_textStorageMutex);
+    }
 }
 
 #pragma mark - Subclass
@@ -188,7 +222,13 @@ do {\
 
 - (void)viewDidLoad
 {
+    if (_isUsingTextStorageLock) {
+        pthread_mutex_lock(&_textStorageMutex);
+    }
     ((WXText *)self.view).textStorage = _textStorage;
+    if (_isUsingTextStorageLock) {
+        pthread_mutex_unlock(&_textStorageMutex);
+    }
     [self setNeedsDisplay];
 }
 
@@ -204,7 +244,17 @@ do {\
         if (isCancelled()) {
             return nil;
         }
-        return [textView drawTextWithBounds:bounds padding:_padding];
+        if (_isUsingTextStorageLock) {
+            pthread_mutex_lock(&_textStorageMutex);
+        }
+        
+        UIImage *image = [textView drawTextWithBounds:bounds padding:_padding];
+        
+        if (_isUsingTextStorageLock) {
+            pthread_mutex_unlock(&_textStorageMutex);
+        }
+        
+        return image;
     };
 }
 
@@ -272,6 +322,7 @@ do {\
     }
     
     NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+
     if (_textAlign) {
         paragraphStyle.alignment = _textAlign;
     }
@@ -286,7 +337,7 @@ do {\
                                  value:paragraphStyle
                                  range:(NSRange){0, attributedString.length}];
     }
-    
+
     return attributedString;
 }
 
@@ -319,7 +370,14 @@ do {\
     [layoutManager ensureLayoutForTextContainer:textContainer];
     
     _textStorageWidth = width;
+    
+    if (_isUsingTextStorageLock) {
+        pthread_mutex_lock(&_textStorageMutex);
+    }
     _textStorage = textStorage;
+    if (_isUsingTextStorageLock) {
+        pthread_mutex_unlock(&_textStorageMutex);
+    }
     
     return textStorage;
 }
@@ -331,7 +389,13 @@ do {\
     
     [self.weexInstance.componentManager  _addUITask:^{
         if ([self isViewLoaded]) {
+            if (_isUsingTextStorageLock) {
+                pthread_mutex_lock(&_textStorageMutex);
+            }
             ((WXText *)self.view).textStorage = textStorage;
+            if (_isUsingTextStorageLock) {
+                pthread_mutex_unlock(&_textStorageMutex);
+            }
             [self setNeedsDisplay];
         }
     }];
@@ -343,9 +407,9 @@ do {\
     [self syncTextStorageForView];
 }
 
-- (void)_updateStylesOnComponentThread:(NSDictionary *)styles
+- (void)_updateStylesOnComponentThread:(NSDictionary *)styles resetStyles:(NSMutableArray *)resetStyles
 {
-    [super _updateStylesOnComponentThread:styles];
+    [super _updateStylesOnComponentThread:styles resetStyles:(NSMutableArray *)resetStyles];
     
     [self fillCSSStyles:styles];
     
@@ -367,6 +431,20 @@ do {\
     return super.description;
 }
 #endif
+ 
+- (void)_resetCSSNodeStyles:(NSArray *)styles
+{
+    [super _resetCSSNodeStyles:styles];
+    if ([styles containsObject:@"color"]) {
+        _color = [UIColor blackColor];
+        [self setNeedsRepaint];
+    }
+    if ([styles containsObject:@"fontSize"]) {
+        _fontSize = WX_TEXT_FONT_SIZE;
+        [self setNeedsRepaint];
+        [self setNeedsLayout];
+    }
+}
 
 @end
 

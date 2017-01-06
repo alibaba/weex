@@ -1,206 +1,75 @@
 <template>
-  <scroller class="body">
-
-    <wxc-panel title="Notice" type="primary">
-    <text class="notice">1. wxc-panel has a default margin left, conflict with slider-neighbor, so DONOT use slider-neighbor in wxc-panel. </text>
-    </wxc-panel>
-
-    <text class="normal"> 1. Default Usage. neighbor-space=150; neighbor-alpha=0.6; neighbor-scale=0.8; </text>
-    <slider-neighbor  class="slider" append="tree" interval="{{sliders[0].interval}}"  auto-play="true" 
-      neighbor-alpha="0.6"
-      neighbor-scale="0.8"
-      neighbor-space="150">
-      <slider-neighbor-page  repeat="{{sliders[0].sliderPages}}"></slider-neighbor-page>
-    </slider-neighbor>
-
-    <text class="normal"> 2. neighbor-space = 190, this property number works with slider-item width. </text>
-    <slider-neighbor  class="slider" append="tree" interval="{{sliders[0].interval}}"  auto-play="false" 
-      neighbor-alpha="0.6"
-      neighbor-scale="0.8"
-      neighbor-space="190">
-      <slider-neighbor-page  repeat="{{sliders[0].sliderPages}}"></slider-neighbor-page>
-    </slider-neighbor>
-
-    <text class="normal"> 3. neighbor-scale = 0.7, Also makes neighbor view smaller. too small will not be seen on screen. </text>
-    <slider-neighbor  class="slider" append="tree" interval="{{sliders[0].interval}}"  auto-play="false" 
-      neighbor-alpha="0.6"
-      neighbor-scale="0.7"
-      neighbor-space="150">
-      <slider-neighbor-page  repeat="{{sliders[0].sliderPages}}"></slider-neighbor-page>
-    </slider-neighbor>
-
-    <text class="normal"> 4. neighbor-alpha = 0.1 </text>
-    <slider-neighbor  class="slider" append="tree" interval="{{sliders[0].interval}}"  auto-play="false" 
-      neighbor-alpha="0.1"
-      neighbor-scale="0.8"
-      neighbor-space="150">
-      <slider-neighbor-page  repeat="{{sliders[0].sliderPages}}"></slider-neighbor-page>
-    </slider-neighbor>
-
-  </scroller>
+	<scroller style="flex-direction: column; background-color: #ffffff;width:750;height:600;border-width: 0;">
+		<TC_Support_MainTitle title="AG_Test_Slider-Neighbor_Auto_Play"></TC_Support_MainTitle>
+		<div style="height:410; border-width:3; border-style:solid; border-color:#000000;margin:10;">
+		<slider-neighbor style="width:700;height:400;" neighbor-scale="0.7" interval="3000" neighbor-alpha="0.8" auto-play="{{attr_auto_play}}">
+			<container style="">
+				<image style="width:650;background-color:#FFFFDF;height:400;" src="https://gw.alicdn.com/tps/TB1dzanMVXXXXXQXVXXXXXXXXXX-573-412.png"></image>
+			</container>
+			<container style="">
+				<image style="width:650;background-color:#FFFFDF;height:400;" src="https://gw.alicdn.com/tps/TB1p9CCMVXXXXa_XFXXXXXXXXXX-450-340.png"></image>
+			</container>
+			<container style="">
+				<image style="width:650;background-color:#FFFFDF;height:400;" src="https://gw.alicdn.com/tps/TB1zpSiMVXXXXchXFXXXXXXXXXX-448-338.png"></image>
+			</container>
+      		<container style="">
+				<image style="width:650;background-color:#FFFFDF;height:400;" src="https://gw.alicdn.com/tps/TB1EuGIMVXXXXcoXpXXXXXXXXXX-452-337.png"></image>
+			</container>
+			<indicator style="height:60;position:absolute;bottom:15;width:700;left:0;itemSelectedColor:#0000FF;itemSize:20;itemColor:#FF0000;"></indicator>
+		</slider-neighbor>
+		</div>
+		<scroller style="height:100; border-width:0; margin:10;">
+			<TC_Support_SubTitle title="auto-play"></TC_Support_SubTitle>
+			<div repeat="btnList2100" style="flex-direction:row">
+				<text onclick="update2100" flagid="{{index}}" repeat="row" style="width:310; height:50;text-align: center; border-width: 1;border-color: #696969;border-style:solid;border-radius:5; margin:10; background-color: {{bgc}}">auto play: {{value}}</text>
+			</div>
+		</scroller>
+	</scroller>
 </template>
 
+
 <script>
-  require('weex-components');
-  var img0 = 'https://gw.alicdn.com/tps/TB1dzanMVXXXXXQXVXXXXXXXXXX-573-412.png';
-  var img1 = 'https://gw.alicdn.com/tps/TB1p9CCMVXXXXa_XFXXXXXXXXXX-450-340.png';
-  var img2 = 'https://gw.alicdn.com/tps/TB1zpSiMVXXXXchXFXXXXXXXXXX-448-338.png';
-  var img3 = 'https://gw.alicdn.com/tps/TB1EuGIMVXXXXcoXpXXXXXXXXXX-452-337.png';
-  var img4 = 'https://gw.alicdn.com/tps/TB1H95jMVXXXXcsXVXXXXXXXXXX-450-338.png';
-  var img5 = 'https://gw.alicdn.com/tps/TB1PumIMVXXXXcnXpXXXXXXXXXX-451-337.png';
-  var img6 = 'https://gw.alicdn.com/tps/TB1wUaEMVXXXXaqXFXXXXXXXXXX-658-409.jpg';
-  var img7 = 'https://gw.alicdn.com/tps/TB187KrMVXXXXX5XVXXXXXXXXXX-705-518.jpg';
-  var img8 = 'https://gw.alicdn.com/tps/TB16XKsMVXXXXXLXVXXXXXXXXXX-557-387.jpg';
-  var img9= 'https://gw.alicdn.com/tps/TB1sqSuMVXXXXc3XFXXXXXXXXXX-563-383.jpg';
-  var img10 = 'https://gw.alicdn.com/tps/TB14WCQMVXXXXXtXXXXXXXXXXXX-651-446.jpg';
-  module.exports = {
-    data: {
-      eventCnt: 0,
-      togglePlayMsg: 'pause',
-      sliders: [
-        {
-          interval: 2000,
-          autoPlay: true,
-          sliderPages: [
-            {
-              items: [
-                {
-                  image: img0,
-                  link: '//h5.m.taobao.com/1'
-                }
-              ]
-            },
-            {
-              items: [
-                {
-                  image: img1,
-                  link: '//h5.m.taobao.com/1'
-                }
-              ]
-            },
-            {
-              items: [
-                {
-                  image: img2,
-                  link: '//h5.m.taobao.com/1'
-                }
-              ]
-            },
-            {
-              items: [
-                {
-                  image: img3,
-                  link: '//h5.m.taobao.com/1'
-                },{
-                  image: img4,
-                  link: '//h5.m.taobao.com/1'
-                },{
-                  image: img5,
-                  link: '//h5.m.taobao.com/1'
-                }
-              ]
-            },
-            {
-              items: [
-                {
-                  image: img4,
-                  link: '//h5.m.taobao.com/1'
-                }
-              ]
-            },
-            {
-              items: [
-                {
-                  image: img5,
-                  link: '//h5.m.taobao.com/1'
-                }
-              ]
-            },
-            {
-              items: [
-                {
-                  image: img6,
-                  link: '//h5.m.taobao.com/1'
-                }
-              ]
-            },
-            {
-              items: [
-                {
-                  image: img7,
-                  link: '//h5.m.taobao.com/1'
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    methods: {
-      ready: function() {
-      },
-      togglePlay: function() {
-        var autoPlay = this.sliders[0].autoPlay
-        autoPlay = !autoPlay
-        this.sliders[0].autoPlay = autoPlay
-        this.togglePlayMsg = autoPlay ? 'pause' : 'play'
-      },
-      handleSliderChange: function() {
-        var nowCnt = this.eventCnt + 1
-        this.eventCnt = nowCnt
-      },
-      setInterval1: function() {
-        this.sliders[0].interval = 1000;
-      },
-      setInterval3: function() {
-        this.sliders[0].interval = 3000;
-      },
-      setInterval5: function() {
-        this.sliders[0].interval = 5000;
-      }
-    }
-  };
+	module.exports = {
+		data : {
+			log_detail:[],
+			attr_auto_play:false,
+			btnList2100: [
+				{row:
+					[
+						{value: "false",bgc:'#EEEEEE',index:0},
+						{value: "true",bgc:'#EEEEEE',index:1},
+					],
+				},
+			],
+		},
+		methods : {
+			update2100: function (e) {
+				var self = this
+				var index = e.target.attr.flagid
+				for (var i = 0; i < self.btnList2100.length; i++) {
+					var row = self.btnList2100[i];
+					var columnlist = row.row;
+					for (var j = 0; j < columnlist.length; j++) {
+						var column = columnlist[j];
+						if (column.index === index) {
+							column.bgc = '#B2DFEE'
+							switch (index) {
+								case 0:
+									self.attr_auto_play=false;
+									break;
+								case 1:
+									self.attr_auto_play=true;
+									break;
+								default:
+									break;
+							}
+						}
+						else {
+							column.bgc = '#EEEEEE'
+						}
+					}
+				}
+			},
+		},
+	}
 </script>
-
-<style>
-  .body {
-    background-color: #ffffff;
-  }
-
-  .notice {
-    font-size:32px; 
-    color:#ff0000; 
-    marginBottom:30;
-  }
-
-  .normal {
-    font-size:26px; 
-    marginBottom:30;
-    marginTop:30;
-  }
-
-  .slider {
-    flexDirection: row;
-    width: 750px;
-    height: 360px;
-    marginLeft: 0px;
-    marginRight: 0px;
-    paddingLeft: 0px;
-    paddingRight: 0px;
-  }
-
-
-  .indicator {
-    position: absolute;
-    width: 690;
-    height: 420;
-    top: 140;
-    left: 240;
-    itemColor: #dddddd;
-    itemSelectedColor: rgb(40, 96, 144);
-  }
-
-  .container {
-    width: 750px;
-  }
-</style>

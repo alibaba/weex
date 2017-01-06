@@ -262,9 +262,9 @@ public class WXTextTest {
         Mockito.when(mDomObject.getLayoutWidth()).thenReturn(100f);
         Mockito.when(mDomObject.getLayoutHeight()).thenReturn(100f);
 
-        mParent = new WXDiv(instance, mParentDomObj, null, false);
+        mParent = new WXDiv(instance, mParentDomObj, null);
         mParent.createView(null, -1);
-        mWXText = new WXText(instance, mDomObject, mParent, false);
+        mWXText = new WXText(instance, mDomObject, mParent);
         mWXText.bindHolder(new SimpleComponentHolder(WXText.class));
         assertNotNull(instance.getContext());
     }

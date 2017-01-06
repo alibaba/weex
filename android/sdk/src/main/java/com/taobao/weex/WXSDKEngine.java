@@ -123,6 +123,7 @@ import com.taobao.weex.adapter.IWXUserTrackAdapter;
 import com.taobao.weex.appfram.clipboard.WXClipboardModule;
 import com.taobao.weex.appfram.navigator.IActivityNavBarSetter;
 import com.taobao.weex.appfram.navigator.WXNavigatorModule;
+import com.taobao.weex.appfram.pickers.WXPickersModule;
 import com.taobao.weex.appfram.storage.IWXStorageAdapter;
 import com.taobao.weex.appfram.storage.WXStorageModule;
 import com.taobao.weex.bridge.ModuleFactory;
@@ -225,11 +226,7 @@ public class WXSDKEngine {
         long start = System.currentTimeMillis();
         WXSDKManager sm = WXSDKManager.getInstance();
         if(config != null ) {
-          sm.setIWXHttpAdapter(config.getHttpAdapter());
-          sm.setIWXImgLoaderAdapter(config.getImgAdapter());
-          sm.setIWXUserTrackAdapter(config.getUtAdapter());
-          sm.setIWXDebugAdapter(config.getDebugAdapter());
-          sm.setIWXStorageAdapter(config.getStorageAdapter());
+          sm.setInitConfig(config);
           if(config.getDebugAdapter()!=null){
             config.getDebugAdapter().initDebug(application);
           }
@@ -340,6 +337,7 @@ public class WXSDKEngine {
       registerModule("storage", WXStorageModule.class, true);
       registerModule("clipboard", WXClipboardModule.class, true);
       registerModule("globalEvent",WXGlobalEventModule.class);
+      registerModule("picker", WXPickersModule.class);
 
       registerDomObject(WXBasicComponentType.INDICATOR, WXIndicator.IndicatorDomNode.class);
       registerDomObject(WXBasicComponentType.TEXT, WXTextDomObject.class);
@@ -391,13 +389,13 @@ public class WXSDKEngine {
   }
 
 
-  static boolean registerComponent(IFComponentHolder holder, boolean appendTree, String ... names) throws WXException {
+  public static boolean registerComponent(IFComponentHolder holder, boolean appendTree, String ... names) throws WXException {
     boolean result =  true;
-    Map<String, String> componentInfo = new HashMap<>();
-    if (appendTree) {
-      componentInfo.put("append", "tree");
-    }
     for(String name:names) {
+      Map<String, Object> componentInfo = new HashMap<>();
+      if (appendTree) {
+        componentInfo.put("append", "tree");
+      }
       result  = result && WXComponentRegistry.registerComponent(name, holder, componentInfo);
     }
     return result;
@@ -466,14 +464,14 @@ public class WXSDKEngine {
   }
 
   public static boolean registerComponent(String type, Class<? extends WXComponent> clazz) throws WXException {
-    return WXComponentRegistry.registerComponent(type, new SimpleComponentHolder(clazz),new HashMap<String, String>());
+    return WXComponentRegistry.registerComponent(type, new SimpleComponentHolder(clazz),new HashMap<String, Object>());
   }
 
-  public static boolean registerComponent(Map<String, String> componentInfo, Class<? extends WXComponent> clazz) throws WXException {
+  public static boolean registerComponent(Map<String, Object> componentInfo, Class<? extends WXComponent> clazz) throws WXException {
     if(componentInfo == null){
       return false;
     }
-    String type = componentInfo.get("type");
+    String type = (String)componentInfo.get("type");
     if(TextUtils.isEmpty(type)){
       return false;
     }
@@ -488,33 +486,12 @@ public class WXSDKEngine {
     return WXSDKManager.getInstance().getIWXUserTrackAdapter();
   }
 
-  @Deprecated
-  public static void setIWXUserTrackAdapter(IWXUserTrackAdapter IWXUserTrackAdapter) {
-    WXSDKManager.getInstance().setIWXUserTrackAdapter(IWXUserTrackAdapter);
-  }
-
   public static IWXImgLoaderAdapter getIWXImgLoaderAdapter() {
     return WXSDKManager.getInstance().getIWXImgLoaderAdapter();
   }
 
-  @Deprecated
-  public static void setIWXImgLoaderAdapter(IWXImgLoaderAdapter IWXImgLoaderAdapter) {
-    if(IWXImgLoaderAdapter==null){
-      if(WXEnvironment.isApkDebugable()){
-        throw new IllegalStateException("ImageLoaderAdapter can not be set to null");
-      }
-      return;
-    }
-    WXSDKManager.getInstance().setIWXImgLoaderAdapter(IWXImgLoaderAdapter);
-  }
-
   public static IWXHttpAdapter getIWXHttpAdapter() {
     return WXSDKManager.getInstance().getIWXHttpAdapter();
-  }
-
-  @Deprecated
-  public static void setIWXHttpAdapter(IWXHttpAdapter IWXHttpAdapter) {
-    WXSDKManager.getInstance().setIWXHttpAdapter(IWXHttpAdapter);
   }
 
   public static IWXStorageAdapter getIWXStorageAdapter() {

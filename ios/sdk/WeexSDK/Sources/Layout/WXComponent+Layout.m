@@ -77,6 +77,11 @@
     [self _fillCSSNode:styles];
 }
 
+-(void)_resetCSSNodeStyles:(NSArray *)styles
+{
+    [self _resetCSSNode:styles];
+}
+
 - (void)_recomputeCSSNodeChildren
 {
     _cssNode->children_count = (int)[self _childrenCountForLayout];
@@ -100,13 +105,24 @@
     
     if ([self isViewLoaded] && isChanged && [self isViewFrameSyncWithCalculated]) {
         
+        __weak typeof(self) weakSelf = self;
         [self.weexInstance.componentManager _addUITask:^{
-            self.view.frame = _calculatedFrame;
-            if (_transform) {
-                _layer.transform = [[WXTransform new] getTransform:_transform withView:_view withOrigin:_transformOrigin];
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (strongSelf->_transform && !CATransform3DEqualToTransform(strongSelf.layer.transform, CATransform3DIdentity)) {
+                // From the UIView's frame documentation:
+                // https://developer.apple.com/reference/uikit/uiview#//apple_ref/occ/instp/UIView/frame
+                // Warning : If the transform property is not the identity transform, the value of this property is undefined and therefore should be ignored.
+                // So layer's transform must be reset to CATransform3DIdentity before setFrame, otherwise frame will be incorrect
+                strongSelf.layer.transform = CATransform3DIdentity;
             }
             
-            [_layer setNeedsDisplay];
+            strongSelf.view.frame = strongSelf.calculatedFrame;
+            
+            if (strongSelf->_transform) {
+                strongSelf.layer.transform = [[WXTransform new] getTransform:strongSelf->_transform withView:strongSelf.view withOrigin:strongSelf->_transformOrigin];
+            }
+            
+            [strongSelf setNeedsDisplay];
         }];
     }
 }
@@ -131,7 +147,6 @@
     if (!CGRectEqualToRect(newFrame, _calculatedFrame)) {
         isFrameChanged = YES;
         _calculatedFrame = newFrame;
-        [self _recomputeBorderRadius];
         [dirtyComponents addObject:self];
     }
     
@@ -183,8 +198,13 @@
 do {\
     id value = styles[@#key];\
     if (value) {\
-        _cssNode->style.cssProp = (typeof(_cssNode->style.cssProp))[WXConvert type:value];\
-        [self setNeedsLayout];\
+        typeof(_cssNode->style.cssProp) convertedValue = (typeof(_cssNode->style.cssProp))[WXConvert type:value];\
+        if([@"WXPixelType" isEqualToString:@#type] && isnan(convertedValue)) {\
+            WXLogError(@"Invalid NaN value for style:%@, ref:%@", @#key, self.ref);\
+        } else { \
+            _cssNode->style.cssProp = convertedValue;\
+            [self setNeedsLayout];\
+        } \
     }\
 } while(0);
 
@@ -241,6 +261,69 @@ do {\
     WX_STYLE_FILL_CSS_NODE(paddingLeft, padding[CSS_LEFT], WXPixelType)
     WX_STYLE_FILL_CSS_NODE(paddingRight, padding[CSS_RIGHT], WXPixelType)
     WX_STYLE_FILL_CSS_NODE(paddingBottom, padding[CSS_BOTTOM], WXPixelType)
+}
+
+#define WX_STYLE_RESET_CSS_NODE(key, cssProp, defaultValue)\
+do {\
+    if (styles && [styles containsObject:@#key]) {\
+        _cssNode->style.cssProp = defaultValue;\
+        [self setNeedsLayout];\
+    }\
+} while(0);
+
+#define WX_STYLE_RESET_CSS_NODE_ALL_DIRECTION(key, cssProp, defaultValue)\
+do {\
+    WX_STYLE_RESET_CSS_NODE(key, cssProp[CSS_TOP], defaultValue)\
+    WX_STYLE_RESET_CSS_NODE(key, cssProp[CSS_LEFT], defaultValue)\
+    WX_STYLE_RESET_CSS_NODE(key, cssProp[CSS_RIGHT], defaultValue)\
+    WX_STYLE_RESET_CSS_NODE(key, cssProp[CSS_BOTTOM], defaultValue)\
+} while(0);
+
+- (void)_resetCSSNode:(NSArray *)styles;
+{
+    // flex
+    WX_STYLE_RESET_CSS_NODE(flex, flex, 0.0)
+    WX_STYLE_RESET_CSS_NODE(flexDirection, flex_direction, CSS_FLEX_DIRECTION_COLUMN)
+    WX_STYLE_RESET_CSS_NODE(alignItems, align_items, CSS_ALIGN_STRETCH)
+    WX_STYLE_RESET_CSS_NODE(alignSelf, align_self, CSS_ALIGN_AUTO)
+    WX_STYLE_RESET_CSS_NODE(flexWrap, flex_wrap, CSS_NOWRAP)
+    WX_STYLE_RESET_CSS_NODE(justifyContent, justify_content, CSS_JUSTIFY_FLEX_START)
+
+    // position
+    WX_STYLE_RESET_CSS_NODE(position, position_type, CSS_POSITION_RELATIVE)
+    WX_STYLE_RESET_CSS_NODE(top, position[CSS_TOP], CSS_UNDEFINED)
+    WX_STYLE_RESET_CSS_NODE(left, position[CSS_LEFT], CSS_UNDEFINED)
+    WX_STYLE_RESET_CSS_NODE(right, position[CSS_RIGHT], CSS_UNDEFINED)
+    WX_STYLE_RESET_CSS_NODE(bottom, position[CSS_BOTTOM], CSS_UNDEFINED)
+    
+    // dimension
+    WX_STYLE_RESET_CSS_NODE(width, dimensions[CSS_WIDTH], CSS_UNDEFINED)
+    WX_STYLE_RESET_CSS_NODE(height, dimensions[CSS_HEIGHT], CSS_UNDEFINED)
+    WX_STYLE_RESET_CSS_NODE(minWidth, minDimensions[CSS_WIDTH], CSS_UNDEFINED)
+    WX_STYLE_RESET_CSS_NODE(minHeight, minDimensions[CSS_HEIGHT], CSS_UNDEFINED)
+    WX_STYLE_RESET_CSS_NODE(maxWidth, maxDimensions[CSS_WIDTH], CSS_UNDEFINED)
+    WX_STYLE_RESET_CSS_NODE(maxHeight, maxDimensions[CSS_HEIGHT], CSS_UNDEFINED)
+    
+    // margin
+    WX_STYLE_RESET_CSS_NODE_ALL_DIRECTION(margin, margin, 0.0)
+    WX_STYLE_RESET_CSS_NODE(marginTop, margin[CSS_TOP], 0.0)
+    WX_STYLE_RESET_CSS_NODE(marginLeft, margin[CSS_LEFT], 0.0)
+    WX_STYLE_RESET_CSS_NODE(marginRight, margin[CSS_RIGHT], 0.0)
+    WX_STYLE_RESET_CSS_NODE(marginBottom, margin[CSS_BOTTOM], 0.0)
+    
+    // border
+    WX_STYLE_RESET_CSS_NODE_ALL_DIRECTION(borderWidth, border, 0.0)
+    WX_STYLE_RESET_CSS_NODE(borderTopWidth, border[CSS_TOP], 0.0)
+    WX_STYLE_RESET_CSS_NODE(borderLeftWidth, border[CSS_LEFT], 0.0)
+    WX_STYLE_RESET_CSS_NODE(borderRightWidth, border[CSS_RIGHT], 0.0)
+    WX_STYLE_RESET_CSS_NODE(borderBottomWidth, border[CSS_BOTTOM], 0.0)
+    
+    // padding
+    WX_STYLE_RESET_CSS_NODE_ALL_DIRECTION(padding, padding, 0.0)
+    WX_STYLE_RESET_CSS_NODE(paddingTop, padding[CSS_TOP], 0.0)
+    WX_STYLE_RESET_CSS_NODE(paddingLeft, padding[CSS_LEFT], 0.0)
+    WX_STYLE_RESET_CSS_NODE(paddingRight, padding[CSS_RIGHT], 0.0)
+    WX_STYLE_RESET_CSS_NODE(paddingBottom, padding[CSS_BOTTOM], 0.0)
 }
 
 - (void)_fillAbsolutePositions

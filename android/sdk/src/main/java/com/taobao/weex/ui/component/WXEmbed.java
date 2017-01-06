@@ -284,7 +284,7 @@ public class WXEmbed extends WXDiv implements WXSDKInstance.OnInstanceVisibleLis
           public void onClick(View v) {
             imageView.setOnClickListener(null);
             imageView.setEnabled(false);
-            comp.loadInstance();
+            comp.loadContent();
           }
         });
         FrameLayout hostView = comp.getHostView();
@@ -346,11 +346,11 @@ public class WXEmbed extends WXDiv implements WXSDKInstance.OnInstanceVisibleLis
 
   @Deprecated
   public WXEmbed(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
-    this(instance,dom,parent,isLazy);
+    this(instance,dom,parent);
   }
 
-  public WXEmbed(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
-    super(instance, node, parent, lazy);
+  public WXEmbed(WXSDKInstance instance, WXDomObject node, WXVContainer parent) {
+    super(instance, node, parent);
     mListener = new EmbedRenderListener(this);
 
     if(instance instanceof EmbedManager) {
@@ -386,7 +386,7 @@ public class WXEmbed extends WXDiv implements WXSDKInstance.OnInstanceVisibleLis
   @Override
   public void renderNewURL(String url) {
     src = url;
-    loadInstance();
+    loadContent();
   }
 
 
@@ -408,15 +408,18 @@ public class WXEmbed extends WXDiv implements WXSDKInstance.OnInstanceVisibleLis
       mNestedInstance.destroy();
       mNestedInstance = null;
     }
-    if (TextUtils.equals(getVisibility(), Constants.Value.VISIBLE)) {
-      loadInstance();
+    if (mIsVisible) {
+      loadContent();
     }
   }
   public String getSrc() {
     return src;
   }
 
-  void loadInstance(){
+  /**
+   * Load embed content, default behavior is create a nested instance.
+   */
+  protected void loadContent(){
     mNestedInstance = createInstance();
     if(mListener != null && mListener.mEventListener != null){
       if(!mListener.mEventListener.onPreCreate(this,src)){
@@ -460,7 +463,7 @@ public class WXEmbed extends WXDiv implements WXSDKInstance.OnInstanceVisibleLis
     boolean visible = TextUtils.equals(visibility, Constants.Value.VISIBLE);
     if (!TextUtils.isEmpty(src) && visible) {
       if (mNestedInstance == null) {
-        loadInstance();
+        loadContent();
       } else {
         mNestedInstance.onViewAppear();
       }

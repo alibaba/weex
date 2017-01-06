@@ -68,7 +68,7 @@ static NSString* WXDebugrepJSFramework;
     void(^scriptLoadFinish)(NSString*, NSString*) = ^(NSString* key, NSString* script){
         if ([key isEqualToString:@"jsframework"]) {
             WXDebugrepJSFramework = script;
-            [[WXSDKManager bridgeMgr] unload];
+            [WXSDKManager unload];
             [WXSDKEngine initSDKEnviroment:script];
         }else {
             WXDebugrepBundleJS = script;
@@ -80,7 +80,7 @@ static NSString* WXDebugrepJSFramework;
             NSString *path = [url path];
             NSData *scriptData = [[NSFileManager defaultManager] contentsAtPath:path];
             NSString *script = [[NSString alloc] initWithData:scriptData encoding:NSUTF8StringEncoding];
-            if (!script) {
+            if (!script || script.length <= 0) {
                 NSString *errorDesc = [NSString stringWithFormat:@"File read error at url: %@", url];
                 WXLogError(@"%@", errorDesc);
             }

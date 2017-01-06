@@ -219,7 +219,6 @@ import java.util.Map;
 public class FunctionParser<K, V> {
 
   public static final char SPACE = ' ';
-  public static final char PERCENT = '%';
 
   private Mapper<K, V> mapper;
   private Lexer lexer;
@@ -285,7 +284,8 @@ public class FunctionParser<K, V> {
      * @param functionName the name of the raw function.
      * @param raw the list of parameter of the raw function
      * @return the expected mapping relationship, where the key in the map is the same as the
-     * functionName, and the value in the map is the type of object that expected by user.
+     * key in the return value of {{@link #parse()}},
+     * and the value in the map is the type of object that expected by user.
      */
     Map<K, V> map(String functionName, List<String> raw);
   }
@@ -346,7 +346,7 @@ public class FunctionParser<K, V> {
             break;
           }
         } else if (isCharacterOrDigit(curChar) || curChar == DOT
-                   || curChar == PERCENT || curChar == MINUS || curChar == PLUS) {
+                   || curChar == WXUtils.PERCENT || curChar == MINUS || curChar == PLUS) {
           pointer++;
         } else {
           if (start == pointer) {

@@ -9,9 +9,8 @@ test:
     - cd android/playground && ./gradlew assembleDebug
     - cd android/sdk && ./gradlew clean testDebugUnitTest -PdisableCov=true
   post:
-    - cp -r android/playground/app/build/outputs $CIRCLE_ARTIFACTS # playground artifacts
-    - cp -r android/sdk/build/ $CIRCLE_ARTIFACTS/build
-    - cd android/sdk && bash <(curl -s https://codecov.io/bash)
+    - cp -r android/playground/app/build/outputs $CIRCLE_ARTIFACTS/playground # playground artifacts
+    - cp -r android/sdk/build/reports $CIRCLE_ARTIFACTS/sdk_reports
 
 dependencies:
   cache_directories:

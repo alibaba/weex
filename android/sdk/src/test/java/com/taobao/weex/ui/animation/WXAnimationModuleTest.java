@@ -251,7 +251,7 @@ public class WXAnimationModuleTest {
   public void testStartAnimation() throws Exception {
     module.startAnimation(module.mWXSDKInstance,null,null,null);
 
-    TestComponent comp = new TestComponent(module.mWXSDKInstance,new TestDomObject(),null,false);
+    TestComponent comp = new TestComponent(module.mWXSDKInstance,new TestDomObject(),null);
     module.startAnimation(module.mWXSDKInstance,comp,null,null);
 
     WXAnimationBean animation = new WXAnimationBean();

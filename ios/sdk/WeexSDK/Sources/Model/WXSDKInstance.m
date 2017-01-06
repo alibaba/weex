@@ -20,6 +20,7 @@
 #import "WXAssert.h"
 #import "WXLog.h"
 #import "WXView.h"
+#import "WXRootView.h"
 #import "WXThreadSafeMutableDictionary.h"
 
 NSString *const bundleUrlOptionKey = @"bundleUrl";
@@ -29,8 +30,8 @@ NSTimeInterval JSLibInitTime = 0;
 @implementation WXSDKInstance
 {
     id<WXNetworkProtocol> _networkHandler;
-    
     WXComponentManager *_componentManager;
+    WXRootView *_rootView;
 }
 
 - (void) dealloc
@@ -68,6 +69,11 @@ NSTimeInterval JSLibInitTime = 0;
 
 #pragma mark Public Mehtods
 
+- (UIView *)rootView
+{
+    return _rootView;
+}
+
 - (void)renderWithURL:(NSURL *)url
 {
     [self renderWithURL:url options:nil data:nil];
@@ -82,7 +88,15 @@ NSTimeInterval JSLibInitTime = 0;
     
     _scriptURL = url;
     NSMutableDictionary *newOptions = [options mutableCopy];
-    newOptions[bundleUrlOptionKey] = url.absoluteString;
+    if (!newOptions) {
+        newOptions = [[NSMutableDictionary alloc] init];
+    }
+    if (!newOptions[bundleUrlOptionKey]) {
+        newOptions[bundleUrlOptionKey] = url.absoluteString;
+    }
+    if ([newOptions[bundleUrlOptionKey] isKindOfClass:[NSURL class]]) {
+        newOptions[bundleUrlOptionKey] = ((NSURL*)newOptions[bundleUrlOptionKey]).absoluteString;
+    }
     
     if (!self.pageName || [self.pageName isEqualToString:@""]) {
         self.pageName = [WXUtility urlByDeletingParameters:url].absoluteString ? : @"";
@@ -94,7 +108,7 @@ NSTimeInterval JSLibInitTime = 0;
             NSString *path = [url path];
             NSData *scriptData = [[NSFileManager defaultManager] contentsAtPath:path];
             NSString *script = [[NSString alloc] initWithData:scriptData encoding:NSUTF8StringEncoding];
-            if (!script) {
+            if (!script || script.length <= 0) {
                 NSString *errorDesc = [NSString stringWithFormat:@"File read error at url: %@", url];
                 WXLogError(@"%@", errorDesc);
                 if (weakSelf.onFailed) {
@@ -191,9 +205,10 @@ NSTimeInterval JSLibInitTime = 0;
     
     //TODO WXRootView
     WXPerformBlockOnMainThread(^{
-        self.rootView = [[WXView alloc] initWithFrame:self.frame];
+        _rootView = [[WXRootView alloc] initWithFrame:self.frame];
+        _rootView.instance = self;
         if(self.onCreate) {
-            self.onCreate(self.rootView);
+            self.onCreate(_rootView);
         }
     });
 
@@ -207,8 +222,8 @@ NSTimeInterval JSLibInitTime = 0;
     if (!CGRectEqualToRect(frame, _frame)) {
         _frame = frame;
         WXPerformBlockOnMainThread(^{
-            if (self.rootView) {
-                self.rootView.frame = frame;
+            if (_rootView) {
+                _rootView.frame = frame;
                 WXPerformBlockOnComponentThread(^{
                     [self.componentManager rootViewFrameDidChange:frame];
                 });
@@ -313,10 +328,25 @@ NSTimeInterval JSLibInitTime = 0;
         params = [NSDictionary dictionary];
     }
     NSDictionary * userInfo = @{
-            @"weexInstance":self,
+            @"weexInstance":self.instanceId,
             @"param":params
     };
     [[NSNotificationCenter defaultCenter] postNotificationName:eventName object:self userInfo:userInfo];
+}
+
+- (NSURL *)completeURL:(NSString *)url
+{
+    if (!_scriptURL) {
+        return [NSURL URLWithString:url];
+    }
+    if ([url hasPrefix:@"//"] && [_scriptURL isFileURL]) {
+        return [NSURL URLWithString:url];
+    }
+    if (!url) {
+        return nil;
+    }
+    
+    return [NSURL URLWithString:url relativeToURL:_scriptURL];
 }
 
 #pragma mark Private Methods

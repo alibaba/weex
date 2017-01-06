@@ -205,6 +205,8 @@
 package com.taobao.weex;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Message;
 import android.text.TextUtils;
@@ -217,8 +219,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
 import com.taobao.weex.adapter.IWXUserTrackAdapter;
+import com.taobao.weex.adapter.URIAdapter;
 import com.taobao.weex.bridge.WXBridgeManager;
+import com.taobao.weex.bridge.WXModuleManager;
 import com.taobao.weex.common.Constants;
+import com.taobao.weex.common.Destroyable;
 import com.taobao.weex.common.OnWXScrollListener;
 import com.taobao.weex.common.WXErrorCode;
 import com.taobao.weex.common.WXPerformance;
@@ -231,7 +236,9 @@ import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.WXDomTask;
 import com.taobao.weex.http.WXHttpUtil;
 import com.taobao.weex.ui.component.NestedContainer;
+import com.taobao.weex.ui.component.WXBasicComponentType;
 import com.taobao.weex.ui.component.WXComponent;
+import com.taobao.weex.ui.component.WXComponentFactory;
 import com.taobao.weex.ui.component.WXVContainer;
 import com.taobao.weex.ui.view.WXScrollView;
 import com.taobao.weex.ui.view.WXScrollView.WXScrollViewListener;
@@ -241,18 +248,23 @@ import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXReflectionUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import static com.taobao.weex.http.WXHttpUtil.KEY_USER_AGENT;
 
 
 /**
  * Each instance of WXSDKInstance represents an running weex instance.
  * It can be a pure weex view, or mixed with native view
  */
-public class WXSDKInstance implements IWXActivityStateListener {
+public class WXSDKInstance implements IWXActivityStateListener, View.OnLayoutChangeListener {
 
   //Performance
   public boolean mEnd = false;
@@ -269,6 +281,9 @@ public class WXSDKInstance implements IWXActivityStateListener {
   private NestedInstanceInterceptor mNestedInstanceInterceptor;
   private String mBundleUrl = "";
   private boolean isDestroy=false;
+  private Map<String,Serializable> mUserTrackParams;
+  private boolean isCommit=false;
+  private WXGlobalEventReceiver mGlobalEventReceiver=null;
 
   /**
    * Render strategy.
@@ -277,11 +292,11 @@ public class WXSDKInstance implements IWXActivityStateListener {
   /**
    * Width of weex's root container.
    */
-  private int mGodViewWidth = -1;
+  private int mGodViewWidth = WXViewUtils.DIMENSION_UNSET;
   /**
    * Height of weex's root container.
    */
-  private int mGodViewHeight = -1;
+  private int mGodViewHeight = WXViewUtils.DIMENSION_UNSET;
   /**
    * Render start time
    */
@@ -298,6 +313,8 @@ public class WXSDKInstance implements IWXActivityStateListener {
   private List<OnWXScrollListener> mWXScrollListeners;
 
   private ViewGroup rootView;
+
+  private int mMaxDeepLayer;
 
   public interface OnInstanceVisibleListener{
     void onAppear();
@@ -508,11 +525,11 @@ public class WXSDKInstance implements IWXActivityStateListener {
     IWXHttpAdapter adapter=WXSDKManager.getInstance().getIWXHttpAdapter();
 
     WXRequest wxRequest = new WXRequest();
-    wxRequest.url = url;
+    wxRequest.url = rewriteUri(Uri.parse(url),URIAdapter.BUNDLE).toString();
     if (wxRequest.paramMap == null) {
       wxRequest.paramMap = new HashMap<String, String>();
     }
-    wxRequest.paramMap.put("user-agent", WXHttpUtil.assembleUserAgent(mContext,WXEnvironment.getConfig()));
+    wxRequest.paramMap.put(KEY_USER_AGENT, WXHttpUtil.assembleUserAgent(mContext,WXEnvironment.getConfig()));
     adapter.sendRequest(wxRequest, new WXHttpListener(pageName, options, jsonInitData, width, height, flag, System.currentTimeMillis()));
     mWXHttpAdapter = adapter;
   }
@@ -600,6 +617,14 @@ public class WXSDKInstance implements IWXActivityStateListener {
     return WXSDKManager.getInstance().getIWXImgLoaderAdapter();
   }
 
+  public URIAdapter getURIAdapter(){
+    return WXSDKManager.getInstance().getURIAdapter();
+  }
+
+  public Uri rewriteUri(Uri uri,String type){
+    return getURIAdapter().rewrite(this,type,uri);
+  }
+
   @Deprecated
   public void setImgLoaderAdapter(IWXImgLoaderAdapter adapter) {
   }
@@ -644,6 +669,9 @@ public class WXSDKInstance implements IWXActivityStateListener {
     for (IWXActivityStateListener listener : mActivityStateListeners) {
       listener.onActivityCreate();
     }
+
+    mGlobalEventReceiver=new WXGlobalEventReceiver(this);
+    getContext().registerReceiver(mGlobalEventReceiver,new IntentFilter(WXGlobalEventReceiver.EVENT_ACTION));
   }
 
   @Override
@@ -659,6 +687,17 @@ public class WXSDKInstance implements IWXActivityStateListener {
       listener.onActivityPause();
     }
     onViewDisappear();
+    if(!isCommit){
+      Set<String> componentTypes= WXComponentFactory.getComponentTypesByInstanceId(getInstanceId());
+      if(componentTypes!=null && componentTypes.contains(WXBasicComponentType.SCROLLER)){
+        mWXPerformance.useScroller=1;
+      }
+      mWXPerformance.maxDeepViewLayer=getMaxDeepLayer();
+      if (mUserTrackAdapter != null) {
+        mUserTrackAdapter.commit(mContext, null, IWXUserTrackAdapter.LOAD, mWXPerformance, getUserTrackParams());
+      }
+      isCommit=true;
+    }
   }
 
   public void onViewDisappear(){
@@ -716,6 +755,13 @@ public class WXSDKInstance implements IWXActivityStateListener {
     return false;
   }
 
+  /**
+   * Bridge the  onActivityResult callback of Activity to Instance;
+   * */
+  public void onActivityResult(int requestCode, int resultCode, Intent data){
+    WXModuleManager.onActivityResult(getInstanceId(),requestCode,resultCode,data);
+  }
+
   public void onViewCreated(final WXComponent component) {
     if (mRenderListener != null && mContext != null) {
       runOnUiThread(new Runnable() {
@@ -749,6 +795,8 @@ public class WXSDKInstance implements IWXActivityStateListener {
   }
 
   public void onRenderSuccess(final int width, final int height) {
+    firstScreenRenderFinished();
+
     long time = System.currentTimeMillis() - mRenderStartTime;
     WXLogUtils.renderPerformanceLog("onRenderSuccess", time);
     WXLogUtils.renderPerformanceLog("   invokeCreateInstance",mWXPerformance.communicateTime);
@@ -776,13 +824,14 @@ public class WXSDKInstance implements IWXActivityStateListener {
         public void run() {
           if (mRenderListener != null && mContext != null) {
             mRenderListener.onRenderSuccess(WXSDKInstance.this, width, height);
-
+            if (mUserTrackAdapter != null) {
+              WXPerformance performance=new WXPerformance();
+              performance.errCode=WXErrorCode.WX_SUCCESS.getErrorCode();
+              performance.args=getBundleUrl();
+              mUserTrackAdapter.commit(mContext,null,IWXUserTrackAdapter.JS_BRIDGE,performance,getUserTrackParams());
+            }
             if (WXEnvironment.isApkDebugable()) {
               WXLogUtils.d(WXLogUtils.WEEX_PERF_TAG, mWXPerformance.toString());
-            }
-            if (mUserTrackAdapter != null) {
-              mUserTrackAdapter.commit(mContext, null, IWXUserTrackAdapter.LOAD, mWXPerformance, null);
-              commitUTStab(IWXUserTrackAdapter.JS_BRIDGE,WXErrorCode.WX_SUCCESS);
             }
           }
         }
@@ -840,6 +889,23 @@ public class WXSDKInstance implements IWXActivityStateListener {
   }
 
 
+  @Override
+  public final void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int
+      oldTop, int oldRight, int oldBottom) {
+    if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
+      onLayoutChange(v);
+    }
+  }
+
+  /**
+   * Subclass should override this method to get notifications of layout change of GodView.
+   * @param godView the godView. If you call {@link #getGodCom()}, then call
+   * {@link WXVContainer#getRealView()}, you will get the same result.
+   */
+  public void onLayoutChange(View godView) {
+
+  }
+
   private boolean mCreateInstance =true;
   public void firstScreenCreateInstanceTime(long time) {
     if(mCreateInstance) {
@@ -857,6 +923,9 @@ public class WXSDKInstance implements IWXActivityStateListener {
   }
 
   public void firstScreenRenderFinished() {
+    if(mEnd == true)
+       return;
+
     mEnd = true;
     mWXPerformance.screenRenderTime = System.currentTimeMillis() - mRenderStartTime;
     WXLogUtils.renderPerformanceLog("firstScreenRenderFinished", mWXPerformance.screenRenderTime);
@@ -901,17 +970,17 @@ public class WXSDKInstance implements IWXActivityStateListener {
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
-        WXPerformance performance = null;
+        WXPerformance performance = new WXPerformance();
+        performance.errCode = errorCode.getErrorCode();
+        performance.args = errorCode.getArgs();
         if (errorCode != WXErrorCode.WX_SUCCESS) {
-          performance = new WXPerformance();
-          performance.errCode = errorCode.getErrorCode();
           performance.errMsg = errorCode.getErrorMsg();
           if (WXEnvironment.isApkDebugable()) {
             WXLogUtils.d(performance.toString());
           }
         }
         if( mUserTrackAdapter!= null) {
-          mUserTrackAdapter.commit(mContext, null, type, performance, null);
+          mUserTrackAdapter.commit(mContext, null, type, performance, getUserTrackParams());
         }
       }
     });
@@ -930,6 +999,9 @@ public class WXSDKInstance implements IWXActivityStateListener {
         WXReflectionUtils.setValue(rootView, "mChildrenCount", 0);
 
       }
+      if(rootView instanceof Destroyable){
+        ((Destroyable)rootView).destroy();
+      }
     } catch (Exception e) {
       WXLogUtils.e("WXSDKInstance destroyView Exception: ", e);
     }
@@ -937,8 +1009,15 @@ public class WXSDKInstance implements IWXActivityStateListener {
 
   public synchronized void destroy() {
     WXSDKManager.getInstance().destroyInstance(mInstanceId);
+    WXComponentFactory.removeComponentTypesByInstanceId(getInstanceId());
+
+    if(mGlobalEventReceiver!=null){
+      getContext().unregisterReceiver(mGlobalEventReceiver);
+      mGlobalEventReceiver=null;
+    }
 
     if (mGodCom != null && mGodCom.getHostView() != null) {
+      mGodCom.getRealView().removeOnLayoutChangeListener(this);
       mGodCom.destroy();
       destroyView(mGodCom.getHostView());
       mGodCom = null;
@@ -952,6 +1031,7 @@ public class WXSDKInstance implements IWXActivityStateListener {
     if(mGlobalEvents!=null){
       mGlobalEvents.clear();
     }
+
 
     mNestedInstanceInterceptor = null;
     mUserTrackAdapter = null;
@@ -969,6 +1049,10 @@ public class WXSDKInstance implements IWXActivityStateListener {
 
   public String getBundleUrl() {
     return mBundleUrl;
+  }
+
+  public void setBundleUrl(String url){
+    mBundleUrl = url;
   }
 
   public ViewGroup getRootView() {
@@ -1022,8 +1106,8 @@ public class WXSDKInstance implements IWXActivityStateListener {
     float realWidth = WXViewUtils.getWebPxByWidth(width);
     float realHeight = WXViewUtils.getWebPxByWidth(height);
 
-    View godView = mGodCom.getHostView();
-    if (godView != null) {
+    View godView;
+    if (mGodCom != null && (godView = mGodCom.getHostView()) != null) {
       ViewGroup.LayoutParams layoutParams = godView.getLayoutParams();
       if (layoutParams != null) {
         layoutParams.width = width;
@@ -1104,9 +1188,49 @@ public class WXSDKInstance implements IWXActivityStateListener {
     mGlobalEvents.remove(eventName);
   }
 
-    /**
-     * load bundle js listener
-     */
+  /**
+   * module event
+   * @return
+   */
+  public void fireModuleEvent(String callback,Map<String,Object> params,boolean isOnce){
+    WXSDKManager.getInstance().callback(getInstanceId(),callback,params,isOnce);
+  }
+
+
+  public Map<String, Serializable> getUserTrackParams() {
+    return mUserTrackParams;
+  }
+
+  public void addUserTrackParameter(String key,Serializable value){
+    if(this.mUserTrackParams == null){
+      this.mUserTrackParams = new ConcurrentHashMap<>();
+    }
+    mUserTrackParams.put(key,value);
+  }
+
+  public void clearUserTrackParameters(){
+    if(this.mUserTrackParams != null){
+      this.mUserTrackParams.clear();
+    }
+  }
+
+  public void removeUserTrackParameter(String key){
+    if(this.mUserTrackParams != null){
+      this.mUserTrackParams.remove(key);
+    }
+  }
+
+  public int getMaxDeepLayer() {
+    return mMaxDeepLayer;
+  }
+
+  public void setMaxDeepLayer(int maxDeepLayer) {
+    mMaxDeepLayer = maxDeepLayer;
+  }
+
+  /**
+   * load bundle js listener
+   */
   class WXHttpListener implements IWXHttpAdapter.OnHttpListener {
 
     private String pageName;
