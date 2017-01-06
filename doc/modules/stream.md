@@ -16,7 +16,7 @@ A series of stream api. It provides a network request.
   * `method`*(string)*: the HTTP method `GET` or `POST`.
   * `url`*(string)*: the request url.
   * `headers`*(object)*: the HTTP request headers.
-  * `type`*(string)*: request type, 'json','text' or 'jsonp'(same as 'json' in native implementation)
+  * `type`*(string)*: response type, 'json','text' or 'jsonp'(same as 'json' in native implementation)
   * `body`*(string)*: the HTTP body.
 * `callback`*(function)*: A callback function whose argument is the response object of the request. Callback function will receive a `response` object:   
   * `status`*(number)*：response status code.
