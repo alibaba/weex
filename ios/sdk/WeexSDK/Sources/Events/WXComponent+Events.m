@@ -122,8 +122,7 @@ if ([removeEventName isEqualToString:@#eventName]) {\
 
 - (void)_initEvents:(NSArray *)events
 {
-    NSArray *eventsCopy = [events copy];
-    for (NSString *addEventName in eventsCopy) {
+    for (NSString *addEventName in events) {
         [self _addEventOnMainThread:addEventName];
     }
 }
@@ -235,10 +234,10 @@ if ([removeEventName isEqualToString:@#eventName]) {\
     
     if (!CGRectEqualToRect(self.calculatedFrame, CGRectZero)) {
         CGRect frame = [self.view.superview convertRect:self.calculatedFrame toView:self.view.window];
-        position[@"x"] = @(frame.origin.x);
-        position[@"y"] = @(frame.origin.y);
-        position[@"width"] = @(frame.size.width);
-        position[@"height"] = @(frame.size.height);
+        position[@"x"] = @(frame.origin.x/WXScreenResizeRadio());
+        position[@"y"] = @(frame.origin.y/WXScreenResizeRadio());
+        position[@"width"] = @(frame.size.width/WXScreenResizeRadio());
+        position[@"height"] = @(frame.size.height/WXScreenResizeRadio());
     }
 
     [self fireEvent:@"click" params:@{@"position":position}];

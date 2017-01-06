@@ -17,6 +17,11 @@
         _module = [data valueForKey:@"module"];
         _method = [data valueForKey:@"method"];
         _arguments = [data valueForKey:@"args"];
+        if (data[@"component"]) {
+            self.targets = [NSMutableDictionary new];
+            [self.targets setValue:data[@"component"] forKey:@"component"];
+            [self.targets setValue:data[@"ref"]?:@"" forKey:@"ref"];
+        }
     }
     return self;
 }

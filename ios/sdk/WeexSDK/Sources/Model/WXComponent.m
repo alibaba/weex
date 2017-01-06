@@ -22,6 +22,7 @@
 #import "WXThreadSafeMutableDictionary.h"
 #import "WXThreadSafeMutableArray.h"
 #import "WXTransform.h"
+#import "WXRoundedRect.h"
 #import <pthread/pthread.h>
 
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
@@ -68,8 +69,9 @@
         _styles = styles ? [NSMutableDictionary dictionaryWithDictionary:styles] : [NSMutableDictionary dictionary];
         _attributes = attributes ? [NSMutableDictionary dictionaryWithDictionary:attributes] : [NSMutableDictionary dictionary];
         _events = events ? [NSMutableArray arrayWithArray:events] : [NSMutableArray array];
-        
         _subcomponents = [NSMutableArray array];
+        
+        _absolutePosition = CGPointMake(NAN, NAN);
         
         _isNeedJoinLayoutSystem = YES;
         _isLayoutDirty = YES;
@@ -140,7 +142,7 @@
 {
     NSArray *events;
     pthread_mutex_lock(&_propertyMutex);
-    events = _events;
+    events = [_events copy];
     pthread_mutex_unlock(&_propertyMutex);
     
     return events;
@@ -183,7 +185,7 @@
         if (![self _needsDrawBorder]) {
             _layer.borderColor = _borderTopColor.CGColor;
             _layer.borderWidth = _borderTopWidth;
-            _layer.cornerRadius = _borderTopLeftRadius;
+            [self _resetNativeBorderRadius];
             _layer.opacity = _opacity;
             _view.backgroundColor = _backgroundColor;
         }
@@ -210,26 +212,37 @@
         [self viewDidLoad];
         
         if (_lazyCreateView) {
-            if (self.supercomponent && !((WXComponent *)self.supercomponent)->_lazyCreateView) {
-                NSArray *subcomponents = ((WXComponent *)self.supercomponent).subcomponents;
-                
-                NSInteger index = [subcomponents indexOfObject:self];
-                if (index != NSNotFound) {
-                    [((WXComponent *)self.supercomponent).view insertSubview:_view atIndex:index];
-                }
-            }
-            
-            NSArray *subcomponents = self.subcomponents;
-            for (int i = 0; i < subcomponents.count; i++) {
-                WXComponent *subcomponent = subcomponents[i];
-                [self insertSubview:subcomponent atIndex:i];
-            }
+            [self _buildViewHierachyLazily];
         }
         
         [self _handleFirstScreenTime];
         
         return _view;
     }
+}
+
+- (void)_buildViewHierachyLazily
+{
+    if (self.supercomponent && !((WXComponent *)self.supercomponent)->_lazyCreateView) {
+        NSArray *subcomponents = ((WXComponent *)self.supercomponent).subcomponents;
+        
+        NSInteger index = [subcomponents indexOfObject:self];
+        if (index != NSNotFound) {
+            [(WXComponent *)self.supercomponent insertSubview:self atIndex:index];
+        }
+    }
+    
+    NSArray *subcomponents = self.subcomponents;
+    for (int i = 0; i < subcomponents.count; i++) {
+        WXComponent *subcomponent = subcomponents[i];
+        [self insertSubview:subcomponent atIndex:i];
+    }
+}
+
+- (void)_resetNativeBorderRadius
+{
+    WXRoundedRect *borderRect = [[WXRoundedRect alloc] initWithRect:_calculatedFrame topLeft:_borderTopRightRadius topRight:_borderTopRightRadius bottomLeft:_borderBottomLeftRadius bottomRight:_borderBottomRightRadius];
+    _layer.cornerRadius = borderRect.radii.topLeft;
 }
 
 - (void)_handleFirstScreenTime
@@ -343,12 +356,13 @@
 
 #pragma mark Updating
 
-- (void)_updateStylesOnComponentThread:(NSDictionary *)styles
+- (void)_updateStylesOnComponentThread:(NSDictionary *)styles resetStyles:(NSMutableArray *)resetStyles
 {
     pthread_mutex_lock(&_propertyMutex);
     [_styles addEntriesFromDictionary:styles];
     pthread_mutex_unlock(&_propertyMutex);
     [self _updateCSSNodeStyles:styles];
+    [self _resetCSSNodeStyles:resetStyles];
 }
 
 - (void)_updateAttributesOnComponentThread:(NSDictionary *)attributes
@@ -372,14 +386,16 @@
     pthread_mutex_unlock(&_propertyMutex);
 }
 
-- (void)_updateStylesOnMainThread:(NSDictionary *)styles
+- (void)_updateStylesOnMainThread:(NSDictionary *)styles resetStyles:(NSMutableArray *)resetStyles
 {
     WXAssertMainThread();
     
     [self _updateViewStyles:styles];
+    [self _resetStyles:resetStyles];
     [self _handleBorders:styles isUpdating:YES];
     
     [self updateStyles:styles];
+    [self resetStyles:resetStyles];
 }
 
 - (void)_updateAttributesOnMainThread:(NSDictionary *)attributes
@@ -397,6 +413,12 @@
 }
 
 - (void)updateAttributes:(NSDictionary *)attributes
+{
+    WXAssertMainThread();
+}
+
+#pragma mark Reset
+- (void)resetStyles:(NSArray *)styles
 {
     WXAssertMainThread();
 }

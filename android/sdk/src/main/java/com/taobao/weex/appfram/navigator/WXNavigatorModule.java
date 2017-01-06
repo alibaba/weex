@@ -111,22 +111,26 @@
 package com.taobao.weex.appfram.navigator;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.bridge.WXBridgeManager;
+import com.taobao.weex.common.Constants;
 import com.taobao.weex.common.WXModule;
 import com.taobao.weex.common.WXModuleAnno;
 import com.taobao.weex.utils.WXLogUtils;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class WXNavigatorModule extends WXModule {
 
     public static final String MSG_SUCCESS = "WX_SUCCESS";
-    public static final String MSG_FAILED = "MSG_FAILED";
+    public static final String MSG_FAILED = "WX_FAILED";
     private final static String INSTANCE_ID = "instanceId";
     private final static String TAG = "Navigator";
     private final static String WEEX = "com.taobao.android.intent.category.WEEX";
@@ -295,5 +299,55 @@ public class WXNavigatorModule extends WXModule {
 
         WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId,
                 MSG_FAILED);
+    }
+
+    @WXModuleAnno
+    public void setNavBarHidden(String param, final String callback) {
+        String message = MSG_FAILED;
+        try {
+            JSONObject jsObj = new JSONObject(param);
+            int visibility = jsObj.getInt(Constants.Name.NAV_BAR_VISIBILITY);
+            boolean success = changeVisibilityOfActionBar(mWXSDKInstance.getContext(), visibility);
+            if (success) {
+                message = MSG_SUCCESS;
+            }
+        } catch (JSONException e) {
+            WXLogUtils.e(TAG, WXLogUtils.getStackTrace(e));
+        }
+        WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callback, message);
+    }
+
+    private boolean changeVisibilityOfActionBar(Context context, int visibility) {
+        boolean result = false;
+        if (mWXSDKInstance.getContext() instanceof AppCompatActivity) {
+            android.support.v7.app.ActionBar actionbar = ((AppCompatActivity) mWXSDKInstance.getContext()).getSupportActionBar();
+            if (actionbar != null) {
+                switch (visibility) {
+                    case Constants.Value.NAV_BAR_HIDDEN:
+                        actionbar.hide();
+                        result = true;
+                        break;
+                    case Constants.Value.NAV_BAR_SHOWN:
+                        actionbar.show();
+                        result = true;
+                        break;
+                }
+            }
+        } else if (mWXSDKInstance.getContext() instanceof Activity) {
+            android.app.ActionBar actionbar = ((Activity) mWXSDKInstance.getContext()).getActionBar();
+            if (actionbar != null) {
+                switch (visibility) {
+                    case Constants.Value.NAV_BAR_HIDDEN:
+                        actionbar.hide();
+                        result = true;
+                        break;
+                    case Constants.Value.NAV_BAR_SHOWN:
+                        actionbar.show();
+                        result = true;
+                        break;
+                }
+            }
+        }
+        return result;
     }
 }

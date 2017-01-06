@@ -9,6 +9,7 @@
 #ifdef __OBJC__
 
 #import "WXUtility.h"
+#import "WXURLRewriteProtocol.h"
 #import "WXType.h"
 #import "WXScrollerProtocol.h"
 #import "WXScrollerComponent.h"
@@ -29,6 +30,7 @@
 #import "WXDefine.h"
 #import "WXDebugTool.h"
 #import "WXConvert.h"
+#import "WXComponentManager.h"
 #import "WXComponent.h"
 #import "WXBridgeProtocol.h"
 #import "WXBridgeManager.h"

@@ -84,18 +84,24 @@ static WXThreadSafeMutableDictionary *globalPerformanceDict;
     
     commitDict[BIZTYPE] = instance.bizType ?: @"";
     commitDict[PAGENAME] = instance.pageName ?: @"";
+    
     commitDict[WXSDKVERSION] = WX_SDK_VERSION;
     commitDict[JSLIBVERSION] = [WXAppConfiguration JSFrameworkVersion];
-#if DEBUG
+    if (instance.userInfo[@"weex_bundlejs_connectionType"]) {
+        commitDict[@"connectionType"] = instance.userInfo[@"weex_bundlejs_connectionType"];
+    }
+    if (instance.userInfo[@"weex_bundlejs_requestType"]) {
+        commitDict[@"requestType"] = instance.userInfo[@"weex_bundlejs_requestType"];
+    }
+    if (instance.userInfo[WXCUSTOMMONITORINFO]) {
+        commitDict[WXCUSTOMMONITORINFO] = instance.userInfo[WXCUSTOMMONITORINFO];
+    }
     WXPerformBlockOnComponentThread(^{
         commitDict[@"componentCount"] = @([instance numberOfComponents]);
         WXPerformBlockOnMainThread(^{
-#endif
     [self commitPerformanceWithDict:commitDict instance:instance];
-#if DEBUG
         });
     });
-#endif
 }
 
 + (void)commitPerformanceWithDict:(NSMutableDictionary *)commitDict instance:(WXSDKInstance *)instance

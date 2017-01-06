@@ -204,12 +204,14 @@
  */
 package com.taobao.weex.http;
 
+import android.net.Uri;
 import android.text.TextUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.adapter.IWXHttpAdapter;
+import com.taobao.weex.adapter.URIAdapter;
 import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.common.*;
@@ -223,6 +225,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.taobao.weex.http.WXHttpUtil.KEY_USER_AGENT;
 
 public class WXStreamModule extends WXModule {
 
@@ -360,9 +364,15 @@ public class WXStreamModule extends WXModule {
               resp.put("data", null);
             } else {
               String respData = readAsString(response.originalData,
-                headers!=null?getHeader(headers,"Content-Type"):""
+                      headers != null ? getHeader(headers, "Content-Type") : ""
               );
-              resp.put("data",parseJson(respData,options.getType()));
+              try {
+                resp.put("data", parseJson(respData, options.getType()));
+              } catch (JSONException exception) {
+                WXLogUtils.e("", exception);
+                resp.put("ok", false);
+                resp.put("data","{'err':'Data parse failed!'}");
+              }
             }
             resp.put(STATUS_TEXT, Status.getStatusText(response.statusCode));
           }
@@ -373,7 +383,7 @@ public class WXStreamModule extends WXModule {
     }, progressCallback);
   }
 
-  Object parseJson(String data,Options.Type type){
+  Object parseJson(String data,Options.Type type) throws JSONException{
     if( type == Options.Type.json){
       return JSONObject.parse(data);
     }else if( type == Options.Type.jsonp){
@@ -424,20 +434,25 @@ public class WXStreamModule extends WXModule {
 
 
   private void extractHeaders(JSONObject headers, Options.Builder builder){
+    //set user-agent
+    String UA = WXHttpUtil.assembleUserAgent(WXEnvironment.getApplication(),WXEnvironment.getConfig());
     if(headers != null){
-      Iterator<String> it = headers.keySet().iterator();
-      while(it.hasNext()){
-        String key = it.next();
-        builder.putHeader(key,headers.getString(key));
+      for (String key : headers.keySet()) {
+        if (key.equals(KEY_USER_AGENT)) {
+          UA = headers.getString(key);
+          continue;
+        }
+        builder.putHeader(key, headers.getString(key));
       }
     }
+    builder.putHeader(KEY_USER_AGENT,UA);
   }
 
 
   private void sendRequest(Options options,ResponseCallback callback,JSCallback progressCallback){
     WXRequest wxRequest = new WXRequest();
     wxRequest.method = options.getMethod();
-    wxRequest.url = options.getUrl();
+    wxRequest.url = mWXSDKInstance.rewriteUri(Uri.parse(options.getUrl()), URIAdapter.REQUEST).toString();
     wxRequest.body = options.getBody();
     wxRequest.timeoutMs = options.getTimeout();
 

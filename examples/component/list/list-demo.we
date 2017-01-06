@@ -3,7 +3,7 @@
     <cell class="cell" onclick="oncellclick" rownumber={{id}} repeat="{{shopList}}" scope="{{scopeValue}}" append="tree"
           composite={{composite}}>
       <div class="shopDiv">
-        <div class="shopHeader" style="flex-direction:row;">
+        <div class="shopHeader" style="flex-direction:row;overflow:hidden;">
           <div style="flex:2;flex-direction:row;">
             <div>
               <image style="width:60;height:60;" src="{{PersonPhoto}}"></image>

@@ -209,6 +209,7 @@ import android.support.v7.widget.OrientationHelper;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 
 import com.taobao.weex.common.WXThread;
 import com.taobao.weex.ui.component.WXComponent;
@@ -308,12 +309,25 @@ public class BounceRecyclerView extends BaseBounceView<WXRecyclerView> {
   private void showSticky() {
     WXCell headComponent = headComponentStack.pop();
     headComponentStack.push(headComponent);
-    View headerView = headComponent.getRealView();
+    final View headerView = headComponent.getRealView();
     if (headerView == null)
       return;
     headerViewStack.push(headerView);
     headComponent.removeSticky();
-    ((ViewGroup) getParent()).addView(headerView);
+
+    final ViewGroup parent = (ViewGroup) getParent();
+    if(parent != null){
+      parent.post(WXThread.secure(new Runnable() {
+        @Override
+        public void run() {
+          ViewGroup existedParent;
+          if((existedParent = (ViewGroup)headerView.getParent())!= null){
+            existedParent.removeView(headerView);
+          }
+          parent.addView(headerView);
+        }
+      }));
+    }
   }
 
   /**
@@ -321,14 +335,23 @@ public class BounceRecyclerView extends BaseBounceView<WXRecyclerView> {
    * @param component
    */
   private void removeSticky(WXComponent component) {
-    WXCell headComponent = headComponentStack.pop();
+    final WXCell headComponent = headComponentStack.pop();
     if (!component.getRef().equals(headComponent.getRef())) {
       headComponentStack.push(headComponent);
       return;
     }
-    View headerView = headerViewStack.pop();
-    ((ViewGroup) getParent()).removeView(headerView);
-    headComponent.recoverySticky();
+    final View headerView = headerViewStack.pop();
+    final ViewGroup parent = (ViewGroup) getParent();
+    if(parent != null){
+      parent.post(WXThread.secure(new Runnable() {
+        @Override
+        public void run() {
+          parent.removeView(headerView);
+          headComponent.recoverySticky();
+        }
+      }));
+    }
+
   }
 
   /**

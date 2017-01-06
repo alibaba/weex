@@ -214,6 +214,8 @@ import android.widget.FrameLayout;
 
 import com.taobao.weex.common.Constants;
 import com.taobao.weex.ui.component.WXComponent;
+import com.taobao.weex.ui.view.WXLoadingLayout;
+import com.taobao.weex.ui.view.WXRefreshLayout;
 import com.taobao.weex.ui.view.refresh.core.WXRefreshView;
 import com.taobao.weex.ui.view.refresh.core.WXSwipeLayout;
 import com.taobao.weex.utils.WXResourceUtils;
@@ -355,6 +357,25 @@ public abstract class BaseBounceView<T extends View> extends FrameLayout {
         if (swipeLayout != null)
             swipeLayout.setPullLoadEnable(enable);
     }
+
+  @Override
+  public void removeView(View view) {
+    if (view instanceof WXLoadingLayout) {
+      finishPullLoad();
+      setLoadmoreEnable(false);
+      if (swipeLayout != null) {
+        swipeLayout.removeView(swipeLayout.getFooterView());
+      }
+    } else if (view instanceof WXRefreshLayout) {
+      finishPullRefresh();
+      setRefreshEnable(false);
+      if (swipeLayout != null) {
+        swipeLayout.removeView(swipeLayout.getHeaderView());
+      }
+    } else {
+      super.removeView(view);
+    }
+  }
 
     public WXSwipeLayout getSwipeLayout() {
         return swipeLayout;

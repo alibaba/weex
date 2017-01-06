@@ -40,44 +40,75 @@
 /******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ 0:
+/***/ function(module, exports, __webpack_require__) {
+
+	var __weex_template__ = __webpack_require__(305)
+	var __weex_style__ = __webpack_require__(306)
+
+	__weex_define__('@weex-component/695862caffb746fa67bb70cbd1bb819e', [], function(__weex_require__, __weex_exports__, __weex_module__) {
+
+	    __weex_module__.exports.template = __weex_template__
+
+	    __weex_module__.exports.style = __weex_style__
+
+	})
+
+	__weex_bootstrap__('@weex-component/695862caffb746fa67bb70cbd1bb819e',undefined,undefined)
+
+/***/ },
+
+/***/ 305:
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/fca21923ec1c1c0065eb4383d4822356", [], function(__weex_require__, __weex_exports__, __weex_module__){
-
-	;
-	  __weex_module__.exports = {
-	    data: function () {return {
-	      img: '//gw.alicdn.com/tps/i2/TB1DpsmMpXXXXabaXXX20ySQVXX-512-512.png_400x400.jpg'
-	    }}
-	  }
-
-	;__weex_module__.exports.template = __weex_module__.exports.template || {}
-	;Object.assign(__weex_module__.exports.template, {
-	  "type": "image",
+	module.exports = {
+	  "type": "div",
 	  "classList": [
-	    "img"
+	    "wrapper"
 	  ],
-	  "style": {
-	    "width": 400,
-	    "height": 400
+	  "children": [
+	    {
+	      "type": "image",
+	      "attr": {
+	        "src": "http://alibaba.github.io/weex/img/weex_logo_blue@3x.png"
+	      },
+	      "classList": [
+	        "logo"
+	      ]
+	    },
+	    {
+	      "type": "text",
+	      "classList": [
+	        "title"
+	      ],
+	      "attr": {
+	        "value": "Hello World"
+	      }
+	    }
+	  ]
+	}
+
+/***/ },
+
+/***/ 306:
+/***/ function(module, exports) {
+
+	module.exports = {
+	  "wrapper": {
+	    "alignItems": "center",
+	    "marginTop": 120
 	  },
-	  "attr": {
-	    "src": function () {return this.img},
-	    "placeHolder": "hehe"
+	  "title": {
+	    "fontSize": 48
+	  },
+	  "logo": {
+	    "width": 360,
+	    "height": 82
 	  }
-	})
-	;__weex_module__.exports.style = __weex_module__.exports.style || {}
-	;Object.assign(__weex_module__.exports.style, {
-	  "img": {
-	    "marginBottom": 20
-	  }
-	})
-	})
-	;__weex_bootstrap__("@weex-component/fca21923ec1c1c0065eb4383d4822356", {
-	  "transformerVersion": "0.3.1"
-	},undefined)
+	}
 
 /***/ }
-/******/ ]);
+
+/******/ });

@@ -30,5 +30,11 @@ public class WXEventModule extends WXModule {
     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
     intent.addCategory(WEEX_CATEGORY);
     mWXSDKInstance.getContext().startActivity(intent);
+
+    String callbacks=getEventCallback("event");
+    if(callbacks!=null){
+      mWXSDKInstance.fireModuleEvent(callbacks,null,isOnce(callbacks));
+    }
+
   }
 }

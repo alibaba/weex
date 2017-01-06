@@ -49,20 +49,13 @@
     [self sendHttp:postOption];
 }
 
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
-}
-
 - (void)sendHttp:(NSDictionary*)options {
     __block id callbackResult = nil;
     [_streamModule sendHttp:options callback:^(id result) {
         callbackResult = result;
         [_exp fulfill];
     }];
-    [self waitForExpectationsWithTimeout:10 handler:^(NSError * error) {
+    [self waitForExpectationsWithTimeout:20 handler:^(NSError * error) {
         XCTAssertNotNil(callbackResult);
     }];
     

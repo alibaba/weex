@@ -45,127 +45,33 @@
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/29432e9104bfbc477db30914749dfb5b", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(17);
-	__webpack_require__(18);
+	__webpack_require__(234)
+	__webpack_require__(237)
+	var __weex_template__ = __webpack_require__(247)
+	var __weex_style__ = __webpack_require__(248)
+	var __weex_script__ = __webpack_require__(249)
 
-	;
-	  __weex_module__.exports = {
-	    data: function () {return {
-	      NUMBER_750: 750,
-	      NUMBER_250: 250,
-	      NUMBER_220: 220,
-	      NUMBER_262: 262,
-	      NUMBER_375: 375
-	    }},
-	    methods: {
-	      ready: function () {
-	        var self = this;
-	        self._randomStarBanner();
-	      },
-	      _randomStarBanner: function () {
-	        var self = this;
-	        if (!self.ds||!self.ds.firstStarBannerItems||!self.ds.secondStarBannerItems||!self.ds.thirdStarBannerItems) return;
-	        var starBanners = [];
-	        starBanners.push(self._app.Util.randomItemFromArr(self.ds.firstStarBannerItems));
-	        starBanners.push(self._app.Util.randomItemFromArr(self.ds.secondStarBannerItems));
-	        starBanners.push(self._app.Util.randomItemFromArr(self.ds.thirdStarBannerItems));
-	        self.ds.starBanners = starBanners;
-	      }
-	    }
-	  }
+	__weex_define__('@weex-component/3a0fc3e27dd7bb14f409fca1ac4baac7', [], function(__weex_require__, __weex_exports__, __weex_module__) {
 
-	;__weex_module__.exports.template={
-	  "type": "container",
-	  "shown": function () {return !this.ds.isHide},
-	  "children": [
-	    {
-	      "type": "image",
-	      "shown": function () {return this.ds.floorTitle},
-	      "classList": [
-	        "title"
-	      ],
-	      "attr": {
-	        "src": function () {return this.ds.floorTitle}
-	      }
-	    },
-	    {
-	      "type": "banner",
-	      "attr": {
-	        "width": function () {return this.NUMBER_750},
-	        "height": function () {return this.NUMBER_262},
-	        "src": function () {return this.ds.bigBannerImg},
-	        "href": function () {return this.ds.bigBannerUrl}
-	      }
-	    },
-	    {
-	      "type": "banners",
-	      "attr": {
-	        "ds": function () {return this.ds.smallBannerItems},
-	        "width": function () {return this.NUMBER_375},
-	        "height": function () {return this.NUMBER_262},
-	        "direction": "row"
-	      }
-	    },
-	    {
-	      "type": "container",
-	      "shown": function () {return !this.ds.isHideStarBanner},
-	      "children": [
-	        {
-	          "type": "banners",
-	          "attr": {
-	            "ds": function () {return this.ds.starBanners},
-	            "width": function () {return this.NUMBER_250},
-	            "height": function () {return this.NUMBER_220},
-	            "direction": "row"
-	          }
-	        }
-	      ]
+	    __weex_script__(__weex_module__, __weex_exports__, __weex_require__)
+	    if (__weex_exports__.__esModule && __weex_exports__.default) {
+	      __weex_module__.exports = __weex_exports__.default
 	    }
-	  ]
-	}
-	;__weex_module__.exports.style={
-	  "title": {
-	    "width": 750,
-	    "height": 100
-	  }
-	}
+
+	    __weex_module__.exports.template = __weex_template__
+
+	    __weex_module__.exports.style = __weex_style__
+
 	})
-	;__weex_bootstrap__("@weex-component/29432e9104bfbc477db30914749dfb5b", {
-	  "transformerVersion": "0.3.1"
-	},undefined)
+
+	__weex_bootstrap__('@weex-component/3a0fc3e27dd7bb14f409fca1ac4baac7',undefined,undefined)
 
 /***/ },
 
-/***/ 17:
+/***/ 232:
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/banner", [], function(__weex_require__, __weex_exports__, __weex_module__){
-
-	;
-	  __weex_module__.exports = {
-	    data: function () {return {
-	        quality: 'normal',
-	        width: 0,
-	        height: 0,
-	        src: '',
-	        href: '',
-	        spmc:0,
-	        spmd:0
-	    }},
-	    methods: {
-	      ready: function () {
-	      },
-	      _clickHandler: function () {
-	        this.$call('modal', 'toast', {
-	          message: 'click',
-	          duration: 1
-	        });
-	      }
-	    }
-	  };
-
-	;__weex_module__.exports.template={
+	module.exports = {
 	  "type": "image",
 	  "style": {
 	    "width": function () {return this.width},
@@ -179,41 +85,63 @@
 	    "click": "_clickHandler"
 	  }
 	}
-	})
 
 /***/ },
 
-/***/ 18:
+/***/ 233:
+/***/ function(module, exports) {
+
+	module.exports = function(module, exports, __weex_require__){'use strict';
+
+	module.exports = {
+	  data: function () {return {
+	    quality: 'normal',
+	    width: 0,
+	    height: 0,
+	    src: '',
+	    href: '',
+	    spmc: 0,
+	    spmd: 0
+	  }},
+	  methods: {
+	    ready: function ready() {},
+	    _clickHandler: function _clickHandler() {
+	      this.$call('modal', 'toast', {
+	        message: 'click',
+	        duration: 1
+	      });
+	    }
+	  }
+	};}
+	/* generated by weex-loader */
+
+
+/***/ },
+
+/***/ 234:
 /***/ function(module, exports, __webpack_require__) {
 
-	;__weex_define__("@weex-component/banners", [], function(__weex_require__, __weex_exports__, __weex_module__){
-	__webpack_require__(17);
+	var __weex_template__ = __webpack_require__(232)
+	var __weex_script__ = __webpack_require__(233)
 
-	;
-	  __weex_module__.exports = {
-	    data: function () {return {
-	      space: 0,
-	      width: 0,
-	      height: 0,
-	      spmc:0,
-	      spmdprefix:'',
-	      ds: []
-	    }},
-	    methods: {
-	      ready: function () {
-	        var self = this;
-	        var ds = self.ds;
-	        var length = ds.length;
-	        for (var i = 0; i < length; i++) {
-	          var item = ds[i];
-	          item.index = i;
-	          item.space = (i % length === 0) ? 0 : self.space;
-	        }
-	      }
+	__weex_define__('@weex-component/banner', [], function(__weex_require__, __weex_exports__, __weex_module__) {
+
+	    __weex_script__(__weex_module__, __weex_exports__, __weex_require__)
+	    if (__weex_exports__.__esModule && __weex_exports__.default) {
+	      __weex_module__.exports = __weex_exports__.default
 	    }
-	  };
 
-	;__weex_module__.exports.template={
+	    __weex_module__.exports.template = __weex_template__
+
+	})
+
+
+/***/ },
+
+/***/ 235:
+/***/ function(module, exports) {
+
+	module.exports = {
 	  "type": "container",
 	  "children": [
 	    {
@@ -273,7 +201,160 @@
 	    }
 	  ]
 	}
+
+/***/ },
+
+/***/ 236:
+/***/ function(module, exports) {
+
+	module.exports = function(module, exports, __weex_require__){'use strict';
+
+	module.exports = {
+	  data: function () {return {
+	    space: 0,
+	    width: 0,
+	    height: 0,
+	    spmc: 0,
+	    spmdprefix: '',
+	    ds: []
+	  }},
+	  methods: {
+	    ready: function ready() {
+	      var self = this;
+	      var ds = self.ds;
+	      var length = ds.length;
+	      for (var i = 0; i < length; i++) {
+	        var item = ds[i];
+	        item.index = i;
+	        item.space = i % length === 0 ? 0 : self.space;
+	      }
+	    }
+	  }
+	};}
+	/* generated by weex-loader */
+
+
+/***/ },
+
+/***/ 237:
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(234)
+	var __weex_template__ = __webpack_require__(235)
+	var __weex_script__ = __webpack_require__(236)
+
+	__weex_define__('@weex-component/banners', [], function(__weex_require__, __weex_exports__, __weex_module__) {
+
+	    __weex_script__(__weex_module__, __weex_exports__, __weex_require__)
+	    if (__weex_exports__.__esModule && __weex_exports__.default) {
+	      __weex_module__.exports = __weex_exports__.default
+	    }
+
+	    __weex_module__.exports.template = __weex_template__
+
 	})
+
+
+/***/ },
+
+/***/ 247:
+/***/ function(module, exports) {
+
+	module.exports = {
+	  "type": "container",
+	  "shown": function () {return !this.ds.isHide},
+	  "children": [
+	    {
+	      "type": "image",
+	      "shown": function () {return this.ds.floorTitle},
+	      "classList": [
+	        "title"
+	      ],
+	      "attr": {
+	        "src": function () {return this.ds.floorTitle}
+	      }
+	    },
+	    {
+	      "type": "banner",
+	      "attr": {
+	        "width": function () {return this.NUMBER_750},
+	        "height": function () {return this.NUMBER_262},
+	        "src": function () {return this.ds.bigBannerImg},
+	        "href": function () {return this.ds.bigBannerUrl}
+	      }
+	    },
+	    {
+	      "type": "banners",
+	      "attr": {
+	        "ds": function () {return this.ds.smallBannerItems},
+	        "width": function () {return this.NUMBER_375},
+	        "height": function () {return this.NUMBER_262},
+	        "direction": "row"
+	      }
+	    },
+	    {
+	      "type": "container",
+	      "shown": function () {return !this.ds.isHideStarBanner},
+	      "children": [
+	        {
+	          "type": "banners",
+	          "attr": {
+	            "ds": function () {return this.ds.starBanners},
+	            "width": function () {return this.NUMBER_250},
+	            "height": function () {return this.NUMBER_220},
+	            "direction": "row"
+	          }
+	        }
+	      ]
+	    }
+	  ]
+	}
+
+/***/ },
+
+/***/ 248:
+/***/ function(module, exports) {
+
+	module.exports = {
+	  "title": {
+	    "width": 750,
+	    "height": 100
+	  }
+	}
+
+/***/ },
+
+/***/ 249:
+/***/ function(module, exports) {
+
+	module.exports = function(module, exports, __weex_require__){"use strict";
+
+	module.exports = {
+	  data: function () {return {
+	    NUMBER_750: 750,
+	    NUMBER_250: 250,
+	    NUMBER_220: 220,
+	    NUMBER_262: 262,
+	    NUMBER_375: 375
+	  }},
+	  methods: {
+	    ready: function ready() {
+	      var self = this;
+	      self._randomStarBanner();
+	    },
+	    _randomStarBanner: function _randomStarBanner() {
+	      var self = this;
+	      if (!self.ds || !self.ds.firstStarBannerItems || !self.ds.secondStarBannerItems || !self.ds.thirdStarBannerItems) return;
+	      var starBanners = [];
+	      starBanners.push(self._app.Util.randomItemFromArr(self.ds.firstStarBannerItems));
+	      starBanners.push(self._app.Util.randomItemFromArr(self.ds.secondStarBannerItems));
+	      starBanners.push(self._app.Util.randomItemFromArr(self.ds.thirdStarBannerItems));
+	      self.ds.starBanners = starBanners;
+	    }
+	  }
+	};}
+	/* generated by weex-loader */
+
 
 /***/ }
 

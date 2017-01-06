@@ -509,13 +509,19 @@ class WXDomStatement {
       style.put(Constants.Name.BACKGROUND_COLOR, "#ffffff");
     }
     //If there is height or width in JS, then that value will override value here.
-    if ( !domObject.getStyles().containsKey(Constants.Name.WIDTH)) {
-      style.put(Constants.Name.WIDTH, WXViewUtils.getWebPxByWidth(WXViewUtils.getWeexWidth(mInstanceId)));
-      domObject.setModifyWidth(true);
+    if (!domObject.getStyles().containsKey(Constants.Name.WIDTH)) {
+      int weexWidth = WXViewUtils.getWeexWidth(mInstanceId, false);
+      if (weexWidth != WXViewUtils.DIMENSION_UNSET) {
+        style.put(Constants.Name.WIDTH, WXViewUtils.getWebPxByWidth(weexWidth));
+        domObject.setModifyWidth(true);
+      }
     }
-    if ( !domObject.getStyles().containsKey(Constants.Name.HEIGHT)) {
-      style.put(Constants.Name.HEIGHT, WXViewUtils.getWebPxByWidth(WXViewUtils.getWeexHeight(mInstanceId)));
-      domObject.setModifyHeight(true);
+    if (!domObject.getStyles().containsKey(Constants.Name.HEIGHT)) {
+      int weexHeight = WXViewUtils.getWeexHeight(mInstanceId, false);
+      if (weexHeight != WXViewUtils.DIMENSION_UNSET) {
+        style.put(Constants.Name.HEIGHT, WXViewUtils.getWebPxByWidth(weexHeight));
+        domObject.setModifyHeight(true);
+      }
     }
     WXDomObject.prepareRoot(domObject);
     domObject.updateStyle(style);
@@ -548,7 +554,7 @@ class WXDomStatement {
           return "createBody";
         }
       });
-      animations.add(new Pair<String, Map<String, Object>>(domObject.getRef(),domObject.getStyles()));
+      addAnimationForDomTree(domObject);
       mDirty = true;
 
       if (instance != null) {
@@ -599,6 +605,18 @@ class WXDomStatement {
         updateDomObj(container.getChild(i));
       }
     }
+  }
+
+  void invokeMethod(String ref, String method, JSONArray args){
+    if(mDestroy){
+      return;
+    }
+    WXComponent comp = mWXRenderManager.getWXComponent(mInstanceId, ref);
+    if(comp == null){
+      WXLogUtils.e("DomStatement","target component not found.");
+      return;
+    }
+    comp.invoke(method,args);
   }
 
   /**
@@ -672,7 +690,7 @@ class WXDomStatement {
         return "AddDom";
       }
     });
-    animations.add(new Pair<String, Map<String, Object>>(domObject.getRef(),domObject.getStyles()));
+    addAnimationForDomTree(domObject);
     mDirty = true;
 
     if (instance != null) {
@@ -716,7 +734,7 @@ class WXDomStatement {
    * @param parentRef Reference of the new parent DOM node
    * @param index the index of the dom to be inserted in the new parent.
    */
-  void moveDom(final String ref, final String parentRef, final int index) {
+  void moveDom(final String ref, final String parentRef, int index) {
     if (mDestroy) {
       return;
     }
@@ -730,17 +748,23 @@ class WXDomStatement {
       }
       return;
     }
-    if(domObject.parent.equals(parentObject)){
-      return ;
+    if (domObject.parent.equals(parentObject)) {
+      if(parentObject.index(domObject) == index) {
+        return;
+      } else if(domObject.parent.index(domObject)<index){
+        index = index -1;
+      }
     }
+
+    final int newIndex = index;
     domObject.parent.remove(domObject);
-    parentObject.add(domObject, index);
+    parentObject.add(domObject, newIndex);
 
     mNormalTasks.add(new IWXRenderTask() {
 
       @Override
       public void execute() {
-        mWXRenderManager.moveComponent(mInstanceId, ref, parentRef, index);
+        mWXRenderManager.moveComponent(mInstanceId, ref, parentRef, newIndex);
       }
 
       @Override
@@ -1163,7 +1187,6 @@ class WXDomStatement {
       }
     });
 
-    mDirty = true;
     WXSDKInstance instance = WXSDKManager.getInstance().getSDKInstance(mInstanceId);
     if (instance != null) {
       instance.commitUTStab(IWXUserTrackAdapter.DOM_MODULE, WXErrorCode.WX_SUCCESS);
@@ -1192,6 +1215,14 @@ class WXDomStatement {
           return "startAnimationByCall";
         }
       });
+      mDirty=true;
+    }
+  }
+
+  private void addAnimationForDomTree(WXDomObject domObject){
+    animations.add(new Pair<String, Map<String, Object>>(domObject.getRef(),domObject.getStyles()));
+    for(int i=0;i<domObject.childCount();i++){
+      addAnimationForDomTree(domObject.getChild(i));
     }
   }
 
@@ -1282,6 +1313,30 @@ class WXDomStatement {
       child = dom.getChild(i);
       transformStyle(child, isAdd);
     }
+  }
+
+  public void getComponentSize(final String ref, final String callback) {
+    if (mDestroy) {
+      Map<String, Object> options = new HashMap<>();
+      options.put("result", false);
+      options.put("errMsg", "Component does not exist");
+      WXSDKManager.getInstance().callback(mInstanceId, callback, options);
+      return;
+    }
+
+    mNormalTasks.add(new IWXRenderTask() {
+
+      @Override
+      public void execute() {
+        mWXRenderManager.getComponentSize(mInstanceId, ref, callback);
+      }
+
+      @Override
+      public String toString() {
+        return "getComponentSize";
+      }
+    });
+    mDirty=true;
   }
 
   static class AddDomInfo {

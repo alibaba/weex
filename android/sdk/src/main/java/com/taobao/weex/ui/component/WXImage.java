@@ -205,15 +205,18 @@
 package com.taobao.weex.ui.component;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.content.res.ResourcesCompat;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
 import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
+import com.taobao.weex.adapter.URIAdapter;
 import com.taobao.weex.common.Component;
 import com.taobao.weex.common.Constants;
 import com.taobao.weex.common.WXImageSharpen;
@@ -221,10 +224,12 @@ import com.taobao.weex.common.WXImageStrategy;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.ComponentCreator;
 import com.taobao.weex.ui.view.WXImageView;
+import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -234,20 +239,20 @@ import java.util.Map;
 public class WXImage extends WXComponent<ImageView> {
 
     public static class Ceator implements ComponentCreator {
-        public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-            return new WXImage(instance,node,parent,lazy);
+        public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+            return new WXImage(instance,node,parent);
         }
     }
 
 
     @Deprecated
     public WXImage(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
-        this(instance,dom,parent,isLazy);
+        this(instance,dom,parent);
     }
 
     public WXImage(WXSDKInstance instance, WXDomObject node,
-                   WXVContainer parent, boolean lazy) {
-        super(instance, node, parent, lazy);
+                   WXVContainer parent) {
+        super(instance, node, parent);
     }
 
     @Override
@@ -279,6 +284,8 @@ public class WXImage extends WXComponent<ImageView> {
                     setSrc(src);
                 return true;
             case Constants.Name.IMAGE_QUALITY:
+                return true;
+            case Constants.Name.FILTER:
                 return true;
         }
         return super.setProperty(key, param);
@@ -324,21 +331,53 @@ public class WXImage extends WXComponent<ImageView> {
         (getHostView()).setScaleType(getResizeMode(resize));
     }
 
+  /**
+   * Process local scheme, load drawable.
+   * @param rewrited
+   */
+  private void setLocalSrc(Uri rewrited){
+        Resources resources = getContext().getResources();
+        List<String> segments = rewrited.getPathSegments();
+        if(segments.size() != 1){
+            WXLogUtils.e("Local src format is invalid.");
+            return;
+        }
+        ImageView imageView;
+        int id = resources.getIdentifier(segments.get(0),"drawable",getContext().getPackageName());
+        if(id != 0 && (imageView = getHostView()) != null){
+            imageView.setImageDrawable(ResourcesCompat.getDrawable(resources,id,null));
+        }
+    }
+
     @WXComponentProp(name = Constants.Name.SRC)
     public void setSrc(String src) {
+        if(src == null){
+            return ;
+        }
 
+        WXSDKInstance instance = getInstance();
+        Uri rewrited = instance.rewriteUri(Uri.parse(src),URIAdapter.IMAGE);
+
+        if(Constants.Scheme.LOCAL.equals(rewrited.getScheme())){
+            setLocalSrc(rewrited);
+        }else{
+            setRemoteSrc(rewrited);
+        }
+    }
+
+    private void setRemoteSrc(Uri rewrited){
+        WXSDKInstance instance = getInstance();
         WXImageStrategy imageStrategy = new WXImageStrategy();
         imageStrategy.isClipping = true;
 
         WXImageSharpen imageSharpen = getDomObject().getAttrs().getImageSharpen();
         imageStrategy.isSharpen = imageSharpen == WXImageSharpen.SHARPEN;
 
+        imageStrategy.blurRadius = getDomObject().getStyles().getBlur();
+
         imageStrategy.setImageListener(new WXImageStrategy.ImageListener() {
             @Override
             public void onImageFinish(String url,ImageView imageView, boolean result, Map extra) {
-                if(!result && imageView!=null){
-                    imageView.setImageDrawable(null);
-                }
                 if(getDomObject()!=null && getDomObject().containsEvent(Constants.Event.ONLOAD)){
                     Map<String,Object> params=new HashMap<String, Object>();
                     params.put("success",result);
@@ -347,15 +386,21 @@ public class WXImage extends WXComponent<ImageView> {
             }
         });
 
-        if( getDomObject().getAttrs().containsKey(Constants.Name.PLACE_HOLDER)){
-            String placeHolder= (String) getDomObject().getAttrs().get(Constants.Name.PLACE_HOLDER);
-            imageStrategy.placeHolder=placeHolder;
+        String placeholder=null;
+        if(getDomObject().getAttrs().containsKey(Constants.Name.PLACEHOLDER)){
+            placeholder= (String) getDomObject().getAttrs().get(Constants.Name.PLACEHOLDER);
+        }else if(getDomObject().getAttrs().containsKey(Constants.Name.PLACE_HOLDER)){
+            placeholder=(String)getDomObject().getAttrs().get(Constants.Name.PLACE_HOLDER);
+        }
+        if(placeholder!=null){
+            imageStrategy.placeHolder = instance.rewriteUri(Uri.parse(placeholder),URIAdapter.IMAGE).toString();
         }
 
         IWXImgLoaderAdapter imgLoaderAdapter = getInstance().getImgLoaderAdapter();
         if (imgLoaderAdapter != null) {
-            imgLoaderAdapter.setImage(src, getHostView(),
-                    getDomObject().getAttrs().getImageQuality(), imageStrategy);
+
+            imgLoaderAdapter.setImage(rewrited.toString(), getHostView(),
+                getDomObject().getAttrs().getImageQuality(), imageStrategy);
         }
     }
 }

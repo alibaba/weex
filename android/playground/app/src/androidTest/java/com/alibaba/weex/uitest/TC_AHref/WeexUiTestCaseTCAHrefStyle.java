@@ -212,12 +212,12 @@ public class WeexUiTestCaseTCAHrefStyle extends ActivityInstrumentationTestCase2
                     .getText()
                     .toString()
                     .equals("TC__Home")){
-
+                sleep(2000);
                 TouchUtils.dragQuarterScreenUp(test,WXPageActivity.wxPageActivityInstance );
                 mViewGroup = (ViewGroup) WXPageActivity.wxPageActivityInstance.findViewById(R.id.container);
                 mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, target);
             }
-
+            sleep(2000);
             TouchUtils.dragQuarterScreenUp(test, WXPageActivity.wxPageActivityInstance );
             mViewGroup = (ViewGroup) WXPageActivity.wxPageActivityInstance.findViewById(R.id.container);
             mCaseListIndexView = ViewUtil.findViewWithText(mViewGroup, target);

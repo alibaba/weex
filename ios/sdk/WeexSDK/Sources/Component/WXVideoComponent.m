@@ -7,6 +7,9 @@
  */
 
 #import "WXVideoComponent.h"
+#import "WXHandlerFactory.h"
+#import "WXURLRewriteProtocol.h"
+
 #import <AVFoundation/AVPlayer.h>
 #import <AVKit/AVPlayerViewController.h>
 #import <MediaPlayer/MPMoviePlayerViewController.h>
@@ -25,6 +28,7 @@
 
 @property (nonatomic, strong) UIViewController* playerViewController;
 @property (nonatomic, strong) AVPlayerItem* playerItem;
+@property (nonatomic, strong) WXSDKInstance* weexSDKInstance;
 
 @end
 
@@ -75,6 +79,7 @@
 
 - (void)dealloc
 {
+    _weexSDKInstance = nil;
     if ([self greater8SysVer]){
         AVPlayerViewController *AVVC = (AVPlayerViewController*)_playerViewController;
         [AVVC.player removeObserver:self forKeyPath:@"rate"];
@@ -134,6 +139,13 @@
 
 - (void)setURL:(NSURL *)URL
 {
+    NSMutableString *urlStr = nil;
+    WX_REWRITE_URL(URL.absoluteString, WXResourceTypeLink, self.weexSDKInstance, &urlStr)
+    
+    if (!urlStr) {
+        return;
+    }
+    NSURL *newURL = [NSURL URLWithString:urlStr];
     if ([self greater8SysVer]){
         
         AVPlayerViewController *AVVC = (AVPlayerViewController*)_playerViewController;
@@ -142,7 +154,7 @@
             [AVVC.player removeObserver:self forKeyPath:@"rate"];
             [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object: _playerItem];
         }
-        _playerItem = [[AVPlayerItem alloc] initWithURL:URL];
+        _playerItem = [[AVPlayerItem alloc] initWithURL:newURL];
         AVPlayer *player = [AVPlayer playerWithPlayerItem: _playerItem];
         AVVC.player = player;
         
@@ -160,7 +172,7 @@
     }
     else {
         MPMoviePlayerViewController *MPVC = (MPMoviePlayerViewController*)_playerViewController;
-        [MPVC moviePlayer].contentURL = URL;
+        [MPVC moviePlayer].contentURL = newURL;
     }
 }
 
@@ -234,7 +246,10 @@
 
 -(UIView *)loadView
 {
-    return [[WXVideoView alloc] init];
+    WXVideoView* videoView = [[WXVideoView alloc] init];
+    videoView.weexSDKInstance = self.weexInstance;
+    
+    return videoView;
 }
 
 -(void)viewDidLoad

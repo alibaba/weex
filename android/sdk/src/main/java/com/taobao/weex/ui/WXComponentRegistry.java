@@ -214,6 +214,7 @@ import com.taobao.weex.utils.WXLogUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * All components must be registered within this class before used.
@@ -221,9 +222,9 @@ import java.util.Map;
 public class WXComponentRegistry {
 
   private static Map<String, IFComponentHolder> sTypeComponentMap = new HashMap<>();
-  private static ArrayList<Map<String, String>> sComponentInfos=new ArrayList<>();
+  private static ArrayList<Map<String, Object>> sComponentInfos=new ArrayList<>();
 
-  public static boolean registerComponent(final String type, final IFComponentHolder holder, final Map<String, String> componentInfo) throws WXException {
+  public static boolean registerComponent(final String type, final IFComponentHolder holder, final Map<String, Object> componentInfo) throws WXException {
     if (holder == null || TextUtils.isEmpty(type)) {
       return false;
     }
@@ -234,12 +235,13 @@ public class WXComponentRegistry {
       @Override
       public void run() {
         try {
-          Map<String, String> registerInfo = componentInfo;
+          Map<String, Object> registerInfo = componentInfo;
           if (registerInfo == null){
             registerInfo = new HashMap<>();
           }
 
           registerInfo.put("type",type);
+          registerInfo.put("methods",holder.getMethods());
           registerNativeComponent(type, holder);
           registerJSComponent(registerInfo);
           sComponentInfos.add(registerInfo);
@@ -263,8 +265,8 @@ public class WXComponentRegistry {
     return true;
   }
 
-  private static boolean registerJSComponent(Map<String, String> componentInfo) throws WXException {
-    ArrayList<Map<String, String>> coms = new ArrayList<>();
+  private static boolean registerJSComponent(Map<String, Object> componentInfo) throws WXException {
+    ArrayList<Map<String, Object>> coms = new ArrayList<>();
     coms.add(componentInfo);
     WXSDKManager.getInstance().registerComponents(coms);
     return true;
@@ -279,7 +281,7 @@ public class WXComponentRegistry {
       @Override
       public void run() {
         try {
-          for(Map<String,String> com:sComponentInfos){
+          for(Map<String,Object> com:sComponentInfos){
             registerJSComponent(com);
           }
         } catch (WXException e) {

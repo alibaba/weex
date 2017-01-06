@@ -91,7 +91,8 @@
       stream.fetch({
         method: 'POST',
         url: POST_URL,
-        type:'json'
+        type:'json',
+        body:JSON.stringify({username:'weex'})//or you can just use JSON Object {username:'weex'}
       }, function(ret) {
         if(!ret.ok){
           me.postResult = "request failed";

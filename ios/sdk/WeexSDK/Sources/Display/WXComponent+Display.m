@@ -11,8 +11,11 @@
 #import "WXComponent_internal.h"
 #import "WXLayer.h"
 #import "WXAssert.h"
+#import "WXUtility.h"
 #import "WXDisplayQueue.h"
 #import "WXThreadSafeCounter.h"
+#import "UIBezierPath+Weex.h"
+#import "WXRoundedRect.h"
 
 #pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
 
@@ -33,6 +36,8 @@
             supercomponent = supercomponent.supercomponent;
         }
         [supercomponent setNeedsDisplay];
+    } else if (!_layer || _layer.frame.size.width ==0 || _layer.frame.size.height == 0) {
+        return;
     } else {
         [_layer setNeedsDisplay];
     }
@@ -46,6 +51,10 @@
         }
         
         if (![self _needsDrawBorder]) {
+            WXLogDebug(@"No need to draw border for %@", self.ref);
+            WXPerformBlockOnMainThread(^{
+                [self _resetNativeBorderRadius];
+            });
             return nil;
         }
         
@@ -235,9 +244,11 @@
 {
     CGSize size = self.calculatedFrame.size;
     if (size.width <= 0 || size.height <= 0) {
+        WXLogDebug(@"No need to draw border for %@, because width or height is zero", self.ref);
         return nil;
     }
     
+    WXLogDebug(@"Begin to draw border for %@", self.ref);
     UIGraphicsBeginImageContextWithOptions(size, NO, 0.0);
     CGContextRef context = UIGraphicsGetCurrentContext();
     
@@ -251,22 +262,20 @@
 
 - (void)_drawBorderWithContext:(CGContextRef)context size:(CGSize)size
 {
+    CGRect rect = CGRectMake(0, 0, size.width, size.height);
+    WXRoundedRect *borderRect = [[WXRoundedRect alloc] initWithRect:rect topLeft:_borderTopLeftRadius topRight:_borderTopRightRadius bottomLeft:_borderBottomLeftRadius bottomRight:_borderBottomRightRadius];
+    // here is computed radii, do not use original style
+    WXRadii *radii = borderRect.radii;
+    CGFloat topLeft = radii.topLeft, topRight = radii.topRight, bottomLeft = radii.bottomLeft, bottomRight = radii.bottomRight;
+    
+    // fill background color
     if (_backgroundColor && CGColorGetAlpha(_backgroundColor.CGColor) > 0) {
         CGContextSetFillColorWithColor(context, _backgroundColor.CGColor);
-        UIBezierPath *bezierPath = [UIBezierPath bezierPath];
-        [bezierPath moveToPoint:CGPointMake(size.width -_borderTopRightRadius, 0)];
-        [bezierPath addLineToPoint:CGPointMake(_borderTopLeftRadius, 0)];
-        [bezierPath addArcWithCenter:CGPointMake(_borderTopLeftRadius, _borderTopLeftRadius) radius:_borderTopLeftRadius startAngle:M_PI+M_PI_2 endAngle:M_PI clockwise:0];
-        [bezierPath addLineToPoint:CGPointMake(0, size.height-_borderBottomLeftRadius)];
-        [bezierPath addArcWithCenter:CGPointMake(_borderBottomLeftRadius, size.height-_borderBottomLeftRadius) radius:_borderBottomLeftRadius startAngle: M_PI endAngle:M_PI_2 clockwise:0];
-        [bezierPath addLineToPoint:CGPointMake(size.width-_borderBottomRightRadius, size.height)];
-        [bezierPath addArcWithCenter:CGPointMake(size.width-_borderBottomRightRadius, size.height-_borderBottomRightRadius) radius:_borderBottomRightRadius startAngle: M_PI_2 endAngle:0 clockwise:0];
-        [bezierPath addLineToPoint:CGPointMake(size.width, _borderTopRightRadius)];
-        [bezierPath addArcWithCenter:CGPointMake(size.width-_borderTopRightRadius, _borderTopRightRadius) radius:_borderTopRightRadius startAngle: 0 endAngle:-M_PI_2 clockwise:0];
+        UIBezierPath *bezierPath = [UIBezierPath wx_bezierPathWithRoundedRect:rect topLeft:topLeft topRight:topRight bottomLeft:bottomLeft bottomRight:bottomRight];
         [bezierPath fill];
     }
     
-    // TOP
+    // Top
     if (_borderTopWidth > 0) {
         if(_borderTopStyle == WXBorderStyleDashed || _borderTopStyle == WXBorderStyleDotted){
             CGFloat lengths[2];
@@ -277,10 +286,10 @@
         }
         CGContextSetLineWidth(context, _borderTopWidth);
         CGContextSetStrokeColorWithColor(context, _borderTopColor.CGColor);
-        CGContextAddArc(context, size.width-_borderTopRightRadius, _borderTopRightRadius, _borderTopRightRadius-_borderTopWidth/2, -M_PI_4+(_borderRightWidth>0?0:M_PI_4), -M_PI_2, 1);
-        CGContextMoveToPoint(context, size.width-_borderTopRightRadius, _borderTopWidth/2);
-        CGContextAddLineToPoint(context, _borderTopLeftRadius, _borderTopWidth/2);
-        CGContextAddArc(context, _borderTopLeftRadius, _borderTopLeftRadius, _borderTopLeftRadius-_borderTopWidth/2, -M_PI_2, -M_PI_2-M_PI_4-(_borderLeftWidth>0?0:M_PI_4), 1);
+        CGContextAddArc(context, size.width-topRight, topRight, topRight-_borderTopWidth/2, -M_PI_4+(_borderRightWidth>0?0:M_PI_4), -M_PI_2, 1);
+        CGContextMoveToPoint(context, size.width-topRight, _borderTopWidth/2);
+        CGContextAddLineToPoint(context, topLeft, _borderTopWidth/2);
+        CGContextAddArc(context, topLeft, topLeft, topLeft-_borderTopWidth/2, -M_PI_2, -M_PI_2-M_PI_4-(_borderLeftWidth>0?0:M_PI_4), 1);
         CGContextStrokePath(context);
     }
     
@@ -295,10 +304,10 @@
         }
         CGContextSetLineWidth(context, _borderLeftWidth);
         CGContextSetStrokeColorWithColor(context, _borderLeftColor.CGColor);
-        CGContextAddArc(context, _borderTopLeftRadius, _borderTopLeftRadius, _borderTopLeftRadius-_borderLeftWidth/2, -M_PI, -M_PI_2-M_PI_4+(_borderTopWidth > 0?0:M_PI_4), 0);
-        CGContextMoveToPoint(context, _borderLeftWidth/2, _borderTopLeftRadius);
-        CGContextAddLineToPoint(context, _borderLeftWidth/2, size.height-_borderBottomLeftRadius);
-        CGContextAddArc(context, _borderBottomLeftRadius, size.height-_borderBottomLeftRadius, _borderBottomLeftRadius-_borderLeftWidth/2, M_PI, M_PI-M_PI_4-(_borderBottomWidth>0?0:M_PI_4), 1);
+        CGContextAddArc(context, topLeft, topLeft, topLeft-_borderLeftWidth/2, -M_PI, -M_PI_2-M_PI_4+(_borderTopWidth > 0?0:M_PI_4), 0);
+        CGContextMoveToPoint(context, _borderLeftWidth/2, topLeft);
+        CGContextAddLineToPoint(context, _borderLeftWidth/2, size.height-bottomLeft);
+        CGContextAddArc(context, bottomLeft, size.height-bottomLeft, bottomLeft-_borderLeftWidth/2, M_PI, M_PI-M_PI_4-(_borderBottomWidth>0?0:M_PI_4), 1);
         CGContextStrokePath(context);
     }
     
@@ -313,10 +322,10 @@
         }
         CGContextSetLineWidth(context, _borderBottomWidth);
         CGContextSetStrokeColorWithColor(context, _borderBottomColor.CGColor);
-        CGContextAddArc(context, _borderBottomLeftRadius, size.height-_borderBottomLeftRadius, _borderBottomLeftRadius-_borderBottomWidth/2, M_PI-M_PI_4+(_borderLeftWidth>0?0:M_PI_4), M_PI_2, 1);
-        CGContextMoveToPoint(context, _borderBottomLeftRadius, size.height-_borderBottomWidth/2);
-        CGContextAddLineToPoint(context, size.width-_borderBottomRightRadius, size.height-_borderBottomWidth/2);
-        CGContextAddArc(context, size.width-_borderBottomRightRadius, size.height-_borderBottomRightRadius, _borderBottomRightRadius-_borderBottomWidth/2, M_PI_2, M_PI_4-(_borderRightWidth > 0?0:M_PI_4), 1);
+        CGContextAddArc(context, bottomLeft, size.height-bottomLeft, bottomLeft-_borderBottomWidth/2, M_PI-M_PI_4+(_borderLeftWidth>0?0:M_PI_4), M_PI_2, 1);
+        CGContextMoveToPoint(context, bottomLeft, size.height-_borderBottomWidth/2);
+        CGContextAddLineToPoint(context, size.width-bottomRight, size.height-_borderBottomWidth/2);
+        CGContextAddArc(context, size.width-bottomRight, size.height-bottomRight, bottomRight-_borderBottomWidth/2, M_PI_2, M_PI_4-(_borderRightWidth > 0?0:M_PI_4), 1);
         CGContextStrokePath(context);
     }
     
@@ -331,10 +340,10 @@
         }
         CGContextSetLineWidth(context, _borderRightWidth);
         CGContextSetStrokeColorWithColor(context, _borderRightColor.CGColor);
-        CGContextAddArc(context, size.width-_borderBottomRightRadius, size.height-_borderBottomRightRadius, _borderBottomRightRadius-_borderRightWidth/2, M_PI_4+(_borderBottomWidth>0?0:M_PI_4), 0, 1);
-        CGContextMoveToPoint(context, size.width-_borderRightWidth/2, size.height-_borderBottomRightRadius);
-        CGContextAddLineToPoint(context, size.width-_borderRightWidth/2, _borderTopRightRadius);
-        CGContextAddArc(context, size.width-_borderTopRightRadius, _borderTopRightRadius, _borderTopRightRadius-_borderRightWidth/2, 0, -M_PI_4-(_borderTopWidth > 0?0:M_PI_4), 1);
+        CGContextAddArc(context, size.width-bottomRight, size.height-bottomRight, bottomRight-_borderRightWidth/2, M_PI_4+(_borderBottomWidth>0?0:M_PI_4), 0, 1);
+        CGContextMoveToPoint(context, size.width-_borderRightWidth/2, size.height-bottomRight);
+        CGContextAddLineToPoint(context, size.width-_borderRightWidth/2, topRight);
+        CGContextAddArc(context, size.width-topRight, topRight, topRight-_borderRightWidth/2, 0, -M_PI_4-(_borderTopWidth > 0?0:M_PI_4), 1);
         CGContextStrokePath(context);
     }
     
@@ -376,20 +385,6 @@
     }
     
     return NO;
-}
-
-- (void)_recomputeBorderRadius
-{
-    // prevent overlapping,
-    CGFloat topRadiusScale  = (_borderTopLeftRadius + _borderTopRightRadius == 0) ? 1 : MIN(1, _calculatedFrame.size.width / (_borderTopLeftRadius + _borderTopRightRadius));
-    CGFloat leftRadiusScale = (_borderTopLeftRadius + _borderBottomLeftRadius == 0) ? 1 : MIN(1, _calculatedFrame.size.height / (_borderTopLeftRadius + _borderBottomLeftRadius));
-    CGFloat bottomRadiusScale = (_borderBottomLeftRadius + _borderBottomRightRadius == 0) ? 1 :MIN(1, _calculatedFrame.size.width / (_borderBottomLeftRadius + _borderBottomRightRadius));
-    CGFloat rightRadiusScale = (_borderTopRightRadius+ _borderBottomRightRadius == 0) ? 1 : MIN(1, _calculatedFrame.size.height / (_borderTopRightRadius+ _borderBottomRightRadius));
-    CGFloat finalScale = MIN(MIN(MIN(topRadiusScale, leftRadiusScale), bottomRadiusScale), rightRadiusScale);
-    _borderTopLeftRadius *= finalScale;
-    _borderTopRightRadius *= finalScale;
-    _borderBottomRightRadius *= finalScale;
-    _borderBottomLeftRadius *= finalScale;
 }
 
 - (void)_handleBorders:(NSDictionary *)styles isUpdating:(BOOL)updating
@@ -444,17 +439,15 @@ do {\
     WX_CHECK_BORDER_PROP(Color, Top, Left, Bottom, Right, UIColor)
     WX_CHECK_BORDER_PROP(Width, Top, Left, Bottom, Right, WXPixelType)
     WX_CHECK_BORDER_PROP(Radius, TopLeft, TopRight, BottomLeft, BottomRight, WXPixelType)
-    
+
     if (updating) {
         BOOL nowNeedsDrawBorder = [self _needsDrawBorder];
         if (nowNeedsDrawBorder && !previousNeedsDrawBorder) {
             _layer.cornerRadius = 0;
             _layer.borderWidth = 0;
             _layer.backgroundColor = NULL;
-        }
-        
-        if (!nowNeedsDrawBorder) {
-            _layer.cornerRadius = _borderTopLeftRadius;
+        } else if (!nowNeedsDrawBorder) {
+            [self _resetNativeBorderRadius];
             _layer.borderWidth = _borderTopWidth;
             _layer.borderColor = _borderTopColor.CGColor;
             _layer.backgroundColor = _backgroundColor.CGColor;

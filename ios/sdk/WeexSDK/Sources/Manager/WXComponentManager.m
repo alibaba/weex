@@ -17,6 +17,9 @@
 #import "WXUtility.h"
 #import "WXMonitor.h"
 #import "WXScrollerProtocol.h"
+#import "WXSDKManager.h"
+#import "WXSDKError.h"
+#import "WXInvocationConfig.h"
 
 static NSThread *WXComponentThread;
 
@@ -158,13 +161,13 @@ static NSThread *WXComponentThread;
     WXAssertParam(data);
     
     _rootComponent = [self _buildComponentForData:data];
-    self.weexInstance.rootView.wx_component = _rootComponent;
-    
+
     [self _initRootCSSNode];
     
     __weak typeof(self) weakSelf = self;
     [self _addUITask:^{
         __strong typeof(self) strongSelf = weakSelf;
+        strongSelf.weexInstance.rootView.wx_component = strongSelf->_rootComponent;
         [strongSelf.weexInstance.rootView addSubview:strongSelf->_rootComponent.view];
     }];
 }
@@ -265,6 +268,9 @@ static css_node_t * rootNodeGetChild(void *context, int i)
     [_indexDict removeObjectForKey:ref];
     
     [self _addUITask:^{
+        if (component.supercomponent) {
+            [component.supercomponent willRemoveSubview:component];
+        }
         [component removeFromSuperview];
     }];
 }
@@ -307,6 +313,29 @@ static css_node_t * rootNodeGetChild(void *context, int i)
 
 #pragma mark Updating
 
+#pragma mark Reset
+-(BOOL)isShouldReset:(id )value
+{
+    if([value isKindOfClass:[NSString class]]) {
+        if(!value || [@"" isEqualToString:value]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+-(void)filterStyles:(NSDictionary *)styles normalStyles:(NSMutableDictionary *)normalStyles resetStyles:(NSMutableArray *)resetStyles
+{
+    for (NSString *key in styles) {
+        id value = [styles objectForKey:key];
+        if([self isShouldReset:value]) {
+            [resetStyles addObject:key];
+        }else{
+            [normalStyles setObject:styles[key] forKey:key];
+        }
+    }
+}
+
 - (void)updateStyles:(NSDictionary *)styles forComponent:(NSString *)ref
 {
     WXAssertParam(styles);
@@ -315,9 +344,12 @@ static css_node_t * rootNodeGetChild(void *context, int i)
     WXComponent *component = [_indexDict objectForKey:ref];
     WXAssertComponentExist(component);
     
-    [component _updateStylesOnComponentThread:styles];
+    NSMutableDictionary *normalStyles = [NSMutableDictionary new];
+    NSMutableArray *resetStyles = [NSMutableArray new];
+    [self filterStyles:styles normalStyles:normalStyles resetStyles:resetStyles];
+    [component _updateStylesOnComponentThread:normalStyles resetStyles:resetStyles];
     [self _addUITask:^{
-        [component _updateStylesOnMainThread:styles];
+        [component _updateStylesOnMainThread:normalStyles resetStyles:resetStyles];
     }];
 }
 
@@ -387,6 +419,33 @@ static css_node_t * rootNodeGetChild(void *context, int i)
     }];
 }
 
+- (void)dispatchComponentMethod:(WXBridgeMethod *)method
+{
+    if (!method) {
+        return;
+    }
+    Class componentClazz = [WXComponentFactory classWithComponentName:method.targets[@"component"]];
+    if (!componentClazz) {
+        NSString *errorMessage = [NSString stringWithFormat:@"Module：%@ doesn't exist！", method.module];
+        WX_MONITOR_FAIL(WXMTJSBridge, WX_ERR_INVOKE_NATIVE, errorMessage);
+        return;
+    }
+    WXPerformBlockOnComponentThread(^{
+        WXSDKInstance *weexInstance = [WXSDKManager instanceForID:method.instance];
+        WXComponent *componentInstance = [weexInstance componentForRef:method.targets[@"ref"]];
+        
+        [self _executeComponentMethod:componentInstance withMethod:method];
+    });
+}
+
+- (void)_executeComponentMethod:(id)target withMethod:(WXBridgeMethod*)method
+{
+    NSInvocation * invocation = [[WXInvocationConfig sharedInstance] invocationWithTargetMethod:target method:method];
+    WXPerformBlockOnMainThread(^{
+        [invocation invoke];
+    });
+}
+
 #pragma mark Life Cycle
 
 - (void)createFinish
@@ -403,7 +462,6 @@ static css_node_t * rootNodeGetChild(void *context, int i)
         WX_MONITOR_SUCCESS(WXMTNativeRender);
         
         if(instance.renderFinish){
-            [instance creatFinish];
             instance.renderFinish(rootView);
         }
     }];
@@ -516,7 +574,6 @@ static css_node_t * rootNodeGetChild(void *context, int i)
 - (void)_layoutAndSyncUI
 {
     [self _layout];
-    
     if(_uiTaskQueue.count > 0){
         [self _syncUITasks];
         _noTaskTickCount = 0;
@@ -601,7 +658,9 @@ static css_node_t * rootNodeGetChild(void *context, int i)
                               WXRoundPixelValue(_rootCSSNode->layout.dimensions[CSS_WIDTH]),
                               WXRoundPixelValue(_rootCSSNode->layout.dimensions[CSS_HEIGHT]));
     WXPerformBlockOnMainThread(^{
-        self.weexInstance.rootView.frame = frame;
+        if(!self.weexInstance.isRootViewFrozen) {
+            self.weexInstance.rootView.frame = frame;
+        }
     });
     
     resetNodeLayout(_rootCSSNode);

@@ -223,8 +223,12 @@ public class WXHeader extends WXCell {
 
   public WXHeader(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
     super(instance, node, parent, lazy);
-    lazy(false);
     setSticky(Constants.Value.STICKY);
+  }
+
+  @Override
+  public boolean isLazy() {
+    return false;
   }
 
   @Override

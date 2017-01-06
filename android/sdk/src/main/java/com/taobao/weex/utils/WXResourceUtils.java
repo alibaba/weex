@@ -207,10 +207,10 @@ package com.taobao.weex.utils;
 import android.graphics.Color;
 import android.text.TextUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Class for parse color
@@ -218,8 +218,45 @@ import java.util.regex.Pattern;
 public class WXResourceUtils {
 
   private final static Map<String, Integer> colorMap = new HashMap<>();
-  private final static Pattern RGB_PATTERN = Pattern.compile("^#[0-9a-fA-F]{3,9}$");
-  private final static Pattern FUNCTION_RGBA_PATTERN = Pattern.compile("^(rgba?[\\(])([\\s]*[0-9%]+[\\s]*),([\\s]*[0-9%]+[\\s]*),(([\\s]*[0-9%]+[\\s]*),)?([\\s]*[0-9.]+[\\s]*)[\\)]$");
+  private final static int RGB_SIZE = 3;
+  private final static int RGBA_SIZE = 4;
+  private final static int HEX = 16;
+  private final static int COLOR_RANGE = 255;
+  private final static String RGB = "rgb";
+  private final static String RGBA = "rgba";
+  private final static SingleFunctionParser.FlatMapper<Integer> FUNCTIONAL_RGB_MAPPER =
+      new SingleFunctionParser.FlatMapper<Integer>() {
+        @Override
+        public Integer map(String raw) {
+          int color = WXUtils.parseUnitOrPercent(raw, COLOR_RANGE);
+          if (color < 0) {
+            color = 0;
+          } else if (color > COLOR_RANGE) {
+            color = COLOR_RANGE;
+          }
+          return color;
+        }
+      };
+
+  private final static SingleFunctionParser.NonUniformMapper<Number> FUNCTIONAL_RGBA_MAPPER =
+      new SingleFunctionParser.NonUniformMapper<Number>() {
+        @Override
+        public List<Number> map(List<String> raw) {
+          List<Number> result = new ArrayList<>(RGBA_SIZE);
+          int i, color;
+          for (i = 0; i < RGB_SIZE; i++) {
+            color = WXUtils.parseUnitOrPercent(raw.get(i), COLOR_RANGE);
+            if (color < 0) {
+              color = 0;
+            } else if (color > COLOR_RANGE) {
+              color = COLOR_RANGE;
+            }
+            result.add(color);
+          }
+          result.add(Float.valueOf(raw.get(i)));
+          return result;
+        }
+      };
 
   static {
     colorMap.put("aliceblue", 0XFFF0F8FF);
@@ -372,7 +409,6 @@ public class WXResourceUtils {
     colorMap.put("transparent", 0x00000000);
   }
 
-
   public static int getColor(String color) {
     return getColor(color, Integer.MIN_VALUE);
   }
@@ -386,12 +422,12 @@ public class WXResourceUtils {
     int resultColor = defaultColor;
     try {
       ColorConvertHandler[] handlers = ColorConvertHandler.values();
-      Integer convertedColor;
       for (ColorConvertHandler handler : handlers) {
-        convertedColor = handler.handle(color);
-        if (convertedColor != null) {
-          resultColor = convertedColor;
+        try {
+          resultColor = handler.handle(color);
           break;
+        } catch (IllegalArgumentException e) {
+          WXLogUtils.v("Color", "Color convert fails");
         }
       }
     } catch (Exception e) {
@@ -403,105 +439,88 @@ public class WXResourceUtils {
   enum ColorConvertHandler {
     NAMED_COLOR_HANDLER {
       @Override
-      Integer handle(String rawColor) {
-        return colorMap.get(rawColor);
+      int handle(String rawColor) {
+        try {
+          return colorMap.get(rawColor);
+        } catch (RuntimeException e) {
+          throw new IllegalArgumentException(e);
+        }
       }
     },
     RGB_HANDLER {
       @Override
-      Integer handle(String rawColor) {
-        if (RGB_PATTERN.matcher(rawColor).matches()) {
+      int handle(String rawColor) {
+        try {
           if (rawColor.length() == 4) {
             //#eee, #333
-            int result = 0;
-            for (int i = 1; i < 4; i++) {
-              result = (result << 8) + 17 * Character.digit(rawColor.charAt(i), 16);
-            }
-            return result | 0xff000000;
+            int r, g, b;
+            r = Integer.parseInt(rawColor.substring(1, 2), HEX);
+            g = Integer.parseInt(rawColor.substring(2, 3), HEX);
+            b = Integer.parseInt(rawColor.substring(3, 4), HEX);
+            return Color.rgb(r + (r << 4), g + (g << 4), b + (b << 4));
           } else if (rawColor.length() == 7 || rawColor.length() == 9) {
             //#eeeeee, #333333
             return Color.parseColor(rawColor);
           } else {
             throw new IllegalArgumentException("ColorConvertHandler invalid color: " + rawColor);
           }
+        } catch (RuntimeException e) {
+          throw new IllegalArgumentException(e);
         }
-        return null;
       }
     },
+    FUNCTIONAL_RGB_HANDLER {
+      @Override
+      int handle(String rawColor) {
+        try {
+          SingleFunctionParser<Integer> functionParser = new SingleFunctionParser<>(rawColor, FUNCTIONAL_RGB_MAPPER);
+          List<Integer> rgb = functionParser.parse(RGB);
+          if (rgb.size() == RGB_SIZE) {
+            return Color.rgb(rgb.get(0), rgb.get(1), rgb.get(2));
+          } else {
+            throw new IllegalArgumentException("Conversion of functional RGB fails");
+          }
+        } catch (RuntimeException e) {
+          throw new IllegalArgumentException(e);
+        }
+      }
+    },
+
     FUNCTIONAL_RGBA_HANDLER {
       @Override
-      Integer handle(String rawColor) {
-        return convertFunctionalColor(rawColor);
+      int handle(String rawColor) {
+        try {
+          SingleFunctionParser<Number> functionParser = new SingleFunctionParser<>(rawColor, FUNCTIONAL_RGBA_MAPPER);
+          List<Number> rgba = functionParser.parse(RGBA);
+          if (rgba.size() == RGBA_SIZE) {
+            return Color.argb(
+                parseAlpha(rgba.get(3).floatValue()),
+                rgba.get(0).intValue(),
+                rgba.get(1).intValue(),
+                rgba.get(2).intValue());
+          } else {
+            throw new IllegalArgumentException("Conversion of functional RGBA fails");
+          }
+        } catch (RuntimeException e) {
+          throw new IllegalArgumentException(e);
+        }
       }
     };
-
-    /**
-     * Parse a functional RGB to #RRGGBB or functional RGBA to #AARRGGBB
-     * @param raw functional RGB or functional RGBA
-     * @return #RRGGBB or #AARRGGBB
-     */
-    private static Integer convertFunctionalColor(String raw) {
-      Matcher matcher = FUNCTION_RGBA_PATTERN.matcher(raw);
-      if (matcher.matches()) {
-        boolean alpha = matcher.group(1).startsWith("rgba");
-        String[] gradients = new String [alpha ? 4 : 3];
-        gradients[0] = matcher.group(2);
-        gradients[1] = matcher.group(3);
-        if (alpha) {
-          gradients[2] = matcher.group(5);
-          gradients[3] = matcher.group(6);
-        } else {
-          gradients[2] = matcher.group(6);
-        }
-        return parseRGBA(gradients);
-      }
-      return null;
-    }
-
-    /**
-     * Parse Functional RGB to RRGGBB mode
-     * @param gradients gradients of functional RGB
-     * @return RRGGBB color
-     */
-    private static Integer parseRGBA(String[] gradients) {
-      int[] digits = new int[4];
-      if (gradients.length == 3) {
-        digits[3] = 0xff;
-      }
-      int percent_loc;
-      int value;
-      String gradient;
-      for (int i = 0; i < gradients.length; i++) {
-        gradient = gradients[i].trim();
-        if ((percent_loc = gradient.lastIndexOf("%")) != -1) {
-          gradient = gradient.substring(0, percent_loc);
-          value = (int) (Float.parseFloat(gradient) / 100 * 255);
-        } else {
-          float temp = Float.parseFloat(gradient);
-          if (0f < temp && temp <= 1f && i == 3) {
-            value = (int) (temp * 255);
-          } else {
-            value = (int) temp;
-          }
-        }
-        if (value < 0 || value > 255) {
-          throw new IllegalArgumentException("ColorConvertHandler invalid gradient: " + gradient);
-        }
-        digits[i] = value;
-      }
-
-      int result = digits[3];
-      for (int i = 0; i < 3; i++) {
-        result = (result << 8) + digits[i];
-      }
-      return result;
-    }
 
     /**
      * Parse color to #RRGGBB or #AARRGGBB. The parsing algorithm depends on sub-class.
      * @param rawColor color, maybe functional RGB(RGBA), #RGB, keywords color or transparent
      * @return #RRGGBB or #AARRGGBB
      */
-    abstract Integer handle(String rawColor);
+    abstract int handle(String rawColor) throws IllegalArgumentException;
+
+    /**
+     * Parse alpha gradient of color from range 0-1 to range 0-255
+     * @param alpha the alpha value, in range 0-1
+     * @return the alpha value, in range 0-255
+     */
+    private static int parseAlpha(float alpha) {
+      return (int) (alpha * COLOR_RANGE);
+    }
   }
 }

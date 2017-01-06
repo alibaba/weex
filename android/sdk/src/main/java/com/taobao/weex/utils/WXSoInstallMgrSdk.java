@@ -285,7 +285,7 @@ public class WXSoInstallMgrSdk {
 
     boolean InitSuc = false;
 
-    if (checkSoIsInValid(libName, ARMEABI_Size) ||checkSoIsInValid(libName, X86_Size)) {
+    if (checkSoIsValid(libName, ARMEABI_Size) || checkSoIsValid(libName, X86_Size)) {
 
       /**
        * Load library with {@link System#loadLibrary(String)}
@@ -356,7 +356,13 @@ public class WXSoInstallMgrSdk {
     return abi;
   }
 
-  static boolean checkSoIsInValid(String libName, int size) {
+  /**
+   *
+   * @param libName lib name
+   * @param size  the right size of lib
+   * @return true for valid  ; false for InValid
+   */
+  static boolean checkSoIsValid(String libName, int size) {
     Context context = mContext;
     if (null == context) {
       return false;

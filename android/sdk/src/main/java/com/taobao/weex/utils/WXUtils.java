@@ -215,6 +215,8 @@ import com.taobao.weex.WXEnvironment;
 
 public class WXUtils {
 
+  public static final char PERCENT = '%';
+  private static final int HUNDRED =100;
   /**
    * Tell whether current thread is UI(main) thread.
    * @return true for UI(main) thread
@@ -436,4 +438,19 @@ public class WXUtils {
 
     return originValue;
   }
+
+  public static int parseUnitOrPercent(String raw, int unit) {
+    int suffix;
+    if ((suffix = raw.lastIndexOf(WXUtils.PERCENT)) != -1) {
+      return parsePercent(raw.substring(0, suffix), unit);
+    }
+    else {
+      return Integer.parseInt(raw);
+    }
+  }
+
+  private static int parsePercent(String raw, int unit){
+    return (int)(Float.parseFloat(raw) / HUNDRED * unit);
+  }
+
 }

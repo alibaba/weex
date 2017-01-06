@@ -10,6 +10,7 @@
 #import "WXThreadSafeMutableDictionary.h"
 #import "WXThreadSafeMutableArray.h"
 #import "WXLog.h"
+#import "WXSDKManager.h"
 
 @interface WXGlobalEventModule()
 @property WXThreadSafeMutableDictionary *eventCallback;
@@ -37,7 +38,7 @@ WX_EXPORT_METHOD(@selector(removeEventListener:))
         array = [[WXThreadSafeMutableArray alloc] init];
         [array addObject:callback];
         _eventCallback[event] = array;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fireGlobalEvent:) name:event object:weexInstance];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fireGlobalEvent:) name:event object:nil];
     }
 }
 
@@ -45,7 +46,7 @@ WX_EXPORT_METHOD(@selector(removeEventListener:))
 {
     if (_eventCallback[event]) {
         [_eventCallback removeObjectForKey:event];
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:event object:weexInstance];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:event object:nil];
     } else {
         WXLogWarning(@"eventName \"%@\" doesn't exist", event);
     }
@@ -54,13 +55,24 @@ WX_EXPORT_METHOD(@selector(removeEventListener:))
 - (void)fireGlobalEvent:(NSNotification *)notification
 {
     NSDictionary * userInfo = notification.userInfo;
-    WXSDKInstance * userWeexInstance = userInfo[@"weexInstance"];
-    NSDictionary * param = userInfo[@"param"];
-    if (userWeexInstance == weexInstance) {
+    NSString * userWeexInstanceId = userInfo[@"weexInstance"];
+    /*
+     1. The userWeexInstanceId param will be passed by globalEvent module notification.
+     2. The notification is posted by native user using Notificationcenter, native user don't need care about what the userWeexInstanceId is. What you do is to addEventListener in weex file using globalEvent module, and then post notification anywhere.
+     */
+    WXSDKInstance * userWeexInstance = [WXSDKManager instanceForID:userWeexInstanceId];
+     // In case that userInstanceId exists but instance has been dealloced
+    if (!userWeexInstanceId || userWeexInstance == weexInstance) {
+        
         for (WXModuleKeepAliveCallback callback in _eventCallback[notification.name]) {
-            callback(param, true);
+            callback(userInfo[@"param"], true);
         }
     }
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

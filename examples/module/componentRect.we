@@ -1,0 +1,130 @@
+<we-element name="multi-text">
+  <template>
+    <div style="flex-direction: row;">
+      <text class="text-style text-descript">{{descript}}</text>
+      <text class="text-style text-detail">{{detail}}</text>
+    </div>
+  </template>
+  
+  <style>
+    .text-style{ font-size: 30; margin-top:15; margin-left: 15; margin-bottom:15;}
+    .text-descript{ font-weight: bold; flex:1}
+    .text-detail{ flex:1}
+  </style>
+  
+  <script>
+    module.exports = {
+      data: {
+        descript:'',
+        detail:'',
+      },
+    }
+  </script>
+</we-element>
+
+<template>
+  <div style="width:730;margin:10;border-width:3; border-color:#00FF00;">
+  	<text>click every view to get view Rect information</text>
+    <scroller style="height:400; width:700; margin:10; border-width:3; border-color:#0000FF;">
+      <!--Controll Space-->
+      <text onclick="getViewportRect" class="component viewportBtn">root view</text>
+  
+      <div style="flex-direction: row;">
+        <text onclick="getViewRect" class="component basicBtn" id="basicview1">basicview1</text>      
+        <text onclick="getViewRect" class="component basicBtn" id="basicview2">basicview2</text>      
+        <text onclick="getViewRect" class="component basicBtn" id="basicview3">basicview3</text>      
+      </div>
+      <div style="flex-direction: column;">
+      	<div style="flex-direction: row;">
+      		<text onclick="getViewRect" class="component basicBtn" id="basicview4">basicview4</text>
+      		<text onclick="getViewRect" class="component basicBtn" id="basicview5">basicview5</text>  
+      	</div>
+      	    
+        <text onclick="getViewRect" class="component basicBtn" id="basicview6">basicview6</text>   
+      </div>
+    </scroller>
+    
+    <!--Show Space-->
+    <div style="width:700; margin:10; border-width:3; border-color:#0000FF;">
+      <!--Device Config-->
+      <text class="sub-title">Device Config</text>
+      <multi-text descript='Device Width:' detail={{configEnv.deviceWidth}}></multi-text>
+      <div class="div-split"></div>
+      <multi-text descript='Device Height:' detail={{configEnv.deviceHeight}}></multi-text>
+      
+      <!--View Rect Information-->
+      <text class="sub-title">View Rect Information</text>
+      <div style="flex-direction: row;">
+        <div style="flex:1;">
+          <text repeat="(key,value) in viewDesc" class="titleFont">{{value}}</text>
+        </div>
+        <div class="child-split"></div>
+        
+        <div class="child-split"></div>
+        <div style="flex:1;">
+          <text repeat="(key,value) in viewRect" class="titleFont">{{value}}</text>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</template>
+
+<style>
+  .sub-title{ height:40; background-color: rgb(91, 192, 222); border-color: rgb(70, 184, 218); color: #FFFFFF; border-width: 1;}
+  .div-split{ height: 2; border-width: 1; border-style:dashed; border-color: #375830;}
+  .titleFont{ font-size: 30; padding:15; border-bottom-width: 1}
+  .child-split{ width: 2; border-width: 1; border-style:dashed; border-color: #00FF00;}
+  .component{ border-width:3; font-size:60; text-align: center;background-color:rgb(240, 173, 78);}
+  .viewportBtn{ width: 300; height: 100; margin-top: 20; margin-left: 200; }
+  .basicBtn { width: 190; height: 180; margin-left: 30;margin-top: 20 ;font-size:40; padding: 35;}
+  .stickyBtn { position:sticky; width: 200; height: 60; margin-left: 30;margin-top: 20 ;font-size:40}
+  .fixedBtn { position:fixed; width: 200; height: 170; right: 100; top: 200;padding: 20}
+  .content { height: 400; margin: 10; padding: 20; font-size: 50; color: #00FF00 ;border-color: #FF0000; border-width: 3}
+</style>
+
+<script>
+  module.exports = {
+    data: {
+      configEnv:{},
+      viewRect:['View Rect'],
+      viewDesc:['----','width','height','top','left','bottom','right'],
+      contentList:['1','2','3','4','5','6','7','8','9'],
+    },
+    created: function () {
+      this.$getConfig(function (config) {
+        this.configEnv = config.env
+      }.bind(this));
+    },
+    methods: {
+      getViewportRect: function(e) {      
+        var dom = require('@weex-module/dom');
+        dom.getComponentRect('viewport', function (data) {
+          if (data.result) {
+            this.viewRect = [this.viewRect[0]]
+            this.viewRect.push(data.size.width);
+            this.viewRect.push(data.size.height);
+            this.viewRect.push(data.size.top);
+            this.viewRect.push(data.size.left);
+            this.viewRect.push(data.size.bottom);
+            this.viewRect.push(data.size.right);
+          }
+        }.bind(this));
+      },
+      getViewRect: function(e) {        
+        var dom = require('@weex-module/dom');
+        dom.getComponentRect(this.$el(e.target.attr.value), function (data) {
+          if (data.result) {
+            this.viewRect = [this.viewRect[0]]
+            this.viewRect.push(data.size.width);
+            this.viewRect.push(data.size.height);
+            this.viewRect.push(data.size.top);
+            this.viewRect.push(data.size.left);
+            this.viewRect.push(data.size.bottom);
+            this.viewRect.push(data.size.right);
+          }
+        }.bind(this));
+      }
+    }
+  }
+</script>

@@ -204,30 +204,25 @@
  */
 package com.taobao.weex.ui;
 
+import android.util.Pair;
+
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.bridge.Invoker;
-import com.taobao.weex.bridge.MethodInvoker;
-import com.taobao.weex.common.Component;
-import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.component.WXComponent;
-import com.taobao.weex.ui.component.WXComponentProp;
 import com.taobao.weex.ui.component.WXVContainer;
-import com.taobao.weex.utils.WXLogUtils;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by sospartan on 8/26/16.
  */
 public class ExternalLoaderComponentHolder implements IFComponentHolder {
   public static final String TAG = "SimpleComponentHolder";
-  private Map<String, Invoker> mMethods;
+  private Map<String, Invoker> mPropertyInvokers;
+  private Map<String, Invoker> mMethodInvokers;
   private final IExternalComponentGetter mClzGetter;
   private final String mType;
   private Class mClass;
@@ -242,33 +237,55 @@ public class ExternalLoaderComponentHolder implements IFComponentHolder {
   public void loadIfNonLazy() {
   }
 
-  private synchronized void generate(){
-    Class clz = mClzGetter.getExternalComponentClass(mType);
-    mClass = clz;
+  private synchronized boolean generate(){
+    if(mClass==null){
+      return false;
+    }
 
-    mMethods = SimpleComponentHolder.getMethods(clz);
+    Pair<Map<String, Invoker>, Map<String, Invoker>> methodPair = SimpleComponentHolder.getMethods(mClass);
+    mPropertyInvokers = methodPair.first;
+    mMethodInvokers = methodPair.second;
+    return true;
   }
 
 
 
   @Override
-  public synchronized WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+  public synchronized WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent) throws IllegalAccessException, InvocationTargetException, InstantiationException {
     if(mClass == null){
-      mClass = mClzGetter.getExternalComponentClass(mType);
+      mClass = mClzGetter.getExternalComponentClass(mType,instance);
     }
     ComponentCreator creator = new SimpleComponentHolder.ClazzComponentCreator(mClass);
-    WXComponent component = creator.createInstance(instance,node,parent,lazy);
+    WXComponent component = creator.createInstance(instance,node,parent);
 
     component.bindHolder(this);
     return component;
   }
 
   @Override
-  public synchronized Invoker getMethod(String name){
-    if (mMethods == null) {
-      generate();
+  public synchronized Invoker getPropertyInvoker(String name){
+    if (mPropertyInvokers == null && !generate()) {
+      return null;
     }
 
-    return mMethods.get(name);
+    return mPropertyInvokers.get(name);
+  }
+
+  @Override
+  public Invoker getMethodInvoker(String name) {
+    if(mMethodInvokers == null && !generate()){
+      return null;
+    }
+    return mMethodInvokers.get(name);
+  }
+
+  @Override
+  public String[] getMethods() {
+    if(mMethodInvokers == null && !generate()){
+      //generate failed
+      return new String[0];
+    }
+    Set<String> keys = mMethodInvokers.keySet();
+    return keys.toArray(new String[keys.size()]);
   }
 }
