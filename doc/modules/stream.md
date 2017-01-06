@@ -40,6 +40,11 @@ stream.fetch({
   method: 'GET',
   url: "http://httpbin.org/get",
   type:'json'
+  // Default Content-Type is 'application/x-www-form-urlencoded'. (The type specified in fetch is the response type!)
+  // You need to set the Content-Type header to 'application/json' manually if you want to post the json body.
+  // headers: {
+  //   "Content-Type": "application/json"
+  // }
 }, function(response) {
   //process response
 },function(response){
