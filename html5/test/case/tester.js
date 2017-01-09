@@ -99,7 +99,7 @@ describe('test input and output', function () {
   })
 
   describe('invalid usage', function () {
-    describe('strict mode', () => {
+    describe.skip('strict mode', () => {
       const readSource = name => getCode('throws/' + name + '.source.js')
 
       let app

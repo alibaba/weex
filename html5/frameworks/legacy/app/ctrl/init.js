@@ -73,7 +73,7 @@ export function init (app, code, data, services) {
     functionBody = code.toString()
   }
   // wrap IFFE and use strict mode
-  functionBody = `(function(global){\n\n"use strict";\n\n ${functionBody} \n\n})(Object.create(this))`
+  functionBody = `(function(global){\n\n ${functionBody} \n\n})(Object.create(this))`
 
   // run code and get result
   const { WXEnvironment } = global
@@ -109,6 +109,7 @@ export function init (app, code, data, services) {
   const globalObjects = Object.assign({
     define: bundleDefine,
     require: bundleRequire,
+    document: bundleDocument,
     bootstrap: bundleBootstrap,
     register: bundleRegister,
     render: bundleRender,
