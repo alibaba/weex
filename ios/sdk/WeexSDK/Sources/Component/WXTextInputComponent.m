@@ -424,7 +424,7 @@ WX_EXPORT_METHOD(@selector(blur))
     }
 }
 
-#pragma mark UITextFieldDelegate
+#pragma mark - UITextFieldDelegate
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     if([self isDateType])
@@ -436,8 +436,6 @@ WX_EXPORT_METHOD(@selector(blur))
     }
     return  YES;
 }
-
-#pragma mark UITextFieldDelegate
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
@@ -463,13 +461,25 @@ WX_EXPORT_METHOD(@selector(blur))
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
+    [self fireChangeEvent:textField];
+    
+    if (_blurEvent) {
+        [self fireEvent:@"blur" params:nil];
+    }
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [self fireChangeEvent:textField];
+    return YES;
+}
+
+- (void)fireChangeEvent:(UITextField*)textField
+{
     if (_changeEvent) {
         if (![[textField text] isEqualToString:_changeEventString]) {
             [self fireEvent:@"change" params:@{@"value":[textField text]} domChanges:@{@"attrs":@{@"value":[textField text]}}];
         }
-    }
-    if (_blurEvent) {
-        [self fireEvent:@"blur" params:nil];
     }
 }
 
