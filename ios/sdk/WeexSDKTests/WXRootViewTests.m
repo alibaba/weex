@@ -53,8 +53,8 @@
     [instance1 renderView:jsScript options:nil data:nil];
     XCTestExpectation *expectation1 = [self expectationWithDescription:@"instance 1"];
     instance1.renderFinish = ^(UIView *view){
-        XCTAssert(CGRectEqualToRect(view.frame, instanceFrame));
-        XCTAssert(CGRectEqualToRect(view.subviews[0].frame, CGRectMake(0, 0, instanceFrame.size.width, instanceFrame.size.height)));
+        XCTAssert(WXRectApproximateToRect(view.frame, instanceFrame));
+        XCTAssert(WXRectApproximateToRect(view.subviews[0].frame, CGRectMake(0, 0, instanceFrame.size.width, instanceFrame.size.height)));
         [expectation1 fulfill];
     };
     
@@ -65,8 +65,8 @@
     [instance2 renderView:jsScript options:nil data:templateRootFrameData];
     XCTestExpectation *expectation2 = [self expectationWithDescription:@"instance 2"];
     instance2.renderFinish = ^(UIView *view){
-        XCTAssert(CGRectEqualToRect(view.frame, instanceFrame));
-        XCTAssert(CGRectEqualToRect(view.subviews[0].frame,
+        XCTAssert(WXRectApproximateToRect(view.frame, instanceFrame));
+        XCTAssert(WXRectApproximateToRect(view.subviews[0].frame,
                                     CGRectMake(
                                                WXPixelResize(templateRootFrame.origin.x),
                                                WXPixelResize(templateRootFrame.origin.y),
@@ -83,11 +83,11 @@
     XCTestExpectation *expectation3 = [self expectationWithDescription:@"instance 3"];
     XCTestExpectation *expectation31 = [self expectationWithDescription:@"instance 3 onLayoutChange"];
     instance3.renderFinish = ^(UIView *view){
-        XCTAssert(CGRectEqualToRect(view.frame,
+        XCTAssert(WXRectApproximateToRect(view.frame,
                                     CGRectMake(0,0,
                                                WXPixelResize(templateRootFrame.size.width),
                                                WXPixelResize(templateRootFrame.size.height))));
-        XCTAssert(CGRectEqualToRect(view.subviews[0].frame,
+        XCTAssert(WXRectApproximateToRect(view.subviews[0].frame,
                                     CGRectMake(
                                                WXPixelResize(templateRootFrame.origin.x),
                                                WXPixelResize(templateRootFrame.origin.y),
@@ -101,7 +101,7 @@
         
         [instance3 refreshInstance:changedFrameData];
         instance3.onLayoutChange = ^(UIView *view) {
-            XCTAssert(CGRectEqualToRect(view.frame,
+            XCTAssert(WXRectApproximateToRect(view.frame,
                                         CGRectMake(0,0,
                                                    WXPixelResize(templateRootFrame.size.width),
                                                    WXPixelResize(400))));
@@ -115,9 +115,9 @@
     [instance4 renderView:jsScript options:nil data:nil];
     XCTestExpectation *expectation4 = [self expectationWithDescription:@"instance 4"];
     instance4.renderFinish = ^(UIView *view){
-        XCTAssert(CGRectEqualToRect(view.frame,
+        XCTAssert(WXRectApproximateToRect(view.frame,
                                     CGRectMake(0,0,WXPixelResize(100),WXPixelResize(200))));
-        XCTAssert(CGRectEqualToRect(view.subviews[0].frame,
+        XCTAssert(WXRectApproximateToRect(view.subviews[0].frame,
                                     CGRectMake(0,0,WXPixelResize(100),WXPixelResize(200))));
         [expectation4 fulfill];
     };

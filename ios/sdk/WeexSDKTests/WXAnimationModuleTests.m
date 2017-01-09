@@ -34,22 +34,14 @@
     
 }
 
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
-}
-
 - (void)testAnimationRotate {
     WXComponent *component = [self component];
     WXAnimationModule *object = [[WXAnimationModule alloc]init];
     [object animation:component args:@{@"duration":@500, @"timingFunction":@"ease-in-out", @"styles":@{@"transform":@"rotate(90deg)"}} callback:nil];
     [TestSupportUtils waitSecs:1];
     
-    CGFloat angle = [(NSNumber *)[component.layer valueForKeyPath:@"transform.rotation.z"] floatValue];
-    
-    XCTAssert(fabs(angle - M_PI_2) < 0.00001);
+    CATransform3D transformToVerify = CATransform3DMakeAffineTransform(CGAffineTransformRotate(CGAffineTransformIdentity, M_PI / 2));
+    XCTAssert(WXTransform3DApproximateToTransform(component.layer.transform, transformToVerify));
 }
 
 - (void)testAnimationTranslate {

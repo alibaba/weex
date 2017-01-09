@@ -384,35 +384,65 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
         return new TransformItemDecoration(getOrientation() == Constants.Orientation.VERTICAL, opacity, translateX, translateY, rotate, scaleX, scaleY);
     }
 
+    /**
+     * derived class can override, to implement custom function
+     * @param context context
+     * @return BounceRecyclerView
+     */
+    protected BounceRecyclerView makeBounceRecyclerView(Context context) {
+        return new BounceRecyclerView(context, getOrientation());
+    }
+
     @Override
     protected BounceRecyclerView initComponentHostView(@NonNull Context context) {
-        bounceRecyclerView = new BounceRecyclerView(context, getOrientation());
+        bounceRecyclerView = makeBounceRecyclerView(context);
 
+        final WXRecyclerView innerRecyclerView = bounceRecyclerView.getInnerView();
         String transforms = (String) getDomObject().getAttrs().get(TRANSFORM);
         if (transforms != null) {
-            bounceRecyclerView.getInnerView().addItemDecoration(parseTransforms(transforms));
+            innerRecyclerView.addItemDecoration(parseTransforms(transforms));
         }
 
         RecyclerViewBaseAdapter recyclerViewBaseAdapter = new RecyclerViewBaseAdapter<>(this);
         recyclerViewBaseAdapter.setHasStableIds(true);
         bounceRecyclerView.setAdapter(recyclerViewBaseAdapter);
         bounceRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        bounceRecyclerView.getInnerView().clearOnScrollListeners();
-        bounceRecyclerView.getInnerView().addOnScrollListener(mViewOnScrollListener);
-        bounceRecyclerView.getInnerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
+        bindScrollListener(innerRecyclerView);
+        bounceRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+            @Override
+            public void onGlobalLayout() {
+              mViewOnScrollListener.onScrolled(innerRecyclerView,0,0);
+              View view;
+              if((view = getHostView()) == null)
+                return;
+              if(Build.VERSION.SDK_INT >=  Build.VERSION_CODES.JELLY_BEAN) {
+                view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+              }else{
+                view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+              }
+            }
+       });
+      return bounceRecyclerView;
+    }
+
+    private void bindScrollListener(WXRecyclerView innerRecyclerView) {
+        innerRecyclerView.clearOnScrollListeners();
+        innerRecyclerView.addOnScrollListener(mViewOnScrollListener);
+        innerRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
               super.onScrollStateChanged(recyclerView, newState);
 
                     if(newState == RecyclerView.SCROLL_STATE_IDLE ){
-                    for(ListBaseViewHolder holder:recycleViewList){
-                        if(holder!=null
-                                && holder.getComponent()!=null
-                                && !holder.getComponent().isUsing()) {
-                            recycleImage(holder.getView());
+                        for(ListBaseViewHolder holder:recycleViewList){
+                            if(holder!=null
+                                    && holder.getComponent()!=null
+                                    && !holder.getComponent().isUsing()) {
+                                recycleImage(holder.getView());
+                            }
                         }
-                    }
-                    recycleViewList.clear();
+                        recycleViewList.clear();
                 }
               List<OnWXScrollListener> listeners = getInstance().getWXScrollListeners();
               if (listeners != null && listeners.size() > 0) {
@@ -441,22 +471,6 @@ public class WXListComponent extends WXVContainer<BounceRecyclerView> implements
                 }
             }
         });
-      bounceRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-        @Override
-        public void onGlobalLayout() {
-          mViewOnScrollListener.onScrolled(bounceRecyclerView.getInnerView(),0,0);
-          View view;
-          if((view = getHostView()) == null)
-            return;
-          if(Build.VERSION.SDK_INT >=  Build.VERSION_CODES.JELLY_BEAN) {
-            view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-          }else{
-            view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-          }
-        }
-      });
-      return bounceRecyclerView;
     }
 
   @Override

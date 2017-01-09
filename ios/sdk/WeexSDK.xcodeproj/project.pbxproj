@@ -1159,9 +1159,8 @@
 					};
 					74C8963C1D2AC2210043B82A = {
 						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = "Xing Zhang";
 						DevelopmentTeamName = "Nanjing Taobao Software Co., Ltd.";
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 					77D160FC1C02DBE70010B15B = {
 						CreatedOnToolsVersion = 7.1.1;
@@ -1404,6 +1403,7 @@
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				DEVELOPMENT_TEAM = "";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/WeexSDK/Dependency",
@@ -1427,6 +1427,7 @@
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				DEVELOPMENT_TEAM = "";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/WeexSDK/Dependency",

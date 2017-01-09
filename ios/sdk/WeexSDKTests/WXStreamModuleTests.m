@@ -55,7 +55,7 @@
         callbackResult = result;
         [_exp fulfill];
     }];
-    [self waitForExpectationsWithTimeout:10 handler:^(NSError * error) {
+    [self waitForExpectationsWithTimeout:20 handler:^(NSError * error) {
         XCTAssertNotNil(callbackResult);
     }];
     
