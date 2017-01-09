@@ -461,11 +461,8 @@ WX_EXPORT_METHOD(@selector(blur))
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-    if (_changeEvent) {
-        if (![[textField text] isEqualToString:_changeEventString]) {
-            [self fireEvent:@"change" params:@{@"value":[textField text]} domChanges:@{@"attrs":@{@"value":[textField text]}}];
-        }
-    }
+    [self fireChangeEvent:textField];
+    
     if (_blurEvent) {
         [self fireEvent:@"blur" params:nil];
     }
@@ -473,12 +470,17 @@ WX_EXPORT_METHOD(@selector(blur))
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
+    [self fireChangeEvent:textField];
+    return YES;
+}
+
+- (void)fireChangeEvent:(UITextField*)textField
+{
     if (_changeEvent) {
         if (![[textField text] isEqualToString:_changeEventString]) {
             [self fireEvent:@"change" params:@{@"value":[textField text]} domChanges:@{@"attrs":@{@"value":[textField text]}}];
         }
     }
-    return YES;
 }
 
 - (void)textFiledEditChanged:(NSNotification *)notifi
