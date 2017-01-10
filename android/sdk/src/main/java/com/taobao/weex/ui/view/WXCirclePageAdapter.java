@@ -299,7 +299,16 @@ public class WXCirclePageAdapter extends PagerAdapter {
     if (WXEnvironment.isApkDebugable()) {
       WXLogUtils.d("onPageSelected >>>> destroyItem >>>>> position:" + position);
     }
-    container.removeView(views.get(position % getRealCount()));
+    if (removableIndex(position)) {
+      container.removeView(shadow.get(position));
+    }
+  }
+
+  private boolean removableIndex(int position) {
+    return getRealCount() > 2
+            && needLoop
+            && position > 1
+            && position < getRealCount();
   }
 
   @Override
