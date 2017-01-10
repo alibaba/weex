@@ -422,7 +422,7 @@ WX_EXPORT_METHOD(@selector(blur))
 
 - (void)textViewDidChange:(UITextView *)textView
 {
-    if(textView.text && [textView.text length] > 0){
+    if(textView.text && [textView.text length] > 0) {
         _placeHolderLabel.text = @"";
     }else{
         [self setPlaceholderAttributedString];
@@ -502,7 +502,7 @@ WX_EXPORT_METHOD(@selector(blur))
     CGRect begin = [[[notification userInfo] objectForKey:@"UIKeyboardFrameBeginUserInfoKey"] CGRectValue];
     
     CGRect end = [[[notification userInfo] objectForKey:@"UIKeyboardFrameEndUserInfoKey"] CGRectValue];
-    if(begin.size.height <= 44 ){
+    if(begin.size.height <= 44) {
         return;
     }
     _keyboardSize = end.size;

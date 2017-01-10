@@ -142,7 +142,7 @@
 {
     UIView *itemView = nil;
     for (itemView in self.itemViews) {
-        if (itemView.tag == index){
+        if (itemView.tag == index) {
             break;
         }
     }
@@ -207,7 +207,7 @@
 - (void)_resetItemFrames
 {
     CGFloat xOffset = 0; CGRect frame = CGRectZero;
-    for(UIView *itemView in self.itemViews){
+    for(UIView *itemView in self.itemViews) {
         frame = itemView.frame;
         frame.origin.x = xOffset;
         frame.size.width = self.frame.size.width;
@@ -429,7 +429,7 @@
 {
     UIView *view = component.view;
     
-    if(self.childrenView && [self.childrenView containsObject:view]){
+    if(self.childrenView && [self.childrenView containsObject:view]) {
         [self.childrenView removeObject:view];
     }
     

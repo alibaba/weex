@@ -595,7 +595,7 @@ WX_EXPORT_METHOD(@selector(blur))
     CGRect begin = [[[notification userInfo] objectForKey:@"UIKeyboardFrameBeginUserInfoKey"] CGRectValue];
     
     CGRect end = [[[notification userInfo] objectForKey:@"UIKeyboardFrameEndUserInfoKey"] CGRectValue];
-    if(begin.size.height <= 44 ){
+    if(begin.size.height <= 44) {
         return;
     }
     _keyboardSize = end.size;

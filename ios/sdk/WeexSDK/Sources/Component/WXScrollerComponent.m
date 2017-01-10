@@ -194,7 +194,7 @@ WX_EXPORT_METHOD(@selector(resetLoadmore))
 
 - (void)addStickyComponent:(WXComponent *)sticky
 {
-    if(![self.stickyArray containsObject:sticky]){
+    if(![self.stickyArray containsObject:sticky]) {
         [self.stickyArray addObject:sticky];
         [self adjustSticky];
     }
@@ -202,7 +202,7 @@ WX_EXPORT_METHOD(@selector(resetLoadmore))
 
 - (void)removeStickyComponent:(WXComponent *)sticky
 {
-    if([self.stickyArray containsObject:sticky]){
+    if([self.stickyArray containsObject:sticky]) {
         [self.stickyArray removeObject:sticky];
         [self adjustSticky];
     }
@@ -274,7 +274,7 @@ WX_EXPORT_METHOD(@selector(resetLoadmore))
             break;
         }
     }
-    if (!has){
+    if (!has) {
         WXScrollToTarget *scrollTarget = [[WXScrollToTarget alloc] init];
         scrollTarget.target = target;
         scrollTarget.hasAppear = NO;
@@ -290,7 +290,7 @@ WX_EXPORT_METHOD(@selector(resetLoadmore))
             break;
         }
     }
-    if(targetData){
+    if(targetData) {
         [self.listenerArray removeObject:targetData];
     }
 }
@@ -394,11 +394,11 @@ WX_EXPORT_METHOD(@selector(resetLoadmore))
         }
     }
     
-    if (_lastContentOffset.x > scrollView.contentOffset.x){
+    if (_lastContentOffset.x > scrollView.contentOffset.x) {
         _direction = @"right";
-    } else if (_lastContentOffset.x < scrollView.contentOffset.x){
+    } else if (_lastContentOffset.x < scrollView.contentOffset.x) {
         _direction = @"left";
-    } else if(_lastContentOffset.y > scrollView.contentOffset.y){
+    } else if(_lastContentOffset.y > scrollView.contentOffset.y) {
         _direction = @"down";
     } else if(_lastContentOffset.y < scrollView.contentOffset.y) {
         _direction = @"up";

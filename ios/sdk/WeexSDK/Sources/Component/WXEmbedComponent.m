@@ -180,7 +180,7 @@
             [self setNavigationWithStyles:self.embedInstance.naviBarStyles];
             [[WXSDKManager bridgeMgr] fireEvent:self.embedInstance.instanceId ref:WX_SDK_ROOT_REF type:@"viewappear" params:nil domChanges:nil];
         }
-        else if (state == WeexInstanceDisappear ){
+        else if (state == WeexInstanceDisappear) {
             [[WXSDKManager bridgeMgr] fireEvent:self.embedInstance.instanceId ref:WX_SDK_ROOT_REF type:@"viewdisappear" params:nil domChanges:nil];
         }
     }

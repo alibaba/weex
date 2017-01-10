@@ -37,7 +37,7 @@
 - (id)init
 {
     if (self = [super init]) {
-        if ([self greater8SysVer]){
+        if ([self greater8SysVer]) {
             _playerViewController = [AVPlayerViewController new];
             
         } else {
@@ -80,7 +80,7 @@
 - (void)dealloc
 {
     _weexSDKInstance = nil;
-    if ([self greater8SysVer]){
+    if ([self greater8SysVer]) {
         AVPlayerViewController *AVVC = (AVPlayerViewController*)_playerViewController;
         [AVVC.player removeObserver:self forKeyPath:@"rate"];
         [_playerItem removeObserver:self forKeyPath:@"status"];
@@ -146,7 +146,7 @@
         return;
     }
     NSURL *newURL = [NSURL URLWithString:urlStr];
-    if ([self greater8SysVer]){
+    if ([self greater8SysVer]) {
         
         AVPlayerViewController *AVVC = (AVPlayerViewController*)_playerViewController;
         if (AVVC.player && _playerItem) {
@@ -203,7 +203,7 @@
 
 - (void)pause
 {
-    if ([self greater8SysVer]){
+    if ([self greater8SysVer]) {
         AVPlayerViewController *AVVC = (AVPlayerViewController*)_playerViewController;
         [[AVVC player] pause];
     } else {

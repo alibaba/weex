@@ -305,7 +305,7 @@ do {\
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
     
     // set textColor
-    if(_color){
+    if(_color) {
         [attributedString addAttribute:NSForegroundColorAttributeName value:_color range:NSMakeRange(0, string.length)];
     }
     
