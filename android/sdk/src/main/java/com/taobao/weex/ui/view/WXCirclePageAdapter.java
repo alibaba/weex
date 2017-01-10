@@ -305,10 +305,15 @@ public class WXCirclePageAdapter extends PagerAdapter {
   }
 
   private boolean removableIndex(int position) {
-    return getRealCount() > 2
-            && needLoop
-            && position > 1
-            && position < getRealCount();
+    if (getRealCount() < 3) {
+      return false;
+    }
+
+    return needLoop ? inRemovableRange(position) : true;
+  }
+
+  private boolean inRemovableRange(int position) {
+    return position > 1 && position < getRealCount();
   }
 
   @Override
