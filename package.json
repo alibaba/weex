@@ -37,6 +37,7 @@
     "build:browser:common": "rollup -c build/rollup.browser.common.config.js",
     "build:examples": "webpack --config build/webpack.examples.config.js",
     "build:test": "webpack --config build/webpack.test.config.js",
+    "build:ui-test": "webpack --config build/webpack.macacatest.config.js",
     "build": "npm run build:native && npm run build:browser && npm run build:examples && npm run build:test",
     "dist:browser": "npm run build:browser && npm run build:browser:common && bash ./bin/dist-browser.sh",
     "dist": "npm run dist:browser",
@@ -52,6 +53,7 @@
     "test:cover": "babel-istanbul cover --report text node_modules/mocha/bin/_mocha -- --require reify --reporter dot html5/test/unit/*/*.js html5/test/unit/*/*/*.js",
     "test:e2e": "npm run build:browser && node html5/test/e2e/runner.js",
     "serve": "serve ./ -p 12580",
+    "serve:ui-test": "serve ./test/build/ -p 12581",
     "clean:examples": "echo \"\\033[36;1m[Clean]\\033[0m \\033[33mexamples\\033[0m\" && rm -vrf examples/build/*",
     "clean:test": "echo \"\\033[36;1m[Clean]\\033[0m \\033[33mtest\\033[0m\" && rm -vrf test/build/*",
     "clean": "npm run clean:examples && npm run clean:test",
@@ -78,6 +80,10 @@
     "weex-components": "^0.2.0"
   },
   "devDependencies": {
+    "xml2map": "^1.0.2",
+    "macaca-cli": "^1.1.0",
+    "webdriver-client": "~1.0.0",
+    "macaca-utils": "^0.1.9",
     "babel-core": "^6.17.0",
     "babel-istanbul": "^0.11.0",
     "babel-loader": "^6.2.5",
