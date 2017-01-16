@@ -122,7 +122,7 @@ function _xhr (config, callback, progressCallback) {
     })
   }
 
-  xhr.send(config.body)
+  xhr.send(config.body || null)
 }
 
 const stream = {
