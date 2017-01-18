@@ -141,6 +141,6 @@
   <string name="sbc_name">Google 图书搜索</string>
   <string name="wifi_changing_network">连接到 Wi-Fi \u2026</string>
 
-  <string name="cpu_not_support_tip">对不起,您当前的设备是X86架构.\n我们只支持ARM架构的设备!</string>
+  <string name="cpu_not_support_tip">对不起,您当前的设备是MIPS架构.\n我们只支持ARM和X86架构的设备!</string>
 
 </resources>
