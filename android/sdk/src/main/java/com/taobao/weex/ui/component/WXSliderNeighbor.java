@@ -205,6 +205,7 @@
 package com.taobao.weex.ui.component;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -213,6 +214,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.common.WXThread;
+import com.taobao.weex.dom.WXDomManager;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.ComponentCreator;
 import com.taobao.weex.ui.view.WXCircleIndicator;
@@ -221,8 +225,10 @@ import com.taobao.weex.ui.view.WXCircleViewPager;
 import com.taobao.weex.utils.WXUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Known Issus: In auto play mode, neighbor view not scaled or aplhaed rarely.
@@ -230,53 +236,51 @@ import java.util.List;
  * Created by xingjiu on 16/8/18.
  */
 public class WXSliderNeighbor extends WXSlider {
-    public static final String NEIGHBOR_SCALE = "neighborScale"; // the init scale of neighor page
-    public static final String NEIGHBOR_ALPHA = "neighborAlpha"; // the init alpha of neighor page
+    public static final String NEIGHBOR_SCALE = "neighborScale"; // the init scale of neighbor page
+    public static final String NEIGHBOR_ALPHA = "neighborAlpha"; // the init alpha of neighbor page
+    public static final String NEIGHBOR_SPACE = "neighborSpace"; // the init space of neighbor page
 
     private static final int DEFAULT_NEIGHBOR_SPACE = 25;
     private static final float DEFAULT_NEIGHBOR_SCALE = 0.8F;
     private static final float DEFAULT_NEIGHBOR_ALPHA = 0.6F;
 
-    private float mNerghborScale = DEFAULT_NEIGHBOR_SCALE;
-    private float mNerghborAlpha = DEFAULT_NEIGHBOR_ALPHA;
+    private float mNeighborScale = DEFAULT_NEIGHBOR_SCALE;
+    private float mNeighborAlpha = DEFAULT_NEIGHBOR_ALPHA;
+    private float mNeighborSpace = DEFAULT_NEIGHBOR_SPACE;
 
     private static final float WX_DEFAULT_MAIN_NEIGHBOR_SCALE = 0.9f;
 
-    public WXSliderNeighbor(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
-        super(instance, dom, parent, instanceId, isLazy);
-    }
+    private ZoomTransformer mCachedTransformer;
 
-    public WXSliderNeighbor(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
-        super(instance, node, parent, lazy);
+    public WXSliderNeighbor(WXSDKInstance instance, WXDomObject node, WXVContainer parent) {
+        super(instance, node, parent);
     }
 
     public static class Creator implements ComponentCreator {
-        public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-            return new WXSliderNeighbor(instance, node, parent, lazy);
+        public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+            return new WXSliderNeighbor(instance, node, parent);
         }
     }
 
     @Override
     public void bindData(WXComponent component) {
         super.bindData(component);
-        mViewPager.setCurrentItem(0);
         if(mAdapter.getRealCount() > 3){
             mViewPager.setOffscreenPageLimit(2);
         }else if(mAdapter.getRealCount() == 3){
             mViewPager.setOffscreenPageLimit(1);
         }
-
     }
 
     @Override
-    protected FrameLayout initComponentHostView(Context context) {
+    protected FrameLayout initComponentHostView(@NonNull Context context) {
         FrameLayout view = new FrameLayout(context);
 
         // init view pager
         FrameLayout.LayoutParams pagerParams = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
         pagerParams.gravity = Gravity.CENTER;
-        mViewPager = new WXCircleViewPager(mContext);
+        mViewPager = new WXCircleViewPager(getContext());
         mViewPager.setLayoutParams(pagerParams);
 
         // init adapter
@@ -287,18 +291,58 @@ public class WXSliderNeighbor extends WXSlider {
         view.addView(mViewPager);
         mViewPager.addOnPageChangeListener(mPageChangeListener);
 
-        // set animation
-        mViewPager.setPageTransformer(true, new ZoomTransformer());
         mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        view.setClipChildren(false);
         registerActivityStateListener();
 
         return view;
     }
 
+    /**
+     * we do it in a hack way.
+     * travel the dom tree, to get how many children does this slider-neighbor have.
+     *
+     * @return
+     */
+    private int getNeighborChildrenCount() {
+
+        try {
+            WXDomManager domManager = WXSDKManager.getInstance().getWXDomManager();
+            Field domRegistriesField = domManager.getClass().getDeclaredField("mDomRegistries");
+            domRegistriesField.setAccessible(true);
+            ConcurrentHashMap<String, Object> domRegistriesMap = (ConcurrentHashMap<String, Object>) domRegistriesField.get(domManager);
+            Object domStatement = domRegistriesMap.get(getInstanceId()); // WXDomStatement
+            Field mRegistryField = domStatement.getClass().getDeclaredField("mRegistry");
+            mRegistryField.setAccessible(true);
+            ConcurrentHashMap<String, WXDomObject> mRegistryMap = (ConcurrentHashMap<String, WXDomObject>) mRegistryField.get(domStatement);
+            for(WXDomObject domObject : mRegistryMap.values()) {
+                if(domObject.getType().equalsIgnoreCase(WXBasicComponentType.SLIDER_NEIGHBOR)) {
+                    int sum = 0;
+                    for (int i = 0,count = domObject.getChildCount(); i < count; i++) {
+                        if(domObject.getChild(i) instanceof WXIndicator.IndicatorDomNode) {
+                            continue;
+                        }
+                        sum++;
+                    }
+                    return sum;
+                }
+            }
+        } catch (Exception e) {
+            // ignore
+        }
+
+        return -1;
+
+    }
+
+    ZoomTransformer createTransformer() {
+        if(mCachedTransformer == null) {
+            mCachedTransformer = new ZoomTransformer();
+        }
+        return mCachedTransformer;
+    }
+
     @Override
     protected void addSubView(View view, int index) {
-        updateScaleAndAlpha(view, mNerghborAlpha, mNerghborScale); // we need to set neighbor view status when added.
         if (view == null || mAdapter == null) {
             return;
         }
@@ -307,18 +351,23 @@ public class WXSliderNeighbor extends WXSlider {
             return;
         }
 
-        FrameLayout wrapper = new FrameLayout(mContext);
+        FrameLayout wrapper = new FrameLayout(getContext());
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.gravity = Gravity.CENTER;
         view.setLayoutParams(params);
         wrapper.addView(view);
+        super.addSubView(wrapper,index);
+        updateAdapterScaleAndAlpha(mNeighborAlpha, mNeighborScale); // we need to set neighbor view status when added.
 
-        mAdapter.addPageView(wrapper);
-        mAdapter.notifyDataSetChanged();
-        if (mIndicator != null) {
-            mIndicator.getHostView().forceLayout();
-            mIndicator.getHostView().requestLayout();
-        }
+        view.postDelayed(WXThread.secure(new Runnable() {
+            @Override
+            public void run() {
+                int childCountByDomTree = getNeighborChildrenCount();
+                if(mAdapter.getRealCount() == childCountByDomTree || childCountByDomTree == -1) { // -1 mean failed at get child count by travel the dom tree.
+                    mViewPager.setPageTransformer(false, createTransformer());
+                }
+            }
+        }), 100); // we need to set the PageTransformer when all children has been rendered.
 
     }
 
@@ -326,29 +375,76 @@ public class WXSliderNeighbor extends WXSlider {
         if(null == view) {
             return;
         }
-        if(alpha >= 0) {
+        if(alpha >= 0 && view.getAlpha() != alpha) {
             view.setAlpha(alpha);
         }
-        if(scale >= 0) {
+        if(scale >= 0 && view.getScaleX() != scale) {
             view.setScaleX(scale);
             view.setScaleY(scale);
         }
     }
 
-    private void updateAdpaterScaleAndAplha(float alpha, float scale) {
-        List<View> pageViews = mAdapter.getViews();
-        int cusPos = mViewPager.getCurrentItem();
-        if(null != pageViews && pageViews.size() > 0) {
-            for(View v : pageViews) {
-                View realView = ((ViewGroup)v).getChildAt(0);
+    private void updateAdapterScaleAndAlpha(final float alpha, final float scale) {
+        final List<View> pageViews = mAdapter.getViews();
+        final int curPos = mViewPager.getCurrentItem();
 
-                if(mAdapter.getItemPosition(v) != cusPos) {
-                    updateScaleAndAlpha(realView, alpha, scale);
-                }else{
-                    updateScaleAndAlpha(realView,1.0F,WX_DEFAULT_MAIN_NEIGHBOR_SCALE);
+        if(pageViews.size() > 0) {
+            final View currentPage = pageViews.get(curPos);
+            updateScaleAndAlpha(((ViewGroup)currentPage).getChildAt(0),1.0F,WX_DEFAULT_MAIN_NEIGHBOR_SCALE);
+
+            if(pageViews.size() < 2) {
+                return;
+            }
+            //make sure View's width & height are measured.
+            currentPage.post(WXThread.secure(new Runnable() {
+                @Override
+                public void run() {
+                    //change left and right page's translation
+                    updateNeighbor(currentPage, alpha, scale);
+
+                }
+            }));
+
+            // make sure only display view current, left, right.
+            int left = (curPos == 0) ? pageViews.size()-1 : curPos-1;
+            int right = (curPos == pageViews.size()-1) ? 0 : curPos+1;
+            for(int i =0; i<mAdapter.getRealCount(); i++) {
+                if(i != left && i != curPos && i != right) {
+                    ((ViewGroup)pageViews.get(i)).getChildAt(0).setAlpha(0F);
                 }
             }
         }
+    }
+
+    private void updateNeighbor(View currentPage, final float alpha, final float scale) {
+        final List<View> pageViews = mAdapter.getViews();
+        final int curPos = mViewPager.getCurrentItem();
+
+        float translation = calculateTranslation(currentPage);
+        int left = (curPos == 0) ? pageViews.size()-1 : curPos-1;
+        View leftPage = pageViews.get(left);
+        int right = (curPos == pageViews.size()-1) ? 0 : curPos+1;
+        View rightPage = pageViews.get(right);
+
+        if(pageViews.size() == 2) {
+            if(curPos == 0) {
+                moveRight(rightPage, translation, alpha, scale);
+            }else if(curPos == 1) {
+                moveLeft(leftPage, translation, alpha, scale);
+            }
+        } else {
+            moveLeft(leftPage, translation, alpha, scale);
+            moveRight(rightPage, translation, alpha, scale);
+        }
+    }
+
+    private void moveLeft(View page, float translation, float alpha, float scale) {
+        updateScaleAndAlpha(((ViewGroup)page).getChildAt(0), alpha, scale);
+        page.setTranslationX(translation);
+        ((ViewGroup)page).getChildAt(0).setTranslationX(translation);
+    }
+    private void moveRight(View page, float translation, float alpha, float scale) {
+        moveLeft(page, -translation, alpha, scale);
     }
 
     @WXComponentProp(name = NEIGHBOR_SCALE)
@@ -362,9 +458,9 @@ public class WXSliderNeighbor extends WXSlider {
         }
 
         // addSubView is called before setProperty, so we need to modify the neighbor view in mAdapter.
-        if(this.mNerghborScale != neighborScale) {
-            this.mNerghborScale = neighborScale;
-            updateAdpaterScaleAndAplha(-1, neighborScale);
+        if(this.mNeighborScale != neighborScale) {
+            this.mNeighborScale = neighborScale;
+            updateAdapterScaleAndAlpha(-1, neighborScale);
         }
     }
 
@@ -379,15 +475,31 @@ public class WXSliderNeighbor extends WXSlider {
         }
 
         // The same work as setNeighborScale()
-        if(this.mNerghborAlpha != neighborAlpha) {
-            this.mNerghborAlpha = neighborAlpha;
-            updateAdpaterScaleAndAplha(neighborAlpha, -1);
+        if(this.mNeighborAlpha != neighborAlpha) {
+            this.mNeighborAlpha = neighborAlpha;
+            updateAdapterScaleAndAlpha(neighborAlpha, -1);
+        }
+    }
+
+    @WXComponentProp(name = NEIGHBOR_SPACE)
+    @SuppressWarnings("unused")
+    public void setNeighborSpace(String input) {
+        float neighborSpace = DEFAULT_NEIGHBOR_SPACE;
+        if (!TextUtils.isEmpty(input)) {
+            try {
+                neighborSpace = Float.parseFloat(input);
+            } catch (NumberFormatException e) {
+            }
+        }
+
+        if(this.mNeighborSpace != neighborSpace) {
+            this.mNeighborSpace = neighborSpace;
         }
     }
 
     @Override
     protected boolean setProperty(String key, Object param) {
-        String input = "";
+        String input;
         switch (key) {
             case NEIGHBOR_SCALE:
                 input = WXUtils.getString(param, null);
@@ -401,14 +513,50 @@ public class WXSliderNeighbor extends WXSlider {
                     setNeighborAlpha(input);
                 }
                 return true;
+            case NEIGHBOR_SPACE:
+                input = WXUtils.getString(param, null);
+                if (input != null) {
+                    setNeighborSpace(input);
+                }
+                return true;
         }
         return super.setProperty(key, param);
     }
 
+    /**
+     * we need add translation for left and right card view.
+     * */
+    private float calculateTranslation(@NonNull View hostPage) {
+        if(!(hostPage instanceof ViewGroup)) {
+            return 0;
+        }
+        View realView = ((ViewGroup)hostPage).getChildAt(0);
+        float translation = (hostPage.getMeasuredWidth()-realView.getMeasuredWidth()*mNeighborScale)/4;
+        translation += ((hostPage.getMeasuredWidth()-realView.getMeasuredWidth()*WX_DEFAULT_MAIN_NEIGHBOR_SCALE)/2 - WXViewUtils.getRealPxByWidth(mNeighborSpace))/2 ;
+        return translation;
+    }
+
     // Here is the trick.
-    class ZoomTransformer implements ViewPager.PageTransformer {
+     class ZoomTransformer implements ViewPager.PageTransformer {
         @Override
         public void transformPage(View page, float position) {
+            int pagePosition = mAdapter.getPagePosition(page);
+            int curPosition = mViewPager.getCurrentItem();
+            boolean ignore = false;
+            if(curPosition != 0 && curPosition != mAdapter.getRealCount() - 1 && Math.abs(pagePosition - curPosition) > 1)  {
+                ignore = true;
+            }
+            if(curPosition == 0 && pagePosition < mAdapter.getRealCount() - 1 && pagePosition > 1) {
+                ignore = true;
+            }
+            if(curPosition == mAdapter.getRealCount() - 1 && pagePosition < mAdapter.getRealCount() - 2 && pagePosition > 0) {
+                ignore = true;
+            }
+            // just transfer the neighbor(left & right) page.
+            if(ignore) {
+                return;
+            }
+
             View realView = ((ViewGroup)page).getChildAt(0);
             if(realView == null){
                 return;
@@ -424,28 +572,26 @@ public class WXSliderNeighbor extends WXSlider {
 
             if (position >= -1 && position <= 1) {
                 float factor = Math.abs(Math.abs(position) - 1);
-                scale = mNerghborScale + factor * (WX_DEFAULT_MAIN_NEIGHBOR_SCALE-mNerghborScale);
-                alpha = (1-mNerghborAlpha) * factor + mNerghborAlpha;
-                int delta = page.getMeasuredWidth()-realView.getMeasuredWidth();
-                float translation = ((page.getMeasuredWidth()-realView.getMeasuredWidth()*WX_DEFAULT_MAIN_NEIGHBOR_SCALE)- WXViewUtils.getRealPxByWidth(DEFAULT_NEIGHBOR_SPACE)*2)/2;
-                if(mViewPager.getCurrentItem() != mAdapter.getItemPosition(page)){
-                    if(position > 0){
-                        realView.setPivotX(0);
-                        realView.setTranslationX(-delta);
-                        page.setTranslationX(-translation);
-                    }else{
-                        realView.setPivotX(realView.getMeasuredWidth());
-                        realView.setTranslationX(delta);
-                        page.setTranslationX(translation);
-                    }
-                }else{
-                    realView.setPivotX(realView.getMeasuredWidth()/2);
+                scale = mNeighborScale + factor * (WX_DEFAULT_MAIN_NEIGHBOR_SCALE- mNeighborScale);
+                alpha = (1- mNeighborAlpha) * factor + mNeighborAlpha;
+
+                float translation = calculateTranslation(page);
+                if(position > 0){
+                    translation = (position*translation);
+                    realView.setTranslationX(-translation);
+                    page.setTranslationX(-translation);
+                }else if(position == 0){
                     page.setTranslationX(0);
                     realView.setTranslationX(0);
+                    updateAdapterScaleAndAlpha(mNeighborAlpha, mNeighborScale);
+                }else{
+                    if(mAdapter.getRealCount() == 2 && Math.abs(position) == 1) {
+                        return;
+                    }
+                    translation = (-position*translation);
+                    realView.setTranslationX(translation);
+                    page.setTranslationX(translation);
                 }
-
-                realView.setPivotY(realView.getMeasuredHeight()/2);
-
                 realView.setAlpha(alpha);
                 realView.setScaleX(scale);
                 realView.setScaleY(scale);

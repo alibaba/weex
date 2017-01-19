@@ -8,13 +8,10 @@
 
 #import "WXSDKManager.h"
 #import "WXThreadSafeMutableDictionary.h"
-#import "WXModuleManager.h"
 
 @interface WXSDKManager ()
 
 @property (nonatomic, strong) WXBridgeManager *bridgeMgr;
-
-@property (nonatomic, strong) WXModuleManager *moduleMgr;
 
 @property (nonatomic, strong) WXThreadSafeMutableDictionary *instanceDict;
 
@@ -46,16 +43,6 @@ static WXSDKManager *_sharedInstance = nil;
     return bridgeMgr;
 }
 
-+ (WXModuleManager *)moduleMgr
-{
-    WXModuleManager *moduleMgr = [self sharedInstance].moduleMgr;
-    if (!moduleMgr) {
-        moduleMgr = [[WXModuleManager alloc] init];
-        [self sharedInstance].moduleMgr = moduleMgr;
-    }
-    return moduleMgr;
-}
-
 + (id)instanceForID:(NSString *)identifier
 {
     return [[self sharedInstance].instanceDict objectForKey:identifier];
@@ -81,7 +68,11 @@ static WXSDKManager *_sharedInstance = nil;
     }
     
     [self sharedInstance].bridgeMgr = nil;
-    [self sharedInstance].moduleMgr = nil;
+}
+
++ (WXModuleManager *)moduleMgr
+{
+    return nil;
 }
 
 @end

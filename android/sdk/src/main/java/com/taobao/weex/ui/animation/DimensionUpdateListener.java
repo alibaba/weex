@@ -239,6 +239,8 @@ public class DimensionUpdateListener implements ValueAnimator.AnimatorUpdateList
       ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
       TimeInterpolator interpolator = animation.getInterpolator();
       float fraction = animation.getAnimatedFraction();
+      int preWidth = layoutParams.width;
+      int preHeight = layoutParams.height;
       if (width != null) {
         layoutParams.width = intEvaluator.evaluate(interpolator.getInterpolation(fraction),
                                                    width.first,
@@ -249,7 +251,9 @@ public class DimensionUpdateListener implements ValueAnimator.AnimatorUpdateList
                                                     height.first,
                                                     height.second);
       }
-      view.requestLayout();
+      if (preHeight != layoutParams.height || preWidth != layoutParams.width) {
+        view.requestLayout();
+      }
     }
   }
 

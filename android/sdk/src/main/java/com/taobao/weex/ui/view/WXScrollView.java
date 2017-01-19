@@ -271,6 +271,7 @@ public class WXScrollView extends ScrollView implements Callback, IWXScroller,
   private Rect mScrollRect;
   private int[] stickyScrollerP = new int[2];
   private int[] stickyViewP = new int[2];
+  private boolean scrollable = true;
 
   public WXScrollView(Context context) {
     super(context);
@@ -366,6 +367,9 @@ public class WXScrollView extends ScrollView implements Callback, IWXScroller,
 
   @Override
   public boolean onTouchEvent(MotionEvent ev) {
+    if(!scrollable) {
+      return true; // when scrollable is set to false, then eat the touch event
+    }
     if (mRedirectTouchToStickyView) {
 
       if (mScrollRect == null) {
@@ -444,6 +448,14 @@ public class WXScrollView extends ScrollView implements Callback, IWXScroller,
   @Override
   public boolean hasNestedScrollingParent() {
     return childHelper.hasNestedScrollingParent();
+  }
+
+  public boolean isScrollable() {
+    return scrollable;
+  }
+
+  public void setScrollable(boolean scrollable) {
+    this.scrollable = scrollable;
   }
 
   @Override

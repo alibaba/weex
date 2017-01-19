@@ -20,6 +20,7 @@
 #import <sys/utsname.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 #import "WXPolyfillSet.h"
+#import "JSValue+Weex.h"
 
 #import <dlfcn.h>
 
@@ -127,34 +128,71 @@
 
 - (void)registerCallNative:(WXJSCallNative)callNative
 {
-    NSInteger (^callNativeBlock)(JSValue *, JSValue *, JSValue *) = ^(JSValue *instance, JSValue *tasks, JSValue *callback){
+    JSValue* (^callNativeBlock)(JSValue *, JSValue *, JSValue *) = ^JSValue*(JSValue *instance, JSValue *tasks, JSValue *callback){
         NSString *instanceId = [instance toString];
         NSArray *tasksArray = [tasks toArray];
         NSString *callbackId = [callback toString];
         
         WXLogDebug(@"Calling native... instance:%@, tasks:%@, callback:%@", instanceId, tasksArray, callbackId);
-        return callNative(instanceId, tasksArray, callbackId);
+        return [JSValue valueWithInt32:(int32_t)callNative(instanceId, tasksArray, callbackId) inContext:[JSContext currentContext]];
     };
     
     _jsContext[@"callNative"] = callNativeBlock;
+}
+
+- (void)executeJavascript:(NSString *)script
+{
+    WXAssertParam(script);
+    [_jsContext evaluateScript:script];
 }
 
 - (void)registerCallAddElement:(WXJSCallAddElement)callAddElement
 {
     id callAddElementBlock = ^(JSValue *instanceId, JSValue *ref, JSValue *element, JSValue *index, JSValue *ifCallback) {
         
-        // Temporary here , in order to improve performance, will be refactored next version.
         NSString *instanceIdString = [instanceId toString];
         NSDictionary *componentData = [element toDictionary];
         NSString *parentRef = [ref toString];
         NSInteger insertIndex = [[index toNumber] integerValue];
         
-         WXLogDebug(@"callAddElement...%@, %@, %@, %ld", instanceIdString, parentRef, componentData, insertIndex);
+         WXLogDebug(@"callAddElement...%@, %@, %@, %ld", instanceIdString, parentRef, componentData, (long)insertIndex);
         
-        return callAddElement(instanceIdString, parentRef, componentData, insertIndex);
+        return [JSValue valueWithInt32:(int32_t)callAddElement(instanceIdString, parentRef, componentData, insertIndex) inContext:[JSContext currentContext]];
     };
 
     _jsContext[@"callAddElement"] = callAddElementBlock;
+}
+
+- (void)registerCallNativeModule:(WXJSCallNativeModule)callNativeModuleBlock
+{
+    _jsContext[@"callNativeModule"] = ^JSValue *(JSValue *instanceId, JSValue *moduleName, JSValue *methodName, JSValue *args, JSValue *options) {
+        NSString *instanceIdString = [instanceId toString];
+        NSString *moduleNameString = [moduleName toString];
+        NSString *methodNameString = [methodName toString];
+        NSArray *argsArray = [args toArray];
+        NSDictionary *optionsDic = [options toDictionary];
+        
+        WXLogDebug(@"callNativeModule...%@,%@,%@,%@", instanceIdString, moduleNameString, methodNameString, argsArray);
+        
+        NSInvocation *invocation = callNativeModuleBlock(instanceIdString, moduleNameString, methodNameString, argsArray, optionsDic);
+        JSValue *returnValue = [JSValue wx_valueWithReturnValueFromInvocation:invocation inContext:[JSContext currentContext]];
+        return returnValue;
+    };
+}
+
+- (void)registerCallNativeComponent:(WXJSCallNativeComponent)callNativeComponentBlock
+{
+    _jsContext[@"callNativeComponent"] = ^void(JSValue *instanceId, JSValue *componentName, JSValue *methodName, JSValue *args, JSValue *options) {
+        NSString *instanceIdString = [instanceId toString];
+        NSString *componentNameString = [componentName toString];
+        NSString *methodNameString = [methodName toString];
+        NSArray *argsArray = [args toArray];
+        NSDictionary *optionsDic = [options toDictionary];
+        
+        WXLogDebug(@"callNativeModule...%@,%@,%@,%@", instanceIdString, componentNameString, methodNameString, argsArray);
+        
+        callNativeComponentBlock(instanceIdString, componentNameString, methodNameString, argsArray, optionsDic);
+    };
 }
 
 - (JSValue*)exception

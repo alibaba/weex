@@ -110,8 +110,9 @@
  */
 package com.taobao.weex.ui.component;
 
-import android.graphics.drawable.ColorDrawable;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.taobao.weappplus_sdk.BuildConfig;
@@ -120,16 +121,17 @@ import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKInstanceTest;
 import com.taobao.weex.common.Constants;
 import com.taobao.weex.common.WXImageSharpen;
+import com.taobao.weex.dom.TestDomObject;
 import com.taobao.weex.dom.WXAttr;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.view.WXImageView;
 import com.taobao.weex.ui.view.border.BorderDrawable;
-import com.taobao.weex.utils.WXResourceUtils;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -139,6 +141,8 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 19)
@@ -157,10 +161,10 @@ public class WXImageTest {
   public void setUp() throws Exception {
 
     mInstance = WXSDKInstanceTest.createInstance();
-    mDomObject = PowerMockito.mock(WXDomObject.class);
-    PowerMockito.when(mDomObject.clone()).thenReturn(mDomObject);
+    mDomObject = new TestDomObject();
+    PowerMockito.when(Mockito.spy(mDomObject).clone()).thenReturn(mDomObject);
     mWXDiv = PowerMockito.mock(WXDiv.class);
-    mWXImage = new WXImage(mInstance, mDomObject, mWXDiv, true);
+    mWXImage = new WXImage(mInstance, mDomObject, mWXDiv);
 
   }
 
@@ -226,10 +230,22 @@ public class WXImageTest {
 
   @Test
   public void testSetSrc() throws Exception {
-    mWXImage.mDomObj = new WXDomObject();
-    mWXImage.mDomObj.attr = PowerMockito.mock(WXAttr.class);
-    PowerMockito.when(mWXImage.mDomObj.attr.getImageSharpen()).thenReturn(WXImageSharpen.SHARPEN);
+    TestDomObject.setAttribute((WXDomObject)mWXImage.getDomObject(),PowerMockito.mock(WXAttr.class));
+    PowerMockito.when(mWXImage.getDomObject().getAttrs().getImageSharpen()).thenReturn(WXImageSharpen.SHARPEN);
     mWXImage.setSrc("");
 
+  }
+
+  @Test
+  public void testSetImageBitmap(){
+    ImageView imageView = mWXImage.initComponentHostView(Robolectric.setupActivity(TestActivity.class));
+    imageView.setLayoutParams(new ViewGroup.LayoutParams(
+        ViewGroup.LayoutParams.WRAP_CONTENT,
+        ViewGroup.LayoutParams.WRAP_CONTENT));
+    imageView.setImageBitmap(null);
+    assertNull(imageView.getDrawable());
+
+    imageView.setImageBitmap(Bitmap.createBitmap(100, 100, Bitmap.Config.RGB_565));
+    assertNotNull(imageView.getDrawable());
   }
 }

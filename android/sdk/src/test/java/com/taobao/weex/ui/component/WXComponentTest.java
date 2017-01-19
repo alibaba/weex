@@ -236,17 +236,60 @@ public class WXComponentTest {
 
   @Test
   public void testSetProperty() throws Exception {
-    component.setProperty(Constants.Name.POSITION, Constants.Value.FIXED);
-    component.setProperty(Constants.Name.BORDER_RADIUS,0.5f);
-    component.setProperty(Constants.Name.BORDER_RADIUS,null);
-    component.setProperty(Constants.Name.BORDER_WIDTH,null);
-    component.setProperty(Constants.Name.BORDER_WIDTH,10);
-    component.setProperty(Constants.Name.BORDER_STYLE,null);
-    component.setProperty(Constants.Name.BORDER_STYLE, "SOLID");
-    component.setProperty(Constants.Name.BORDER_COLOR,null);
-    component.setProperty(Constants.Name.BORDER_COLOR, "#ff0000");
-    component.setProperty(Constants.Name.VISIBILITY,null);
-    component.setProperty(Constants.Name.VISIBILITY, Constants.Value.VISIBLE);
+
+    assertTrue(component.setProperty(Constants.Name.VISIBILITY,null));
+    assertTrue(component.setProperty(Constants.Name.VISIBILITY, Constants.Value.VISIBLE));
+
+    assertTrue(component.setProperty(Constants.Name.DISABLED,true));
+    assertTrue(component.setProperty(Constants.Name.POSITION, Constants.Value.FIXED));
+    assertTrue(component.setProperty(Constants.Name.BACKGROUND_COLOR, "#ffffff"));
+    assertTrue(component.setProperty(Constants.Name.OPACITY, 0.5f));
+    assertTrue(component.setProperty(Constants.Name.BORDER_RADIUS,0.5f));
+    assertTrue(component.setProperty(Constants.Name.BORDER_RADIUS,null));
+    assertTrue(component.setProperty(Constants.Name.BORDER_WIDTH,null));
+    assertTrue(component.setProperty(Constants.Name.BORDER_WIDTH,10));
+    assertTrue(component.setProperty(Constants.Name.BORDER_STYLE,null));
+    assertTrue(component.setProperty(Constants.Name.BORDER_STYLE, "SOLID"));
+    assertTrue(component.setProperty(Constants.Name.BORDER_COLOR,null));
+    assertTrue(component.setProperty(Constants.Name.BORDER_COLOR, "#ff0000"));
+
+    assertTrue(component.setProperty(Constants.Name.BORDER_TOP_LEFT_RADIUS, 1));
+    assertTrue(component.setProperty(Constants.Name.BORDER_TOP_RIGHT_RADIUS, 1));
+    assertTrue(component.setProperty(Constants.Name.BORDER_BOTTOM_LEFT_RADIUS, 1));
+    assertTrue(component.setProperty(Constants.Name.BORDER_BOTTOM_RIGHT_RADIUS, 1));
+    assertTrue(component.setProperty(Constants.Name.BORDER_TOP_WIDTH, 1));
+    assertTrue(component.setProperty(Constants.Name.BORDER_LEFT_WIDTH, 1));
+    assertTrue(component.setProperty(Constants.Name.BORDER_BOTTOM_WIDTH, 1));
+    assertTrue(component.setProperty(Constants.Name.BORDER_RIGHT_WIDTH,1));
+
+    assertTrue(component.setProperty(Constants.Name.BORDER_TOP_COLOR, "#ff0000"));
+    assertTrue(component.setProperty(Constants.Name.BORDER_BOTTOM_COLOR, "#ff0000"));
+    assertTrue(component.setProperty(Constants.Name.BORDER_LEFT_COLOR, "#ff0000"));
+    assertTrue(component.setProperty(Constants.Name.BORDER_RIGHT_COLOR, "#ff0000"));
+
+    assertTrue(component.setProperty(Constants.Name.WIDTH, null));
+    assertTrue(component.setProperty(Constants.Name.MIN_WIDTH, null));
+    assertTrue(component.setProperty(Constants.Name.MAX_WIDTH, null));
+    assertTrue(component.setProperty(Constants.Name.HEIGHT, null));
+    assertTrue(component.setProperty(Constants.Name.MIN_HEIGHT, null));
+    assertTrue(component.setProperty(Constants.Name.MAX_HEIGHT, null));
+    assertTrue(component.setProperty(Constants.Name.ALIGN_ITEMS, null));
+    assertTrue(component.setProperty(Constants.Name.ALIGN_SELF, null));
+    assertTrue(component.setProperty(Constants.Name.FLEX, null));
+    assertTrue(component.setProperty(Constants.Name.FLEX_DIRECTION, null));
+    assertTrue(component.setProperty(Constants.Name.JUSTIFY_CONTENT, null));
+    assertTrue(component.setProperty(Constants.Name.FLEX_WRAP, null));
+    assertTrue(component.setProperty(Constants.Name.MARGIN, null));
+    assertTrue(component.setProperty(Constants.Name.MARGIN_TOP, null));
+    assertTrue(component.setProperty(Constants.Name.MARGIN_LEFT, null));
+    assertTrue(component.setProperty(Constants.Name.MARGIN_RIGHT, null));
+    assertTrue(component.setProperty(Constants.Name.MARGIN_BOTTOM, null));
+    assertTrue(component.setProperty(Constants.Name.PADDING, null));
+    assertTrue(component.setProperty(Constants.Name.PADDING_TOP, null));
+    assertTrue(component.setProperty(Constants.Name.PADDING_LEFT, null));
+    assertTrue(component.setProperty(Constants.Name.PADDING_RIGHT, null));
+    assertTrue(component.setProperty(Constants.Name.PADDING_BOTTOM, null));
+
   }
 
 

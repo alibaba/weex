@@ -205,14 +205,16 @@
 package com.taobao.weex.ui;
 
 import com.taobao.weex.bridge.Invoker;
+import com.taobao.weex.bridge.JavascriptInvokable;
 
 /**
  * Created by sospartan on 6/23/16.
  */
-public interface IFComponentHolder extends ComponentCreator {
+public interface IFComponentHolder extends ComponentCreator,JavascriptInvokable {
 
     /** Prepare component if not a lazy load componnet.**/
     void loadIfNonLazy();
 
-    Invoker getMethod(String name);
+    Invoker getPropertyInvoker(String name);
+
 }

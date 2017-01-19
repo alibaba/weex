@@ -192,7 +192,7 @@ export function setId (vm, el, id, target) {
   if (typeof id === 'function') {
     const handler = id
     id = handler.call(vm)
-    if (id) {
+    if (id || id === 0) {
       vm._ids[id] = map
     }
     watch(vm, handler, (newId) => {

@@ -9,7 +9,7 @@
 #import <XCTest/XCTest.h>
 #import "WXStreamModule.h"
 #import <WeexSDK/WeexSDK.h>
-#import "WXNetworkDefaultImpl.h"
+#import "WXResourceRequestHandlerDefaultImpl.h"
 
 @interface WXStreamModuleTests : XCTestCase
 @property (nonatomic, strong)  WXStreamModule *streamModule;
@@ -22,7 +22,7 @@
 - (void)setUp {
     [super setUp];
     _streamModule = [[WXStreamModule alloc] init];
-    [WXSDKEngine registerHandler:[WXNetworkDefaultImpl new] withProtocol:@protocol(WXNetworkProtocol)];
+    [WXSDKEngine registerHandler:[WXResourceRequestHandlerDefaultImpl new] withProtocol:@protocol(WXResourceRequestHandler)];
     _exp = [self expectationWithDescription:@"SendRequestSuccess Unit Test Error!"];
 }
 
@@ -49,20 +49,13 @@
     [self sendHttp:postOption];
 }
 
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
-}
-
 - (void)sendHttp:(NSDictionary*)options {
     __block id callbackResult = nil;
     [_streamModule sendHttp:options callback:^(id result) {
         callbackResult = result;
         [_exp fulfill];
     }];
-    [self waitForExpectationsWithTimeout:10 handler:^(NSError * error) {
+    [self waitForExpectationsWithTimeout:20 handler:^(NSError * error) {
         XCTAssertNotNil(callbackResult);
     }];
     

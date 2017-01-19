@@ -1,0 +1,112 @@
+<template>
+    <scroller>
+        <wxc-panel title="websocket" type="primary">
+            <input
+                    type="text"
+                    placeholder="please input message to send"
+                    class="input"
+                    autofocus="false"
+                    value=""
+                    onchange="onchange"
+                    oninput="oninput"
+                    id = "input"
+            />
+            <div style="flex-direction: row; justify-content: center;">
+                <wxc-button value="connect" size="small"  type="primary" onclick="{{connect}}"></wxc-button>
+                <wxc-button value="send" size="small" onclick="{{send}}" type="primary" style="margin-left:20px;"></wxc-button>
+                <wxc-button value="close" size="small" onclick="{{close}}" type="primary" style="margin-left:20px;"></wxc-button>
+
+            </div>
+
+            <wxc-panel title="method = send">
+                <text>{{sendinfo}}</text>
+            </wxc-panel>
+
+            <wxc-panel title="method = onopen">
+                <text>{{onopeninfo}}</text>
+            </wxc-panel>
+
+            <wxc-panel title="method = onmessage">
+                <text>{{onmessage}}</text>
+            </wxc-panel>
+
+            <wxc-panel title="method = onclose">
+                <text>{{oncloseinfo}}</text>
+            </wxc-panel>
+
+            <wxc-panel title="method = onerror">
+                <text>{{onerrorinfo}}</text>
+            </wxc-panel>
+
+            <wxc-panel title="method = close">
+                <text>{{closeinfo}}</text>
+            </wxc-panel>
+        </wxc-panel>
+    </scroller>
+</template>
+
+<style>
+    .input {
+        font-size: 40px;
+        height: 80px;
+        width: 600px;
+    }
+</style>
+
+<script>
+    require('weex-components');
+    var navigator = require('@weex-module/navigator');
+    var modal = require('@weex-module/modal');
+    var websocket = require('@weex-module/webSocket');
+    module.exports = {
+        data: {
+            connectinfo: '',
+            sendinfo: '',
+            onopeninfo: '',
+            onmessage: '',
+            oncloseinfo: '',
+            onerrorinfo: '',
+            closeinfo: '',
+            txtInput:'',
+            navBarHeight: 88,
+            title: 'Navigator',
+            dir: 'examples',
+            baseURL: '',
+        },
+        methods: {
+            connect:function() {
+                websocket.WebSocket('ws://115.29.193.48:8088','');
+                var self = this;
+                websocket.onopen = function(e)
+                {
+                    self.onopeninfo = e;
+                }
+                websocket.onmessage = function(e)
+                {
+                    self.onmessage = e.data;
+                }
+                websocket.onerror = function(e)
+                {
+                    self.onerrorinfo = e.data;
+                }
+                websocket.onclose = function(e)
+                {
+                    self.onerrorinfo = e.code;
+                }
+            },
+            send:function(e) {
+                var input = this.$el('input');
+                input.blur();
+                websocket.send(this.txtInput);
+                this.sendinfo = this.txtInput;
+
+            },
+            oninput: function(event) {
+                this.txtInput = event.value;
+            },
+            close:function(e) {
+                websocket.close();
+            },
+        }
+    };
+</script>

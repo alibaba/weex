@@ -231,12 +231,22 @@ public class ComponentHolderTest {
       }
 
       @Override
-      public Invoker getMethod(String name) {
+      public Invoker getPropertyInvoker(String name) {
         return null;
       }
 
       @Override
-      public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+      public Invoker getMethodInvoker(String name) {
+        return null;
+      }
+
+      @Override
+      public String[] getMethods() {
+        return new String[0];
+      }
+
+      @Override
+      public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         mComponent.bindHolder(this);
         return mComponent;
       }

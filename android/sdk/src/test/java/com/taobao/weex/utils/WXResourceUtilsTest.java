@@ -204,6 +204,8 @@
  */
 package com.taobao.weex.utils;
 
+import android.graphics.Shader;
+
 import com.taobao.weappplus_sdk.BuildConfig;
 
 import org.junit.Before;
@@ -213,12 +215,14 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * Created by caolijie on 16/8/4.
  */
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = BuildConfig.class,sdk = 19)
 public class WXResourceUtilsTest {
 
   @Before
@@ -301,10 +305,10 @@ public class WXResourceUtilsTest {
 
     //can't match
     color = WXResourceUtils.getColor("rgb(256, 256, 256)");
-    assertEquals(color, Integer.MIN_VALUE);
+    assertEquals(color, 0xffffffff);
 
     color = WXResourceUtils.getColor("rgb(-1, 255, 255)");
-    assertEquals(color, Integer.MIN_VALUE);
+    assertEquals(color, 0xff00ffff);
   }
 
   @Test
@@ -318,5 +322,17 @@ public class WXResourceUtilsTest {
     //can't match
     color = WXResourceUtils.getColor("jahskdja");
     assertEquals(color, Integer.MIN_VALUE);
+  }
+
+  @Test
+  public void testGetShader() throws Exception {
+    Shader shader = WXResourceUtils.getShader("linear-gradient(to bottom,#a80077,blue)", 100, 100);
+    assertNotNull(shader);
+    shader = WXResourceUtils.getShader("linear-gradient(to bottom,#a80077,rgb(255,255,0))", 100, 100);
+    assertNotNull(shader);
+    shader = WXResourceUtils.getShader("linear-gradient(to bottom,#a80077,rgba(255,255,0,0.5))", 100, 100);
+    assertNotNull(shader);
+    shader = WXResourceUtils.getShader("gradient", 100, 100);
+    assertNull(shader);
   }
 }

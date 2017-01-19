@@ -209,7 +209,7 @@ import android.text.TextUtils;
 
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.bridge.JSCallback;
-import com.taobao.weex.common.WXModuleAnno;
+import com.taobao.weex.annotation.JSMethod;
 
 import java.util.Map;
 
@@ -227,9 +227,9 @@ public class WXStorageModule extends WXSDKEngine.DestroyableModule implements IW
 
 
     @Override
-    @WXModuleAnno
+    @JSMethod(uiThread = false)
     public void setItem(String key, String value, @Nullable final JSCallback callback) {
-        if (TextUtils.isEmpty(key) || TextUtils.isEmpty(value)) {
+        if (TextUtils.isEmpty(key) || value == null) {
             StorageResultHandler.handleInvalidParam(callback);
             return;
         }
@@ -252,7 +252,7 @@ public class WXStorageModule extends WXSDKEngine.DestroyableModule implements IW
     }
 
     @Override
-    @WXModuleAnno
+    @JSMethod(uiThread = false)
     public void getItem(String key, @Nullable final JSCallback callback) {
         if (TextUtils.isEmpty(key)) {
             StorageResultHandler.handleInvalidParam(callback);
@@ -275,7 +275,7 @@ public class WXStorageModule extends WXSDKEngine.DestroyableModule implements IW
     }
 
     @Override
-    @WXModuleAnno
+    @JSMethod(uiThread = false)
     public void removeItem(String key, @Nullable final JSCallback callback) {
         if (TextUtils.isEmpty(key)) {
             StorageResultHandler.handleInvalidParam(callback);
@@ -298,7 +298,7 @@ public class WXStorageModule extends WXSDKEngine.DestroyableModule implements IW
     }
 
     @Override
-    @WXModuleAnno
+    @JSMethod(uiThread = false)
     public void length(@Nullable final JSCallback callback) {
         IWXStorageAdapter adapter = ability();
         if (adapter == null) {
@@ -316,7 +316,7 @@ public class WXStorageModule extends WXSDKEngine.DestroyableModule implements IW
     }
 
     @Override
-    @WXModuleAnno
+    @JSMethod(uiThread = false)
     public void getAllKeys(@Nullable final JSCallback callback) {
         IWXStorageAdapter adapter = ability();
         if (adapter == null) {
@@ -334,8 +334,9 @@ public class WXStorageModule extends WXSDKEngine.DestroyableModule implements IW
     }
 
     @Override
+    @JSMethod(uiThread = false)
     public void setItemPersistent(String key, String value, @Nullable final JSCallback callback) {
-        if (TextUtils.isEmpty(key) || TextUtils.isEmpty(value)) {
+        if (TextUtils.isEmpty(key) || value == null) {
             StorageResultHandler.handleInvalidParam(callback);
             return;
         }

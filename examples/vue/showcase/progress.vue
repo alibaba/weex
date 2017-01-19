@@ -22,12 +22,14 @@
 <script>
   var INC = 20;
   module.exports = {
-    data: {
-      fullW: 600,
-      w: 40
+    data: function () {
+      return {
+        fullW: 600,
+        w: 40
+      }
     },
     components: {
-      panel: require('weex-vue-components/panel.vue')
+      panel: require('../include/panel.vue')
     },
     created: function() {
       var me = this;

@@ -3,12 +3,12 @@
     <panel title="Clipboard" type="primary">
       <panel title="Copy to clipboard5">
         <text style="line-height: 40px; font-size: 28px">{{textToCopy}}</text>
-        <button type="info" size="middle" value="Copy" @click="doCopy"></button>
+        <button type="info" size="middle" value="Copy" @click.native="doCopy"></button>
       </panel>
 
       <panel title="Paste from clipboard">
         <text style="line-height: 40px; font-size: 28px">{{textFromPaste}}</text>
-        <button type="info" size="middle" value="Paste" @click="doPaste"></button>
+        <button type="info" size="middle" value="Paste" @click.native="doPaste"></button>
       </panel>
 
       <panel title="Result">
@@ -23,31 +23,32 @@
   var modal = require('@weex-module/modal')
   var clipboard = require('@weex-module/clipboard')
   module.exports = {
-    data: {
-      textToCopy : '',
-      textFromPaste: '',
-      tips : '',
+    data: function () {
+      return {
+        textToCopy : '',
+        textFromPaste: '',
+        tips : ''
+      }
     },
     components: {
-      panel: require('weex-vue-components/panel.vue'),
-      tip: require('weex-vue-components/tip.vue'),
-      button: require('weex-vue-components/button.vue')
+      panel: require('../include/panel.vue'),
+      tip: require('../include/tip.vue'),
+      button: require('../include/button.vue')
     },
-    ready : function() {
+    mounted: function() {
       this.tips = "1. Just click COPY button. It will auto generate a string with random text, and copy to system clipboard. \n 2. do copy in another app, then come back and click PASTE button."
     },
     methods: {
-      clicked: function() {
-        modal.toast({'message': 'clicked!', duration: 0.5})
-      },
       doCopy: function() {
+        modal.toast({'message': 'doCopy!', duration: 0.5})
         textToCopy = "autoGenerateTextToCopy" + Math.random()
         clipboard.setString(textToCopy)
         this.textToCopy = textToCopy
-        this.tips = "copy done. Now system clipboard has string of '" + textToCopy + "', try PASTE button, or paste in another app." 
+        this.tips = "copy done. Now system clipboard has string of '" + textToCopy + "', try PASTE button, or paste in another app."
       },
       doPaste: function() {
         var me = this
+        modal.toast({'message': 'doPaste!', duration: 0.5})
         clipboard.getString(function(ret) {
           console.log("paste result is " + JSON.stringify(ret))
           me.textFromPaste = ret.data

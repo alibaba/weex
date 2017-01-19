@@ -213,7 +213,6 @@ import android.graphics.Paint.Style;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.FrameLayout;
 
 import com.taobao.weex.ui.view.gesture.WXGesture;
@@ -324,7 +323,7 @@ public class WXBaseCircleIndicator extends FrameLayout implements OnPageChangeLi
 
   @Override
   public void onPageSelected(int position) {
-    realCurrentItem = position % getCount();
+    realCurrentItem = mCircleViewPager.getRealCurrentItem();
     invalidate();
     if (mListener != null) {
       mListener.onPageSelected(position);
@@ -498,9 +497,9 @@ public class WXBaseCircleIndicator extends FrameLayout implements OnPageChangeLi
    * @return the count
    */
   public int getCount() {
-    if (mCircleViewPager == null || mCircleViewPager.getCirclePageAdapter() == null) {
+    if (mCircleViewPager == null || mCircleViewPager.getAdapter() == null) {
       return 0;
     }
-    return mCircleViewPager.getCirclePageAdapter().getRealCount();
+    return mCircleViewPager.getRealCount();
   }
 }

@@ -1,0 +1,74 @@
+@import "../variable.scss";
+
+#sidebar {
+  display: none;
+  height: 100%;
+  width: 300px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  padding: 90px 20px 10px;
+  background: #fff;
+  box-shadow: -3px 0 20px rgba(0, 0, 0, .2);
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+
+  .sidebar-menu {
+    z-index: 999;
+    overflow-y: auto;
+
+    .btn-close-sidebar {
+      cursor: pointer;
+      display: block;
+      font-size: 1.5em;
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      background: transparent;
+      border: none;
+      &:hover {
+        border: none;
+        color: #777;
+      }
+    }
+  }
+
+  .main-nav {
+    font-size: 1.3em;
+    border-bottom: 1px solid #DDDDDD;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+
+    li {
+      margin-bottom: 25px;
+      color: $text-black;
+    }
+
+    a {
+      color: $text-black;
+      &:hover {
+        border-bottom: .2em solid $text-blue;
+      }
+    }
+
+    .subnav {
+      font-size: .8em;
+      list-style: none;
+      padding-left: 20px;
+    }
+  }
+
+  .summary {
+    display: block;
+  }
+
+  .results-panel {
+    width: 300px;
+    left: -20px;
+    right: 0;
+  }
+}

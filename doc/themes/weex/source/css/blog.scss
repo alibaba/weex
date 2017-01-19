@@ -1,0 +1,36 @@
+@import "variable.scss";
+
+.blog-wrapper {
+  position: relative;
+  width: 100%;
+  margin: 120px auto 90px;
+  max-width: 900px;
+  min-height: 100%;
+  
+  .article-excerpt {
+    &.article {
+      margin: 0;
+    }
+
+    > h1 {
+      display: none;
+    }
+
+    .weex-version {
+      display: none;
+    }
+  }
+
+  .blog-article-inner {
+    padding: 0 1.45em;
+    margin-bottom: 50px;
+  }
+
+  .more-link {
+    display: block;
+    color: $text-gray;
+    &:hover {
+      color: #777;
+    }
+  }
+}

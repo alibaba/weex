@@ -9,6 +9,7 @@ chai.use(sinonChai)
 import runtime from '../../../runtime'
 import frameworks from '../../../frameworks'
 import defaultConfig from '../../../frameworks/legacy/config'
+import { init as resetTaskHandler } from '../../../runtime/task-center'
 
 const { init, config } = runtime
 config.frameworks = frameworks
@@ -29,8 +30,10 @@ function clearRefs (json) {
 describe('framework entry', () => {
   const oriCallNative = global.callNative
   const oriCallAddElement = global.callAddElement
+  const oriDocumentHandler = config.Document.handler
   const callNativeSpy = sinon.spy()
   const callAddElementSpy = sinon.spy()
+  const documentHandlerSpy = sinon.spy()
   const instanceId = Date.now() + ''
 
   before(() => {
@@ -44,7 +47,6 @@ describe('framework entry', () => {
         }])
       }
     }
-    config.Document.handler = global.callNative
     global.callAddElement = (name, id, ref, json, index, callbackId) => {
       callAddElementSpy(name, ref, json, index, callbackId)
       /* istanbul ignore if */
@@ -55,15 +57,18 @@ describe('framework entry', () => {
         }])
       }
     }
+    config.Document.handler = oriDocumentHandler
+    resetTaskHandler()
   })
 
   afterEach(() => {
     callNativeSpy.reset()
     callAddElementSpy.reset()
+    documentHandlerSpy.reset()
   })
 
   after(() => {
-    config.Document.handler = function () {}
+    config.Document.handler = oriDocumentHandler
     global.callNative = oriCallNative
     global.callAddElement = oriCallAddElement
   })
@@ -104,7 +109,6 @@ describe('framework entry', () => {
         bootstrap('@weex-component/main')
       `
       framework.createInstance(instanceId, code)
-
       expect(callNativeSpy.callCount).to.be.equal(2)
       expect(callAddElementSpy.callCount).to.be.equal(1)
 
@@ -168,7 +172,7 @@ describe('framework entry', () => {
       expect(frameworks.xxx.createInstance.callCount).equal(1)
       expect(frameworks.yyy.createInstance.callCount).equal(0)
       expect(frameworks.Weex.createInstance.callCount).equal(0)
-      expect(frameworks.xxx.createInstance.firstCall.args).eql([
+      expect(frameworks.xxx.createInstance.firstCall.args.slice(0, 4)).eql([
         instanceId + '~',
         code,
         { bundleVersion: '0.3.1', env: {}},
@@ -191,7 +195,7 @@ describe('framework entry', () => {
       expect(frameworks.xxx.createInstance.callCount).equal(2)
       expect(frameworks.yyy.createInstance.callCount).equal(0)
       expect(frameworks.Weex.createInstance.callCount).equal(1)
-      expect(frameworks.Weex.createInstance.firstCall.args).eql([
+      expect(frameworks.Weex.createInstance.firstCall.args.slice(0, 4)).eql([
         instanceId + '~~~',
         code,
         { bundleVersion: undefined, env: {}},
@@ -212,7 +216,7 @@ describe('framework entry', () => {
       expect(frameworks.xxx.createInstance.callCount).equal(2)
       expect(frameworks.yyy.createInstance.callCount).equal(1)
       expect(frameworks.Weex.createInstance.callCount).equal(1)
-      expect(frameworks.yyy.createInstance.firstCall.args).eql([
+      expect(frameworks.yyy.createInstance.firstCall.args.slice(0, 4)).eql([
         instanceId + '~~~~',
         code,
         { bundleVersion: undefined, env: {}},
@@ -225,7 +229,7 @@ describe('framework entry', () => {
       expect(frameworks.xxx.createInstance.callCount).equal(2)
       expect(frameworks.yyy.createInstance.callCount).equal(1)
       expect(frameworks.Weex.createInstance.callCount).equal(2)
-      expect(frameworks.Weex.createInstance.secondCall.args).eql([
+      expect(frameworks.Weex.createInstance.secondCall.args.slice(0, 4)).eql([
         instanceId + '~~~~~',
         code,
         { bundleVersion: undefined, env: {}},
@@ -238,7 +242,7 @@ describe('framework entry', () => {
       expect(frameworks.xxx.createInstance.callCount).equal(2)
       expect(frameworks.yyy.createInstance.callCount).equal(1)
       expect(frameworks.Weex.createInstance.callCount).equal(3)
-      expect(frameworks.Weex.createInstance.thirdCall.args).eql([
+      expect(frameworks.Weex.createInstance.thirdCall.args.slice(0, 4)).eql([
         instanceId + '~~~~~~',
         code,
         { bundleVersion: undefined, env: {}},
@@ -320,14 +324,13 @@ describe('framework entry', () => {
       const textRef = json.children[0].ref
       framework.refreshInstance(instanceId, { showText: false })
       expect(callNativeSpy.callCount).to.be.equal(2)
-
       expect(callNativeSpy.firstCall.args[0]).to.be.equal(instanceId)
       expect(callNativeSpy.firstCall.args[1]).to.deep.equal([{
         module: 'dom',
         method: 'removeElement',
         args: [textRef]
       }])
-      expect(callNativeSpy.firstCall.args[2]).to.be.equal('-1')
+      // expect(callNativeSpy.firstCall.args[2]).to.be.equal('-1')
 
       expect(callNativeSpy.secondCall.args[0]).to.be.equal(instanceId)
       expect(callNativeSpy.secondCall.args[1]).to.deep.equal([{
@@ -335,7 +338,7 @@ describe('framework entry', () => {
         method: 'refreshFinish',
         args: []
       }])
-      expect(callNativeSpy.secondCall.args[2]).to.be.equal('-1')
+      // expect(callNativeSpy.secondCall.args[2]).to.be.equal('-1')
     })
 
     it('with a non-exist instanceId', () => {
@@ -383,6 +386,21 @@ describe('framework entry', () => {
         type: 'e'
       })
       expect(defaultConfig.nativeComponentMap).not.contain.keys('e')
+    })
+
+    it('with methods', () => {
+      const components = [{
+        type: 'x',
+        methods: ['foo', 'bar']
+      }, {
+        type: 'y',
+        methods: []
+      }, {
+        type: 'z',
+        methods: null
+      }]
+      framework.registerComponents(components)
+      expect(defaultConfig.nativeComponentMap).to.contain.keys('x', 'y', 'z')
     })
   })
 

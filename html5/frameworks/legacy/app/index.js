@@ -18,14 +18,14 @@ App.prototype.requireModule = function (name) {
  * @deprecated
  */
 App.prototype.updateActions = function () {
-  updateActions(this)
+  return updateActions(this)
 }
 
 /**
  * @deprecated
  */
 App.prototype.callTasks = function (tasks) {
-  callTasks(this, tasks)
+  return callTasks(this, tasks)
 }
 
 /**

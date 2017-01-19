@@ -214,6 +214,8 @@ import android.widget.FrameLayout;
 
 import com.taobao.weex.common.Constants;
 import com.taobao.weex.ui.component.WXComponent;
+import com.taobao.weex.ui.view.WXLoadingLayout;
+import com.taobao.weex.ui.view.WXRefreshLayout;
 import com.taobao.weex.ui.view.refresh.core.WXRefreshView;
 import com.taobao.weex.ui.view.refresh.core.WXSwipeLayout;
 import com.taobao.weex.utils.WXResourceUtils;
@@ -346,6 +348,28 @@ public abstract class BaseBounceView<T extends View> extends FrameLayout {
         }
     }
 
+    public void removeFooterView(WXComponent loading){
+        setLoadmoreEnable(false);
+        if(swipeLayout!=null){
+            if(swipeLayout.getFooterView()!=null){
+                swipeLayout.setLoadingHeight(0);
+                swipeLayout.getFooterView().removeView(loading.getHostView());
+                swipeLayout.finishPullLoad();
+            }
+        }
+    }
+    //TODO There are bugs, will be more than a rolling height
+    public void removeHeaderView(WXComponent refresh){
+        setRefreshEnable(false);
+        if(swipeLayout!=null){
+            if(swipeLayout.getHeaderView()!=null){
+                swipeLayout.setRefreshHeight(0);
+                swipeLayout.getHeaderView().removeView(refresh.getHostView());
+                swipeLayout.finishPullRefresh();
+            }
+        }
+    }
+
     public void setRefreshEnable(boolean enable) {
         if (swipeLayout != null)
             swipeLayout.setPullRefreshEnable(enable);
@@ -355,6 +379,25 @@ public abstract class BaseBounceView<T extends View> extends FrameLayout {
         if (swipeLayout != null)
             swipeLayout.setPullLoadEnable(enable);
     }
+
+  @Override
+  public void removeView(View view) {
+    if (view instanceof WXLoadingLayout) {
+      finishPullLoad();
+      setLoadmoreEnable(false);
+      if (swipeLayout != null) {
+        swipeLayout.removeView(swipeLayout.getFooterView());
+      }
+    } else if (view instanceof WXRefreshLayout) {
+      finishPullRefresh();
+      setRefreshEnable(false);
+      if (swipeLayout != null) {
+        swipeLayout.removeView(swipeLayout.getHeaderView());
+      }
+    } else {
+      super.removeView(view);
+    }
+  }
 
     public WXSwipeLayout getSwipeLayout() {
         return swipeLayout;

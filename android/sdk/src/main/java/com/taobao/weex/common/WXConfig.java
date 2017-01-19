@@ -216,4 +216,5 @@ public interface WXConfig {
   String appGroup="appGroup";
   String externalUserAgent="externalUserAgent";
   String logLevel="logLevel";
+  String scale = "scale";
 }

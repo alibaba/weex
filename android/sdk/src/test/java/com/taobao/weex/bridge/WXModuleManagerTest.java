@@ -212,8 +212,6 @@ import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKInstanceTest;
 import com.taobao.weex.common.TestModule;
 import com.taobao.weex.common.TypeModuleFactory;
-import com.taobao.weex.common.WXModule;
-import com.taobao.weex.common.WXModuleAnno;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

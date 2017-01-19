@@ -15,12 +15,14 @@
 
 <script>
   module.exports = {
-    data: {
-      items: [
-        {title: 'A', url: 'a'},
-        {title: 'B', url: 'b'},
-        {title: 'C', url: 'c'}
-      ]
+    data: function () {
+      return {
+        items: [
+          {title: 'A', url: 'a'},
+          {title: 'B', url: 'b'},
+          {title: 'C', url: 'c'}
+        ]
+      }
     },
     components: {
       item: require('./include/sub.vue')

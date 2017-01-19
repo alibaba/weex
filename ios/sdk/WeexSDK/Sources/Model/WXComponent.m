@@ -8,6 +8,7 @@
 
 #import "WXComponent.h"
 #import "WXComponent_internal.h"
+#import "WXComponent+GradientColor.h"
 #import "WXComponentManager.h"
 #import "WXSDKManager.h"
 #import "WXSDKInstance.h"
@@ -22,7 +23,9 @@
 #import "WXThreadSafeMutableDictionary.h"
 #import "WXThreadSafeMutableArray.h"
 #import "WXTransform.h"
+#import "WXRoundedRect.h"
 #import <pthread/pthread.h>
+#import "WXComponent+PseudoClassManagement.h"
 
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
 #pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
@@ -65,11 +68,12 @@
         _ref = ref;
         _type = type;
         _weexInstance = weexInstance;
-        _styles = styles ? [NSMutableDictionary dictionaryWithDictionary:styles] : [NSMutableDictionary dictionary];
+        _styles = [self parseStyles:styles];
         _attributes = attributes ? [NSMutableDictionary dictionaryWithDictionary:attributes] : [NSMutableDictionary dictionary];
         _events = events ? [NSMutableArray arrayWithArray:events] : [NSMutableArray array];
-        
         _subcomponents = [NSMutableArray array];
+        
+        _absolutePosition = CGPointMake(NAN, NAN);
         
         _isNeedJoinLayoutSystem = YES;
         _isLayoutDirty = YES;
@@ -121,6 +125,16 @@
     return styles;
 }
 
+- (NSDictionary *)pseudoClassStyles
+{
+    NSDictionary *pseudoClassStyles;
+    pthread_mutex_lock(&_propertyMutex);
+    pseudoClassStyles = _pseudoClassStyles;
+    pthread_mutex_unlock(&_propertyMutex);
+    
+    return pseudoClassStyles;
+}
+
 - (NSString *)type
 {
     return _type;
@@ -140,7 +154,7 @@
 {
     NSArray *events;
     pthread_mutex_lock(&_propertyMutex);
-    events = _events;
+    events = [_events copy];
     pthread_mutex_unlock(&_propertyMutex);
     
     return events;
@@ -183,13 +197,17 @@
         if (![self _needsDrawBorder]) {
             _layer.borderColor = _borderTopColor.CGColor;
             _layer.borderWidth = _borderTopWidth;
-            _layer.cornerRadius = _borderTopLeftRadius;
+            [self _resetNativeBorderRadius];
             _layer.opacity = _opacity;
             _view.backgroundColor = _backgroundColor;
         }
         
+        if (_backgroundImage) {
+            [self setGradientLayer];
+        }
+        
         if (_transform) {
-            _layer.transform = [[WXTransform new] getTransform:_transform withView:_view withOrigin:_transformOrigin];
+            _layer.transform = [[[WXTransform alloc] initWithInstance:self.weexInstance] getTransform:_transform withView:_view withOrigin:_transformOrigin];
         }
         
         _view.wx_component = self;
@@ -197,6 +215,7 @@
         _layer.wx_component = self;
         
         [self _initEvents:self.events];
+        [self _initPseudoEvents:_isListenPseudoTouch];
         
         if (_positionType == WXPositionTypeSticky) {
             [self.ancestorScroller addStickyComponent:self];
@@ -210,26 +229,37 @@
         [self viewDidLoad];
         
         if (_lazyCreateView) {
-            if (self.supercomponent && !((WXComponent *)self.supercomponent)->_lazyCreateView) {
-                NSArray *subcomponents = ((WXComponent *)self.supercomponent).subcomponents;
-                
-                NSInteger index = [subcomponents indexOfObject:self];
-                if (index != NSNotFound) {
-                    [((WXComponent *)self.supercomponent).view insertSubview:_view atIndex:index];
-                }
-            }
-            
-            NSArray *subcomponents = self.subcomponents;
-            for (int i = 0; i < subcomponents.count; i++) {
-                WXComponent *subcomponent = subcomponents[i];
-                [self insertSubview:subcomponent atIndex:i];
-            }
+            [self _buildViewHierachyLazily];
         }
         
         [self _handleFirstScreenTime];
         
         return _view;
     }
+}
+
+- (void)_buildViewHierachyLazily
+{
+    if (self.supercomponent && !((WXComponent *)self.supercomponent)->_lazyCreateView) {
+        NSArray *subcomponents = ((WXComponent *)self.supercomponent).subcomponents;
+        
+        NSInteger index = [subcomponents indexOfObject:self];
+        if (index != NSNotFound) {
+            [(WXComponent *)self.supercomponent insertSubview:self atIndex:index];
+        }
+    }
+    
+    NSArray *subcomponents = self.subcomponents;
+    for (int i = 0; i < subcomponents.count; i++) {
+        WXComponent *subcomponent = subcomponents[i];
+        [self insertSubview:subcomponent atIndex:i];
+    }
+}
+
+- (void)_resetNativeBorderRadius
+{
+    WXRoundedRect *borderRect = [[WXRoundedRect alloc] initWithRect:_calculatedFrame topLeft:_borderTopRightRadius topRight:_borderTopRightRadius bottomLeft:_borderBottomLeftRadius bottomRight:_borderBottomRightRadius];
+    _layer.cornerRadius = borderRect.radii.topLeft;
 }
 
 - (void)_handleFirstScreenTime
@@ -343,12 +373,15 @@
 
 #pragma mark Updating
 
-- (void)_updateStylesOnComponentThread:(NSDictionary *)styles
+- (void)_updateStylesOnComponentThread:(NSDictionary *)styles resetStyles:(NSMutableArray *)resetStyles isUpdateStyles:(BOOL)isUpdateStyles
 {
-    pthread_mutex_lock(&_propertyMutex);
-    [_styles addEntriesFromDictionary:styles];
-    pthread_mutex_unlock(&_propertyMutex);
+    if (isUpdateStyles) {
+        pthread_mutex_lock(&_propertyMutex);
+        [_styles addEntriesFromDictionary:styles];
+        pthread_mutex_unlock(&_propertyMutex);
+    }
     [self _updateCSSNodeStyles:styles];
+    [self _resetCSSNodeStyles:resetStyles];
 }
 
 - (void)_updateAttributesOnComponentThread:(NSDictionary *)attributes
@@ -372,14 +405,15 @@
     pthread_mutex_unlock(&_propertyMutex);
 }
 
-- (void)_updateStylesOnMainThread:(NSDictionary *)styles
+- (void)_updateStylesOnMainThread:(NSDictionary *)styles resetStyles:(NSMutableArray *)resetStyles
 {
     WXAssertMainThread();
-    
     [self _updateViewStyles:styles];
+    [self _resetStyles:resetStyles];
     [self _handleBorders:styles isUpdating:YES];
     
     [self updateStyles:styles];
+    [self resetStyles:resetStyles];
 }
 
 - (void)_updateAttributesOnMainThread:(NSDictionary *)attributes
@@ -396,7 +430,20 @@
     WXAssertMainThread();
 }
 
+- (void)readyToRender
+{
+    if (self.weexInstance.trackComponent) {
+        [self.supercomponent readyToRender];
+    }
+}
+
 - (void)updateAttributes:(NSDictionary *)attributes
+{
+    WXAssertMainThread();
+}
+
+#pragma mark Reset
+- (void)resetStyles:(NSArray *)styles
 {
     WXAssertMainThread();
 }

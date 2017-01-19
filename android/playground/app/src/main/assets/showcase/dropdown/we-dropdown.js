@@ -40,109 +40,36 @@
 /******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
-/***/ function(module, exports) {
+/******/ ({
 
-	;__weex_define__("@weex-component/526974094623ab419c9886ba381581b7", [], function(__weex_require__, __weex_exports__, __weex_module__){
+/***/ 0:
+/***/ function(module, exports, __webpack_require__) {
 
-	;
-	    var animation = __weex_require__('@weex-module/animation');
+	var __weex_template__ = __webpack_require__(226)
+	var __weex_style__ = __webpack_require__(227)
+	var __weex_script__ = __webpack_require__(228)
 
-	    __weex_module__.exports = {
-	        data: function () {return {
-	            statusId: '0', 
-	            status: [
-	                {id: '0', name: 'All'},
-	                {id: '1', name: 'Doing'},
-	                {id: '2', name: 'Done'}
-	            ],
-	            flagSrc: 'https://gw.alicdn.com/tps/TB11a2lKFXXXXbVXpXXXXXXXXXX-32-32.png',
-	            arrowSrc: 'https://gw.alicdn.com/tps/TB1O3_aKFXXXXXdXVXXXXXXXXXX-27-23.png'
-	        }},
-	        computed: {
-	            statusName: {
-	                get: function(){
-	                    var id = this.statusId;
-	                    return this.status.filter(function(s){
-	                        return s.id == id
-	                    })[0].name;
-	                }
-	            }
-	        },
-	        methods: {
-	            switchView: function() { 
-	                this.toggleMaskVisible();
+	__weex_define__('@weex-component/ffbcbcf1bd6120b070f00ceafeb0160e', [], function(__weex_require__, __weex_exports__, __weex_module__) {
 
-	                this.opacity(this._ids.mask.el.ref);
-	                this.collapse(this._ids.options.el.ref);
-	                this.rotate(this._ids.arrow.el.ref);
-
-	            },
-
-	            onItemClick: function(e) {
-	                var vid = e.target.attr.vid;
-	                this.updateStatus(vid);
-	                this.switchView();
-	                this.$dispatch('statuschange', {
-	                    id: this.statusId,
-	                    name: this.statusName
-	                })
-	            },
-
-	            updateStatus: function(id) { 
-	                this.statusId = id; 
-	            },
-
-	            toggleMaskVisible: function(){
-	                this.current_showMask = !this.current_showMask;
-	                var visibility = this.current_showMask? 'visible': 'hidden';
-	                this._ids.mask.el.setClassStyle({visibility:visibility});
-	            },
-
-	            collapse: function(ref, callback) {
-	                var platform = this.$getConfig().env.platform;
-	                var translate = 'translate(0, 100%)'; // Web need % ;
-	                if(platform == 'iOS') {
-	                    translate = 'translate(0, 270)'; // ios bug && fixing
-	                }
-	                this.current_translate = this.current_translate ? '' : translate;
-	                this.anim(ref, {
-	                  transform: this.current_translate
-	                }, 'ease', 100, callback);
-	            },
-
-	            opacity: function(ref, callback) {
-	                var self = this;
-	                self.current_opacity = self.current_opacity === 1 ? 0.1 : 1;
-	                self.anim(ref, {
-	                    opacity: self.current_opacity
-	                }, 'ease', 100, callback);
-	            },
-
-	            rotate: function(ref, callback) {
-	                var self = this;
-	                if(!self.current_rotate) {
-	                    self.current_rotate = 0;
-	                }
-	                self.current_rotate = self.current_rotate + 180;
-	                self.anim(ref, {
-	                    transform: 'rotate(' + self.current_rotate + 'deg)'
-	                }, 'linear', 100, callback);
-	            },
-
-	            anim: function(ref, styles, timingFunction, duration, callback) {
-	                animation.transition(ref, {
-	                  styles: styles,
-	                  timingFunction: timingFunction,
-	                  duration: duration
-	                }, callback || function(){});
-	            }
-	        }
+	    __weex_script__(__weex_module__, __weex_exports__, __weex_require__)
+	    if (__weex_exports__.__esModule && __weex_exports__.default) {
+	      __weex_module__.exports = __weex_exports__.default
 	    }
 
-	;__weex_module__.exports.template = __weex_module__.exports.template || {}
-	;Object.assign(__weex_module__.exports.template, {
+	    __weex_module__.exports.template = __weex_template__
+
+	    __weex_module__.exports.style = __weex_style__
+
+	})
+
+	__weex_bootstrap__('@weex-component/ffbcbcf1bd6120b070f00ceafeb0160e',undefined,undefined)
+
+/***/ },
+
+/***/ 226:
+/***/ function(module, exports) {
+
+	module.exports = {
 	  "type": "div",
 	  "classList": [
 	    "select-container"
@@ -241,9 +168,14 @@
 	      ]
 	    }
 	  ]
-	})
-	;__weex_module__.exports.style = __weex_module__.exports.style || {}
-	;Object.assign(__weex_module__.exports.style, {
+	}
+
+/***/ },
+
+/***/ 227:
+/***/ function(module, exports) {
+
+	module.exports = {
 	  "select-container": {
 	    "flexDirection": "column",
 	    "position": "relative",
@@ -320,11 +252,106 @@
 	  "current": {
 	    "color": "#0088FB"
 	  }
-	})
-	})
-	;__weex_bootstrap__("@weex-component/526974094623ab419c9886ba381581b7", {
-	  "transformerVersion": "0.3.1"
-	},undefined)
+	}
+
+/***/ },
+
+/***/ 228:
+/***/ function(module, exports) {
+
+	module.exports = function(module, exports, __weex_require__){'use strict';
+
+	var animation = __weex_require__('@weex-module/animation');
+
+	module.exports = {
+	    data: function () {return {
+	        statusId: '0',
+	        status: [{ id: '0', name: 'All' }, { id: '1', name: 'Doing' }, { id: '2', name: 'Done' }],
+	        flagSrc: 'https://gw.alicdn.com/tps/TB11a2lKFXXXXbVXpXXXXXXXXXX-32-32.png',
+	        arrowSrc: 'https://gw.alicdn.com/tps/TB1O3_aKFXXXXXdXVXXXXXXXXXX-27-23.png'
+	    }},
+	    computed: {
+	        statusName: {
+	            get: function get() {
+	                var id = this.statusId;
+	                return this.status.filter(function (s) {
+	                    return s.id == id;
+	                })[0].name;
+	            }
+	        }
+	    },
+	    methods: {
+	        switchView: function switchView() {
+	            this.toggleMaskVisible();
+
+	            this.opacity(this._ids.mask.el.ref);
+	            this.collapse(this._ids.options.el.ref);
+	            this.rotate(this._ids.arrow.el.ref);
+	        },
+
+	        onItemClick: function onItemClick(e) {
+	            var vid = e.target.attr.vid;
+	            this.updateStatus(vid);
+	            this.switchView();
+	            this.$dispatch('statuschange', {
+	                id: this.statusId,
+	                name: this.statusName
+	            });
+	        },
+
+	        updateStatus: function updateStatus(id) {
+	            this.statusId = id;
+	        },
+
+	        toggleMaskVisible: function toggleMaskVisible() {
+	            this.current_showMask = !this.current_showMask;
+	            var visibility = this.current_showMask ? 'visible' : 'hidden';
+	            this._ids.mask.el.setClassStyle({ visibility: visibility });
+	        },
+
+	        collapse: function collapse(ref, callback) {
+	            var platform = this.$getConfig().env.platform;
+	            var translate = 'translate(0, 100%)';
+	            if (platform == 'iOS') {
+	                translate = 'translate(0, 270)';
+	            }
+	            this.current_translate = this.current_translate ? '' : translate;
+	            this.anim(ref, {
+	                transform: this.current_translate
+	            }, 'ease', 100, callback);
+	        },
+
+	        opacity: function opacity(ref, callback) {
+	            var self = this;
+	            self.current_opacity = self.current_opacity === 1 ? 0.1 : 1;
+	            self.anim(ref, {
+	                opacity: self.current_opacity
+	            }, 'ease', 100, callback);
+	        },
+
+	        rotate: function rotate(ref, callback) {
+	            var self = this;
+	            if (!self.current_rotate) {
+	                self.current_rotate = 0;
+	            }
+	            self.current_rotate = self.current_rotate + 180;
+	            self.anim(ref, {
+	                transform: 'rotate(' + self.current_rotate + 'deg)'
+	            }, 'linear', 100, callback);
+	        },
+
+	        anim: function anim(ref, styles, timingFunction, duration, callback) {
+	            animation.transition(ref, {
+	                styles: styles,
+	                timingFunction: timingFunction,
+	                duration: duration
+	            }, callback || function () {});
+	        }
+	    }
+	};}
+	/* generated by weex-loader */
+
 
 /***/ }
-/******/ ]);
+
+/******/ });

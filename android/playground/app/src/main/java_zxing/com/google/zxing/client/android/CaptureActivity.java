@@ -570,46 +570,38 @@ public final class CaptureActivity extends Activity implements
 		}
 	}
 
-	// Put up our own UI for how to handle the decoded contents.
-	private void handleDecodeInternally(Result rawResult,
-			ResultHandler resultHandler, Bitmap barcode) {
-
-          String code = rawResult.getText();
-          if (!TextUtils.isEmpty(code)) {
-            Uri uri = Uri.parse(code);
-            if (uri.getQueryParameterNames().contains("bundle")) {
-              WXEnvironment.sDynamicMode = uri.getBooleanQueryParameter("debug", false);
-              WXEnvironment.sDynamicUrl = uri.getQueryParameter("bundle");
-              String tip=WXEnvironment.sDynamicMode?"Has switched to Dynamic Mode":"Has switched to Normal Mode";
-              Toast.makeText(this,tip,Toast.LENGTH_SHORT).show();
-              finish();
-	      return;
-            } else if (uri.getQueryParameterNames().contains("_wx_devtool")) {
-	      WXEnvironment.sRemoteDebugProxyUrl=uri.getQueryParameter("_wx_devtool");
-	      WXSDKEngine.reload();
-	      Toast.makeText(this,"devtool",Toast.LENGTH_SHORT).show();
+  // Put up our own UI for how to handle the decoded contents.
+  private void handleDecodeInternally(Result rawResult, ResultHandler resultHandler, Bitmap barcode) {
+    String code = rawResult.getText();
+    if (!TextUtils.isEmpty(code)) {
+      Uri uri = Uri.parse(code);
+      if (uri.getPath().contains("dynamic/replace")) {
+        Intent intent = new Intent("weex.intent.action.dynamic", uri);
+        intent.addCategory("weex.intent.category.dynamic");
+        startActivity(intent);
 	      finish();
-	      return;
-            }
+      } else if (uri.getQueryParameterNames().contains("_wx_devtool")) {
+        WXEnvironment.sRemoteDebugProxyUrl = uri.getQueryParameter("_wx_devtool");
+        WXSDKEngine.reload();
+        Toast.makeText(this, "devtool", Toast.LENGTH_SHORT).show();
+        finish();
+        return;
+      } else  if (code.contains("_wx_debug")) {
+        uri = Uri.parse(code);
+        String debug_url = uri.getQueryParameter("_wx_debug");
+        WXSDKEngine.switchDebugModel(true, debug_url);
+        finish();
+      } else {
+        Toast.makeText(this, rawResult.getText(), Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(CaptureActivity.this, WXPageActivity.class);
+        intent.setData(Uri.parse(code));
+        startActivity(intent);
+      }
+    }
+  }
 
-            if (code.contains("_wx_debug")) {
-              uri = Uri.parse(code);
-              String debug_url = uri.getQueryParameter("_wx_debug");
-	      WXSDKEngine.switchDebugModel(true,debug_url);
-              finish();
-            } else {
-              Toast.makeText(this, rawResult.getText(), Toast.LENGTH_SHORT)
-                  .show();
-              Intent intent;
 
-              intent = new Intent(CaptureActivity.this, WXPageActivity.class);
-              intent.setData(Uri.parse(code));
-              startActivity(intent);
-            }
-          }
-        }
-
-	// Briefly show the contents of the barcode, then handle the result outside
+  // Briefly show the contents of the barcode, then handle the result outside
 	// Barcode Scanner.
 	private void handleDecodeExternally(Result rawResult,
 			ResultHandler resultHandler, Bitmap barcode) {

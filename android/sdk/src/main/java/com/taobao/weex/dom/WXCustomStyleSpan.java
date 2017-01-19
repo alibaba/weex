@@ -12,7 +12,7 @@ import android.text.TextPaint;
 import android.text.style.MetricAffectingSpan;
 import com.taobao.weex.utils.TypefaceUtil;
 
-class WXCustomStyleSpan extends MetricAffectingSpan {
+public class WXCustomStyleSpan extends MetricAffectingSpan {
 
   private final int mStyle;
   private final int mWeight;

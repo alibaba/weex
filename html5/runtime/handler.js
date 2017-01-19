@@ -21,7 +21,7 @@ const handlerMap = {
  * @return {function} taskHandler
  */
 export function createHandler (id, handler) {
-  const defaultHandler = handler || callNative
+  const defaultHandler = handler || global.callNative
 
   /* istanbul ignore if */
   if (typeof defaultHandler !== 'function') {

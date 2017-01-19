@@ -253,9 +253,9 @@ public class ImageAdapter implements IWXImgLoaderAdapter {
           view.setTag(strategy.placeHolder.hashCode(),picasso);
         }
 
-
         Picasso.with(WXEnvironment.getApplication())
             .load(temp)
+            .transform(new BlurTransformation(strategy.blurRadius))
             .into(view, new Callback() {
               @Override
               public void onSuccess() {

@@ -207,13 +207,13 @@ package com.taobao.weex.ui.module;
 import android.os.Message;
 
 import com.taobao.weex.bridge.WXBridgeManager;
+import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.common.WXJSBridgeMsgType;
 import com.taobao.weex.common.WXModule;
-import com.taobao.weex.common.WXModuleAnno;
 
 public class WXTimerModule extends WXModule {
 
-  @WXModuleAnno(runOnUIThread = false)
+  @JSMethod(uiThread = false)
   public void setTimeout(int funcId, int delay) {
     if(delay<0){
       delay = 0;
@@ -228,12 +228,12 @@ public class WXTimerModule extends WXModule {
     WXBridgeManager.getInstance().sendMessageDelayed(message, delay);
   }
 
-  @WXModuleAnno(runOnUIThread = false)
+  @JSMethod(uiThread = false)
   public void setInterval(int funcId, int interval) {
     setInterval(funcId, interval, Integer.parseInt(mWXSDKInstance.getInstanceId()));
   }
 
-  @WXModuleAnno(runOnUIThread = false)
+  @JSMethod(uiThread = false)
   public void clearTimeout(int funcId) {
     if(funcId <= 0){
       return;
@@ -241,7 +241,7 @@ public class WXTimerModule extends WXModule {
     WXBridgeManager.getInstance().removeMessage(WXJSBridgeMsgType.MODULE_TIMEOUT, funcId);
   }
 
-  @WXModuleAnno(runOnUIThread = false)
+  @JSMethod(uiThread = false)
   public void clearInterval(int funcId) {
     if(funcId <= 0){
       return;

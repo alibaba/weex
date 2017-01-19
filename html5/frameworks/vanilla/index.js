@@ -17,9 +17,10 @@ function registerMethods (apis) {}
 
 function prepareInstance (id, options, data) {}
 
-function createInstance (id, code, options, data) {
+function createInstance (id, code, options, data, serviceObjects) {
   const document = new config.Document(id, options.bundleUrl)
   const callbacks = {}
+
   let lastCallbackId = 0
   document.addCallback = func => {
     lastCallbackId++
@@ -34,27 +35,25 @@ function createInstance (id, code, options, data) {
     return callback(data)
   }
   instanceMap[id] = document
-  const result = new Function(
-    'Document',
-    'Element',
-    'Comment',
-    'sendTasks',
-    'id',
-    'options',
-    'data',
-    'document',
-    code
-  )
-  return result(
-    config.Document,
-    config.Element,
-    config.Comment,
-    config.sendTasks,
-    id,
-    options,
-    data,
-    document
-  )
+
+  const globalObjects = Object.assign({
+    Document: config.Document,
+    Element: config.Element,
+    Comment: config.Comment,
+    sendTasks: config.sendTasks,
+    id, options, data, document
+  }, serviceObjects)
+
+  const globalKeys = []
+  const globalValues = []
+  for (const key in globalObjects) {
+    globalKeys.push(key)
+    globalValues.push(globalObjects[key])
+  }
+  globalKeys.push(code)
+
+  const result = new Function(...globalKeys)
+  return result(...globalValues)
 }
 
 function refreshInstance (id, data) {}

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class WXBridgeMethod;
+@class WXCallJSMethod;
 @class WXSDKInstance;
 
 @interface WXBridgeContext : NSObject
@@ -62,12 +62,19 @@
  *  Execute JS Method
  *  @param method    :   object of bridge method
  **/
-- (void)executeJsMethod:(WXBridgeMethod *)method;
+- (void)executeJsMethod:(WXCallJSMethod *)method;
 /**
  *  Register Modules Method
  *  @param modules   :   module list
  **/
 - (void)registerModules:(NSDictionary *)modules;
+
+/**
+ *  Execute JS Service
+ *  @param method    :   JS services name
+ *  @param method    :   JS services script
+ **/
+- (void)executeJsService:(NSString *)script withName: (NSString *)name;
 
 /**
  *  Register Components Method

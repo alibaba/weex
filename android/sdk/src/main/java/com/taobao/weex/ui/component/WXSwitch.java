@@ -206,12 +206,11 @@ package com.taobao.weex.ui.component;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.TypedValue;
 import android.widget.CompoundButton;
 
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
-import com.taobao.weex.common.Component;
+import com.taobao.weex.annotation.Component;
 import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.view.WXSwitchView;
@@ -222,11 +221,13 @@ import java.util.Map;
 
 @Component(lazyload = false)
 
-public class WXSwitch extends WXComponent<WXSwitchView>{
+public class WXSwitch extends WXComponent<WXSwitchView> {
+
+  private CompoundButton.OnCheckedChangeListener mListener;
 
   @Deprecated
   public WXSwitch(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
-    this(instance,dom,parent,isLazy);
+    this(instance, dom, parent, isLazy);
   }
 
   public WXSwitch(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
@@ -235,9 +236,7 @@ public class WXSwitch extends WXComponent<WXSwitchView>{
 
   @Override
   protected WXSwitchView initComponentHostView(@NonNull Context context) {
-    WXSwitchView view = new WXSwitchView(context);
-    view.setTextSize(TypedValue.COMPLEX_UNIT_PX,22);
-    return view;
+    return new WXSwitchView(context);
   }
 
 
@@ -245,26 +244,29 @@ public class WXSwitch extends WXComponent<WXSwitchView>{
   public void addEvent(String type) {
     super.addEvent(type);
     if (type != null && type.equals(Constants.Event.CHANGE) && getHostView() != null) {
-      getHostView().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-          Map<String, Object> params = new HashMap<>(2);
-          params.put("value", isChecked);
+      if (mListener == null) {
+        mListener = new CompoundButton.OnCheckedChangeListener() {
+          @Override
+          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            Map<String, Object> params = new HashMap<>(2);
+            params.put("value", isChecked);
 
-          Map<String, Object> domChanges = new HashMap<>();
-          Map<String, Object> attrsChanges = new HashMap<>();
-          attrsChanges.put("checked",Boolean.toString(isChecked));
-          domChanges.put("attrs",attrsChanges);
-          WXSDKManager.getInstance().fireEvent(getInstanceId(), getDomObject().getRef(), Constants.Event.CHANGE, params,domChanges);
-        }
-      });
+            Map<String, Object> domChanges = new HashMap<>();
+            Map<String, Object> attrsChanges = new HashMap<>();
+            attrsChanges.put("checked",Boolean.toString(isChecked));
+            domChanges.put("attrs",attrsChanges);
+            fireEvent(Constants.Event.CHANGE, params,domChanges);
+          }
+        };
+      }
+      getHostView().setOnCheckedChangeListener(mListener);
     }
   }
 
   @Override
   protected void removeEventFromView(String type) {
     super.removeEventFromView(type);
-    if (getHostView() != null) {
+    if (getHostView() != null && Constants.Event.CHANGE.equals(type)) {
       getHostView().setOnCheckedChangeListener(null);
     }
   }
@@ -273,9 +275,10 @@ public class WXSwitch extends WXComponent<WXSwitchView>{
   protected boolean setProperty(String key, Object param) {
     switch (key) {
       case Constants.Name.CHECKED:
-        Boolean result = WXUtils.getBoolean(param,null);
-        if (result != null)
+        Boolean result = WXUtils.getBoolean(param, null);
+        if (result != null) {
           setChecked(result);
+        }
         return true;
     }
     return super.setProperty(key, param);
@@ -283,6 +286,8 @@ public class WXSwitch extends WXComponent<WXSwitchView>{
 
   @WXComponentProp(name = Constants.Name.CHECKED)
   public void setChecked(boolean checked) {
+    getHostView().setOnCheckedChangeListener(null);
     getHostView().setChecked(checked);
+    getHostView().setOnCheckedChangeListener(mListener);
   }
 }

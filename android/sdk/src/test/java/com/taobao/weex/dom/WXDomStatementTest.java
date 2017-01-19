@@ -212,6 +212,7 @@ import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKInstanceTest;
 import com.taobao.weex.bridge.WXBridgeManagerTest;
 import com.taobao.weex.ui.WXRenderManager;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -256,6 +257,18 @@ public class WXDomStatementTest {
     body.put("type","div");
     body.put("ref",WXDomObject.ROOT);
     stmt.createBody(body);
+  }
+
+  @Test
+  public void testCustomDomObject() throws Exception {
+    WXDomObject root = new TestDomObject();
+    root.add(new WXListDomObject(),0);
+    root.add(new WXScrollerDomObject(),0);
+    root.add(new WXTextDomObject(),0);
+    root.add(new WXSwitchDomObject(),0);
+    root.add(new TextAreaEditTextDomObject(),0);
+    stmt.layout(root);
+    root.traverseTree(WXDomStatement.ApplyStyleConsumer.getInstance());
   }
 
   @Test
@@ -340,8 +353,8 @@ public class WXDomStatementTest {
     obj.put("ref","100");
     stmt.addDom(obj,WXDomObject.ROOT,0);
 
-    stmt.updateStyle("100",new JSONObject());
-    stmt.updateStyle("100",null);
+    stmt.updateStyle("100",new JSONObject(),false);
+    stmt.updateStyle("100",null,false);
 
     stmt.batch();
   }

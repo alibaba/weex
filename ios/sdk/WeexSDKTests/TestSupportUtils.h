@@ -7,6 +7,11 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
+extern bool WXTransform3DApproximateToTransform(CATransform3D a,CATransform3D b);
+
+extern bool WXRectApproximateToRect(CGRect a,CGRect b);
 
 @interface TestSupportUtils : NSObject
 /**

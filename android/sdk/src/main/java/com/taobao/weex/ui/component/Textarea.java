@@ -205,6 +205,8 @@
 package com.taobao.weex.ui.component;
 
 import android.text.TextUtils;
+import android.view.Gravity;
+
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.TextAreaEditTextDomObject;
@@ -237,6 +239,11 @@ public class Textarea extends AbstractEditComponent {
 
     editText.setLines(rows);
     editText.setMinLines(rows);
+  }
+
+  @Override
+  protected int getVerticalGravity() {
+    return Gravity.TOP;
   }
 
   @Override

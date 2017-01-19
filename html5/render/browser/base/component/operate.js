@@ -16,7 +16,6 @@ export function createChildren () {
     let isFlex = false
     for (let i = 0; i < children.length; i++) {
       children[i].instanceId = this.data.instanceId
-      children[i].scale = this.data.scale
       const child = componentManager.createElement(children[i])
       fragment.appendChild(child.node)
       child.parentRef = parentRef
@@ -139,8 +138,7 @@ export function updateStyle (style) {
       styleSetter.call(this, value)
       continue
     }
-    const parser = getFilters(key,
-      { scale: this.data.scale })[typeof value]
+    const parser = getFilters(key)[typeof value]
     if (typeof parser === 'function') {
       value = parser(value)
     }

@@ -205,8 +205,8 @@
 package com.taobao.weex.ui.module;
 
 import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.common.WXModule;
-import com.taobao.weex.common.WXModuleAnno;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXWeb;
 
@@ -218,17 +218,17 @@ public class WXWebViewModule extends WXModule{
         goForward
     }
 
-    @WXModuleAnno
+    @JSMethod(uiThread = true)
     public void goBack(String ref) {
         action(Action.goBack, ref);
     }
 
-    @WXModuleAnno
+    @JSMethod(uiThread = true)
     public void goForward(String ref) {
         action(Action.goForward, ref);
     }
 
-    @WXModuleAnno
+    @JSMethod(uiThread = true)
     public void reload(String ref) {
         action(Action.reload, ref);
     }

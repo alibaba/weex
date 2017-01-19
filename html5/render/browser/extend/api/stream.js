@@ -6,14 +6,10 @@
 let utils
 
 import 'httpurl'
+import qs from 'query-string'
 
 let jsonpCnt = 0
 const ERROR_STATE = -1
-
-const TYPE_JSON = 'application/json;charset=UTF-8'
-const TYPE_FORM = 'application/x-www-form-urlencoded'
-
-const REG_FORM = /^(?:[^&=]+=[^&=]+)(?:&[^&=]+=[^&=]+)*$/
 
 function _jsonp (config, callback, progressCallback) {
   const cbName = 'jsonp_' + (++jsonpCnt)
@@ -221,6 +217,22 @@ const stream = {
       return console.error('[h5-render] options.url should be set for \'fetch\' API.')
     }
 
+    // validate body content for method 'GET'.
+    if (config.method.toUpperCase() === 'GET') {
+      let body = config.body
+      if (utils.isPlainObject(body)) {
+        body = qs.stringify(body)
+      }
+      let url = config.url
+      let hashIdx = url.indexOf('#')
+      hashIdx <= -1 && (hashIdx = url.length)
+      let hash = url.substr(hashIdx)
+      hash && (hash = '#' + hash)
+      url = url.substring(0, hashIdx)
+      url += (config.url.indexOf('?') <= -1 ? '?' : '&') + body + hash
+      config.url = url
+    }
+
     // validate options.mode
     if (typeof config.mode === 'undefined') {
       config.mode = DEFAULT_MODE
@@ -249,24 +261,6 @@ const stream = {
     config.headers = config.headers || {}
     if (!utils.isPlainObject(config.headers)) {
       return console.error('[h5-render] options.headers should be a plain object')
-    }
-
-    // validate options.body
-    const body = config.body
-    if (!config.headers['Content-Type'] && body) {
-      if (utils.isPlainObject(body)) {
-        // is a json data
-        try {
-          config.body = JSON.stringify(body)
-          config.headers['Content-Type'] = TYPE_JSON
-        }
-        catch (e) {}
-      }
-      else if (utils.getType(body) === 'string' && body.match(REG_FORM)) {
-        // is form-data
-        config.body = encodeURI(body)
-        config.headers['Content-Type'] = TYPE_FORM
-      }
     }
 
     // validate options.timeout

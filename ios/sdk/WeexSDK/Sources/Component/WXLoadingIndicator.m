@@ -74,4 +74,12 @@
     [_indicator setFrame:frame];
 }
 
+#pragma mark -reset color
+- (void)resetStyles:(NSArray *)styles
+{
+    if ([styles containsObject:@"color"]) {
+        [self setColor:[UIColor blackColor]];
+    }
+}
+
 @end

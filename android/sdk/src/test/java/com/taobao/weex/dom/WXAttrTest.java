@@ -204,20 +204,28 @@
  */
 package com.taobao.weex.dom;
 
+import com.taobao.weappplus_sdk.BuildConfig;
 import com.taobao.weex.common.Constants;
 import com.taobao.weex.common.WXImageSharpen;
+import com.taobao.weex.utils.WXViewUtils;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.annotation.Config;
 
-import static org.junit.Assert.*;
+import static com.taobao.weex.common.Constants.Name.IMAGE_QUALITY;
+import static com.taobao.weex.common.Constants.Name.SRC;
+import static com.taobao.weex.common.Constants.Name.VALUE;
+import static com.taobao.weex.common.Constants.Value.HIGH;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
-import static com.taobao.weex.common.Constants.Name.*;
-import static com.taobao.weex.common.Constants.Value.*;
-
-/**
- * Created by sospartan on 8/31/16.
- */
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class)
 public class WXAttrTest {
 
   WXAttr attr;
@@ -297,4 +305,20 @@ public class WXAttrTest {
   public void testGetScrollDirection() throws Exception {
     assertEquals("vertical",attr.getScrollDirection());
   }
+
+  @Test
+  public void testGetElevation() {
+    int elevation = 100, viewPortW = 750;
+
+    attr.put(Constants.Name.ELEVATION, elevation);
+    assertThat(attr.getElevation(viewPortW),
+               is(WXViewUtils.getRealSubPxByWidth(elevation, viewPortW)));
+
+    attr.put(Constants.Name.ELEVATION, "");
+    assertThat(attr.getElevation(viewPortW), is(0f));
+
+    attr.put(Constants.Name.ELEVATION, "give me a NAN");
+    assertThat(attr.getElevation(viewPortW), is(Float.NaN));
+  }
+
 }

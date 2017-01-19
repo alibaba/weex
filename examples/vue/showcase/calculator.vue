@@ -62,13 +62,17 @@
 
 <script>
   var OP = ['+', '-', '*', '/'];
+  var modal = require('@weex-module/modal')
   module.exports = {
-    data: {
-      result: '',
-      inputs: []
+    data: function () {
+      return {
+        result: '',
+        inputs: []
+      }
     },
     methods: {
       input: function(e) {
+        modal.toast({ message: 'input: ' + e.target.attr.value, duration: 1 })
         var value = e.target.attr['value'];
         var inputs = this.inputs;
         var lastOne = inputs.length ? inputs[inputs.length - 1] : '';

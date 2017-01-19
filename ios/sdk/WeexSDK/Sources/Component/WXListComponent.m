@@ -36,6 +36,20 @@
     [self.wx_component layoutDidFinish];
 }
 
+- (void)setContentOffset:(CGPoint)contentOffset
+{
+    // FIXME: side effect caused by hooking _adjustContentOffsetIfNecessary.
+    // When UITableView is pulled down and finger releases，contentOffset will be set from -xxxx to about -0.5(greater than -0.5), then contentOffset will be reset to zero by calling _adjustContentOffsetIfNecessary.
+    // So hooking _adjustContentOffsetIfNecessary will always cause remaining 1px space between list's top and navigator.
+    // Demo: http://dotwe.org/895630945793a9a044e49abe39cbb77f
+    // Have to reset contentOffset to zero manually here.
+    if (fabs(contentOffset.y) < 0.5) {
+        contentOffset.y = 0;
+    }
+    
+    [super setContentOffset:contentOffset];
+}
+
 @end
 
 @interface WXHeaderComponent : WXComponent
@@ -209,7 +223,7 @@
     NSIndexPath *toIndexPath = [self indexPathForCell:(WXCellComponent*)cellComponent sections:_completedSections];
     CGRect cellRect = [_tableView rectForRowAtIndexPath:toIndexPath];
     contentOffsetY += cellRect.origin.y;
-    contentOffsetY += offset * WXScreenResizeRadio();
+    contentOffsetY += offset * self.weexInstance.pixelScaleFactor;
     
     if (contentOffsetY > _tableView.contentSize.height - _tableView.frame.size.height) {
         contentOffset.y = _tableView.contentSize.height - _tableView.frame.size.height;
@@ -237,6 +251,12 @@
     }
     
     [super _insertSubcomponent:subcomponent atIndex:index];
+    
+    if (![subcomponent isKindOfClass:[WXHeaderComponent class]]
+        && ![subcomponent isKindOfClass:[WXCellComponent class]]) {
+        // Don't insert section if subcomponent is not header or cell
+        return;
+    }
     
     NSIndexPath *indexPath = [self indexPathForSubIndex:index];
     if (_sections.count <= indexPath.section) {
@@ -291,9 +311,15 @@
         [self removeCellForIndexPath:indexPath withSections:_completedSections];
         
         WXLogDebug(@"Delete cell:%@ at indexPath:%@", cell.ref, indexPath);
-        [UIView performWithoutAnimation:^{
-            [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
-        }];
+        if (cell.deleteAnimation == UITableViewRowAnimationNone) {
+            [UIView performWithoutAnimation:^{
+                [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+                [self handleAppear];
+            }];
+        } else {
+            [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:cell.deleteAnimation];
+            [self handleAppear];
+        }
     }];
 }
 
@@ -321,13 +347,20 @@
         if (!isReload) {
             WXLogDebug(@"Insert cell:%@ at indexPath:%@", cell.ref, indexPath);
             _completedSections = completedSections;
-            [UIView performWithoutAnimation:^{
-                [_tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
-            }];
+            if (cell.insertAnimation == UITableViewRowAnimationNone) {
+                [UIView performWithoutAnimation:^{
+                    [_tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+                    [self handleAppear];
+                }];
+            } else {
+                [_tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:cell.insertAnimation];
+                [self handleAppear];
+            }
         } else {
             WXLogInfo(@"Reload cell:%@ at indexPath:%@", cell.ref, indexPath);
             [UIView performWithoutAnimation:^{
                 [_tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+                [self handleAppear];
             }];
         }
     }];
@@ -375,6 +408,7 @@
         [self insertCell:cell forIndexPath:toIndexPath withSections:_completedSections];
         [UIView performWithoutAnimation:^{
             [_tableView moveRowAtIndexPath:fromIndexPath toIndexPath:toIndexPath];
+            [self handleAppear];
         }];
     }];
 }
@@ -397,11 +431,14 @@
 
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    WXLogDebug(@"Did end displaying cell:%@, at index path:%@", cell, indexPath);
     NSArray *visibleIndexPaths = [tableView indexPathsForVisibleRows];
     if (![visibleIndexPaths containsObject:indexPath]) {
-        WXCellComponent *cell = [self cellForIndexPath:indexPath];
-        // Must invoke synchronously otherwise it will remove the view just added.
-        [cell _unloadViewWithReusing:YES];
+        if (cell.contentView.subviews.count > 0) {
+            UIView *wxCellView = [cell.contentView.subviews firstObject];
+            // Must invoke synchronously otherwise it will remove the view just added.
+            [wxCellView.wx_component _unloadViewWithReusing:YES];
+        }
     }
 }
 
@@ -507,6 +544,11 @@
     return rowNumber;
 }
 
+- (void)resetLoadmore{
+    [super resetLoadmore];
+    _previousLoadMoreRowNumber=0;
+}
+
 #pragma mark Private
 
 - (WXCellComponent *)cellForIndexPath:(NSIndexPath *)indexPath
@@ -589,7 +631,11 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        //(ง •̀_•́)ง┻━┻ Stupid scoll view, always reset content offset to zero after insert cells, any other more elegant way?
+        // FIXME:(ง •̀_•́)ง┻━┻ Stupid scoll view, always reset content offset to zero by calling _adjustContentOffsetIfNecessary after insert cells.
+        // So if you pull down list while list is rendering, the list will be flickering.
+        // Demo:    
+        // Have to hook _adjustContentOffsetIfNecessary here.
+        // Any other more elegant way?
         NSString *a = @"ntOffsetIfNe";
         NSString *b = @"adjustConte";
         

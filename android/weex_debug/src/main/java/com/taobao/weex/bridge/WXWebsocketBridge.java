@@ -266,6 +266,11 @@ public class WXWebsocketBridge implements IWXBridge,WXWebSocketManager.JSDebugge
     }
 
     @Override
+    public int execJSService(String javascript) {
+        return 0;
+    }
+
+    @Override
     public int callNative(String instanceId, String tasks, String callback) {
         if (!mInit || mJsManager == null)
             return IWXBridge.INSTANCE_RENDERING_ERROR ;
@@ -301,6 +306,16 @@ public class WXWebsocketBridge implements IWXBridge,WXWebSocketManager.JSDebugge
         if (mJsManager != null) {
             mJsManager.reportJSException(instanceId, func, exception);
         }
+    }
+
+    @Override
+    public String callNativeModule(String instanceId, String module, String method, byte[] arguments, byte[] options) {
+        return null;
+    }
+
+    @Override
+    public void callNativeComponent(String instanceId, String componentRef, String method, byte[] arguments, byte[] options) {
+
     }
 
     @Override

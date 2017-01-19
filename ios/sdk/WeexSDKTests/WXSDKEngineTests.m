@@ -11,7 +11,8 @@
 #import "WXModuleFactory.h"
 #import "WXComponentFactory.h"
 #import "WXHandlerFactory.h"
-#import "WXNetworkDefaultImpl.h"
+#import "WXResourceRequest.h"
+#import "WXResourceRequestHandlerDefaultImpl.h"
 
 @interface WXSDKEngineTests : XCTestCase
 
@@ -34,13 +35,6 @@
     // Use XCTAssert and related functions to verify your tests produce the correct results.
 }
 
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
-}
-
 - (void)testRegisterModule {
     
     [WXSDKEngine registerModule:@"stream" withClass:NSClassFromString(@"WXStreamModule")];
@@ -56,7 +50,7 @@
     Class cls = [WXModuleFactory classWithModuleName:@"stream"];
     XCTAssertEqualObjects(NSStringFromClass(cls), @"WXStreamModule");
     
-    SEL selector = [WXModuleFactory methodWithModuleName:@"stream" withMethod:@"fetch"];
+    SEL selector = [WXModuleFactory selectorWithModuleName:@"stream" methodName:@"fetch" isSync:nil];
     XCTAssertEqualObjects(NSStringFromSelector(selector), @"fetch:callback:progressCallback:");
 }
 
@@ -92,22 +86,18 @@
 
 - (void)testRegisterHandler {
     
-    [WXSDKEngine registerHandler:[WXNetworkDefaultImpl new] withProtocol:@protocol(WXNetworkProtocol)];
-    id handler = [WXHandlerFactory handlerForProtocol:@protocol(WXNetworkProtocol)];
+    [WXSDKEngine registerHandler:[WXResourceRequestHandlerDefaultImpl new] withProtocol:@protocol(WXResourceRequestHandler)];
+    id handler = [WXHandlerFactory handlerForProtocol:@protocol(WXResourceRequestHandler)];
     XCTAssertNotNil(handler);
-    XCTAssertTrue([handler conformsToProtocol:@protocol(WXNetworkProtocol)]);
+    XCTAssertTrue([handler conformsToProtocol:@protocol(WXResourceRequestHandler)]);
     
     NSDictionary *handlerConfigs = [WXHandlerFactory handlerConfigs];
-    handler = [handlerConfigs objectForKey:NSStringFromProtocol(@protocol(WXNetworkProtocol))];
+    handler = [handlerConfigs objectForKey:NSStringFromProtocol(@protocol(WXResourceRequestHandler))];
     XCTAssertNotNil(handler);
-    XCTAssertTrue([handler conformsToProtocol:@protocol(WXNetworkProtocol)]);
+    XCTAssertTrue([handler conformsToProtocol:@protocol(WXResourceRequestHandler)]);
 }
 
 - (void)testComponentFactory {
-    
-    Class cls = [WXComponentFactory classWithComponentName:@"abc"];
-    XCTAssertNil(cls);
-
     NSDictionary *component = @{@"name": @"div", @"class": @"WXComponent"};
     [WXComponentFactory registerComponents: [NSArray arrayWithObjects:component, nil]];
     
@@ -117,7 +107,7 @@
     XCTAssertEqualObjects(config[@"name"], @"div");
     XCTAssertEqualObjects(config[@"clazz"], @"WXComponent");
     
-    cls = [WXComponentFactory classWithComponentName:@"abc"];
+    Class cls = [WXComponentFactory classWithComponentName:@"abc"];
     XCTAssertEqualObjects(NSStringFromClass(cls), @"WXComponent");
     
     [WXComponentFactory unregisterAllComponents];

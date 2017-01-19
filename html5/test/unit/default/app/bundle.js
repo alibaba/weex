@@ -4,9 +4,6 @@ import sinonChai from 'sinon-chai'
 const { expect } = chai
 chai.use(sinonChai)
 
-global.callNative = function () {}
-global.callAddElement = function () {}
-
 import * as bundle from '../../../../frameworks/legacy/app/bundle'
 import * as register from '../../../../frameworks/legacy/app/register'
 import { removeWeexPrefix } from '../../../../frameworks/legacy/util'
@@ -46,19 +43,16 @@ describe('parsing a bundle file', () => {
       const id = Date.now()
       callTasksSpy = sinon.spy()
 
-      const doc = new Document(id, '', (tasks, callback) => {
-        app.callTasks(tasks, callback)
-      }, Listener)
+      const doc = new Document(id, '', (tasks) => {
+        app.callTasks(tasks)
+      })
 
       app = {
         id, doc,
         customComponentMap: {},
         commonModules: {},
         callbacks: {},
-        callTasks: (tasks, callback) => {
-          callTasksSpy(tasks)
-          callback && callback()
-        },
+        callTasks: callTasksSpy,
         requireModule: function (name) {
           return register.requireModule(this, name)
         }
@@ -213,7 +207,6 @@ describe('parsing a bundle file', () => {
         expect(callTasksSpy.calledTwice).to.be.true
 
         expect(ready.calledOnce).to.be.true
-
         const task1 = callTasksSpy.firstCall.args[0][0]
         expect(task1.module).to.be.equal('dom')
         expect(task1.method).to.be.equal('createBody')
@@ -255,6 +248,21 @@ describe('parsing a bundle file', () => {
           { transformerVersion: '9.9.9' }
         )
         expect(result).instanceof(Error)
+      })
+
+      it('with viewport config', () => {
+        bundle.bootstrap(
+          app,
+          '@weex-component/undefined',
+          {
+            viewport: { width: 640 }
+          }
+        )
+        expect(callTasksSpy.callCount).to.be.equal(1)
+        const tasks = callTasksSpy.lastCall.args[0]
+        expect(tasks[0].module).to.be.equal('meta')
+        expect(tasks[0].method).to.be.equal('setViewport')
+        expect(tasks[0].args).to.deep.equal([{ width: 640 }])
       })
     })
   })

@@ -15,6 +15,7 @@
 #import "WXModuleProtocol.h"
 #import "WXUtility.h"
 #import "WXRuleManager.h"
+#import "WXSDKInstance.h"
 
 @interface WXDomModule ()
 
@@ -37,6 +38,7 @@ WX_EXPORT_METHOD(@selector(scrollToElement:options:))
 WX_EXPORT_METHOD(@selector(updateStyle:styles:))
 WX_EXPORT_METHOD(@selector(updateAttrs:attrs:))
 WX_EXPORT_METHOD(@selector(addRule:rule:))
+WX_EXPORT_METHOD(@selector(getComponentRect:callback:))
 
 
 - (void)performBlockOnComponentMananger:(void(^)(WXComponentManager *))block
@@ -159,7 +161,51 @@ WX_EXPORT_METHOD(@selector(addRule:rule:))
     }
     
     [self performSelectorOnRuleManager:^{
+        [WXRuleManager sharedInstance].instance = weexInstance;
         [[WXRuleManager sharedInstance] addRule:type rule:rule];
+        
+    }];
+}
+
+- (void)getComponentRect:(NSString*)ref callback:(WXModuleKeepAliveCallback)callback {
+    [self performBlockOnComponentMananger:^(WXComponentManager * manager) {
+        NSMutableDictionary * callbackRsp = [[NSMutableDictionary alloc] init];
+        UIView *rootView = manager.weexInstance.rootView;
+        CGRect rootRect = [rootView.superview convertRect:rootView.frame toView:rootView];
+        CGFloat scaleFactor = self.weexInstance.pixelScaleFactor;
+        if ([ref isEqualToString:@"viewport"]) {
+            [callbackRsp setObject:@(true) forKey:@"result"];
+            [callbackRsp setObject:@{
+                                     @"width":@(rootRect.size.width / scaleFactor),
+                                     @"height":@(rootRect.size.height / scaleFactor),
+                                     @"bottom":@(CGRectGetMaxY(rootRect) / scaleFactor),
+                                     @"left":@(rootRect.origin.x / scaleFactor),
+                                     @"right":@(CGRectGetMaxX(rootRect) / scaleFactor),
+                                     @"top":@(rootRect.origin.y / scaleFactor)
+                                     } forKey:@"size"];
+            callback(callbackRsp, false);
+        }else {
+            WXComponent *component = [manager componentForRef:ref];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (!component) {
+                    [callbackRsp setObject:@(false) forKey:@"result"];
+                    [callbackRsp setObject:[NSString stringWithFormat:@"Illegal parameter, no ref about \"%@\" can be found",ref] forKey:@"errMsg"];
+                } else {
+                    CGRect componentRect = [component.view.superview convertRect:component.calculatedFrame toView:rootView];
+                    [callbackRsp setObject:@(true)forKey:@"result"];
+                    [callbackRsp setObject:@{
+                                             @"width":@(componentRect.size.width / scaleFactor),
+                                             @"height":@(componentRect.size.height / scaleFactor),
+                                             @"bottom":@(CGRectGetMaxY(componentRect) / scaleFactor),
+                                             @"left":@(componentRect.origin.x / scaleFactor),
+                                             @"right":@(CGRectGetMaxX(componentRect) / scaleFactor),
+                                             @"top":@(componentRect.origin.y / scaleFactor)
+                                             } forKey:@"size"];
+                }
+                callback(callbackRsp, false);
+            });
+           
+        }
     }];
 }
 

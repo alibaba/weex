@@ -7,7 +7,7 @@
 <template>
   <div>
     <text class="title">Track by</text>
-    <text class="subtitle" v-for="item in list" track-by="item.key">{{$index}}-{{item.text}}</text>
+    <text class="subtitle" v-for="(item, k, $index) in list" track-by="item.key">{{$index}}-{{item.text}}</text>
     <text class="btn" @click="update">Update</text>
     <text class="btn" @click="mutate">Mutate</text>
   </div>
@@ -21,21 +21,24 @@
 
 <script>
   module.exports = {
-    data: {
-      list: [
-        {key: 1, text: 'a'},
-        {key: 2, text: 'a'},
-        {key: 3, text: 'b'},
-        {key: 4, text: 'c'},
-        {key: 5, text: 'a'}
-      ],
-      flag: true
+    data: function () {
+      return {
+        list: [
+          {key: 1, text: 'a'},
+          {key: 2, text: 'a'},
+          {key: 3, text: 'b'},
+          {key: 4, text: 'c'},
+          {key: 5, text: 'a'}
+        ],
+        flag: true
+      }
     },
     methods: {
       update: function (e) {
         // equals to `this.list.text = 'foo'`
         // DO NOT USE: `this.list[2] = {key: 3, text: 'foo'}}`
         Vue.set(this.list, 2, {key: 3, text: 'foo'})
+        console.log('this.list', this.list)
       },
       mutate: function (e) {
         if (this.list.length % 2) {
@@ -44,6 +47,7 @@
         else {
           this.list.pop()
         }
+        console.log('this.list', this.list)
       }
     }
   }

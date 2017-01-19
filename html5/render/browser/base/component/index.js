@@ -2,14 +2,39 @@
 
 import { extend } from '../../utils'
 import { ComponentManager } from '../../dom'
+import { isComponentAppear } from '../../dom/appearWatcher'
 import * as operate from './operate'
 import * as position from './position'
 import flexbox from './flexbox'
 import { makeImageLazy, fireLazyload } from './lazyload'
 
-function hasIntersection (rect, ctRect) {
-  return (rect.left < ctRect.right && rect.right > ctRect.left)
-    && (rect.top < ctRect.bottom && rect.bottom > ctRect.top)
+const appearEvts = ['appear', 'disappear']
+
+/**
+ * check whether a event is valid to dispatch.
+ * @param  {Component}      comp  the component that this event is to trigger on.
+ * @param  {string}  type   the event type.
+ * @return {Boolean}        is it valid to dispatch.
+ */
+function isEventValid (comp, type) {
+  // if a component has aleary triggered 'appear' event, then
+  // the 'appear' even† can't be triggered again utill the
+  // 'disappear' event triggered.
+  if (appearEvts.indexOf(type) <= -1) {
+    return true
+  }
+  if (comp._appear === undefined && type === 'disappear') {
+    return false
+  }
+  let res
+  if (comp._appear === undefined && type === 'appear') {
+    res = true
+  }
+  else {
+    res = type !== comp._appear
+  }
+  res && (comp._appear = type)
+  return res
 }
 
 export default function Component (data, nodeType) {
@@ -106,6 +131,9 @@ Component.prototype = {
   //     - bubbles
   //     - cancelable
   dispatchEvent (type, data, config) {
+    if (!isEventValid(this, type)) {
+      return
+    }
     const event = document.createEvent('HTMLEvents')
     config = config || {}
     event.initEvent(type, config.bubbles || false, config.cancelable || false)
@@ -130,13 +158,7 @@ Component.prototype = {
     }
     // trigger 'appear' event in the next tick.
     setTimeout(() => {
-      const rect = this.node.getBoundingClientRect()
-      const parent = this.getParentScroller()
-      const parentNode = parent
-        ? parent.node
-        : this.getRootContainer()
-      const ctRect = parentNode.getBoundingClientRect()
-      if (hasIntersection(rect, ctRect)) {
+      if (isComponentAppear(this)) {
         this.dispatchEvent('appear', { direction: '' })
       }
     }, 0)

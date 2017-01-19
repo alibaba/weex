@@ -18,9 +18,10 @@
 
 @synthesize weexInstance;
 
+WX_EXPORT_METHOD(@selector(open:success:failure:))
+WX_EXPORT_METHOD(@selector(close:success:failure:))
 WX_EXPORT_METHOD(@selector(push:callback:))
 WX_EXPORT_METHOD(@selector(pop:callback:))
-WX_EXPORT_METHOD(@selector(close:callback:))
 WX_EXPORT_METHOD(@selector(setNavBarBackgroundColor:callback:))
 WX_EXPORT_METHOD(@selector(setNavBarLeftItem:callback:))
 WX_EXPORT_METHOD(@selector(clearNavBarLeftItem:callback:))
@@ -30,6 +31,7 @@ WX_EXPORT_METHOD(@selector(setNavBarMoreItem:callback:))
 WX_EXPORT_METHOD(@selector(clearNavBarMoreItem:callback:))
 WX_EXPORT_METHOD(@selector(setNavBarTitle:callback:))
 WX_EXPORT_METHOD(@selector(clearNavBarTitle:callback:))
+WX_EXPORT_METHOD(@selector(setNavBarHidden:callback:))
 
 - (id<WXNavigationProtocol>)navigator
 {
@@ -39,6 +41,20 @@ WX_EXPORT_METHOD(@selector(clearNavBarTitle:callback:))
 
 #pragma mark Weex Application Interface
 
+- (void)open:(NSDictionary *)param success:(WXModuleCallback)success failure:(WXModuleCallback)failure
+{
+    id<WXNavigationProtocol> navigator = [self navigator];
+    UIViewController *container = self.weexInstance.viewController;
+    [navigator open:param success:success failure:failure withContainer:container];
+}
+    
+- (void)close:(NSDictionary *)param success:(WXModuleCallback)success failure:(WXModuleCallback)failure
+{
+    id<WXNavigationProtocol> navigator = [self navigator];
+    UIViewController *container = self.weexInstance.viewController;
+    [navigator close:param success:success failure:failure withContainer:container];
+}
+    
 - (void)push:(NSDictionary *)param callback:(WXModuleCallback)callback
 {
     id<WXNavigationProtocol> navigator = [self navigator];
@@ -61,15 +77,15 @@ WX_EXPORT_METHOD(@selector(clearNavBarTitle:callback:))
     } withContainer:container];
 }
 
-- (void)close:(NSDictionary *)param callback:(WXModuleCallback)callback
+- (void)setNavBarHidden:(NSDictionary*)param callback:(WXModuleCallback)callback
 {
-    id<WXNavigationProtocol> navigator = [self navigator];
-    UIViewController *container = self.weexInstance.viewController;
-    [navigator popToRootViewControllerWithParam:param completion:^(NSString *code, NSDictionary *responseData) {
-        if (callback && code) {
-            callback(code);
-        }
-    } withContainer:container];
+    NSString *result = MSG_FAILED;
+    if ([[NSArray arrayWithObjects:@"0",@"1",@0,@1, nil] containsObject:param[@"hidden"]]) {
+        id<WXNavigationProtocol> navigator = [self navigator];
+        [navigator setNavigationBarHidden:[param[@"hidden"] boolValue] animated:[param[@"animated"] boolValue] withContainer:self.weexInstance.viewController];
+        result = MSG_SUCCESS;
+    }
+    callback(result);
 }
 
 #pragma mark Navigation Setup

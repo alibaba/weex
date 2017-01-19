@@ -206,6 +206,7 @@ package com.taobao.weex.ui.module;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.text.TextUtils;
@@ -213,12 +214,12 @@ import android.view.Gravity;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.taobao.weex.WXSDKEngine;
+import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.bridge.JSCallback;
-import com.taobao.weex.common.WXModule;
-import com.taobao.weex.common.WXModuleAnno;
 import com.taobao.weex.utils.WXLogUtils;
-
-import org.json.JSONObject;
 
 import java.net.URLDecoder;
 import java.util.HashMap;
@@ -230,7 +231,7 @@ import java.util.Map;
  * for example(weex JS):
  * this.$call('modal','toast',{'message':'test toast','duration': 2.0});
  */
-public class WXModalUIModule extends WXModule {
+public class WXModalUIModule extends WXSDKEngine.DestroyableModule {
 
   public static final String OK = "OK";
   public static final String CANCEL = "Cancel";
@@ -240,8 +241,11 @@ public class WXModalUIModule extends WXModule {
   public static final String DURATION = "duration";
   public static final String OK_TITLE = "okTitle";
   public static final String CANCEL_TITLE = "cancelTitle";
+  public static final String DEFAULT = "default";
   private Toast toast;
-  @WXModuleAnno
+  private Dialog activeDialog;
+
+  @JSMethod(uiThread = true)
   public void toast(String param) {
 
     String message = "";
@@ -249,9 +253,9 @@ public class WXModalUIModule extends WXModule {
     if (!TextUtils.isEmpty(param)) {
       try {
         param = URLDecoder.decode(param, "utf-8");
-        JSONObject jsObj = new JSONObject(param);
-        message = jsObj.optString(MESSAGE);
-        duration = jsObj.optInt(DURATION);
+        JSONObject jsObj = JSON.parseObject(param);
+        message = jsObj.getString(MESSAGE);
+        duration = jsObj.getInteger(DURATION);
       } catch (Exception e) {
         WXLogUtils.e("[WXModalUIModule] alert param parse error ", e);
       }
@@ -266,8 +270,8 @@ public class WXModalUIModule extends WXModule {
     } else {
       duration = Toast.LENGTH_SHORT;
     }
-    if(toast== null){
-      toast =Toast.makeText(mWXSDKInstance.getContext(), message, duration);
+    if (toast == null) {
+      toast = Toast.makeText(mWXSDKInstance.getContext(), message, duration);
     } else {
       toast.setDuration(duration);
       toast.setText(message);
@@ -276,7 +280,7 @@ public class WXModalUIModule extends WXModule {
     toast.show();
   }
 
-  @WXModuleAnno
+  @JSMethod(uiThread = true)
   public void alert(String param, final JSCallback callback) {
 
     if (mWXSDKInstance.getContext() instanceof Activity) {
@@ -286,15 +290,15 @@ public class WXModalUIModule extends WXModule {
       if (!TextUtils.isEmpty(param)) {
         try {
           param = URLDecoder.decode(param, "utf-8");
-          JSONObject jsObj = new JSONObject(param);
-          message = jsObj.optString(MESSAGE);
-          okTitle = jsObj.optString(OK_TITLE);
+          JSONObject jsObj = JSON.parseObject(param);
+          message = jsObj.getString(MESSAGE);
+          okTitle = jsObj.getString(OK_TITLE);
         } catch (Exception e) {
           WXLogUtils.e("[WXModalUIModule] alert param parse error ", e);
         }
       }
       if (TextUtils.isEmpty(message)) {
-        message="";
+        message = "";
       }
       AlertDialog.Builder builder = new AlertDialog.Builder(mWXSDKInstance.getContext());
       builder.setMessage(message);
@@ -303,7 +307,7 @@ public class WXModalUIModule extends WXModule {
       builder.setPositiveButton(okTitle_f, new OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-          if(callback !=null) {
+          if (callback != null) {
             callback.invoke(okTitle_f);
           }
         }
@@ -311,12 +315,13 @@ public class WXModalUIModule extends WXModule {
       AlertDialog alertDialog = builder.create();
       alertDialog.setCanceledOnTouchOutside(false);
       alertDialog.show();
+      tracking(alertDialog);
     } else {
       WXLogUtils.e("[WXModalUIModule] when call alert mWXSDKInstance.getContext() must instanceof Activity");
     }
   }
 
-  @WXModuleAnno
+  @JSMethod(uiThread = true)
   public void confirm(String param, final JSCallback callback) {
 
     if (mWXSDKInstance.getContext() instanceof Activity) {
@@ -327,48 +332,49 @@ public class WXModalUIModule extends WXModule {
       if (!TextUtils.isEmpty(param)) {
         try {
           param = URLDecoder.decode(param, "utf-8");
-          JSONObject jsObj = new JSONObject(param);
-          message = jsObj.optString(MESSAGE);
-          okTitle = jsObj.optString(OK_TITLE);
-          cancelTitle = jsObj.optString(CANCEL_TITLE);
+          JSONObject jsObj = JSON.parseObject(param);
+          message = jsObj.getString(MESSAGE);
+          okTitle = jsObj.getString(OK_TITLE);
+          cancelTitle = jsObj.getString(CANCEL_TITLE);
         } catch (Exception e) {
           WXLogUtils.e("[WXModalUIModule] confirm param parse error ", e);
         }
       }
       if (TextUtils.isEmpty(message)) {
-        message="";
+        message = "";
       }
       AlertDialog.Builder builder = new AlertDialog.Builder(mWXSDKInstance.getContext());
       builder.setMessage(message);
 
-      final String okTitle_f = TextUtils.isEmpty(okTitle) ? OK : okTitle;
-      final String cancelTitle_f = TextUtils.isEmpty(cancelTitle) ? CANCEL : cancelTitle;
+      final String okTitleFinal = TextUtils.isEmpty(okTitle) ? OK : okTitle;
+      final String cancelTitleFinal = TextUtils.isEmpty(cancelTitle) ? CANCEL : cancelTitle;
 
-      builder.setPositiveButton(okTitle_f, new OnClickListener() {
+      builder.setPositiveButton(okTitleFinal, new OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-          if(callback != null){
-            callback.invoke(okTitle_f);
+          if (callback != null) {
+            callback.invoke(okTitleFinal);
           }
         }
       });
-      builder.setNegativeButton(cancelTitle_f, new OnClickListener() {
+      builder.setNegativeButton(cancelTitleFinal, new OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-          if(callback != null){
-            callback.invoke(cancelTitle_f);
+          if (callback != null) {
+            callback.invoke(cancelTitleFinal);
           }
         }
       });
       AlertDialog alertDialog = builder.create();
       alertDialog.setCanceledOnTouchOutside(false);
       alertDialog.show();
+      tracking(alertDialog);
     } else {
       WXLogUtils.e("[WXModalUIModule] when call confirm mWXSDKInstance.getContext() must instanceof Activity");
     }
   }
 
-  @WXModuleAnno
+  @JSMethod(uiThread = true)
   public void prompt(String param, final JSCallback callback) {
     if (mWXSDKInstance.getContext() instanceof Activity) {
       String message = "";
@@ -379,18 +385,18 @@ public class WXModalUIModule extends WXModule {
       if (!TextUtils.isEmpty(param)) {
         try {
           param = URLDecoder.decode(param, "utf-8");
-          JSONObject jsObj = new JSONObject(param);
-          message = jsObj.optString("message");
-          okTitle = jsObj.optString("okTitle");
-          cancelTitle = jsObj.optString("cancelTitle");
-          defaultValue = jsObj.optString("default");
+          JSONObject jsObj = JSON.parseObject(param);
+          message = jsObj.getString(MESSAGE);
+          okTitle = jsObj.getString(OK_TITLE);
+          cancelTitle = jsObj.getString(CANCEL_TITLE);
+          defaultValue = jsObj.getString(DEFAULT);
         } catch (Exception e) {
           WXLogUtils.e("[WXModalUIModule] confirm param parse error ", e);
         }
       }
 
       if (TextUtils.isEmpty(message)) {
-        message="";
+        message = "";
       }
       AlertDialog.Builder builder = new AlertDialog.Builder(mWXSDKInstance.getContext());
       builder.setMessage(message);
@@ -398,27 +404,26 @@ public class WXModalUIModule extends WXModule {
       final EditText editText = new EditText(mWXSDKInstance.getContext());
       editText.setText(defaultValue);
       builder.setView(editText);
-      final String okTitle_f = TextUtils.isEmpty(okTitle) ? OK : okTitle;
-      final String cancelTitle_f = TextUtils.isEmpty(cancelTitle) ? CANCEL : cancelTitle;
-      builder.setPositiveButton(okTitle_f, new OnClickListener() {
+      final String okTitleFinal = TextUtils.isEmpty(okTitle) ? OK : okTitle;
+      final String cancelTitleFinal = TextUtils.isEmpty(cancelTitle) ? CANCEL : cancelTitle;
+      builder.setPositiveButton(okTitleFinal, new OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-          if(callback != null){
+          if (callback != null) {
             Map<String, Object> result = new HashMap<String, Object>();
-            result.put(RESULT, okTitle_f);
+            result.put(RESULT, okTitleFinal);
             result.put(DATA, editText.getText().toString());
-            callback.invoke( result);
+            callback.invoke(result);
           }
         }
-      });
-      builder.setNegativeButton(cancelTitle_f, new OnClickListener() {
+      }).setNegativeButton(cancelTitleFinal, new OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-          if(callback !=null){
+          if (callback != null) {
             Map<String, Object> result = new HashMap<String, Object>();
-            result.put(RESULT, cancelTitle_f);
+            result.put(RESULT, cancelTitleFinal);
             result.put(DATA, editText.getText().toString());
-            callback.invoke( result);
+            callback.invoke(result);
           }
 
         }
@@ -426,9 +431,27 @@ public class WXModalUIModule extends WXModule {
       AlertDialog alertDialog = builder.create();
       alertDialog.setCanceledOnTouchOutside(false);
       alertDialog.show();
+      tracking(alertDialog);
     } else {
       WXLogUtils.e("when call prompt mWXSDKInstance.getContext() must instanceof Activity");
     }
   }
 
+  private void tracking(Dialog dialog) {
+    activeDialog = dialog;
+    dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+      @Override
+      public void onDismiss(DialogInterface dialog) {
+        activeDialog = null;
+      }
+    });
+  }
+
+  @Override
+  public void destroy() {
+    if (activeDialog != null && activeDialog.isShowing()) {
+      WXLogUtils.w("Dismiss the active dialog");
+      activeDialog.dismiss();
+    }
+  }
 }

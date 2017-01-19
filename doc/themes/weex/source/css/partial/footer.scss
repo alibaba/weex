@@ -1,0 +1,62 @@
+@import "../variable.scss";
+
+#footer {
+  width: 100%;
+  padding: 20px 65px;
+  margin: 0;
+  background: $bg-white;
+  border-top: 1px solid #DDDDDD;
+
+  .ali-logo {
+    width: 83px;
+    height: 41px;
+    float: left;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  .select-lang {
+    width: 105px;
+    height: 25px;
+    line-height: 25px;
+    float: right;
+  }
+
+  .select-lang .dropdown-toggle {
+    color: #00293D;
+    border: 1px solid $border-gray;
+  }
+
+  .select-lang .dropdown-menu {
+    width: 105px;
+    border: 1px solid $border-gray;
+  }
+
+  .row {
+    font-size: 14px;
+    margin: 8px 0;
+  } 
+
+  .row span {
+    color: $text-gray;
+  } 
+
+  .row .icon-baichuan {
+    font-size: 14px;
+    color: $text-light-black;
+  } 
+
+  .row .cell {
+    float: left;
+    color: $text-gray;
+    margin: 0 20px 10px 0;
+  }
+
+  .caret {
+    display: inline-block;
+    margin-left: 2px;
+    @include triangle-down($border-gray, 4px);
+  }
+}

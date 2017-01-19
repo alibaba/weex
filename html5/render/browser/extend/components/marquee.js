@@ -29,7 +29,6 @@ const proto = {
       fragment = document.createDocumentFragment()
       isFlex = false
       for (i = 0; i < children.length; i++) {
-        children[i].scale = this.data.scale
         children[i].instanceId = instanceId
         child = componentManager.createElement(children[i])
         child.parentRef = parentRef
@@ -117,16 +116,16 @@ const proto = {
       // This problem relies on jsframework's bugfix.
 
       // node.style.transform = index === 1
-      //     ? 'translate3D(0,' + config.scale * item.data.style.height + 'px,0)'
+      //     ? 'translate3D(0,' + item.data.style.height + 'px,0)'
       //     : ''
       // node.style.webkitTransform = index === 1
-      //     ? 'translate3D(0,' + config.scale * item.data.style.height + 'px,0)'
+      //     ? 'translate3D(0,' + item.data.style.height + 'px,0)'
       //     : ''
       node.style.transform = index === 1
-          ? 'translate3D(0,' + self.data.scale * self.data.style.height + 'px,0)'
+          ? 'translate3D(0,' + self.data.style.height + 'px,0)'
           : ''
       node.style.webkitTransform = index === 1
-          ? 'translate3D(0,' + self.data.scale * self.data.style.height + 'px,0)'
+          ? 'translate3D(0,' + self.data.style.height + 'px,0)'
           : ''
     })
 
@@ -177,10 +176,10 @@ const proto = {
       next.style.transform = 'translate3D(0,0,0)'
       next.style.webkitTransform = 'translate3D(0,0,0)'
       current.style.transform = 'translate3D(0,-'
-          + this.data.scale * this.data.style.height
+          + this.data.style.height
           + 'px,0)'
       current.style.webkitTransform = 'translate3D(0,-'
-          + this.data.scale * this.data.style.height
+          + this.data.style.height
           + 'px,0)'
       this.fireEvent('change')
     }.bind(this), 300)
@@ -238,7 +237,7 @@ const proto = {
       // This problem relies on jsframework's bugfix.
 
       next.style.webkitTransform = 'translate3D(0,'
-          + this.data.scale * this.data.style.height
+          + this.data.style.height
           + 'px,0)'
       next.style.display = ''
       this.fireLazyload(next)

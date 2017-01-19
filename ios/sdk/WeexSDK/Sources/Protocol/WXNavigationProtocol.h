@@ -119,18 +119,39 @@ typedef void (^WXNavigationResultBlock)(NSString *code, NSDictionary * responseD
                         completion:(WXNavigationResultBlock)block
                      withContainer:(UIViewController *)container;
 
+    
+@optional
+    
 /**
- * @abstract Pops all the view controllers on the stack except the root view controller.
+ * @abstract open the resource at the specified URL which supports many common schemes, including the http, https, tel and mailto schemes.
  *
  * @param param The data which is passed to the implementation of the protocol.
  *
- * @param block A block called once the action is completed.
+ * @param block A block called once the action is completed successfully.
+ *
+ * @param block A block called once the action failed to be completed.
  *
  * @param container The target controller.
  *
  */
-- (void)popToRootViewControllerWithParam:(NSDictionary *)param
-                              completion:(WXNavigationResultBlock)block
-                           withContainer:(UIViewController *)container;
+- (void)open:(NSDictionary *)param success:(WXModuleCallback)success
+                                   failure:(WXModuleCallback)failure
+                             withContainer:(UIViewController *)container;
 
+
+/**
+  * @abstract close the current weex page
+  *
+  * @param param The data which is passed to the implementation of the protocol.
+  *
+  * @param block A block called once the action is completed successfully.
+  *
+  * @param block A block called once the action failed to be completed.
+  *
+  * @param container The target controller.
+  *
+  */
+- (void)close:(NSDictionary *)param success:(WXModuleCallback)success
+                                   failure:(WXModuleCallback)failure
+                             withContainer:(UIViewController *)container;
 @end
