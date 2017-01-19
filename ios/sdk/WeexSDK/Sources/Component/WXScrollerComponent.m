@@ -44,6 +44,7 @@
     CGFloat _loadMoreOffset;
     CGFloat _previousLoadMoreContentHeight;
     CGPoint _lastContentOffset;
+    BOOL _scrollable;
     
     // vertical & horizontal
     WXScrollDirection _scrollDirection;
@@ -52,6 +53,13 @@
     BOOL _showScrollBar;
 
     css_node_t *_scrollerCSSNode;
+}
+
+WX_EXPORT_METHOD(@selector(resetLoadmore))
+
+- (void)resetLoadmore
+{
+    _previousLoadMoreContentHeight=0;
 }
 
 - (css_node_t *)scrollerCSSNode
@@ -84,6 +92,7 @@
         _loadMoreOffset = attributes[@"loadmoreoffset"] ? [WXConvert CGFloat:attributes[@"loadmoreoffset"]] : 0;
         _loadmoreretry = attributes[@"loadmoreretry"] ? [WXConvert NSUInteger:attributes[@"loadmoreretry"]] : 0;
         _listenLoadMore = [events containsObject:@"loadmore"];
+        _scrollable = attributes[@"scrollable"] ? [WXConvert BOOL:attributes[@"scrollable"]] : YES;
 
         _scrollerCSSNode = new_css_node();
         
@@ -116,6 +125,7 @@
     scrollView.clipsToBounds = YES;
     scrollView.showsVerticalScrollIndicator = _showScrollBar;
     scrollView.showsHorizontalScrollIndicator = _showScrollBar;
+    scrollView.scrollEnabled = _scrollable;
     
     if (self.ancestorScroller) {
         scrollView.scrollsToTop = NO;
@@ -128,10 +138,10 @@
 {
     if ([self isViewLoaded]) {
         [self setContentSize:_contentSize];
+        [self adjustSticky];
+        [self handleAppear];
     }
     
-    [self adjustSticky];
-    [self handleAppear];
     [_loadingComponent resizeFrame];
 }
 
@@ -166,6 +176,10 @@
             _previousLoadMoreContentHeight = 0;
         }
         self.loadmoreretry = loadmoreretry;
+    }
+    if (attributes[@"scrollable"]) {
+        _scrollable = attributes[@"scrollable"] ? [WXConvert BOOL:attributes[@"scrollable"]] : YES;
+        ((UIScrollView *)self.view).scrollEnabled = _scrollable;
     }
 }
 
@@ -203,9 +217,12 @@
 
 - (void)adjustSticky
 {
+    if (![self isViewLoaded]) {
+        return;
+    }
     CGFloat scrollOffsetY = ((UIScrollView *)self.view).contentOffset.y;
     for(WXComponent *component in self.stickyArray) {
-        if (CGPointEqualToPoint(component->_absolutePosition, CGPointZero)) {
+        if (isnan(component->_absolutePosition.x) && isnan(component->_absolutePosition.y)) {
             component->_absolutePosition = [component.supercomponent.view convertPoint:component.view.frame.origin toView:self.view];
         }
         CGPoint relativePosition = component->_absolutePosition;
@@ -289,10 +306,11 @@
 {
     UIScrollView *scrollView = (UIScrollView *)self.view;
     CGPoint contentOffset = scrollView.contentOffset;
+    CGFloat scaleFactor = self.weexInstance.pixelScaleFactor;
     
     if (_scrollDirection == WXScrollDirectionHorizontal) {
         CGFloat contentOffetX = [component.supercomponent.view convertPoint:component.view.frame.origin toView:self.view].x;
-        contentOffetX += offset * WXScreenResizeRadio();
+        contentOffetX += offset * scaleFactor;
         
         if (contentOffetX > scrollView.contentSize.width - scrollView.frame.size.width) {
             contentOffset.x = scrollView.contentSize.width - scrollView.frame.size.width;
@@ -301,7 +319,7 @@
         }
     } else {
         CGFloat contentOffetY = [component.supercomponent.view convertPoint:component.view.frame.origin toView:self.view].y;
-        contentOffetY += offset * WXScreenResizeRadio();
+        contentOffetY += offset * scaleFactor;
         
         if (contentOffetY > scrollView.contentSize.height - scrollView.frame.size.height) {
             contentOffset.y = scrollView.contentSize.height - scrollView.frame.size.height;
@@ -315,7 +333,7 @@
 
 - (BOOL)isNeedLoadMore
 {
-    if (_loadMoreOffset >= 0.0) {
+    if (_loadMoreOffset >= 0.0 && ((UIScrollView *)self.view).contentOffset.y >= 0) {
         return _previousLoadMoreContentHeight != ((UIScrollView *)self.view).contentSize.height && ((UIScrollView *)self.view).contentSize.height - ((UIScrollView *)self.view).contentOffset.y -  self.view.frame.size.height <= _loadMoreOffset;
     }
     
@@ -451,10 +469,11 @@
     }
 }
 
-#pragma mark  Private Methods
-
 - (void)handleAppear
 {
+    if (![self isViewLoaded]) {
+        return;
+    }
     UIScrollView *scrollView = (UIScrollView *)self.view;
     CGFloat vx = scrollView.contentInset.left + scrollView.contentOffset.x;
     CGFloat vy = scrollView.contentInset.top + scrollView.contentOffset.y;
@@ -468,20 +487,25 @@
     }
 }
 
+#pragma mark  Private Methods
+
 - (void)scrollToTarget:(WXScrollToTarget *)target scrollRect:(CGRect)rect
 {
     WXComponent *component = target.target;
+    if (![component isViewLoaded]) {
+        return;
+    }
     
     CGFloat ctop;
-    if (component.supercomponent) {
-        ctop = [component.supercomponent->_view convertPoint:component->_view.frame.origin toView:_view].y;
+    if (component && component->_view && component->_view.superview) {
+        ctop = [component->_view.superview convertPoint:component->_view.frame.origin toView:_view].y;
     } else {
         ctop = 0.0;
     }
     CGFloat cbottom = ctop + CGRectGetHeight(component.calculatedFrame);
     CGFloat cleft;
-    if (component.supercomponent) {
-        cleft = [component.supercomponent->_view convertPoint:component->_view.frame.origin toView:_view].x;
+    if (component && component->_view && component->_view.superview) {
+        cleft = [component->_view.superview convertPoint:component->_view.frame.origin toView:_view].x;
     } else {
         cleft = 0.0;
     }

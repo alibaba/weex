@@ -1,14 +1,18 @@
 import { subversion } from '../../../package.json'
 import runtime from '../../runtime'
 import frameworks from '../../frameworks/index'
+import services from '../../services/index'
 
 const { init, config } = runtime
 config.frameworks = frameworks
 const { native, transformer } = subversion
 
+for (const serviceName in services) {
+  runtime.service.register(serviceName, services[serviceName])
+}
+
 runtime.freezePrototype()
 runtime.setNativeConsole()
-runtime.setNativeTimer()
 
 // register framework meta info
 global.frameworkVersion = native

@@ -1,4 +1,9 @@
+import { init as initTaskHandler } from './task-center'
+import { registerElement } from './vdom/element-types'
+import { services, register, unregister } from './service'
+
 let frameworks
+let runtimeConfig
 
 const versionRegExp = /^\s*\/\/ *(\{[^}]*\}) *\r?\n/
 
@@ -21,6 +26,26 @@ function checkVersion (code) {
   return info
 }
 
+function createServices (id, env, config) {
+  // Init JavaScript services for this instance.
+  const serviceMap = Object.create(null)
+  serviceMap.service = Object.create(null)
+  services.forEach(({ name, options }) => {
+    if (process.env.NODE_ENV === 'development') {
+      console.debug(`[JS Runtime] create service ${name}.`)
+    }
+    const create = options.create
+    if (create) {
+      const result = create(id, env, config)
+      Object.assign(serviceMap.service, result)
+      Object.assign(serviceMap, result.instance)
+    }
+  })
+  delete serviceMap.service.instance
+  Object.freeze(serviceMap.service)
+  return serviceMap
+}
+
 const instanceMap = {}
 
 /**
@@ -33,24 +58,42 @@ const instanceMap = {}
  */
 function createInstance (id, code, config, data) {
   let info = instanceMap[id]
+
   if (!info) {
+    // Init instance info.
     info = checkVersion(code) || {}
     if (!frameworks[info.framework]) {
       info.framework = 'Weex'
     }
-    info.created = Date.now()
-    instanceMap[id] = info
+
+    // Init instance config.
     config = JSON.parse(JSON.stringify(config || {}))
     config.bundleVersion = info.version
     config.env = JSON.parse(JSON.stringify(global.WXEnvironment || {}))
     console.debug(`[JS Framework] create an ${info.framework}@${config.bundleVersion} instance from ${config.bundleVersion}`)
-    return frameworks[info.framework].createInstance(id, code, config, data)
+
+    // Init callback manager
+    const callbacks = new runtimeConfig.CallbackManager(id)
+
+    const env = {
+      info,
+      config,
+      callbacks,
+      created: Date.now(),
+      framework: info.framework
+    }
+    env.services = createServices(id, env, runtimeConfig)
+    instanceMap[id] = env
+
+    return frameworks[info.framework].createInstance(id, code, config, data, env)
   }
   return new Error(`invalid instance id "${id}"`)
 }
 
 const methods = {
-  createInstance
+  createInstance,
+  registerService: register,
+  unregisterService: unregister
 }
 
 /**
@@ -59,12 +102,25 @@ const methods = {
  */
 function genInit (methodName) {
   methods[methodName] = function (...args) {
+    if (methodName === 'registerComponents') {
+      checkComponentMethods(args[0])
+    }
     for (const name in frameworks) {
       const framework = frameworks[name]
       if (framework && framework[methodName]) {
         framework[methodName](...args)
       }
     }
+  }
+}
+
+function checkComponentMethods (components) {
+  if (Array.isArray(components)) {
+    components.forEach((name) => {
+      if (name && name.type && name.methods) {
+        registerElement(name.type, name.methods)
+      }
+    })
   }
 }
 
@@ -78,9 +134,26 @@ function genInstance (methodName) {
     const info = instanceMap[id]
     if (info && frameworks[info.framework]) {
       const result = frameworks[info.framework][methodName](...args)
-      if (methodName === 'destroyInstance') {
+
+      // Lifecycle methods
+      if (methodName === 'refreshInstance') {
+        services.forEach(service => {
+          const refresh = service.options.refresh
+          if (refresh) {
+            refresh(id, { info, runtime: runtimeConfig })
+          }
+        })
+      }
+      else if (methodName === 'destroyInstance') {
+        services.forEach(service => {
+          const destroy = service.options.destroy
+          if (destroy) {
+            destroy(id, { info, runtime: runtimeConfig })
+          }
+        })
         delete instanceMap[id]
       }
+
       return result
     }
     return new Error(`invalid instance id "${id}"`)
@@ -105,7 +178,9 @@ function adaptInstance (methodName, nativeMethodName) {
 }
 
 export default function init (config) {
-  frameworks = config.frameworks || {}
+  runtimeConfig = config || {}
+  frameworks = runtimeConfig.frameworks || {}
+  initTaskHandler()
 
   // Init each framework by `init` method and `config` which contains three
   // virtual-DOM Class: `Document`, `Element` & `Comment`, and a JS bridge method:

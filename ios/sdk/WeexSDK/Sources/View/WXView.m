@@ -22,7 +22,7 @@
     /**
      *  Capturing touches on a subview outside the frame of its superview if it does not clips to bounds.
      */
-    if (self.hidden) {
+    if (self.hidden || !self.userInteractionEnabled) {
         return nil;
     }
     

@@ -7,18 +7,19 @@
  */
 
 #import <Foundation/Foundation.h>
+@class WXSDKInstance;
 
 @interface WXBridgeMethod : NSObject
 
-@property (nonatomic, strong) NSString  *instance;
-@property (nonatomic, strong) NSString  *module;
-@property (nonatomic, strong) NSString  *method;
-@property (nonatomic, strong) NSArray   *arguments;
+@property (nonatomic, strong, readonly) NSString *methodName;
+@property (nonatomic, copy, readonly) NSArray *arguments;
+@property (nonatomic, weak, readonly) WXSDKInstance *instance;
 
-- (instancetype)initWihData:(NSDictionary *)data;
+- (instancetype)initWithMethodName:(NSString *)methodName
+                         arguments:(NSArray *)arguments
+                          instance:(WXSDKInstance *)instance;
 
-- (instancetype)initWithInstance:(NSString *)instance data:(NSMutableDictionary *)data;
-
-- (NSDictionary *)dataDesc;
+- (NSInvocation *)invocationWithTarget:(id)target selector:(SEL)selector;
 
 @end
+

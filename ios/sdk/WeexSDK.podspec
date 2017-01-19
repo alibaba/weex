@@ -2,7 +2,9 @@
 Pod::Spec.new do |s|
 
   s.name         = "WeexSDK"
-  s.version      = "0.8.0"
+
+  s.version      = "0.9.5"
+
   s.summary      = "WeexSDK Source ."
 
   s.description  = <<-DESC
@@ -16,9 +18,11 @@ Pod::Spec.new do |s|
            Alibaba-INC copyright
     LICENSE
   }
-  s.authors      = { "cxfeng1"  => "cxfeng1@gmail.com",
-                     "boboning" => "ningli928@163.com",
-                     "acton393" =>"zhangxing610321@gmail.com"
+  s.authors      = { "cxfeng1"      => "cxfeng1@gmail.com",
+                     "boboning"     => "ningli928@163.com",
+                     "yangshengtao" => "yangshengtao1314@163.com",
+                     "kfeagle"      => "sunjjbobo@163.com",
+                     "acton393"     => "zhangxing610321@gmail.com"
                    }
   s.platform     = :ios
   s.ios.deployment_target = '7.0'
@@ -38,5 +42,6 @@ Pod::Spec.new do |s|
   s.frameworks = 'CoreMedia','MediaPlayer','AVFoundation','AVKit','JavaScriptCore', 'GLKit'
 
   s.dependency 'SocketRocket'
+  s.libraries = "stdc++"
 
 end

@@ -1,0 +1,27 @@
+<template>
+    <div>
+        <text>hello world.</text>
+        <input id="input" value="input" onblur="onblur"></input>
+        <text style="color:red">{{status}}</text>
+        <text onclick="onclick">button</text>
+        <text onclick="toggleblur">blur input</text>
+    </div>
+</template>
+<script>
+    module.exports = {
+        data:{
+            status:"___"
+        },
+        methods:{
+            onclick:function(e){
+                this.status = "btn click."
+            },
+            toggleblur:function(e){
+                this.$el("input").blur();
+            },
+            onblur:function(e){
+                this.status = "input blur."
+            }
+        }
+    }
+</script>

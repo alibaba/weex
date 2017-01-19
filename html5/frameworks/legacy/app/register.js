@@ -59,8 +59,6 @@ export function initMethods (Vm, apis) {
   }
 }
 
-// for app
-
 /**
  * get a module of methods for an app instance
  */
@@ -68,10 +66,25 @@ export function requireModule (app, name) {
   const methods = nativeModules[name]
   const target = {}
   for (const methodName in methods) {
-    target[methodName] = (...args) => app.callTasks({
-      module: name,
-      method: methodName,
-      args: args
+    Object.defineProperty(target, methodName, {
+      configurable: true,
+      enumerable: true,
+      get: function moduleGetter () {
+        return (...args) => app.callTasks({
+          module: name,
+          method: methodName,
+          args: args
+        })
+      },
+      set: function moduleSetter (value) {
+        if (typeof value === 'function') {
+          return app.callTasks({
+            module: name,
+            method: methodName,
+            args: [value]
+          })
+        }
+      }
     })
   }
   return target

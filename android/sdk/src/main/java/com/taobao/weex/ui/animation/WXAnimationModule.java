@@ -207,7 +207,6 @@ package com.taobao.weex.ui.animation;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
-import android.animation.IntEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.graphics.drawable.ColorDrawable;
@@ -228,8 +227,8 @@ import android.view.animation.LinearInterpolator;
 
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.common.WXModule;
-import com.taobao.weex.common.WXModuleAnno;
 import com.taobao.weex.dom.WXDomHandler;
 import com.taobao.weex.dom.WXDomTask;
 import com.taobao.weex.ui.component.WXComponent;
@@ -246,7 +245,7 @@ import java.util.List;
 
 public class WXAnimationModule extends WXModule {
 
-  @WXModuleAnno
+  @JSMethod
   public void transition(@Nullable String ref, @Nullable String animation, @Nullable String callBack) {
     if(!TextUtils.isEmpty(ref)&&!TextUtils.isEmpty(animation)) {
       Message msg = Message.obtain();
@@ -267,8 +266,13 @@ public class WXAnimationModule extends WXModule {
     if(component == null){
       return;
     }
+    if (component.getHostView() == null) {
+      AnimationHolder holder = new AnimationHolder(animationBean, callback);
+      component.postAnimation(holder);
+      return;
+    }
     try {
-      Animator animator = createAnimator(animationBean, component.getHostView());
+      Animator animator = createAnimator(animationBean, component.getHostView(),mWXSDKInstance.getViewPortWidth());
       if (animator != null) {
         Animator.AnimatorListener animatorCallback = createAnimatorListener(mWXSDKInstance, callback);
         if(Build.VERSION.SDK_INT<Build.VERSION_CODES.JELLY_BEAN_MR2) {
@@ -291,7 +295,7 @@ public class WXAnimationModule extends WXModule {
   }
 
   private static @Nullable
-  ObjectAnimator createAnimator(@NonNull WXAnimationBean animation, final View target) {
+  ObjectAnimator createAnimator(@NonNull WXAnimationBean animation, final View target,final int viewPortWidth) {
     if(target == null){
       return null;
     }
@@ -321,18 +325,17 @@ public class WXAnimationModule extends WXModule {
       animator = ObjectAnimator.ofPropertyValuesHolder(
           target, holders.toArray(new PropertyValuesHolder[holders.size()]));
       animator.setStartDelay(animation.delay);
-      final IntEvaluator intEvaluator=new IntEvaluator();
       if (target.getLayoutParams() != null &&
           (!TextUtils.isEmpty(style.width) || !TextUtils.isEmpty(style.height))) {
         DimensionUpdateListener listener = new DimensionUpdateListener(target);
         ViewGroup.LayoutParams layoutParams = target.getLayoutParams();
         if (!TextUtils.isEmpty(style.width)) {
           listener.setWidth(layoutParams.width,
-                            (int) WXViewUtils.getRealPxByWidth(WXUtils.getFloat(style.width)));
+                            (int) WXViewUtils.getRealPxByWidth(WXUtils.getFloat(style.width),viewPortWidth));
         }
         if (!TextUtils.isEmpty(style.height)) {
           listener.setHeight(layoutParams.height,
-                             (int) WXViewUtils.getRealPxByWidth(WXUtils.getFloat(style.height)));
+                             (int) WXViewUtils.getRealPxByWidth(WXUtils.getFloat(style.height),viewPortWidth));
         }
         animator.addUpdateListener(listener);
       }
@@ -401,6 +404,21 @@ public class WXAnimationModule extends WXModule {
       }
     }
     return null;
+  }
+
+  //add by moxun on 12/26/2016
+  public static class AnimationHolder {
+    private WXAnimationBean wxAnimationBean;
+    private String callback;
+
+    public void execute(WXSDKInstance mInstance, WXComponent component) {
+      WXAnimationModule.startAnimation(mInstance, component, wxAnimationBean, callback);
+    }
+
+    private AnimationHolder(WXAnimationBean wxAnimationBean, String callback) {
+      this.wxAnimationBean = wxAnimationBean;
+      this.callback = callback;
+    }
   }
 
 }

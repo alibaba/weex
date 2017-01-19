@@ -204,10 +204,8 @@
  */
 package com.taobao.weex.ui.animation;
 
-import android.view.View;
 import com.taobao.weappplus_sdk.BuildConfig;
 import com.taobao.weex.WXSDKInstanceTest;
-import com.taobao.weex.common.Component;
 import com.taobao.weex.dom.TestDomObject;
 import com.taobao.weex.ui.component.TestComponent;
 import org.junit.Before;
@@ -215,12 +213,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 /**
  * Created by sospartan on 7/29/16.
@@ -251,7 +245,7 @@ public class WXAnimationModuleTest {
   public void testStartAnimation() throws Exception {
     module.startAnimation(module.mWXSDKInstance,null,null,null);
 
-    TestComponent comp = new TestComponent(module.mWXSDKInstance,new TestDomObject(),null,false);
+    TestComponent comp = new TestComponent(module.mWXSDKInstance,new TestDomObject(),null);
     module.startAnimation(module.mWXSDKInstance,comp,null,null);
 
     WXAnimationBean animation = new WXAnimationBean();

@@ -9,81 +9,18 @@
 #import "WXModuleFactory.h"
 #import "WXAssert.h"
 #import "WXLog.h"
+#import "WXInvocationConfig.h"
+
 #import <objc/runtime.h>
 #import <objc/message.h>
 
 /************************************************************************************************/
 
-@interface WXModuleConfig : NSObject
-/**
- *  The module name
- **/
-@property (nonatomic, strong) NSString  *name;
-/**
- *  The module class
- **/
-@property (nonatomic, strong) NSString  *clazz;
-/**
- *  The methods map
- **/
-@property (nonatomic, strong) NSMutableDictionary   *methods;
+@interface WXModuleConfig : WXInvocationConfig
 
 @end
 
 @implementation WXModuleConfig
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        _methods = [NSMutableDictionary dictionary];
-    }
-    return self;
-}
-
-- (void)registerModuleMethods
-{
-    Class currentClass = NSClassFromString(_clazz);
-    
-    if (!currentClass) {
-        WXLogWarning(@"The module class [%@] doesn't exit！", _clazz);
-        return;
-    }
-    
-    while (currentClass != [NSObject class]) {
-        unsigned int methodCount = 0;
-        Method *methodList = class_copyMethodList(object_getClass(currentClass), &methodCount);
-        for (unsigned int i = 0; i < methodCount; i++) {
-            NSString *selStr = [NSString stringWithCString:sel_getName(method_getName(methodList[i])) encoding:NSUTF8StringEncoding];
-            
-            if (![selStr hasPrefix:@"wx_export_method_"]) continue;
-            
-            NSString *name = nil, *method = nil;
-            SEL selector = NSSelectorFromString(selStr);
-            if ([currentClass respondsToSelector:selector]) {
-                method = ((NSString* (*)(id, SEL))[currentClass methodForSelector:selector])(currentClass, selector);
-            }
-            
-            if (method.length <= 0) {
-                WXLogWarning(@"The module class [%@] doesn't has any method！", _clazz);
-                continue;
-            }
-            
-            NSRange range = [method rangeOfString:@":"];
-            if (range.location != NSNotFound) {
-                name = [method substringToIndex:range.location];
-            } else {
-                name = method;
-            }
-            
-            [_methods setObject:method forKey:name];
-        }
-                
-        free(methodList);
-        currentClass = class_getSuperclass(currentClass);
-        
-    }
-}
 
 @end
 
@@ -146,24 +83,27 @@ static WXModuleFactory *_sharedInstance = nil;
     return NSClassFromString(config.clazz);
 }
 
-- (SEL)_methodWithModuleName:(NSString *)name withMethod:(NSString *)method
+- (SEL)_selectorWithModuleName:(NSString *)name methodName:(NSString *)method isSync:(BOOL *)isSync
 {
     WXAssert(name && method, @"Fail to find selector with module name and method, please check if the parameters are correct ！");
     
-    NSString *selStr = nil; SEL selector = nil;
+    NSString *selectorString = nil;;
     WXModuleConfig *config = nil;
     
     [_moduleLock lock];
     config = [_moduleMap objectForKey:name];
-    if (config.methods) {
-        selStr = [config.methods objectForKey:method];
+    if (config.syncMethods) {
+        selectorString = [config.syncMethods objectForKey:method];
+        if (selectorString && isSync) {
+            *isSync = YES;
+        }
     }
-    if (selStr) {
-        selector = NSSelectorFromString(selStr);
+    if (!selectorString && config.asyncMethods) {
+        selectorString = [config.asyncMethods objectForKey:method];;
     }
     [_moduleLock unlock];
     
-    return selector;
+    return NSSelectorFromString(selectorString);
 }
 
 - (NSString *)_registerModule:(NSString *)name withClass:(Class)clazz
@@ -175,7 +115,7 @@ static WXModuleFactory *_sharedInstance = nil;
     WXModuleConfig *config = [[WXModuleConfig alloc] init];
     config.name = name;
     config.clazz = NSStringFromClass(clazz);
-    [config registerModuleMethods];
+    [config registerMethods];
     [_moduleMap setValue:config forKey:name];
     [_moduleLock unlock];
     
@@ -185,7 +125,7 @@ static WXModuleFactory *_sharedInstance = nil;
 - (NSMutableDictionary *)_moduleMethodMapsWithName:(NSString *)name
 {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    NSMutableArray *methods = [NSMutableArray array];
+    NSMutableArray *methods = [self _defaultModuleMethod];
     
     [_moduleLock lock];
     [dict setValue:methods forKey:name];
@@ -194,20 +134,29 @@ static WXModuleFactory *_sharedInstance = nil;
     void (^mBlock)(id, id, BOOL *) = ^(id mKey, id mObj, BOOL * mStop) {
         [methods addObject:mKey];
     };
-    [config.methods enumerateKeysAndObjectsUsingBlock:mBlock];
+    [config.syncMethods enumerateKeysAndObjectsUsingBlock:mBlock];
+    [config.asyncMethods enumerateKeysAndObjectsUsingBlock:mBlock];
     [_moduleLock unlock];
     
     return dict;
 }
 
+// module common method
+- (NSMutableArray*)_defaultModuleMethod
+{
+    return [NSMutableArray arrayWithObjects:@"addEventListener",@"removeAllEventListeners", nil];
+}
+
 - (NSDictionary *)_getModuleConfigs {
-    NSMutableDictionary *modelesDic = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary *moduleDic = [[NSMutableDictionary alloc] init];
     void (^moduleBlock)(id, id, BOOL *) = ^(id mKey, id mObj, BOOL * mStop) {
-        WXModuleConfig *modeleConfig = (WXModuleConfig *)mObj;
-        [modelesDic setObject:modeleConfig.clazz forKey:modeleConfig.name];
+        WXModuleConfig *moduleConfig = (WXModuleConfig *)mObj;
+        if (moduleConfig.clazz && moduleConfig.name) {
+            [moduleDic setObject:moduleConfig.clazz forKey:moduleConfig.name];
+        }
     };
     [_moduleMap enumerateKeysAndObjectsUsingBlock:moduleBlock];
-    return modelesDic;
+    return moduleDic;
 }
 
 #pragma mark Public Methods
@@ -221,9 +170,9 @@ static WXModuleFactory *_sharedInstance = nil;
     return [[self _sharedInstance] _classWithModuleName:name];
 }
 
-+ (SEL)methodWithModuleName:(NSString *)name withMethod:(NSString *)method
++ (SEL)selectorWithModuleName:(NSString *)name methodName:(NSString *)method isSync:(BOOL *)isSync
 {
-    return [[self _sharedInstance] _methodWithModuleName:name withMethod:method];
+    return [[self _sharedInstance] _selectorWithModuleName:name methodName:method isSync:isSync];
 }
 
 + (NSString *)registerModule:(NSString *)name withClass:(Class)clazz

@@ -1,7 +1,7 @@
 package com.alibaba.weex.uitest.TC_AG;
 import com.alibaba.weex.WXPageActivity;
 import com.alibaba.weex.util.TestFlow;
-import java.util.HashMap;
+import java.util.TreeMap;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,16 +13,16 @@ public class AG_Border_A_Border_Radius extends TestFlow {
 	@Before
 	public void setUp() throws InterruptedException {
 		super.setUp();
-		HashMap testMap = new <String, Object> HashMap();
+		TreeMap testMap = new <String, Object> TreeMap();
 		testMap.put("testComponet", "AG_Border");
 		testMap.put("testChildCaseInit", "AG_Border_A_Border_Radius");
-		testMap.put("step1",new HashMap(){
+		testMap.put("step1",new TreeMap(){
 			{
 				put("click", "10");
 				put("screenshot", "AG_Border_A_Border_Radius_01_10");
 			}
 		});
-		testMap.put("step2",new HashMap(){
+		testMap.put("step2",new TreeMap(){
 			{
 				put("click", "20");
 				put("screenshot", "AG_Border_A_Border_Radius_02_20");

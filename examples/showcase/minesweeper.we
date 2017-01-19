@@ -19,8 +19,8 @@
       row: [],
       vector: [[-1, 0], [-1, -1], [0, -1], [1, -1], [1, 0], [1, 1], [0, 1], [-1, 1]],
       strings: {
-        mine: "❎",
-        flag: "✅",
+        mine: "💣",
+        flag: "🚩",
         win: "YOU WIN!",
         lose: "YOU LOSE~"
       },
@@ -207,7 +207,7 @@
   
   .tile {
     margin: 2;
-    font-size: 66;
+    font-size: 56;
     height: 80;
     padding-top: 0;
     text-align: center;

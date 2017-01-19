@@ -40,3 +40,5 @@ export function resetNativeTimer () {
   global.setTimeout = originalSetTimeout
   global.setTimeoutCallback = null
 }
+
+setNativeTimer()

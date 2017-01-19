@@ -44,12 +44,8 @@ module.exports = {
   module: {
     loaders: [
       {
-        test: /\.we(\?[^?]+)?$/,
+        test: /\.(we|vue)(\?[^?]+)?$/,
         loader: 'weex'
-      },
-      {
-        test: /\.vue(\?[^?]+)?$/,
-        loader: 'weex-vue-loader'
       }
     ]
   },

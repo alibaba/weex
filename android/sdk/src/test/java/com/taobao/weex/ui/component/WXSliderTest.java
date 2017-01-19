@@ -208,6 +208,7 @@ import com.taobao.weappplus_sdk.BuildConfig;
 import com.taobao.weex.WXSDKInstanceTest;
 import com.taobao.weex.dom.TestDomObject;
 import com.taobao.weex.ui.SimpleComponentHolder;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -218,8 +219,8 @@ import org.robolectric.annotation.Config;
 
 import java.lang.reflect.InvocationTargetException;
 
-import static org.junit.Assert.*;
 import static com.taobao.weex.common.Constants.Name;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by sospartan on 8/9/16.
@@ -250,11 +251,15 @@ public class WXSliderTest {
   };
 
   public static WXSlider create() throws IllegalAccessException, InstantiationException, InvocationTargetException {
-    return (WXSlider) new SimpleComponentHolder(WXSlider.class).createInstance(WXSDKInstanceTest.createInstance(), new TestDomObject(), WXDivTest.create(), false);
+    return (WXSlider) new SimpleComponentHolder(WXSlider.class).createInstance(WXSDKInstanceTest.createInstance(), new TestDomObject(), WXDivTest.create());
   }
 
   public static WXIndicator createIndicator() throws IllegalAccessException, InstantiationException, InvocationTargetException {
-    return (WXIndicator) new SimpleComponentHolder(WXIndicator.class).createInstance(WXSDKInstanceTest.createInstance(), new TestDomObject(), WXDivTest.create(), false);
+    return (WXIndicator) new SimpleComponentHolder(WXIndicator.class).createInstance(WXSDKInstanceTest.createInstance(), new TestDomObject(), WXDivTest.create());
+  }
+
+  public static WXIndicator createIndicator(WXVContainer container) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+    return (WXIndicator) new SimpleComponentHolder(WXIndicator.class).createInstance(WXSDKInstanceTest.createInstance(), new TestDomObject(), container);
   }
 
   @Before
@@ -277,7 +282,7 @@ public class WXSliderTest {
     component.addChild(ComponentTest.createComponent(new TestDomObject(),component,TestComponent.class));
     component.addChild(ComponentTest.createComponent(new TestDomObject(),component,TestComponent.class));
 
-    WXIndicator indicator = new WXIndicator(component.mInstance,new TestDomObject(),component,false);
+    WXIndicator indicator = new WXIndicator(component.getInstance(),new TestDomObject(),component,false);
     ComponentTest.create(indicator);
     component.addChild(indicator);
     ComponentTest.create(component);
@@ -304,11 +309,25 @@ public class WXSliderTest {
 
   @Test
   public void testIndicator() throws Exception {
-    WXIndicator indicator = createIndicator();
-    indicator.mParent = component;
+    WXIndicator indicator = createIndicator(component);
     ComponentTest.create(indicator);
     component.addChild(indicator);
     ComponentTest.setProperty(indicator,IPROPS,IVALUES);
+  }
+
+  @Test
+  public void testOnScrollListener() throws Exception {
+    component.mViewPager.addOnPageChangeListener(new WXSlider.SliderOnScrollListener(component));
+    component.setOffsetXAccuracy(0.05f);
+    component.mViewPager.setCurrentItem(0);
+    for (int index=1;index<component.mViewPager.getRealCount();index++) {
+      component.mViewPager.setCurrentItem(index,true);
+    }
+    for (int index=component.mViewPager.getRealCount() - 1;index>=0;index--) {
+      component.mViewPager.setCurrentItem(index,true);
+    }
+    component.mViewPager.setCurrentItem(3,true);
+    component.mViewPager.setCurrentItem(0,true);
   }
 
   @After

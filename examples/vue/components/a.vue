@@ -1,7 +1,7 @@
 <template>
   <scroller>
     <panel title="Hyperlink" type="primary">
-      <a href="http://g.tbcdn.cn/ali-wireless-h5/res/0.0.16/hello.js">
+      <a href="http://alibaba.github.io/weex/index.html">
         <tip type="info" style="margin-bottom: 20px;"
           value="Click me to see how 'A' element opens a new world."></tip>
       </a>
@@ -11,12 +11,14 @@
 
 <script>
   module.exports = {
-    data: {
-      img: '//gw.alicdn.com/tps/i2/TB1DpsmMpXXXXabaXXX20ySQVXX-512-512.png_400x400.jpg'
+    data: function () {
+      return {
+        img: '//gw.alicdn.com/tps/i2/TB1DpsmMpXXXXabaXXX20ySQVXX-512-512.png_400x400.jpg'
+      }
     },
     components: {
-      panel: require('weex-vue-components/panel.vue'),
-      tip: require('weex-vue-components/tip.vue')
+      panel: require('../include/panel.vue'),
+      tip: require('../include/tip.vue')
     }
   }
 </script>

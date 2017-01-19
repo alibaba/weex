@@ -204,13 +204,19 @@
  */
 package com.taobao.weex.adapter;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.taobao.weex.common.WXRequest;
 import com.taobao.weex.common.WXResponse;
-import com.taobao.weex.utils.WXLogUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
@@ -222,6 +228,7 @@ import java.util.concurrent.Executors;
 
 public class DefaultWXHttpAdapter implements IWXHttpAdapter {
 
+  private static final IEventReporterDelegate DEFAULT_DELEGATE = new NOPEventReportDelegate();
   private ExecutorService mExecutorService;
 
   private void execute(Runnable runnable){
@@ -240,17 +247,22 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
       @Override
       public void run() {
         WXResponse response = new WXResponse();
+        IEventReporterDelegate reporter = getEventReporterDelegate();
         try {
           HttpURLConnection connection = openConnection(request, listener);
+          reporter.preConnect(connection, request.body);
           Map<String,List<String>> headers = connection.getHeaderFields();
           int responseCode = connection.getResponseCode();
           if(listener != null){
             listener.onHeadersReceived(responseCode,headers);
           }
+          reporter.postConnect();
 
           response.statusCode = String.valueOf(responseCode);
           if (responseCode >= 200 && responseCode<=299) {
-            response.originalData = readInputStreamAsBytes(connection.getInputStream(), listener);
+            InputStream rawStream = connection.getInputStream();
+            rawStream = reporter.interpretResponseStream(rawStream);
+            response.originalData = readInputStreamAsBytes(rawStream, listener);
           } else {
             response.errorMsg = readInputStream(connection.getErrorStream(), listener);
           }
@@ -264,6 +276,9 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
           response.errorMsg=e.getMessage();
           if(listener!=null){
             listener.onHttpFinish(response);
+          }
+          if (e instanceof IOException) {
+            reporter.httpExchangeFailed((IOException) e);
           }
         }
       }
@@ -366,5 +381,36 @@ public class DefaultWXHttpAdapter implements IWXHttpAdapter {
     return (HttpURLConnection) url.openConnection();
   }
 
+  public @NonNull IEventReporterDelegate getEventReporterDelegate() {
+    return DEFAULT_DELEGATE;
+  }
 
+  public interface IEventReporterDelegate {
+    void preConnect(HttpURLConnection connection, @Nullable String body);
+    void postConnect();
+    InputStream interpretResponseStream(@Nullable InputStream inputStream);
+    void httpExchangeFailed(IOException e);
+  }
+
+  private static class NOPEventReportDelegate implements IEventReporterDelegate {
+    @Override
+    public void preConnect(HttpURLConnection connection, @Nullable String body) {
+      //do nothing
+    }
+
+    @Override
+    public void postConnect() {
+      //do nothing
+    }
+
+    @Override
+    public InputStream interpretResponseStream(@Nullable InputStream inputStream) {
+      return inputStream;
+    }
+
+    @Override
+    public void httpExchangeFailed(IOException e) {
+      //do nothing
+    }
+  }
 }

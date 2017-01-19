@@ -205,18 +205,46 @@
 package com.taobao.weex.bridge;
 
 
+import com.taobao.weex.utils.WXJsonUtils;
+
 public class WXJSObject {
 
-  public static final int NUMBER = 1;
-  public static final int String = 2;
-  public static final int JSON = 3;
-  //Double,String,jsonstring;
-  public Object data;
-  public int type;
+    public static final int NUMBER = 1;
+    public static final int String = 2;
+    public static final int JSON = 3;
 
-  public WXJSObject(int type, Object data) {
-    this.type = type;
-    this.data = data;
-  }
+    public Object data;
+    public int type;
+
+    public WXJSObject(int type, Object data) {
+        this.type = type;
+        this.data = data;
+    }
+
+    public WXJSObject(Object object) {
+
+         if(null == object){
+             type= String;
+             data = "";
+             return;
+         }
+
+        data = object;
+        if (object instanceof Integer) {
+            type = NUMBER;
+            data = new Double(((Integer) object).intValue());
+        } else if (object instanceof Double) {
+            type = NUMBER;
+        } else if (object instanceof Float) {
+            type = NUMBER;
+            data = new Double(((Float) object).intValue());
+        } else if (object instanceof String) {
+            type = String;
+        } else if (object instanceof Object) {
+            type = JSON;
+            data = WXJsonUtils.fromObjectToJSONString(object,true);
+        }
+    }
+
 
 }

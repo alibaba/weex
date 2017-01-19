@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "WXDefine.h"
+#import "WXSDKError.h"
 
 @class WXSDKInstance;
 
@@ -30,6 +31,7 @@ typedef enum : NSUInteger {
     WXMTJSDownload,
     WXMTJSBridge,
     WXMTNativeRender,
+    WXMTJSService,
 } WXMonitorTag;
 
 

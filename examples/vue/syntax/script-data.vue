@@ -54,14 +54,17 @@
   // }
 
   module.exports = {
-    data: {
-      firstName: 'John',
-      lastName: 'Smith',
-      date: Date.now()
+    data: function () {
+      return {
+        firstName: 'John',
+        lastName: 'Smith',
+        date: Date.now()
+      }
     },
     methods: {
       update: function () {
         this.today = '2016-01-01'
+        console.log('today:', this.today)
       }
     },
     computed: {

@@ -210,7 +210,7 @@ import android.text.Layout;
 import android.view.ViewGroup;
 
 import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.common.Component;
+import com.taobao.weex.annotation.Component;
 import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.ComponentCreator;
@@ -231,24 +231,26 @@ public class WXText extends WXComponent<WXTextView> {
 
   public static class Creator implements ComponentCreator {
 
-    public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-      return new WXText(instance, node, parent, lazy);
+    public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+      return new WXText(instance, node, parent);
     }
   }
 
   @Deprecated
   public WXText(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
-    this(instance, dom, parent, isLazy);
+    this(instance, dom, parent);
   }
 
   public WXText(WXSDKInstance instance, WXDomObject node,
-                WXVContainer parent, boolean lazy) {
-    super(instance, node, parent, lazy);
+                WXVContainer parent) {
+    super(instance, node, parent);
   }
 
   @Override
   protected WXTextView initComponentHostView(@NonNull Context context) {
-    return new WXTextView(context);
+    WXTextView textView =new WXTextView(context);
+    textView.holdComponent(this);
+    return textView;
   }
 
   @Override
@@ -309,5 +311,16 @@ public class WXText extends WXComponent<WXTextView> {
       getHostView().setTextLayout(layout);
       getHostView().invalidate();
     }
+  }
+
+  @Override
+  protected Object convertEmptyProperty(String propName, Object originalValue) {
+    switch (propName) {
+      case Constants.Name.FONT_SIZE:
+        return WXText.sDEFAULT_SIZE;
+      case Constants.Name.COLOR:
+        return "black";
+    }
+    return super.convertEmptyProperty(propName, originalValue);
   }
 }

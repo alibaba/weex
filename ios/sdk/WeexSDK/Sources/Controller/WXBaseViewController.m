@@ -76,6 +76,36 @@
     }
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [_instance fireGlobalEvent:WX_APPLICATION_WILL_RESIGN_ACTIVE params:nil];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [_instance fireGlobalEvent:WX_APPLICATION_DID_BECOME_ACTIVE params:nil];
+    [self _updateInstanceState:WeexInstanceAppear];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self _updateInstanceState:WeexInstanceDisappear];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    [self _updateInstanceState:WeexInstanceMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (void)refreshWeex
+{
+    [self _renderWithURL:_sourceURL];
+}
+
 - (void)addEdgePop
 {
     UIScreenEdgePanGestureRecognizer *edgePanGestureRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(edgePanGesture:)];
@@ -99,30 +129,6 @@
     return YES;
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    [self _updateInstanceState:WeexInstanceAppear];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-    [self _updateInstanceState:WeexInstanceDisappear];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    [self _updateInstanceState:WeexInstanceMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (void)refreshWeex
-{
-    [self _renderWithURL:_sourceURL];
-}
-
 - (void)_renderWithURL:(NSURL *)sourceURL
 {
     if (!sourceURL) {
@@ -143,7 +149,7 @@
     } else {
         newURL = [NSString stringWithFormat:@"%@?random=%d", sourceURL.absoluteString, arc4random()];
     }
-    [_instance renderWithURL:[NSURL URLWithString:newURL] options:@{@"bundleUrl":sourceURL} data:nil];
+    [_instance renderWithURL:[NSURL URLWithString:newURL] options:@{@"bundleUrl":sourceURL.absoluteString} data:nil];
     
     __weak typeof(self) weakSelf = self;
     _instance.onCreate = ^(UIView *view) {

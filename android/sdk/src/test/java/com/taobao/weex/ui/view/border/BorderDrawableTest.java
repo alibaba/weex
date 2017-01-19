@@ -209,9 +209,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 
-import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.flex.Spacing;
 import com.taobao.weex.utils.WXResourceUtils;
 
@@ -221,8 +219,9 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
@@ -529,4 +528,37 @@ public class BorderDrawableTest {
     assertThat(partAndFull.getBorderStyle(Spacing.BOTTOM), is(BorderStyle.DOTTED.ordinal()));
   }
 
+  @Test
+  public void testIsRounded(){
+    BorderDrawable none = new BorderDrawable();
+    assertThat(none.isRounded(), is(false));
+
+    BorderDrawable full = new BorderDrawable();
+    full.setBorderRadius(Spacing.ALL, 12);
+    assertThat(full.isRounded(), is(true));
+
+    BorderDrawable noneAndPart = new BorderDrawable();
+    noneAndPart.setBorderRadius(BorderDrawable.BORDER_TOP_LEFT_RADIUS, 5);
+    noneAndPart.setBorderRadius(BorderDrawable.BORDER_BOTTOM_RIGHT_RADIUS, 12);
+    assertThat(noneAndPart.isRounded(), is(true));
+
+    BorderDrawable fullAndPart = new BorderDrawable();
+    fullAndPart.setBorderRadius(BorderDrawable.BORDER_RADIUS_ALL, 0);
+    fullAndPart.setBorderRadius(BorderDrawable.BORDER_TOP_LEFT_RADIUS, 12);
+    fullAndPart.setBorderRadius(BorderDrawable.BORDER_BOTTOM_RIGHT_RADIUS, 19);
+    assertThat(fullAndPart.isRounded(), is(true));
+
+    BorderDrawable partAndFull = new BorderDrawable();
+    partAndFull.setBorderRadius(BorderDrawable.BORDER_TOP_LEFT_RADIUS, 12);
+    partAndFull.setBorderRadius(BorderDrawable.BORDER_RADIUS_ALL, 0);
+    assertThat(partAndFull.isRounded(), is(true));
+
+    BorderDrawable zeroAll = new BorderDrawable();
+    zeroAll.setBorderRadius(BorderDrawable.BORDER_RADIUS_ALL, 0);
+    assertThat(zeroAll.isRounded(), is(false));
+
+    BorderDrawable zeroPart = new BorderDrawable();
+    zeroPart.setBorderRadius(BorderDrawable.BORDER_TOP_LEFT_RADIUS, 0);
+    assertThat(zeroPart.isRounded(), is(false));
+  }
 }

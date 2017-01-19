@@ -46,7 +46,7 @@ const clipboard = {
 
 function element () {
   let tempInput = document.getElementById(WEEX_CLIPBOARD_ID)
-  if (tempInput === undefined) {
+  if (!tempInput) {
     tempInput = document.createElement('input')
     tempInput.setAttribute('id', WEEX_CLIPBOARD_ID)
     tempInput.style.cssText = 'height:1px;width:1px;border:none;'

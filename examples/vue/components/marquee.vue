@@ -37,24 +37,26 @@
 
 <script>
   module.exports = {
-    data: {
-      marquee: {
-        height: 30,
-        duration: 1500,
-        interval: 2000,
-        list: [
-          {text: 'Introducing Bots on Messenger'},
-          {text: 'Capturing 3D 360-Stereo VR Video'},
-          {text: 'The Future of Video on Facebook'},
-          {text: 'Announcing Vue.js 2.0'},
-          {text: 'Not Your Average Virtual-DOM'},
-          {text: 'Templates, JSX, or Hyperscript?'}
-        ]
+    data: function () {
+      return {
+        marquee: {
+          height: 30,
+          duration: 1500,
+          interval: 2000,
+          list: [
+            {text: 'Introducing Bots on Messenger'},
+            {text: 'Capturing 3D 360-Stereo VR Video'},
+            {text: 'The Future of Video on Facebook'},
+            {text: 'Announcing Vue.js 2.0'},
+            {text: 'Not Your Average Virtual-DOM'},
+            {text: 'Templates, JSX, or Hyperscript?'}
+          ]
+        }
       }
     },
     components: {
-      panel: require('weex-vue-components/panel.vue'),
-      marquee: require('weex-vue-components/marquee.vue')
+      panel: require('../include/panel.vue'),
+      marquee: require('../include/marquee.vue')
     },
     methods: {
       marqueeChange: function (e) {

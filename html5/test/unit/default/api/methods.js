@@ -35,17 +35,17 @@ describe('built-in methods', () => {
         differ: new Differ(),
         requireModule: (name) => {
           requireSpy(name)
-
           const module = requireModule(this, name)
+          const mockModule = {}
           for (const moduleName in module) {
-            module[moduleName] = function (...args) {
+            mockModule[moduleName] = function (...args) {
               moduleSpy(...args)
               if (typeof args[args.length - 1] === 'function') {
                 args[args.length - 1]()
               }
             }
           }
-          return module
+          return mockModule
         }
       },
       _setStyle: function () {},

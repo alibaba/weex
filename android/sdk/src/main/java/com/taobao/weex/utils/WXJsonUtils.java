@@ -206,8 +206,10 @@ package com.taobao.weex.utils;
 
 
 import android.support.annotation.NonNull;
-import com.alibaba.fastjson.JSONArray;
+
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.common.WXRuntimeException;
 
@@ -233,9 +235,13 @@ public class WXJsonUtils {
     return result;
   }
 
-  public @NonNull static String fromObjectToJSONString(Object obj) {
+  public @NonNull static String fromObjectToJSONString(Object obj, boolean WriteNonStringKeyAsString){
     try {
-      return JSONObject.toJSONString(obj);
+      if(WriteNonStringKeyAsString) {
+        return JSON.toJSONString(obj, SerializerFeature.WriteNonStringKeyAsString);
+      }else {
+        return JSON.toJSONString(obj);
+      }
     }catch(Exception e){
       if(WXEnvironment.isApkDebugable()){
         throw new WXRuntimeException("fromObjectToJSONString parse error!");
@@ -243,7 +249,10 @@ public class WXJsonUtils {
       WXLogUtils.e("fromObjectToJSONString error:", e);
       return "{}";
     }
+  }
+  public @NonNull static String fromObjectToJSONString(Object obj) {
 
+    return fromObjectToJSONString(obj,false);
   }
 
   /**

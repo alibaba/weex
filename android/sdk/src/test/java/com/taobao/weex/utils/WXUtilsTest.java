@@ -204,33 +204,50 @@
  */
 package com.taobao.weex.utils;
 
+import com.taobao.weappplus_sdk.BuildConfig;
 import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.annotation.Config;
 
 /**
  * Created by lixinke on 16/2/24.
  */
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 19)
+@PowerMockIgnore( {"org.mockito.*", "org.robolectric.*", "android.*"})
 public class WXUtilsTest extends TestCase {
 
+    @Before
     public void setUp() throws Exception {
         super.setUp();
 
     }
 
+    @Test
     public void testGetFloat() throws Exception {
         float test_float = WXUtils.getFloat("12324.9px");
         assertEquals(12324.9, test_float, 0.9);
+
+        assertEquals(WXUtils.fastGetFloat("1.2345",2),1.23f);
     }
 
+    @Test
     public void testGetInt() throws Exception {
         int test_int = WXUtils.getInt("23px");
         assertEquals(23, test_int);
     }
 
+    @Test
     public void testGetLong() throws Exception {
         long test_long = WXUtils.getLong("8098px");
         assertEquals(8098, test_long);
     }
 
+    @Test
     public void testGetDouble() throws Exception {
         double test_Double = WXUtils.getDouble("8098.8989px");
         assertEquals(8098.8, test_Double, 0.89);

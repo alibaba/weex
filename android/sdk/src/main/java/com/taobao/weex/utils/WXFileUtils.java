@@ -222,34 +222,38 @@ public class WXFileUtils {
    * @return the Content of the file
    */
   public static String loadAsset(String path, Context context) {
-    if(path == null || context == null){
+    if (context == null || TextUtils.isEmpty(path)) {
       return null;
     }
-    StringBuilder builder ;
+    InputStream inputStream = null;
+    BufferedReader bufferedReader = null;
     try {
-      InputStream in = context.getAssets().open(path);
-
-      builder = new StringBuilder(in.available()+10);
-
-      BufferedReader localBufferedReader = new BufferedReader(new InputStreamReader(in));
-      char[] data = new char[2048];
+      inputStream = context.getAssets().open(path);
+      StringBuilder builder = new StringBuilder(inputStream.available() + 10);
+      bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+      char[] data = new char[4096];
       int len = -1;
-      while ((len = localBufferedReader.read(data)) > 0) {
+      while ((len = bufferedReader.read(data)) > 0) {
         builder.append(data, 0, len);
       }
-      localBufferedReader.close();
-      if (in != null) {
-        try {
-          in.close();
-        } catch (IOException e) {
-          WXLogUtils.e("WXFileUtils loadAsset: ", e);
-        }
-      }
-      return builder.toString();
 
+      return builder.toString();
     } catch (IOException e) {
       e.printStackTrace();
       WXLogUtils.e("", e);
+    } finally {
+      try {
+        if (bufferedReader != null)
+          bufferedReader.close();
+      } catch (IOException e) {
+        WXLogUtils.e("WXFileUtils loadAsset: ", e);
+      }
+      try {
+        if (inputStream != null)
+          inputStream.close();
+      } catch (IOException e) {
+        WXLogUtils.e("WXFileUtils loadAsset: ", e);
+      }
     }
 
     return "";

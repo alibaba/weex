@@ -23,16 +23,18 @@
   var navigator = require('@weex-module/navigator')
   var getBaseURL = require('../include/base-url.js').getBaseURL
   module.exports = {
-    data: {
-      navBarHeight: 88,
-      title: 'Navigator',
-      dir: 'examples',
-      baseURL: '',
+    data: function () {
+      return {
+        navBarHeight: 88,
+        title: 'Navigator',
+        dir: 'examples',
+        baseURL: ''
+      }
     },
     components: {
-      panel: require('weex-vue-components/panel.vue'),
-      navpage: require('weex-vue-components/navpage.vue'),
-      button: require('weex-vue-components/button.vue')
+      panel: require('../include/panel.vue'),
+      navpage: require('../include/navpage.vue'),
+      button: require('../include/button.vue')
     },
     created: function() {
       this.$getConfig(function (config) {
@@ -41,7 +43,7 @@
           var scale = env.scale;
           var deviceWidth = env.deviceWidth / scale;
           this.navBarHeight = 64.0 * 750.0 / deviceWidth;
-        }   
+        }
       }.bind(this));
       this.baseURL = getBaseURL(this)
     },

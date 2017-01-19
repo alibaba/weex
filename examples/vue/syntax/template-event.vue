@@ -20,16 +20,20 @@
 
 <script>
   module.exports = {
-    data: {
-      name: 'Steve',
-      temp: 'Mike'
+    data: function () {
+      return {
+        name: 'Steve',
+        temp: 'Mike'
+      }
     },
     methods: {
       update: function (e) {
         this.setName('David')
+        console.log('setName', this.name)
       },
       setName: function (value) {
         this.name = value
+        console.log('name', this.name)
       }
     }
   }

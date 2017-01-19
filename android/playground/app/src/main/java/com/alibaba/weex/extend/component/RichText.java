@@ -16,8 +16,8 @@ import com.taobao.weex.ui.component.WXVContainer;
 
 public class RichText extends WXComponent<TextView> {
 
-  public RichText(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
-    super(instance, dom, parent, isLazy);
+  public RichText(WXSDKInstance instance, WXDomObject dom, WXVContainer parent) {
+    super(instance, dom, parent);
   }
 
   @Override

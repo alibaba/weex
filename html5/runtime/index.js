@@ -6,30 +6,27 @@
  */
 
 import * as shared from '../shared'
-import { Document, Element, Comment } from './vdom'
-import Listener from './listener'
+
 import init from './init'
+import config from './config'
 
-const config = {
-  Document, Element, Comment, Listener,
-  sendTasks (...args) {
-    return global.callNative(...args)
-  }
-}
-
-Document.handler = config.sendTasks
+import {
+  register,
+  unregister,
+  has
+} from './service'
 
 /* istanbul ignore next */
 function freezePrototype () {
   shared.freezePrototype()
 
-  Object.freeze(Element)
-  Object.freeze(Comment)
-  Object.freeze(Listener)
-  Object.freeze(Document.prototype)
-  Object.freeze(Element.prototype)
-  Object.freeze(Comment.prototype)
-  Object.freeze(Listener.prototype)
+  Object.freeze(config.Element)
+  Object.freeze(config.Comment)
+  Object.freeze(config.Listener)
+  Object.freeze(config.Document.prototype)
+  Object.freeze(config.Element.prototype)
+  Object.freeze(config.Comment.prototype)
+  Object.freeze(config.Listener.prototype)
 }
 
 export default {
@@ -37,6 +34,7 @@ export default {
   resetNativeConsole: shared.resetNativeConsole,
   setNativeTimer: shared.setNativeTimer,
   resetNativeTimer: shared.resetNativeTimer,
+  service: { register, unregister, has },
   freezePrototype,
   init,
   config

@@ -55,27 +55,29 @@
 
 <script>
   module.exports = {
-    data: {
-      countdown1: {
-        remain: 5000,
-        time: {
-          D: '0',
-          hh: '00',
-          mm: '00',
-          ss: '00'
-        }
-      },
-      countdown2: {
-        remain: 5000,
-        time: {
-          MM: '0',
-          ss: '0'
+    data: function () {
+      return {
+        countdown1: {
+          remain: 5000,
+          time: {
+            D: '0',
+            hh: '00',
+            mm: '00',
+            ss: '00'
+          }
+        },
+        countdown2: {
+          remain: 5000,
+          time: {
+            MM: '0',
+            ss: '0'
+          }
         }
       }
     },
     components: {
-      panel: require('weex-vue-components/panel.vue'),
-      countdown: require('weex-vue-components/countdown.vue')
+      panel: require('../include/panel.vue'),
+      countdown: require('../include/countdown.vue')
     },
     methods: {
       tick: function (e, k) {

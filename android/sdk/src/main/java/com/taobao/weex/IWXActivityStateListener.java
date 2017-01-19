@@ -207,6 +207,8 @@ package com.taobao.weex;
 /**
  * Listener class for activity lifecycle
  */
+
+@Deprecated
 public interface IWXActivityStateListener {
 
   void onActivityCreate();

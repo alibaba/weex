@@ -19,7 +19,7 @@
       url: { default: '' }
     },
     components: {
-      listItem: require('weex-vue-components/list-item.vue')
+      listItem: require('./list-item.vue')
     },
     methods: {
       redirect: function() {

@@ -4,13 +4,9 @@ import sinonChai from 'sinon-chai'
 const { expect } = chai
 chai.use(sinonChai)
 
-global.callNative = function () {}
-global.callAddElement = function () {}
-
 import * as ctrl from '../../../../frameworks/legacy/app/ctrl'
 import Differ from '../../../../frameworks/legacy/app/differ'
 import { Document } from '../../../../runtime/vdom'
-import Listener from '../../../../runtime/listener'
 
 describe('the api of app', () => {
   let app
@@ -33,7 +29,7 @@ describe('the api of app', () => {
       differ: new Differ(id)
     }
 
-    app.doc = new Document(id, '', spy1, Listener)
+    app.doc = new Document(id, '', spy1)
     app.doc.createBody('div')
     // app.bootstrap.returns()
 
@@ -155,31 +151,6 @@ describe('the api of app', () => {
       const data = null
       const result = ctrl.callback(app, '1', data, true)
       expect(result).to.be.an.instanceof(Error)
-    })
-  })
-
-  describe('updateActions', () => {
-    let originalCallNative
-
-    before(() => {
-      originalCallNative = global.callNative
-      global.callNative = function () {}
-    })
-
-    after(() => {
-      global.callNative = originalCallNative
-    })
-
-    it('update actions in listener', () => {
-      app.doc.listener.updates = [
-        {
-          method () {},
-          args: [undefined, null, /\.x/i, new Date(), 2, '3', true, ['']]
-        }
-      ]
-      ctrl.updateActions(app)
-
-      expect(app.doc.listener.updates).to.deep.equal([])
     })
   })
 

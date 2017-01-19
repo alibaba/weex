@@ -11,6 +11,7 @@
 #import "WXHandlerFactory.h"
 #import "WXLog.h"
 #import "WXComponent+Events.h"
+#import "WXURLRewriteProtocol.h"
 
 @interface WXAComponent()
 
@@ -49,12 +50,17 @@
 - (void)openURL
 {
     if (_href && [_href length] > 0) {
+        NSMutableString *newHref = [_href mutableCopy];
+        WX_REWRITE_URL(_href, WXResourceTypeLink, self.weexInstance, &newHref)
+        if (!newHref) {
+            return;
+        }
         id<WXNavigationProtocol> navigationHandler = [WXHandlerFactory handlerForProtocol:@protocol(WXNavigationProtocol)];
         if ([navigationHandler respondsToSelector:@selector(pushViewControllerWithParam:
                                                             completion:
                                                             withContainer:)]) {
             __weak typeof(self) weexSelf = self;
-            [navigationHandler pushViewControllerWithParam:@{@"url":_href} completion:^(NSString *code, NSDictionary *responseData) {
+            [navigationHandler pushViewControllerWithParam:@{@"url":newHref} completion:^(NSString *code, NSDictionary *responseData) {
                 WXLogDebug(@"Push success -> %@", weexSelf.href);
             } withContainer:self.weexInstance.viewController];
         } else {

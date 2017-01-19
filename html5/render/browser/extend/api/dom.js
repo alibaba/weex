@@ -5,6 +5,65 @@ import scroll from 'scroll-to'
 let camelToKebab, appendStyle
 
 const dom = {
+
+  /**
+   * createBody: create root component
+   * @param  {object} element
+   *    container|listview|scrollview
+   * @return {[type]}      [description]
+   */
+  createBody: function (element) {
+    const componentManager = this.getComponentManager()
+    element.instanceId = componentManager.instanceId
+    return componentManager.createBody(element)
+  },
+
+  addElement: function (parentRef, element, index) {
+    const componentManager = this.getComponentManager()
+    element.instanceId = componentManager.instanceId
+    return componentManager.addElement(parentRef, element, index)
+  },
+
+  removeElement: function (ref) {
+    const componentManager = this.getComponentManager()
+    return componentManager.removeElement(ref)
+  },
+
+  moveElement: function (ref, parentRef, index) {
+    const componentManager = this.getComponentManager()
+    return componentManager.moveElement(ref, parentRef, index)
+  },
+
+  addEvent: function (ref, type) {
+    const componentManager = this.getComponentManager()
+    return componentManager.addEvent(ref, type)
+  },
+
+  removeEvent: function (ref, type) {
+    const componentManager = this.getComponentManager()
+    return componentManager.removeEvent(ref, type)
+  },
+
+  /**
+   * updateAttrs: update attributes of component
+   * @param  {string} ref
+   * @param  {obj} attr
+   */
+  updateAttrs: function (ref, attr) {
+    const componentManager = this.getComponentManager()
+    return componentManager.updateAttrs(ref, attr)
+  },
+
+  /**
+   * updateStyle: udpate style of component
+   * @param {string} ref
+   * @param {obj} style
+   */
+  updateStyle: function (ref, style) {
+    const componentManager = this.getComponentManager()
+    return componentManager.updateStyle(ref, style)
+  },
+
   /**
    * scrollToElement
    * @param  {string} ref
@@ -13,7 +72,7 @@ const dom = {
    */
   scrollToElement: function (ref, options) {
     !options && (options = {})
-    const offset = (Number(options.offset) || 0) * this.scale
+    const offset = Number(options.offset) || 0
     const elem = this.getComponentManager().getComponent(ref)
     if (!elem) {
       return console.error(`[h5-render] component of ref ${ref} doesn't exist.`)
@@ -82,11 +141,56 @@ const dom = {
     }
     const styleText = `@${key}{${stylesText}}`
     appendStyle(styleText, 'dom-added-rules')
+  },
+
+  createFinish (callback) {
+    return this.getComponentManager().createFinish()
+  },
+
+  updateFinish (callback) {
+    return this.getComponentManager().updateFinish()
+  },
+
+  refreshFinish (callback) {
+    return this.getComponentManager().refreshFinish()
   }
 }
 
 const meta = {
   dom: [{
+    name: 'createBody',
+    args: ['object']
+  }, {
+    name: 'addElement',
+    args: ['string', 'object', 'number']
+  }, {
+    name: 'removeElement',
+    args: ['string']
+  }, {
+    name: 'moveElement',
+    args: ['string', 'string', 'number']
+  }, {
+    name: 'addEvent',
+    args: ['string', 'string']
+  }, {
+    name: 'removeEvent',
+    args: ['string', 'string']
+  }, {
+    name: 'updateAttrs',
+    args: ['string', 'object']
+  }, {
+    name: 'updateStyle',
+    args: ['string', 'object']
+  }, {
+    name: 'createFinish',
+    args: []
+  }, {
+    name: 'updateFinish',
+    args: []
+  }, {
+    name: 'refreshFinish',
+    args: []
+  }, {
     name: 'scrollToElement',
     args: ['string', 'object']
   }, {

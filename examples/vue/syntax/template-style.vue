@@ -11,13 +11,16 @@
 
 <script>
   module.exports = {
-    data: {
-      size: 32,
-      color: '#ff0000'
+    data: function () {
+      return {
+        size: 32,
+        color: '#ff0000'
+      }
     },
     methods: {
       update: function (e) {
         this.size = 48
+        console.log('this.size', this.size)
       }
     }
   }

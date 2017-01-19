@@ -218,7 +218,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = BuildConfig.class,manifest = Config.NONE)
 public class WXHashMapTest {
 	private WXHashMap<String, String> mWXHashMap = new WXHashMap<>();
 

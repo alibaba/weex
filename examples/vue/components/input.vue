@@ -25,22 +25,31 @@
 </style>
 
 <script>
+  var modal = require('@weex-module/modal')
   module.exports = {
-    data: {
-      txtInput: '',
-      txtChange: ''
+    data: function () {
+      return {
+        txtInput: '',
+        txtChange: ''
+      }
     },
     components: {
-      panel: require('weex-vue-components/panel.vue')
+      panel: require('../include/panel.vue')
     },
     methods: {
       onchange: function(event) {
         this.txtChange = event.value;
-        console.log('onchange', event.value);
+        modal.toast({
+          message: 'onchange: ' + event.value,
+          duration: 2
+        })
       },
       oninput: function(event) {
         this.txtInput = event.value;
-        console.log('oninput', event.value);
+        modal.toast({
+          message: 'onitput: ' + event.value,
+          duration: 1
+        })
       }
     }
   };

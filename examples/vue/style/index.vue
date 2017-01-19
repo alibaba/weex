@@ -32,7 +32,7 @@
 <script>
   module.exports = {
     components: {
-      panel: require('weex-vue-components/panel.vue'),
+      panel: require('../include/panel.vue'),
       styleBox: require('./style-box.vue'),
       styleFlex: require('./style-flex.vue'),
       styleItem: require('./style-item.vue')

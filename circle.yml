@@ -1,21 +1,29 @@
 machine:
+  pre:
+    - sudo service mongodb stop
+    - sudo service mysql stop
+    - sudo service postgresql stop
+    - sudo service rabbitmq-server stop
+    - sudo service couchdb stop
   node:
-    version: 7
-  environment:
-    GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
+   version: 7
+  java:
+    version: 'oraclejdk8'
 test:
   override:
+    - npm run build
     - npm run test
-    - cd android/playground && ./gradlew assembleDebug
-    - cd android/sdk && ./gradlew clean testDebugUnitTest -PdisableCov=true
+    - cd android/playground && ./gradlew assembleDebug -Dorg.gradle.daemon=true -Dorg.gradle.parallel=true -Dorg.gradle.jvmargs="-Xmx512m -XX:+HeapDumpOnOutOfMemoryError" -Dfile.encoding=UTF-8
+    - cd android/sdk && ./gradlew testDebugUnitTest -PdisableCov=true -PtargetSDK=19 -Dorg.gradle.daemon=true -Dorg.gradle.parallel=true -Dorg.gradle.jvmargs="-Xmx512m -XX:+HeapDumpOnOutOfMemoryError" -Dfile.encoding=UTF-8
   post:
-    - cp -r android/playground/app/build/outputs $CIRCLE_ARTIFACTS # playground artifacts
-    - cp -r android/sdk/build/ $CIRCLE_ARTIFACTS/build
-    - cd android/sdk && bash <(curl -s https://codecov.io/bash)
+    - cp -r android/playground/app/build/outputs $CIRCLE_ARTIFACTS/playground # playground artifacts
+    - cp -r android/sdk/build/reports $CIRCLE_ARTIFACTS/sdk_reports
 
 dependencies:
   cache_directories:
     - "node_modules"
+    - ~/.gradle
+    - ~/.m2
 
 notify:
   webhooks:

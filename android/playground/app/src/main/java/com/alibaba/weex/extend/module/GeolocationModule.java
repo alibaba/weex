@@ -14,8 +14,8 @@ import com.alibaba.weex.extend.module.location.ILocatable;
 import com.alibaba.weex.extend.module.location.LocationFactory;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.common.Destroyable;
+import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.common.WXModule;
-import com.taobao.weex.common.WXModuleAnno;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +38,7 @@ public class GeolocationModule extends WXModule implements Destroyable {
    * @param errorCallback   错误回调function id.(例如:没有权限)
    * @param params          JSON格式的参数(例如:准确度等).
    */
-  @WXModuleAnno
+  @JSMethod
   public void getCurrentPosition(String successCallback, String errorCallback, String params) {
     mILocatable.setWXSDKInstance(mWXSDKInstance);
     if (checkPermission()) {
@@ -56,7 +56,7 @@ public class GeolocationModule extends WXModule implements Destroyable {
    * @param errorCallback   错误回调(例如:没有权限等).
    * @param params          SON格式的参数(例如:准确度等).
    */
-  @WXModuleAnno
+  @JSMethod
   public void watchPosition(String successCallback, String errorCallback, String params) {
     mILocatable.setWXSDKInstance(mWXSDKInstance);
     if (checkPermission()) {
@@ -71,7 +71,7 @@ public class GeolocationModule extends WXModule implements Destroyable {
    *
    * @param registerID 注册时返回的唯一ID。
    */
-  @WXModuleAnno
+  @JSMethod
   public void clearWatch(String registerID) {
     mILocatable.setWXSDKInstance(mWXSDKInstance);
     mILocatable.clearWatch(registerID);

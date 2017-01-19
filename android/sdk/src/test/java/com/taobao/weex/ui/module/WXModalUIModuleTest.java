@@ -207,7 +207,7 @@ package com.taobao.weex.ui.module;
 import com.taobao.weappplus_sdk.BuildConfig;
 import com.taobao.weex.WXSDKInstanceTest;
 import com.taobao.weex.bridge.JSCallback;
-import com.taobao.weex.ui.module.WXModalUIModule;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

@@ -204,19 +204,37 @@
  */
 package com.taobao.weex.dom;
 
+import android.support.annotation.NonNull;
+import android.support.v4.util.ArrayMap;
+import android.text.TextUtils;
+
 import com.taobao.weex.common.Constants;
 import com.taobao.weex.common.WXImageSharpen;
 import com.taobao.weex.utils.WXLogUtils;
+import com.taobao.weex.utils.WXUtils;
+import com.taobao.weex.utils.WXViewUtils;
 
+import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * store value of component attribute
  *
  */
-public class WXAttr extends SafePutConcurrentHashMap<String, Object> {
+public class WXAttr implements Map<String, Object>,Cloneable {
 
   private static final long serialVersionUID = -2619357510079360946L;
+  private @NonNull final ArrayMap<String, Object> map;
+
+  public WXAttr(){
+    map=new ArrayMap<>();
+  }
+
+  public WXAttr(@NonNull Map<String,Object> standardMap) {
+    this();
+    map.putAll(standardMap);
+  }
 
   public static String getPrefix(Map<String, Object> attr) {
     if (attr == null) {
@@ -360,7 +378,7 @@ public class WXAttr extends SafePutConcurrentHashMap<String, Object> {
   }
 
   public String optString(String key){
-    if(contains(key)){
+    if(containsKey(key)){
       Object value = get(key);
       if (value instanceof String) {
         return (String) value;
@@ -390,5 +408,97 @@ public class WXAttr extends SafePutConcurrentHashMap<String, Object> {
       return "vertical";
     }
     return scrollDirection.toString();
+  }
+
+  public float getElevation(int viewPortW) {
+    Object obj = get(Constants.Name.ELEVATION);
+    float ret = Float.NaN;
+    if (obj != null) {
+      String number = obj.toString();
+      if (!TextUtils.isEmpty(number)) {
+        ret = WXViewUtils.getRealSubPxByWidth(WXUtils.getFloat(number),viewPortW);
+      } else {
+        ret = 0;
+      }
+    }
+    return ret;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    return map.equals(o);
+  }
+
+  @Override
+  public int hashCode() {
+    return map.hashCode();
+  }
+
+  @Override
+  public void clear() {
+    map.clear();
+  }
+
+  @Override
+  public boolean containsKey(Object key) {
+    return map.containsKey(key);
+  }
+
+  @Override
+  public boolean containsValue(Object value) {
+    return map.containsValue(value);
+  }
+
+  @NonNull
+  @Override
+  public Set<Entry<String, Object>> entrySet() {
+    return map.entrySet();
+  }
+
+  @Override
+  public Object get(Object key) {
+    return map.get(key);
+  }
+
+  @Override
+  public boolean isEmpty() {
+    return map.isEmpty();
+  }
+
+  @NonNull
+  @Override
+  public Set<String> keySet() {
+    return map.keySet();
+  }
+
+  @Override
+  public Object put(String key, Object value) {
+    return map.put(key,value);
+  }
+
+  @Override
+  public void putAll(Map<? extends String, ?> map) {
+    this.map.putAll(map);
+  }
+
+  @Override
+  public Object remove(Object key) {
+    return map.remove(key);
+  }
+
+  @Override
+  public int size() {
+    return map.size();
+  }
+
+  @NonNull
+  @Override
+  public Collection<Object> values() {
+    return map.values();
+  }
+
+  @Override
+  protected WXAttr clone(){
+    return new WXAttr(map);
   }
 }

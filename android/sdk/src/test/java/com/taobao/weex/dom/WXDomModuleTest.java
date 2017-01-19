@@ -272,8 +272,7 @@ public class WXDomModuleTest {
 
   @Before
   public void setUp() throws Exception {
-    module = new WXDomModule();
-    module.mWXSDKInstance = WXSDKInstanceTest.createInstance();
+    module = new WXDomModule(WXSDKInstanceTest.createInstance());
   }
 
   @After

@@ -8,7 +8,6 @@
 
 #import "WXHandlerFactory.h"
 #import "WXThreadSafeMutableDictionary.h"
-#import "WXNetworkDefaultImpl.h"
 #import "WXNavigationDefaultImpl.h"
 #import "WXAssert.h"
 

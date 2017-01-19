@@ -77,16 +77,59 @@
   var img0 = '//gw.alicdn.com/tps/i2/TB1DpsmMpXXXXabaXXX20ySQVXX-512-512.png_400x400.jpg';
   var img1 = '//gw.alicdn.com/tps/i1/TB1M3sQMpXXXXakXXXXApNeJVXX-360-360.png';
   module.exports = {
-    data: {
-      eventCnt: 0,
-      togglePlayMsg: 'pause',
-      sliders: [
-        {
-          interval: 1000,
-          autoPlay: true,
-          sliderPages: [
-            {
-              items: [
+    data: function () {
+      return {
+        eventCnt: 0,
+        togglePlayMsg: 'pause',
+        sliders: [
+          {
+            interval: 1000,
+            autoPlay: true,
+            sliderPages: [
+              {
+                items: [
+                  {
+                    image: img0,
+                    link: '//h5.m.taobao.com/1'
+                  },
+                  {
+                    image: img0,
+                    link: '//h5.m.taobao.com/1'
+                  }
+                ]
+              },
+              {
+                items: [
+                  {
+                    image: img1,
+                    link: '//h5.m.taobao.com/1'
+                  },
+                  {
+                    image: img1,
+                    link: '//h5.m.taobao.com/1'
+                  }
+                ]
+              },
+              {
+                items: [
+                  {
+                    image: img0,
+                    link: '//h5.m.taobao.com/1'
+                  },
+                  {
+                    image: img1,
+                    link: '//h5.m.taobao.com/1'
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            interval: 3000,
+            autoPlay: true,
+            sliderPages: [
+              {
+                items: [
                 {
                   image: img0,
                   link: '//h5.m.taobao.com/1'
@@ -95,10 +138,52 @@
                   image: img0,
                   link: '//h5.m.taobao.com/1'
                 }
+                ]
+              },
+              {
+                items: [
+                {
+                  image: img1,
+                  link: '//h5.m.taobao.com/1'
+                },
+                {
+                  image: img1,
+                  link: '//h5.m.taobao.com/1'
+                }
+                ]
+              },
+              {
+                items: [
+                {
+                  image: img0,
+                  link: '//h5.m.taobao.com/1'
+                },
+                {
+                  image: img1,
+                  link: '//h5.m.taobao.com/1'
+                }
+                ]
+              }
               ]
             },
             {
-              items: [
+              interval: 5000,
+              autoPlay: true,
+              sliderPages: [
+              {
+                items: [
+                {
+                  image: img0,
+                  link: '//h5.m.taobao.com/1'
+                },
+                {
+                  image: img0,
+                  link: '//h5.m.taobao.com/1'
+                }
+                ]
+              },
+              {
+                items: [
                 {
                   image: img1,
                   link: '//h5.m.taobao.com/1'
@@ -107,10 +192,10 @@
                   image: img1,
                   link: '//h5.m.taobao.com/1'
                 }
-              ]
-            },
-            {
-              items: [
+                ]
+              },
+              {
+                items: [
                 {
                   image: img0,
                   link: '//h5.m.taobao.com/1'
@@ -119,98 +204,15 @@
                   image: img1,
                   link: '//h5.m.taobao.com/1'
                 }
+                ]
+              }
               ]
             }
-          ]
-        },
-        {
-          interval: 3000,
-          autoPlay: true,
-          sliderPages: [
-            {
-              items: [
-                {
-                  image: img0,
-                  link: '//h5.m.taobao.com/1'
-                },
-                {
-                  image: img0,
-                  link: '//h5.m.taobao.com/1'
-                }
-              ]
-            },
-            {
-              items: [
-                {
-                  image: img1,
-                  link: '//h5.m.taobao.com/1'
-                },
-                {
-                  image: img1,
-                  link: '//h5.m.taobao.com/1'
-                }
-              ]
-            },
-            {
-              items: [
-                {
-                  image: img0,
-                  link: '//h5.m.taobao.com/1'
-                },
-                {
-                  image: img1,
-                  link: '//h5.m.taobao.com/1'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          interval: 5000,
-          autoPlay: true,
-          sliderPages: [
-            {
-              items: [
-                {
-                  image: img0,
-                  link: '//h5.m.taobao.com/1'
-                },
-                {
-                  image: img0,
-                  link: '//h5.m.taobao.com/1'
-                }
-              ]
-            },
-            {
-              items: [
-                {
-                  image: img1,
-                  link: '//h5.m.taobao.com/1'
-                },
-                {
-                  image: img1,
-                  link: '//h5.m.taobao.com/1'
-                }
-              ]
-            },
-            {
-              items: [
-                {
-                  image: img0,
-                  link: '//h5.m.taobao.com/1'
-                },
-                {
-                  image: img1,
-                  link: '//h5.m.taobao.com/1'
-                }
-              ]
-            }
-          ]
-        }
-      ]
+            ]
+      }
     },
     components: {
-      panel: require('weex-vue-components/panel.vue'),
+      panel: require('../include/panel.vue'),
       sliderPage: require('../include/slider-page.vue')
     },
     methods: {

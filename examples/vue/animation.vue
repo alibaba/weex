@@ -25,19 +25,21 @@
 <script>
   var animation = require('@weex-module/animation')
   module.exports = {
-    data: {
-      transformOrigin: 'center center',
-      current_rotate: 0,
-      current_scale: 1,
-      current_color: '#FF0000',
-      current_opacity: 1,
-      current_translate: '',
-      current_transform: '',
-      isStop: true
+    data: function () {
+      return {
+        transformOrigin: 'center center',
+        current_rotate: 0,
+        current_scale: 1,
+        current_color: '#FF0000',
+        current_opacity: 1,
+        current_translate: '',
+        current_transform: '',
+        isStop: true
+      }
     },
     components: {
-      panel: require('weex-vue-components/panel.vue'),
-      button: require('weex-vue-components/button.vue')
+      panel: require('./include/panel.vue'),
+      button: require('./include/button.vue')
     },
     methods: {
       anim: function(styles, timingFunction, duration, callback) {

@@ -21,5 +21,7 @@
 
 - (NSUInteger)childrenCountForScrollerLayout;
 
+- (void)handleAppear;
+
 @end
 

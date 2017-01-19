@@ -208,6 +208,8 @@ import com.taobao.weappplus_sdk.BuildConfig;
 import com.taobao.weex.WXSDKInstanceTest;
 import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.TestDomObject;
+import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.dom.WXListDomObject;
 import com.taobao.weex.ui.SimpleComponentHolder;
 import com.taobao.weex.ui.component.*;
 import org.junit.After;
@@ -232,9 +234,12 @@ public class WXListComponentTest {
 
   WXListComponent component;
 
-
   public static WXListComponent create(WXVContainer parent) throws IllegalAccessException, InstantiationException, InvocationTargetException {
-    return (WXListComponent) new SimpleComponentHolder(WXListComponent.class).createInstance(WXSDKInstanceTest.createInstance(), new TestDomObject(), parent, false);
+    return create(parent,new WXListDomObject());
+  }
+
+  public static WXListComponent create(WXVContainer parent, WXDomObject dom) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+    return (WXListComponent) new SimpleComponentHolder(WXListComponent.class).createInstance(WXSDKInstanceTest.createInstance(), dom, parent);
   }
 
   @Before
@@ -243,7 +248,6 @@ public class WXListComponentTest {
     ComponentTest.create(div);
     component = create(div);
     ComponentTest.create(component);
-
   }
 
   @Test
@@ -280,6 +284,17 @@ public class WXListComponentTest {
     component.bindAppearEvent(child);
 
     component.notifyAppearStateChange(0,0,0,10);
+  }
+
+  @Test
+  public void testParseTransforms() throws Exception {
+    WXDiv div = WXDivTest.create();
+    ComponentTest.create(div);
+
+    WXDomObject dom = new WXListDomObject();
+    dom.getAttrs().put(WXListComponent.TRANSFORM,"scale(0.9,0.8);translate(10,20);opacity(0.5);rotate(100)");
+    component = create(div,dom);
+    ComponentTest.create(component);
   }
 
   @After

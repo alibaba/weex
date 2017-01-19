@@ -245,6 +245,12 @@ public class WXRefreshView extends FrameLayout {
     addView(linearLayout,lp);
   }
 
+  public void setContentGravity(int gravity) {
+    if (linearLayout != null) {
+      linearLayout.setGravity(gravity);
+    }
+  }
+
   @Override
   public boolean post(Runnable action) {
     return super.post(WXThread.secure(action));

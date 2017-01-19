@@ -8,10 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+@class WXSDKInstance;
 
 @interface WXTransform : NSObject
 
 @property CGAffineTransform transform;
+
+- (instancetype)initWithInstance:(WXSDKInstance *)instance NS_DESIGNATED_INITIALIZER;
 
 - (CATransform3D)getTransform:(NSString *)cssValue;
 - (CATransform3D)getTransform:(NSString *)cssValue withView:(UIView *)view;

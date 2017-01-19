@@ -7,7 +7,7 @@ import '../../shared/objectAssign'
 import Node from './node'
 import {
   getDoc,
-  getListener,
+  getTaskCenter,
   uniqueId,
   linkParent,
   nextElement,
@@ -16,10 +16,18 @@ import {
   moveIndex,
   removeIndex
 } from './operation'
+import {
+  elementTypes,
+  setElement
+} from './element-types'
 
 const DEFAULT_TAG_NAME = 'div'
 
-export default function Element (type = DEFAULT_TAG_NAME, props) {
+export default function Element (type = DEFAULT_TAG_NAME, props, isExtended) {
+  const XElement = elementTypes[type]
+  if (XElement && !isExtended) {
+    return new XElement(props)
+  }
   props = props || {}
   this.nodeType = 1
   this.nodeId = uniqueId()
@@ -41,6 +49,8 @@ function registerNode (docId, node) {
   doc.nodeMap[node.nodeId] = node
 }
 
+setElement(Element)
+
 Object.assign(Element.prototype, {
   /**
    * Append a child node.
@@ -60,9 +70,13 @@ Object.assign(Element.prototype, {
       }
       if (node.nodeType === 1) {
         insertIndex(node, this.pureChildren, this.pureChildren.length)
-        const listener = getListener(this.docId)
-        if (listener) {
-          return listener.addElement(node, this.ref, -1)
+        const taskCenter = getTaskCenter(this.docId)
+        if (taskCenter) {
+          return taskCenter.send(
+            'dom',
+            { action: 'addElement' },
+            [this.ref, node.toJSON(), -1]
+          )
         }
       }
     }
@@ -70,9 +84,13 @@ Object.assign(Element.prototype, {
       moveIndex(node, this.children, this.children.length, true)
       if (node.nodeType === 1) {
         const index = moveIndex(node, this.pureChildren, this.pureChildren.length)
-        const listener = getListener(this.docId)
-        if (listener && index >= 0) {
-          return listener.moveElement(node.ref, this.ref, index)
+        const taskCenter = getTaskCenter(this.docId)
+        if (taskCenter && index >= 0) {
+          return taskCenter.send(
+            'dom',
+            { action: 'moveElement' },
+            [node.ref, this.ref, index]
+          )
         }
       }
     }
@@ -106,9 +124,13 @@ Object.assign(Element.prototype, {
           ? this.pureChildren.indexOf(pureBefore)
           : this.pureChildren.length
         )
-        const listener = getListener(this.docId)
-        if (listener) {
-          return listener.addElement(node, this.ref, index)
+        const taskCenter = getTaskCenter(this.docId)
+        if (taskCenter) {
+          return taskCenter.send(
+            'dom',
+            { action: 'addElement' },
+            [this.ref, node.toJSON(), index]
+          )
         }
       }
     }
@@ -116,6 +138,7 @@ Object.assign(Element.prototype, {
       moveIndex(node, this.children, this.children.indexOf(before), true)
       if (node.nodeType === 1) {
         const pureBefore = nextElement(before)
+        /* istanbul ignore next */
         const index = moveIndex(
           node,
           this.pureChildren,
@@ -123,9 +146,13 @@ Object.assign(Element.prototype, {
           ? this.pureChildren.indexOf(pureBefore)
           : this.pureChildren.length
         )
-        const listener = getListener(this.docId)
-        if (listener && index >= 0) {
-          return listener.moveElement(node.ref, this.ref, index)
+        const taskCenter = getTaskCenter(this.docId)
+        if (taskCenter && index >= 0) {
+          return taskCenter.send(
+            'dom',
+            { action: 'moveElement' },
+            [node.ref, this.ref, index]
+          )
         }
       }
     }
@@ -157,10 +184,14 @@ Object.assign(Element.prototype, {
           this.pureChildren,
           this.pureChildren.indexOf(previousElement(after)) + 1
         )
-        const listener = getListener(this.docId)
+        const taskCenter = getTaskCenter(this.docId)
         /* istanbul ignore else */
-        if (listener) {
-          return listener.addElement(node, this.ref, index)
+        if (taskCenter) {
+          return taskCenter.send(
+            'dom',
+            { action: 'addElement' },
+            [this.ref, node.toJSON(), index]
+          )
         }
       }
     }
@@ -172,9 +203,13 @@ Object.assign(Element.prototype, {
           this.pureChildren,
           this.pureChildren.indexOf(previousElement(after)) + 1
         )
-        const listener = getListener(this.docId)
-        if (listener && index >= 0) {
-          return listener.moveElement(node.ref, this.ref, index)
+        const taskCenter = getTaskCenter(this.docId)
+        if (taskCenter && index >= 0) {
+          return taskCenter.send(
+            'dom',
+            { action: 'moveElement' },
+            [node.ref, this.ref, index]
+          )
         }
       }
     }
@@ -190,9 +225,13 @@ Object.assign(Element.prototype, {
       removeIndex(node, this.children, true)
       if (node.nodeType === 1) {
         removeIndex(node, this.pureChildren)
-        const listener = getListener(this.docId)
-        if (listener) {
-          listener.removeElement(node.ref)
+        const taskCenter = getTaskCenter(this.docId)
+        if (taskCenter) {
+          taskCenter.send(
+            'dom',
+            { action: 'removeElement' },
+            [node.ref]
+          )
         }
       }
     }
@@ -205,11 +244,15 @@ Object.assign(Element.prototype, {
    * Clear all child nodes.
    */
   clear () {
-    const listener = getListener(this.docId)
+    const taskCenter = getTaskCenter(this.docId)
     /* istanbul ignore else */
-    if (listener) {
+    if (taskCenter) {
       this.pureChildren.forEach(node => {
-        listener.removeElement(node.ref)
+        taskCenter.send(
+          'dom',
+          { action: 'removeElement' },
+          [node.ref]
+        )
       })
     }
     this.children.forEach(node => {
@@ -230,9 +273,15 @@ Object.assign(Element.prototype, {
       return
     }
     this.attr[key] = value
-    const listener = getListener(this.docId)
-    if (!silent && listener) {
-      listener.setAttr(this.ref, key, value)
+    const taskCenter = getTaskCenter(this.docId)
+    if (!silent && taskCenter) {
+      const result = {}
+      result[key] = value
+      taskCenter.send(
+        'dom',
+        { action: 'updateAttrs' },
+        [this.ref, result]
+      )
     }
   },
 
@@ -247,9 +296,15 @@ Object.assign(Element.prototype, {
       return
     }
     this.style[key] = value
-    const listener = getListener(this.docId)
-    if (!silent && listener) {
-      listener.setStyle(this.ref, key, value)
+    const taskCenter = getTaskCenter(this.docId)
+    if (!silent && taskCenter) {
+      const result = {}
+      result[key] = value
+      taskCenter.send(
+        'dom',
+        { action: 'updateStyle' },
+        [this.ref, result]
+      )
     }
   },
 
@@ -264,9 +319,13 @@ Object.assign(Element.prototype, {
     }
 
     Object.assign(this.classStyle, classStyle)
-    const listener = getListener(this.docId)
-    if (listener) {
-      listener.setStyles(this.ref, this.toStyle())
+    const taskCenter = getTaskCenter(this.docId)
+    if (taskCenter) {
+      taskCenter.send(
+        'dom',
+        { action: 'updateStyle' },
+        [this.ref, this.toStyle()]
+      )
     }
   },
 
@@ -278,9 +337,13 @@ Object.assign(Element.prototype, {
   addEvent (type, handler) {
     if (!this.event[type]) {
       this.event[type] = handler
-      const listener = getListener(this.docId)
-      if (listener) {
-        listener.addEvent(this.ref, type)
+      const taskCenter = getTaskCenter(this.docId)
+      if (taskCenter) {
+        taskCenter.send(
+          'dom',
+          { action: 'addEvent' },
+          [this.ref, type]
+        )
       }
     }
   },
@@ -292,9 +355,13 @@ Object.assign(Element.prototype, {
   removeEvent (type) {
     if (this.event[type]) {
       delete this.event[type]
-      const listener = getListener(this.docId)
-      if (listener) {
-        listener.removeEvent(this.ref, type)
+      const taskCenter = getTaskCenter(this.docId)
+      if (taskCenter) {
+        taskCenter.send(
+          'dom',
+          { action: 'removeEvent' },
+          [this.ref, type]
+        )
       }
     }
   },

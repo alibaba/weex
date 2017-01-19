@@ -12,6 +12,7 @@
 #import "WXLayer.h"
 #import "WXUtility.h"
 #import "WXConvert.h"
+#import <pthread/pthread.h>
 
 @interface WXText : UIView
 
@@ -49,8 +50,11 @@
     
     if ([self.wx_component _needsDrawBorder]) {
         [self.wx_component _drawBorderWithContext:context size:bounds.size];
+    } else {
+        WXPerformBlockOnMainThread(^{
+            [self.wx_component _resetNativeBorderRadius];
+        });
     }
-    
     NSLayoutManager *layoutManager = _textStorage.layoutManagers.firstObject;
     NSTextContainer *textContainer = layoutManager.textContainers.firstObject;
     
@@ -71,7 +75,7 @@
 {
     if (_textStorage != textStorage) {
         _textStorage = textStorage;
-        [self setNeedsDisplay];
+        [self.wx_component setNeedsDisplay];
     }
 }
 
@@ -101,13 +105,23 @@
     UIColor *_color;
     NSString *_fontFamily;
     CGFloat _fontSize;
-    WXTextWeight _fontWeight;
+    CGFloat _fontWeight;
     WXTextStyle _fontStyle;
     NSUInteger _lines;
     NSTextAlignment _textAlign;
     WXTextDecoration _textDecoration;
     NSString *_textOverflow;
     CGFloat _lineHeight;
+    
+   
+    pthread_mutex_t _textStorageMutex;
+    pthread_mutexattr_t _textStorageMutexAttr;
+}
+
+static BOOL _isUsingTextStorageLock = NO;
++ (void)useTextStorageLock:(BOOL)isUsingTextStorageLock
+{
+    _isUsingTextStorageLock = isUsingTextStorageLock;
 }
 
 - (instancetype)initWithRef:(NSString *)ref
@@ -119,12 +133,28 @@
 {
     self = [super initWithRef:ref type:type styles:styles attributes:attributes events:events weexInstance:weexInstance];
     if (self) {
+        if (_isUsingTextStorageLock) {
+            pthread_mutexattr_init(&_textStorageMutexAttr);
+            pthread_mutexattr_settype(&_textStorageMutexAttr, PTHREAD_MUTEX_RECURSIVE);
+            pthread_mutex_init(&_textStorageMutex, &_textStorageMutexAttr);
+        }
+        
         [self fillCSSStyles:styles];
         [self fillAttributes:attributes];
     }
     
     return self;
 }
+
+- (void)dealloc
+{
+    if (_isUsingTextStorageLock) {
+        pthread_mutex_destroy(&_textStorageMutex);
+        pthread_mutexattr_destroy(&_textStorageMutexAttr);
+    }
+}
+
+
 
 #define WX_STYLE_FILL_TEXT(key, prop, type, needLayout)\
 do {\
@@ -138,18 +168,30 @@ do {\
     }\
 } while(0);
 
+#define WX_STYLE_FILL_TEXT_PIXEL(key, prop, needLayout)\
+do {\
+    id value = styles[@#key];\
+    if (value) {\
+        _##prop = [WXConvert WXPixelType:value scaleFactor:self.weexInstance.pixelScaleFactor];\
+        [self setNeedsRepaint];\
+    if (needLayout) {\
+        [self setNeedsLayout];\
+    }\
+}\
+} while(0);
+
 - (void)fillCSSStyles:(NSDictionary *)styles
 {
     WX_STYLE_FILL_TEXT(color, color, UIColor, NO)
     WX_STYLE_FILL_TEXT(fontFamily, fontFamily, NSString, YES)
-    WX_STYLE_FILL_TEXT(fontSize, fontSize, WXPixelType, YES)
+    WX_STYLE_FILL_TEXT_PIXEL(fontSize, fontSize, YES)
     WX_STYLE_FILL_TEXT(fontWeight, fontWeight, WXTextWeight, YES)
     WX_STYLE_FILL_TEXT(fontStyle, fontStyle, WXTextStyle, YES)
     WX_STYLE_FILL_TEXT(lines, lines, NSUInteger, YES)
     WX_STYLE_FILL_TEXT(textAlign, textAlign, NSTextAlignment, NO)
     WX_STYLE_FILL_TEXT(textDecoration, textDecoration, WXTextDecoration, YES)
     WX_STYLE_FILL_TEXT(textOverflow, textOverflow, NSString, NO)
-    WX_STYLE_FILL_TEXT(lineHeight, lineHeight, WXPixelType, YES)
+    WX_STYLE_FILL_TEXT_PIXEL(lineHeight, lineHeight, YES)
     
     UIEdgeInsets padding = {
         WXFloorPixelValue(self.cssNode->style.padding[CSS_TOP] + self.cssNode->style.border[CSS_TOP]),
@@ -176,7 +218,13 @@ do {\
 
 - (void)setNeedsRepaint
 {
+    if (_isUsingTextStorageLock) {
+        pthread_mutex_lock(&_textStorageMutex);
+    }
     _textStorage = nil;
+    if (_isUsingTextStorageLock) {
+        pthread_mutex_unlock(&_textStorageMutex);
+    }
 }
 
 #pragma mark - Subclass
@@ -188,7 +236,13 @@ do {\
 
 - (void)viewDidLoad
 {
+    if (_isUsingTextStorageLock) {
+        pthread_mutex_lock(&_textStorageMutex);
+    }
     ((WXText *)self.view).textStorage = _textStorage;
+    if (_isUsingTextStorageLock) {
+        pthread_mutex_unlock(&_textStorageMutex);
+    }
     [self setNeedsDisplay];
 }
 
@@ -204,7 +258,17 @@ do {\
         if (isCancelled()) {
             return nil;
         }
-        return [textView drawTextWithBounds:bounds padding:_padding];
+        if (_isUsingTextStorageLock) {
+            pthread_mutex_lock(&_textStorageMutex);
+        }
+        
+        UIImage *image = [textView drawTextWithBounds:bounds padding:_padding];
+        
+        if (_isUsingTextStorageLock) {
+            pthread_mutex_unlock(&_textStorageMutex);
+        }
+        
+        return image;
     };
 }
 
@@ -228,11 +292,11 @@ do {\
         }
         
         if (!isnan(weakSelf.cssNode->style.minDimensions[CSS_HEIGHT])) {
-            computedSize.width = MAX(computedSize.height, weakSelf.cssNode->style.minDimensions[CSS_HEIGHT]);
+            computedSize.height = MAX(computedSize.height, weakSelf.cssNode->style.minDimensions[CSS_HEIGHT]);
         }
         
         if (!isnan(weakSelf.cssNode->style.maxDimensions[CSS_HEIGHT])) {
-            computedSize.width = MIN(computedSize.height, weakSelf.cssNode->style.maxDimensions[CSS_HEIGHT]);
+            computedSize.height = MIN(computedSize.height, weakSelf.cssNode->style.maxDimensions[CSS_HEIGHT]);
         }
         
         return (CGSize) {
@@ -260,7 +324,20 @@ do {\
     }
     
     // set font
-    UIFont *font = [WXUtility fontWithSize:_fontSize textWeight:_fontWeight textStyle:_fontStyle fontFamily:_fontFamily];
+    if (!_fontFamily) {
+        NSString *regex = @".*[\\u4e00-\\u9faf].*";//Has Simplified Chinese char
+        NSPredicate *pred = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",regex];
+        if ([pred evaluateWithObject:string]) {
+            if ([[UIDevice currentDevice].systemVersion floatValue] < 9.0) {
+                //“Heiti SC” font is "[UIFont systemFontOfSize:]" for Simplified Chinese before iOS 9.0.
+                _fontFamily = @"Heiti SC";
+            } else {
+                //“PingFang SC” font is "[UIFont systemFontOfSize:]" for Simplified Chinese from iOS 9.0.
+                _fontFamily = @"PingFang SC";
+            }
+        }
+    }
+    UIFont *font = [WXUtility fontWithSize:_fontSize textWeight:_fontWeight textStyle:_fontStyle fontFamily:_fontFamily scaleFactor:self.weexInstance.pixelScaleFactor];
     if (font) {
         [attributedString addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, string.length)];
     }
@@ -272,6 +349,7 @@ do {\
     }
     
     NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+
     if (_textAlign) {
         paragraphStyle.alignment = _textAlign;
     }
@@ -286,7 +364,7 @@ do {\
                                  value:paragraphStyle
                                  range:(NSRange){0, attributedString.length}];
     }
-    
+
     return attributedString;
 }
 
@@ -319,7 +397,14 @@ do {\
     [layoutManager ensureLayoutForTextContainer:textContainer];
     
     _textStorageWidth = width;
+    
+    if (_isUsingTextStorageLock) {
+        pthread_mutex_lock(&_textStorageMutex);
+    }
     _textStorage = textStorage;
+    if (_isUsingTextStorageLock) {
+        pthread_mutex_unlock(&_textStorageMutex);
+    }
     
     return textStorage;
 }
@@ -331,7 +416,14 @@ do {\
     
     [self.weexInstance.componentManager  _addUITask:^{
         if ([self isViewLoaded]) {
+            if (_isUsingTextStorageLock) {
+                pthread_mutex_lock(&_textStorageMutex);
+            }
             ((WXText *)self.view).textStorage = textStorage;
+            if (_isUsingTextStorageLock) {
+                pthread_mutex_unlock(&_textStorageMutex);
+            }
+            [self readyToRender]; // notify super component
             [self setNeedsDisplay];
         }
     }];
@@ -343,9 +435,9 @@ do {\
     [self syncTextStorageForView];
 }
 
-- (void)_updateStylesOnComponentThread:(NSDictionary *)styles
+- (void)_updateStylesOnComponentThread:(NSDictionary *)styles resetStyles:(NSMutableArray *)resetStyles isUpdateStyles:(BOOL)isUpdateStyles
 {
-    [super _updateStylesOnComponentThread:styles];
+    [super _updateStylesOnComponentThread:styles resetStyles:(NSMutableArray *)resetStyles isUpdateStyles:isUpdateStyles];
     
     [self fillCSSStyles:styles];
     
@@ -367,6 +459,20 @@ do {\
     return super.description;
 }
 #endif
+ 
+- (void)_resetCSSNodeStyles:(NSArray *)styles
+{
+    [super _resetCSSNodeStyles:styles];
+    if ([styles containsObject:@"color"]) {
+        _color = [UIColor blackColor];
+        [self setNeedsRepaint];
+    }
+    if ([styles containsObject:@"fontSize"]) {
+        _fontSize = WX_TEXT_FONT_SIZE;
+        [self setNeedsRepaint];
+        [self setNeedsLayout];
+    }
+}
 
 @end
 

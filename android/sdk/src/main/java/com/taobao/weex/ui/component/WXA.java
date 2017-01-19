@@ -204,25 +204,24 @@
  */
 package com.taobao.weex.ui.component;
 
-import com.alibaba.fastjson.JSONArray;
 import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.WXSDKManager;
-import com.taobao.weex.common.Component;
+import com.taobao.weex.annotation.Component;
 import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.view.WXFrameLayout;
+import com.taobao.weex.utils.ATagUtil;
 import com.taobao.weex.utils.WXLogUtils;
-@Component(lazyload = false)
 
+@Component(lazyload = false)
 public class WXA extends WXDiv {
 
   @Deprecated
   public WXA(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
-    this(instance, dom, parent, isLazy);
+    this(instance, dom, parent);
   }
 
-  public WXA(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
-    super(instance, dom, parent, isLazy);
+  public WXA(WXSDKInstance instance, WXDomObject dom, WXVContainer parent) {
+    super(instance, dom, parent);
   }
 
   @Override
@@ -231,10 +230,9 @@ public class WXA extends WXDiv {
     addClickListener(new OnClickListener() {
       @Override
       public void onHostViewClick() {
-        if ( getDomObject().getAttrs().get("href") != null) {
-          JSONArray array = new JSONArray();
-          array.add(getDomObject().getAttrs().get("href"));
-          WXSDKManager.getInstance().getWXBridgeManager().callModuleMethod(getInstanceId(), "event", "openURL", array);
+        String href;
+        if ( (href = (String)getDomObject().getAttrs().get("href")) != null) {
+          ATagUtil.onClick(null, getInstanceId(), href);
         } else {
           WXLogUtils.d("WXA", "Property href is empty.");
         }

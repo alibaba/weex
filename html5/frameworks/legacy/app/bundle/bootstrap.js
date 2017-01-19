@@ -1,6 +1,7 @@
 import semver from 'semver'
 import Vm from '../../vm/index'
 import * as downgrade from '../downgrade'
+import { setViewport } from '../viewport'
 import {
   requireCustomComponent
 } from '../register'
@@ -59,6 +60,11 @@ export function bootstrap (app, name, config, data) {
       ]
     }])
     return new Error(`Downgrade[${downgradeResult.code}]: ${downgradeResult.errorMessage}`)
+  }
+
+  // set viewport
+  if (config.viewport) {
+    setViewport(app, config.viewport)
   }
 
   // 3. create a new Vm with custom component name and data

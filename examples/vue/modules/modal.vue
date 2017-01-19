@@ -15,10 +15,12 @@
 <script>
   var modal = require('@weex-module/modal')
   module.exports = {
-    data: {},
+    data: function () {
+      return {}
+    },
     components: {
-      panel: require('weex-vue-components/panel.vue'),
-      button: require('weex-vue-components/button.vue')
+      panel: require('../include/panel.vue'),
+      button: require('../include/button.vue')
     },
     methods: {
       toast: function(msg, duration) {
@@ -54,7 +56,7 @@
           'okTitle': okTitle,
           'cancelTitle': cancelTitle
         }, function(result) {
-          modal.toast({ message: "Click Confirm  " + result })
+          modal.toast({ message: "Click Confirm  " + JSON.stringify(result) })
         })
       },
       prompt: function() {
@@ -63,7 +65,7 @@
           'okTitle': 'ok',
           'cancelTitle': 'cancel'
         }, function(result) {
-          modal.toast({ message: "Click Prompt  " + result })
+          modal.toast({ message: "Click Prompt  " + JSON.stringify(result) })
         })
       }
     }
