@@ -1,0 +1,540 @@
+@import "variable.scss";
+
+.scene-container {
+  max-width: 1680px;
+  height: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+}
+
+.scene {
+  position: relative;
+  height: 100%;
+  height: calc(100% - 72px);
+
+  &:nth-child(odd) {
+    background: $bg-gray;
+    color: $text-blue;
+  }
+
+  &:nth-child(even) {
+    background: $bg-blue; 
+    color: $text-white;
+  }
+
+  h2 {
+    font-family: "Gill Sans";
+    font-weight: 400;
+    font-size: 2.64em;
+    margin: .7em 0;
+    text-align: center;
+  }
+
+  ul, li , ol {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+}
+
+.horizon .scene-container, .edge .scene-container {
+  max-width: $content-max-width;
+  padding-bottom: 2em;
+  display: flex;
+  flex-direction: column;
+  align-content: space-around;
+}
+
+.horizon{
+  .textbox {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 1em;
+  }
+
+  .textbox p {
+    width: 70%;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .sketch-content {
+    padding: 0 7em;
+    display: flex;
+    flex: 3;
+    align-items: stretch;
+  }
+
+  .inner-box {
+    flex: 1;
+    padding: 0 2em;
+  }
+}
+
+.header {
+  height: 100%;
+  position: relative;
+
+  #slider {
+    margin-top: 73px;
+    height: 100%;
+    height: calc(100% - 72px);
+  }
+
+  .swiper-container {
+    max-width: $content-max-width;
+    height: 100%;
+  }
+
+  .swiper-controller {
+    max-width: $content-max-width;
+    height: 100%;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+
+  .swiper-button-next, .swiper-button-prev {
+    background: transparent !important;
+    color: $text-white;
+    line-height: 44px;
+  }
+
+  .swiper-button-next {
+    transform: rotate(180deg);
+  }
+
+  .slide-content {
+    max-width: $content-max-width;
+    margin: auto;
+    height: 100%;
+    
+    .page-title {
+      font-size: 2.3em;
+      font-family: "Gill Sans";
+      width: 500px;
+      text-align: center;
+      position: absolute;
+      top: 70px;
+      left: 50%;
+      margin-left: -250px;
+    }
+
+    .btn-group {
+      position: absolute;
+      bottom: 30%;
+      left: 50%;
+      margin-left: -11.222em;
+
+      & > .button:nth-child(2) {
+        margin-left: 20px;
+      }
+    }
+  }
+
+  .galaxy {
+    height: 560px;
+    width: 560px;
+    position: absolute;
+    top: 45%;
+    margin-top: -230px;
+  }
+
+  .left {
+    left: -40px;
+  } 
+
+  .right {
+    top: 55%;
+    right: -110px;
+  } 
+}
+
+.edge {
+
+  .scene-container {
+    .textbox {
+      flex: 3;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .sketch-content {
+      padding: 2em 7em;
+      display: flex;
+      flex: 5;
+      flex-direction: row; 
+      align-items: flex-start;
+    }
+  }
+
+  .inner-box {
+    flex: 1;
+    text-align: center;
+    padding: 0 1em;
+
+    img {
+      width: 78px;
+      height: 78px;
+      color: $text-light-black;
+    }
+
+    h3 {
+      margin: .4em;
+      font-size: 1.5em;
+      color: $text-light-black;
+    }
+
+    .underline {
+      display: inline-block;
+      background: $bg-blue;
+      width: 80px;
+      height: 3px;
+      margin: 0 0 20px;
+    }
+
+    p {
+      font-size: 1em;
+      color: $text-light-black;
+    }
+  }
+}
+
+.feature {
+  .feature-content {
+    height: 100%;
+    max-width: $content-max-width;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .left-text {
+    position: relative;
+    padding: 15px 20px;
+    z-index: 99;
+  }
+
+  .left-text h2 {
+    width: 300px;
+    text-align: left;
+  }
+
+  .left-text p {
+    width: 220px;
+    line-height: 1.7;
+    text-align: left;
+  }
+
+  .right-box {
+    width: 660px;
+    height: 405px;
+    position: absolute;
+    top: 30%;
+    right: 0px;
+    // right: -100%;
+    z-index: 1;
+    .imgbox {
+      position: absolute;
+      // transform: translateX(1000px);
+    }
+    .level1 {
+      width: 660px;
+      height: 405px;
+      background: url("../images/level1.png")  50% 50% / contain no-repeat;
+      background-origin: content-box;
+      z-index: 9;
+      top: 0;
+      left: 660px;
+    }
+    .level2 {
+      width: 660px;
+      height: 405px;
+      background: url("../images/level2.png")  50% 50% / contain no-repeat;
+      background-origin: content-box;
+      z-index: 99;
+      top: -30px;
+      left: 660px;
+    }
+    .level3 {
+      width: 660px;
+      height: 405px;
+      background: url("../images/level3.png")  50% 50% / contain no-repeat;
+      background-origin: content-box;
+      z-index: 99;
+      top: -60px;
+      left: 660px;
+    }
+    .level4 {
+      width: 660px;
+      height: 405px;
+      background: url("../images/level4.png")  50% 50% / contain no-repeat;
+      background-origin: content-box;
+      z-index: 999;
+      top: -85px;
+      // left: -15px;
+      left: 660px;
+    }
+  }
+  .right-img {
+    width: 70%;
+    position: absolute;
+    top: 40px;
+    right: 0;
+  }
+}
+
+.cross-platform {
+  .sketch-content {
+    flex: 5;
+  }
+  .imgbox{
+    height: auto;
+    &.ios {
+      padding: 0 30px;
+      background: url("../images/ios.png")  50% 50% / contain no-repeat;
+      background-size: contain;
+      background-position: left 50% bottom 0px;
+      background-origin: content-box;
+    }
+
+    &.android {
+      background: url("../images/android.png")  50% 50% / contain  no-repeat;
+      background-size: contain;
+      background-position: left 50% bottom 0px;
+      background-origin: content-box;
+    }
+
+    &.h5 {
+      flex: 1.16;
+      background: url("../images/web.png")  50% 50% / contain  no-repeat;
+      background-position: left 50% bottom 0px;
+      background-size: contain;
+      background-origin: content-box;
+    }
+  }
+
+  .textbox p {
+    color: $text-light-black;
+  }
+}
+
+.supporting-vue {
+  color: #fff;
+
+  .sketch-content.imgbox {
+    background: url("../images/vue.png") 50% 50% / contain no-repeat;
+    background-origin: content-box;
+    position: relative;
+
+    .imgbox {
+      width: 100%;
+      height: 104px;
+      background: url("../images/vue-logo.png") 50% 50% / contain no-repeat;
+      position: absolute;
+      top: -50px;
+      left: 0;
+      right: 0;
+    } 
+  }
+}
+
+.schematic {
+  .textbox p {
+    color: $text-light-black;
+  }
+
+  .sketch-content.imgbox {
+    background: url("../images/flow.png") 50% 50% / contain no-repeat;
+    background-origin: content-box;
+  }
+}
+
+.users {
+  .sketch-content {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-content: flex-start;
+
+    .user-logo {
+      width: 150px;
+      height: 150px;
+      margin: 1px;
+      overflow: hidden;
+      position: relative;
+      transition-duration: .3s;
+      transition-property: box-shadow;
+
+      h3 {
+        font-size: 1em;
+        margin-top: 30px;
+        text-align: center;
+        margin-top: 125px;
+      }
+
+      &:hover {
+        position: relative;
+        z-index: 999;
+        box-shadow: 0px 1px 12px 0 rgba(0,0,0,0.54);
+      }
+
+      &:hover .user-info {
+        opacity: .9;
+      }
+    }
+
+    .tmall-logo {
+      background: $bg-light-blue url("../images/tmall.png") 50% 50% / 64px 64px no-repeat;
+      background-origin: content-box;
+    }
+
+    .aliyun-logo {
+      background: $bg-light-blue url("../images/aliyun.png") 50% 50% / 64px 64px no-repeat;
+      background-origin: content-box;
+    }
+
+    .taobao-logo {
+      background: $bg-light-blue url("../images/taobao.png") 50% 50% / 64px 64px no-repeat;
+      background-origin: content-box;
+    }
+
+    .alibaba-logo {
+      background: $bg-light-blue url("../images/alibaba.png") 50% 50% / 64px 64px no-repeat;
+      background-origin: content-box;
+    }
+
+    .cainiao-logo {
+      background: $bg-light-blue url("../images/cainiao.png") 50% 50% / 64px 64px no-repeat;
+      background-origin: content-box;
+    }
+
+    .xiami-logo {
+      background: $bg-light-blue url("../images/xiami.png") 50% 50% / 64px 64px no-repeat;
+      background-origin: content-box;
+    }
+
+    .youku-logo {
+      background: $bg-light-blue url("../images/youku.png") 50% 50% / 64px 64px no-repeat;
+      background-origin: content-box;
+    }
+
+    .ding-logo {
+      background: $bg-light-blue url("../images/ding.png") 50% 50% / 64px 64px no-repeat;
+      background-origin: content-box;
+    }
+  }
+
+  .user-info {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 1em;
+    background: $bg-light-blue;
+    text-align: center;
+    color: $text-light-black;
+    transition-duration: .4s;
+    transition-property: opacity;
+
+    h4 {
+      font-size: 1em;
+      margin-bottom: .98em;
+    }
+
+    p {
+      @include lines(6);
+      font-size: .8em;
+    }
+  }
+
+  .more {
+    flex: 1;    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    a {
+      margin-top: 1em;
+      color: $text-white;
+      text-decoration: underline;
+      font-weight: lighter;
+    }
+  }
+}
+
+.feedback {
+  .sketch-content {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-content: space-around;
+  }
+
+  .user-feedback {
+    flex: 1 0 200px;
+    margin: 0;
+    text-align: center;
+    color: $text-light-black;
+    padding: 10px;
+
+    .avatar {
+      width: 66px;
+      height: 66px;
+      border-radius: 100%;
+    } 
+
+    .user-name {
+      font-weight: bold;
+      font-size: 1em;
+      margin: 10px 0 0;
+    }
+
+    .user-title {
+      font-size: .8em;
+      margin: 5px 0 10px;
+      color: #999;
+    }
+
+    .user-say {
+      margin: 1em 0;
+    }
+  }
+
+  .scene-container .go-2-doc {
+    flex: 1;    
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: -30px;
+  }
+}
+
+.back2top {
+  display: none;
+  width: 68px;
+  height: 68px;
+  border-radius: 100%;
+  background: #F3C3C1;
+  position: fixed;
+  bottom: 180px;
+  right: 10px;
+  text-align: center;
+  line-height: 68px;
+  transform: rotate(90deg);
+  color: #fff;
+  z-index: 99;
+  &:hover {
+    background: #FF3E33;
+    color: #fff;
+  }
+}

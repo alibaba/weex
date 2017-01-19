@@ -1,0 +1,6 @@
+<div class="article-wrapper page-layout">
+  <div class="doc-nav">
+    <%- partial('_partial/post/summary', {post: page, index: false, type: page.type ? page.type : ''}) %>
+  </div>
+  <%- partial('_partial/article', {post: page, index: false}) %>
+</div>

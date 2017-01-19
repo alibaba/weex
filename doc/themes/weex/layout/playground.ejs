@@ -1,0 +1,30 @@
+<div class="wrapper playground-wrapper clearfix">
+  <div class="left">
+    <h2>Weex Playground</h2>
+    <p><%= _p('playground.content') %></p>
+    <div class="download clearfix">
+      <img class="qr-code" src="//gw.alicdn.com/tps/TB1PZ1HPXXXXXctXVXXXXXXXXXX-280-280.png" alt="playground qr code">
+      <ul class="links">
+        <li class="ios">
+          <a href="" id="ios-link" class="link" target="_blank">iOS</a>
+        </li>
+        <li class="android">
+          <a href="" id="android-link" class="link">Android</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="left">
+    <img src="//gw.alicdn.com/tps/TB1831MPXXXXXXzXVXXXXXXXXXX-333-502.png" alt="">
+  </div>
+</div>
+
+<script type="text/javascript">
+	function parseWeexVersion(data){
+    document.getElementById("ios-link").href = data.iosDownload
+    document.getElementById("android-link").href = data.androidDownload
+	}
+
+	window.parseWeexVersion = parseWeexVersion;
+</script>
+<script type="text/javascript" src="https://h5.m.taobao.com/js/weex/playground/app/info.js "></script>

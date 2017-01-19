@@ -1,0 +1,20 @@
+<%- js('js/mobile-detect.js') %>
+<script>
+  function parseWeexVersion(data){
+      window.androidURL = data.androidDownload;
+      window.iosURL = data.iosDownload;
+    }
+    window.parseWeexVersion = parseWeexVersion;
+</script>
+<script src="https://h5.m.taobao.com/js/weex/playground/app/info.js"></script>
+
+<h5 style="text-align:center;margin-top: 100px;">please open this link in system browser</h5>
+
+<script>
+  var md = new MobileDetect(window.navigator.userAgent);         
+  if ( md.is("iPhone") )  {
+    location = window.iosURL;
+  }else{
+    location = window.androidURL;
+  }
+</script>

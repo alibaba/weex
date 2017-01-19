@@ -1,0 +1,40 @@
+/***********************
+* Variable
+***********************/
+
+$text-light-black: #363539;
+$text-black: #333;
+$text-white: #fff;
+$text-gray: #999;
+$text-blue: #00BDFF;
+$bg-blue: $text-blue;
+$bg-light-blue: #23CEFD;
+$bg-white: #fff;
+$bg-gray: #f5f5f5;
+$border-light: #ddd;
+$border-blue: $text-blue;
+$border-gray: #999ba4;
+
+$article-max-width: 1350px;
+$content-max-width: 900px;
+
+/***********************
+* Mixin
+***********************/
+
+@mixin lines ($length: 2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: $length;
+  -webkit-box-orient: vertical;
+}
+
+@mixin triangle-down ($color, $size) {
+  width: 0;
+  height: 0;
+  vertical-align: middle;
+  border-left: $size solid transparent;
+  border-right: $size solid transparent;
+  border-top: $size solid $color;
+}
