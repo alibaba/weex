@@ -25,6 +25,15 @@
     <wxc-panel title="font-weight" type="primary">
       <text class="txt" style="font-weight: normal">normal</text>
       <text class="txt" style="font-weight: bold">bold</text>
+      <text class="txt" style="font-weight: 100">100</text>
+      <text class="txt" style="font-weight: 200">200</text>
+      <text class="txt" style="font-weight: 300">300</text>
+      <text class="txt" style="font-weight: 400">400</text>
+      <text class="txt" style="font-weight: 500">500</text>
+      <text class="txt" style="font-weight: 600">600</text>
+      <text class="txt" style="font-weight: 700">700</text>
+      <text class="txt" style="font-weight: 800">800</text>
+      <text class="txt" style="font-weight: 900">900</text>
     </wxc-panel>
 
     <wxc-panel title="text-decoration" type="primary">
