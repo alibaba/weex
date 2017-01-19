@@ -17,6 +17,7 @@ This component supports no child components.
 
 - `src`: &lt;string&gt; image source url
 - `resize`: <span class="weex-version">0.5</span> &lt;string&gt; the 'ScaleType' of the component. The default value is ``stretch``, if this attribute is not specified. Possible values are ``cover``, ``contain``, each of which has the same meaning with w3c standard.
+- `place-holder`: <span class="weex-version">0.7</span> &lt;string&gt;image to display while the network image src is loading.
 
 Other attributes please check out the [common attributes](../references/common-attrs.md).
 
@@ -38,6 +39,8 @@ Other attributes please check out the [common attributes](../references/common-a
 
 - support `click` event. Check out [common events](../references/common-event.md)
 - support `appear` / `disappear` event. Check out [common events](../references/common-event.md)
+- support `load` event. 
+  * `success`: `true` or `false`
 
 ### Examples
 
