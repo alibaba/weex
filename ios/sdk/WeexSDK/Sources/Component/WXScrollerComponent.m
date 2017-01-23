@@ -41,11 +41,13 @@
 {
     CGSize _contentSize;
     BOOL _listenLoadMore;
+    BOOL _scrollEvent;
     CGFloat _loadMoreOffset;
     CGFloat _previousLoadMoreContentHeight;
+    CGFloat _offsetAccuracy;
     CGPoint _lastContentOffset;
     BOOL _scrollable;
-    
+
     // vertical & horizontal
     WXScrollDirection _scrollDirection;
     // left & right & up & down
@@ -86,14 +88,14 @@ WX_EXPORT_METHOD(@selector(resetLoadmore))
         
         _stickyArray = [NSMutableArray array];
         _listenerArray = [NSMutableArray array];
-        
+        _scrollEvent = NO;
         _scrollDirection = attributes[@"scrollDirection"] ? [WXConvert WXScrollDirection:attributes[@"scrollDirection"]] : WXScrollDirectionVertical;
         _showScrollBar = attributes[@"showScrollbar"] ? [WXConvert BOOL:attributes[@"showScrollbar"]] : YES;
         _loadMoreOffset = attributes[@"loadmoreoffset"] ? [WXConvert CGFloat:attributes[@"loadmoreoffset"]] : 0;
         _loadmoreretry = attributes[@"loadmoreretry"] ? [WXConvert NSUInteger:attributes[@"loadmoreretry"]] : 0;
         _listenLoadMore = [events containsObject:@"loadmore"];
         _scrollable = attributes[@"scrollable"] ? [WXConvert BOOL:attributes[@"scrollable"]] : YES;
-
+        _offsetAccuracy = attributes[@"offsetAccuracy"] ? [WXConvert CGFloat:attributes[@"offsetAccuracy"]] : 0;
         _scrollerCSSNode = new_css_node();
         
         // let scroller fill the rest space if it is a child component and has no fixed height & width
@@ -181,12 +183,18 @@ WX_EXPORT_METHOD(@selector(resetLoadmore))
         _scrollable = attributes[@"scrollable"] ? [WXConvert BOOL:attributes[@"scrollable"]] : YES;
         ((UIScrollView *)self.view).scrollEnabled = _scrollable;
     }
+    if (attributes[@"offsetAccuracy"]) {
+        _offsetAccuracy = [WXConvert CGFloat:attributes[@"offsetAccuracy"]];
+    }
 }
 
 - (void)addEvent:(NSString *)eventName
 {
     if ([eventName isEqualToString:@"loadmore"]) {
         _listenLoadMore = YES;
+    }
+    if ([eventName isEqualToString:@"scroll"]) {
+        _scrollEvent = YES;
     }
 }
 
@@ -412,8 +420,6 @@ WX_EXPORT_METHOD(@selector(resetLoadmore))
         _direction = @"up";
     }
     
-    _lastContentOffset = scrollView.contentOffset;
-    
     // check sticky
     [self adjustSticky];
     [self handleLoadMore];
@@ -433,6 +439,23 @@ WX_EXPORT_METHOD(@selector(resetLoadmore))
     if (self.onScroll) {
         self.onScroll(scrollView);
     }
+    if (_scrollEvent) {
+        NSMutableDictionary *scrollEventParams = [[NSMutableDictionary alloc] init];
+        NSDictionary *frameSizeData = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithFloat:scrollView.frame.size.width],@"width",[NSNumber numberWithFloat:scrollView.frame.size.height],@"height", nil];
+        NSDictionary *contentSizeData = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithFloat:scrollView.contentSize.width],@"width",[NSNumber numberWithFloat:scrollView.contentSize.height],@"height", nil];
+        //contentOffset values are replaced by (-contentOffset.x,-contentOffset.y) ,in order to be consistent with Android client.
+        NSDictionary *contentOffsetData = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithFloat:-scrollView.contentOffset.x],@"x",[NSNumber numberWithFloat:-scrollView.contentOffset.y],@"y", nil];
+        float distance = 0;
+        if (_scrollDirection == WXScrollDirectionHorizontal) {
+            distance = scrollView.contentOffset.x - _lastContentOffset.x;
+        } else {
+            distance = scrollView.contentOffset.y - _lastContentOffset.y;
+        }
+        if (ABS(distance) >= _offsetAccuracy) {
+            [self fireEvent:@"scroll" params:@{@"frameSize":frameSizeData,@"contentSize":contentSizeData,@"contentOffset":contentOffsetData} domChanges:nil];
+        }
+    }
+    _lastContentOffset = scrollView.contentOffset;
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
