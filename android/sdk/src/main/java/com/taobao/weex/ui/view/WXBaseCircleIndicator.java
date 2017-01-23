@@ -222,9 +222,9 @@ import com.taobao.weex.utils.WXViewUtils;
 
 public class WXBaseCircleIndicator extends FrameLayout implements OnPageChangeListener, WXGestureObservable {
 
-  private final Paint mPaintPage = new Paint();
-  private final Paint mPaintStroke = new Paint();
-  private final Paint mPaintFill = new Paint();
+  private final Paint mPaintPage = new Paint(Paint.ANTI_ALIAS_FLAG);
+  private final Paint mPaintStroke = new Paint(Paint.ANTI_ALIAS_FLAG);
+  private final Paint mPaintFill = new Paint(Paint.ANTI_ALIAS_FLAG);
   private WXGesture wxGesture;
   private WXCircleViewPager mCircleViewPager;
 
