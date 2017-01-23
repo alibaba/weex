@@ -51,6 +51,7 @@
         {name: 'showcase/minesweeper', title: 'Minesweeper'},
         {name: 'showcase/ui', title: 'UI Gallery'},
         {name: 'showcase/dropdown/dropdown-demo', title: 'Dropdown'}
+        {name: 'newExample', title: 'New Example123'}
       ]
     }
   }
