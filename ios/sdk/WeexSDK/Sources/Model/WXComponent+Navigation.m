@@ -66,8 +66,8 @@
 
 - (void)_updateNavBarAttributes:(NSDictionary *)attributes
 {
-    if (attributes[@"data-role"]) {
-        NSString *dataRole = attributes[@"data-role"];
+    if (attributes[@"dataRole"]) {
+        NSString *dataRole = attributes[@"dataRole"];
         if ([dataRole isEqualToString:@"navbar"]) {
             [self setNavigationBarHidden:NO];
             
