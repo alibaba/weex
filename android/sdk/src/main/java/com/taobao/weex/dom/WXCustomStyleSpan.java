@@ -17,8 +17,10 @@ public class WXCustomStyleSpan extends MetricAffectingSpan {
   private final int mStyle;
   private final int mWeight;
   private final String mFontFamily;
+  private final String mDomObjectRef;
 
-  public WXCustomStyleSpan(int fontStyle, int fontWeight, String fontFamily) {
+  public WXCustomStyleSpan(String ref, int fontStyle, int fontWeight, String fontFamily) {
+    mDomObjectRef = ref;
     mStyle = fontStyle;
     mWeight = fontWeight;
     mFontFamily = fontFamily;
@@ -26,12 +28,12 @@ public class WXCustomStyleSpan extends MetricAffectingSpan {
 
   @Override
   public void updateDrawState(TextPaint ds) {
-    TypefaceUtil.applyFontStyle(ds, mStyle, mWeight, mFontFamily);
+    TypefaceUtil.applyFontStyle(mDomObjectRef, ds, mStyle, mWeight, mFontFamily);
   }
 
   @Override
   public void updateMeasureState(TextPaint paint) {
-    TypefaceUtil.applyFontStyle(paint, mStyle, mWeight, mFontFamily);
+    TypefaceUtil.applyFontStyle(mDomObjectRef, paint, mStyle, mWeight, mFontFamily);
   }
 
   /**

@@ -283,7 +283,7 @@ public class BasicEditTextDomObject extends WXDomObject {
         mPaint.setTextSize(fontSize);
 
       if (fontFamily != null) {
-        TypefaceUtil.applyFontStyle(mPaint, fontStyle, fontWeight, fontFamily);
+        TypefaceUtil.applyFontStyle(mRef, mPaint, fontStyle, fontWeight, fontFamily);
       }
 
       this.dirty();

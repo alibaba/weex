@@ -416,8 +416,8 @@ public class WXTextDomObject extends WXDomObject {
           || mFontWeight != UNSET
           || mFontFamily != null) {
         ops.add(new SetSpanOperation(start, end,
-                                     new WXCustomStyleSpan(mFontStyle, mFontWeight, mFontFamily),
-                                     spanFlag));
+                new WXCustomStyleSpan(mRef, mFontStyle, mFontWeight, mFontFamily),
+                spanFlag));
       }
       ops.add(new SetSpanOperation(start, end, new AlignmentSpan.Standard(mAlignment), spanFlag));
       if (mLineHeight != UNSET) {

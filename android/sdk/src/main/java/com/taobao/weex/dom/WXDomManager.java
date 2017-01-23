@@ -226,6 +226,7 @@ import com.taobao.weex.utils.WXUtils;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -547,19 +548,56 @@ public final class WXDomManager {
     statement.startAnimation(ref,animation,callBack);
   }
 
-  public void addRule(String instanceId,final String type,final JSONObject jsonObject) {
+  public void addRule(final String instanceId,final String type,final JSONObject jsonObject) {
     if (Constants.Name.FONT_FACE.equals(type)) {
       FontDO fontDO = parseFontDO(jsonObject, mWXRenderManager.getWXSDKInstance(instanceId));
       if (fontDO != null && !TextUtils.isEmpty(fontDO.getFontFamilyName())) {
         FontDO cacheFontDO = TypefaceUtil.getFontDO(fontDO.getFontFamilyName());
         if (cacheFontDO == null || !TextUtils.equals(cacheFontDO.getUrl(), fontDO.getUrl())) {
           TypefaceUtil.putFontDO(fontDO);
-          TypefaceUtil.loadTypeface(fontDO);
         } else {
-          TypefaceUtil.loadTypeface(cacheFontDO);
+          fontDO = cacheFontDO;
+        }
+
+        TypefaceUtil.loadTypeface(fontDO, new TypefaceUtil.LoadCallback() {
+          @Override
+          public void onLoaded(boolean success, final String family) {
+            if (success) {
+              mDomHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                  updateTextDomObjects(family, instanceId);
+                }
+              });
+            } else {
+              TypefaceUtil.removeTextDomRefsByFamily(family);
+            }
+          }
+        });
+      }
+    }
+  }
+
+  private void updateTextDomObjects(String family, String instanceId) {
+    WXDomStatement statement = mDomRegistries.get(instanceId);
+    if (statement != null) {
+      WXDomObject rootDom = statement.mRegistry.get(WXDomObject.ROOT);
+      if (rootDom != null) {
+        List<String> refs = TypefaceUtil.getTextDomRefs(family);
+        if (refs != null && refs.size() > 0) {
+          for (String ref : refs) {
+            if (ref != null) {
+              WXDomObject domObject = statement.mRegistry.get(ref);
+              if (domObject != null) {
+                domObject.updateAttr(domObject.getAttrs());
+              }
+            }
+          }
+          statement.layout(rootDom);
         }
       }
     }
+    TypefaceUtil.removeTextDomRefsByFamily(family);
   }
 
   private FontDO parseFontDO(JSONObject jsonObject,WXSDKInstance instance) {
