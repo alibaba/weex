@@ -1,0 +1,62 @@
+<template>
+
+  <div class="container" onclick="goWeexSite" >
+    <div style="flex-direction: column;">
+      <slider class="slider" interval="{{intervalValue}}" auto-play="{{isAutoPlay}}" >
+        <div class="slider-pages" repeat="{{itemList}}" onclick="goWeexSite" >
+          <image class="thumb" src="{{pictureUrl}}"></image>
+          <text class="title">{{title}}</text>
+        </div>
+      </slider>
+    </div>
+    <div class="cell">
+       <image class="thumb" src="http://t.cn/RGE3AJt"></image>  
+       <text class="title">JavaScript</text>
+    </div>
+    <div class="cell">
+       <image class="thumb" src="http://t.cn/RGE3uo9"></image>
+       <text class="title">Java</text>
+    </div>
+    <div class="cell">
+       <image class="thumb" src="http://t.cn/RGE31hq"></image>  
+       <text class="title">Objective C</text>
+    </div>
+  </div>
+</template>
+
+<style>
+  .cell{margin-top:10 ; margin-left:10 ; flex-direction: row; }
+  .thumb {width: 200; height: 200; }
+  .title {text-align: center ; flex: 1; color: grey; font-size: 50; }
+  .slider {
+        margin: 18;
+        width: 714;
+        height: 230;
+  }
+  .slider-pages {
+        flex-direction: row;
+        width: 714;
+        height: 200;
+  }
+  
+</style>
+
+<script>
+module.exports = {
+    data: {
+      intervalValue:"1000",
+      isShowIndicators:"true",
+      isAutoPlay:"true",
+      itemList: [
+        {title: 'Java', pictureUrl: 'http://t.cn/RGE3uo9'},
+        {title: 'Objective C', pictureUrl: 'http://t.cn/RGE31hq'},
+        {title: 'JavaScript', pictureUrl: 'http://t.cn/RGE3AJt'}
+      ]
+    },
+    methods: {
+      goWeexSite: function () {
+        this.$openURL('//alibaba.github.io/weex/')
+              }
+    }
+}
+</script>
