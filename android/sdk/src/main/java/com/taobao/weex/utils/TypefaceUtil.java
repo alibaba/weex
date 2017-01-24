@@ -218,6 +218,7 @@ import com.taobao.weex.dom.TypefaceManager;
 import com.taobao.weex.dom.WXStyle;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -227,6 +228,17 @@ import java.util.Map;
 public class TypefaceUtil {
   public static final String FONT_CACHE_DIR_NAME = "font-family";
   private final static String TAG = "TypefaceUtil";
+  private final static Map<String, FontDO> sCacheMap = new HashMap<>(); //Key: fontFamilyName
+
+  public static void putFontDO(FontDO fontDO) {
+    if (fontDO != null && !TextUtils.isEmpty(fontDO.getFontFamilyName())) {
+      sCacheMap.put(fontDO.getFontFamilyName(), fontDO);
+    }
+  }
+
+  public static FontDO getFontDO(String fontFamilyName) {
+    return sCacheMap.get(fontFamilyName);
+  }
 
   public static void applyFontStyle(String ref, Paint paint, int style, int weight, String family) {
     int oldStyle;
@@ -260,15 +272,14 @@ public class TypefaceUtil {
   }
 
   private static Typeface getOrCreateTypeface(String ref, String family, int style) {
-    FontDO fontDo = TypefaceManager.getFontDO(family);
+    FontDO fontDo = sCacheMap.get(family);
     if (fontDo != null) {
       if (fontDo.getTypeface() != null) {
         return fontDo.getTypeface();
-      } else if (TypefaceManager.getLoadCallback(family) != null) {
+      } else {
         TypefaceManager.putRef(family, ref);
       }
     }
-
     return Typeface.create(family, style);
   }
 
@@ -291,17 +302,17 @@ public class TypefaceUtil {
     return false;
   }
 
-  public static void loadTypeface(final FontDO fontDo, TypefaceManager.LoadCallback callback) {
+  public static void loadTypeface(final FontDO fontDo, final LoadCallback callback) {
     if (fontDo != null && fontDo.getTypeface() == null &&
             (fontDo.getState() == FontDO.STATE_FAILED || fontDo.getState() == FontDO.STATE_INIT)) {
       fontDo.setState(FontDO.STATE_LOADING);
-      if (callback != null) {
-        TypefaceManager.putLoadCallback(fontDo.getFontFamilyName(), callback);
-      }
+
       if (fontDo.getType() == FontDO.TYPE_LOCAL) {
         final Uri uri = Uri.parse(fontDo.getUrl());
         boolean result = loadFromAsset(fontDo,uri.getPath().substring(1));//exclude slash
-        callback(result, fontDo.getFontFamilyName());
+        if (callback != null) {
+          callback.onLoaded(result, fontDo.getFontFamilyName());
+        }
       } else if (fontDo.getType() == FontDO.TYPE_NETWORK) {
         final String url = fontDo.getUrl();
         final String fontFamily = fontDo.getFontFamilyName();
@@ -313,27 +324,36 @@ public class TypefaceUtil {
         final String fullPath =  dir.getAbsolutePath()+ File.separator +fileName;
         boolean result = loadLocalFontFile(fullPath, fontFamily);
         if (result) {
-          callback(true, fontFamily);
+          if (callback != null) {
+            callback.onLoaded(true, fontFamily);
+          }
         } else {
-          downloadFontByNetwork(url, fullPath, fontFamily);
+          downloadFontByNetwork(url, fullPath, fontFamily, callback);
         }
       } else if (fontDo.getType() == FontDO.TYPE_FILE) {
         boolean result = loadLocalFontFile(fontDo.getUrl(), fontDo.getFontFamilyName());
         if (!result) {
           fontDo.setState(FontDO.STATE_FAILED);
         }
-        callback(result, fontDo.getFontFamilyName());
+        if (callback != null) {
+          callback.onLoaded(result, fontDo.getFontFamilyName());
+        }
       } else {
         fontDo.setState(FontDO.STATE_FAILED);
-        callback(false, fontDo.getFontFamilyName());
+        if (callback != null) {
+          callback.onLoaded(false, fontDo.getFontFamilyName());
+        }
       }
     }
   }
 
-  private static void downloadFontByNetwork(final String url, final String fullPath, final String fontFamily) {
+  private static void downloadFontByNetwork(final String url, final String fullPath, final String fontFamily,final LoadCallback callback) {
     IWXHttpAdapter adapter = WXSDKManager.getInstance().getIWXHttpAdapter();
     if (adapter == null) {
       WXLogUtils.e(TAG, "downloadFontByNetwork() IWXHttpAdapter == null");
+      if (callback != null) {
+        callback.onLoaded(false, fontFamily);
+      }
       return;
     }
     WXRequest request = new WXRequest();
@@ -388,12 +408,14 @@ public class TypefaceUtil {
         }
 
         if (!result) {
-          FontDO fontDO = TypefaceManager.getFontDO(fontFamily);
+          FontDO fontDO = sCacheMap.get(fontFamily);
           if (fontDO != null) {
             fontDO.setState(FontDO.STATE_FAILED);
           }
         }
-        callback(result, fontFamily);
+        if (callback != null) {
+          callback.onLoaded(result, fontFamily);
+        }
       }
     });
   }
@@ -409,7 +431,7 @@ public class TypefaceUtil {
       }
       Typeface typeface = Typeface.createFromFile(path);
       if (typeface != null) {
-        FontDO fontDo = TypefaceManager.getFontDO(fontFamily);
+        FontDO fontDo = sCacheMap.get(fontFamily);
         if (fontDo != null) {
           fontDo.setState(FontDO.STATE_SUCCESS);
           fontDo.setTypeface(typeface);
@@ -431,10 +453,7 @@ public class TypefaceUtil {
     return WXEnvironment.getDiskCacheDir(WXEnvironment.getApplication()) + "/" + FONT_CACHE_DIR_NAME;
   }
 
-  private static void callback(boolean result, String fontFamily) {
-    TypefaceManager.LoadCallback loadCallback = TypefaceManager.removeLoadCallback(fontFamily);
-    if(loadCallback != null) {
-      loadCallback.onLoaded(result, fontFamily);
-    }
+  public interface LoadCallback {
+    void onLoaded(boolean success, String family);
   }
 }
