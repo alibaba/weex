@@ -552,14 +552,14 @@ public final class WXDomManager {
     if (Constants.Name.FONT_FACE.equals(type)) {
       FontDO fontDO = parseFontDO(jsonObject, mWXRenderManager.getWXSDKInstance(instanceId));
       if (fontDO != null && !TextUtils.isEmpty(fontDO.getFontFamilyName())) {
-        FontDO cacheFontDO = TypefaceUtil.getFontDO(fontDO.getFontFamilyName());
+        FontDO cacheFontDO = TypefaceManager.getFontDO(fontDO.getFontFamilyName());
         if (cacheFontDO == null || !TextUtils.equals(cacheFontDO.getUrl(), fontDO.getUrl())) {
-          TypefaceUtil.putFontDO(fontDO);
+          TypefaceManager.putFontDO(fontDO);
         } else {
           fontDO = cacheFontDO;
         }
 
-        TypefaceUtil.loadTypeface(fontDO, new TypefaceUtil.LoadCallback() {
+        TypefaceUtil.loadTypeface(fontDO, new TypefaceManager.LoadCallback() {
           @Override
           public void onLoaded(boolean success, final String family) {
             if (success) {
@@ -570,7 +570,7 @@ public final class WXDomManager {
                 }
               });
             } else {
-              TypefaceUtil.removeTextDomRefsByFamily(family);
+              TypefaceManager.removeTextDomRefsByFamily(family);
             }
           }
         });
@@ -583,7 +583,7 @@ public final class WXDomManager {
     if (statement != null) {
       WXDomObject rootDom = statement.mRegistry.get(WXDomObject.ROOT);
       if (rootDom != null) {
-        List<String> refs = TypefaceUtil.getTextDomRefs(family);
+        List<String> refs = TypefaceManager.getTextDomRefs(family);
         if (refs != null && refs.size() > 0) {
           for (String ref : refs) {
             if (ref != null) {
@@ -597,7 +597,7 @@ public final class WXDomManager {
         }
       }
     }
-    TypefaceUtil.removeTextDomRefsByFamily(family);
+    TypefaceManager.removeTextDomRefsByFamily(family);
   }
 
   private FontDO parseFontDO(JSONObject jsonObject,WXSDKInstance instance) {

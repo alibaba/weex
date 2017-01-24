@@ -214,11 +214,10 @@ import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.common.WXRequest;
 import com.taobao.weex.common.WXResponse;
+import com.taobao.weex.dom.TypefaceManager;
 import com.taobao.weex.dom.WXStyle;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -228,19 +227,6 @@ import java.util.Map;
 public class TypefaceUtil {
   public static final String FONT_CACHE_DIR_NAME = "font-family";
   private final static String TAG = "TypefaceUtil";
-  private final static Map<String, FontDO> sCacheMap = new HashMap<>(); //Key: fontFamilyName
-  private final static Map<String, List<String>> mTextDomRefMap = new HashMap<>();
-  private final static Map<String, LoadCallback> mLoadCallbackMap = new HashMap<>();
-
-  public static void putFontDO(FontDO fontDO) {
-    if (fontDO != null && !TextUtils.isEmpty(fontDO.getFontFamilyName())) {
-      sCacheMap.put(fontDO.getFontFamilyName(), fontDO);
-    }
-  }
-
-  public static FontDO getFontDO(String fontFamilyName) {
-    return sCacheMap.get(fontFamilyName);
-  }
 
   public static void applyFontStyle(String ref, Paint paint, int style, int weight, String family) {
     int oldStyle;
@@ -273,20 +259,13 @@ public class TypefaceUtil {
     }
   }
 
-  public static Typeface getOrCreateTypeface(String ref, String family, int style) {
-    FontDO fontDo = sCacheMap.get(family);
+  private static Typeface getOrCreateTypeface(String ref, String family, int style) {
+    FontDO fontDo = TypefaceManager.getFontDO(family);
     if (fontDo != null) {
       if (fontDo.getTypeface() != null) {
         return fontDo.getTypeface();
-      } else if (mLoadCallbackMap.get(family) != null) {
-        List<String> refs = mTextDomRefMap.get(family);
-        if (refs == null) {
-          refs = new ArrayList<>();
-          mTextDomRefMap.put(family, refs);
-        }
-        if (!refs.contains(ref)) {
-          refs.add(ref);
-        }
+      } else if (TypefaceManager.getLoadCallback(family) != null) {
+        TypefaceManager.putRef(family, ref);
       }
     }
 
@@ -312,12 +291,12 @@ public class TypefaceUtil {
     return false;
   }
 
-  public static void loadTypeface(final FontDO fontDo, LoadCallback callback) {
+  public static void loadTypeface(final FontDO fontDo, TypefaceManager.LoadCallback callback) {
     if (fontDo != null && fontDo.getTypeface() == null &&
             (fontDo.getState() == FontDO.STATE_FAILED || fontDo.getState() == FontDO.STATE_INIT)) {
       fontDo.setState(FontDO.STATE_LOADING);
       if (callback != null) {
-        mLoadCallbackMap.put(fontDo.getFontFamilyName(), callback);
+        TypefaceManager.putLoadCallback(fontDo.getFontFamilyName(), callback);
       }
       if (fontDo.getType() == FontDO.TYPE_LOCAL) {
         final Uri uri = Uri.parse(fontDo.getUrl());
@@ -409,7 +388,7 @@ public class TypefaceUtil {
         }
 
         if (!result) {
-          FontDO fontDO = sCacheMap.get(fontFamily);
+          FontDO fontDO = TypefaceManager.getFontDO(fontFamily);
           if (fontDO != null) {
             fontDO.setState(FontDO.STATE_FAILED);
           }
@@ -417,13 +396,6 @@ public class TypefaceUtil {
         callback(result, fontFamily);
       }
     });
-  }
-
-  private static void callback(boolean result, String fontFamily) {
-    LoadCallback loadCallback = mLoadCallbackMap.remove(fontFamily);
-    if(loadCallback != null) {
-      loadCallback.onLoaded(result, fontFamily);
-    }
   }
 
   private static boolean loadLocalFontFile(String path, String fontFamily) {
@@ -437,7 +409,7 @@ public class TypefaceUtil {
       }
       Typeface typeface = Typeface.createFromFile(path);
       if (typeface != null) {
-        FontDO fontDo = sCacheMap.get(fontFamily);
+        FontDO fontDo = TypefaceManager.getFontDO(fontFamily);
         if (fontDo != null) {
           fontDo.setState(FontDO.STATE_SUCCESS);
           fontDo.setTypeface(typeface);
@@ -459,15 +431,10 @@ public class TypefaceUtil {
     return WXEnvironment.getDiskCacheDir(WXEnvironment.getApplication()) + "/" + FONT_CACHE_DIR_NAME;
   }
 
-  public interface LoadCallback {
-    void onLoaded(boolean success, String family);
-  }
-
-  public static List<String> getTextDomRefs(String family) {
-    return mTextDomRefMap.get(family);
-  }
-
-  public static boolean removeTextDomRefsByFamily(String family) {
-    return mTextDomRefMap.remove(family) != null;
+  private static void callback(boolean result, String fontFamily) {
+    TypefaceManager.LoadCallback loadCallback = TypefaceManager.removeLoadCallback(fontFamily);
+    if(loadCallback != null) {
+      loadCallback.onLoaded(result, fontFamily);
+    }
   }
 }
