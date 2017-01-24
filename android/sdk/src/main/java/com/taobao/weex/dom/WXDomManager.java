@@ -566,7 +566,10 @@ public final class WXDomManager {
               mDomHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                  updateTextDomObjects(family, instanceId);
+                  WXDomStatement statement = mDomRegistries.get(instanceId);
+                  if (statement != null){
+                    TypefaceManager.updateTextDomObjects(statement, family);
+                  }
                 }
               });
             } else {
@@ -576,28 +579,6 @@ public final class WXDomManager {
         });
       }
     }
-  }
-
-  private void updateTextDomObjects(String family, String instanceId) {
-    WXDomStatement statement = mDomRegistries.get(instanceId);
-    if (statement != null) {
-      WXDomObject rootDom = statement.mRegistry.get(WXDomObject.ROOT);
-      if (rootDom != null) {
-        List<String> refs = TypefaceManager.getTextDomRefs(family);
-        if (refs != null && refs.size() > 0) {
-          for (String ref : refs) {
-            if (ref != null) {
-              WXDomObject domObject = statement.mRegistry.get(ref);
-              if (domObject != null) {
-                domObject.updateAttr(domObject.getAttrs());
-              }
-            }
-          }
-          statement.layout(rootDom);
-        }
-      }
-    }
-    TypefaceManager.removeTextDomRefsByFamily(family);
   }
 
   private FontDO parseFontDO(JSONObject jsonObject,WXSDKInstance instance) {

@@ -62,4 +62,25 @@ public class TypefaceManager {
     public interface LoadCallback {
         void onLoaded(boolean success, String family);
     }
+
+    public static void updateTextDomObjects(WXDomStatement statement, String family) {
+        if (statement != null) {
+            WXDomObject rootDom = statement.mRegistry.get(WXDomObject.ROOT);
+            if (rootDom != null) {
+                List<String> refs = TypefaceManager.getTextDomRefs(family);
+                if (refs != null && refs.size() > 0) {
+                    for (String ref : refs) {
+                        if (ref != null) {
+                            WXDomObject domObject = statement.mRegistry.get(ref);
+                            if (domObject != null) {
+                                domObject.updateAttr(domObject.getAttrs());
+                            }
+                        }
+                    }
+                    statement.layout(rootDom);
+                }
+            }
+        }
+        TypefaceManager.removeTextDomRefsByFamily(family);
+    }
 }
