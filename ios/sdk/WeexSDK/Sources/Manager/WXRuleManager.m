@@ -106,7 +106,8 @@ static WXRuleManager *_sharedInstance = nil;
                     NSString *fontSrc = [dictForFontFamily objectForKey:@"tempSrc"];
                     [dictForFontFamily setObject:fontSrc forKey:@"src"];
                     [dictForFontFamily setObject:url forKey:@"localSrc"];
-                    [[NSNotificationCenter defaultCenter] postNotificationName:WX_ICONFONT_DOWNLOAD_NOTIFICATION object:nil];
+                    
+                    [[NSNotificationCenter defaultCenter] postNotificationName:WX_ICONFONT_DOWNLOAD_NOTIFICATION object:nil userInfo:@{@"fontFamily":rule[@"fontFamily"]}];
                 } else {
                     //there was some errors during loading
                     WXLogError(@"load font failed %@",error.description);

@@ -116,14 +116,12 @@
     CGPoint contentOffset = [scrollerProtocol contentOffset];
     if (_displayState) {
         contentOffset.y = [scrollerProtocol contentSize].height - scroller.calculatedFrame.size.height + self.calculatedFrame.size.height;
-        [scrollerProtocol setContentOffset:contentOffset animated:NO];
         [_indicator start];
     } else {
-        _displayState = NO;
         contentOffset.y = contentOffset.y - self.calculatedFrame.size.height;
-        [scrollerProtocol setContentOffset:contentOffset animated:YES];
         [_indicator stop];
     }
+    [scrollerProtocol setContentOffset:contentOffset animated:YES];
 }
 
 - (void)_insertSubcomponent:(WXComponent *)subcomponent atIndex:(NSInteger)index
