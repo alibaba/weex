@@ -64,14 +64,15 @@
     instance2.frame = instanceFrame;
     [instance2 renderView:jsScript options:nil data:templateRootFrameData];
     XCTestExpectation *expectation2 = [self expectationWithDescription:@"instance 2"];
+    CGFloat pixelScaleFactor = instance2.pixelScaleFactor;
     instance2.renderFinish = ^(UIView *view){
         XCTAssert(WXRectApproximateToRect(view.frame, instanceFrame));
         XCTAssert(WXRectApproximateToRect(view.subviews[0].frame,
                                     CGRectMake(
-                                               WXPixelResize(templateRootFrame.origin.x),
-                                               WXPixelResize(templateRootFrame.origin.y),
-                                               WXPixelResize(templateRootFrame.size.width),
-                                               WXPixelResize(templateRootFrame.size.height))));
+                                               WXPixelScale(templateRootFrame.origin.x, pixelScaleFactor),
+                                               WXPixelScale(templateRootFrame.origin.y, pixelScaleFactor),
+                                               WXPixelScale(templateRootFrame.size.width, pixelScaleFactor),
+                                               WXPixelScale(templateRootFrame.size.height, pixelScaleFactor))));
     
         [expectation2 fulfill];
     };
@@ -82,29 +83,30 @@
     [instance3 renderView:jsScript options:nil data:templateRootFrameData];
     XCTestExpectation *expectation3 = [self expectationWithDescription:@"instance 3"];
     XCTestExpectation *expectation31 = [self expectationWithDescription:@"instance 3 onLayoutChange"];
+    __weak typeof(instance2) weakInstance = instance3;
     instance3.renderFinish = ^(UIView *view){
         XCTAssert(WXRectApproximateToRect(view.frame,
                                     CGRectMake(0,0,
-                                               WXPixelResize(templateRootFrame.size.width),
-                                               WXPixelResize(templateRootFrame.size.height))));
+                                               WXPixelScale(templateRootFrame.size.width, weakInstance.pixelScaleFactor),
+                                               WXPixelScale(templateRootFrame.size.height, weakInstance.pixelScaleFactor))));
         XCTAssert(WXRectApproximateToRect(view.subviews[0].frame,
                                     CGRectMake(
-                                               WXPixelResize(templateRootFrame.origin.x),
-                                               WXPixelResize(templateRootFrame.origin.y),
-                                               WXPixelResize(templateRootFrame.size.width),
-                                               WXPixelResize(templateRootFrame.size.height))));
+                                               WXPixelScale(templateRootFrame.origin.x, weakInstance.pixelScaleFactor),
+                                               WXPixelScale(templateRootFrame.origin.y, weakInstance.pixelScaleFactor),
+                                               WXPixelScale(templateRootFrame.size.width, weakInstance.pixelScaleFactor),
+                                               WXPixelScale(templateRootFrame.size.height, weakInstance.pixelScaleFactor))));
         [expectation3 fulfill];
         
         // 31.if weex template root frame changed, root container will change the width and height computed by layout, thus trigger instance's onLayoutChange;
         NSMutableDictionary *changedFrameData = [templateRootFrameData mutableCopy];
         [changedFrameData setObject:@(400) forKey:@"height"];
         
-        [instance3 refreshInstance:changedFrameData];
-        instance3.onLayoutChange = ^(UIView *view) {
+        [weakInstance refreshInstance:changedFrameData];
+        weakInstance.onLayoutChange = ^(UIView *view) {
             XCTAssert(WXRectApproximateToRect(view.frame,
                                         CGRectMake(0,0,
-                                                   WXPixelResize(templateRootFrame.size.width),
-                                                   WXPixelResize(400))));
+                                                   WXPixelScale(templateRootFrame.size.width, weakInstance.pixelScaleFactor),
+                                                   WXPixelScale(400, weakInstance.pixelScaleFactor))));
             [expectation31 fulfill];
         };
         
@@ -114,11 +116,12 @@
     WXSDKInstance *instance4 = [[WXSDKInstance alloc] init];
     [instance4 renderView:jsScript options:nil data:nil];
     XCTestExpectation *expectation4 = [self expectationWithDescription:@"instance 4"];
+    pixelScaleFactor = instance4.pixelScaleFactor;
     instance4.renderFinish = ^(UIView *view){
         XCTAssert(WXRectApproximateToRect(view.frame,
-                                    CGRectMake(0,0,WXPixelResize(100),WXPixelResize(200))));
+                                    CGRectMake(0,0,WXPixelScale(100, pixelScaleFactor),WXPixelScale(200, pixelScaleFactor))));
         XCTAssert(WXRectApproximateToRect(view.subviews[0].frame,
-                                    CGRectMake(0,0,WXPixelResize(100),WXPixelResize(200))));
+                                    CGRectMake(0,0,WXPixelScale(100, pixelScaleFactor),WXPixelScale(200, pixelScaleFactor))));
         [expectation4 fulfill];
     };
     

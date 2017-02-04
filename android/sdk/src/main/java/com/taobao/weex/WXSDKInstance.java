@@ -206,8 +206,8 @@ package com.taobao.weex;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -1220,7 +1220,6 @@ public class WXSDKInstance implements IWXActivityStateListener,DomContext, View.
       getContext().unregisterReceiver(mGlobalEventReceiver);
       mGlobalEventReceiver=null;
     }
-
     if(mRootComp != null ) {
       mRootComp.destroy();
       destroyView(mRenderContainer);
@@ -1402,14 +1401,20 @@ public class WXSDKInstance implements IWXActivityStateListener,DomContext, View.
     if (TextUtils.isEmpty(eventName) || module == null) {
       return;
     }
+
+    Map<String, Object> event = new HashMap<>();
+    event.put("type", eventName);
+    event.put("module", module.getModuleName());
+    event.put("data", params);
+
     List<String> callbacks = module.getEventCallbacks(eventName);
     if (callbacks != null) {
       for (String callback : callbacks) {
         SimpleJSCallback jsCallback = new SimpleJSCallback(mInstanceId, callback);
         if (module.isOnce(callback)) {
-          jsCallback.invokeAndKeepAlive(params);
+          jsCallback.invoke(event);
         } else {
-          jsCallback.invoke(params);
+          jsCallback.invokeAndKeepAlive(event);
         }
       }
     }

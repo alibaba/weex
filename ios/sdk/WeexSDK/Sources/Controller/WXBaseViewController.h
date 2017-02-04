@@ -20,7 +20,7 @@
 /**
  * @abstract initializes the viewcontroller with bundle url.
  *
- * @param sourceURL. The url of bundle rendered to a weex view.
+ * @param sourceURL The url of bundle rendered to a weex view.
  *
  * @return a object the class of WXBaseViewController.
  *

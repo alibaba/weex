@@ -12,6 +12,8 @@
 #import "WXLayer.h"
 #import "WXUtility.h"
 #import "WXConvert.h"
+#import "WXRuleManager.h"
+#import "WXDefine.h"
 #import <pthread/pthread.h>
 
 @interface WXText : UIView
@@ -152,6 +154,7 @@ static BOOL _isUsingTextStorageLock = NO;
         pthread_mutex_destroy(&_textStorageMutex);
         pthread_mutexattr_destroy(&_textStorageMutexAttr);
     }
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 
@@ -298,6 +301,10 @@ do {\
         if (!isnan(weakSelf.cssNode->style.maxDimensions[CSS_HEIGHT])) {
             computedSize.height = MIN(computedSize.height, weakSelf.cssNode->style.maxDimensions[CSS_HEIGHT]);
         }
+        if ([WXUtility isBlankString:textStorage.string]) {
+            //  if the text value is empty or nil, then set the height is 0.
+            computedSize.height = 0;
+        }
         
         return (CGSize) {
             WXCeilPixelValue(computedSize.width),
@@ -312,6 +319,21 @@ do {\
     return _text;
 }
 
+- (void)repaintText:(NSNotification *)notification
+{
+    if (![_fontFamily isEqualToString:notification.userInfo[@"fontFamily"]]) {
+        return;
+    }
+    [self setNeedsRepaint];
+    WXPerformBlockOnComponentThread(^{
+        [self.weexInstance.componentManager startComponentTasks];
+        WXPerformBlockOnMainThread(^{
+            [self setNeedsLayout];
+            [self setNeedsDisplay];
+        });
+    });
+}
+
 - (NSAttributedString *)buildAttributeString
 {
     NSString *string = [self text] ?: @"";
@@ -323,20 +345,19 @@ do {\
         [attributedString addAttribute:NSForegroundColorAttributeName value:_color range:NSMakeRange(0, string.length)];
     }
     
-    // set font
-    if (!_fontFamily) {
-        NSString *regex = @".*[\\u4e00-\\u9faf].*";//Has Simplified Chinese char
-        NSPredicate *pred = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",regex];
-        if ([pred evaluateWithObject:string]) {
-            if ([[UIDevice currentDevice].systemVersion floatValue] < 9.0) {
-                //“Heiti SC” font is "[UIFont systemFontOfSize:]" for Simplified Chinese before iOS 9.0.
-                _fontFamily = @"Heiti SC";
-            } else {
-                //“PingFang SC” font is "[UIFont systemFontOfSize:]" for Simplified Chinese from iOS 9.0.
-                _fontFamily = @"PingFang SC";
-            }
+    if (_fontFamily) {
+        NSString * keyPath = [NSString stringWithFormat:@"%@.tempSrc", _fontFamily];
+        NSString * fontSrc = [[[WXRuleManager sharedInstance] getRule:@"fontFace"] valueForKeyPath:keyPath];
+        keyPath = [NSString stringWithFormat:@"%@.localSrc", _fontFamily];
+        NSString * fontLocalSrc = [[[WXRuleManager sharedInstance] getRule:@"fontFace"] valueForKeyPath:keyPath];
+        //custom localSrc is cached
+        if (!fontLocalSrc && fontSrc) {
+            // if use custom font, when the custom font download finish, refresh text.
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(repaintText:) name:WX_ICONFONT_DOWNLOAD_NOTIFICATION object:nil];
         }
     }
+    
+    // set font
     UIFont *font = [WXUtility fontWithSize:_fontSize textWeight:_fontWeight textStyle:_fontStyle fontFamily:_fontFamily scaleFactor:self.weexInstance.pixelScaleFactor];
     if (font) {
         [attributedString addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, string.length)];

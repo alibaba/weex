@@ -5,13 +5,10 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.2.3'
-        classpath files('../sdk/license/license-gradle-plugin-0.12.1.jar')
-        classpath files('../sdk/license/maven-license-plugin-1.10.b1.jar')
-        classpath files('../sdk/license/plexus-utils-3.0.24.jar')
     }
 }
+
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.hierynomus.license'
 
 repositories {
     jcenter()
@@ -66,13 +63,6 @@ dependencies {
     testCompile 'org.powermock:powermock-module-testng:1.6.4'
     testCompile 'org.robolectric:robolectric:3.0-rc3'
 }
-
-license{
-    header=file('../sdk/license/LICENSE')
-    excludes ([])
-}
-
-preBuild.dependsOn licenseFormat
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.10'

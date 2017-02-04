@@ -39,8 +39,10 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
     
     if (!options || [WXUtility isBlankString:urlStr]) {
         [callbackRsp setObject:@(-1) forKey:@"status"];
-        [callbackRsp setObject:@false forKey:@"ok"];
-        callback(callbackRsp);
+        [callbackRsp setObject:@NO forKey:@"ok"];
+        if (callback) {
+            callback(callbackRsp);
+        }
         
         return;
     }
@@ -74,9 +76,10 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
         }
         if (!body) {
             [callbackRsp setObject:@(-1) forKey:@"status"];
-            [callbackRsp setObject:@false forKey:@"ok"];
-            callback(callbackRsp);
-                
+            [callbackRsp setObject:@NO forKey:@"ok"];
+            if (callback) {
+                callback(callbackRsp);
+            }
             return;
         }
         
@@ -118,7 +121,7 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
         [callbackRsp removeObjectForKey:@"readyState"];
         [callbackRsp removeObjectForKey:@"length"];
         [callbackRsp removeObjectForKey:@"keepalive"];
-        [callbackRsp setObject:httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299 ? @true : @false forKey:@"ok"];
+        [callbackRsp setObject:httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299 ? @YES : @NO forKey:@"ok"];
     
         NSString *responseData = [self stringfromData:data encode:httpResponse.textEncodingName];
         if ([type isEqualToString:@"json"] || [type isEqualToString:@"jsonp"]) {
@@ -139,8 +142,9 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
                 [callbackRsp setObject:responseData forKey:@"data"];
             }
         }
-        
-        callback(callbackRsp);
+        if (callback) {
+            callback(callbackRsp);
+        }
     };
     
     loader.onFailed = ^(NSError *error) {

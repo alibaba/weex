@@ -268,6 +268,7 @@ public class WXModuleManager {
         if (global) {
           try {
             WXModule wxModule = factory.buildInstance();
+            wxModule.setModuleName(moduleName);
             sGlobalModuleMap.put(moduleName, wxModule);
           } catch (Exception e) {
             WXLogUtils.e(moduleName + " class must have a default constructor without params. ", e);
@@ -355,6 +356,7 @@ public class WXModuleManager {
       if (wxModule == null) {
         try {
           wxModule = factory.buildInstance();
+          wxModule.setModuleName(moduleStr);
         } catch (Exception e) {
           WXLogUtils.e(moduleStr + " module build instace failed.", e);
           return null;

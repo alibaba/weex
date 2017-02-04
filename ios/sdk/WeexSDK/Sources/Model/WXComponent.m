@@ -207,7 +207,7 @@
         }
         
         if (_transform) {
-            _layer.transform = [[[WXTransform alloc] initWithInstance:self.weexInstance] getTransform:_transform withView:_view withOrigin:_transformOrigin];
+            [_transform applyTransformForView:_view];
         }
         
         _view.wx_component = self;

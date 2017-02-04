@@ -48,7 +48,7 @@ typedef BOOL WXClipType;
 /**
  * @abstract UIFontWeightRegular ,UIFontWeightBold,etc are not support by the system which is less than 8.2. weex sdk set the float value.
  *
- * @param value, support normal,bold,100,200,300,400,500,600,700,800,900
+ * @param value support normal,blod,100,200,300,400,500,600,700,800,900
  *
  * @return A float value.
  *

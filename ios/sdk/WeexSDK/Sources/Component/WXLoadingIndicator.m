@@ -12,6 +12,7 @@
 @interface WXLoadingIndicator()
 
 @property (nonatomic, strong) UIActivityIndicatorView* indicator;
+@property (nonatomic, strong) UIColor * color;
 
 @end
 
@@ -20,9 +21,8 @@
 - (instancetype)initWithRef:(NSString *)ref type:(NSString *)type styles:(NSDictionary *)styles attributes:(NSDictionary *)attributes events:(NSArray *)events weexInstance:(WXSDKInstance *)weexInstance {
     self = [super initWithRef:ref type:type styles:styles attributes:attributes events:events weexInstance:weexInstance];
     if (self) {
-        _indicator = [[UIActivityIndicatorView alloc] init];
         if (styles[@"color"]) {
-            [self setColor:[WXConvert UIColor:styles[@"color"]]];
+            _color = [WXConvert UIColor:styles[@"color"]];
         }
     }
     
@@ -32,13 +32,20 @@
 - (void)updateStyles:(NSDictionary *)styles
 {
     if (styles[@"color"]) {
-        [self setColor:[WXConvert UIColor:styles[@"color"]]];
+        _color = [WXConvert UIColor:styles[@"color"]];
+        [self setColor: _color];
     }
 }
 
 - (UIView *)loadView
 {
+    _indicator = [[UIActivityIndicatorView alloc] init];
     return _indicator;
+}
+
+- (void)viewDidLoad {
+    [self setColor: _color];
+    [self setFrame:self.calculatedFrame];
 }
 
 #pragma mark - lifeCircle
@@ -47,11 +54,6 @@
     [_indicator stopAnimating];
     _indicator = nil;
 
-}
-
-- (void)viewDidLoad
-{
-    [self setFrame:self.calculatedFrame];
 }
 
 - (void)setColor:(UIColor *)color

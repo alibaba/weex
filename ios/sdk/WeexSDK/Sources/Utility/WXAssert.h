@@ -63,4 +63,7 @@ WXAssert([[NSThread currentThread].name isEqualToString:WX_BRIDGE_THREAD_NAME], 
 @"must be called on the bridge thread")
 
 
+#define WXAssertNotReached() \
+WXAssert(NO, @"should never be reached")
+
 WX_EXTERN_C_END

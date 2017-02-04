@@ -208,9 +208,9 @@ import android.content.DialogInterface;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 
+import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.common.WXModule;
-import com.taobao.weex.common.WXModuleAnno;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -239,7 +239,7 @@ public class WXPickersModule extends WXModule {
 
     private int selected;
 
-    @WXModuleAnno
+    @JSMethod
     public void pick(Map<String, Object> options, JSCallback callback) {
         List<String> items = safeConvert(getOption(options, KEY_ITEMS, new ArrayList<String>()));
         int index = getOption(options, KEY_INDEX, 0);
@@ -247,12 +247,12 @@ public class WXPickersModule extends WXModule {
         performSinglePick(items, index, title, callback);
     }
 
-    @WXModuleAnno
+    @JSMethod
     public void pickDate(Map<String, Object> options, JSCallback callback) {
         performPickDate(options, callback);
     }
 
-    @WXModuleAnno
+    @JSMethod
     public void pickTime(Map<String, Object> options, JSCallback callback) {
         performPickTime(options, callback);
     }

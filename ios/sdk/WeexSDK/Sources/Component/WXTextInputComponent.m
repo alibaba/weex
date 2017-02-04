@@ -98,6 +98,8 @@
 
 WX_EXPORT_METHOD(@selector(focus))
 WX_EXPORT_METHOD(@selector(blur))
+WX_EXPORT_METHOD(@selector(setSelectionRange:selectionEnd:))
+WX_EXPORT_METHOD(@selector(getSelectionRange:))
 
 - (instancetype)initWithRef:(NSString *)ref type:(NSString *)type styles:(NSDictionary *)styles attributes:(NSDictionary *)attributes events:(NSArray *)events weexInstance:(WXSDKInstance *)weexInstance
 {
@@ -217,6 +219,27 @@ WX_EXPORT_METHOD(@selector(blur))
     if(self.inputView) {
         [self.inputView resignFirstResponder];
     }
+}
+
+-(void)setSelectionRange:(NSInteger)selectionStart selectionEnd:(NSInteger)selectionEnd
+{
+    if(selectionStart>self.inputView.text.length || selectionEnd>self.inputView.text.length) {
+        return;
+    }
+    [self.inputView becomeFirstResponder];
+    UITextPosition *startPos =  [self.inputView positionFromPosition:self.inputView.beginningOfDocument offset:selectionStart];
+    UITextPosition *endPos = [self.inputView positionFromPosition:self.inputView.beginningOfDocument offset:selectionEnd];
+    UITextRange *textRange = [self.inputView textRangeFromPosition:startPos
+                                                       toPosition:endPos];
+    self.inputView.selectedTextRange = textRange;
+}
+
+-(void)getSelectionRange:(WXCallback)callback
+{
+    NSInteger selectionStart = [self.inputView offsetFromPosition:self.inputView.beginningOfDocument toPosition:self.inputView.selectedTextRange.start];
+    NSInteger selectionEnd = [self.inputView offsetFromPosition:self.inputView.beginningOfDocument toPosition:self.inputView.selectedTextRange.end];
+    NSDictionary *res = @{@"selectionStart":@(selectionStart),@"selectionEnd":@(selectionEnd)};
+    callback(res);
 }
 
 #pragma mark - Add Event

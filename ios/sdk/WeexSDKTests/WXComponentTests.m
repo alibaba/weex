@@ -161,7 +161,7 @@
     WXComponent *component = [[WXComponent alloc] initWithRef:@"1" type:@"div" styles:testStyles attributes:nil events:nil weexInstance:[[WXSDKInstance alloc] init]];
     
     css_node_t *cssNode = component.cssNode;
-    CGFloat scale = WXScreenResizeRadio();
+    CGFloat scale = [WXUtility defaultPixelScaleFactor];
     
     XCTAssertEqual(cssNode->style.flex, 2.0);
     XCTAssertEqual(cssNode->style.flex_direction, CSS_FLEX_DIRECTION_ROW);

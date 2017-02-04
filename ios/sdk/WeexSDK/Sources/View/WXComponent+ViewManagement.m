@@ -99,8 +99,9 @@
     _clipToBounds = styles[@"overflow"] ? [WXConvert WXClipType:styles[@"overflow"]] : NO;
     _visibility = styles[@"visibility"] ? [WXConvert WXVisibility:styles[@"visibility"]] : WXVisibilityShow;
     _positionType = styles[@"position"] ? [WXConvert WXPositionType:styles[@"position"]] : WXPositionTypeRelative;
-    _transform = styles[@"transform"] ? [WXConvert NSString:styles[@"transform"]] : nil;
-    _transformOrigin = styles[@"transformOrigin"] ? [WXConvert NSString:styles[@"transformOrigin"]] : nil;
+    _transform = styles[@"transform"] || styles[@"transformOrigin"] ?
+    [[WXTransform alloc] initWithCSSValue:[WXConvert NSString:styles[@"transform"]] origin:styles[@"transformOrigin"] instance:self.weexInstance] :
+    [[WXTransform alloc] initWithCSSValue:nil origin:nil instance:self.weexInstance];
 }
 
 - (void)_updateViewStyles:(NSDictionary *)styles
@@ -160,14 +161,10 @@
         }
     }
     
-    if (styles[@"transformOrigin"]) {
-        _transformOrigin = [WXConvert NSString:styles[@"transformOrigin"]];
-    }
-    
-    if (styles[@"transform"]) {
+    if (styles[@"transformOrigin"] || styles[@"transform"]) {
+        _transform = [[WXTransform alloc] initWithCSSValue:[WXConvert NSString:styles[@"transform"]] origin:styles[@"transformOrigin"] instance:self.weexInstance];
         if (!CGRectEqualToRect(self.calculatedFrame, CGRectZero)) {
-            _transform = [WXConvert NSString:styles[@"transform"]];
-            _layer.transform = [[[WXTransform alloc] initWithInstance:self.weexInstance] getTransform:_transform withView:_view withOrigin:_transformOrigin];
+            [_transform applyTransformForView:_view];
             [_layer setNeedsDisplay];
         }
     }

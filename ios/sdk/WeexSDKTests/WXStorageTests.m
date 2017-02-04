@@ -144,17 +144,19 @@
     dispatch_async(self.storageQueue, ^{
         [self.storage setItem:@"key2" value:@"shortValue2" callback:^(id result) {
             NSDictionary *infoDic1 = [NSDictionary dictionaryWithContentsOfFile:weakSelf.infoPath];
-            
+            __strong typeof(weakSelf) self = weakSelf;
             XCTAssertEqual(result[@"result"], @"success");
             XCTAssertEqual(infoDic1[@"key2"][@"persistent"], @(NO));
             
             [self.storage setItemPersistent:@"key2" value:@"shortValue22" callback:^(id result) {
+                __strong typeof(weakSelf) self = weakSelf;
                 NSDictionary *infoDic2 = [NSDictionary dictionaryWithContentsOfFile:weakSelf.infoPath];
 
                 XCTAssertEqual(result[@"result"], @"success");
                 XCTAssertEqual(infoDic2[@"key2"][@"persistent"], @(YES));
                 
                 [self.storage setItem:@"key2" value:@"shortValue23" callback:^(id result) {
+                    __strong typeof(weakSelf) self = weakSelf;
                     [expectation fulfill];
 
                     NSDictionary *infoDic3 = [NSDictionary dictionaryWithContentsOfFile:weakSelf.infoPath];
@@ -175,18 +177,20 @@
     __weak typeof(self) weakSelf = self;
     dispatch_async(self.storageQueue, ^{
         [self.storage setItem:@"key3" value:@"shortValue3" callback:^(id result) {
+            __strong typeof(weakSelf) self = weakSelf;
             NSDictionary *infoDic = [NSDictionary dictionaryWithContentsOfFile:weakSelf.infoPath];
             NSTimeInterval tsNow = [[NSDate date] timeIntervalSince1970];
             NSTimeInterval ts = [infoDic[@"key3"][@"ts"] doubleValue];
-            XCTAssertTrue(ABS(tsNow - ts) <= 0.1);
+            XCTAssertTrue(ABS(tsNow - ts) <= 1);
 
             [NSThread sleepForTimeInterval:2];
             
             [self.storage setItem:@"key3" value:@"shortValue32" callback:^(id result) {
+                __strong typeof(weakSelf) self = weakSelf;
                 NSDictionary *infoDic = [NSDictionary dictionaryWithContentsOfFile:weakSelf.infoPath];
                 NSTimeInterval tsNow = [[NSDate date] timeIntervalSince1970];
                 NSTimeInterval ts = [infoDic[@"key3"][@"ts"] doubleValue];
-                XCTAssertTrue(ABS(tsNow - ts) <= 0.1);
+                XCTAssertTrue(ABS(tsNow - ts) <= 1);
 
                 [NSThread sleepForTimeInterval:2];
                 
@@ -196,7 +200,7 @@
                     NSDictionary *infoDic = [NSDictionary dictionaryWithContentsOfFile:weakSelf.infoPath];
                     NSTimeInterval tsNow = [[NSDate date] timeIntervalSince1970];
                     NSTimeInterval ts = [infoDic[@"key3"][@"ts"] doubleValue];
-                    XCTAssertTrue(ABS(tsNow - ts) <= 0.1);
+                    XCTAssertTrue(ABS(tsNow - ts) <= 1);
                     
                     [NSThread sleepForTimeInterval:2];
                 }];
@@ -216,7 +220,7 @@
     __weak typeof(self) weakSelf = self;
     dispatch_async(self.storageQueue, ^{
         [self.storage setItem:@"key4" value:longValue callback:^(id result) {
-            
+            __strong typeof(weakSelf) self = weakSelf;
             NSDictionary *dic = [NSDictionary dictionaryWithContentsOfFile:weakSelf.filePath];
             NSDictionary *infoDic = [NSDictionary dictionaryWithContentsOfFile:weakSelf.infoPath];
             NSArray *indexArray = [NSArray arrayWithContentsOfFile:weakSelf.indexPath];
@@ -251,6 +255,7 @@
     dispatch_async(self.storageQueue, ^{
         [self.storage setItem:@"key5" value:@"shortValue5" callback:^(id result) {
             [weakSelf.storage getItem:@"key5" callback:^(id result) {
+                __strong typeof(weakSelf) self = weakSelf;
                 NSString *data = result[@"data"];
                 
                 XCTAssertEqual(result[@"result"], @"success");
@@ -281,6 +286,7 @@
         NSString *longValue = [@"longvalue6" stringByAppendingString:self.longValue];
         [self.storage setItem:@"key6" value:@"shortValue6" callback:^(id result) {
             [weakSelf.storage getItem:@"key6" callback:^(id result) {
+                __strong typeof(weakSelf) self = weakSelf;
                 NSString *value = result[@"data"];
                 XCTAssertEqual(value, @"shortValue6");
                 

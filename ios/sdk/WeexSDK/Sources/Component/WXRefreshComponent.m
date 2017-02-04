@@ -17,6 +17,7 @@
 @property (nonatomic) BOOL displayState;
 @property (nonatomic) BOOL initFinished;
 @property (nonatomic) BOOL refreshEvent;
+@property (nonatomic) BOOL pullingdownEvent;
 
 @property (nonatomic, weak) WXLoadingIndicator *indicator;
 
@@ -28,6 +29,8 @@
 {
     self = [super initWithRef:ref type:type styles:styles attributes:attributes events:events weexInstance:weexInstance];
     if (self) {
+        _refreshEvent = NO;
+        _pullingdownEvent = NO;
         if (attributes[@"display"]) {
             if ([attributes[@"display"] isEqualToString:@"show"]) {
                 _displayState = YES;
@@ -64,8 +67,19 @@
 
 - (void)refresh
 {
-    if (!_refreshEvent) return;
+    if (!_refreshEvent) {
+        return;
+    }
     [self fireEvent:@"refresh" params:nil];
+}
+
+- (void)pullingdown:(NSDictionary*)param
+{
+    if (!_pullingdownEvent) {
+        return ;
+    }
+    
+    [self fireEvent:@"pullingdown" params:param];
 }
 
 - (void)_insertSubcomponent:(WXComponent *)subcomponent atIndex:(NSInteger)index
@@ -97,12 +111,18 @@
     if ([eventName isEqualToString:@"refresh"]) {
         _refreshEvent = YES;
     }
+    if ([eventName isEqualToString:@"pullingdown"]) {
+        _pullingdownEvent = YES;
+    }
 }
 
 - (void)removeEvent:(NSString *)evetName
 {
     if ([evetName isEqualToString:@"refresh"]) {
         _refreshEvent = NO;
+    }
+    if ([evetName isEqualToString:@"pullingdown"]) {
+        _pullingdownEvent = NO;
     }
 }
 
