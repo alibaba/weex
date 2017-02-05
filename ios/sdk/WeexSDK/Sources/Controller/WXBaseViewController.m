@@ -108,15 +108,7 @@
 
 - (void)addEdgePop
 {
-    UIScreenEdgePanGestureRecognizer *edgePanGestureRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(edgePanGesture:)];
-    edgePanGestureRecognizer.delegate = self;
-    edgePanGestureRecognizer.edges = UIRectEdgeLeft;
-    [self.view addGestureRecognizer:edgePanGestureRecognizer];
-}
-
-- (void)edgePanGesture:(UIScreenEdgePanGestureRecognizer*)edgePanGestureRecognizer
-{
-    [self.navigationController popViewControllerAnimated:YES];
+    self.navigationController.interactivePopGestureRecognizer.delegate = self;
 }
 
 #pragma mark- UIGestureRecognizerDelegate
