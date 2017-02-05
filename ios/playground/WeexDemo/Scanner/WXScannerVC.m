@@ -11,9 +11,9 @@
 #import "UIViewController+WXDemoNaviBar.h"
 #import "WXDemoViewController.h"
 #import "WXDebugTool.h"
-#import "WXDevTool.h"
+#import <TBWXDevTool/WXDevTool.h>
 #import <AudioToolbox/AudioToolbox.h>
-#import <WeexSDK/WXSDKEngine.h>
+#import <WeexSDK/WeexSDK.h>
 
 @interface WXScannerVC ()
 
@@ -36,21 +36,23 @@
     self.edgesForExtendedLayout = UIRectEdgeNone;
     [self setupNaviBar];
     
+#if !(TARGET_IPHONE_SIMULATOR)
     self.session = [[AVCaptureSession alloc]init];
     [_session setSessionPreset:AVCaptureSessionPresetHigh];
     AVCaptureDevice * device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     AVCaptureDeviceInput * input = [AVCaptureDeviceInput deviceInputWithDevice:device error:nil];
     AVCaptureMetadataOutput * output = [[AVCaptureMetadataOutput alloc]init];
-    [output setMetadataObjectsDelegate:self queue:dispatch_get_main_queue()];
-    [_session addInput:input];
-    [_session addOutput:output];
-    
-    output.metadataObjectTypes=@[AVMetadataObjectTypeQRCode,AVMetadataObjectTypeEAN13Code, AVMetadataObjectTypeEAN8Code, AVMetadataObjectTypeCode128Code];
+    if (output && input && device) {
+        [output setMetadataObjectsDelegate:self queue:dispatch_get_main_queue()];
+        [_session addInput:input];
+        [_session addOutput:output];
+        output.metadataObjectTypes=@[AVMetadataObjectTypeQRCode,AVMetadataObjectTypeEAN13Code, AVMetadataObjectTypeEAN8Code, AVMetadataObjectTypeCode128Code];
+    }
     
     _captureLayer = [AVCaptureVideoPreviewLayer layerWithSession:_session];
     _captureLayer.videoGravity=AVLayerVideoGravityResizeAspectFill;
     _captureLayer.frame=self.view.layer.bounds;
-    
+#endif
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -81,7 +83,18 @@
 
 - (void)openURL:(NSString*)URL
 {
-    NSURL *url = [NSURL URLWithString:URL];
+    NSString *transformURL = URL;
+    NSArray* elts = [URL componentsSeparatedByString:@"?"];
+    if (elts.count >= 2) {
+        NSArray *urls = [elts.lastObject componentsSeparatedByString:@"="];
+        for (NSString *param in urls) {
+            if ([param isEqualToString:@"_wx_tpl"]) {
+                transformURL = [[urls lastObject]  stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                break;
+            }
+        }
+    }
+    NSURL *url = [NSURL URLWithString:transformURL];
     if ([self remoteDebug:url]) {
         return;
     }
@@ -90,17 +103,43 @@
     controller.url = url;
     controller.source = @"scan";
     
-    if ([url.port integerValue] == 8081) {
-        NSURL *socketURL = [NSURL URLWithString:[NSString stringWithFormat:@"ws://%@:8082", url.host]];
-        controller.hotReloadSocket = [[SRWebSocket alloc] initWithURL:socketURL protocols:@[@"echo-protocol"]];
-        controller.hotReloadSocket.delegate = controller;
-        [controller.hotReloadSocket open];
+    NSMutableDictionary *queryDict = [NSMutableDictionary new];
+    if (WX_SYS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+        NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
+        NSArray *queryItems = [components queryItems];
+    
+        for (NSURLQueryItem *item in queryItems)
+            [queryDict setObject:item.value forKey:item.name];
+    }else {
+        queryDict = [self queryWithURL:url];
     }
+    NSString *wsport = queryDict[@"wsport"] ?: @"8082";
+    NSURL *socketURL = [NSURL URLWithString:[NSString stringWithFormat:@"ws://%@:%@", url.host, wsport]];
+    controller.hotReloadSocket = [[SRWebSocket alloc] initWithURL:socketURL protocols:@[@"echo-protocol"]];
+    controller.hotReloadSocket.delegate = controller;
+    [controller.hotReloadSocket open];
     
     [[self navigationController] pushViewController:controller animated:YES];
 }
 
+- (NSMutableDictionary*)queryWithURL:(NSURL *)url {
+    NSMutableDictionary * queryDic = nil;
+    if (![url query]) {
+        return queryDic;
+    }
+    queryDic = [NSMutableDictionary new];
+    NSArray* components = [[url query] componentsSeparatedByString:@"&"];
+    for (NSUInteger i = 0; i < [components count]; i ++) {
+        NSString * queryParam = [components objectAtIndex:i];
+        NSArray* component = [queryParam componentsSeparatedByString:@"="];
+        [queryDic setValue:component[1] forKey:component[0]];
+    }
+    
+    return  queryDic;
+}
+
 #pragma mark - Replace JS
+
 - (void)jsReplace:(NSURL *)url
 {
     if ([[url host] isEqualToString:@"weex-remote-debugger"]){
@@ -138,7 +177,7 @@
 {
     if ([url.scheme isEqualToString:@"ws"]) {
         [WXSDKEngine connectDebugServer:url.absoluteString];
-        [WXSDKEngine initSDKEnviroment];
+        [WXSDKEngine initSDKEnvironment];
         
         return YES;
     }
@@ -158,16 +197,11 @@
             return YES;
         } else if ([[elts firstObject] isEqualToString:@"_wx_devtool"]) {
             NSString *devToolURL = [[elts lastObject]  stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-            [WXDevTool setDebug:YES];
             [WXDevTool launchDevToolDebugWithUrl:devToolURL];
-
-            [WXSDKEngine restart];
-            
             if ([[[self.navigationController viewControllers] objectAtIndex:0] isKindOfClass:NSClassFromString(@"WXDemoViewController")]) {
                 WXDemoViewController * vc = (WXDemoViewController*)[[self.navigationController viewControllers] objectAtIndex:0];
                 [self.navigationController popToViewController:vc animated:NO];
             }
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshInstance" object:nil];
             
             return YES;
         }

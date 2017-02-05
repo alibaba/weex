@@ -1,6 +1,5 @@
 # Bootstrap
 <span class="weex-version">0.4</span>
-<a href="https://github.com/weexteam/article/issues/29"  class="weex-translate">cn</a>
 
 Besides its default meaning, `<script>` tag supports two more configuration with its `type` property *in the top level component of a page*.
 
@@ -25,7 +24,7 @@ here is an example:
 
 ```html
 <script type="data">
-  module.exports = {
+  {
       title: 'Alibaba',
       date: new Date().toLocaleString()
   }

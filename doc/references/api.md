@@ -1,6 +1,5 @@
 # APIs
 <span class="weex-version">0.4</span>
-<a href="https://github.com/weexteam/article/issues/30"  class="weex-translate">cn</a>
 
 You can access these apis through `this`(Vm) context in script methods.
 
@@ -70,8 +69,8 @@ Get the current global environment variables and configuration information.
     * `platform`*(string)*: the platform, one of `iOS`, `Android` and `Web`.
     * `osVersion`*(string)*: the version of os.
     * `deviceModel`*(string)*: the model of device. **native only**
-    * `deviceWidth`*(number)*: the width of device, default is `750`.
-    * `deviceHeight`*(number)*: the height of device.
+    * `deviceWidth`*(number)*: the width of device, in pixels.
+    * `deviceHeight`*(number)*: the height of device, in pixels.
 
 ## $call(module, method, ...args)
 

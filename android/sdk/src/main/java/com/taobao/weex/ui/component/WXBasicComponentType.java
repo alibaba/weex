@@ -216,6 +216,7 @@ public class WXBasicComponentType {
   public static final String DIV = "div";
   public static final String SCROLLER = "scroller";
   public static final String SLIDER = "slider";
+  public static final String SLIDER_NEIGHBOR = "slider-neighbor";
   public static final String LIST = "list";
   public static final String VLIST = "vlist";
   public static final String HLIST = "hlist";
@@ -225,6 +226,7 @@ public class WXBasicComponentType {
   public static final String INDICATOR = "indicator";
   public static final String VIDEO = "video";
   public static final String INPUT = "input";
+  public static final String TEXTAREA = "textarea";
   public static final String SWITCH = "switch";
   public static final String A = "a";
   public static final String EMBED = "embed";

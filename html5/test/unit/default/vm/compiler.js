@@ -4,9 +4,9 @@ import sinonChai from 'sinon-chai'
 const { expect } = chai
 chai.use(sinonChai)
 
-import * as compiler from '../../../../default/vm/compiler'
-import * as directive from '../../../../default/vm/directive'
-import { initState } from '../../../../default/core/state'
+import * as compiler from '../../../../frameworks/legacy/vm/compiler'
+import * as directive from '../../../../frameworks/legacy/vm/directive'
+import { initState } from '../../../../frameworks/legacy/core/state'
 
 describe.skip('generate workflow', () => {
   let contentIndex = 0
@@ -194,6 +194,28 @@ describe.skip('generate workflow', () => {
     check()
   })
 
+  it('can\'t not use repeat on root element', (done) => {
+    const target = {
+      type: 'a',
+      repeat: () => [1, 2, 3]
+    }
+    const dest = {
+      type: 'document'
+    }
+
+    function check () {
+      expect(vm._compile).callCount(1)
+      expect(vm._createBody).callCount(0)
+      expect(vm._createBlock).callCount(0)
+      expect(vm._mergeContext).callCount(0)
+      expect(vm.constructor).callCount(0)
+      done()
+    }
+
+    vm._compile(target, dest)
+    check()
+  })
+
   it('generate a shown element', (done) => {
     const target = {
       type: 'a',
@@ -209,6 +231,28 @@ describe.skip('generate workflow', () => {
       expect(vm._compile.args[1][1].display).eql(true)
       expect(vm._compile.args[1][2]).eql({ shown: true })
       expect(vm._createBlock).callCount(1)
+      expect(vm._mergeContext).callCount(0)
+      expect(vm.constructor).callCount(0)
+      done()
+    }
+
+    vm._compile(target, dest)
+    check()
+  })
+
+  it('can\'t not use shown on root element', (done) => {
+    const target = {
+      type: 'a',
+      shown: () => true
+    }
+    const dest = {
+      type: 'document'
+    }
+
+    function check () {
+      expect(vm._compile).callCount(1)
+      expect(vm._createBody).callCount(0)
+      expect(vm._createBlock).callCount(0)
       expect(vm._mergeContext).callCount(0)
       expect(vm.constructor).callCount(0)
       done()

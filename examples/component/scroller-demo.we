@@ -1,5 +1,11 @@
 <template>
   <scroller class="list" append＝"tree">
+
+    <refresh class="refresh-view" display="{{refresh_display}}" onrefresh="onrefresh">
+      <loading-indicator class="indicator" ></loading-indicator>
+      <text class="refresh-arrow" style="text-align: center; color:rgb(238, 162, 54)" if="{{(refresh_display==='hide')}}">Pull To Refresh</text>
+    </refresh>
+
     <div class="section" repeat="{{sections}}">
       <div class="header">
         <text class="header-title">{{title}}</text>
@@ -10,7 +16,7 @@
     </div>
 
     <loading class="loading-view" display="{{loading_display}}" onloading="onloading">
-      <loading-indicator style="height:60;width:60" ></loading-indicator>
+      <loading-indicator class="indicator" ></loading-indicator>
     </loading>
 
   </scroller>
@@ -35,16 +41,21 @@
   }
 
   .loading-view {
-    height: 80px;
-    width: 750px;
-    justify-content: center;
+    width: 750;
+    height: 100;
+    display: -ms-flex;
+    display: -webkit-flex;
+    display: flex;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
     align-items: center;
   }
 
   .indicator {
-    height: 40px;
-    width: 40px;
-    color: #45b5f0;
+    height: 60;
+    width: 60;
+    color: #889967;
   }
 
   .header {
@@ -79,12 +90,25 @@
       onrefresh: function(e) {
         var self = this;
         self.refresh_display = 'show';
-        self.refresh_display = 'hide';
+        self.$call('modal', 'toast', {
+          'message': 'onrefresh'
+        });
+        this.$call('timer', 'setTimeout', function() {
+          self.refresh_display = 'hide';
+        }, 3000);
       },
       onloading: function(e) {
         var self = this;
         self.loading_display = 'show';
-        self.loading_display = 'hide';
+        self.$call('modal', 'toast', {
+          'message': 'onloading'
+        });
+        this.$call('timer', 'setTimeout', function() {
+          if (self.sections.length <= 6) {
+            self.sections.push(self.moreSections[self.sections.length - 2]);
+          }
+          self.loading_display = 'hide';
+        }, 3000);
       }
     },
     data: {

@@ -1,0 +1,3 @@
+# do not lint test case source files
+html5/test/case/*/*.source.js
+html5/test/case/*/*.output.js

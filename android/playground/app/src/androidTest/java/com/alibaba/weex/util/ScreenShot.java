@@ -1,11 +1,14 @@
 package com.alibaba.weex.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Environment;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
@@ -28,7 +31,7 @@ import java.util.ArrayList;
  */
 public  class ScreenShot {
 
-    public  static View rootView;
+    public static View rootView;
     public static ArrayList<View> allViews = new ArrayList<View>();
     public static View firstScrollView = null;
     public static View firstListView = null;
@@ -41,7 +44,7 @@ public  class ScreenShot {
             allViews = ViewUtil.getAllChildViews(rootView);
             for (View view:allViews
                  ) {
-                if(view instanceof android.widget.ScrollView){
+                if(view instanceof ScrollView){
                     firstScrollView = view;
                     break;
                 }
@@ -144,6 +147,9 @@ public  class ScreenShot {
     // Gets the Activity screenshots, save to png file
     private static Bitmap takeScreenShot(Activity activity) {
 
+        Context ctx = activity.getApplicationContext();
+        String screenShotDir = getWeexScreenShotDir(ctx);
+
         View view = activity.getWindow().getDecorView();
 
         rootView = view;
@@ -233,7 +239,9 @@ public  class ScreenShot {
     public static void shoot(Activity activity, String pathName) throws IOException {
 
         if(SdCardHelper.isHasSdcard()){
-            ScreenShot.saveToSD(ScreenShot.takeScreenShot(activity), SdCardHelper.SDCardRoot + "WeexTest/ScreenShot/", pathName /*+System.currentTimeMillis()*/ + ".png");
+//            ScreenShot.saveToSD(ScreenShot.takeScreenShot(activity), SdCardHelper.SDCardRoot + "WeexTest/ScreenShot/", pathName /*+System.currentTimeMillis()*/ + ".png");
+            ScreenShot.saveToSD(ScreenShot.takeScreenShot(activity),
+                    getWeexScreenShotDir(activity.getApplicationContext()) + File.separator , pathName /*+System.currentTimeMillis()*/ + ".png");
 
         }
 
@@ -248,12 +256,13 @@ public  class ScreenShot {
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
 
-            File dir = new File(SdCardHelper.SDCardRoot +"WeexTest/ScreenShot/");
+            File dir = new File(getWeexScreenShotDir(activity.getApplicationContext()) );
             if(!dir.exists()){
                 dir.mkdirs();
             }
 
-            File filePic = new File(SdCardHelper.SDCardRoot + "WeexTest/ScreenShot/"+ file + ".png");
+            File filePic = new File(getWeexScreenShotDir(activity.getApplicationContext())  +
+                    File.separator + file + ".png");
             if (!filePic.exists()) {
                 try {
                     filePic.createNewFile();
@@ -311,7 +320,7 @@ public  class ScreenShot {
         Window window = activity.getWindow();
         if (window != null) {
             window.getDecorView().getWindowVisibleDisplayFrame(rect);
-            android.view.View v = window.findViewById(Window.ID_ANDROID_CONTENT);
+            View v = window.findViewById(Window.ID_ANDROID_CONTENT);
 
             android.view.Display display = ((android.view.WindowManager) activity.getSystemService(activity.WINDOW_SERVICE)).getDefaultDisplay();
 
@@ -325,5 +334,39 @@ public  class ScreenShot {
         }
         return result;
 
+    }
+
+    /**
+     * getDiskCacheDir
+     * @param context
+     * @return
+     */
+    @Nullable
+    public static String getWeexScreenShotDir(Context context) {
+        if (context == null) {
+            return null;
+        }
+        String cachePath;
+        String extDir = "" ;
+
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
+                || !Environment.isExternalStorageRemovable()) {
+            cachePath = context.getExternalCacheDir().getPath();
+            extDir  = context.getExternalFilesDir(null).getPath();
+            File screenShotFileDir = new File(extDir, "WeexTest" + File.separator + "ScreenShot");
+            if (!screenShotFileDir.exists()){
+                screenShotFileDir.mkdirs();
+            }
+            return screenShotFileDir.getPath();
+//            File file = new File(context.getExternalFilesDir(null), "DemoFile.jpg");
+
+
+        } else {
+            cachePath = context.getCacheDir().getPath();
+        }
+        Log.e("weex_test","cachePath==" + cachePath);
+        Log.e("weex_test","extDir==" + extDir);
+
+        return cachePath;
     }
 }

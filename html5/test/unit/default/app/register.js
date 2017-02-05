@@ -5,17 +5,18 @@ const { expect } = chai
 chai.use(sinonChai)
 
 import {
-  registerComponent,
-  requireComponent,
-  registerModules,
-  requireModule,
   getModule,
   clearModules,
-  registerMethods
-} from '../../../../default/app/register'
+  initModules,
+  initMethods,
+  requireModule,
+  requireCustomComponent,
+  registerCustomComponent
+} from '../../../../frameworks/legacy/app/register'
 
 function Ctx () {
   this.customComponentMap = {}
+  this.callTasks = sinon.spy()
 }
 
 describe('register', () => {
@@ -23,13 +24,6 @@ describe('register', () => {
 
   before(() => {
     clearModules()
-
-    Ctx.prototype.requireModule = requireModule
-    Ctx.prototype.registerComponent = registerComponent
-    Ctx.prototype.requireComponent = requireComponent
-    Ctx.registerModules = registerModules
-    Ctx.registerMethods = registerMethods
-
     ctx = new Ctx()
   })
 
@@ -42,9 +36,8 @@ describe('register', () => {
       const def = {
         a: 'b'
       }
-
-      ctx.registerComponent('componentA', def)
-      expect(ctx.requireComponent('componentA')).to.deep.equal(def)
+      registerCustomComponent(ctx, 'componentA', def)
+      expect(requireCustomComponent(ctx, 'componentA')).to.deep.equal(def)
     })
 
     it('with a existing name', () => {
@@ -52,7 +45,7 @@ describe('register', () => {
         a: 'b'
       }
       sinon.stub(console, 'error')
-      ctx.registerComponent('componentA', def)
+      registerCustomComponent(ctx, 'componentA', def)
       expect(console.error).callCount(1)
       console.error.restore()
     })
@@ -60,19 +53,17 @@ describe('register', () => {
 
   describe('module', () => {
     it('with a old format', () => {
-      Ctx.registerModules({
+      initModules({
         dom: [
           'createBody',
           'addElement'
         ]
       })
-
-      expect(ctx.requireModule('dom'))
-        .to.have.any.keys('createBody', 'addElement')
+      expect(requireModule(ctx, 'dom')).to.have.any.keys('createBody', 'addElement')
     })
 
     it('with a new format', () => {
-      Ctx.registerModules({
+      initModules({
         dom: [
           {
             name: 'moveElement',
@@ -86,14 +77,12 @@ describe('register', () => {
           }
         ]
       })
-
-      expect(ctx.requireModule('dom'))
-        .to.have.all.keys('createBody', 'addElement', 'moveElement')
-      expect(ctx.requireModule('stream')).to.have.all.keys('sendMtop')
+      expect(requireModule(ctx, 'dom')).to.have.all.keys('createBody', 'addElement', 'moveElement')
+      expect(requireModule(ctx, 'stream')).to.have.all.keys('sendMtop')
     })
 
     it('with a existed module.method', () => {
-      Ctx.registerModules({
+      initModules({
         dom: [
           {
             name: 'moveElement',
@@ -101,8 +90,7 @@ describe('register', () => {
           }
         ]
       }, true)
-
-      Ctx.registerModules({
+      initModules({
         stream: [
           {
             name: 'sendMtop',
@@ -110,7 +98,6 @@ describe('register', () => {
           }
         ]
       })
-
       expect(getModule('dom').moveElement).to.deep.equal({
         name: 'moveElement',
         args: ['string', 'string', 'string']
@@ -121,11 +108,25 @@ describe('register', () => {
         args: ['object', 'function']
       })
     })
+
+    it('run registered module', () => {
+      initModules({
+        event: [{
+          name: 'openURL',
+          args: ['string']
+        }]
+      })
+      const event = requireModule(ctx, 'event')
+      expect(event).to.have.keys('openURL')
+
+      event.openURL('http://test.com')
+      expect(ctx.callTasks.callCount).to.be.equal(1)
+    })
   })
 
   describe('api', () => {
     it('a common api', () => {
-      Ctx.registerMethods({
+      initMethods(Ctx, {
         $test1: function () {
           return {
             ctx: this,
@@ -149,6 +150,32 @@ describe('register', () => {
       expect(ctx.$test2()).to.deep.equal({
         ctx: ctx,
         value: 'test2'
+      })
+    })
+
+    it('override api', () => {
+      initMethods(Ctx, {
+        $override: function () {
+          return {
+            ctx: this,
+            value: 'first'
+          }
+        }
+      })
+
+      initMethods(Ctx, {
+        $override: function () {
+          return {
+            ctx: this,
+            value: 'ignored'
+          }
+        }
+      })
+
+      expect(ctx.$override).to.be.a('Function')
+      expect(ctx.$override()).to.deep.equal({
+        ctx: ctx,
+        value: 'first'
       })
     })
   })

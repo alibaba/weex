@@ -54,3 +54,74 @@ modal.toast({message: 'hello'})
 ```
 
 We will bring a better syntax design in the future.
+
+## iOS text line-height style is abnormal
+
+`line-height` style in text component is different from h5 and Android,  text value will be placed at bottom of line box because of iOS native api. We are trying to optimize it.
+
+## Android only support `overflow:hidden`
+The `overflow` style in android is `hidden` and cannot be changed. This is the result of Android View framework. This only happens on Android, iOS will work as expected.
+
+## Android do not support emoji
+As Android NDK only supports Modified UTF-8, emoji is not support yet. Any attemp to use emoji may cause crash in case of lower than Android 6.0, and unexpected behavior when it is higher than 6.0. Only use Modified UTF-8, **do not** use emoji.
+
+## How to get rid of 750 adaption and calculate width/height in real pixels？
+
+The deviceHeight and deviceWidth got in `this.$getConfig()` is the real device width/height in pixels, not the ones with 750-adapted.
+
+So you can use them to calculate width/height in real pixels.
+
+Suppose you need to display a navigation bar of fixed 88 pixels, the bar's height will be:
+
+```
+var height = 88 * 750 / env.deviceWidth 
+```
+
+
+## How to detect an native module/component supported in JavaScript?
+
+### Detect native module
+
+```javascript
+var xxx = require('@weex-module/xxx')
+if (xxx) {
+  // todo: use this module
+}
+else {
+  // todo: handle the exception
+}
+```
+
+### Detect native component
+
+```html
+<template>
+  <component is="{{type}}"></component>
+</template>
+
+<script>
+  var type = 'xxx'
+  var xxx = require('@weex-component/xxx')
+  if (!xxx) {
+    type = 'div' // downgrade to <div>
+  }
+  module.exports = {
+    data: function () {
+      return {
+        type: type
+      }
+    }
+  }
+</script>
+```
+
+## Transfer data between pages
+
+If you have 2 pages, A and B.
+
+0. A -> B, use [getConfig api](http://alibaba.github.io/weex/doc/references/api.html#getconfig) or [storage module](http://alibaba.github.io/weex/doc/modules/storage.html) to transfer data
+0. B -> A, use [storage module](http://alibaba.github.io/weex/doc/modules/storage.html) to transfer data
+
+
+
+

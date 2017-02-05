@@ -1,5 +1,4 @@
 # Integrate to Android
-<a href="https://github.com/weexteam/article/issues/25"  class="weex-translate">cn</a>
 
 
 When you need to use the new features or to customize specific features, you can rely on the Source SDK for development。
@@ -11,7 +10,7 @@ Assuming you have the Android SDK installed, run `android` to open the Android S
 Make sure you have the following installed:
 
 1. Android SDK version 23 (compileSdkVersion in [`build.gradle`](https://github.com/alibaba/weex/blob/master/android/sdk/build.gradle))
-2. SDK build tools version 23.0.1 (buildToolsVersion in [`build.gradle`](https://github.com/alibaba/weex/blob/master/android/sdk/build.gradle))
+2. SDK build tools version 23.0.2 (buildToolsVersion in [`build.gradle`](https://github.com/alibaba/weex/blob/master/android/sdk/build.gradle))
 3. Android Support Repository >= 17 (for Android Support Library)
 4. Android NDK (download & extraction instructions [here](http://developer.android.com/ndk/downloads/index.html))
 
@@ -40,10 +39,10 @@ First, you need to git clone `weex` from github:
 git clone https://github.com/alibaba/weex.git
 ```
 ##### 2. Build APK
-  ***   1) Android stuido build APK ***
+  ***   1) Android studio build APK ***
  
  ```
-     Step 1: run android stuido 
+     Step 1: run android studio 
      Step 2: open the file of ~/weex/android/playground/build.gradle 
      Step 3: Run the Project and the Apk will auto install in your android device
  ```
@@ -160,16 +159,22 @@ public class WXApplication extends Application {
 Next, 
 
 ```java
+// Create or find RenderContainer view. 
+// Notice: If you create RenderContainer manually, don't forget add it to view tree.
+RenderContainer renderContainer = (RenderContainer)findViewById(R.id.container);
+
 //crate Weex instance
 WXSDKInstance mInstance = new WXSDKInstance(this);
+//set render container
+mInstance.setRenderContainer(renderContainer);
 //set image Adapter
 mInstance.setImgLoaderAdapter(new ImageAdapter(this));
 //register render listener
 mInstance.registerRenderListener(new IWXRenderListener() {
    @Override
-   public void onViewCreated(WXSDKInstance instance, View view) {
-       // addview
-       mViewGroup.addView(view);
+   public void onViewCreated(WXSDKInstance instance, View resultView) {
+       // Notice: If you don't setRenderContainer before render, you need add the resultView to view tree here.
+
    } 
    @Override
    public void onRenderSuccess(WXSDKInstance instance) {

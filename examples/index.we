@@ -8,12 +8,15 @@
     data: {
       root: 'examples',
       items: [
+        // FORMAT:
         // `name` key is the example filename without '.we'
         // Support sub directory, e.g. 'new-fashion/index'
+
+        // common
         {name: 'hello', title: 'Hello World'},
-        {name: 'syntax/index', title: 'More Syntax'},
         {name: 'style/index', title: 'Common Style'},
         {name: 'animation', title: 'Animation'},
+
         // component
         {name: 'component/text-demo', title: 'Text'},
         {name: 'component/image-demo', title: 'Image'},
@@ -22,6 +25,7 @@
         {name: 'component/list/list-basic', title: 'List (Basic)'},
         {name: 'component/list/list-demo', title: 'List (Advanced)'},
         {name: 'component/slider/index', title: 'Slider'},
+        {name: 'component/slider-neighbor/index', title: 'Slider Neighbor'},
         {name: 'component/a-demo', title: 'A'},
         {name: 'component/video-demo', title: 'Video'},
         {name: 'component/countdown-demo', title: 'Countdown'},
@@ -29,13 +33,18 @@
         {name: 'component/web-demo', title: 'Web'},
         {name: 'component/navigator-demo', title: 'Navigator'},
         {name: 'component/tabbar/tabbar-demo', title: 'Tabbar'},
+        {name: 'component/process-bar-demo', title: 'ProcessBar'},
 
         // module
         {name: 'module/instance-api', title: 'Instance API'},
         {name: 'module/modal', title: 'Modal'},
         {name: 'module/stream-demo', title: 'Stream'},
+        {name: 'module/websocket-demo', title: 'WebSocket'},
+        {name: 'module/storage-demo',title:'Storage'},
+        {name: 'module/picker-demo',title:'Picker'},
+        {name: 'module/componentRect',title:'componentRect'},
         {name: 'module/clipboard', title: 'Clipboard'},
-        
+
         // showcase
         {name: 'showcase/new-fashion/index', title: 'Activity'},
         {name: 'showcase/calculator', title: 'Calculator'},
@@ -46,3 +55,4 @@
     }
   }
 </script>
+

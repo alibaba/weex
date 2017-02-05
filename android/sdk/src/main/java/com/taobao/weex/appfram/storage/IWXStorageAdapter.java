@@ -210,7 +210,7 @@ import java.util.Map;
  * interface for {@link WXStorageModule} class.
  * this interface works as an adapter for different storage strategy.
  * the default is use {@link android.database.sqlite.SQLiteDatabase} to store k-v pairs.
- * You can call {@link com.taobao.weex.WXSDKEngine#setIWXStorageAdapter(IWXStorageAdapter)} to inject your own
+ * You can call {@link com.taobao.weex.InitConfig.Builder#setStorageAdapter(IWXStorageAdapter)} to inject your own
  * storage implementation.
  * */
 public interface IWXStorageAdapter {
@@ -223,6 +223,10 @@ public interface IWXStorageAdapter {
     void length(OnResultReceivedListener listener);
 
     void getAllKeys(OnResultReceivedListener listener);
+
+    void setItemPersistent(String key, String value, OnResultReceivedListener listener);
+
+    void close();
 
     /**
      * the callback of storage operation.

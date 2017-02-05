@@ -21,11 +21,11 @@
 /**
  * @abstract initialize the RootViewController with bundle url.
  *
- * @param soureURL. The bundle url which can be render to a weex view.
+ * @param sourceURL. The bundle url which can be render to a weex view.
  *
  * @return a object the class of WXRootViewController.
  *
- * @discussion initialize this controller in function 'application:didFinishLaunchingWithOptions', and make it as rootViewContoller of window. In the
+ * @discussion initialize this controller in function 'application:didFinishLaunchingWithOptions', and make it as rootViewController of window. In the
  * weex application, all page content can be managed by the navigation, such as push or pop.
  */
 - (id)initWithSourceURL:(NSURL *)sourceURL;

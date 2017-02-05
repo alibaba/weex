@@ -1,6 +1,5 @@
 ## Integrate Weex HTML5 to your project
 <span class="weex-version">0.4</span>
-<a href="https://github.com/weexteam/article/issues/10"  class="weex-translate">cn</a>
 
 ### Intro
 

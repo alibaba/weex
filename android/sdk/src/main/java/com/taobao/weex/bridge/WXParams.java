@@ -127,6 +127,8 @@
  */
 package com.taobao.weex.bridge;
 
+import java.util.Map;
+
 public class WXParams {
 
   private String platform;
@@ -139,6 +141,16 @@ public class WXParams {
   private String deviceHeight;
   private String shouldInfoCollect;
   private String logLevel;
+
+  private Map<String, String> options;
+
+  public Object getOptions() {
+    return options;
+  }
+
+  public void setOptions(Map<String, String> options) {
+    this.options = options;
+  }
 
   public String getShouldInfoCollect() {
     return shouldInfoCollect;
@@ -200,6 +212,13 @@ public class WXParams {
     return deviceWidth;
   }
 
+
+  /**
+   * Device should not be set manually, instead it suppose to represent the width of device and
+   * initialized automatically.
+   * @param deviceWidth
+   */
+  @Deprecated
   public void setDeviceWidth(String deviceWidth) {
     this.deviceWidth = deviceWidth;
   }

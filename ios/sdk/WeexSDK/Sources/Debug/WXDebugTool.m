@@ -13,6 +13,9 @@
 #import "WXUtility.h"
 #import "WXSDKManager.h"
 #import "WXSDKEngine.h"
+#import "WXResourceRequest.h"
+#import "WXResourceResponse.h"
+#import "WXResourceLoader.h"
 
 static BOOL WXIsDebug;
 static BOOL WXIsDevToolDebug;
@@ -36,10 +39,7 @@ static NSString* WXDebugrepJSFramework;
 
 + (BOOL)isDebug
 {
-#ifdef DEBUG
-    return YES;
-#endif
-    return NO;
+    return WXIsDebug;
 }
 
 + (void)setDevToolDebug:(BOOL)isDevToolDebug {
@@ -71,8 +71,8 @@ static NSString* WXDebugrepJSFramework;
     void(^scriptLoadFinish)(NSString*, NSString*) = ^(NSString* key, NSString* script){
         if ([key isEqualToString:@"jsframework"]) {
             WXDebugrepJSFramework = script;
-            [[WXSDKManager bridgeMgr] unload];
-            [WXSDKEngine initSDKEnviroment:script];
+            [WXSDKManager unload];
+            [WXSDKEngine initSDKEnvironment:script];
         }else {
             WXDebugrepBundleJS = script;
         }
@@ -83,7 +83,7 @@ static NSString* WXDebugrepJSFramework;
             NSString *path = [url path];
             NSData *scriptData = [[NSFileManager defaultManager] contentsAtPath:path];
             NSString *script = [[NSString alloc] initWithData:scriptData encoding:NSUTF8StringEncoding];
-            if (!script) {
+            if (!script || script.length <= 0) {
                 NSString *errorDesc = [NSString stringWithFormat:@"File read error at url: %@", url];
                 WXLogError(@"%@", errorDesc);
             }
@@ -91,33 +91,24 @@ static NSString* WXDebugrepJSFramework;
         });
     } else {
         // HTTP/HTTPS URL
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-        [request setValue:[WXUtility userAgent] forHTTPHeaderField:@"User-Agent"];
+        WXResourceRequest *request = [WXResourceRequest requestWithURL:url resourceType:WXResourceTypeMainBundle referrer:nil cachePolicy:NSURLRequestUseProtocolCachePolicy];
+        request.userAgent = [WXUtility userAgent];
+        WXResourceLoader *loader = [[WXResourceLoader alloc] initWithRequest:request];
         
-        id<WXNetworkProtocol> networkHandler = [WXHandlerFactory handlerForProtocol:@protocol(WXNetworkProtocol)];
+        loader.onFinished = ^(const WXResourceResponse * response, NSData *data) {
+            if ([response isKindOfClass:[NSHTTPURLResponse class]] && ((NSHTTPURLResponse *)response).statusCode != 200) {
+                __unused NSError *error = [NSError errorWithDomain:WX_ERROR_DOMAIN
+                                                              code:((NSHTTPURLResponse *)response).statusCode
+                                                          userInfo:@{@"message":@"status code error."}];
+                
+                return ;
+            }
+            
+            NSString * script = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            scriptLoadFinish(key, script);
+        };
         
-        __block NSURLResponse *urlResponse;
-        [networkHandler sendRequest:request
-                    withSendingData:^(int64_t bytesSent, int64_t totalBytes) {}
-                       withResponse:^(NSURLResponse *response) {
-                           urlResponse = response;
-                       }
-                    withReceiveData:^(NSData *data) {}
-                    withCompeletion:^(NSData *totalData, NSError *error) {
-                        if (error) {
-                            
-                        } else {
-                            if ([urlResponse isKindOfClass:[NSHTTPURLResponse class]] && ((NSHTTPURLResponse *)urlResponse).statusCode != 200) {
-                                __unused NSError *error = [NSError errorWithDomain:WX_ERROR_DOMAIN
-                                                                     code:((NSHTTPURLResponse *)urlResponse).statusCode
-                                                                 userInfo:@{@"message":@"status code error."}];
-                                
-                                return ;
-                            }
-                            NSString * script = [[NSString alloc] initWithData:totalData encoding:NSUTF8StringEncoding];
-                            scriptLoadFinish(key, script);
-                        }
-                    }];
+        [loader start];
     }
 }
 

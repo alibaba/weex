@@ -12,10 +12,12 @@
 #import "WXComponent_internal.h"
 #import "NSArray+Weex.h"
 #import "WXAssert.h"
+#import "WXMonitor.h"
 #import "WXUtility.h"
 #import "NSObject+WXSwizzle.h"
 #import "WXSDKInstance_private.h"
-
+#import "WXRefreshComponent.h"
+#import "WXLoadingComponent.h"
 
 @interface WXTableView : UITableView
 
@@ -32,6 +34,20 @@
 {
     [super layoutSubviews];
     [self.wx_component layoutDidFinish];
+}
+
+- (void)setContentOffset:(CGPoint)contentOffset
+{
+    // FIXME: side effect caused by hooking _adjustContentOffsetIfNecessary.
+    // When UITableView is pulled down and finger releases，contentOffset will be set from -xxxx to about -0.5(greater than -0.5), then contentOffset will be reset to zero by calling _adjustContentOffsetIfNecessary.
+    // So hooking _adjustContentOffsetIfNecessary will always cause remaining 1px space between list's top and navigator.
+    // Demo: http://dotwe.org/895630945793a9a044e49abe39cbb77f
+    // Have to reset contentOffset to zero manually here.
+    if (fabs(contentOffset.y) < 0.5) {
+        contentOffset.y = 0;
+    }
+    
+    [super setContentOffset:contentOffset];
 }
 
 @end
@@ -59,6 +75,8 @@
 
 - (void)_frameDidCalculated:(BOOL)isChanged
 {
+    [super _frameDidCalculated:isChanged];
+    
     if (isChanged) {
         [self.list headerDidLayout:self];
     }
@@ -183,16 +201,61 @@
     // Do Nothing
 }
 
+- (void)_handleFirstScreenTime
+{
+    // Do Nothing， firstScreenTime is set by cellDidRendered:
+}
+
+- (void)scrollToComponent:(WXComponent *)component withOffset:(CGFloat)offset
+{
+    CGPoint contentOffset = _tableView.contentOffset;
+    CGFloat contentOffsetY = 0;
+    
+    WXComponent *cellComponent = component;
+    while (cellComponent) {
+        if ([cellComponent isKindOfClass:[WXCellComponent class]]) {
+            break;
+        }
+        contentOffsetY += cellComponent.calculatedFrame.origin.y;
+        cellComponent = cellComponent.supercomponent;
+    }
+    
+    NSIndexPath *toIndexPath = [self indexPathForCell:(WXCellComponent*)cellComponent sections:_completedSections];
+    CGRect cellRect = [_tableView rectForRowAtIndexPath:toIndexPath];
+    contentOffsetY += cellRect.origin.y;
+    contentOffsetY += offset * self.weexInstance.pixelScaleFactor;
+    
+    if (contentOffsetY > _tableView.contentSize.height - _tableView.frame.size.height) {
+        contentOffset.y = _tableView.contentSize.height - _tableView.frame.size.height;
+    } else {
+        contentOffset.y = contentOffsetY;
+    }
+    
+    [_tableView setContentOffset:contentOffset animated:YES];
+}
+
+
 #pragma mark - Inheritance
 
 - (void)_insertSubcomponent:(WXComponent *)subcomponent atIndex:(NSInteger)index
 {
-    [super _insertSubcomponent:subcomponent atIndex:index];
-    
     if ([subcomponent isKindOfClass:[WXCellComponent class]]) {
         ((WXCellComponent *)subcomponent).list = self;
     } else if ([subcomponent isKindOfClass:[WXHeaderComponent class]]) {
         ((WXHeaderComponent *)subcomponent).list = self;
+    } else if (![subcomponent isKindOfClass:[WXRefreshComponent class]]
+               && ![subcomponent isKindOfClass:[WXLoadingComponent class]]
+               && subcomponent->_positionType != WXPositionTypeFixed) {
+        WXLogError(@"list only support cell/header/refresh/loading/fixed-component as child.");
+        return;
+    }
+    
+    [super _insertSubcomponent:subcomponent atIndex:index];
+    
+    if (![subcomponent isKindOfClass:[WXHeaderComponent class]]
+        && ![subcomponent isKindOfClass:[WXCellComponent class]]) {
+        // Don't insert section if subcomponent is not header or cell
+        return;
     }
     
     NSIndexPath *indexPath = [self indexPathForSubIndex:index];
@@ -209,7 +272,7 @@
         
         [self.weexInstance.componentManager _addUITask:^{
             [_completedSections addObject:completedSection];
-            WXLogDebug(@"Insert section:%ld",  [_completedSections indexOfObject:completedSection]);
+            WXLogDebug(@"Insert section:%ld",  (unsigned long)[_completedSections indexOfObject:completedSection]);
             [UIView performWithoutAnimation:^{
                 [_tableView insertSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
             }];
@@ -232,20 +295,6 @@
         // trigger section header update
         [_tableView beginUpdates];
         [_tableView endUpdates];
-        
-        __block BOOL needCompute;
-        [_completedSections enumerateObjectsUsingBlock:^(WXSection * _Nonnull section, NSUInteger sectionIndex, BOOL * _Nonnull stop) {
-            if (header == section.header) {
-                needCompute = YES ;
-            } else if (!needCompute) {
-                return ;
-            }
-            
-            [section.rows enumerateObjectsUsingBlock:^(WXCellComponent * _Nonnull cell, NSUInteger row, BOOL * _Nonnull stop) {
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:sectionIndex];
-                [self _recomputeCellAbsolutePostion:cell forIndexPath:indexPath];
-            }];
-        }];
     }];
     
 }
@@ -262,9 +311,15 @@
         [self removeCellForIndexPath:indexPath withSections:_completedSections];
         
         WXLogDebug(@"Delete cell:%@ at indexPath:%@", cell.ref, indexPath);
-        [UIView performWithoutAnimation:^{
-            [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
-        }];
+        if (cell.deleteAnimation == UITableViewRowAnimationNone) {
+            [UIView performWithoutAnimation:^{
+                [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+                [self handleAppear];
+            }];
+        } else {
+            [_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:cell.deleteAnimation];
+            [self handleAppear];
+        }
     }];
 }
 
@@ -292,31 +347,33 @@
         if (!isReload) {
             WXLogDebug(@"Insert cell:%@ at indexPath:%@", cell.ref, indexPath);
             _completedSections = completedSections;
-            [UIView performWithoutAnimation:^{
-                [_tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
-            }];
+            if (cell.insertAnimation == UITableViewRowAnimationNone) {
+                [UIView performWithoutAnimation:^{
+                    [_tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+                    [self handleAppear];
+                }];
+            } else {
+                [_tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:cell.insertAnimation];
+                [self handleAppear];
+            }
         } else {
             WXLogInfo(@"Reload cell:%@ at indexPath:%@", cell.ref, indexPath);
             [UIView performWithoutAnimation:^{
                 [_tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+                [self handleAppear];
             }];
         }
-        
-        [self _recomputeCellAbsolutePostion:cell forIndexPath:indexPath];
     }];
-}
-
-- (void)_recomputeCellAbsolutePostion:(WXCellComponent *)cell forIndexPath:(NSIndexPath *)indexPath
-{
-    CGRect cellRect = [_tableView rectForRowAtIndexPath:indexPath];
-    cell.absolutePosition = CGPointMake(self.absolutePosition.x + cellRect.origin.x,
-                                        self.absolutePosition.y + cellRect.origin.y);
-    [cell _fillAbsolutePositions];
 }
 
 - (void)cellDidRendered:(WXCellComponent *)cell
 {
     WXAssertMainThread();
+    
+    if (WX_MONITOR_INSTANCE_PERF_IS_RECORDED(WXPTFirstScreenRender, self.weexInstance) && !self.weexInstance.onRenderProgress) {
+        // improve performance
+        return;
+    }
     
     NSIndexPath *indexPath = [self indexPathForCell:cell sections:_completedSections];
     if (!indexPath || indexPath.section >= [_tableView numberOfSections] ||
@@ -327,16 +384,11 @@
     
     CGRect cellRect = [_tableView rectForRowAtIndexPath:indexPath];
     if (cellRect.origin.y + cellRect.size.height >= _tableView.frame.size.height) {
-        if (self.weexInstance.screenRenderTime == 0) {
-            self.weexInstance.screenRenderTime = [[NSDate new] timeIntervalSinceDate:self.weexInstance.renderStartDate];
-        }
+        WX_MONITOR_INSTANCE_PERF_END(WXPTFirstScreenRender, self.weexInstance);
     }
     
     if (self.weexInstance.onRenderProgress) {
-        CGRect renderRect = CGRectMake(self.absolutePosition.x + cellRect.origin.x,
-                                       self.absolutePosition.y + cellRect.origin.y,
-                                       cellRect.size.width, cellRect.size.height);
-        
+        CGRect renderRect = [_tableView convertRect:cellRect toView:self.weexInstance.rootView];
         self.weexInstance.onRenderProgress(renderRect);
     }
 
@@ -356,6 +408,7 @@
         [self insertCell:cell forIndexPath:toIndexPath withSections:_completedSections];
         [UIView performWithoutAnimation:^{
             [_tableView moveRowAtIndexPath:fromIndexPath toIndexPath:toIndexPath];
+            [self handleAppear];
         }];
     }];
 }
@@ -378,11 +431,14 @@
 
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    WXLogDebug(@"Did end displaying cell:%@, at index path:%@", cell, indexPath);
     NSArray *visibleIndexPaths = [tableView indexPathsForVisibleRows];
     if (![visibleIndexPaths containsObject:indexPath]) {
-        WXCellComponent *cell = [self cellForIndexPath:indexPath];
-        // Must invoke synchronously otherwise it will remove the view just added.
-        [cell _unloadView];
+        if (cell.contentView.subviews.count > 0) {
+            UIView *wxCellView = [cell.contentView.subviews firstObject];
+            // Must invoke synchronously otherwise it will remove the view just added.
+            [wxCellView.wx_component _unloadViewWithReusing:YES];
+        }
     }
 }
 
@@ -405,7 +461,7 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     WXHeaderComponent *header = ((WXSection *)_completedSections[section]).header;
-    WXLogDebug(@"header view for section %ld:%@", section, header.view);
+    WXLogDebug(@"header view for section %ld:%@", (long)section, header.view);
     return header.view;
 }
 
@@ -488,19 +544,24 @@
     return rowNumber;
 }
 
+- (void)resetLoadmore{
+    [super resetLoadmore];
+    _previousLoadMoreRowNumber=0;
+}
+
 #pragma mark Private
 
 - (WXCellComponent *)cellForIndexPath:(NSIndexPath *)indexPath
 {
     WXSection *section = [_completedSections wx_safeObjectAtIndex:indexPath.section];
     if (!section) {
-        WXLogError(@"No section found for num:%ld, completed sections:%ld", indexPath.section, _completedSections.count);
+        WXLogError(@"No section found for num:%ld, completed sections:%ld", (long)indexPath.section, (unsigned long)_completedSections.count);
         return nil;
     }
     
     WXCellComponent *cell = [section.rows wx_safeObjectAtIndex:indexPath.row];
     if (!cell) {
-        WXLogError(@"No cell found for num:%ld, completed rows:%ld", indexPath.row, section.rows.count);
+        WXLogError(@"No cell found for num:%ld, completed rows:%ld", (long)indexPath.row, (unsigned long)section.rows.count);
         return nil;
     }
     
@@ -543,7 +604,10 @@
     NSInteger row = -1;
     WXComponent *firstComponent;
     for (int i = 0; i <= index; i++) {
-        WXComponent* component = self.subcomponents[i];
+        WXComponent* component = [self.subcomponents wx_safeObjectAtIndex:i];
+        if (!component) {
+            continue;
+        }
         if (([component isKindOfClass:[WXHeaderComponent class]]
             || [component isKindOfClass:[WXCellComponent class]])
             && !firstComponent) {
@@ -567,7 +631,11 @@
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        //(ง •̀_•́)ง┻━┻ Stupid scoll view, always reset content offset to zero after insert cells, any other more elegant way?
+        // FIXME:(ง •̀_•́)ง┻━┻ Stupid scoll view, always reset content offset to zero by calling _adjustContentOffsetIfNecessary after insert cells.
+        // So if you pull down list while list is rendering, the list will be flickering.
+        // Demo:    
+        // Have to hook _adjustContentOffsetIfNecessary here.
+        // Any other more elegant way?
         NSString *a = @"ntOffsetIfNe";
         NSString *b = @"adjustConte";
         

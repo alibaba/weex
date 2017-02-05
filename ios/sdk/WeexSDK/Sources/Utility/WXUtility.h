@@ -8,12 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import <CommonCrypto/CommonCrypto.h>
 #import "WXDefine.h"
 #import "WXType.h"
 #import "WXLog.h"
 
-// The default screen width which helps us to caculate the real size or scale in different devices.
+// The default screen width which helps us to calculate the real size or scale in different devices.
 static const CGFloat WXDefaultScreenWidth = 750.0;
 
 #define WX_ENUMBER_CASE(_invoke, idx, code, obj, _type, op, _flist) \
@@ -83,6 +82,12 @@ extern void WXPerformBlockOnMainThread( void (^ _Nonnull block)());
 extern void WXPerformBlockSyncOnMainThread( void (^ _Nonnull block)());
 
 /**
+ * @abstract execute action block on the specific thread.
+ *
+ */
+extern void WXPerformBlockOnThread(void (^ _Nonnull block)(), NSThread *_Nonnull thread);
+
+/**
  * @abstract swizzling methods.
  *
  */
@@ -94,10 +99,12 @@ extern _Nonnull SEL WXSwizzledSelectorForSelector(_Nonnull SEL selector);
 
 @interface WXUtility : NSObject
 
++ (void)performBlock:(void (^_Nonnull)())block onThread:(NSThread *_Nonnull)thread;
+
 + (void)setNotStat:(BOOL)notStat;
 + (BOOL)notStat;
 /**
- * @abstract Returns the environment of current application, you can get some nessary properties such as appVersion、sdkVersion、appName etc.
+ * @abstract Returns the environment of current application, you can get some necessary properties such as appVersion、sdkVersion、appName etc.
  *
  * @return A dictionary object which contains these properties.
  *
@@ -115,7 +122,7 @@ extern _Nonnull SEL WXSwizzledSelectorForSelector(_Nonnull SEL selector);
 + (NSString *_Nonnull)userAgent;
 
 /**
- * @abstract JSON Decode Mehthod
+ * @abstract JSON Decode Method
  *
  * @param JSON String.
  *
@@ -127,7 +134,7 @@ extern _Nonnull SEL WXSwizzledSelectorForSelector(_Nonnull SEL selector);
 #define WXDecodeJson(json)  [WXUtility objectFromJSON:json]
 
 /**
- * @abstract JSON Encode Mehthod
+ * @abstract JSON Encode Method
  *
  * @param JSON Object.
  *
@@ -136,11 +143,22 @@ extern _Nonnull SEL WXSwizzledSelectorForSelector(_Nonnull SEL selector);
  */
 + (NSString * _Nullable)JSONString:(id _Nonnull)object;
 
-
 #define WXEncodeJson(obj)  [WXUtility JSONString:obj]
 
 /**
- * @abstract JSON Object Copy Mehthod
+ * @abstract Returns a Foundation object from given JSON data. A Foundation object from the JSON data in data, or nil if an error occurs.
+ *
+ * @param data A data object containing JSON data.
+ * @param error If an error occurs, upon return contains an NSError object that describes the problem.
+ *
+ * @return A Foundation object from the JSON data in data, or nil if an error occurs.
+ *
+ */
++ (id _Nullable)JSONObject:(NSData * _Nonnull)data error:(NSError * __nullable * __nullable)error;
+
+#define WXJSONObjectFromData(data) [WXUtility JSONObject:data error:nil]
+/**
+ * @abstract JSON Object Copy Method
  *
  * @param JSON Object.
  *
@@ -184,7 +202,7 @@ extern _Nonnull SEL WXSwizzledSelectorForSelector(_Nonnull SEL selector);
  *
  * @param textSize.
  *
- * @param textWeight. The type of WXTextWeight (Normal or Bold).
+ * @param textWeight.
  *
  * @param textStyle. The type of WXTextStyle (Normal or Italic).
  *
@@ -193,27 +211,31 @@ extern _Nonnull SEL WXSwizzledSelectorForSelector(_Nonnull SEL selector);
  * @return A font object according to the above params.
  *
  */
-+ (UIFont *_Nonnull)fontWithSize:(CGFloat)size textWeight:(WXTextWeight)textWeight textStyle:(WXTextStyle)textStyle fontFamily:(NSString *_Nullable)fontFamily;
++ (UIFont *_Nonnull)fontWithSize:(CGFloat)size textWeight:(CGFloat)textWeight textStyle:(WXTextStyle)textStyle fontFamily:(NSString *_Nullable)fontFamily scaleFactor:(CGFloat)scaleFactor;
+
+/**
+ * @abstract download remote font from specified url
+ * @param url for remote font
+ *
+ */
++ (void)getIconfont:(NSURL * _Nonnull)fontURL completion:( void(^ _Nullable )(NSURL * _Nonnull url, NSError * _Nullable error)) completionBlock;
+
+/**
+ * @abstract Returns the main screen's size when the device is in portrait mode,.
+ */
++ (CGSize)portraitScreenSize;
+
+/**
+ * @abstract Returns the default pixel scale factor
+ * @discussion If orientation is equal to landscape, the value is caculated as follows: WXScreenSize().height / WXDefaultScreenWidth, otherwise, WXScreenSize().width / WXDefaultScreenWidth.
+ */
++ (CGFloat)defaultPixelScaleFactor;
 
 /**
  * @abstract Returns the scale of the main screen.
  *
  */
 CGFloat WXScreenScale();
-
-/**
- * @abstract Returns the metrics of the main screen.
- *
- */
-CGSize WXScreenSize();
-
-/**
- * @abstract Returns the resize radio of the main screen. 
- *
- * @discussion If orientation is equal to landscape, the value is caculated as follows: WXScreenSize().height / WXDefaultScreenWidth, otherwise, WXScreenSize().width / WXDefaultScreenWidth.
- *
- */
-CGFloat WXScreenResizeRadio(void);
 
 /**
  * @abstract Returns a Round float coordinates to the main screen pixel.
@@ -234,23 +256,11 @@ CGFloat WXFloorPixelValue(CGFloat value);
 CGFloat WXCeilPixelValue(CGFloat value);
 
 /**
- *  @abstract Returns a resized pixel which is caculated according to the WXScreenResizeRadio.
+ *  @abstract check whether the file is exist
  *
  */
-CGFloat WXPixelResize(CGFloat value);
 
-/**
- *  @abstract Returns a resized frame which is caculated according to the WXScreenResizeRadio.
- *
- */
-CGRect WXPixelFrameResize(CGRect value);
-
-/**
- *  @abstract Returns a resized point which is caculated according to the WXScreenResizeRadio.
- *
- */
-CGPoint WXPixelPointResize(CGPoint value);
-
++ (BOOL)isFileExist:(NSString * _Nonnull)filePath;
 /**
  *  @abstract Returns the document directory path.
  *
@@ -273,7 +283,7 @@ CGPoint WXPixelPointResize(CGPoint value);
  */
 + (NSString *_Nonnull)libraryDirectory;
 
-#define WXLibararyPath  [WXUtility libraryDirectory]
+#define WXLibraryPath  [WXUtility libraryDirectory]
 
 /**
  *  @abstract Returns the global cache whose size is 5M.
@@ -296,4 +306,53 @@ CGPoint WXPixelPointResize(CGPoint value);
  *
  */
 + (NSString *_Nullable)md5:(NSString *_Nullable)string;
+
+/**
+ *  @abstract Returns Creates a Universally Unique Identifier (UUID) string.
+ *
+ */
++ (NSString *_Nullable)uuidString;
+
+/**
+ *  @abstract convert date string with formatter yyyy-MM-dd to date.
+ *
+ */
++ (NSDate *_Nullable)dateStringToDate:(NSString *_Nullable)dateString;
+
+/**
+ *  @abstract convert time string with formatter HH:mm to date.
+ *
+ */
++ (NSDate *_Nullable)timeStringToDate:(NSString *_Nullable)timeString;
+
+/**
+ *  @abstract convert date to date string with formatter yyyy-MM-dd .
+ *
+ */
++ (NSString *_Nullable)dateToString:(NSDate *_Nullable)date;
+
+/**
+ *  @abstract convert date to time string with formatter HH:mm .
+ *
+ */
++ (NSString *_Nullable)timeToString:(NSDate *_Nullable)date;
+
+/**
+ *  @abstract get the repeat substring number of string.
+ *
+ */
++ (NSUInteger)getSubStringNumber:(NSString *_Nullable)string subString:(NSString *_Nullable)subString;
+
+/**
+ *  @abstract Returns a resized pixel which is calculated according to the WXScreenResizeRadio.
+ *
+ */
+CGFloat WXPixelScale(CGFloat value, CGFloat scaleFactor);
+
+CGFloat WXScreenResizeRadio(void) DEPRECATED_MSG_ATTRIBUTE("Use [WXUtility defaultPixelScaleFactor] instead");
+CGFloat WXPixelResize(CGFloat value) DEPRECATED_MSG_ATTRIBUTE("Use WXPixelScale Instead");
+CGRect WXPixelFrameResize(CGRect value) DEPRECATED_MSG_ATTRIBUTE("Use WXPixelScale Instead");
+CGPoint WXPixelPointResize(CGPoint value) DEPRECATED_MSG_ATTRIBUTE("Use WXPixelScale Instead");
++ (UIFont  * _Nullable )fontWithSize:(CGFloat)size textWeight:(CGFloat)textWeight textStyle:(WXTextStyle)textStyle fontFamily:(NSString * _Nullable)fontFamily DEPRECATED_MSG_ATTRIBUTE("Use +[WXUtility fontWithSize:textWeight:textStyle:fontFamily:scaleFactor:]");
+
 @end

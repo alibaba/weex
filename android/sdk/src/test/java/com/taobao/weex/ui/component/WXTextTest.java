@@ -207,12 +207,14 @@ package com.taobao.weex.ui.component;
 import com.taobao.weappplus_sdk.BuildConfig;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.common.WXDomPropConstant;
+import com.taobao.weex.common.Constants;
+import com.taobao.weex.dom.TestDomObject;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.WXTextDomObject;
 import com.taobao.weex.dom.flex.Spacing;
 
 import com.taobao.weex.ui.SimpleComponentHolder;
+import org.apache.tools.ant.taskdefs.EchoXML;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -246,15 +248,15 @@ public class WXTextTest {
         WXSDKInstance instance = Mockito.mock(WXSDKInstance.class);
         Mockito.when(instance.getContext()).thenReturn(RuntimeEnvironment.application);
 
-        mParentDomObj = Mockito.mock(WXDomObject.class);
+        mParentDomObj = Mockito.spy(new WXDomObject());
         Mockito.when(mParentDomObj.getPadding()).thenReturn(new Spacing());
         Mockito.when(mParentDomObj.getBorder()).thenReturn(new Spacing());
         Mockito.when(mParentDomObj.clone()).thenReturn(mParentDomObj);
-        mParentDomObj.ref = "_root";
+        TestDomObject.setRef(mParentDomObj,WXDomObject.ROOT);
 
-        mDomObject = Mockito.mock(WXTextDomObject.class);
-        mDomObject.ref = "1";
-        mDomObject.addEvent(WXEventType.CLICK);
+        mDomObject = Mockito.spy(new WXTextDomObject());
+        TestDomObject.setRef(mDomObject,"1");
+        mDomObject.addEvent(Constants.Event.CLICK);
         Mockito.when(mDomObject.clone()).thenReturn(mDomObject);
         Mockito.when(mDomObject.getPadding()).thenReturn(new Spacing());
         Mockito.when(mDomObject.getBorder()).thenReturn(new Spacing());
@@ -262,36 +264,50 @@ public class WXTextTest {
         Mockito.when(mDomObject.getLayoutWidth()).thenReturn(100f);
         Mockito.when(mDomObject.getLayoutHeight()).thenReturn(100f);
 
-        mParent = new WXDiv(instance, mParentDomObj, null, false);
-        mParent.createView(null, -1);
-        mWXText = new WXText(instance, mDomObject, mParent, false);
+        mParent = new WXDiv(instance, mParentDomObj, null);
+        mParent.createView();
+        mWXText = new WXText(instance, mDomObject, mParent);
         mWXText.bindHolder(new SimpleComponentHolder(WXText.class));
         assertNotNull(instance.getContext());
     }
 
     @Test
+    public void testSetProperties() throws Exception {
+        mWXText.setProperty(Constants.Name.LINES,null);
+        mWXText.setProperty(Constants.Name.FONT_SIZE,null);
+        mWXText.setProperty(Constants.Name.FONT_WEIGHT,null);
+        mWXText.setProperty(Constants.Name.FONT_STYLE,null);
+        mWXText.setProperty(Constants.Name.COLOR,null);
+        mWXText.setProperty(Constants.Name.TEXT_DECORATION,null);
+        mWXText.setProperty(Constants.Name.FONT_FAMILY,null);
+        mWXText.setProperty(Constants.Name.TEXT_ALIGN,null);
+        mWXText.setProperty(Constants.Name.TEXT_OVERFLOW,null);
+        mWXText.setProperty(Constants.Name.LINE_HEIGHT,null);
+    }
+
+    @Test
     public void testCreateView(){
-        mWXText.createView(mParent, -1);
-        assertNotNull(mWXText.getView());
+        mWXText.createView();
+        assertNotNull(mWXText.getHostView());
     }
 
     @Test
     public void testSetLayout(){
         testCreateView();
         mWXText.setLayout(mDomObject);
-        assertNotNull(mWXText.getView().getLayoutParams());
-        assertEquals(100, mWXText.getView().getLayoutParams().height);
-        assertEquals(100, mWXText.getView().getLayoutParams().width);
+        assertNotNull(mWXText.getHostView().getLayoutParams());
+        assertEquals(100, mWXText.getHostView().getLayoutParams().height);
+        assertEquals(100, mWXText.getHostView().getLayoutParams().width);
     }
 
     @Test
     public void testSetPadding(){
         testCreateView();
         mWXText.setPadding(mDomObject.getPadding(), mDomObject.getBorder());
-        assertEquals(0, mWXText.getView().getPaddingLeft());
-        assertEquals(0, mWXText.getView().getPaddingTop());
-        assertEquals(0, mWXText.getView().getPaddingRight());
-        assertEquals(0, mWXText.getView().getPaddingBottom());
+        assertEquals(0, mWXText.getHostView().getPaddingLeft());
+        assertEquals(0, mWXText.getHostView().getPaddingTop());
+        assertEquals(0, mWXText.getHostView().getPaddingRight());
+        assertEquals(0, mWXText.getHostView().getPaddingBottom());
     }
 
     @Test
@@ -301,36 +317,36 @@ public class WXTextTest {
         mWXText.applyLayoutAndEvent(mWXText);
         mWXText.bindData(mWXText);
 
-        assertNotNull(mWXText.getView().getLayoutParams());
-        assertEquals(100, mWXText.getView().getLayoutParams().height);
-        assertEquals(100, mWXText.getView().getLayoutParams().width);
+        assertNotNull(mWXText.getHostView().getLayoutParams());
+        assertEquals(100, mWXText.getHostView().getLayoutParams().height);
+        assertEquals(100, mWXText.getHostView().getLayoutParams().width);
 
-        assertEquals(0, mWXText.getView().getPaddingLeft());
-        assertEquals(0, mWXText.getView().getPaddingTop());
-        assertEquals(0, mWXText.getView().getPaddingRight());
-        assertEquals(0, mWXText.getView().getPaddingBottom());
+        assertEquals(0, mWXText.getHostView().getPaddingLeft());
+        assertEquals(0, mWXText.getHostView().getPaddingTop());
+        assertEquals(0, mWXText.getHostView().getPaddingRight());
+        assertEquals(0, mWXText.getHostView().getPaddingBottom());
     }
 
     @Test
     public void testAddEvent(){
         testBind();
-        mWXText.addEvent(WXEventType.CLICK);
-        assertTrue(mWXText.getView().isEnabled());
-        mWXText.getView().performClick();
+        mWXText.addEvent(Constants.Event.CLICK);
+        assertTrue(mWXText.getHostView().isEnabled());
+        mWXText.getHostView().performClick();
     }
 
     @Test
     public void testUpdateProperties(){
         testBind();
         Map<String, Object> prop = new HashMap<>();
-        prop.put(WXDomPropConstant.WX_ATTR_DISABLED, "false");
-        prop.put(WXDomPropConstant.WX_OPACITY, 0.8f);
+        prop.put(Constants.Name.DISABLED, "false");
+        prop.put(Constants.Name.OPACITY, 0.8f);
         mWXText.updateProperties(prop);
-        assertTrue(mWXText.getView().isEnabled());
-        assertTrue(mWXText.getView().getAlpha()>=0.799 && mWXText.getView().getAlpha()<=0.811);
+        assertTrue(mWXText.getHostView().isEnabled());
+        assertTrue(mWXText.getHostView().getAlpha()>=0.799 && mWXText.getHostView().getAlpha()<=0.811);
 
-        prop.put(WXDomPropConstant.WX_ATTR_DISABLED, "true");
+        prop.put(Constants.Name.DISABLED, "true");
         mWXText.updateProperties(prop);
-        assertFalse(mWXText.getView().isEnabled());
+        assertFalse(mWXText.getHostView().isEnabled());
     }
 }

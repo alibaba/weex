@@ -66,6 +66,15 @@ for example:
 
 [Create Pull Requests](https://github.com/alibaba/weex/compare).
 
+## Contributor License Agreement
+In order to contribute code to Weex, you (or the legal entity you represent) must sign the Contributor License Agreement (CLA).
+
+You can read and sign the [Alibaba CLA](https://cla-assistant.io/alibaba/weex) online.
+
+For CLA assistant service works properly, please make sure you have added email address that your commits linked to GitHub account.
+
+Please read [How to setting your Email address in Git](https://help.github.com/articles/setting-your-email-in-git/) and [How to adding an email address to your GitHub Account](https://help.github.com/articles/adding-an-email-address-to-your-github-account/).
+
 ## Code Style Guide
 
 ### Objective-C

@@ -205,68 +205,74 @@
 package com.taobao.weex.ui.view;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.MotionEvent;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.ui.component.IWXUpdateComponent;
+import com.taobao.weex.ui.component.WXImage;
 import com.taobao.weex.ui.view.gesture.WXGesture;
 import com.taobao.weex.ui.view.gesture.WXGestureObservable;
+import com.taobao.weex.utils.ImageDrawable;
 
-public class WXImageView extends ImageView implements IWXUpdateComponent, WXGestureObservable {
+import java.lang.ref.WeakReference;
+import java.util.Arrays;
 
-  private WXShapeFeature mImageShapeFeature;
+public class WXImageView extends ImageView implements WXGestureObservable,
+                                                      IRenderStatus<WXImage> {
+
+  private WeakReference<WXImage> mWeakReference;
   private WXGesture wxGesture;
+  private float[] borderRadius;
+  private boolean gif;
 
-  public WXImageView(Context context, WXDomObject element) {
+  public WXImageView(Context context) {
     super(context);
-    mImageShapeFeature = new WXShapeFeature(getContext(), this, element);
-  }
-
-  @Override
-  public void updateDom(WXDomObject domObject) {
-    mImageShapeFeature.updateDom(domObject);
   }
 
   @Override
   public void setImageResource(int resId) {
     Drawable drawable = getResources().getDrawable(resId);
-    drawable = mImageShapeFeature.wrapDrawable(drawable);
-    super.setImageDrawable(drawable);
+    setImageDrawable(drawable);
   }
 
-  @Override
-  public void setImageDrawable(Drawable drawable) {
-    drawable = mImageShapeFeature.wrapDrawable(drawable);
-    super.setImageDrawable(drawable);
-    if(getScaleType()==ScaleType.MATRIX && getDrawable()!=null){
-      Matrix matrix = getImageMatrix();
-      int dwidth = getDrawable().getIntrinsicWidth();
-      int dheight = getDrawable().getIntrinsicHeight();
-
-      int vwidth = getWidth() - getPaddingLeft() - getPaddingRight();
-      int vheight = getHeight() - getPaddingTop() - getPaddingBottom();
-
-      float scale;
-      if (dwidth * vheight > vwidth * dheight) {
-        scale = (float) vheight / (float) dheight;
-      } else {
-        scale = (float) vwidth / (float) dwidth;
+  public void setImageDrawable(@Nullable Drawable drawable, boolean isGif) {
+    this.gif = isGif;
+    ViewGroup.LayoutParams layoutParams;
+    if ((layoutParams = getLayoutParams()) != null) {
+      Drawable wrapDrawable = ImageDrawable.createImageDrawable(drawable,
+                                                                getScaleType(), borderRadius,
+                                                                layoutParams.width - getPaddingLeft() - getPaddingRight(),
+                                                                layoutParams.height - getPaddingTop() - getPaddingBottom(),
+                                                                isGif);
+      if (wrapDrawable instanceof ImageDrawable) {
+        ImageDrawable imageDrawable = (ImageDrawable) wrapDrawable;
+        if (!Arrays.equals(imageDrawable.getCornerRadii(), borderRadius)) {
+          imageDrawable.setCornerRadii(borderRadius);
+        }
       }
-
-      matrix.setScale(scale, scale);
-      setImageMatrix(matrix);
+      super.setImageDrawable(wrapDrawable);
+      if (mWeakReference != null) {
+        WXImage component = mWeakReference.get();
+        if (component != null) {
+          component.readyToRender();
+        }
+      }
     }
   }
 
   @Override
-  protected void onDraw(Canvas canvas) {
-    mImageShapeFeature.beforeOnDraw(canvas);
-    super.onDraw(canvas);
-    mImageShapeFeature.afterOnDraw(canvas);
+  public void setImageDrawable(@Nullable Drawable drawable) {
+    setImageDrawable(drawable, false);
+  }
+
+  @Override
+  public void setImageBitmap(@Nullable Bitmap bm) {
+    setImageDrawable(bm == null ? null : new BitmapDrawable(getResources(), bm));
   }
 
   @Override
@@ -283,27 +289,20 @@ public class WXImageView extends ImageView implements IWXUpdateComponent, WXGest
     return result;
   }
 
+  public void setBorderRadius(@NonNull float[] borderRadius) {
+    this.borderRadius = borderRadius;
+  }
+
   @Override
-  protected void onLayout(boolean changed, int left, int top, int right,
-                          int bottom) {
-    mImageShapeFeature.beforeOnLayout(changed, left, top, right, bottom);
+  protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
     super.onLayout(changed, left, top, right, bottom);
-    mImageShapeFeature.afterOnLayout(changed, left, top, right, bottom);
-  }
-
-  @Override
-  public void setBackgroundResource(int resid) {
-    Drawable drawable = getResources().getDrawable(resid);
-    drawable = mImageShapeFeature.wrapDrawable(drawable);
-    super.setBackgroundDrawable(drawable);
-  }
-
-  @Override
-  public void setBackgroundDrawable(Drawable d) {
-    Drawable drawable = d;
-    if (mImageShapeFeature != null) {
-      mImageShapeFeature.wrapDrawable(d);
+    if (changed) {
+      setImageDrawable(getDrawable(), gif);
     }
-    super.setBackgroundDrawable(drawable);
+  }
+
+  @Override
+  public void holdComponent(WXImage component) {
+    mWeakReference = new WeakReference<>(component);
   }
 }

@@ -204,8 +204,6 @@
  */
 package com.taobao.weex.bridge;
 
-import com.taobao.weex.common.WXModuleAnno;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -216,26 +214,35 @@ import java.lang.reflect.Type;
 public class MethodInvoker implements Invoker {
 
   final Method mMethod;
+  final boolean mRunOnUIThread;
+  Type[] mParam;
 
   public MethodInvoker(Method method){
+    this(method,false);
+  }
+
+  public MethodInvoker(Method method,boolean runInUIThread){
     mMethod = method;
+    mParam = mMethod.getGenericParameterTypes();
+    mRunOnUIThread = runInUIThread;
   }
 
   @Override
-  public void invoke(Object receiver, Object... params) throws InvocationTargetException, IllegalAccessException {
-    mMethod.invoke(receiver,params);
+  public Object invoke(Object receiver, Object... params) throws InvocationTargetException, IllegalAccessException {
+    return mMethod.invoke(receiver,params);
   }
 
   @Override
   public Type[] getParameterTypes() {
-    return mMethod.getGenericParameterTypes();
+    if(mParam ==null){
+      mParam = mMethod.getGenericParameterTypes();
+    }
+    return mParam;
   }
 
   @Override
-  public boolean isRunInUIThread() {
-    //TODO: use a separate annotation
-    WXModuleAnno annotation = mMethod.getAnnotation(WXModuleAnno.class);
-    return annotation != null && annotation.runOnUIThread();
+  public boolean isRunOnUIThread() {
+    return mRunOnUIThread;
   }
 
   @Override

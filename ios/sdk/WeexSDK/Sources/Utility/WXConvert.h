@@ -24,7 +24,8 @@
  *  750px Adaptive
  */
 typedef CGFloat WXPixelType;
-+ (WXPixelType)WXPixelType:(id)value;
+// @parameter scaleFactor: please use weexInstance's pixelScaleFactor property
++ (WXPixelType)WXPixelType:(id)value scaleFactor:(CGFloat)scaleFactor;
 
 + (css_flex_direction_t)css_flex_direction_t:(id)value;
 + (css_align_t)css_align_t:(id)value;
@@ -44,15 +45,32 @@ typedef BOOL WXClipType;
 + (WXPositionType)WXPositionType:(id)value;
 
 + (WXTextStyle)WXTextStyle:(id)value;
-+ (WXTextWeight)WXTextWeight:(id)value;
+/**
+ * @abstract UIFontWeightRegular ,UIFontWeightBold,etc are not support by the system which is less than 8.2. weex sdk set the float value.
+ *
+ * @param value, support normal,bold,100,200,300,400,500,600,700,800,900
+ *
+ * @return A float value.
+ *
+ */
++ (CGFloat)WXTextWeight:(id)value;
 + (WXTextDecoration)WXTextDecoration:(id)value;
 + (NSTextAlignment)NSTextAlignment:(id)value;
 
 + (WXScrollDirection)WXScrollDirection:(id)value;
++ (UITableViewRowAnimation)UITableViewRowAnimation:(id)value;
 
 + (UIViewAnimationOptions)UIViewAnimationTimingFunction:(id)value;
 + (CAMediaTimingFunction *)CAMediaTimingFunction:(id)value;
 
 + (WXVisibility)WXVisibility:(id)value;
+
++ (WXGradientType)gradientType:(id)value;
+
+@end
+
+@interface WXConvert (Deprecated)
+
++ (WXPixelType)WXPixelType:(id)value DEPRECATED_MSG_ATTRIBUTE("Use [WXConvert WXPixelType:scaleFactor:] instead");
 
 @end

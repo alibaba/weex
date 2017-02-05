@@ -205,11 +205,13 @@
 package com.taobao.weex.ui.view;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
 import com.taobao.weex.ui.view.gesture.WXGesture;
 import com.taobao.weex.ui.view.gesture.WXGestureObservable;
+import com.taobao.weex.utils.WXViewUtils;
 
 /**
  * FrameLayout wrapper
@@ -235,5 +237,11 @@ public class WXFrameLayout extends FrameLayout implements WXGestureObservable {
       result |= wxGesture.onTouch(this, event);
     }
     return result;
+  }
+
+  @Override
+  protected void onDraw(Canvas canvas) {
+    WXViewUtils.clipCanvasWithinBorderBox(this, canvas);
+    super.onDraw(canvas);
   }
 }

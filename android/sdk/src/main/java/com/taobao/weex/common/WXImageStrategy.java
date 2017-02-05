@@ -204,6 +204,10 @@
  */
 package com.taobao.weex.common;
 
+import android.widget.ImageView;
+
+import java.util.Map;
+
 public class WXImageStrategy {
 
   /**
@@ -215,4 +219,25 @@ public class WXImageStrategy {
    * Whether to sharp the image. The default is false.
    */
   public boolean isSharpen;
+
+  /**
+   * The blur radius of the image. [0,10],0 means no blur.
+   * */
+  public int blurRadius;
+
+  public String placeHolder;
+
+  public ImageListener getImageListener() {
+    return imageListener;
+  }
+
+  public void setImageListener(ImageListener imageListener) {
+    this.imageListener = imageListener;
+  }
+
+  ImageListener imageListener;
+
+  public interface ImageListener{
+    public void onImageFinish(String url,ImageView imageView,boolean  result,Map extra);
+  }
 }

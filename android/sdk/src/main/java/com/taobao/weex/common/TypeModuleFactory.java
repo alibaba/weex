@@ -204,18 +204,18 @@
  */
 package com.taobao.weex.common;
 
+import com.taobao.weex.WXEnvironment;
+import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.bridge.Invoker;
 import com.taobao.weex.bridge.MethodInvoker;
 import com.taobao.weex.bridge.ModuleFactory;
-import com.taobao.weex.common.WXModule;
-import com.taobao.weex.common.WXModuleAnno;
 import com.taobao.weex.utils.WXLogUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Use class
@@ -224,7 +224,6 @@ import java.util.Map;
 public class TypeModuleFactory<T extends WXModule> implements ModuleFactory<T> {
   public static final String TAG = "TypeModuleFactory";
   Class<T> mClazz;
-  ArrayList<String> mMethods;
   Map<String, Invoker> mMethodMap;
 
   public TypeModuleFactory(Class<T> clz) {
@@ -232,24 +231,31 @@ public class TypeModuleFactory<T extends WXModule> implements ModuleFactory<T> {
   }
 
   private void generateMethodMap() {
-    WXLogUtils.d(TAG, "extractMethodNames");
-    ArrayList<String> methods = new ArrayList<>();
+    if(WXEnvironment.isApkDebugable()) {
+      WXLogUtils.d(TAG, "extractMethodNames:" + mClazz.getSimpleName());
+    }
     HashMap<String, Invoker> methodMap = new HashMap<>();
     try {
       for (Method method : mClazz.getMethods()) {
         // iterates all the annotations available in the method
         for (Annotation anno : method.getDeclaredAnnotations()) {
-          if (anno != null && anno instanceof WXModuleAnno) {
-            methods.add(method.getName());
-            methodMap.put(method.getName(), new MethodInvoker(method));
-            break;
+          if (anno != null) {
+            if(anno instanceof JSMethod) {
+              JSMethod methodAnnotation = (JSMethod) anno;
+              String name = JSMethod.NOT_SET.equals(methodAnnotation.alias())? method.getName():methodAnnotation.alias();
+              methodMap.put(name, new MethodInvoker(method, methodAnnotation.uiThread()));
+              break;
+            }else if(anno instanceof WXModuleAnno) {
+              WXModuleAnno methodAnnotation = (WXModuleAnno)anno;
+              methodMap.put(method.getName(), new MethodInvoker(method,methodAnnotation.runOnUIThread()));
+              break;
+            }
           }
         }
       }
     } catch (Throwable e) {
       WXLogUtils.e("[WXModuleManager] extractMethodNames:", e);
     }
-    mMethods = methods;
     mMethodMap = methodMap;
   }
 
@@ -260,18 +266,19 @@ public class TypeModuleFactory<T extends WXModule> implements ModuleFactory<T> {
   }
 
   @Override
-  public ArrayList<String> getMethodNames() {
-    if (mMethods == null) {
-      generateMethodMap();
-    }
-    return mMethods;
-  }
-
-  @Override
-  public Map<String, Invoker> getMethodMap() {
+  public String[] getMethods() {
     if (mMethodMap == null) {
       generateMethodMap();
     }
-    return mMethodMap;
+    Set<String> keys = mMethodMap.keySet();
+    return keys.toArray(new String[keys.size()]);
+  }
+
+  @Override
+  public Invoker getMethodInvoker(String name) {
+    if (mMethodMap == null) {
+      generateMethodMap();
+    }
+    return mMethodMap.get(name);
   }
 }

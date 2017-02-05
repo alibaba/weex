@@ -1,45 +1,87 @@
 <template>
   <div>
     <list class="list">
+      <refresh  class = "refresh-view" display="{{refresh_display}}" onrefresh="onrefresh">
+        <text if="{{(refresh_display==='hide')}}"> ↓ pull to refresh </text>
+        <loading-indicator class="indicator"></loading-indicator>
+      </refresh>
       <cell onappear="onappear" ondisappear="ondisappear" class="row" repeat="{{rows}}" index="{{$index}}">
         <div class="item">
           <text class="item-title">row {{id}}</text>
         </div>
       </cell>
+      <loading class="loading-view" display="{{loading_display}}" onloading="onloading">
+        <text if="{{(loading_display==='hide')}}">↑ Loadmore </text>
+        <loading-indicator class="indicator"></loading-indicator>
+      </loading>
     </list>
-    <text class="count" value="Appear items:{{appearMin}} - {{appearMax}}"></text>
+    <text class="count">Appear items:{{appearMin}} - {{appearMax}}</text>
   </div>
 </template>
 
 <style>
   .list {
-    height:850px
+    height:850
   }
   .count {
-    font-size: 48px;
-    margin:10px;
+    font-size: 48;
+    margin:10;
   }
   .indicator {
-    height: 40px;
-    width: 40px;
+    height: 40;
+    width: 40;
     color:#45b5f0;
   }
-  .row {
-    width: 750px;
+
+  .refresh-arrow {
+    font-size: 30px;
+    color: #45b5f0;
   }
+
+  .row {
+    width: 750;
+  }
+  
   .item {
     justify-content: center;
-    border-bottom-width: 2px;
+    border-bottom-width: 2;
     border-bottom-color: #c0c0c0;
-    height: 100px;
-    padding:20px;
+    height: 100;
+    padding:20;
   }
   .item-title {
+  }
+  .refresh-view {
+    width: 750;
+    height: 100;
+    display: -ms-flex;
+    display: -webkit-flex;
+    display: flex;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    align-items: center;
+  }
+  .loading-view {
+    width: 750;
+    height: 100;
+    display: -ms-flex;
+    display: -webkit-flex;
+    display: flex;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    align-items: center;
+  }
+  .indicator {
+    height: 60;
+    width: 60;
+    color: #889967;
   }
 </style>
 
 <script>
-  require('weex-components');
+
   module.exports = {
     methods: {
       onappear: function (e) {
@@ -66,9 +108,37 @@
         this.appearIds = appearIds;
         this.appearMax = appearIds[appearIds.length - 1];
         this.appearMin = appearIds[0];
-      }
+      },
+      onrefresh: function(e) {
+        var self = this;
+        self.refresh_display = 'show';
+        self.$call('modal', 'toast', {
+          'message': 'onrefresh'
+        });
+
+        this.$call('timer', 'setTimeout', function () {
+          self.refresh_display = 'hide';
+        }, 3000);
+      },
+
+      onloading: function() {
+        var self = this;
+        self.loading_display = 'show';
+        self.$call('modal', 'toast', {
+          'message': 'onloading'
+        });
+
+        this.$call('timer', 'setTimeout', function () {
+          if (self.rows.length <= 33) {
+              self.rows.push(self.moreRows[self.rows.length - 29]);
+            }
+          self.loading_display = 'hide';
+        }, 3000);
+      },
     },
     data: {
+      refresh_display: 'hide',
+      loading_display: 'hide',
       appearMin:1,
       appearMax:1,
       appearIds:[],
@@ -102,6 +172,12 @@
         {id: 27},
         {id: 28},
         {id: 29}
+      ],
+      moreRows: [
+        {id: 30},
+        {id: 31},
+        {id: 32},
+        {id: 33}
       ]
     }
   }

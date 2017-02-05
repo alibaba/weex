@@ -204,69 +204,123 @@
  */
 package com.taobao.weex.ui.component;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.Layout;
 import android.view.ViewGroup;
 
 import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.common.Component;
+import com.taobao.weex.annotation.Component;
+import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.ComponentCreator;
 import com.taobao.weex.ui.view.WXTextView;
+
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Text component
  */
 @Component(lazyload = false)
-public class WXText extends WXComponent{
+public class WXText extends WXComponent<WXTextView> {
 
   /**
    * The default text size
    **/
   public static final int sDEFAULT_SIZE = 32;
 
+  public static class Creator implements ComponentCreator {
+
+    public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+      return new WXText(instance, node, parent);
+    }
+  }
+
+  @Deprecated
+  public WXText(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
+    this(instance, dom, parent);
+  }
+
   public WXText(WXSDKInstance instance, WXDomObject node,
-                WXVContainer parent, boolean lazy) {
-    super(instance, node, parent, lazy);
+                WXVContainer parent) {
+    super(instance, node, parent);
   }
 
   @Override
-  protected void initView() {
-    mHost = new WXTextView(mContext);
-  }
-
-  @Override
-  public WXTextView getView() {
-    return (WXTextView) super.getView();
+  protected WXTextView initComponentHostView(@NonNull Context context) {
+    WXTextView textView =new WXTextView(context);
+    textView.holdComponent(this);
+    return textView;
   }
 
   @Override
   public void updateExtra(Object extra) {
-    if(extra instanceof Layout &&
-       getView()!=null && !extra.equals(getView().getTextLayout())) {
+    if (extra instanceof Layout &&
+        getHostView() != null && !extra.equals(getHostView().getTextLayout())) {
       final Layout layout = (Layout) extra;
-      getView().setTextLayout(layout);
-      getView().invalidate();
+      getHostView().setTextLayout(layout);
+      getHostView().invalidate();
+    }
+  }
+
+  @Override
+  public void refreshData(WXComponent component) {
+    super.refreshData(component);
+    if (component instanceof WXText) {
+      updateExtra(component.getDomObject().getExtra());
+    }
+  }
+
+  @Override
+  protected boolean setProperty(String key, Object param) {
+    switch (key) {
+      case Constants.Name.LINES:
+      case Constants.Name.FONT_SIZE:
+      case Constants.Name.FONT_WEIGHT:
+      case Constants.Name.FONT_STYLE:
+      case Constants.Name.COLOR:
+      case Constants.Name.TEXT_DECORATION:
+      case Constants.Name.FONT_FAMILY:
+      case Constants.Name.TEXT_ALIGN:
+      case Constants.Name.TEXT_OVERFLOW:
+      case Constants.Name.LINE_HEIGHT:
+      case Constants.Name.VALUE:
+        return true;
+      default:
+        return super.setProperty(key, param);
     }
   }
 
   /**
    * Flush view no matter what height and width the {@link WXDomObject} specifies.
-   * @param object must be a {@link Layout} object, otherwise, nothing will happen.
+   * @param extra must be a {@link Layout} object, otherwise, nothing will happen.
    */
-  private void flushView(Object extra){
-    if(extra instanceof Layout &&
-       getView()!=null && !extra.equals(getView().getTextLayout())){
+  private void flushView(Object extra) {
+    if (extra instanceof Layout &&
+        getHostView() != null && !extra.equals(getHostView().getTextLayout())) {
       final Layout layout = (Layout) extra;
       /**The following if block change the height of the width of the textView.
        * other part of the code is the same to updateExtra
        */
-      ViewGroup.LayoutParams layoutParams=getView().getLayoutParams();
-      if(layoutParams!=null){
-        layoutParams.height=layout.getHeight();
-        layoutParams.width=layout.getWidth();
-        getView().setLayoutParams(layoutParams);
+      ViewGroup.LayoutParams layoutParams = getHostView().getLayoutParams();
+      if (layoutParams != null) {
+        layoutParams.height = layout.getHeight();
+        layoutParams.width = layout.getWidth();
+        getHostView().setLayoutParams(layoutParams);
       }
-      getView().setTextLayout(layout);
-      getView().invalidate();
+      getHostView().setTextLayout(layout);
+      getHostView().invalidate();
     }
+  }
+
+  @Override
+  protected Object convertEmptyProperty(String propName, Object originalValue) {
+    switch (propName) {
+      case Constants.Name.FONT_SIZE:
+        return WXText.sDEFAULT_SIZE;
+      case Constants.Name.COLOR:
+        return "black";
+    }
+    return super.convertEmptyProperty(propName, originalValue);
   }
 }

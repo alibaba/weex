@@ -11,7 +11,7 @@
 /**
  * The WXBaseViewController class provides the infrastructure for managing the weex view in your app. It is 
  * responsible for creating a weex instance or rendering the weex view, for observing the lifecycle of the
- * view such as "appear" or "disapper"、"foreground" or "background" etc. You can initialize this controller by 
+ * view such as "appear" or "disappear"、"foreground" or "background" etc. You can initialize this controller by
  * special bundle URL.
  */
 
@@ -20,7 +20,7 @@
 /**
  * @abstract initializes the viewcontroller with bundle url.
  *
- * @param soureURL. The url of bundle rendered to a weex view.
+ * @param sourceURL. The url of bundle rendered to a weex view.
  *
  * @return a object the class of WXBaseViewController.
  *

@@ -72,10 +72,8 @@ WX_EXPORT_METHOD(@selector(clearInterval:))
     }
     
     WXTimerTarget *target = [[WXTimerTarget alloc] initWithCallback:callbackID shouldRepeat:shouldRepeat weexInstance:self.weexInstance];
-    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:milliseconds/1000.0 target:target selector:@selector(trigger) userInfo:nil repeats:shouldRepeat];
-    if (!_timers[callbackID]) {
-        _timers[callbackID] = timer;
-    }
+    
+    [self createTimerWithCallback:callbackID time:milliseconds target:target selector:@selector(trigger) shouldRepeat:shouldRepeat];
 }
 
 # pragma mark Timer API
@@ -122,6 +120,23 @@ WX_EXPORT_METHOD(@selector(clearInterval:))
         [_timers removeAllObjects];
         _timers = nil;
     }
+}
+
+# pragma mark Unit Test
+
+- (void)createTimerWithCallback:(NSString *)callbackID time:(NSTimeInterval)milliseconds target:(id)target selector:(SEL)selector shouldRepeat:(BOOL)shouldRepeat {
+    
+    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:milliseconds/1000.0f target:target selector:selector userInfo:nil repeats:shouldRepeat];
+    [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
+    
+    if (!_timers[callbackID]) {
+        _timers[callbackID] = timer;
+    }
+}
+
+- (NSMutableDictionary *)timers
+{
+    return _timers;
 }
 
 @end

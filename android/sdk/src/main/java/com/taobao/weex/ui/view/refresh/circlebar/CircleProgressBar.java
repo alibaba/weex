@@ -410,7 +410,6 @@ public class CircleProgressBar extends ImageView {
 
   public void setBackgroundColor(int color) {
     if (getBackground() instanceof ShapeDrawable) {
-      final Resources res = getResources();
       ((ShapeDrawable) getBackground()).getPaint().setColor(color);
     }
   }

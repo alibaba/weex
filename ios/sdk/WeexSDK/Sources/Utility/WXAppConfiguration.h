@@ -34,4 +34,17 @@
 + (NSString *)externalUserAgent;
 + (void)setExternalUserAgent:(NSString *)userAgent;
 
+/**
+ * @abstract JSFrameworkVersion
+ */
++ (NSString *)JSFrameworkVersion;
++ (void)setJSFrameworkVersion:(NSString *)JSFrameworkVersion;
+
+
+/*
+ *  @abstract customizeProtocolClasses
+ */
++ (NSArray*)customizeProtocolClasses;
++ (void)setCustomizeProtocolClasses:(NSArray*)customizeProtocolClasses;
+
 @end

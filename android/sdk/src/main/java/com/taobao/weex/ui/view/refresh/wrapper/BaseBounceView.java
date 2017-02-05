@@ -205,20 +205,27 @@
 package com.taobao.weex.ui.view.refresh.wrapper;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.OrientationHelper;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.taobao.weex.common.Constants;
+import com.taobao.weex.ui.component.WXComponent;
+import com.taobao.weex.ui.view.WXLoadingLayout;
+import com.taobao.weex.ui.view.WXRefreshLayout;
 import com.taobao.weex.ui.view.refresh.core.WXRefreshView;
 import com.taobao.weex.ui.view.refresh.core.WXSwipeLayout;
+import com.taobao.weex.utils.WXResourceUtils;
+import com.taobao.weex.utils.WXUtils;
 
 /**
  * BounceView(SwipeLayout) contains Scroller/List and refresh/loading view
  * @param <T> InnerView
  */
-public abstract class BaseBounceView<T extends View> extends ViewGroup {
+public abstract class BaseBounceView<T extends View> extends FrameLayout {
 
     private int mOrientation = OrientationHelper.VERTICAL;
     protected WXSwipeLayout swipeLayout;
@@ -266,80 +273,6 @@ public abstract class BaseBounceView<T extends View> extends ViewGroup {
             swipeLayout.finishPullLoad();
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        //Helper.logv("BaseBounceView onMeasure");
-        View child0 = getChildAt(0);
-        int w = 0;
-        int h = 0;
-        if (child0 != null) {
-            child0.measure(widthMeasureSpec, heightMeasureSpec);
-            w = child0.getMeasuredWidth();
-            h = child0.getMeasuredHeight();
-        }
-        measureChild(w,h,1);
-        measureChild(w,h,2);
-    }
-
-    private void measureChild(int w,int h,int index){
-        View child = getChildAt(index);
-        if (child != null) {
-            LayoutParams lp = child.getLayoutParams();
-            if(isVertical()) {
-                child.measure(
-                        MeasureSpec.makeMeasureSpec(w, MeasureSpec.EXACTLY),
-                        MeasureSpec.makeMeasureSpec(lp.height, lp.height > 0 ? MeasureSpec.EXACTLY : MeasureSpec.AT_MOST)
-                );
-            }else{
-                child.measure(
-                        MeasureSpec.makeMeasureSpec(lp.width, lp.width > 0 ? MeasureSpec.EXACTLY : MeasureSpec.AT_MOST),
-                        MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY)
-                );
-            }
-        }
-    }
-
-
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        View child0 = getChildAt(0);
-        int paddingLeft,paddingTop,childRight,childBottom;
-        paddingLeft=getPaddingLeft();
-        paddingTop=getPaddingTop();
-        childRight=r-l-getPaddingRight();
-        childBottom = b-t-getPaddingBottom();
-
-        if (child0 != null) {
-            if(isVertical()){
-                child0.layout(paddingLeft, paddingTop, childRight, b-t-paddingTop);
-            }else{
-                child0.layout(paddingLeft, paddingTop, r-l-paddingLeft, childBottom);
-            }
-
-        }
-        View child1 = getChildAt(1);
-        if (child1 != null) {
-            if(isVertical()) {
-                int h = child1.getMeasuredHeight();
-                child1.layout(paddingLeft, -h, childRight, 0);
-            }else{
-                int w = child1.getMeasuredWidth();
-                child1.layout(-w, paddingTop, 0, childBottom);
-            }
-        }
-        View child2 = getChildAt(2);
-        if (child2 != null) {
-            if(isVertical()) {
-                int h = child2.getMeasuredHeight();
-                child2.layout(paddingLeft, b, childRight, b + h);
-            }else{
-                int w = child2.getMeasuredWidth();
-                child2.layout(r, paddingTop, r+w , childBottom);
-            }
-        }
-    }
-
     /**
      * Init Swipelayout
      */
@@ -365,24 +298,76 @@ public abstract class BaseBounceView<T extends View> extends ViewGroup {
 
     /**
      *
-     * @param headerView should be {@link WXRefreshView}
+     * @param refresh should be {@link WXRefreshView}
      */
-    public void setHeaderView(View headerView) {
+    public void setHeaderView(WXComponent refresh) {
         setRefreshEnable(true);
-        if (swipeLayout != null)
-            if (swipeLayout.getHeaderView() != null)
-                swipeLayout.getHeaderView().setRefreshView(headerView);
+        if (swipeLayout != null) {
+            if (swipeLayout.getHeaderView() != null) {
+                swipeLayout.setRefreshHeight((int) refresh.getDomObject().getLayoutHeight());
+
+                String colorStr = (String) refresh.getDomObject().getStyles().get(Constants.Name.BACKGROUND_COLOR);
+                String bgColor = WXUtils.getString(colorStr, null);
+
+                if (bgColor != null) {
+                    if (!TextUtils.isEmpty(bgColor)) {
+                        int colorInt = WXResourceUtils.getColor(bgColor);
+                        if (!(colorInt == Color.TRANSPARENT)) {
+                            swipeLayout.setRefreshBgColor(colorInt);
+                        }
+                    }
+                }
+                swipeLayout.getHeaderView().setRefreshView(refresh.getHostView());
+            }
+        }
     }
 
     /**
      *
-     * @param footerView should be {@link WXRefreshView}
+     * @param loading should be {@link WXRefreshView}
      */
-    public void setFooterView(View footerView) {
+    public void setFooterView(WXComponent loading) {
         setLoadmoreEnable(true);
-        if (swipeLayout != null)
-            if (swipeLayout.getFooterView() != null)
-                swipeLayout.getFooterView().setRefreshView(footerView);
+        if (swipeLayout != null) {
+            if (swipeLayout.getFooterView() != null) {
+                swipeLayout.setLoadingHeight((int) loading.getDomObject().getLayoutHeight());
+
+                String colorStr = (String) loading.getDomObject().getStyles().get(Constants.Name.BACKGROUND_COLOR);
+                String bgColor = WXUtils.getString(colorStr, null);
+
+                if (bgColor != null) {
+                    if (!TextUtils.isEmpty(bgColor)) {
+                        int colorInt = WXResourceUtils.getColor(bgColor);
+                        if (!(colorInt == Color.TRANSPARENT)) {
+                            swipeLayout.setLoadingBgColor(colorInt);
+                        }
+                    }
+                }
+                swipeLayout.getFooterView().setRefreshView(loading.getHostView());
+            }
+        }
+    }
+
+    public void removeFooterView(WXComponent loading){
+        setLoadmoreEnable(false);
+        if(swipeLayout!=null){
+            if(swipeLayout.getFooterView()!=null){
+                swipeLayout.setLoadingHeight(0);
+                swipeLayout.getFooterView().removeView(loading.getHostView());
+                swipeLayout.finishPullLoad();
+            }
+        }
+    }
+    //TODO There are bugs, will be more than a rolling height
+    public void removeHeaderView(WXComponent refresh){
+        setRefreshEnable(false);
+        if(swipeLayout!=null){
+            if(swipeLayout.getHeaderView()!=null){
+                swipeLayout.setRefreshHeight(0);
+                swipeLayout.getHeaderView().removeView(refresh.getHostView());
+                swipeLayout.finishPullRefresh();
+            }
+        }
     }
 
     public void setRefreshEnable(boolean enable) {
@@ -394,6 +379,25 @@ public abstract class BaseBounceView<T extends View> extends ViewGroup {
         if (swipeLayout != null)
             swipeLayout.setPullLoadEnable(enable);
     }
+
+  @Override
+  public void removeView(View view) {
+    if (view instanceof WXLoadingLayout) {
+      finishPullLoad();
+      setLoadmoreEnable(false);
+      if (swipeLayout != null) {
+        swipeLayout.removeView(swipeLayout.getFooterView());
+      }
+    } else if (view instanceof WXRefreshLayout) {
+      finishPullRefresh();
+      setRefreshEnable(false);
+      if (swipeLayout != null) {
+        swipeLayout.removeView(swipeLayout.getHeaderView());
+      }
+    } else {
+      super.removeView(view);
+    }
+  }
 
     public WXSwipeLayout getSwipeLayout() {
         return swipeLayout;

@@ -85,13 +85,13 @@ static id<WXLogProtocol> _externalLog;
 {
     NSDictionary *logLevelEnumToString =
     @{
-      @(WXLogLevelAll) : @"all",
+      @(WXLogLevelOff) : @"off",
       @(WXLogLevelError) : @"error",
       @(WXLogLevelWarning) : @"warn",
       @(WXLogLevelInfo) : @"info",
       @(WXLogLevelLog) : @"log",
       @(WXLogLevelDebug) : @"debug",
-      @(WXLogLevelOff) : @"off"
+      @(WXLogLevelAll) : @"debug"
       };
     return [logLevelEnumToString objectForKey:@([self logLevel])];
 }
@@ -154,47 +154,53 @@ static id<WXLogProtocol> _externalLog;
 }
 
 + (void)devLog:(WXLogFlag)flag file:(const char *)fileName line:(NSUInteger)line format:(NSString *)format, ... {
-    
-    NSString *flagString = @"log";
-    switch (flag) {
-        case WXLogFlagError:
-            flagString = @"error";
-            break;
-        case WXLogFlagWarning:
-            flagString = @"warn";
-            break;
-        case WXLogFlagDebug:
-            flagString = @"debug";
-            break;
-        case WXLogFlagLog:
-            flagString = @"log";
-            break;
-        default:
-            flagString = @"info";
-            break;
-    }
-    
-    va_list args;
-    va_start(args, format);
-    NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
-    NSArray *messageAry = @[message];
-    Class PDLogClass = NSClassFromString(@"PDDebugger");
-    if (PDLogClass) {
-        SEL selector = NSSelectorFromString(@"coutLogWithLevel:arguments:");
-        NSMethodSignature *methodSignature = [PDLogClass instanceMethodSignatureForSelector:selector];
-        if (methodSignature == nil) {
-            NSString *info = [NSString stringWithFormat:@"%@ not found", NSStringFromSelector(selector)];
-            [NSException raise:@"Method invocation appears abnormal" format:info, nil];
+    if ([WXLog logLevel] & flag || [_externalLog logLevel] & flag) {
+        if (!format) {
+            return;
         }
-        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
-        [invocation setTarget:[PDLogClass alloc]];
-        [invocation setSelector:selector];
-        [invocation setArgument:&flagString atIndex:2];
-        [invocation setArgument:&messageAry atIndex:3];
-        [invocation invoke];
+        NSString *flagString = @"log";
+        switch (flag) {
+            case WXLogFlagError:
+                flagString = @"error";
+                break;
+            case WXLogFlagWarning:
+                flagString = @"warn";
+                break;
+            case WXLogFlagDebug:
+                flagString = @"debug";
+                break;
+            case WXLogFlagLog:
+                flagString = @"log";
+                break;
+            default:
+                flagString = @"info";
+                break;
+        }
+        
+        va_list args;
+        va_start(args, format);
+        NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
+        va_end(args);
+        
+        NSArray *messageAry = [NSArray arrayWithObjects:message, nil];
+        Class WXLogClass = NSClassFromString(@"WXDebugger");
+        if (WXLogClass) {
+            SEL selector = NSSelectorFromString(@"coutLogWithLevel:arguments:");
+            NSMethodSignature *methodSignature = [WXLogClass instanceMethodSignatureForSelector:selector];
+            if (methodSignature == nil) {
+                NSString *info = [NSString stringWithFormat:@"%@ not found", NSStringFromSelector(selector)];
+                [NSException raise:@"Method invocation appears abnormal" format:info, nil];
+            }
+            NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
+            [invocation setTarget:[WXLogClass alloc]];
+            [invocation setSelector:selector];
+            [invocation setArgument:&flagString atIndex:2];
+            [invocation setArgument:&messageAry atIndex:3];
+            [invocation invoke];
+        }
+        
+        [self log:flag file:fileName line:line message:message];
     }
-    
-    [self log:flag file:fileName line:line message:message];
 }
 
 #pragma mark - External Log

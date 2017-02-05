@@ -1,6 +1,5 @@
 # &lt;wxc-navpage&gt;
 <span class="weex-version">0.5</span>
-<a href="https://github.com/weexteam/article/wiki/%E6%AC%A2%E8%BF%8E%E5%8F%82%E4%B8%8EWeex%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91"  class="weex-translate incomplete">cn</a>
 
 ### Summary
 
@@ -12,14 +11,14 @@ This type of component supports all kinds of weex component as its child compone
 
 ### Attributes
 
-- `height`: &lt;length&gt; The height of the navbar. Default value is 88. 
+- `height`: &lt;length&gt; The height of the navbar. Default value is 88.
 - `background-color`: &lt;color&gt;The backgroudColor of the navbar. Default value is `white`.
-- `title`: &lt;string&gt; The title of the navbar. 
+- `title`: &lt;string&gt; The title of the navbar.
 - `title-color`: &lt;color&gt;The color of the navbar title. Default value is `black`.
 - `left-item-title`: &lt;string&gt; The title of the leftItem.
 -  `left-item-color`: &lt;color&gt; The color of the leftItem title. Default value is `black`.
 - `right-item-title`: &lt;string&gt; The title of the rightItem.
--  `right-item-color`: &lt;color&gt; The color of the rightItem title. Default value is `black`. 
+-  `right-item-color`: &lt;color&gt; The color of the rightItem title. Default value is `black`.
 - `left-item-src`: &lt;string&gt; The imageURL of the leftItem you want to set.
 - `right-item-src`: &lt;string&gt; The imageURL of the rightItem you want to set.
 
@@ -61,11 +60,9 @@ Other attributes please check out the [common attributes](../references/common-a
         });
 
         this.$on('naviBar.leftItem.click',function(e){
-          //handle your click event here. 
+          //handle your click event here.
         });
     }
   }
 </script>
 ```
-
-

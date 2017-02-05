@@ -4,10 +4,8 @@ import sinonChai from 'sinon-chai'
 const { expect } = chai
 chai.use(sinonChai)
 
-global.callNative = function () {}
-
-import Vm from '../../../../default/vm'
-import { Document } from '../../../../vdom'
+import Vm from '../../../../frameworks/legacy/vm'
+import { Document } from '../../../../runtime/vdom'
 
 describe('bind and fire events', () => {
   let doc, customComponentMap, spy
@@ -24,9 +22,7 @@ describe('bind and fire events', () => {
 
   beforeEach(() => {
     spy = sinon.spy()
-    doc = new Document('test', '', (actions) => {
-      spy(actions)
-    })
+    doc = new Document('test', '', spy)
     customComponentMap = {}
   })
 
@@ -57,8 +53,6 @@ describe('bind and fire events', () => {
     const vm = new Vm('foo', customComponentMap.foo, { _app: app })
 
     checkReady(vm, function () {
-      doc.close()
-
       expect(doc.body.event.click).a('function')
 
       const el = doc.body
@@ -67,10 +61,9 @@ describe('bind and fire events', () => {
       expect(doc.listener.updates.length).eql(0)
 
       el.event.click({ xxx: 1 })
-
       expect(el.attr.a).eql(2)
-      expect(spy.args.length).eql(1)
-      expect(doc.listener.updates).eql([
+      expect(spy.args.length).eql(2)
+      expect(spy.args[1][0]).eql([
         { module: 'dom', method: 'updateAttrs', args: [el.ref, { a: 2 }] }
       ])
 
@@ -105,6 +98,7 @@ describe('bind and fire events', () => {
 
       const spyA = sinon.spy()
       const spyB = sinon.spy()
+
       vm.$on('customTypeA', spyA)
       subVm.$on('customTypeA', spyB)
 

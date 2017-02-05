@@ -219,7 +219,6 @@ import java.util.Map;
 public class FunctionParser<K, V> {
 
   public static final char SPACE = ' ';
-  public static final char PERCENT = '%';
 
   private Mapper<K, V> mapper;
   private Lexer lexer;
@@ -285,7 +284,8 @@ public class FunctionParser<K, V> {
      * @param functionName the name of the raw function.
      * @param raw the list of parameter of the raw function
      * @return the expected mapping relationship, where the key in the map is the same as the
-     * functionName, and the value in the map is the type of object that expected by user.
+     * key in the return value of {{@link #parse()}},
+     * and the value in the map is the type of object that expected by user.
      */
     Map<K, V> map(String functionName, List<String> raw);
   }
@@ -302,6 +302,21 @@ public class FunctionParser<K, V> {
    * valid character, and '(', ')', ',', parameter value and function name is valid token.
    * Parameter value is defined as "(?i)[\+-]?[0-9]+(\.[0-9]+)?(%||deg||px)?" while function
    * name is defined as "[a-zA-Z]+".
+   *
+   * The Lexer can also be expressed using the following EBNF format.
+   * <ul>
+   *   <li>definition = {function};</li>
+   *   <li>function = name, "(", value, { ",", value } , ")";</li>
+   *   <li>name = character, {character};</li>
+   *   <li>value = identifier, {identifier};</li>
+   *   <li>identifier = character | "." | "%" | "+" | "-";</li>
+   *   <li>character = digit | letter;</li>
+   *   <li>digit =  "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;</li>
+   *   <li>letter = "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" |
+   *   "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z" | "a" | "b" |
+   *   "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" |
+   *   "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" ;</li>
+   * </ul>
    */
   private static class Lexer {
 
@@ -346,7 +361,7 @@ public class FunctionParser<K, V> {
             break;
           }
         } else if (isCharacterOrDigit(curChar) || curChar == DOT
-                   || curChar == PERCENT || curChar == MINUS || curChar == PLUS) {
+                   || curChar == WXUtils.PERCENT || curChar == MINUS || curChar == PLUS) {
           pointer++;
         } else {
           if (start == pointer) {
@@ -389,7 +404,9 @@ public class FunctionParser<K, V> {
       char letter;
       for (int i = 0; i < funcName.length(); i++) {
         letter = funcName.charAt(i);
-        if (!((A_LOWER <= letter && letter <= Z_LOWER) || (A_UPPER <= letter && letter <= Z_UPPER))) {
+        if (!((A_LOWER <= letter && letter <= Z_LOWER) ||
+              (A_UPPER <= letter && letter <= Z_UPPER) ||
+              letter == MINUS)) {
           return false;
         }
       }

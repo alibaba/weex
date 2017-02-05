@@ -10,17 +10,24 @@
 #import "WXLog.h"
 #import "WXSDKEngine.h"
 #import "WXAppConfiguration.h"
+#import "WXThreadSafeMutableDictionary.h"
+#import "WXRuleManager.h"
+#import "WXSDKEngine.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
 #import <sys/utsname.h>
 #import <UIKit/UIScreen.h>
 #import <Security/Security.h>
+#import <CommonCrypto/CommonCrypto.h>
+#import <coreText/CoreText.h>
 
 #define KEY_PASSWORD  @"com.taobao.Weex.123456"
 #define KEY_USERNAME_PASSWORD  @"com.taobao.Weex.weex123456"
 
 void WXPerformBlockOnMainThread(void (^ _Nonnull block)())
 {
+    if (!block) return;
+    
     if ([NSThread isMainThread]) {
         block();
     } else {
@@ -32,6 +39,8 @@ void WXPerformBlockOnMainThread(void (^ _Nonnull block)())
 
 void WXPerformBlockSyncOnMainThread(void (^ _Nonnull block)())
 {
+    if (!block) return;
+    
     if ([NSThread isMainThread]) {
         block();
     } else {
@@ -39,6 +48,11 @@ void WXPerformBlockSyncOnMainThread(void (^ _Nonnull block)())
             block();
         });
     }
+}
+
+void WXPerformBlockOnThread(void (^ _Nonnull block)(), NSThread *thread)
+{
+    [WXUtility performBlock:block onThread:thread];
 }
 
 void WXSwizzleInstanceMethod(Class class, SEL original, SEL replaced)
@@ -79,9 +93,9 @@ CGFloat WXScreenScale(void)
     return _scale;
 }
 
-CGSize WXScreenSize(void)
+CGFloat WXPixelScale(CGFloat value, CGFloat scaleFactor)
 {
-    return [UIScreen mainScreen].bounds.size;
+    return WXCeilPixelValue(value * scaleFactor);
 }
 
 CGFloat WXRoundPixelValue(CGFloat value)
@@ -102,28 +116,28 @@ CGFloat WXFloorPixelValue(CGFloat value)
     return floor(value * scale) / scale;
 }
 
-CGFloat WXPixelResize(CGFloat value)
-{
-    return WXCeilPixelValue(value * WXScreenResizeRadio());
-}
-
-CGRect WXPixelFrameResize(CGRect value)
-{
-    CGRect new = CGRectMake(value.origin.x * WXScreenResizeRadio(),
-                            value.origin.y * WXScreenResizeRadio(),
-                            value.size.width * WXScreenResizeRadio(),
-                            value.size.height * WXScreenResizeRadio());
-    return new;
-}
-
-CGPoint WXPixelPointResize(CGPoint value)
-{
-    CGPoint new = CGPointMake(value.x * WXScreenResizeRadio(),
-                              value.y * WXScreenResizeRadio());
-    return new;
-}
 static BOOL WXNotStat;
 @implementation WXUtility
+
++ (void)performBlock:(void (^)())block onThread:(NSThread *)thread
+{
+    if (!thread || !block) return;
+    
+    if ([NSThread currentThread] == thread) {
+        block();
+    } else {
+        [self performSelector:@selector(_performBlock:)
+                     onThread:thread
+                   withObject:[block copy]
+                waitUntilDone:NO];
+    }
+}
+
++ (void)_performBlock:(void (^)())block
+{
+    block();
+}
+
 
 + (NSDictionary *)getEnvironment
 {
@@ -134,8 +148,8 @@ static BOOL WXNotStat;
     NSString *appVersion = [WXAppConfiguration appVersion] ? : @"";
     NSString *appName = [WXAppConfiguration appName] ? : @"";
     
-    CGFloat deviceWidth = [[UIScreen mainScreen] bounds].size.width;
-    CGFloat deviceHeight = [[UIScreen mainScreen] bounds].size.height;
+    CGFloat deviceWidth = [self portraitScreenSize].width;
+    CGFloat deviceHeight = [self portraitScreenSize].height;
     CGFloat scale = [[UIScreen mainScreen] scale];
     
     NSMutableDictionary *data = [NSMutableDictionary dictionaryWithDictionary:@{
@@ -150,6 +164,10 @@ static BOOL WXNotStat;
                                     @"scale":@(scale),
                                     @"logLevel":[WXLog logLevelString] ?: @"error"
                                 }];
+    if ([WXSDKEngine customEnvironment]) {
+        [data addEntriesFromDictionary:[WXSDKEngine customEnvironment]];
+    }
+    
     return data;
 }
 
@@ -208,6 +226,20 @@ static BOOL WXNotStat;
     }
     
     return obj;
+}
+
++ (id)JSONObject:(NSData*)data error:(NSError **)error
+{
+    if (!data) return nil;
+    id jsonObj = nil;
+    @try {
+        jsonObj = [NSJSONSerialization JSONObjectWithData:data
+                                                  options:NSJSONReadingAllowFragments | NSJSONReadingMutableContainers | NSJSONReadingMutableLeaves
+                                                    error:error];
+    } @catch (NSException *exception) {
+        *error = [NSError errorWithDomain:WX_ERROR_DOMAIN code:-1 userInfo:@{NSLocalizedDescriptionKey: [exception description]}];
+    }
+    return jsonObj;
 }
 
 + (NSString *)JSONString:(id)object
@@ -293,29 +325,106 @@ static BOOL WXNotStat;
     return [NSError errorWithDomain:@"WeexErrorDomain" code:code userInfo:@{@"errMsg":message}];
 }
 
-+ (UIFont *)fontWithSize:(CGFloat)size textWeight:(WXTextWeight)textWeight textStyle:(WXTextStyle)textStyle fontFamily:(NSString *)fontFamily
++ (UIFont *)fontWithSize:(CGFloat)size textWeight:(CGFloat)textWeight textStyle:(WXTextStyle)textStyle fontFamily:(NSString *)fontFamily
 {
-    CGFloat fontSize = (isnan(size) || size == 0) ?  WX_TEXT_FONT_SIZE : size;
-    UIFont *font;
+    return [self fontWithSize:size textWeight:textWeight textStyle:textStyle fontFamily:fontFamily scaleFactor:[self defaultPixelScaleFactor]];
+}
+
++ (UIFont *)fontWithSize:(CGFloat)size textWeight:(CGFloat)textWeight textStyle:(WXTextStyle)textStyle fontFamily:(NSString *)fontFamily scaleFactor:(CGFloat)scaleFactor
+{
+    CGFloat fontSize = (isnan(size) || size == 0) ?  32 * scaleFactor : size;
+    UIFont *font = nil;
     
-    if (fontFamily) {
-        font = [UIFont fontWithName:fontFamily size:fontSize];
-        if (!font) {
-            WXLogWarning(@"Unknown fontFamily:%@", fontFamily);
-            font = [UIFont systemFontOfSize:fontSize];
+    WXThreadSafeMutableDictionary *fontFace = [[WXRuleManager sharedInstance] getRule:@"fontFace"];
+    WXThreadSafeMutableDictionary *fontFamilyDic = fontFace[fontFamily];
+    if (fontFamilyDic[@"localSrc"]){
+        NSString *fpath = [((NSURL*)fontFamilyDic[@"localSrc"]) path];
+        if ([self isFileExist:fpath]) {
+            // if the font file is not the correct font file. it will crash by singal 9
+            CFURLRef fontURL = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, (__bridge CFStringRef)fpath, kCFURLPOSIXPathStyle, false);
+            CGDataProviderRef fontDataProvider = CGDataProviderCreateWithURL(fontURL);
+            CFRelease(fontURL);
+            CGFontRef graphicFont = CGFontCreateWithDataProvider(fontDataProvider);
+            CGDataProviderRelease(fontDataProvider);
+            CTFontRef smallFont = CTFontCreateWithGraphicsFont(graphicFont, size, NULL, NULL);
+            CFRelease(graphicFont);
+            font = (__bridge UIFont*)smallFont;
+        }else {
+            [[WXRuleManager sharedInstance] removeRule:@"fontFace" rule:@{@"fontFamily": fontFamily}];
         }
-    } else {
-        font = [UIFont systemFontOfSize:fontSize];
     }
-    
+    if (!font) {
+        if (fontFamily) {
+            font = [UIFont fontWithName:fontFamily size:fontSize];
+            if (!font) {
+                WXLogWarning(@"Unknown fontFamily:%@", fontFamily);
+                font = [UIFont systemFontOfSize:fontSize weight:textWeight];
+            }
+        } else {
+            font = [UIFont systemFontOfSize:fontSize weight:textWeight];
+        }
+    }
     UIFontDescriptor *fontD = font.fontDescriptor;
     UIFontDescriptorSymbolicTraits traits = 0;
+    
     traits = (textStyle == WXTextStyleItalic) ? (traits | UIFontDescriptorTraitItalic) : traits;
-    traits = (textWeight == WXTextWeightBold) ? (traits | UIFontDescriptorTraitBold) : traits;
-    fontD = [fontD fontDescriptorWithSymbolicTraits:traits];
-    font = [UIFont fontWithDescriptor:fontD size:0];
+    traits = (fabs(textWeight-(WX_SYS_VERSION_LESS_THAN(@"8.2")?0.4:UIFontWeightBold)) <= 1e-6) ? (traits | UIFontDescriptorTraitBold) : traits;
+    if (traits != 0) {
+        fontD = [fontD fontDescriptorWithSymbolicTraits:traits];
+        UIFont *tempFont = [UIFont fontWithDescriptor:fontD size:0];
+        if (tempFont) {
+            font = tempFont;
+        }
+    }
     
     return font;
+}
+
++ (void)getIconfont:(NSURL *)url completion:(void(^)(NSURL *url, NSError *error))completionBlock
+{
+    if ([url isFileURL]) {
+        // local file url
+        NSError * error = nil;
+        if (![WXUtility isFileExist:url.absoluteString]) {
+            error = [NSError errorWithDomain:WX_ERROR_DOMAIN code:-1 userInfo:@{@"errMsg":[NSString stringWithFormat:@"local font %@ is't exist", url.absoluteString]}];
+        }
+        completionBlock(url, error);
+        return;
+    }
+    
+    // remote font url
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionDownloadTask *task = [session downloadTaskWithURL:url completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSURL * downloadPath = nil;
+        NSHTTPURLResponse * httpResponse = (NSHTTPURLResponse*)response;
+        if (200 == httpResponse.statusCode && !error && location) {
+            NSString *file = [NSString stringWithFormat:@"%@/%@",WX_FONT_DOWNLOAD_DIR,[WXUtility md5:[url absoluteString]]];
+            downloadPath = [NSURL fileURLWithPath:file];
+            NSFileManager *mgr = [NSFileManager defaultManager];
+            NSError * error ;
+            if (![mgr fileExistsAtPath:[file stringByDeletingLastPathComponent]]) {
+                // create font cache directory and its parent if not exist
+                [mgr createDirectoryAtPath:[file stringByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:&error];
+            }
+            BOOL result = [mgr moveItemAtURL:location toURL:downloadPath error:&error];
+            if (!result) {
+                downloadPath = nil;
+            }
+        } else {
+            if (200 != httpResponse.statusCode) {
+                error = [NSError errorWithDomain:WX_ERROR_DOMAIN code:-1 userInfo:@{@"ErrorMsg": [NSString stringWithFormat:@"can not load the font url %@ ", url.absoluteString]}];
+            }
+        }
+        completionBlock(downloadPath, error);
+    }];
+    
+    [task resume];
+}
+
++ (BOOL)isFileExist:(NSString *)filePath
+{
+    
+    return [[NSFileManager defaultManager] fileExistsAtPath:filePath];
 }
 
 + (NSString *)documentDirectory
@@ -376,30 +485,30 @@ static BOOL WXNotStat;
     return model;
 }
 
-CGFloat WXScreenResizeRadio(void)
++ (CGSize)portraitScreenSize
 {
-    return [WXUtility screenResizeScale];
-}
-
-+ (CGFloat)screenResizeScale
-{
-    static CGFloat resizeScale;
+    static CGSize portraitScreenSize;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        CGSize size = WXScreenSize();
-        CGFloat deviceWidth;
-        if (size.width > size.height) {
-            // Landscape
-            deviceWidth = size.height;
-        } else {
-            deviceWidth = size.width;
-        }
-        
-        resizeScale = deviceWidth / WXDefaultScreenWidth;
+        CGSize screenSize = [UIScreen mainScreen].bounds.size;
+        portraitScreenSize = CGSizeMake(MIN(screenSize.width, screenSize.height),
+                                        MAX(screenSize.width, screenSize.height));
     });
     
-    return resizeScale;
+    return portraitScreenSize;
 }
+
++ (CGFloat)defaultPixelScaleFactor
+{
+    static CGFloat defaultScaleFactor;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        defaultScaleFactor = [self portraitScreenSize].width / WXDefaultScreenWidth;
+    });
+    
+    return defaultScaleFactor;
+}
+
 
 #pragma mark - get deviceID
 + (NSString *)getDeviceID {
@@ -504,4 +613,91 @@ CGFloat WXScreenResizeRadio(void)
             ];
 }
 
++ (NSString *)uuidString
+{
+    CFUUIDRef uuidRef = CFUUIDCreate(NULL);
+    CFStringRef uuidStringRef= CFUUIDCreateString(NULL, uuidRef);
+    NSString *uuid = [NSString stringWithString:(__bridge NSString *)uuidStringRef];
+    CFRelease(uuidRef);
+    CFRelease(uuidStringRef);
+    
+    return [uuid lowercaseString];
+}
+
++ (NSDate *)dateStringToDate:(NSString *)dateString
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
+    [formatter setDateFormat:@"yyyy-MM-dd"];
+    NSDate *date=[formatter dateFromString:dateString];
+    return date;
+}
+
++ (NSDate *)timeStringToDate:(NSString *)timeString
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
+    [formatter setDateFormat:@"HH:mm"];
+    NSDate *date=[formatter dateFromString:timeString];
+    return date;
+}
+
++ (NSString *)dateToString:(NSDate *)date
+{
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+    NSString *str = [dateFormatter stringFromDate:date];
+    return str;
+}
+
++ (NSString *)timeToString:(NSDate *)date
+{
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"HH:mm"];
+    NSString *str = [dateFormatter stringFromDate:date];
+    return str;
+}
+
++ (NSUInteger)getSubStringNumber:(NSString *_Nullable)string subString:(NSString *_Nullable)subString
+{
+    if([string length] ==0) {
+        return 0;
+    }
+    if([subString length] ==0) {
+        return 0;
+    }
+    NSError *error = NULL;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:subString options:NSRegularExpressionCaseInsensitive error:&error];
+    NSUInteger numberOfMatches = [regex numberOfMatchesInString:string options:0 range:NSMakeRange(0, [string length])];
+    return numberOfMatches;
+    
+}
+
 @end
+
+
+//Deprecated
+CGFloat WXScreenResizeRadio(void)
+{
+    return [WXUtility defaultPixelScaleFactor];
+}
+
+CGFloat WXPixelResize(CGFloat value)
+{
+    return WXCeilPixelValue(value * WXScreenResizeRadio());
+}
+
+CGRect WXPixelFrameResize(CGRect value)
+{
+    CGRect new = CGRectMake(value.origin.x * WXScreenResizeRadio(),
+                            value.origin.y * WXScreenResizeRadio(),
+                            value.size.width * WXScreenResizeRadio(),
+                            value.size.height * WXScreenResizeRadio());
+    return new;
+}
+
+CGPoint WXPixelPointResize(CGPoint value)
+{
+    CGPoint new = CGPointMake(value.x * WXScreenResizeRadio(),
+                              value.y * WXScreenResizeRadio());
+    return new;
+}
+

@@ -1,6 +1,5 @@
 # Common Events
 <span class="weex-version">0.4</span>
-<a href="https://github.com/weexteam/article/issues/33"  class="weex-translate">cn</a>
 
 ## Click event
 
@@ -12,7 +11,50 @@ If a `click` event is bound to a component, the event will be triggered when the
 
 * `type`: `click`
 * `target`: The target component where the event is triggered
-* `timestamp`: Timestamp when event is triggered.
+* `timestamp`: Timestamp when event is triggered.       
+
+## Longpress event      
+
+If a `longpress` event is bound to a component, the event will be triggered when the user long press on it.
+
+**Notes:** The component `input` and `switch` do not currently support this event, please use `change` or `input` event instead.
+
+**event object**
+
+* `type`: `longpress`
+* `target`: The target component where the event is triggered
+* `timestamp`: Timestamp when event is triggered.     
+
+e.g.     
+
+```html
+<template>
+    <div>
+        <div onlongpress="longpress" onclick="click" class="border">
+            <text>Long press</text>
+        </div>
+    </div>
+</template>
+<style>
+    .border{
+        height:80;
+        border-width:1;
+    }
+</style>
+
+<script>
+    module.exports ={
+        methods: {
+            longpress: function(e){
+                console.log('long:', e);
+            },
+            click: function(e){
+                console.log('click:', e);
+            }
+        }
+    };
+</script>
+```        
 
 ## Appear event
 

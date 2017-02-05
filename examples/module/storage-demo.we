@@ -1,0 +1,85 @@
+<template>
+  <scroller>
+    <wxc-panel title="storage API" type="primary">
+      <wxc-panel title="setItem">
+        <text>{{setItemResult}}</text>
+      </wxc-panel>
+
+      <wxc-panel title="getItem">
+        <text>{{getItemResult}}</text>
+      </wxc-panel>
+
+      <wxc-panel title="length">
+        <text>{{lengthResult}}</text>
+      </wxc-panel>
+
+      <wxc-panel title="getAllKeys">
+        <text>{{getAllKeysResult}}</text>
+      </wxc-panel>
+
+      <wxc-panel title="removeItem">
+        <text>{{removeItemResult}}</text>
+      </wxc-panel>
+
+    </wxc-panel>
+  </scroller>
+
+</template>
+
+
+<script>
+require('weex-components');
+module.exports = {
+  data: {
+    setItemResult:'loading',
+    getItemResult:'loading',
+    removeItemResult:'loading',
+    lengthResult:'loading',
+    getAllKeysResult:'loading'
+  },
+  ready: function() {
+    var storage = require('@weex-module/storage');
+    var me = this;
+
+    //setItem
+    storage.setItem('foo','foo-value',function(e){
+      console.log('set [foo<->foo-value]:'+JSON.stringify(e));
+      me.setItemResult = 'foo:'+JSON.stringify(e)+'\n';
+    });
+    storage.setItem('bar','bar-value',function(e){
+      console.log('set [bar<->bar-value]:'+JSON.stringify(e));
+      me.setItemResult = me.setItemResult + 'bar:'+JSON.stringify(e);
+    });
+
+    //getItem
+    storage.getItem('foo',function(e){
+      console.log('get foo result:'+JSON.stringify(e));
+      me.getItemResult = 'get foo,value is '+e.data+'\n';
+    });
+    storage.getItem('bar',function(e){
+      console.log('get bar result:'+JSON.stringify(e));
+      me.getItemResult += 'get bar,value is '+e.data;
+    });
+
+    //length
+    storage.length(function(e){
+      console.log('length:'+JSON.stringify(e));
+      me.lengthResult = 'current length is ' + e.data;
+    });
+
+    //getAllKeys
+    storage.getAllKeys(function(e){
+      console.log('getAllKeys:'+JSON.stringify(e));
+      me.getAllKeysResult = JSON.stringify(e.data);
+      //me.getAllKeysResult +=' '+ typeof e.data
+    });
+    //removeItem
+    storage.removeItem('foo',function(e){
+      console.log('remove foo:'+JSON.stringify(e));
+      me.removeItemResult = 'remove item foo '+e.result;
+    });
+
+  }
+};
+
+</script>

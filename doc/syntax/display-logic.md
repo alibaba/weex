@@ -1,8 +1,9 @@
 # Display Logic Control
 <span class="weex-version">0.4</span>
-<a href="https://github.com/weexteam/article/issues/12"  class="weex-translate">cn</a>
 
 There are two attributes for display logic control: `if` and `repeat`. We can create Weex page structure and effects more flexible with them.
+
+ > **Notes:** The display logic could't apply on the root element within `<template>`, please don't use `if` or `repeat` directive on it.
 
 ## `if`
 
@@ -32,7 +33,7 @@ There are two attributes for display logic control: `if` and `repeat`. We can cr
 
 ## `repeat`
 
-`repeat` statement is just for array rendering. Every item in an array is also a structed data. This means in `repeat`ed component, you can bind their item properties directly.
+`repeat` statement is just for array rendering. Every item in an array is also a structured data. This means in `repeat`ed component, you can bind their item properties directly.
 
 ```html
 <template>
@@ -93,11 +94,11 @@ The origin data properties which not belongs to the array will also be bound:
 </script>
 ```
 
-### A extension of repeat syntax
+### An extension of repeat syntax
 
 #### use default `$index` for the index of array.
 <span class="weex-version">0.5</span>
- 
+
 e.g.
 
 ```html
@@ -125,7 +126,7 @@ e.g.
 
 #### use `track-by` to specify unique attribute
 <span class="weex-version">0.5</span>
- 
+
 By default when replacing an array, `repeat` will cause the entire list to be re-rendered. However you can use `track-by` to specify an unique attribute as a hint, so that weex can reuse existing elements as much as possible.
 
 **NOTE: DO NOT USE DATA-BINDING SYNTAX FOR `track-by`**

@@ -13,6 +13,8 @@
     <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <uses-feature android:name="android.hardware.camera"/>
     <uses-feature android:name="android.hardware.camera.autofocus"/>
@@ -23,9 +25,10 @@
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:supportsRtl="true"
-            tools:overrideLibrary="com.taobao.android.dexposed"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            tools:overrideLibrary="com.taobao.android.dexposed">
         <uses-library android:name="android.test.runner"/>
+
         <activity
                 android:name=".SplashActivity"
                 android:configChanges="orientation|keyboardHidden|screenSize"
@@ -50,14 +53,16 @@
                 android:screenOrientation="portrait"
                 android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="com.taobao.android.intent.action.WEEX"/>
 
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="com.taobao.android.intent.category.WEEX"/>
+                <action android:name="android.intent.action.VIEW"/>
 
                 <data android:scheme="http"/>
                 <data android:scheme="https"/>
                 <data android:scheme="file"/>
+                <data android:scheme="wxpage" />
             </intent-filter>
         </activity>
         <activity
@@ -69,21 +74,47 @@
                 android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="com.google.zxing.client.android.SCAN"/>
+
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
+
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:host="zxing.appspot.com"
-                      android:path="/scan"
-                      android:scheme="http"/>
+
+                <data android:host="zxing.appspot.com" android:path="/scan" android:scheme="http"/>
             </intent-filter>
         </activity>
         <activity
                 android:name="com.google.zxing.client.android.history.HistoryActivity"
                 android:label="@string/history_title"
                 android:stateNotNeeded="true"/>
+        <activity
+                android:name=".WXDebugActivity"
+                android:label="@string/title_activity_dynamic"
+                android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="weex.intent.action.dynamic"/>
+
+                <category android:name="weex.intent.category.dynamic"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="http"
+                      android:host="weex-remote-debugger"
+                      android:path="/dynamic/replace/framework"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="weex.intent.action.dynamic"/>
+
+                <category android:name="weex.intent.category.dynamic"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="http"
+                      android:host="weex-remote-debugger"
+                      android:path="/dynamic/replace/bundle"/>
+            </intent-filter>
+        </activity>
+        <activity android:name="com.alibaba.weex.BenchmarkActivity"
+                  android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

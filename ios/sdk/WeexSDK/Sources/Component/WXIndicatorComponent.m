@@ -9,6 +9,8 @@
 #import "WXIndicatorComponent.h"
 #import "WXSliderComponent.h"
 #import "WXConvert.h"
+#import "WXSliderNeighborComponent.h"
+#import "WXSDKInstance.h"
 
 @implementation WXIndicatorView
 
@@ -135,7 +137,7 @@
     if (self = [super initWithRef:ref type:type styles:styles attributes:attributes events:events weexInstance:weexInstance]) {
         _itemColor = styles[@"itemColor"] ? [WXConvert UIColor:styles[@"itemColor"]]:[UIColor colorWithRed:0xff/255.0f green:0xff/255.0f blue:0xff/255.0f alpha:0.5f];
         _itemSelectedColor = styles[@"itemSelectedColor"] ? [WXConvert UIColor:styles[@"itemSelectedColor"]]:[UIColor colorWithRed:0xff/255.0f green:0xd5/255.0f blue:0x45/255.0f alpha:1.0f];
-        _itemSize = styles[@"itemSize"] ? [WXConvert WXPixelType:styles[@"itemSize"]] : 5.0f;
+        _itemSize = styles[@"itemSize"] ? [WXConvert WXPixelType:styles[@"itemSize"] scaleFactor:self.weexInstance.pixelScaleFactor] : 5.0f;
     }
     return self;
 }
@@ -157,7 +159,7 @@
     _indicatorView.pointSize = _itemSize;
     
     WXComponent *parent = self.supercomponent;
-    if([parent isKindOfClass:[WXSliderComponent class]]) {
+    if([parent isKindOfClass:[WXSliderComponent class]] || [parent isKindOfClass:[WXSliderNeighborComponent class]]) {
         WXSliderComponent *parentSlider = (WXSliderComponent *)parent;
         [parentSlider setIndicatorView:_indicatorView];
     }
@@ -169,25 +171,28 @@
 - (void)updateStyles:(NSDictionary *)styles
 {
     BOOL styleChange = NO;
+    
     if (styles[@"itemColor"]) {
         styleChange = YES;
         _itemColor = [WXConvert UIColor:styles[@"itemColor"]];
         [_indicatorView setPointColor:_itemColor];
     }
-    else if (styles[@"itemSelectedColor"]) {
+    
+    if (styles[@"itemSelectedColor"]) {
         styleChange = YES;
         _itemSelectedColor = [WXConvert UIColor:styles[@"itemSelectedColor"]];
         [_indicatorView setLightColor:_itemSelectedColor];
     }
-    else if (styles[@"itemSize"]) {
+    
+    if (styles[@"itemSize"]) {
         styleChange = YES;
-        _itemSize = [WXConvert WXPixelType:styles[@"itemSize"]];
+        _itemSize = [WXConvert WXPixelType:styles[@"itemSize"] scaleFactor:self.weexInstance.pixelScaleFactor];
         [_indicatorView setPointSize:_itemSize];
     }
+    
     if (styleChange) {
         [self setNeedsDisplay];
     }
 }
 
 @end
-

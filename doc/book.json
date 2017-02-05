@@ -4,7 +4,8 @@
   "description": "Weex Document Site",
   "plugins": [
       "header",
-      "disqus"
+      "disqus",
+      "heading-anchors"
   ],
   "pluginsConfig": {
     "disqus": {

@@ -1,92 +1,41 @@
-import frameworks from './config'
+/**
+ * @fileOverview
+ * Register framework(s) in JS runtime. Weex supply two layers for 3rd-party
+ * framework(s): one is the instance management layer, another is the
+ * virtual-DOM layer.
+ */
 
-import { Document, Element, Comment } from '../vdom'
+import * as shared from '../shared'
 
-const config = {
-  Document, Element, Comment,
-  sendTasks (...args) {
-    return global.callNative(...args)
-  }
+import init from './init'
+import config from './config'
+
+import {
+  register,
+  unregister,
+  has
+} from './service'
+
+/* istanbul ignore next */
+function freezePrototype () {
+  shared.freezePrototype()
+
+  Object.freeze(config.Element)
+  Object.freeze(config.Comment)
+  Object.freeze(config.Listener)
+  Object.freeze(config.Document.prototype)
+  Object.freeze(config.Element.prototype)
+  Object.freeze(config.Comment.prototype)
+  Object.freeze(config.Listener.prototype)
 }
 
-for (const name in frameworks) {
-  const framework = frameworks[name]
-  framework.init(config)
+export default {
+  setNativeConsole: shared.setNativeConsole,
+  resetNativeConsole: shared.resetNativeConsole,
+  setNativeTimer: shared.setNativeTimer,
+  resetNativeTimer: shared.resetNativeTimer,
+  service: { register, unregister, has },
+  freezePrototype,
+  init,
+  config
 }
-
-const versionRegExp = /^\/\/ *(\{[^\}]*\}) *\r?\n/
-
-function checkVersion (code) {
-  let info
-  const result = versionRegExp.exec(code)
-  if (result) {
-    try {
-      info = JSON.parse(result[1])
-    }
-    catch (e) {}
-  }
-  return info
-}
-
-const instanceMap = {}
-
-export function createInstance (id, code, config, data) {
-  let info = instanceMap[id]
-  if (!info) {
-    info = checkVersion(code) || {}
-    if (!frameworks[info.framework]) {
-      info.framework = 'Weex'
-    }
-    instanceMap[id] = info
-    config = config || {}
-    config.bundleVersion = info.version
-    console.debug(`[JS Framework] create an ${info.framework}@${config.bundleVersion} instance from ${config.bundleVersion}`)
-    return frameworks[info.framework].createInstance(id, code, config, data)
-  }
-  return new Error(`invalid instance id "${id}"`)
-}
-
-const methods = {
-  createInstance
-}
-
-function genInit (methodName) {
-  methods[methodName] = function (...args) {
-    for (const name in frameworks) {
-      const framework = frameworks[name]
-      if (framework && framework[methodName]) {
-        framework[methodName](...args)
-      }
-    }
-  }
-}
-
-['registerComponents', 'registerModules', 'registerMethods'].forEach(genInit)
-
-function genInstance (methodName) {
-  methods[methodName] = function (...args) {
-    const id = args[0]
-    const info = instanceMap[id]
-    if (info && frameworks[info.framework]) {
-      return frameworks[info.framework][methodName](...args)
-    }
-    return new Error(`invalid instance id "${id}"`)
-  }
-}
-
-['destroyInstance', 'refreshInstance', 'receiveTasks', 'getRoot'].forEach(genInstance)
-
-function adaptInstance (methodName, nativeMethodName) {
-  methods[nativeMethodName] = function (...args) {
-    const id = args[0]
-    const info = instanceMap[id]
-    if (info && frameworks[info.framework]) {
-      return frameworks[info.framework][methodName](...args)
-    }
-    return new Error(`invalid instance id "${id}"`)
-  }
-}
-
-adaptInstance('receiveTasks', 'callJS')
-
-export default methods

@@ -27,10 +27,10 @@ weex --debugger
 
 #####3.start debug
 If you start server success you can find the address which like this:  
- ![IP](http://gw.alicdn.com/mt/TB107u8JVXXXXcaXVXXXXXXXXXX-718-110.png)  
+ ![IP](//gw.alicdn.com/mt/TB107u8JVXXXXcaXVXXXXXXXXXX-718-110.png)  
 copy "http://30.10.217.78:4000/" to your browser。The browser will show a QR Code.  
 Use your 'playgroud' to scan the code QR in your browser.you can find this content:  
-![server](http://gw.alicdn.com/mt/TB1EgO_JVXXXXa9XVXXXXXXXXXX-1698-648.png)
+![server](//gw.alicdn.com/mt/TB1EgO_JVXXXXa9XVXXXXXXXXXX-1698-648.png)
 
 #####Device Log Level
 
@@ -42,4 +42,4 @@ For example, you select "Debug", the device will send "error", "Info","Warn" lev
 
 Blue button is used to filter the log Level。  
 For example, you select the "error", you can only see the "error" level log
-![](http://gw.alicdn.com/mt/TB1RtTmJVXXXXbfXpXXXXXXXXXX-1460-488.png)
+![](//gw.alicdn.com/mt/TB1RtTmJVXXXXbfXpXXXXXXXXXX-1460-488.png)

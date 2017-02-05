@@ -10,4 +10,6 @@
 
 @interface WXInstanceWrap : NSObject <WXModuleProtocol>
 
+- (void)error:(NSInteger)type code:(NSInteger)code info:(NSString *)info;
+
 @end

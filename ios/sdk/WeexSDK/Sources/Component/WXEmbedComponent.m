@@ -19,6 +19,7 @@
 
 @property (nonatomic, strong) WXSDKInstance *embedInstance;
 @property (nonatomic, strong) UIView *embedView;
+@property (nonatomic, assign) BOOL createFinished;
 @property (nonatomic, assign) BOOL renderFinished;
 @property (nonatomic, assign) WXVisibility visible;
 @property (nonatomic, strong) NSURL *sourceURL;
@@ -42,6 +43,10 @@
 - (instancetype)initWithRef:(NSString *)ref type:(NSString *)type styles:(NSDictionary *)styles attributes:(NSDictionary *)attributes events:(NSArray *)events weexInstance:(WXSDKInstance *)weexInstance
 {
     if (self = [super initWithRef:ref type:type styles:styles attributes:attributes events:events weexInstance:weexInstance]) {
+        
+        _createFinished = NO;
+        _renderFinished = NO;
+        
         _sourceURL = [NSURL URLWithString: attributes[@"src"]];
         _visible =  [WXConvert WXVisibility:styles[@"visibility"]];
         
@@ -79,6 +84,7 @@
         NSURL *sourceURL = [NSURL URLWithString:attributes[@"src"]];
         if (!sourceURL|| ![[sourceURL absoluteString] isEqualToString:[_sourceURL absoluteString]]) {
             _sourceURL = sourceURL;
+            _createFinished = NO;
             [self _layoutEmbedView];
         }
     }
@@ -93,7 +99,7 @@
 {
     if (_visible == WXVisibilityShow) {
         [self _updateState:WeexInstanceAppear];
-        if (!_renderFinished && !CGRectEqualToRect(CGRectZero, self.calculatedFrame)) {
+        if (!_createFinished && !CGRectEqualToRect(CGRectZero, self.calculatedFrame)) {
             [self _renderWithURL:_sourceURL];
         }
     }
@@ -138,39 +144,43 @@
         
             [weakSelf.embedView removeFromSuperview];
             weakSelf.embedView = view;
-            weakSelf.renderFinished = YES;
             [weakSelf.view addSubview:weakSelf.embedView];
+            
+            weakSelf.createFinished = YES;
         });
     };
     
     _embedInstance.onFailed = ^(NSError *error) {
-        if (weakSelf.errorView) {
-            return ;
-        }
-        
-        WXErrorView *errorView = [[WXErrorView alloc]initWithFrame:CGRectMake(0.0f, 0.0f, 135.0f, 130.0f)];
-        errorView.center = CGPointMake(weakSelf.view.bounds.size.width / 2.0f, weakSelf.view.bounds.size.height / 2.0f);
-        errorView.delegate = weakSelf;
-        [weakSelf.view addSubview:errorView];
-        
-        weakSelf.errorView = errorView;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (weakSelf.errorView) {
+                return ;
+            }
+            
+            WXErrorView *errorView = [[WXErrorView alloc]initWithFrame:CGRectMake(0.0f, 0.0f, 135.0f, 130.0f)];
+            errorView.center = CGPointMake(weakSelf.view.bounds.size.width / 2.0f, weakSelf.view.bounds.size.height / 2.0f);
+            errorView.delegate = weakSelf;
+            [weakSelf.view addSubview:errorView];
+            
+            weakSelf.errorView = errorView;
+        });
     };
     
     _embedInstance.renderFinish = ^(UIView *view) {
+         weakSelf.renderFinished = YES;
         [weakSelf _updateState:WeexInstanceAppear];
     };
 }
 
 - (void)_updateState:(WXState)state
 {
-    if (_embedInstance && _embedInstance.state != state) {
+    if (_renderFinished && _embedInstance && _embedInstance.state != state) {
         _embedInstance.state = state;
         
         if (state == WeexInstanceAppear) {
             [self setNavigationWithStyles:self.embedInstance.naviBarStyles];
             [[WXSDKManager bridgeMgr] fireEvent:self.embedInstance.instanceId ref:WX_SDK_ROOT_REF type:@"viewappear" params:nil domChanges:nil];
         }
-        else if (state == WeexInstanceDisappear ){
+        else if (state == WeexInstanceDisappear) {
             [[WXSDKManager bridgeMgr] fireEvent:self.embedInstance.instanceId ref:WX_SDK_ROOT_REF type:@"viewdisappear" params:nil domChanges:nil];
         }
     }

@@ -204,26 +204,43 @@
  */
 package com.taobao.weex.dom;
 
-import com.taobao.weex.common.WXDomPropConstant;
+import android.support.annotation.NonNull;
+import android.support.v4.util.ArrayMap;
+import android.text.TextUtils;
+
+import com.taobao.weex.common.Constants;
 import com.taobao.weex.common.WXImageSharpen;
 import com.taobao.weex.utils.WXLogUtils;
+import com.taobao.weex.utils.WXUtils;
+import com.taobao.weex.utils.WXViewUtils;
 
+import java.util.Collection;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Set;
 
 /**
  * store value of component attribute
  *
  */
-public class WXAttr extends ConcurrentHashMap<String, Object> {
+public class WXAttr implements Map<String, Object>,Cloneable {
 
   private static final long serialVersionUID = -2619357510079360946L;
+  private @NonNull final ArrayMap<String, Object> map;
+
+  public WXAttr(){
+    map=new ArrayMap<>();
+  }
+
+  public WXAttr(@NonNull Map<String,Object> standardMap) {
+    this();
+    map.putAll(standardMap);
+  }
 
   public static String getPrefix(Map<String, Object> attr) {
     if (attr == null) {
       return null;
     }
-    Object src = attr.get(WXDomPropConstant.WX_ATTR_PREFIX);
+    Object src = attr.get(Constants.Name.PREFIX);
     if (src == null) {
       return null;
     }
@@ -234,7 +251,7 @@ public class WXAttr extends ConcurrentHashMap<String, Object> {
     if (attr == null) {
       return null;
     }
-    Object src = attr.get(WXDomPropConstant.WX_ATTR_SUFFIX);
+    Object src = attr.get(Constants.Name.SUFFIX);
     if (src == null) {
       return null;
     }
@@ -250,7 +267,7 @@ public class WXAttr extends ConcurrentHashMap<String, Object> {
     if (attr == null) {
       return null;
     }
-    Object src = attr.get(WXDomPropConstant.WX_ATTR_VALUE);
+    Object src = attr.get(Constants.Name.VALUE);
     if (src == null) {
       src = attr.get("content");
       if (src == null) {
@@ -262,22 +279,22 @@ public class WXAttr extends ConcurrentHashMap<String, Object> {
 
   public WXImageQuality getImageQuality() {
 
-    Object obj = get(WXDomPropConstant.WX_ATTR_QUALITY);
+    Object obj = get(Constants.Name.QUALITY);
     if (obj == null) {
-      obj = get(WXDomPropConstant.WX_ATTR_IMAGE_QUALITY);
+      obj = get(Constants.Name.IMAGE_QUALITY);
     }
     if (obj == null) {
       return WXImageQuality.LOW;
     }
     WXImageQuality waImageQuality = WXImageQuality.LOW;
     String imageQuality = obj.toString();
-    if (imageQuality.equals(WXDomPropConstant.WX_ATTR_IMAGE_QUALITY_ORIGINAL)) {
+    if (imageQuality.equals(Constants.Value.ORIGINAL)) {
       waImageQuality = WXImageQuality.ORIGINAL;
-    } else if (imageQuality.equals(WXDomPropConstant.WX_ATTR_IMAGE_QUALITY_LOW)) {
+    } else if (imageQuality.equals(Constants.Value.LOW)) {
       waImageQuality = WXImageQuality.LOW;
-    } else if (imageQuality.equals(WXDomPropConstant.WX_ATTR_IMAGE_QUALITY_NORMAL)) {
+    } else if (imageQuality.equals(Constants.Value.NORMAL)) {
       waImageQuality = WXImageQuality.NORMAL;
-    } else if (imageQuality.equals(WXDomPropConstant.WX_ATTR_IMAGE_QUALITY_HIGH)) {
+    } else if (imageQuality.equals(Constants.Value.HIGH)) {
       waImageQuality = WXImageQuality.HIGH;
     }
 
@@ -285,9 +302,9 @@ public class WXAttr extends ConcurrentHashMap<String, Object> {
   }
 
   public WXImageSharpen getImageSharpen() {
-    Object obj = get(WXDomPropConstant.WX_SHARPEN);
+    Object obj = get(Constants.Name.SHARPEN);
     if (obj == null) {
-      obj = get(WXDomPropConstant.WX_IMAGE_SHARPEN);
+      obj = get(Constants.Name.IMAGE_SHARPEN);
     }
     if (obj == null) {
       return WXImageSharpen.UNSHARPEN;
@@ -302,7 +319,7 @@ public class WXAttr extends ConcurrentHashMap<String, Object> {
   }
 
   public String getImageSrc() {
-    Object src = get(WXDomPropConstant.WX_ATTR_SRC);
+    Object src = get(Constants.Name.SRC);
     if (src == null) {
       return null;
     }
@@ -310,7 +327,7 @@ public class WXAttr extends ConcurrentHashMap<String, Object> {
   }
 
   public boolean showIndicators() {
-    Object obj = get(WXDomPropConstant.WX_ATTR_SHOWINDICATORS);
+    Object obj = get(Constants.Name.SHOW_INDICATORS);
     if (obj == null) {
       return true;
     }
@@ -324,7 +341,7 @@ public class WXAttr extends ConcurrentHashMap<String, Object> {
   }
 
   public boolean autoPlay() {
-    Object obj = get(WXDomPropConstant.WX_ATTR_AUTOPLAY);
+    Object obj = get(Constants.Name.AUTO_PLAY);
     if (obj == null) {
       return false;
     }
@@ -338,14 +355,14 @@ public class WXAttr extends ConcurrentHashMap<String, Object> {
   }
 
   public String getScope() {
-    Object src = get(WXDomPropConstant.WX_ATTR_SCOPE);
+    Object src = get(Constants.Name.SCOPE);
     if (src == null) {
       return null;
     }
     return src.toString();
   }
   public String getLoadMoreRetry() {
-    Object src = get(WXDomPropConstant.WX_ATTR_LOAD_MORE_RETRY);
+    Object src = get(Constants.Name.LOADMORERETRY);
     if (src == null) {
       return null;
     }
@@ -353,15 +370,27 @@ public class WXAttr extends ConcurrentHashMap<String, Object> {
   }
 
   public String getLoadMoreOffset() {
-    Object src = get(WXDomPropConstant.WX_ATTR_LOAD_MORE_OFFSET);
+    Object src = get(Constants.Name.LOADMOREOFFSET);
     if (src == null) {
       return null;
     }
     return src.toString();
   }
 
+  public String optString(String key){
+    if(containsKey(key)){
+      Object value = get(key);
+      if (value instanceof String) {
+        return (String) value;
+      } else if (value != null) {
+        return String.valueOf(value);
+      }
+    }
+    return "";
+  }
+
   public boolean getIsRecycleImage() {
-    Object obj = get(WXDomPropConstant.WX_ATTR_RECYCLE_IMG);
+    Object obj = get(Constants.Name.RECYCLE_IMAGE);
     if (obj == null) {
       return true;
     }
@@ -379,5 +408,97 @@ public class WXAttr extends ConcurrentHashMap<String, Object> {
       return "vertical";
     }
     return scrollDirection.toString();
+  }
+
+  public float getElevation(int viewPortW) {
+    Object obj = get(Constants.Name.ELEVATION);
+    float ret = Float.NaN;
+    if (obj != null) {
+      String number = obj.toString();
+      if (!TextUtils.isEmpty(number)) {
+        ret = WXViewUtils.getRealSubPxByWidth(WXUtils.getFloat(number),viewPortW);
+      } else {
+        ret = 0;
+      }
+    }
+    return ret;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    return map.equals(o);
+  }
+
+  @Override
+  public int hashCode() {
+    return map.hashCode();
+  }
+
+  @Override
+  public void clear() {
+    map.clear();
+  }
+
+  @Override
+  public boolean containsKey(Object key) {
+    return map.containsKey(key);
+  }
+
+  @Override
+  public boolean containsValue(Object value) {
+    return map.containsValue(value);
+  }
+
+  @NonNull
+  @Override
+  public Set<Entry<String, Object>> entrySet() {
+    return map.entrySet();
+  }
+
+  @Override
+  public Object get(Object key) {
+    return map.get(key);
+  }
+
+  @Override
+  public boolean isEmpty() {
+    return map.isEmpty();
+  }
+
+  @NonNull
+  @Override
+  public Set<String> keySet() {
+    return map.keySet();
+  }
+
+  @Override
+  public Object put(String key, Object value) {
+    return map.put(key,value);
+  }
+
+  @Override
+  public void putAll(Map<? extends String, ?> map) {
+    this.map.putAll(map);
+  }
+
+  @Override
+  public Object remove(Object key) {
+    return map.remove(key);
+  }
+
+  @Override
+  public int size() {
+    return map.size();
+  }
+
+  @NonNull
+  @Override
+  public Collection<Object> values() {
+    return map.values();
+  }
+
+  @Override
+  protected WXAttr clone(){
+    return new WXAttr(map);
   }
 }

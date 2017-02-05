@@ -31,38 +31,28 @@
         if (attributes[@"display"]) {
             if ([attributes[@"display"] isEqualToString:@"show"]) {
                 _displayState = YES;
-            } else if ([attributes[@"display"] isEqualToString:@"hide"]){
+            } else if ([attributes[@"display"] isEqualToString:@"hide"]) {
                 _displayState = NO;
             } else {
                 WXLogError(@"");
             }
         }
-        
         self.cssNode->style.position_type = CSS_POSITION_ABSOLUTE;
     }
     return self;
 }
 
-- (void)layoutDidFinish
-{
-    if ([self isViewLoaded]) {
-        
-        [self.view setFrame: (CGRect){
-            .size = self.calculatedFrame.size,
-            .origin.x = self.calculatedFrame.origin.x,
-            .origin.y = self.view.frame.origin.y - CGRectGetHeight(self.calculatedFrame)
-        }];
-    }
-}
-
 - (void)viewDidLoad
 {
      _initFinished = YES;
-    [self.view setFrame: (CGRect){
+    [self.view setFrame: (CGRect) {
         .size = self.calculatedFrame.size,
         .origin.x = self.calculatedFrame.origin.x,
         .origin.y = self.view.frame.origin.y - CGRectGetHeight(self.calculatedFrame)
     }];
+    if (!_displayState) {
+        [_indicator.view setHidden:YES];
+    }
 }
 
 - (void)viewWillUnload
@@ -93,7 +83,7 @@
     if (attributes[@"display"]) {
         if ([attributes[@"display"] isEqualToString:@"show"]) {
             _displayState = YES;
-        } else if ([attributes[@"display"] isEqualToString:@"hide"]){
+        } else if ([attributes[@"display"] isEqualToString:@"hide"]) {
             _displayState = NO;
         } else {
             WXLogError(@"");
@@ -126,12 +116,16 @@
     if (_displayState) {
         offset.y = -self.calculatedFrame.size.height;
         [_indicator start];
-    }
-    else {
+    } else {
         offset.y = 0;
         [_indicator stop];
     }
     [scrollerProtocol setContentOffset:offset animated:YES];
+}
+
+- (BOOL)displayState
+{
+    return _displayState;
 }
 
 - (void)setFrame:(CGRect)frame

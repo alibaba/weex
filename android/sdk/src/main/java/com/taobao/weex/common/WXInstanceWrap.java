@@ -204,12 +204,14 @@
  */
 package com.taobao.weex.common;
 
+import com.taobao.weex.annotation.JSMethod;
+
 /**
  * Report template error.
  */
 public class WXInstanceWrap extends WXModule {
 
-  @WXModuleAnno
+  @JSMethod
   public void error(String type, String code, String info) {
     if (mWXSDKInstance != null) {
       mWXSDKInstance.onRenderError(type + "|" + code, info);

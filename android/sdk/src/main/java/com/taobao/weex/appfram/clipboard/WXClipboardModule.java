@@ -213,8 +213,8 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 
 import com.taobao.weex.bridge.JSCallback;
+import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.common.WXModule;
-import com.taobao.weex.common.WXModuleAnno;
 import com.taobao.weex.utils.WXLogUtils;
 
 import java.io.FileInputStream;
@@ -225,9 +225,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-/**
- * Created by yiyuan.zhangyy(xingjiu) <br/>
- */
 public class WXClipboardModule extends WXModule implements IWXClipboard {
 
     private final String CLIP_KEY = "WEEX_CLIP_KEY_MAIN";
@@ -239,7 +236,7 @@ public class WXClipboardModule extends WXModule implements IWXClipboard {
     private static final String RESULT_FAILED = "failed";
 
     @Override
-    @WXModuleAnno
+    @JSMethod
     public void setString(String text) {
         if(null == text) {
             return;
@@ -252,7 +249,7 @@ public class WXClipboardModule extends WXModule implements IWXClipboard {
     }
 
     @Override
-    @WXModuleAnno
+    @JSMethod
     public void getString(@Nullable JSCallback callback) {
         Context context = mWXSDKInstance.getContext();
         ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
@@ -286,11 +283,12 @@ public class WXClipboardModule extends WXModule implements IWXClipboard {
         // Condition 2. a URI value
         Uri uri = item.getUri();
         if (uri != null) {
+            InputStreamReader reader = null;
             FileInputStream stream = null;
             try {
                 AssetFileDescriptor assetFileDescriptor = context.getContentResolver().openTypedAssetFileDescriptor(uri, "text/*", null);
                 stream = assetFileDescriptor.createInputStream();
-                InputStreamReader reader = new InputStreamReader(stream, "UTF-8");
+                reader = new InputStreamReader(stream, "UTF-8");
 
                 StringBuilder builder = new StringBuilder(128);
                 char[] buffer = new char[8192];
@@ -305,6 +303,13 @@ public class WXClipboardModule extends WXModule implements IWXClipboard {
             } catch (IOException e) {
                 WXLogUtils.w("ClippedData Failure loading text.", e);
             } finally {
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        // ignore
+                    }
+                }
                 if (stream != null) {
                     try {
                         stream.close();

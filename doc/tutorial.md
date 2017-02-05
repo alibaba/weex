@@ -1,7 +1,6 @@
 # Tutorial
 
 <span class="weex-version">0.4</span>
-<a href="https://github.com/weexteam/article/issues/4"  class="weex-translate">cn</a>
 
 We will make a simple but realistic list, in which the technologies Weex uses will be shown. This form of list also works for a lot of e-commercial apps and mobile sites.
 
@@ -60,7 +59,7 @@ weex tech_list.we
 
 A browser window will be opened automatically to display the running result like below     (weex-toolkit version should be greater than 0.1.0, use `weex --version` to check it):
 
-![weex html5 render](http://gtms02.alicdn.com/tps/i2/TB1y151LVXXXXXXaXXXoRYgWVXX-495-584.jpg)
+![weex html5 render](https://gtms02.alicdn.com/tps/i2/TB1y151LVXXXXXXaXXXoRYgWVXX-495-584.jpg)
 
 ## Introduce to Weex Syntax
 
@@ -68,9 +67,9 @@ So it's time for introducing the syntax.
 
 Given the content of `tech_list.we`, Weex source code is composed of three parts -- *template*, *style*, and *script*, just like html, css, and javascript for the Web.
 
-Template is the skeleton that gives Weex structure. It is composed of tags which surround content and apply meaning to it. Weex has two types of tag, opening tag & closing tag. We call every pair of opening tags & closing tags a Weex tag. Tags have *attributes*, different attribute has different meaning, for example, `class` attribute makes it possible to define equal styles for multiple tags, `onclick` attribute makes the tag respond to click event.
+Template is the skeleton that gives Weex structure. It is composed of tags which surround content and apply meaning to it. Tags have *attributes*, different attribute means different feature, for example, `class` attribute makes it possible to define the same styles for multiple tags, `onclick` attribute makes the tag respond to click event.
 
-Style describes how Weex tags are to be displayed. We like you, love the CSS, so we try to keep consistent with CSS standard as possible. Weex Style supports a lot of CSS features, like margin, padding, fixed and so on. Better yet, flexbox layout (flex) is well supported in Weex Style.
+Style describes how Weex tags are to be displayed. We prefer CSS very much. So we try to keep consistent with CSS standard as possible. Weex Style supports a lot of CSS features, like margin, padding, fixed and so on. Better yet, flexbox layout (flex) is well supported in Weex Style.
 
 Script adds *data* & *logic* to Weex tags, helping you easily access local or remote data and update tags. You can also define some methods for your tag to respond to different events. Weex Script organization learns a lot from CommonJS module style.
 
@@ -78,7 +77,7 @@ More information about Weex syntax can be found in our [Syntax chapter](syntax/m
 
 ## Add More Items
 
-We can't call one item an list, so we need to add more items to our tech list. Open `tech_list.we` in your favorite editor and update it's content like below:
+We can't call one item a list, so we need to add more items to our tech list. Open `tech_list.we` in your favorite editor and update it's content like below:
 
 ```html
 <template>
@@ -113,11 +112,11 @@ weex tech_list.we --qr -h {ip or hostname}
 
 It's ***RECOMMENDED*** to use `-h` option to specify your local ip address or hostname.
 
-An QR code will be displayed in the terminal window like below:
+A QR code will be displayed in the terminal window like below:
 
 ![Weex CLI](images/tut-cli-qrcode.png)
 
-The QR code can work together with [Weex Playground App](http://alibaba.github.io/weex/download.html). Open it and tap the scan icon at the top-right corner, then scan the Qr code displayed in your terminal. If all work well, a beautiful list will be displayed in your phone.
+The QR code can work together with [Weex Playground App](http://alibaba.github.io/weex/download.html). Open it and tap the scan icon at the top-right corner, then scan the QR code displayed in your terminal. If all work well, a beautiful list will be displayed in your phone.
 
 ![Second Example](images/tut-second.png)
 

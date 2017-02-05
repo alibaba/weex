@@ -1,6 +1,5 @@
 # How data-binding works
 <span class="weex-version">0.4</span>
-<a href="https://github.com/weexteam/article/issues/26"  class="weex-translate">cn</a>
 
 Weex JS Framework is a MVVM framework. It observe data and use `{{bindedKey}}` syntax to bind in views. When data is changed in anyway, the view will automatically be updated due to data-binding.
 

@@ -103,8 +103,8 @@ do {                                    \
            format:(fmt), ## __VA_ARGS__];  \
 } while(0)
 
+extern void _WXLogObjectsImpl(NSString *severity, NSArray *arguments);
 
-extern void _PDLogObjectsImpl(NSString *severity, NSArray *arguments);
 #define WXLog(format,...)               WX_LOG(WXLogFlagLog, format, ##__VA_ARGS__)
 #define WXLogDebug(format, ...)         WX_LOG(WXLogFlagDebug, format, ##__VA_ARGS__)
 #define WXLogInfo(format, ...)          WX_LOG(WXLogFlagInfo, format, ##__VA_ARGS__)

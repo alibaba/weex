@@ -1,5 +1,7 @@
 # Gesture
 
+> Experiment Feature
+
 Weex encapsulates native touch events to provide a gesture system. Using gesture is similar to use event in Weex. Just set `on` attributes on a node to listen to gesture.
 
 ## Type

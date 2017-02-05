@@ -1,7 +1,6 @@
 # How to customize a native Component ?
-<a href="https://github.com/weexteam/article/wiki/%E6%AC%A2%E8%BF%8E%E5%8F%82%E4%B8%8EWeex%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91"  class="weex-translate incomplete">cn</a>
 
-Weex has wrapped up the most critical platform components, such as `ScrollView`, `ListView`, `Text`, `Imageview` and so on. Certainly these components can not completely meet your need. And  thousands of native UI components that alwaysly be using in our project may be required to integrate into Weex easily. Fortunately, it's quite convenient to wrap up your own components that should be from any existing components.
+Weex has wrapped up the most critical platform components, such as `ScrollView`, `ListView`, `Text`, `Imageview` and so on. Certainly these components can not completely meet your need. And  thousands of native UI components that always be using in our project may be required to integrate into Weex easily. Fortunately, it's quite convenient to wrap up your own components that should be from any existing components.
 
 ##### Step By Step
  

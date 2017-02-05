@@ -1,6 +1,5 @@
 # How it works
 <span class="weex-version">0.4</span>
-<a href="https://github.com/weexteam/article/issues/32"  class="weex-translate">cn</a>
 
 ## Overview
 
@@ -100,7 +99,7 @@ Native RenderEngine will supplies many native components and modules for call.
 
 During a Weex instance works, Native RenderEngine receives all kinds of module API calls from JS Framework. These calls will create or update components for view and use client-side features like `toast`. When a user interaction or module API callback happens, It will call `callJS()` from JS Framework. These jobs could walk through the Weex instance lifecycle till the instance is destroyed. As is shown in the architecture figure, H5 RenderEngine is a special RenderEngine with almost the same functions as native RenderEngines. 
 
-![arch](http://gtms02.alicdn.com/tps/i2/TB1ootBMpXXXXXrXXXXwi60UVXX-596-397.png)  
+![arch](//gtms02.alicdn.com/tps/i2/TB1ootBMpXXXXXrXXXXwi60UVXX-596-397.png)  
 Weex Architecture 
 
 ### call native from javascript
@@ -126,7 +125,7 @@ user interactions
 
 ### Render Flow
 
-![render flow](http://gtms03.alicdn.com/tps/i3/TB1_SA4MXXXXXXGaXXXpZ8UVXXX-519-337.png)  
+![render flow](//gtms03.alicdn.com/tps/i3/TB1_SA4MXXXXXXGaXXXpZ8UVXXX-519-337.png)  
 Weex Render Flow 
 
 0. Input is virtual dom.

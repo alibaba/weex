@@ -9,19 +9,41 @@
 #import "WXTransform.h"
 #import "math.h"
 #import "WXUtility.h"
+#import "WXSDKInstance.h"
 
 @interface WXTransform()
 
 @property (nonatomic, weak) UIView *view;
+@property (nonatomic, assign) float rotateAngle;
+@property (nonatomic, assign) BOOL isTransformRotate;
+@property (nonatomic, weak) WXSDKInstance *weexInstance;
 
 @end
 
 @implementation WXTransform
 
+- (instancetype)init
+{
+    return [self initWithInstance:nil];
+}
+
+- (instancetype)initWithInstance:(WXSDKInstance *)weexInstance;
+{
+    if (self = [super init]) {
+        _isTransformRotate = YES;
+        _rotateAngle = 0.0;
+        _weexInstance = weexInstance;
+    }
+    
+    return self;
+}
+
 - (CATransform3D)getTransform:(NSString *)cssValue
 {
+    //CATransform3D transform3D = _view.layer.transform;
+    //_transform = _view ? CGAffineTransformMake(transform3D.m11, transform3D.m12, transform3D.m21, transform3D.m22, transform3D.m41, transform3D.m42) : CGAffineTransformIdentity;
+    
     _transform = CGAffineTransformIdentity;
-
     if (!cssValue || cssValue.length == 0 || [cssValue isEqualToString:@"none"]) {
         return CATransform3DMakeAffineTransform(_transform);
     }
@@ -61,6 +83,10 @@
 - (CATransform3D)getTransform:(NSString *)cssValue withView:(UIView *)view withOrigin:(NSString *)origin
 {
     if (origin && origin.length > 0 && ![origin isEqualToString:@"none"]) {
+        /**
+          * Waiting to fix the issue that transform-origin behaves in rotation 
+          * http://ronnqvi.st/translate-rotate-translate/
+         **/
         CGPoint originPoint = [self getTransformOrigin:origin withView:view];
         if (originPoint.x != 0 || originPoint.y != 0) {
             cssValue = [NSString stringWithFormat:@"translate(%f,%f) %@ translate(%f,%f)", originPoint.x, originPoint.y, cssValue, -originPoint.x, -originPoint.y];
@@ -68,6 +94,12 @@
     }
     
     return [self getTransform:cssValue withView:view];
+}
+
+- (CATransform3D)getTransform:(NSString *)cssValue withView:(UIView *)view withOrigin:(NSString *)origin isTransformRotate:(BOOL)isTransformRotate
+{
+    _isTransformRotate = isTransformRotate;
+    return [self getTransform:cssValue withView:view withOrigin:origin];
 }
 
 - (CGPoint)getTransformOrigin:(NSString *)cssValue withView:(UIView *)view
@@ -100,14 +132,14 @@
                 if ([value hasSuffix:@"%"]) {
                     val *= width / 100;
                 } else {
-                    val = WXPixelResize(val);
+                    val = WXPixelScale(val, self.weexInstance.pixelScaleFactor);
                 }
                 x = val;
             } else {
                 if ([value hasSuffix:@"%"]) {
                     val *= height / 100;
                 } else {
-                    val = WXPixelResize(val);
+                    val = WXPixelScale(val, self.weexInstance.pixelScaleFactor);
                 }
                 y = val;
             }
@@ -115,7 +147,9 @@
     }
     x -= width / 2.0;
     y -= height / 2.0;
-    return CGPointMake(round(x / WXScreenResizeRadio()), round(y / WXScreenResizeRadio()));
+    
+    CGFloat scaleFactor = self.weexInstance.pixelScaleFactor;
+    return CGPointMake(round(x / scaleFactor), round(y / scaleFactor));
 }
 
 // Angle in radians
@@ -135,7 +169,7 @@
     if ([value[0] hasSuffix:@"%"] && _view) {
         x *= _view.bounds.size.width / 100;
     } else {
-        x = WXPixelResize(x);
+        x = WXPixelScale(x, self.weexInstance.pixelScaleFactor);
     }
 
     double y = 0;
@@ -145,7 +179,7 @@
         if ([value[1] hasSuffix:@"%"] && _view) {
             y *= _view.bounds.size.height / 100;
         } else {
-            y = WXPixelResize(y);
+            y = WXPixelScale(y, self.weexInstance.pixelScaleFactor);
         }
     }
     _transform = CGAffineTransformTranslate(_transform, x, y);
@@ -163,7 +197,19 @@
 
 - (void)doRotate:(NSArray *)value
 {
-    _transform = CGAffineTransformRotate(_transform, [self getAngle:value[0]]);
+    float rotateAngle = [self getAngle:value[0]];
+    CGAffineTransform cgTransform = CATransform3DGetAffineTransform(_view.layer.transform);
+    float originAngle = atan2f(cgTransform.b, cgTransform.a) * (180 / M_PI);
+    if (_isTransformRotate || fabs(rotateAngle - originAngle) <= M_PI+0.0001){
+        _transform = CGAffineTransformRotate(_transform, rotateAngle);
+    }
+
+    _rotateAngle += rotateAngle;
+}
+
+- (float)getRotateAngle
+{
+    return _rotateAngle;
 }
 
 - (void)doScale:(NSArray *)value

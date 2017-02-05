@@ -1,9 +1,8 @@
 ##Extend to Android
 <span class="weex-version">0.4</span>
-<a href="https://github.com/weexteam/article/issues/27"  class="weex-translate">cn</a>
  
 ### Module extend
-weex sdk support Moulde extend,
+weex sdk support Module extend,
 Weex SDK provides only rendering capabilities, rather than have other capabilities, such as network, picture, and URL redirection. If you want the these features, you need to implement it.  
 
 For example: If you want to implement an address jumping function, you can achieve a Module Follow the steps below. 
@@ -14,7 +13,7 @@ For example: If you want to implement an address jumping function, you can achie
 4. The module class also can not be an inner class  
 5. Customize can not be obfuscated by tools like ProGuard
 6. Module methods will be invoked in UI thread, do not put time consuming operation there
-7. Weex params can be int, double, float, String, Map, List, self-defined class that implements WXObject interface
+7. Weex params can be int, double, float, String, Map, List
 
 Refer to the following example: 
 
@@ -80,7 +79,7 @@ There are label, image, div, scroll, ect. components in weex, you can also custo
 4. The component class can not be an inner class  
 5. Customize can not be obfuscated by tools like ProGuard  
 6. Component methods will be invoked in UI thread, do not put time consuming operation there.  
-7. Weex params can be int, double, float, String, Map, List, self-defined class that implements WXObject interface 
+7. Weex params can be int, double, float, String, Map, List, Array
 
 
 Refer to the following example 

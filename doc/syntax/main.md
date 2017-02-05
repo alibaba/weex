@@ -1,6 +1,5 @@
 # Syntax
 <span class="weex-version">0.4</span>
-<a href="https://github.com/weexteam/article/issues/8"  class="weex-translate">cn</a>
 
 
 *The syntax of Weex is deeply inspired from [Vue.js](http://vuejs.org/), an elegant JavaScript framework with component system and reactive data binding.*
@@ -8,8 +7,8 @@
 A simple Weex page sample is just a piece of `<template>` code, a piece of `<style>` code and a piece of `<script>` code. The three parts together describe a whole Weex page.
 
 - `<template>`: *required*. Just uses HTML syntax and describes the structure of a Weex page, which is build upon several tags. Each tag means a type of *component*.
-- `<style>`: *optional*. Describes the presetation details, and the content is based on CSS syntax.
-- `<script>`: *optional*. Describes the data and behaiver with JavaScript syntax. It defines data and how these data are processed etc.
+- `<style>`: *optional*. Describes the presentation details, and the content is based on CSS syntax.
+- `<script>`: *optional*. Describes the data and behavior with JavaScript syntax. It defines data and how these data are processed etc.
 
 ```html
 <template>

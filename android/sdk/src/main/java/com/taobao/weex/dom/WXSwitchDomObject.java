@@ -204,49 +204,44 @@
  */
 package com.taobao.weex.dom;
 
-import com.taobao.weex.utils.WXViewUtils;
+import android.view.View;
 
-public class WXSwitchDomObject extends WXDomObject{
-    private static final float FIXED_WIDTH = 100;
-    private static final float FIXED_HEIGHT = 60;
+import com.taobao.weex.dom.flex.CSSNode;
+import com.taobao.weex.dom.flex.MeasureOutput;
+import com.taobao.weex.ui.view.WXSwitchView;
+import com.taobao.weex.utils.WXLogUtils;
+
+public class WXSwitchDomObject extends WXDomObject {
+
+  private static final MeasureFunction SWITCH_MEASURE_FUNCTION = new MeasureFunction() {
+
+    private boolean measured;
+    private int mWidth;
+    private int mHeight;
 
     @Override
-    public void layoutBefore() {
-        super.layoutBefore();
-        if (style == null){
-            style = new WXStyle();
+    public void measure(CSSNode node, float width, MeasureOutput measureOutput) {
+      try {
+        if (!measured) {
+          WXSwitchView wxSwitchView = new WXSwitchView(((WXDomObject) node).getDomContext().getUIContext());
+          int heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+          int widthSpec = View.MeasureSpec.makeMeasureSpec((int) width, View.MeasureSpec.AT_MOST);
+          wxSwitchView.measure(widthSpec, heightSpec);
+          mWidth = wxSwitchView.getMeasuredWidth();
+          mHeight = wxSwitchView.getMeasuredHeight();
+          measured = true;
         }
-        setStyleWidth(FIXED_WIDTH);
-        setStyleHeight(FIXED_HEIGHT);
+        measureOutput.width = mWidth;
+        measureOutput.height = mHeight;
+      } catch (RuntimeException e) {
+        WXLogUtils.e(TAG, WXLogUtils.getStackTrace(e));
+      }
     }
+  };
 
-    @Override
-    public void setMaxWidth(float maxWidth) {
-        super.setMaxWidth(WXViewUtils.getRealPxByWidth(FIXED_WIDTH));
-    }
+  public WXSwitchDomObject() {
+    super();
+    setMeasureFunction(SWITCH_MEASURE_FUNCTION);
+  }
 
-    @Override
-    public void setMinWidth(float minWidth) {
-        super.setMinWidth(WXViewUtils.getRealPxByWidth(FIXED_WIDTH));
-    }
-
-    @Override
-    public void setMaxHeight(float maxHeight) {
-        super.setMaxHeight(WXViewUtils.getRealPxByWidth(FIXED_HEIGHT));
-    }
-
-    @Override
-    public void setMinHeight(float minHeight) {
-        super.setMinHeight(WXViewUtils.getRealPxByWidth(FIXED_HEIGHT));
-    }
-
-    @Override
-    public void setStyleWidth(float width) {
-        super.setStyleWidth(WXViewUtils.getRealPxByWidth(FIXED_WIDTH));
-    }
-
-    @Override
-    public void setStyleHeight(float height) {
-        super.setStyleHeight(WXViewUtils.getRealPxByWidth(FIXED_HEIGHT));
-    }
 }

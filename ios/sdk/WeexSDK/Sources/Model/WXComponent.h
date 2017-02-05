@@ -6,9 +6,22 @@
  * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
  */
 
+#import <Foundation/Foundation.h>
 #import "WXLayoutDefine.h"
 
 @class WXSDKInstance;
+
+/**
+ * @abstract the component callback , result can be string or dictionary.
+ * @discussion callback data to js, the id of callback function will be removed to save memory.
+ */
+typedef void (^WXCallback)(_Nonnull id result);
+
+/**
+ * @abstract the component callback , result can be string or dictionary.
+ * @discussion callback data to js, you can specify the keepAlive parameter to keep callback function id keepalive or not. If the keepAlive is true, it won't be removed unitl instance destroyed, so you can call it repetitious.
+ */
+typedef void (^WXKeepAliveCallback)(_Nonnull id result, BOOL keepAlive);
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -40,22 +53,32 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  @abstract The component's identifier string.
  */
-@property (nonatomic, readonly, copy) NSString *ref;
+@property (nonatomic, readonly, strong) NSString *ref;
+
+/**
+ *  @abstract The component's type string.
+ */
+@property (nonatomic, readonly, copy) NSString *type;
 
 /**
  *  @abstract The component's styles.
  */
-@property (nonatomic, readonly, copy) NSDictionary *styles;
+@property (nonatomic, readonly, strong) NSDictionary *styles;
+
+/**
+ *  @abstract The component's pseudoClassStyles.
+ */
+@property (nonatomic, readonly, strong) NSDictionary *pseudoClassStyles;
 
 /**
  *  @abstract The component's attributes.
  */
-@property (nonatomic, readonly, copy) NSDictionary *attributes;
+@property (nonatomic, readonly, strong) NSDictionary *attributes;
 
 /**
  *  @abstract The component's events.
  */
-@property (nonatomic, readonly, copy) NSArray *events;
+@property (nonatomic, readonly, strong) NSArray *events;
 
 /**
  *  @abstract The reference to
@@ -65,7 +88,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * @abstract The component's subcomponents.
  */
-@property (nonatomic, readonly, copy, nullable) NSArray<WXComponent *> *subcomponents;
+@property (nonatomic, readonly, strong, nullable) NSArray<WXComponent *> *subcomponents;
 
 /**
  * @abstract The component's supercomponent.
@@ -84,11 +107,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, readonly, assign) CGRect calculatedFrame;
 
 /**
- * @abstract Return the calculated absolute position.
- *
- * @warning Subclasses must not override this.
+ * @abstract Tell if component's view frame will keep synchronized with calculatedFrame. 
+ * Default Value is YES.
  */
-@property(nonatomic, assign) CGPoint absolutePosition;
+@property(nonatomic, assign) BOOL isViewFrameSyncWithCalculated;
+
+///**
+// * @abstract Return the calculated absolute position.
+// *
+// * @warning Subclasses must not override this.
+// */
+//@property(nonatomic, assign) CGPoint absolutePosition;
 
 /**
  * @abstract Return the css node used to layout.
@@ -204,6 +233,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)insertSubview:(WXComponent *)subcomponent atIndex:(NSInteger)index;
 
 /**
+ * @abstract Tells the component that a subcomponent's view is about to be removed.
+ *
+ * @discussion The method is called on the main thread.
+ */
+- (void)willRemoveSubview:(WXComponent *)component;
+
+/**
  * @abstract Remove the component's view from its superview.
  *
  * @discussion The method is called on the main thread.
@@ -253,6 +289,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateStyles:(NSDictionary *)styles;
 
 /**
+ * @abstract Called when component's style are reset
+ *
+ * @param elements The reset style's elements
+ * @discussion It can be overrided to handle specific style reseting. The method is called on the main thread.
+ **/
+- (void)resetStyles:(NSArray *)styles;
+
+/**
  * @abstract Called when component's attributes are updated
  *
  * @param attributes The updated attributes dictionary
@@ -269,7 +313,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)addEvent:(NSString *)eventName;
 
 /**
- * @abstract Called when removing an event frome the component
+ * @abstract Called when removing an event from the component
  *
  * @param eventName The removed event's name
  * @discussion It can be overrided to handle specific event removing. The method is called on the main thread.
@@ -281,7 +325,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///--------------------------------------
 
 typedef UIImage * _Nonnull(^WXDisplayBlock)(CGRect bounds, BOOL(^isCancelled)(void));
-typedef void(^WXDisplayCompeletionBlock)(CALayer *layer, BOOL finished);
+typedef void(^WXDisplayCompletionBlock)(CALayer *layer, BOOL finished);
 
 /**
  * @abstract Marks the view as needing display. The method should be called on the main thread.
@@ -297,18 +341,25 @@ typedef void(^WXDisplayCompeletionBlock)(CALayer *layer, BOOL finished);
 - (WXDisplayBlock)displayBlock;
 
 /**
+ * readyToRender
+ */
+- (void)readyToRender;
+
+/**
  * @abstract Return a block to be called while drawing is finished.
  *
  * @discussion The block returned will be called on main thread.
  *
  */
-- (WXDisplayCompeletionBlock)displayCompeletionBlock;
+- (WXDisplayCompletionBlock)displayCompletionBlock;
 
 @end
 
 @interface UIView (WXComponent)
 
 @property (nonatomic, weak) WXComponent *wx_component;
+
+@property (nonatomic, weak) NSString *wx_ref;
 
 @end
 
