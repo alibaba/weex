@@ -216,7 +216,7 @@
 
 @interface WXVideoComponent()
 
-@property (nonatomic, strong) WXVideoView *videoView;
+@property (nonatomic, weak) WXVideoView *videoView;
 @property (nonatomic, strong) NSURL *videoURL;
 @property (nonatomic) BOOL autoPlay;
 @property (nonatomic) BOOL playStatus;

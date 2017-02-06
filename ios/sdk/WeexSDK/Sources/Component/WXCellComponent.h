@@ -12,6 +12,7 @@
 @interface WXCellComponent : WXComponent
 
 @property (nonatomic, strong) NSString *scope;
+@property (nonatomic, assign) BOOL isRecycle;
 @property (nonatomic, assign) UITableViewRowAnimation insertAnimation;
 @property (nonatomic, assign) UITableViewRowAnimation deleteAnimation;
 @property (nonatomic, weak) WXListComponent *list;
