@@ -93,11 +93,11 @@ WX_EXPORT_METHOD(@selector(resetLoadmore))
         _lastScrollEventFiredOffset = CGPointMake(0, 0);
         _scrollDirection = attributes[@"scrollDirection"] ? [WXConvert WXScrollDirection:attributes[@"scrollDirection"]] : WXScrollDirectionVertical;
         _showScrollBar = attributes[@"showScrollbar"] ? [WXConvert BOOL:attributes[@"showScrollbar"]] : YES;
-        _loadMoreOffset = attributes[@"loadmoreoffset"] ? [WXConvert CGFloat:attributes[@"loadmoreoffset"]] : 0;
+        _loadMoreOffset = attributes[@"loadmoreoffset"] ? [WXConvert WXPixelType:attributes[@"loadmoreoffset"] scaleFactor:self.weexInstance.pixelScaleFactor] : 0;
         _loadmoreretry = attributes[@"loadmoreretry"] ? [WXConvert NSUInteger:attributes[@"loadmoreretry"]] : 0;
         _listenLoadMore = [events containsObject:@"loadmore"];
         _scrollable = attributes[@"scrollable"] ? [WXConvert BOOL:attributes[@"scrollable"]] : YES;
-        _offsetAccuracy = attributes[@"offsetAccuracy"] ? [WXConvert CGFloat:attributes[@"offsetAccuracy"]] : 0;
+        _offsetAccuracy = attributes[@"offsetAccuracy"] ? [WXConvert WXPixelType:attributes[@"offsetAccuracy"] scaleFactor:self.weexInstance.pixelScaleFactor] : 0;
         _scrollerCSSNode = new_css_node();
         
         // let scroller fill the rest space if it is a child component and has no fixed height & width
@@ -171,7 +171,7 @@ WX_EXPORT_METHOD(@selector(resetLoadmore))
     }
     
     if (attributes[@"loadmoreoffset"]) {
-        _loadMoreOffset = [WXConvert CGFloat:attributes[@"loadmoreoffset"]];
+        _loadMoreOffset = [WXConvert WXPixelType:attributes[@"loadmoreoffset"] scaleFactor:self.weexInstance.pixelScaleFactor];
     }
     
     if (attributes[@"loadmoreretry"]) {
@@ -186,7 +186,7 @@ WX_EXPORT_METHOD(@selector(resetLoadmore))
         ((UIScrollView *)self.view).scrollEnabled = _scrollable;
     }
     if (attributes[@"offsetAccuracy"]) {
-        _offsetAccuracy = [WXConvert CGFloat:attributes[@"offsetAccuracy"]];
+        _offsetAccuracy = [WXConvert WXPixelType:attributes[@"offsetAccuracy"] scaleFactor:self.weexInstance.pixelScaleFactor];
     }
 }
 
@@ -442,9 +442,11 @@ WX_EXPORT_METHOD(@selector(resetLoadmore))
         self.onScroll(scrollView);
     }
     if (_scrollEvent) {
-        NSDictionary *contentSizeData = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithFloat:scrollView.contentSize.width],@"width",[NSNumber numberWithFloat:scrollView.contentSize.height],@"height", nil];
+        CGFloat scaleFactor = self.weexInstance.pixelScaleFactor;
+        NSMutableDictionary *scrollEventParams = [[NSMutableDictionary alloc] init];
+        NSDictionary *contentSizeData = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithFloat:scrollView.contentSize.width / scaleFactor],@"width",[NSNumber numberWithFloat:scrollView.contentSize.height / scaleFactor],@"height", nil];
         //contentOffset values are replaced by (-contentOffset.x,-contentOffset.y) ,in order to be consistent with Android client.
-        NSDictionary *contentOffsetData = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithFloat:-scrollView.contentOffset.x],@"x",[NSNumber numberWithFloat:-scrollView.contentOffset.y],@"y", nil];
+        NSDictionary *contentOffsetData = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithFloat:-scrollView.contentOffset.x / scaleFactor],@"x",[NSNumber numberWithFloat:-scrollView.contentOffset.y / scaleFactor],@"y", nil];
         float distance = 0;
         if (_scrollDirection == WXScrollDirectionHorizontal) {
             distance = scrollView.contentOffset.x - _lastScrollEventFiredOffset.x;
