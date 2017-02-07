@@ -77,7 +77,7 @@ More information about Weex syntax can be found in our [Syntax chapter](syntax/m
 
 ## Add More Items
 
-We can't call one item an list, so we need to add more items to our tech list. Open `tech_list.we` in your favorite editor and update it's content like below:
+We can't call one item a list, so we need to add more items to our tech list. Open `tech_list.we` in your favorite editor and update it's content like below:
 
 ```html
 <template>
@@ -112,11 +112,11 @@ weex tech_list.we --qr -h {ip or hostname}
 
 It's ***RECOMMENDED*** to use `-h` option to specify your local ip address or hostname.
 
-An QR code will be displayed in the terminal window like below:
+A QR code will be displayed in the terminal window like below:
 
 ![Weex CLI](images/tut-cli-qrcode.png)
 
-The QR code can work together with [Weex Playground App](http://alibaba.github.io/weex/download.html). Open it and tap the scan icon at the top-right corner, then scan the Qr code displayed in your terminal. If all work well, a beautiful list will be displayed in your phone.
+The QR code can work together with [Weex Playground App](http://alibaba.github.io/weex/download.html). Open it and tap the scan icon at the top-right corner, then scan the QR code displayed in your terminal. If all work well, a beautiful list will be displayed in your phone.
 
 ![Second Example](images/tut-second.png)
 

@@ -100,7 +100,9 @@ static NSThread *WXComponentThread;
     [[NSRunLoop currentRunLoop] addPort:[NSMachPort port] forMode:NSDefaultRunLoopMode];
     
     while (!_stopRunning) {
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+        @autoreleasepool {
+            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+        }
     }
 }
 
