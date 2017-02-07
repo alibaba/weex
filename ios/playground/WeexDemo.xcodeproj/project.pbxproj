@@ -12,6 +12,7 @@
 		59EA0DA71D2E7D19004F904A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59EA0DA61D2E7D19004F904A /* Images.xcassets */; };
 		741DFE091DDDD519009B020F /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 741DFE081DDDD519009B020F /* libstdc++.tbd */; };
 		7478481E1E0CD4910044500D /* WXSyncTestModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 7478481D1E0CD4910044500D /* WXSyncTestModule.m */; };
+		747DF6681E2F176A005C53A8 /* UIView+UIThreadCheck.m in Sources */ = {isa = PBXBuildFile; fileRef = 747DF6671E2F176A005C53A8 /* UIView+UIThreadCheck.m */; };
 		74CC79EB1C2B9E4700829368 /* UIViewController+WXDemoNaviBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 74CC79EA1C2B9E4700829368 /* UIViewController+WXDemoNaviBar.m */; };
 		775BEE801C1E8ECC008D1629 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 775BEE7F1C1E8ECC008D1629 /* main.m */; };
 		775BEE831C1E8ECC008D1629 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 775BEE821C1E8ECC008D1629 /* AppDelegate.m */; };
@@ -68,6 +69,8 @@
 		7475ACA01CD8444A0044E96C /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		7478481C1E0CD4910044500D /* WXSyncTestModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXSyncTestModule.h; sourceTree = "<group>"; };
 		7478481D1E0CD4910044500D /* WXSyncTestModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXSyncTestModule.m; sourceTree = "<group>"; };
+		747DF6661E2F176A005C53A8 /* UIView+UIThreadCheck.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+UIThreadCheck.h"; sourceTree = "<group>"; };
+		747DF6671E2F176A005C53A8 /* UIView+UIThreadCheck.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+UIThreadCheck.m"; sourceTree = "<group>"; };
 		74CC79E91C2B9E4700829368 /* UIViewController+WXDemoNaviBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+WXDemoNaviBar.h"; sourceTree = "<group>"; };
 		74CC79EA1C2B9E4700829368 /* UIViewController+WXDemoNaviBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+WXDemoNaviBar.m"; sourceTree = "<group>"; };
 		7601607D735D7F8D88971230 /* libPods-WeexDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WeexDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -236,6 +239,8 @@
 				775BEE821C1E8ECC008D1629 /* AppDelegate.m */,
 				775BEE841C1E8ECC008D1629 /* WXDemoViewController.h */,
 				775BEE851C1E8ECC008D1629 /* WXDemoViewController.m */,
+				747DF6661E2F176A005C53A8 /* UIView+UIThreadCheck.h */,
+				747DF6671E2F176A005C53A8 /* UIView+UIThreadCheck.m */,
 				7453E3641C9FA971001EB427 /* DemoDefine.h */,
 			);
 			name = Source;
@@ -309,13 +314,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 775BEEA81C1E8ECC008D1629 /* Build configuration list for PBXNativeTarget "WeexDemo" */;
 			buildPhases = (
-				B5825066F03BDD65A25F2701 /* 📦 Check Pods Manifest.lock */,
+				B5825066F03BDD65A25F2701 /* [CP] Check Pods Manifest.lock */,
 				74CC7A221C2C13BF00829368 /* Start Samples */,
 				775BEE771C1E8ECC008D1629 /* Sources */,
 				775BEE781C1E8ECC008D1629 /* Frameworks */,
 				775BEE791C1E8ECC008D1629 /* Resources */,
-				685399B3421CD1410375A2AD /* 📦 Embed Pods Frameworks */,
-				C715566148067A7FFAB7797D /* 📦 Copy Pods Resources */,
+				685399B3421CD1410375A2AD /* [CP] Embed Pods Frameworks */,
+				C715566148067A7FFAB7797D /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -348,12 +353,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 84361D711CA10F8E00F43825 /* Build configuration list for PBXNativeTarget "WeexUITestDemo" */;
 			buildPhases = (
-				84361D271CA10F8E00F43825 /* 📦 Check Pods Manifest.lock */,
+				84361D271CA10F8E00F43825 /* [CP] Check Pods Manifest.lock */,
 				84361D291CA10F8E00F43825 /* Sources */,
 				84361D3C1CA10F8E00F43825 /* Frameworks */,
 				84361D431CA10F8E00F43825 /* Resources */,
-				84361D6F1CA10F8E00F43825 /* 📦 Copy Pods Resources */,
-				84361D701CA10F8E00F43825 /* 📦 Embed Pods Frameworks */,
+				84361D6F1CA10F8E00F43825 /* [CP] Copy Pods Resources */,
+				84361D701CA10F8E00F43825 /* [CP] Embed Pods Frameworks */,
 				567369891CE436EB000A646C /* ShellScript */,
 			);
 			buildRules = (
@@ -450,14 +455,14 @@
 			shellPath = /bin/sh;
 			shellScript = "myFile=\"XcodeCoverage/exportenv.sh\"\n\nif [ -f \"$myFile\" ]; then\nXcodeCoverage/exportenv.sh\nfi";
 		};
-		685399B3421CD1410375A2AD /* 📦 Embed Pods Frameworks */ = {
+		685399B3421CD1410375A2AD /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Embed Pods Frameworks";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -477,31 +482,31 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -x\n\nif nc -w 5 -z localhost 12580 ; then\n    echo \"Port 12580 already in use, server is running\"\nelse\n    open \"$SRCROOT/../../start\"\nfi\n\n";
+			shellScript = "DEST=$CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\n\nif [[ \"$CONFIGURATION\" = \"Debug\" && \"$PLATFORM_NAME\" != \"iphonesimulator\" ]]; then\nipconfig getifaddr en0 | awk '{printf(\"%s\",$0)}' > \"$DEST/localServer-ip.txt\"\nfi\n\nset -x\n\nif nc -w 5 -z localhost 12580 ; then\n    echo \"Port 12580 already in use, server is running\"\nelse\n    open \"$SRCROOT/../../start\"\nfi\n\n";
 		};
-		84361D271CA10F8E00F43825 /* 📦 Check Pods Manifest.lock */ = {
+		84361D271CA10F8E00F43825 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		84361D6F1CA10F8E00F43825 /* 📦 Copy Pods Resources */ = {
+		84361D6F1CA10F8E00F43825 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -509,14 +514,14 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WeexUITestDemo/Pods-WeexUITestDemo-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		84361D701CA10F8E00F43825 /* 📦 Embed Pods Frameworks */ = {
+		84361D701CA10F8E00F43825 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Embed Pods Frameworks";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -524,29 +529,29 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WeexUITestDemo/Pods-WeexUITestDemo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		B5825066F03BDD65A25F2701 /* 📦 Check Pods Manifest.lock */ = {
+		B5825066F03BDD65A25F2701 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		C715566148067A7FFAB7797D /* 📦 Copy Pods Resources */ = {
+		C715566148067A7FFAB7797D /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -571,6 +576,7 @@
 				DCABAFF41D029685001C8592 /* WXATViewHierarchyPlugin.m in Sources */,
 				775BEE801C1E8ECC008D1629 /* main.m in Sources */,
 				DCABAFFE1D029753001C8592 /* WXImgLoaderDefaultImpl.m in Sources */,
+				747DF6681E2F176A005C53A8 /* UIView+UIThreadCheck.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -833,6 +839,7 @@
 				GCC_GENERATE_TEST_COVERAGE_FILES = YES;
 				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = YES;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				INFOPLIST_FILE = "WeexUITestDemo-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = NO;

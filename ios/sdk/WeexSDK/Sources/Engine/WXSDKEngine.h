@@ -13,7 +13,7 @@
 @interface WXSDKEngine : NSObject
 
 /**
- *  @abstract Register default modules/components/handlers, they will be reigstered only once.
+ *  @abstract Register default modules/components/handlers, they will be registered only once.
  **/
 + (void)registerDefaults;
 
@@ -56,7 +56,7 @@
  *
  * @param options The service options to register
  *
- * @param code service js code to invoke
+ * @param serviceScript service js code to invoke
  *
  */
 + (void)registerService:(NSString *)name withScript:(NSString *)serviceScript withOptions:(NSDictionary *)options;
@@ -68,7 +68,7 @@
  *
  * @param options The service options to register
  *
- * @param url The service url to register
+ * @param serviceScriptUrl The service url to register
  *
  */
 + (void)registerService:(NSString *)name withScriptUrl:(NSURL *)serviceScriptUrl WithOptions:(NSDictionary *)options;
@@ -101,7 +101,7 @@
 + (id)handlerForProtocol:(Protocol *)protocol;
 
 /**
- * @abstract Initializes the global sdk enviroment
+ * @abstract Initializes the global sdk environment
  *
  * @discussion Injects main.js in app bundle as default JSFramework script.
  *
@@ -109,7 +109,7 @@
 + (void)initSDKEnvironment;
 
 /**
- * @abstract Initializes the enviroment with a given JSFramework script.
+ * @abstract Initializes the environment with a given JSFramework script.
  *
  **/
 + (void)initSDKEnvironment:(NSString *)script;
@@ -138,7 +138,7 @@
 + (WXSDKInstance *)topInstance;
 
 /**
- * @abstract Add custom envionment variables 
+ * @abstract Add custom environment variables
  * @discuss These variables can be obtained by $getConfig().env
  *
  **/

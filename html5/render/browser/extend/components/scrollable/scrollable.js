@@ -85,7 +85,6 @@ function getProto (Weex) {
       let isFlex = false
       for (let i = 0; i < children.length; i++) {
         children[i].instanceId = this.data.instanceId
-        children[i].scale = this.data.scale
         const child = componentManager.createElement(children[i])
         fragment.appendChild(child.node)
         child.parentRef = parentRef

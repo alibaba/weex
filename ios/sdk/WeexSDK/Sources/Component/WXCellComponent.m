@@ -46,11 +46,11 @@
     }
 }
 
-- (WXDisplayCompeletionBlock)displayCompeletionBlock
+- (WXDisplayCompletionBlock)displayCompletionBlock
 {
     return ^(CALayer *layer, BOOL finished) {
-        if ([super displayCompeletionBlock]) {
-            [super displayCompeletionBlock](layer, finished);
+        if ([super displayCompletionBlock]) {
+            [super displayCompletionBlock](layer, finished);
         }
         
         [self.list cellDidRendered:self];

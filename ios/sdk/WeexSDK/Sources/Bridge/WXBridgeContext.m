@@ -50,7 +50,7 @@ _Pragma("clang diagnostic pop") \
 @property (nonatomic) BOOL frameworkLoadFinished;
 //store some methods temporarily before JSFramework is loaded
 @property (nonatomic, strong) NSMutableArray *methodQueue;
-// store template service
+// store service
 @property (nonatomic, strong) NSMutableArray *jsServiceQueue;
 
 @end
@@ -86,12 +86,12 @@ _Pragma("clang diagnostic pop") \
     
     _jsBridge = _debugJS ? [NSClassFromString(@"WXDebugger") alloc] : [[WXJSCoreBridge alloc] init];
     
-    [self registerGlobalFuntions];
+    [self registerGlobalFunctions];
     
     return _jsBridge;
 }
 
-- (void)registerGlobalFuntions
+- (void)registerGlobalFunctions
 {
     __weak typeof(self) weakSelf = self;
     [_jsBridge registerCallNative:^NSInteger(NSString *instance, NSArray *tasks, NSString *callback) {
@@ -252,9 +252,12 @@ _Pragma("clang diagnostic pop") \
     }
     
     [self callJSMethod:@"destroyInstance" args:@[instance]];
-    
+}
+
+- (void)forceGarbageCollection
+{
     if ([self.jsBridge respondsToSelector:@selector(garbageCollect)]) {
-         [self.jsBridge garbageCollect];
+        [self.jsBridge garbageCollect];
     }
 }
 

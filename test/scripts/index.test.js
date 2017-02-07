@@ -1,16 +1,15 @@
 'use strict';
 
 var _ = require('macaca-utils');
-var weex = require('./weex.js')()
 var assert = require('chai').assert
-var wd = weex.wd
+var wd = require('weex-wd')
+var path = require('path');
+var os = require('os');
+var util = require("./util.js");
 
 describe('weex mobile index', function () {
-  this.timeout(5 * 60 * 1000);
-
-  var driver = wd.initPromiseChain();
-
-  var windowSize = driver.getWindowSize()
+  this.timeout(1 * 60 * 1000);
+  var driver = wd(util.getConfig()).initPromiseChain();
   driver.configureHttp({
     timeout: 100000
   });
@@ -18,38 +17,41 @@ describe('weex mobile index', function () {
   before(function () {
     return driver
       .initDriver()
-      .wGet("index.js")
+      .get('wxpage://' + util.getDeviceHost() +'/index.js')
       .sleep(1000);
   });
 
 
   it('#1 Index', () => {
     return driver
-    .textOfXPath("//div/text[1]")
+    .elementByXPath('//div/text[1]')
+    .text()
     .then((text)=>{
-      assert.equal(text.description,"hello world.")
+      assert.equal(text,'hello world.')
     })
   })
 
   it('#2 Click Button', () => {
     return driver
-    .wElement("//div/text[3]")
+    .elementByXPath('//div/text[3]')
     .click()
-    .textOfXPath("//div/text[2]")
+    .elementByXPath('//div/text[2]')
+    .text()
     .then((text)=>{
-      assert.equal(text.description,"btn click.")
+      assert.equal(text,'btn click.')
     })
   })
 
   it('#2 Input Blur', () => {
     return driver
-    .wElement("//div/input")
+    .elementByXPath('//div/input')
     .click()
-    .wElement("//div/text[4]")
+    .elementByXPath('//div/text[4]')
     .click()
-    .textOfXPath("//div/text[2]")
+    .elementByXPath('//div/text[2]')
+    .text()
     .then((text)=>{
-      assert.equal(text.description,"input blur.")
+      assert.equal(text,'input blur.')
     })
   })
 

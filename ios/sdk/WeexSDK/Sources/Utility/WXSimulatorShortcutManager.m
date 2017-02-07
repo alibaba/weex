@@ -6,13 +6,13 @@
  * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
  */
 
-#import "WXSimulatorShortcutMananger.h"
+#import "WXSimulatorShortcutManager.h"
 #import "WXUtility.h"
 #import <objc/message.h>
 
-#if TARGET_OS_SIMULATOR
+//#if TARGET_OS_SIMULATOR
 
-@interface UIEvent (WXSimulatorShortcutMananger)
+@interface UIEvent (WXSimulatorShortcutManager)
 
 @property (nonatomic, strong) NSString *_modifiedInput;
 @property (nonatomic, strong) NSString *_unmodifiedInput;
@@ -54,14 +54,14 @@
 @end
 
 
-@implementation WXSimulatorShortcutMananger
+@implementation WXSimulatorShortcutManager
 {
     NSCache *_actions;
 }
 
 + (instancetype)sharedManager
 {
-    static WXSimulatorShortcutMananger *_sharedInstance = nil;
+    static WXSimulatorShortcutManager *_sharedInstance = nil;
     static dispatch_once_t oncePredicate;
     dispatch_once(&oncePredicate, ^{
         _sharedInstance = [[self alloc] init];
@@ -79,7 +79,7 @@
 + (void)registerSimulatorShortcutWithKey:(NSString *)key modifierFlags:(UIKeyModifierFlags)flags action:(dispatch_block_t)action
 {
     WXKeyInput *keyInput = [WXKeyInput keyInputForKey:key flags:flags];
-    [[WXSimulatorShortcutMananger sharedManager]->_actions setObject:action forKey:keyInput];
+    [[WXSimulatorShortcutManager sharedManager]->_actions setObject:action forKey:keyInput];
 }
 
 - (void)handleKeyUIEvent:(UIEvent *)event
@@ -115,4 +115,4 @@
 
 @end
 
-#endif
+//#endif

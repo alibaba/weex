@@ -145,14 +145,14 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * @abstract return a measure block for measure component's layout
  *
- * @param constrainedSize The maximum size the receiver should fit in.
+ * constrainedSize: The maximum size the receiver should fit in.
  *
  * @return A block which will ask the component to measure and return the size that best fits for a constrained size.
  *
  * @discussion Subclasses can override this method to perform their own layout behaviour.  Weex will use the returned block to measure the component's layout, ignoring its own layout mechanism.
  *
  */
-- (nullable CGSize (^)(CGSize))measureBlock;
+- (nullable CGSize (^)(CGSize constrainedSize))measureBlock;
 
 /**
  * @abstract Called on main thread when the component has just laid out.
@@ -291,7 +291,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * @abstract Called when component's style are reset
  *
- * @param elements The reset style's elements
+ * @param styles The reset style's elements
  * @discussion It can be overrided to handle specific style reseting. The method is called on the main thread.
  **/
 - (void)resetStyles:(NSArray *)styles;
@@ -313,7 +313,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)addEvent:(NSString *)eventName;
 
 /**
- * @abstract Called when removing an event frome the component
+ * @abstract Called when removing an event from the component
  *
  * @param eventName The removed event's name
  * @discussion It can be overrided to handle specific event removing. The method is called on the main thread.
@@ -325,7 +325,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///--------------------------------------
 
 typedef UIImage * _Nonnull(^WXDisplayBlock)(CGRect bounds, BOOL(^isCancelled)(void));
-typedef void(^WXDisplayCompeletionBlock)(CALayer *layer, BOOL finished);
+typedef void(^WXDisplayCompletionBlock)(CALayer *layer, BOOL finished);
 
 /**
  * @abstract Marks the view as needing display. The method should be called on the main thread.
@@ -351,7 +351,7 @@ typedef void(^WXDisplayCompeletionBlock)(CALayer *layer, BOOL finished);
  * @discussion The block returned will be called on main thread.
  *
  */
-- (WXDisplayCompeletionBlock)displayCompeletionBlock;
+- (WXDisplayCompletionBlock)displayCompletionBlock;
 
 @end
 

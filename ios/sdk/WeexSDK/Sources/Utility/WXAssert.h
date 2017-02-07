@@ -11,13 +11,13 @@
 
 WX_EXTERN_C_BEGIN
 
-void WXAssertIntenal(NSString *func, NSString *file, int lineNum, NSString *format, ...);
+void WXAssertInternal(NSString *func, NSString *file, int lineNum, NSString *format, ...);
 
 #if DEBUG
 #define WXAssert(condition, ...) \
 do{\
     if(!(condition)){\
-        WXAssertIntenal(@(__func__), @(__FILE__), __LINE__, __VA_ARGS__);\
+        WXAssertInternal(@(__func__), @(__FILE__), __LINE__, __VA_ARGS__);\
     }\
 }while(0)
 #else
@@ -62,5 +62,8 @@ WXAssert([[NSThread currentThread].name isEqualToString:WX_COMPONENT_THREAD_NAME
 WXAssert([[NSThread currentThread].name isEqualToString:WX_BRIDGE_THREAD_NAME], \
 @"must be called on the bridge thread")
 
+
+#define WXAssertNotReached() \
+WXAssert(NO, @"should never be reached")
 
 WX_EXTERN_C_END

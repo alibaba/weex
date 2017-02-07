@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface WXSimulatorShortcutMananger : NSObject
+@interface WXSimulatorShortcutManager : NSObject
 
 + (void)registerSimulatorShortcutWithKey:(NSString *)key modifierFlags:(UIKeyModifierFlags)flags action:(dispatch_block_t)action;
 

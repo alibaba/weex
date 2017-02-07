@@ -8,9 +8,84 @@
 
 #import "WXAnimationModule.h"
 #import "WXSDKInstance_private.h"
+#import "WXComponent_internal.h"
 #import "WXConvert.h"
 #import "WXTransform.h"
 #import "WXUtility.h"
+#import "WXLength.h"
+
+@interface WXAnimationInfo : NSObject<NSCopying>
+
+@property (nonatomic, weak) WXComponent *target;
+@property (nonatomic, strong) NSString *propertyName;
+@property (nonatomic, strong) id fromValue;
+@property (nonatomic, strong) id toValue;
+@property (nonatomic, assign) double duration;
+@property (nonatomic, assign) double delay;
+@property (nonatomic, strong) CAMediaTimingFunction *timingFunction;
+
+@end
+
+@implementation WXAnimationInfo
+
+- (id)copyWithZone:(NSZone *)zone
+{
+    WXAnimationInfo *info = [[WXAnimationInfo allocWithZone:zone] init];
+    
+    info.target = self.target;
+    info.propertyName = self.propertyName;
+    info.fromValue = self.fromValue;
+    info.toValue = self.toValue;
+    info.duration = self.duration;
+    info.delay = self.delay;
+    info.timingFunction = self.timingFunction;
+    
+    return info;
+}
+
+@end
+
+@interface WXAnimationDelegate : NSObject <CAAnimationDelegate>
+
+@property (nonatomic, copy) void (^finishBlock)(BOOL);
+@property (nonatomic, strong) WXAnimationInfo *animationInfo;
+
+- (instancetype)initWithAnimationInfo:(WXAnimationInfo *)info finishBlock:(void(^)(BOOL))finishBlock;
+
+@end
+
+@implementation WXAnimationDelegate
+
+- (instancetype)initWithAnimationInfo:(WXAnimationInfo *)info finishBlock:(void (^)(BOOL))finishBlock
+{
+    if (self = [super init]) {
+        _animationInfo = info;
+        _finishBlock = finishBlock;
+    }
+    
+    return self;
+}
+
+- (void)animationDidStart:(CAAnimation *)anim
+{
+    if ([_animationInfo.propertyName hasPrefix:@"transform"]) {
+        WXTransform *transform = _animationInfo.target->_transform;
+        [transform applyTransformForView:_animationInfo.target.view];
+    } else if ([_animationInfo.propertyName isEqualToString:@"backgroundColor"]) {
+        _animationInfo.target.view.layer.backgroundColor = (__bridge CGColorRef _Nullable)(_animationInfo.toValue);
+    } else if ([_animationInfo.propertyName isEqualToString:@"opacity"]) {
+        _animationInfo.target.view.layer.opacity = [_animationInfo.toValue floatValue];
+    }
+}
+
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
+{
+    if (_finishBlock) {
+        _finishBlock(flag);
+    }
+}
+
+@end
 
 @interface WXAnimationModule ()
 
@@ -37,57 +112,106 @@ WX_EXPORT_METHOD(@selector(transition:args:callback:))
     });
 }
 
-- (void)animation:(WXComponent *)targetComponent args:(NSDictionary *)args callback:(WXModuleCallback)callback
+- (NSArray<WXAnimationInfo *> *)animationInfoArrayFromArgs:(NSDictionary *)args target:(WXComponent *)target
 {
-    CALayer *layer = targetComponent.layer;
-    UIView *view = targetComponent.view;
-    
-    NSDictionary *styles = args[@"styles"];
-    
-    NSTimeInterval duration = [args[@"duration"] doubleValue] / 1000;
-    NSTimeInterval delay = [args[@"delay"] doubleValue] / 1000;
+    UIView *view = target.view;
+    CALayer *layer = target.layer;
+    NSMutableArray<WXAnimationInfo *> *infos = [NSMutableArray new];
 
-    __block CATransform3D transform;
-    BOOL isAnimateTransform = NO;
-    __block CGColorRef backgroundColor;
-    BOOL isAnimateBackgroundColor = NO;
-    float opacity = 0.0;
-    BOOL isAnimateOpacity = NO;
-    CGRect newFrame = layer.frame;
-    BOOL isAnimateFrame = NO;
-    CGFloat rotateAngle = 0.0;
-    BOOL isUsingCAAnimation = NO;
-    
+    double duration = [args[@"duration"] doubleValue] / 1000;
+    double delay = [args[@"delay"] doubleValue] / 1000;
+    CAMediaTimingFunction *timingFunction = [WXConvert CAMediaTimingFunction:args[@"timingFunction"]];
+    NSDictionary *styles = args[@"styles"];
     for (NSString *property in styles) {
+        WXAnimationInfo *info = [WXAnimationInfo new];
+        info.duration = duration;
+        info.delay = delay;
+        info.timingFunction = timingFunction;
+        info.target = target;
+        
+        id value = styles[property];
         if ([property isEqualToString:@"transform"]) {
             NSString *transformOrigin = styles[@"transformOrigin"];
-            WXTransform *wxTransform = [[WXTransform alloc] initWithInstance:self.weexInstance];
-            transform = [wxTransform getTransform:styles[property] withView:view withOrigin:transformOrigin isTransformRotate:NO];
-            rotateAngle = [wxTransform getRotateAngle];
-            CGFloat originAngle = [self getRotateAngleFromTransForm:layer.transform];
-            if (fabs(originAngle - rotateAngle) > M_PI + 0.0001) {
+            WXTransform *wxTransform = [[WXTransform alloc] initWithCSSValue:value origin:transformOrigin instance:self.weexInstance];
+            WXTransform *oldTransform = target->_transform;
+            if (wxTransform.rotateAngle != oldTransform.rotateAngle) {
+                WXAnimationInfo *newInfo = [info copy];
+                newInfo.propertyName = @"transform.rotation";
                 /**
                  Rotate >= 180 degree not working on UIView block animation, have not found any more elegant solution than using CAAnimation
                  See http://stackoverflow.com/questions/9844925/uiview-infinite-360-degree-rotation-animation
                  **/
-                isUsingCAAnimation = YES;
+                newInfo.fromValue = @(oldTransform.rotateAngle);
+                newInfo.toValue = [NSNumber numberWithDouble:wxTransform.rotateAngle];
+                [infos addObject:newInfo];
             }
-            isAnimateTransform = YES;
+            
+            if (wxTransform.scaleX != oldTransform.scaleX) {
+                WXAnimationInfo *newInfo = [info copy];
+                newInfo.propertyName = @"transform.scale.x";
+                newInfo.fromValue = @(oldTransform.scaleX);
+                newInfo.toValue = @(wxTransform.scaleX);
+                [infos addObject:newInfo];
+            }
+            
+            if (wxTransform.scaleY != oldTransform.scaleY) {
+                WXAnimationInfo *newInfo = [info copy];
+                newInfo.propertyName = @"transform.scale.y";
+                newInfo.fromValue = @(oldTransform.scaleY);
+                newInfo.toValue = @(wxTransform.scaleX);
+                [infos addObject:newInfo];
+            }
+            
+            if ((wxTransform.translateX && ![wxTransform.translateX isEqualToLength:oldTransform.translateX]) || (!wxTransform.translateX && oldTransform.translateX)) {
+                WXAnimationInfo *newInfo = [info copy];
+                newInfo.propertyName = @"transform.translation.x";
+                newInfo.fromValue = @([oldTransform.translateX valueForMaximumValue:view.bounds.size.width]);
+                newInfo.toValue = @([wxTransform.translateX valueForMaximumValue:view.bounds.size.width]);
+                [infos addObject:newInfo];
+            }
+            
+            if ((wxTransform.translateY && ![wxTransform.translateY isEqualToLength:oldTransform.translateY]) || (!wxTransform.translateY && oldTransform.translateY)) {
+                WXAnimationInfo *newInfo = [info copy];
+                newInfo.propertyName = @"transform.translation.y";
+                newInfo.fromValue = @([oldTransform.translateY valueForMaximumValue:view.bounds.size.height]);
+                newInfo.toValue = @([wxTransform.translateY valueForMaximumValue:view.bounds.size.height]);
+                [infos addObject:newInfo];
+            }
+            
+            target->_transform = wxTransform;
         } else if ([property isEqualToString:@"backgroundColor"]) {
-            backgroundColor = [WXConvert CGColor:styles[property]];
-            isAnimateBackgroundColor = YES;
+            info.propertyName = @"backgroundColor";
+            info.fromValue = (__bridge id)(layer.backgroundColor);
+            info.toValue = (__bridge id)[WXConvert CGColor:value];
+            [infos addObject:info];
         } else if ([property isEqualToString:@"opacity"]) {
-            opacity = [styles[property] floatValue];
-            isAnimateOpacity = YES;
+            info.propertyName = @"opacity";
+            info.fromValue = @(layer.opacity);
+            info.toValue = @([value floatValue]);
+            [infos addObject:info];
         } else if ([property isEqualToString:@"width"]) {
-            newFrame = CGRectMake(newFrame.origin.x, newFrame.origin.y, [WXConvert WXPixelType:styles[property] scaleFactor:self.weexInstance.pixelScaleFactor], newFrame.size.height);
-            isAnimateFrame = YES;
+            info.propertyName = @"bounds";
+            info.fromValue = [NSValue valueWithCGRect:layer.bounds];
+            CGRect newBounds = layer.bounds;
+            newBounds.size = CGSizeMake([WXConvert WXPixelType:value scaleFactor:self.weexInstance.pixelScaleFactor], newBounds.size.height);
+            info.toValue = [NSValue valueWithCGRect:newBounds];
+            [infos addObject:info];
         } else if ([property isEqualToString:@"height"]) {
-            newFrame = CGRectMake(newFrame.origin.x, newFrame.origin.y, newFrame.size.width, [WXConvert WXPixelType:styles[property] scaleFactor:self.weexInstance.pixelScaleFactor]);
-            isAnimateFrame = YES;
+            info.propertyName = @"bounds";
+            info.fromValue = [NSValue valueWithCGRect:layer.bounds];
+            CGRect newBounds = layer.bounds;
+            newBounds.size = CGSizeMake(newBounds.size.width, [WXConvert WXPixelType:value scaleFactor:self.weexInstance.pixelScaleFactor]);
+            info.toValue = [NSValue valueWithCGRect:newBounds];
+            [infos addObject:info];
         }
     }
-    
+
+    return infos;
+}
+
+
+- (void)animation:(WXComponent *)targetComponent args:(NSDictionary *)args callback:(WXModuleCallback)callback
+{
     /**
        UIView-style animation functions support the standard timing functions,
        but they don’t allow you to specify your own cubic Bézier curve. 
@@ -96,65 +220,36 @@ WX_EXPORT_METHOD(@selector(transition:args:callback:))
     [CATransaction begin];
     [CATransaction setAnimationTimingFunction:[WXConvert CAMediaTimingFunction:args[@"timingFunction"]]];
     [CATransaction setCompletionBlock:^{
-        if (isUsingCAAnimation) {
-            CGAffineTransform originTransform = CATransform3DGetAffineTransform(layer.transform);
-            layer.transform = CATransform3DMakeAffineTransform(CGAffineTransformRotate(originTransform, rotateAngle * M_PI / 180));
-        }
         if (callback) {
             callback(@"SUCCESS");
         }
     }];
-    
-    if (isUsingCAAnimation) {
-        CABasicAnimation* rotationAnimation;
-        rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
-        rotationAnimation.toValue = [NSNumber numberWithFloat: rotateAngle];
-        rotationAnimation.fromValue = @([self getRotateAngleFromTransForm:layer.transform]);
-        rotationAnimation.duration = duration;
-        rotationAnimation.cumulative = YES;
-        rotationAnimation.fillMode = kCAFillModeForwards;
-        rotationAnimation.removedOnCompletion = NO;
-        
-        [layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+    NSArray<WXAnimationInfo *> *infos = [self animationInfoArrayFromArgs:args target:targetComponent];
+    for (WXAnimationInfo *info in infos) {
+        [self _createCAAnimation:info];
     }
-    
-    /**
-       Using UIView block animation (UIView animateWithDuration:completion: and it's relatives) instead of using CAAnimation objects. 
-       Those methods actually move the view to it's new position, so that it responds to user interaction at the final location once the animation is complete.
-     **/
-    if (isAnimateTransform || isAnimateFrame || isAnimateBackgroundColor || isAnimateOpacity) {
-        [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionAllowUserInteraction  animations:^{
-            if (isAnimateTransform && !CATransform3DEqualToTransform(transform, layer.transform)) {
-                /**
-                   Struggling with an issue regarding CGAffineTransform scale and translation where when I set a transform in an animation block on a view that already has a transform the view jumps a bit before animating.
-                   I assume it's a bug in Core Animation.
-                   Here comes the black magic: In the scale transformation, change the z parameter to anything different from 1.0, the jump is gone.
-                   See http://stackoverflow.com/questions/27931421/cgaffinetransform-scale-and-translation-jump-before-animation
-                 **/
-                layer.transform = CATransform3DScale(transform, 1, 1, 1.00001);
-            }
-            if (isAnimateBackgroundColor) {
-                layer.backgroundColor = backgroundColor;
-            }
-            if (isAnimateOpacity) {
-                layer.opacity = opacity;
-            }
-            if (isAnimateFrame) {
-                layer.frame = newFrame;
-            }
-        } completion:nil];
-    }
-    
 
     [CATransaction commit];
 }
 
-- (CGFloat)getRotateAngleFromTransForm:(CATransform3D)transform
+- (void)_createCAAnimation:(WXAnimationInfo *)info
 {
-    CGAffineTransform cgTransform = CATransform3DGetAffineTransform(transform);
-    CGFloat radians = atan2f(cgTransform.b, cgTransform.a);
-    CGFloat degrees = radians * (180 / M_PI);
-    return degrees;
+    CABasicAnimation* animation = [CABasicAnimation animationWithKeyPath:info.propertyName];
+    animation.fromValue = info.fromValue;
+    animation.toValue = info.toValue;
+    animation.duration = info.duration;
+    animation.beginTime = CACurrentMediaTime() + info.delay;
+    animation.timingFunction = info.timingFunction;
+    animation.removedOnCompletion = NO;
+    animation.fillMode = kCAFillModeForwards;
+    
+    WXAnimationDelegate *delegate = [[WXAnimationDelegate alloc] initWithAnimationInfo:info finishBlock:^(BOOL isFinish) {
+        
+    }];
+    animation.delegate = delegate;
+    
+    CALayer *layer = info.target.layer;
+    [layer addAnimation:animation forKey:info.propertyName];
 }
 
 @end

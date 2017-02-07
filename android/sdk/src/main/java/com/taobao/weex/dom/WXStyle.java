@@ -762,12 +762,12 @@ public class WXStyle implements Map<String, Object>,Cloneable {
       int i;
       if ((i = key.indexOf(":")) > 0) {
         String clzName = key.substring(i);
-        if (clzName.equals(Constants.PESUDO.ENABLED)) {
+        if (clzName.equals(Constants.PSEUDO.ENABLED)) {
           //enabled, use as regular style
           this.mPesudoResetStyleMap.put(key.substring(0, i), entry.getValue());
           continue;
         } else {
-          clzName = clzName.replace(Constants.PESUDO.ENABLED, "");//remove ':enabled' which is ignored
+          clzName = clzName.replace(Constants.PSEUDO.ENABLED, "");//remove ':enabled' which is ignored
         }
 
         Map<String, Object> stylesMap = pesudoStyleMap.get(clzName);

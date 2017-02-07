@@ -671,7 +671,7 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
         Boolean disabled = WXUtils.getBoolean(param,null);
         if (disabled != null) {
           setDisabled(disabled);
-          setPseudoClassStatus(Constants.PESUDO.DISABLED, disabled);
+          setPseudoClassStatus(Constants.PSEUDO.DISABLED, disabled);
         }
         return true;
       case Constants.Name.POSITION:
@@ -1408,7 +1408,7 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
   }
 
   private void setActiveTouchListener(){
-    boolean hasActivePesudo = mDomObj.getStyles().getPesudoStyles().containsKey(Constants.PESUDO.ACTIVE);
+    boolean hasActivePesudo = mDomObj.getStyles().getPesudoStyles().containsKey(Constants.PSEUDO.ACTIVE);
     View view;
     if(hasActivePesudo && (view = getRealView()) != null) {
       boolean hasTouchConsumer = (mHostClickListeners != null && mHostClickListeners.size() > 0) || mGesture != null;
@@ -1418,7 +1418,7 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
 
   @Override
   public void updateActivePseudo(boolean isSet) {
-    setPseudoClassStatus(Constants.PESUDO.ACTIVE,isSet);
+    setPseudoClassStatus(Constants.PSEUDO.ACTIVE,isSet);
   }
 
   /**

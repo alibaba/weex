@@ -98,7 +98,7 @@
             return;
         }
         //call native
-        WXLogDebug(@"Calling native... instancdId:%@, methods:%@, callbackId:%@", instanceId, [WXUtility JSONString:methods], callbackId);
+        WXLogDebug(@"Calling native... instanceId:%@, methods:%@, callbackId:%@", instanceId, [WXUtility JSONString:methods], callbackId);
         _nativeCallBlock(instanceId, methods, callbackId);
     } else if ([method isEqualToString:@"setLogLevel"]) {
         NSString *levelString = [args firstObject];

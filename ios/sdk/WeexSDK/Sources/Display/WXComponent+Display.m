@@ -65,7 +65,7 @@
     return displayBlock;
 }
 
-- (WXDisplayCompeletionBlock)displayCompeletionBlock
+- (WXDisplayCompletionBlock)displayCompletionBlock
 {
     return nil;
 }
@@ -89,11 +89,11 @@
     } else {
         displayBlock = [self displayBlock];
     }
-    WXDisplayCompeletionBlock compeletionBlock = [self displayCompeletionBlock];
+    WXDisplayCompletionBlock completionBlock = [self displayCompletionBlock];
     
     if (!displayBlock) {
-        if (compeletionBlock) {
-            compeletionBlock(layer, NO);
+        if (completionBlock) {
+            completionBlock(layer, NO);
         }
         return;
     }
@@ -107,9 +107,9 @@
         
         [WXDisplayQueue addBlock:^{
             if (isCancelled()) {
-                if (compeletionBlock) {
+                if (completionBlock) {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        compeletionBlock(layer, NO);
+                        completionBlock(layer, NO);
                     });
                 }
                 return;
@@ -119,16 +119,16 @@
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (isCancelled()) {
-                    if (compeletionBlock) {
-                        compeletionBlock(layer, NO);
+                    if (completionBlock) {
+                        completionBlock(layer, NO);
                     }
                     return;
                 }
                 
                 layer.contents = (id)(image.CGImage);
                 
-                if (compeletionBlock) {
-                    compeletionBlock(layer, YES);
+                if (completionBlock) {
+                    completionBlock(layer, YES);
                 }
             });
             
@@ -140,8 +140,8 @@
         
         _layer.contents = (id)image.CGImage;
         
-        if (compeletionBlock) {
-            compeletionBlock(layer, YES);
+        if (completionBlock) {
+            completionBlock(layer, YES);
         }
     }
 }
@@ -391,7 +391,7 @@
 - (void)_handleBorders:(NSDictionary *)styles isUpdating:(BOOL)updating
 {
     if (!updating) {
-        // init with defalut value
+        // init with default value
         _borderTopStyle = _borderRightStyle = _borderBottomStyle = _borderLeftStyle = WXBorderStyleSolid;
         _borderTopColor = _borderLeftColor = _borderRightColor = _borderBottomColor = [UIColor blackColor];
         _borderTopWidth = _borderLeftWidth = _borderRightWidth = _borderBottomWidth = 0;

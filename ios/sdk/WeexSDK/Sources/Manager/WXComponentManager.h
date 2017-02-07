@@ -34,7 +34,7 @@ extern void WXPerformBlockOnComponentThread(void (^block)());
 - (void)startComponentTasks;
 
 /**
- * @abstract tell the component mananger that instance root view's frame has been changed
+ * @abstract tell the component manager that instance root view's frame has been changed
  **/
 - (void)rootViewFrameDidChange:(CGRect)frame;
 
@@ -149,14 +149,14 @@ extern void WXPerformBlockOnComponentThread(void (^block)());
 /**
  *  @abstract add a component which has a fixed position
  *
- *  @param component
+ *  @param fixComponent the fixed component to add
  */
 - (void)addFixedComponent:(WXComponent *)fixComponent;
 
 /**
  *  @abstract remove a component which has a fixed position
  *
- *  @param component
+ *  @param fixComponent the fixed component to remove
  */
 - (void)removeFixedComponent:(WXComponent *)fixComponent;
 

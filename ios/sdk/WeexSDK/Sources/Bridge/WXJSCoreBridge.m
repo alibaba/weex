@@ -189,7 +189,7 @@
         NSArray *argsArray = [args toArray];
         NSDictionary *optionsDic = [options toDictionary];
         
-        WXLogDebug(@"callNativeModule...%@,%@,%@,%@", instanceIdString, componentNameString, methodNameString, argsArray);
+        WXLogDebug(@"callNativeComponent...%@,%@,%@,%@", instanceIdString, componentNameString, methodNameString, argsArray);
         
         callNativeComponentBlock(instanceIdString, componentNameString, methodNameString, argsArray, optionsDic);
     };
@@ -210,6 +210,7 @@ typedef void (*WXJSCGarbageCollect)(JSContextRef);
 
 - (void)garbageCollect
 {
+    // for dev and debug only!!
     char str[80];
     strcpy(str, "JSSynchron");
     strcat(str, "ousGarbageColl");

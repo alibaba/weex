@@ -9,6 +9,7 @@
 #import "WXScrollerProtocol.h"
 #import "WXComponent.h"
 #import "WXConvert.h"
+#import "WXTransform.h"
 @class WXTouchGestureRecognizer;
 @class WXThreadSafeCounter;
 
@@ -100,8 +101,7 @@
     BOOL _isNeedJoinLayoutSystem;
     BOOL _lazyCreateView;
     
-    NSString *_transform;
-    NSString *_transformOrigin;
+    WXTransform *_transform;
 }
 
 ///--------------------------------------

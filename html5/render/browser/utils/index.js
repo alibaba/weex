@@ -4,9 +4,6 @@
 
 // const WEAPP_STYLE_ID = 'weapp-style'
 
-import frameUpdater from './frameUpdater'
-export { frameUpdater }
-
 import '../../../shared/objectAssign'
 
 export {

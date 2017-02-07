@@ -34,7 +34,7 @@
  */
 - (void)removeScrollToListener:(WXComponent *)target;
 
-- (void)scrollToComponent:(WXComponent *)component withOffset:(CGFloat)offset;
+- (void)scrollToComponent:(WXComponent *)component withOffset:(CGFloat)offset animated:(BOOL)animated;
 
 - (BOOL)isNeedLoadMore;
 

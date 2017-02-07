@@ -119,8 +119,7 @@
             strongSelf.view.frame = strongSelf.calculatedFrame;
             
             if (strongSelf->_transform) {
-                WXTransform *transform = [[WXTransform alloc] initWithInstance:strongSelf.weexInstance];
-                strongSelf.layer.transform = [transform getTransform:strongSelf->_transform withView:strongSelf.view withOrigin:strongSelf->_transformOrigin];
+                [strongSelf->_transform applyTransformForView:strongSelf.view];
             }
             
             [strongSelf setNeedsDisplay];

@@ -57,6 +57,8 @@ typedef UITextView WXTextAreaView;
 
 WX_EXPORT_METHOD(@selector(focus))
 WX_EXPORT_METHOD(@selector(blur))
+WX_EXPORT_METHOD(@selector(setSelectionRange:selectionEnd:))
+WX_EXPORT_METHOD(@selector(getSelectionRange:))
 
 - (instancetype)initWithRef:(NSString *)ref type:(NSString *)type styles:(NSDictionary *)styles attributes:(NSDictionary *)attributes events:(NSArray *)events weexInstance:(WXSDKInstance *)weexInstance
 {
@@ -205,6 +207,27 @@ WX_EXPORT_METHOD(@selector(blur))
     if (self.textView) {
         [self.textView resignFirstResponder];
     }
+}
+
+-(void)setSelectionRange:(NSInteger)selectionStart selectionEnd:(NSInteger)selectionEnd
+{
+    if(selectionStart>self.textView.text.length || selectionEnd>self.textView.text.length) {
+        return;
+    }
+    [self.textView becomeFirstResponder];
+    UITextPosition *startPos =  [self.textView positionFromPosition:self.textView.beginningOfDocument offset:selectionStart];
+    UITextPosition *endPos = [self.textView positionFromPosition:self.textView.beginningOfDocument offset:selectionEnd];
+    UITextRange *textRange = [self.textView textRangeFromPosition:startPos
+                                                        toPosition:endPos];
+    self.textView.selectedTextRange = textRange;
+}
+
+-(void)getSelectionRange:(WXCallback)callback
+{
+    NSInteger selectionStart = [self.textView offsetFromPosition:self.textView.beginningOfDocument toPosition:self.textView.selectedTextRange.start];
+    NSInteger selectionEnd = [self.textView offsetFromPosition:self.textView.beginningOfDocument toPosition:self.textView.selectedTextRange.end];
+    NSDictionary *res = @{@"selectionStart":@(selectionStart),@"selectionEnd":@(selectionEnd)};
+    callback(res);
 }
 
 #pragma mark - add-remove Event
@@ -387,7 +410,7 @@ WX_EXPORT_METHOD(@selector(blur))
 
 - (void)textViewDidChange:(UITextView *)textView
 {
-    if(textView.text && [textView.text length] > 0){
+    if(textView.text && [textView.text length] > 0) {
         _placeHolderLabel.text = @"";
     }else{
         [self setPlaceholderAttributedString];
@@ -502,7 +525,7 @@ WX_EXPORT_METHOD(@selector(blur))
     CGRect begin = [[[notification userInfo] objectForKey:@"UIKeyboardFrameBeginUserInfoKey"] CGRectValue];
     
     CGRect end = [[[notification userInfo] objectForKey:@"UIKeyboardFrameEndUserInfoKey"] CGRectValue];
-    if(begin.size.height <= 44 ){
+    if(begin.size.height <= 44) {
         return;
     }
     _keyboardSize = end.size;

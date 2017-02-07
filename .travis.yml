@@ -1,2 +1,8 @@
 language: objective-c
-script: xcodebuild -project ios/sdk/WeexSDK.xcodeproj test -scheme WeexSDKTests CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -destination 'platform=iOS Simulator,name=iPhone 6'
+rvm: 2.0.0
+osx_image: xcode8.2
+before_install:
+  - gem install danger danger-xcode_summary xcpretty xcpretty-json-formatter
+script:
+  - xcodebuild -project ios/sdk/WeexSDK.xcodeproj test -scheme WeexSDKTests CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -destination 'platform=iOS Simulator,name=iPhone 6' | XCPRETTY_JSON_FILE_OUTPUT=ios/sdk/xcodebuild.json xcpretty -f `xcpretty-json-formatter`
+  - bundle exec danger

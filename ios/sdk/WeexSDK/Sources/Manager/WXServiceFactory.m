@@ -88,7 +88,7 @@
                             @"unregister: global.unregisterService"
                             @"}";
     
-    NSString *script = [NSString stringWithFormat:@";(function(service, options){ %@ })(%@, %@);"
+    NSString *script = [NSString stringWithFormat:@";(function(service, options){\n;%@;\n})(%@, %@);"
                         , serviceScript, funcString, optionsString];
     return script;
 }

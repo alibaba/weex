@@ -7,6 +7,7 @@
  */
 
 #import "WXSDKEngine.h"
+#import "WXDebugTool.h"
 #import "WXModuleFactory.h"
 #import "WXHandlerFactory.h"
 #import "WXComponentFactory.h"
@@ -21,7 +22,7 @@
 #import "WXSDKManager.h"
 #import "WXSDKError.h"
 #import "WXMonitor.h"
-#import "WXSimulatorShortcutMananger.h"
+#import "WXSimulatorShortcutManager.h"
 #import "WXAssert.h"
 #import "WXLog.h"
 #import "WXUtility.h"
@@ -102,7 +103,7 @@
     if (!name || !clazz) {
         return;
     }
-    
+
     WXAssert(name && clazz, @"Fail to register the component, please check if the parameters are correct ！");
     
     [WXComponentFactory registerComponent:name withClass:clazz withPros:properties];
@@ -178,7 +179,7 @@
 #if TARGET_OS_SIMULATOR
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [WXSimulatorShortcutMananger registerSimulatorShortcutWithKey:@"i" modifierFlags:UIKeyModifierCommand | UIKeyModifierAlternate action:^{
+        [WXSimulatorShortcutManager registerSimulatorShortcutWithKey:@"i" modifierFlags:UIKeyModifierCommand | UIKeyModifierAlternate action:^{
             NSURL *URL = [NSURL URLWithString:@"http://localhost:8687/launchDebugger"];
             NSURLRequest *request = [NSURLRequest requestWithURL:URL];
             
@@ -268,6 +269,15 @@ static NSDictionary *_customEnvironment;
     [self _originalRegisterHandlers:handlers];
     
     [[WXSDKManager bridgeMgr] executeJsFramework:script];
+    
+    NSDictionary *jsSerices = [WXDebugTool jsServiceCache];
+    for(NSString *serviceName in jsSerices) {
+        NSDictionary *service = [jsSerices objectForKey:serviceName];
+        NSString *serviceName = [service objectForKey:@"name"];
+        NSString *serviceScript = [service objectForKey:@"script"];
+        NSDictionary *serviceOptions = [service objectForKey:@"options"];
+        [WXSDKEngine registerService:serviceName withScript:serviceScript withOptions:serviceOptions];
+    }
 }
 
 + (void)connectDebugServer:(NSString*)URL

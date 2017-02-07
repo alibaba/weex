@@ -143,7 +143,7 @@
 {
     UIView *itemView = nil;
     for (itemView in self.itemViews) {
-        if (itemView.tag == index){
+        if (itemView.tag == index) {
             break;
         }
     }
@@ -173,7 +173,7 @@
 
 - (void)_resortItemViews
 {
-    if (self.itemViews.count <= 1) return;
+    if (self.itemViews.count <= 2) return;
     
     NSInteger center = [self _centerItemIndex];
     NSInteger index = 0;
@@ -208,7 +208,7 @@
 - (void)_resetItemFrames
 {
     CGFloat xOffset = 0; CGRect frame = CGRectZero;
-    for(UIView *itemView in self.itemViews){
+    for(UIView *itemView in self.itemViews) {
         frame = itemView.frame;
         frame.origin.x = xOffset;
         frame.size.width = self.frame.size.width;
@@ -219,7 +219,7 @@
 
 - (NSInteger)_centerItemIndex
 {
-    if (self.itemViews.count > 1) {
+    if (self.itemViews.count > 2) {
         return self.itemViews.count % 2 ? self.itemViews.count / 2 : self.itemViews.count / 2 - 1;
     }
     return 0;
@@ -227,7 +227,7 @@
 
 - (void)_scroll2Center
 {
-    if (self.itemViews.count > 1) {
+    if (self.itemViews.count > 2) {
         UIView *itemView = [self.itemViews objectAtIndex:[self _centerItemIndex]];
         [self.scrollView scrollRectToVisible:itemView.frame animated:NO];
     }
@@ -281,7 +281,6 @@
             break;
         }
     }
-    
     if (itemView) {
         self.currentIndex = itemView.tag;
     }
@@ -446,7 +445,7 @@
 {
     UIView *view = component.view;
     
-    if(self.childrenView && [self.childrenView containsObject:view]){
+    if(self.childrenView && [self.childrenView containsObject:view]) {
         [self.childrenView removeObject:view];
     }
     

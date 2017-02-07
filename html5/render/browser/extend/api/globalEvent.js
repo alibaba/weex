@@ -10,7 +10,7 @@ const globalEvent = {
    * @param {string} evt - the event name to add a listener on.
    */
   addEventListener (evt, callbackId) {
-    const cb = e => this.sender.performCallback(callbackId, e)
+    const cb = e => this.sender.performCallback(callbackId, e, true)
     if (!handlerTraker[evt]) {
       handlerTraker[evt] = [cb]
     }

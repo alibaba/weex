@@ -33,7 +33,7 @@
     if (self) {
         if(!self.backgroudView)
         {
-            self.backgroudView = [self createBackgroudView];
+            self.backgroudView = [self createBackgroundView];
             UITapGestureRecognizer *tapGesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hide)];
             [self.backgroudView addGestureRecognizer:tapGesture];
         }
@@ -119,7 +119,7 @@
     }
 }
 
--(UIView *)createBackgroudView
+-(UIView *)createBackgroundView
 {
     UIView *view = [UIView new];
     view.frame = [UIScreen mainScreen].bounds;

@@ -81,7 +81,7 @@
 - (instancetype)init {
     
     self = [super init];
-    if (!self){
+    if (!self) {
     }
     _decelerationRate = 0.01;
     _scrollEnabled = YES;

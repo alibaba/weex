@@ -2,6 +2,28 @@ import ComponentManager from '../dom/componentManager'
 import { registerLoader } from './loader'
 import { protocol } from '../bridge'
 import { extend } from '../utils'
+import { addEventListener, removeAllEventListeners } from '../base/moduleEvent'
+
+/**
+ * register module event listener for every api module except 'globalEvent'.
+ */
+function registerModuleEventListener (name, module, meta) {
+  if (name !== 'globalEvent') {
+    module['addEventListener'] = function (evt, callbackId, options) {
+      return addEventListener.call(this, name, evt, callbackId, options)
+    }
+    module['removeAllEventListeners'] = function (evt) {
+      return removeAllEventListeners.call(this, name, evt)
+    }
+    ; [{
+      name: 'addEventListener',
+      args: ['string', 'function', 'object']
+    }, {
+      name: 'removeAllEventListeners',
+      args: ['string']
+    }].forEach(info => meta[name].push(info))
+  }
+}
 
 const methods = {
   // Register a new component with the specified name.
@@ -13,6 +35,7 @@ const methods = {
   // If the module already exists, just add methods from the
   // new module to the old one.
   registerApiModule (name, module, meta) {
+    registerModuleEventListener(name, module, meta)
     if (!protocol.apiModule[name]) {
       protocol.apiModule[name] = module
     }

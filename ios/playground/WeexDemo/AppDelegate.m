@@ -16,6 +16,7 @@
 #import "DemoDefine.h"
 #import "WXScannerVC.h"
 #import "WXSyncTestModule.h"
+#import "UIView+UIThreadCheck.h"
 #import <WeexSDK/WeexSDK.h>
 #import <AVFoundation/AVFoundation.h>
 #import <ATSDK/ATManager.h>
@@ -39,6 +40,11 @@
     [self.window makeKeyAndVisible];
     
     [self startSplashScreen];
+    
+#if DEBUG
+    // check if there are any UI changes on main thread.
+    [UIView wx_checkUIThread];
+#endif
     
     return YES;
 }
@@ -64,6 +70,18 @@
     extern void __gcov_flush(void);
     __gcov_flush();
 #endif
+}
+
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+{
+    NSString *newUrlStr = url.absoluteString;
+    if([url.scheme isEqualToString:@"wxpage"]) {
+        newUrlStr = [newUrlStr stringByReplacingOccurrencesOfString:@"wxpage://" withString:@"http://"];
+    }
+    UIViewController * viewController = [self demoController];
+    ((WXDemoViewController*)viewController).url = [NSURL URLWithString:newUrlStr];
+    [(WXRootViewController*)self.window.rootViewController pushViewController:viewController animated:YES];
+    return YES;
 }
 
 #pragma mark weex

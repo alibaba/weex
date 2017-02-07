@@ -9,17 +9,18 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 @class WXSDKInstance;
+@class WXLength;
 
 @interface WXTransform : NSObject
 
-@property CGAffineTransform transform;
+@property (nonatomic, assign, readonly) float rotateAngle;
+@property (nonatomic, strong, readonly) WXLength *translateX;
+@property (nonatomic, strong, readonly) WXLength *translateY;
+@property (nonatomic, assign, readonly) float scaleX;
+@property (nonatomic, assign, readonly) float scaleY;
 
-- (instancetype)initWithInstance:(WXSDKInstance *)instance NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithCSSValue:(NSString *)cssValue origin:(NSString *)origin instance:(WXSDKInstance *)instance;
 
-- (CATransform3D)getTransform:(NSString *)cssValue;
-- (CATransform3D)getTransform:(NSString *)cssValue withView:(UIView *)view;
-- (CATransform3D)getTransform:(NSString *)cssValue withView:(UIView *)view withOrigin:(NSString *)origin;
-- (CATransform3D)getTransform:(NSString *)cssValue withView:(UIView *)view withOrigin:(NSString *)origin isTransformRotate:(BOOL)isTransformRotate;
-- (float)getRotateAngle;
+- (void)applyTransformForView:(UIView *)view;
 
 @end

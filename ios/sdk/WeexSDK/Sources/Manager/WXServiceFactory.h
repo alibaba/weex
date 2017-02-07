@@ -26,7 +26,7 @@
 
 
 /**
- * @abstract Unregisters a component for a given name
+ * @abstract Unregisters a service for a given name
  *
  * @param name The service name to register
  *

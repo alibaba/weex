@@ -66,6 +66,7 @@ const proto = {
   create () {
     const node = document.createElement('div')
     node.classList.add('slider')
+    node.classList.add('weex-container')
     node.style.position = 'relative'
     node.style.overflow = 'hidden'
     return node
@@ -89,7 +90,6 @@ const proto = {
     this.sliderContainer = sliderContainer
 
     const children = this.data.children
-    const scale = this.data.scale
     const fragment = document.createDocumentFragment()
     let indicatorData, width, height
     let childWidth = 0
@@ -98,7 +98,6 @@ const proto = {
     if (children && children.length) {
       for (let i = 0; i < children.length; i++) {
         let child
-        children[i].scale = this.data.scale
         children[i].instanceId = this.data.instanceId
         if (children[i].type === 'indicator') {
           indicatorData = extend(children[i], {
@@ -129,7 +128,7 @@ const proto = {
         this.node.appendChild(this.indicator.node)
       }
 
-      sliderContainer.style.height = scale * this.data.style.height + 'px'
+      sliderContainer.style.height = this.data.style.height + 'px'
       sliderContainer.appendChild(fragment)
     }
   },

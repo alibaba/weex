@@ -2,17 +2,23 @@
 
 import config from '../render/config'
 import protocol from './protocol'
-import { isArray, frameUpdater } from '../utils'
+import { isArray } from '../utils'
 import Sender from './sender'
 
-const callQueue = []
-// Need a task counter?
-// When frameUpdater is not activated, tasks will not be push
-// into callQueue and there will be no trace for situation of
-// execution of tasks.
+// sync call native component method.
+function callNativeComponent (instanceId, ref, method, args, options) {
+  return processCall(instanceId, {
+    component: options.component,
+    ref,
+    method,
+    args
+  })
+}
 
-// give 10ms for call handling, and rest 6ms for others
-const MAX_TIME_FOR_EACH_FRAME = 10
+// sync call native module api.
+function callNativeModule (instanceId, module, method, args, options) {
+  return processCall(instanceId, { module, method, args })
+}
 
 // callNative: jsFramework will call this method to talk to
 // this renderer.
@@ -37,40 +43,14 @@ function callNative (instanceId, tasks, callbackId) {
   calls[len - 1].callbackId = (!callbackId && callbackId !== 0)
                               ? -1
                               : callbackId
-  // To solve the problem of callapp, the two-way time loop rule must
-  // be replaced by calling directly except the situation of page loading.
-  // 2015-11-03
   for (let i = 0; i < len; i++) {
-    if (frameUpdater.isActive()) {
-      callQueue.push({
-        instanceId: instanceId,
-        call: calls[i]
-      })
-    }
-    else {
-      processCall(instanceId, calls[i])
-    }
-  }
-}
-
-function processCallQueue () {
-  let len = callQueue.length
-  if (len === 0) {
-    return
-  }
-  const start = Date.now()
-  let elapsed = 0
-
-  while (--len >= 0 && elapsed < MAX_TIME_FOR_EACH_FRAME) {
-    const callObj = callQueue.shift()
-    processCall(callObj.instanceId, callObj.call)
-    elapsed = Date.now() - start
+    processCall(instanceId, calls[i])
   }
 }
 
 function processCall (instanceId, call) {
   const isComponent = typeof call.module === 'undefined'
-  isComponent ? componentCall(instanceId, call) : moduleCall(instanceId, call)
+  const res = isComponent ? componentCall(instanceId, call) : moduleCall(instanceId, call)
 
   const callbackId = call.callbackId
   if ((callbackId
@@ -80,6 +60,9 @@ function processCall (instanceId, call) {
     && callbackId !== -1) {
     performNextTick(instanceId, callbackId)
   }
+
+  // for sync call.
+  return res
 }
 
 function moduleCall (instanceId, call) {
@@ -95,7 +78,7 @@ function moduleCall (instanceId, call) {
     return
   }
 
-  method.apply(global.weex.getInstance(instanceId), args)
+  return method.apply(global.weex.getInstance(instanceId), args)
 }
 
 function componentCall (instanceId, call) {
@@ -115,7 +98,7 @@ function componentCall (instanceId, call) {
     return console.error(`[h5-render] component ${componentName} doesn't have a method named ${methodName}.`)
   }
 
-  method.apply(elem, args)
+  return method.apply(elem, args)
 }
 
 function performNextTick (instanceId, callbackId) {
@@ -134,15 +117,13 @@ function nativeLog () {
 
 function exportsBridgeMethodsToGlobal () {
   global.callNative = callNative
+  global.callNativeComponent = callNativeComponent
+  global.callNativeModule = callNativeModule
   global.nativeLog = nativeLog
 }
 
 export default {
   init: function () {
-    // process callQueue every 16 milliseconds.
-    frameUpdater.addUpdateObserver(processCallQueue)
-    frameUpdater.start()
-
     // exports methods to global(window).
     exportsBridgeMethodsToGlobal()
   }

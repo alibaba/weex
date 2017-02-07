@@ -21,7 +21,7 @@
 /**
  *  Create Instance Method
  *  @param instance  :   instance id
- *  @param template  :   template data
+ *  @param temp  :   template data
  *  @param options   :   parameters
  *  @param data      :   external data
  **/
@@ -42,6 +42,11 @@
 - (void)destroyInstance:(NSString *)instance;
 
 /**
+ * Trigger full GC, for dev and debug only.
+ **/
+- (void)forceGarbageCollection;
+
+/**
  *  Refresh Instance Method
  *  @param instance  :   instance id
  *  @param data      :   external data
@@ -54,12 +59,11 @@
 - (void)unload;
 
 /**
- *  Update Instacne State Method
+ *  Update Instance State Method
  *  @param instance  :   instance id
  *  @param data      :   parameters
  **/
-- (void)updateState:(NSString *)instance
-               data:(id)data;
+- (void)updateState:(NSString *)instance data:(id)data;
 
 /**
  *  Execute JSFramework Script
@@ -70,7 +74,7 @@
 /**
  *  Register JS service Script
  *  @param name      :   service name
- *  @param script    :   script code
+ *  @param serviceScript    :   script code
  *  @param options   :   service options
  **/
 - (void)registerService:(NSString *)name withService:(NSString *)serviceScript withOptions:(NSDictionary *)options;
@@ -79,7 +83,7 @@
 /**
  *  Register JS service Script
  *  @param name         :   service name
- *  @param scriptUrl    :   script url
+ *  @param serviceScriptUrl    :   script url
  *  @param options      :   service options
  **/
 
@@ -87,7 +91,7 @@
 
 /**
  *  Unregister JS service Script
- *  @param script    :   script code
+ *  @param name    :   script code
  **/
 - (void)unregisterService:(NSString *)name;
 
@@ -99,17 +103,17 @@
 
 /**
  *  Register Components Method
- *  @param components:   component list
+ *  @param components   component list
  **/
 - (void)registerComponents:(NSArray* )components;
 
 /**
  *  FireEvent
- *  @param instanceId:   instance id
+ *  @param instanceId   instance id
  *  @param ref       :   node reference
  *  @param type      :   event type
  *  @param params    :   parameters
- *  @param domChanges:   dom value changes, used for two-way data binding
+ *  @param domChanges   dom value changes, used for two-way data binding
  **/
 - (void)fireEvent:(NSString *)instanceId ref:(NSString *)ref type:(NSString *)type params:(NSDictionary *)params domChanges:(NSDictionary *)domChanges;
 
@@ -119,7 +123,7 @@
  *  @param instanceId instanceId
  *  @param funcId     funcId
  *  @param params     params
- *  @param iflast     indicate that whether this func will be reused
+ *  @param keepAlive     indicate that whether this func will be reused
  */
 - (void)callBack:(NSString *)instanceId funcId:(NSString *)funcId params:(id)params keepAlive:(BOOL)keepAlive;
 
@@ -131,7 +135,7 @@
 
 /**
  *  CallBack
- *  @param instanceId:   instance id
+ *  @param instanceId   instance id
  *  @param funcId    :   callback id
  *  @param params    :   parameters
  **/
@@ -145,7 +149,7 @@
 
 /**
  *  Log To WebSocket
- *  @param flag      :   the tag to indentify
+ *  @param flag      :   the tag to identify
  *  @param message   :   message to output
  **/
 - (void)logToWebSocket:(NSString *)flag message:(NSString *)message;

@@ -60,7 +60,7 @@
 }
 
 /**
- *  We assume that the initial state of viewController's navigitonBar is hidden.  By setting the attribute of
+ *  We assume that the initial state of viewController's navigtionBar is hidden.  By setting the attribute of
  *  'dataRole' equal to 'navbar', the navigationBar hidden will be NO.
  */
 - (void)viewDidLoad
@@ -180,11 +180,11 @@
     }
 }
 
-- (void)_appStateDidChange:(NSNotification *)nofity
+- (void)_appStateDidChange:(NSNotification *)notify
 {
-    if ([nofity.name isEqualToString:@"UIApplicationDidBecomeActiveNotification"]) {
+    if ([notify.name isEqualToString:@"UIApplicationDidBecomeActiveNotification"]) {
         [self _updateInstanceState:WeexInstanceForeground];
-    } else if([nofity.name isEqualToString:@"UIApplicationDidEnterBackgroundNotification"]) {
+    } else if([notify.name isEqualToString:@"UIApplicationDidEnterBackgroundNotification"]) {
         [self _updateInstanceState:WeexInstanceBackground]; ;
     }
 }

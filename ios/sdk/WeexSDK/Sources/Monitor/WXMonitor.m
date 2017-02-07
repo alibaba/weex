@@ -99,7 +99,7 @@ static WXThreadSafeMutableDictionary *globalPerformanceDict;
     WXPerformBlockOnComponentThread(^{
         commitDict[@"componentCount"] = @([instance numberOfComponents]);
         WXPerformBlockOnMainThread(^{
-    [self commitPerformanceWithDict:commitDict instance:instance];
+            [self commitPerformanceWithDict:commitDict instance:instance];
         });
     });
 }

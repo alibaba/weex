@@ -8,6 +8,8 @@ const DEFAULT_SIZE = 200
 const RESIZE_MODES = ['stretch', 'cover', 'contain']
 const DEFAULT_RESIZE_MODE = 'stretch'
 
+let Atomic
+
 /**
  * resize: 'cover' | 'contain' | 'stretch', default is 'stretch'
  * src: url
@@ -57,7 +59,7 @@ const attr = {
 
 const style = {
   width: function (val) {
-    val = parseFloat(val) * this.data.scale
+    val = parseFloat(val)
     if (val < 0 || isNaN(val)) {
       val = DEFAULT_SIZE
     }
@@ -65,7 +67,7 @@ const style = {
   },
 
   height: function (val) {
-    val = parseFloat(val) * this.data.scale
+    val = parseFloat(val)
     if (val < 0 || isNaN(val)) {
       val = DEFAULT_SIZE
     }
@@ -73,8 +75,19 @@ const style = {
   }
 }
 
+const event = {
+  load: {
+    extra: function () {
+      const { naturalWidth, naturalHeight } = this.node
+      return {
+        naturalWidth, naturalHeight
+      }
+    }
+  }
+}
+
 function init (Weex) {
-  const Atomic = Weex.Atomic
+  Atomic = Weex.Atomic
   const extend = Weex.utils.extend
 
   function Image (data) {
@@ -87,6 +100,7 @@ function init (Weex) {
   extend(Image.prototype, {
     style: extend(Object.create(Atomic.prototype.style), style)
   })
+  extend(Image.prototype, { event })
 
   Weex.registerComponent('image', Image)
 }

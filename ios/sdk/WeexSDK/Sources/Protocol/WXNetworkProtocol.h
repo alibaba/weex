@@ -23,11 +23,11 @@ __attribute__ ((deprecated("Use WXResourceRequestHandler instead")))
  *
  * @param receiveDataCallback This block is called when data is available.
  *
- * @param compeletionCallback This block is called when the last message related to a specific task is sent.
+ * @param completionCallback This block is called when the last message related to a specific task is sent.
  */
 - (id)sendRequest:(NSURLRequest *)request withSendingData:(void (^)(int64_t bytesSent, int64_t totalBytes))sendDataCallback
                                              withResponse:(void (^)(NSURLResponse *response))responseCallback
                                           withReceiveData:(void (^)(NSData *data))receiveDataCallback
-                                          withCompeletion:(void (^)(NSData *totalData, NSError *error))compeletionCallback;
+                                          withCompeletion:(void (^)(NSData *totalData, NSError *error))completionCallback;
 
 @end

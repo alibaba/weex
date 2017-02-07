@@ -16,7 +16,12 @@ ul, ol {
   -webkit-box-orient: vertical;
   -webkit-flex-direction: column;
   flex-direction: column;
+  -webkit-flex-shrink: 0;
   flex-shrink: 0;
+  -webkit-flex-grow: 0;
+  flex-grow: 0;
+  -webkit-flex-basis: auto;
+  flex-basis: auto;
   align-items: stretch;
   box-align: stretch;
   align-content: flex-start;
@@ -30,7 +35,12 @@ ul, ol {
 .weex-element {
   box-sizing: border-box;
   position: relative;
+  -webkit-flex-shrink: 0;
   flex-shrink: 0;
+  -webkit-flex-grow: 0;
+  flex-grow: 0;
+  -webkit-flex-basis: auto;
+  flex-basis: auto;
   border: 0 solid black;
   margin: 0;
   padding: 0;

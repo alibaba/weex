@@ -300,6 +300,11 @@ typedef enum : NSUInteger {
     });
 }
 
+- (void)forceGarbageCollection
+{
+    [[WXSDKManager bridgeMgr] forceGarbageCollection];
+}
+
 - (void)updateState:(WXState)state
 {
     if (!self.instanceId) {
@@ -418,7 +423,7 @@ typedef enum : NSUInteger {
         return;
     }
     Class moduleClass =  [WXModuleFactory classWithModuleName:method.moduleName];
-    NSMutableDictionary * option = [methodArguments[3] mutableCopy];
+    NSMutableDictionary * option = [methodArguments[2] mutableCopy];
     [option setObject:method.moduleName forKey:@"moduleName"];
     // the value for moduleName in option is for the need of callback
     [self addModuleEventObservers:methodArguments[0] callback:methodArguments[1] option:option moduleClassName:NSStringFromClass(moduleClass)];
@@ -544,7 +549,7 @@ typedef enum : NSUInteger {
 
 - (void)finishPerformance
 {
-    //deperacated
+    //deprecated
 }
 
 - (void)creatFinish

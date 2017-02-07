@@ -41,18 +41,16 @@
     WXAssert(moduleInstance, @"No instance found for module name:%@, class:%@", _moduleName, moduleClass);
     BOOL isSync = NO;
     SEL selector = [WXModuleFactory selectorWithModuleName:self.moduleName methodName:self.methodName isSync:&isSync];
-    if (!selector) {
-        NSString *errorMessage = [NSString stringWithFormat:@"method：%@ for module:%@ doesn't exist, maybe it has not been registered", self.methodName, _moduleName];
-        WX_MONITOR_FAIL(WXMTJSBridge, WX_ERR_INVOKE_NATIVE, errorMessage);
-        return nil;;
-    }
+   
     if (![moduleInstance respondsToSelector:selector]) {
         // if not implement the selector, then dispatch default module method
         if ([self.methodName isEqualToString:@"addEventListener"]) {
             [self.instance _addModuleEventObserversWithModuleMethod:self];
-        }
-        if ([self.methodName isEqualToString:@"removeAllEventListeners"]) {
+        } else if ([self.methodName isEqualToString:@"removeAllEventListeners"]) {
             [self.instance _removeModuleEventObserverWithModuleMethod:self];
+        } else {
+            NSString *errorMessage = [NSString stringWithFormat:@"method：%@ for module:%@ doesn't exist, maybe it has not been registered", self.methodName, _moduleName];
+            WX_MONITOR_FAIL(WXMTJSBridge, WX_ERR_INVOKE_NATIVE, errorMessage);
         }
         return nil;
     }
@@ -63,15 +61,15 @@
         [invocation invoke];
         return invocation;
     } else {
-        [self _dispatchInvovation:invocation moduleInstance:moduleInstance];
+        [self _dispatchInvocation:invocation moduleInstance:moduleInstance];
         return nil;
     }
 }
 
-- (void)_dispatchInvovation:(NSInvocation *)invocation moduleInstance:(id<WXModuleProtocol>)moduleInstance
+- (void)_dispatchInvocation:(NSInvocation *)invocation moduleInstance:(id<WXModuleProtocol>)moduleInstance
 {
     // dispatch to user specified queue or thread, default is main thread
-    dispatch_block_t dipatchBlock = ^ (){
+    dispatch_block_t dispatchBlock = ^ (){
         [invocation invoke];
     };
     
@@ -84,14 +82,14 @@
     } else {
         targetThread = [NSThread mainThread];
     }
-    
+
     WXAssert(targetQueue || targetThread, @"No queue or thread found for module:%@", moduleInstance);
     
     if (targetQueue) {
-        dispatch_async(targetQueue, dipatchBlock);
+        dispatch_async(targetQueue, dispatchBlock);
     } else {
         WXPerformBlockOnThread(^{
-            dipatchBlock();
+            dispatchBlock();
         }, targetThread);
     }
 }

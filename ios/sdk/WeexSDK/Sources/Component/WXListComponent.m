@@ -206,7 +206,7 @@
     // Do Nothing， firstScreenTime is set by cellDidRendered:
 }
 
-- (void)scrollToComponent:(WXComponent *)component withOffset:(CGFloat)offset
+- (void)scrollToComponent:(WXComponent *)component withOffset:(CGFloat)offset animated:(BOOL)animated
 {
     CGPoint contentOffset = _tableView.contentOffset;
     CGFloat contentOffsetY = 0;
@@ -231,7 +231,7 @@
         contentOffset.y = contentOffsetY;
     }
     
-    [_tableView setContentOffset:contentOffset animated:YES];
+    [_tableView setContentOffset:contentOffset animated:animated];
 }
 
 

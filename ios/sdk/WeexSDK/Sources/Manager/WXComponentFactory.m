@@ -95,7 +95,7 @@
 
 + (SEL)methodWithComponentName:(NSString *)name withMethod:(NSString *)method
 {
-    return [[self sharedInstance] _methodWithComponnetName:name withMethod:method];
+    return [[self sharedInstance] _methodWithComponetName:name withMethod:method];
 }
 
 + (NSMutableDictionary *)componentMethodMapsWithName:(NSString *)name
@@ -123,7 +123,7 @@
     return dict;
 }
 
-- (SEL)_methodWithComponnetName:(NSString *)name withMethod:(NSString *)method
+- (SEL)_methodWithComponetName:(NSString *)name withMethod:(NSString *)method
 {
     WXAssert(name && method, @"Fail to find selector with module name and method, please check if the parameters are correct ！");
     

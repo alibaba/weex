@@ -11,10 +11,16 @@ function getProto (Weex) {
       node.classList.add('weex-element')
       node.controls = true
       node.autoplay = this.autoPlay
+      node.setAttribute('playsinline', '')
+      node.setAttribute('webkit-playsinline', '')
       node.setAttribute('play-status', this.playStatus)
       this.node = node
       if (this.autoPlay && this.playStatus === 'play') {
-        this.play()
+        // set timer to avoid error: uncaught DOM exception: the play() request
+        // was interrupted by a new load request.
+        setTimeout(() => {
+          this.play()
+        }, 0)
       }
       return node
     },
@@ -41,7 +47,12 @@ function getProto (Weex) {
         src = this.node.getAttribute('data-src')
         src && this.node.setAttribute('src', src)
       }
-      this.node.play()
+      try {
+        this.node.play()
+      }
+      catch (err) {
+        // DO NOTHING.
+      }
     },
 
     pause () {
