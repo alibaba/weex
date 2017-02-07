@@ -219,7 +219,7 @@ public class WXDomHandler implements Handler.Callback {
   /**
    * The batch operation in dom thread will run at most once in 16ms.
    */
-  private static final int DELAY_TIME = 16;//ms
+  public static final int DELAY_TIME = 16;//ms
   private WXDomManager mWXDomManager;
   private boolean mHasBatch = false;
 

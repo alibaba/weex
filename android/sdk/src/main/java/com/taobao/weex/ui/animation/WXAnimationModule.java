@@ -257,7 +257,9 @@ public class WXAnimationModule extends WXModule {
       task.args.add(callBack);
       msg.what = WXDomHandler.MsgType.WX_ANIMATION;
       msg.obj = task;
-      WXSDKManager.getInstance().getWXDomManager().sendMessage(msg);
+      //Due to animation module rely on the result of the css-layout and the batch mechanism of
+      //css-layout, the animation.transition must be delayed the batch time.
+      WXSDKManager.getInstance().getWXDomManager().sendMessageDelayed(msg, WXDomHandler.DELAY_TIME);
     }
   }
 

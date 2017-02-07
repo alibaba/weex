@@ -261,11 +261,15 @@ public final class WXDomManager {
   }
 
   public void sendMessage(Message msg) {
+    sendMessageDelayed(msg, 0);
+  }
+
+  public void sendMessageDelayed(Message msg, long delay) {
     if (msg == null || mDomHandler == null || mDomThread == null
         || !mDomThread.isWXThreadAlive() || mDomThread.getLooper() == null) {
       return;
     }
-    mDomHandler.sendMessage(msg);
+    mDomHandler.sendMessageDelayed(msg,delay);
   }
 
   /**
