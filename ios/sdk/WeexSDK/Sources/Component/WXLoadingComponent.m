@@ -116,10 +116,8 @@
     CGPoint contentOffset = [scrollerProtocol contentOffset];
     if (_displayState) {
         contentOffset.y = [scrollerProtocol contentSize].height - scroller.calculatedFrame.size.height + self.calculatedFrame.size.height;
-        
         [_indicator start];
     } else {
-        _displayState = NO;
         contentOffset.y = contentOffset.y - self.calculatedFrame.size.height;
         [_indicator stop];
     }

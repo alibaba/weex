@@ -12,11 +12,9 @@ buildscript {
     }
 }
 
-allprojects {
-    repositories {
-        mavenCentral()
-        jcenter()
-    }
+
+plugins {
+    id "com.github.hierynomus.license" version "0.13.1"
 }
 
 apply plugin: 'com.android.library'
@@ -112,6 +110,7 @@ android {
     }
     testOptions {
         unitTests.all {
+            maxHeapSize = "1024m"
             jvmArgs += ['-XX:-UseSplitVerifier', '-noverify','-Xverify:none']/* fix VerifyError  */
         }
     }
@@ -143,35 +142,22 @@ dependencies {
     testCompile 'org.json:json:20160212'
 }
 
-license{
-    header=file('license/LICENSE')
-    excludes (["**/WXDataStructureUtil.java",
-               "**/Spacing.java",
-               "**/MeasureOutput.java",
-               "**/LayoutEngine.java",
-               "**/FloatUtil.java",
-               "**/CSSWrap.java",
-               "**/CSSStyle.java",
-               "**/CSSPositionType.java",
-               "**/CSSNode.java",
-               "**/CSSLayoutContext.java",
-               "**/CSSLayout.java",
-               "**/CSSJustify.java",
-               "**/CSSFlexDirection.java",
-               "**/CSSDirection.java",
-               "**/CSSConstants.java",
-               "**/CSSAlign.java",
-               "**/CachedCSSLayout.java",
-               "**/CSSAlignConvert.java",
-               "**/CSSFlexDirectionConvert.java",
-               "**/CSSJustifyConvert.java",
-               "**/CSSPositionTypeConvert.java",
-               "**/CSSTransformFromStyle.java",
-               "**/CSSWrapConvert.java",
-               "**/WXTextDomObject.java",
-               "**/WXCustomStyleSpan.java"])
+task licenseFormatWeex (type:nl.javadude.gradle.plugins.license.License) {
+    source = fileTree(dir: "../",
+            includes: [
+                    "sdk/src/main/java/**/*.java",
+                    "common/src/main/java/**/*.java",
+                    "playground/app/src/main/java/**/*.java"
+            ],
+            excludes: [
+            "**/dom/flex/*.java"
+            ])
 }
-preBuild.dependsOn licenseFormat
+
+license{
+    header=file("license/LICENSE")
+}
+preBuild.dependsOn licenseFormatWeex
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.10'

@@ -11,6 +11,8 @@
 
 @interface WXDebugTool : NSObject<WXModuleProtocol>
 
++ (instancetype)sharedInstance;
+
 //+ (void)showFPS;
 
 + (void)setDebug:(BOOL)isDebug;
@@ -28,5 +30,11 @@
 + (void)setReplacedJSFramework:(NSURL*)url;
 
 + (NSString*)getReplacedJSFramework;
+
++ (BOOL) cacheJsService: (NSString *)name withScript: (NSString *)script withOptions: (NSDictionary *) options;
+
++ (BOOL) removeCacheJsService: (NSString *)name;
+
++ (NSDictionary *) jsServiceCache;
 
 @end

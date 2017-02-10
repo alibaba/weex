@@ -162,13 +162,13 @@ public class WXNavigatorModule extends WXModule {
                     } catch (Throwable e) {
                         e.printStackTrace();
                         result.put(CALLBACK_RESULT, MSG_FAILED);
-                        result.put(CALLBACK_MESSAGE, "open page failed");
+                        result.put(CALLBACK_MESSAGE, "Open page failed.");
                         callback = failure;
                     }
                 }
             } else {
                 result.put(CALLBACK_RESULT, MSG_PARAM_ERR);
-                result.put(CALLBACK_MESSAGE, "param error");
+                result.put(CALLBACK_MESSAGE, "The URL parameter is empty.");
                 callback = failure;
             }
 
@@ -187,7 +187,7 @@ public class WXNavigatorModule extends WXModule {
             ((Activity) mWXSDKInstance.getContext()).finish();
         } else {
             result.put(CALLBACK_RESULT, MSG_FAILED);
-            result.put(CALLBACK_MESSAGE, "close page failed");
+            result.put(CALLBACK_MESSAGE, "Close page failed.");
             callback = failure;
         }
         if (callback != null) {

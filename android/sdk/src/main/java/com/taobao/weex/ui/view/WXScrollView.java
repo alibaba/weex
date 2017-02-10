@@ -575,7 +575,10 @@ public class WXScrollView extends ScrollView implements Callback, IWXScroller,
       int stickyStartHidePos = -parentH + stickyScrollerP[1] + stickyViewH;
       if (stickyViewP[1] <= stickyShowPos && stickyViewP[1] >= (stickyStartHidePos - stickyViewH)) {
         mStickyOffset = stickyViewP[1] - stickyStartHidePos;
+        stickyData.setStickyOffset(stickyViewP[1]-stickyScrollerP[1]);
         return stickyData.getHostView();
+      }else{
+        stickyData.setStickyOffset(0);
       }
     }
     return null;

@@ -21,7 +21,7 @@
 /**
  * @abstract initialize the RootViewController with bundle url.
  *
- * @param sourceURL. The bundle url which can be render to a weex view.
+ * @param sourceURL The bundle url which can be render to a weex view.
  *
  * @return a object the class of WXRootViewController.
  *

@@ -210,6 +210,7 @@ typedef void (*WXJSCGarbageCollect)(JSContextRef);
 
 - (void)garbageCollect
 {
+    // for dev and debug only!!
     char str[80];
     strcpy(str, "JSSynchron");
     strcat(str, "ousGarbageColl");

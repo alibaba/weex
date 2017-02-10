@@ -246,7 +246,6 @@ import com.taobao.weex.ui.view.listview.adapter.ListBaseViewHolder;
 import com.taobao.weex.ui.view.listview.adapter.RecyclerViewBaseAdapter;
 import com.taobao.weex.ui.view.listview.adapter.TransformItemDecoration;
 import com.taobao.weex.ui.view.listview.adapter.WXRecyclerViewOnScrollListener;
-import com.taobao.weex.ui.view.refresh.wrapper.BounceRecyclerView;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXUtils;
 import com.taobao.weex.utils.WXViewUtils;
@@ -275,10 +274,9 @@ public abstract class BasicListComponent<T extends ViewGroup & ListComponentView
 
   private Map<String, AppearanceHelper> mAppearComponents = new HashMap<>();
 
-  private boolean scrollable = true;
+  private boolean isScrollable = true;
   private ArrayMap<String, Long> mRefToViewType;
   private SparseArray<ArrayList<WXComponent>> mViewTypes;
-  protected BounceRecyclerView bounceRecyclerView;
   private WXRecyclerViewOnScrollListener mViewOnScrollListener = new WXRecyclerViewOnScrollListener(this);
 
   private static final int MAX_VIEWTYPE_ALLOW_CACHE = 9;
@@ -312,7 +310,7 @@ public abstract class BasicListComponent<T extends ViewGroup & ListComponentView
     return super.measure(width, outHeight);
   }
 
-  protected int getOrientation() {
+  public int getOrientation() {
     return Constants.Orientation.VERTICAL;
   }
 
@@ -510,12 +508,18 @@ public abstract class BasicListComponent<T extends ViewGroup & ListComponentView
 
   @WXComponentProp(name = Constants.Name.SCROLLABLE)
   public void setScrollable(boolean scrollable) {
-    View inner = getHostView().getInnerView();
-    if (inner instanceof WXRecyclerView) {
-      ((WXRecyclerView) inner).setScrollable(scrollable);
+    this.isScrollable = scrollable;
+    WXRecyclerView inner = getHostView().getInnerView();
+    if(inner != null) {
+      inner.setScrollable(scrollable);
     }
-    ;
   }
+
+  @Override
+  public boolean isScrollable() {
+    return isScrollable;
+  }
+
 
   private void setAppearanceWatch(WXComponent component, int event, boolean enable) {
     AppearanceHelper item = mAppearComponents.get(component.getRef());
@@ -556,6 +560,7 @@ public abstract class BasicListComponent<T extends ViewGroup & ListComponentView
 
   @Override
   public void scrollTo(WXComponent component, final int offset) {
+    T bounceRecyclerView = getHostView();
     if (bounceRecyclerView == null) {
       return;
     }
@@ -598,7 +603,8 @@ public abstract class BasicListComponent<T extends ViewGroup & ListComponentView
 
   @Override
   public void onBeforeScroll(int dx, int dy) {
-    if (mStickyMap == null) {
+    T bounceRecyclerView = getHostView();
+    if (mStickyMap == null || bounceRecyclerView == null) {
       return;
     }
     HashMap<String, WXComponent> stickyMap = mStickyMap.get(getRef());
@@ -659,11 +665,13 @@ public abstract class BasicListComponent<T extends ViewGroup & ListComponentView
 
   @Override
   public int getScrollY() {
+    T bounceRecyclerView = getHostView();
     return bounceRecyclerView == null ? 0 : bounceRecyclerView.getInnerView().getScrollY();
   }
 
   @Override
   public int getScrollX() {
+    T bounceRecyclerView = getHostView();
     return bounceRecyclerView == null ? 0 : bounceRecyclerView.getInnerView().getScrollX();
   }
 

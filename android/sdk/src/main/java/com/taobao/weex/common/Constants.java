@@ -335,6 +335,9 @@ public class Constants {
     String DISTANCE_Y = "dy";
     String PULLING_DISTANCE = "pullingDistance";
     String VIEW_HEIGHT = "viewHeight";
+    String PREVENT_MOVE_EVENT = "preventMoveEvent";
+    String SELECTION_START = "selectionStart";
+    String SELECTION_END = "selectionEnd";
   }
 
   public interface Value {
@@ -402,7 +405,7 @@ public class Constants {
     String PAUSE_EVENT = "WXApplicationWillResignActiveEvent";
   }
 
-  public interface PESUDO {
+  public interface PSEUDO {
     String ACTIVE = ":active";
     String ENABLED = ":enabled";
     String DISABLED = ":disabled";

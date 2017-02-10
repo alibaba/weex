@@ -56,7 +56,7 @@
  *
  * @param options The service options to register
  *
- * @param code service js code to invoke
+ * @param serviceScript service js code to invoke
  *
  */
 + (void)registerService:(NSString *)name withScript:(NSString *)serviceScript withOptions:(NSDictionary *)options;
@@ -68,7 +68,7 @@
  *
  * @param options The service options to register
  *
- * @param url The service url to register
+ * @param serviceScriptUrl The service url to register
  *
  */
 + (void)registerService:(NSString *)name withScriptUrl:(NSURL *)serviceScriptUrl WithOptions:(NSDictionary *)options;

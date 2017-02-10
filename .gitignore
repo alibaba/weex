@@ -2,6 +2,7 @@
 .idea/
 *.iml
 .DS_Store
+.vscode
 
 # Created by Builder
 examples/build

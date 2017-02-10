@@ -31,36 +31,6 @@
     [super tearDown];
 }
 
-- (void)testSendHttpGet {
-    
-    NSDictionary *getOption = @{
-        @"method" : @"GET",
-        @"url"    : @"http://httpbin.org/get"
-    };
-    [self sendHttp:getOption];
-    
-}
-- (void)testSendHttpPost {
-    NSDictionary *postOption = @{
-        @"method" : @"POST",
-        @"url"    : @"http://httpbin.org/post",
-        @"body"   : @"username=weex&&password=weex"
-    };
-    [self sendHttp:postOption];
-}
-
-- (void)sendHttp:(NSDictionary*)options {
-    __block id callbackResult = nil;
-    [_streamModule sendHttp:options callback:^(id result) {
-        callbackResult = result;
-        [_exp fulfill];
-    }];
-    [self waitForExpectationsWithTimeout:20 handler:^(NSError * error) {
-        XCTAssertNotNil(callbackResult);
-    }];
-    
-}
-
 - (void)fetch:(NSDictionary*)options {
     __block id callbackRet = nil, progressCallbackRet = nil;
     [_streamModule fetch:options callback:^(id result) {

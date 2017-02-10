@@ -168,39 +168,27 @@ WX_EXPORT_METHOD(@selector(getComponentRect:callback:))
 }
 
 - (void)getComponentRect:(NSString*)ref callback:(WXModuleKeepAliveCallback)callback {
-    [self performBlockOnComponentManager:^(WXComponentManager *manager) {
-        NSMutableDictionary *callbackRsp = [[NSMutableDictionary alloc] init];
+    [self performBlockOnComponentManager:^(WXComponentManager * manager) {
         UIView *rootView = manager.weexInstance.rootView;
         CGRect rootRect = [rootView.superview convertRect:rootView.frame toView:rootView];
-        CGFloat scaleFactor = self.weexInstance.pixelScaleFactor;
         if ([ref isEqualToString:@"viewport"]) {
+            NSMutableDictionary * callbackRsp = nil;
+            callbackRsp = [self _componentRectInfoWithViewFrame:rootRect];
             [callbackRsp setObject:@(true) forKey:@"result"];
-            [callbackRsp setObject:@{
-                @"width": @(rootRect.size.width / scaleFactor),
-                @"height": @(rootRect.size.height / scaleFactor),
-                @"bottom": @(CGRectGetMaxY(rootRect) / scaleFactor),
-                @"left": @(rootRect.origin.x / scaleFactor),
-                @"right": @(CGRectGetMaxX(rootRect) / scaleFactor),
-                @"top": @(rootRect.origin.y / scaleFactor)
-            }               forKey:@"size"];
             callback(callbackRsp, false);
         } else {
             WXComponent *component = [manager componentForRef:ref];
+            __weak typeof (self) weakSelf = self;
             dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof (weakSelf) strongSelf = weakSelf;
+                NSMutableDictionary * callbackRsp = nil;
                 if (!component) {
                     [callbackRsp setObject:@(false) forKey:@"result"];
                     [callbackRsp setObject:[NSString stringWithFormat:@"Illegal parameter, no ref about \"%@\" can be found", ref] forKey:@"errMsg"];
                 } else {
-                    CGRect componentRect = [component.view.superview convertRect:component.calculatedFrame toView:rootView];
-                    [callbackRsp setObject:@(true) forKey:@"result"];
-                    [callbackRsp setObject:@{
-                        @"width": @(componentRect.size.width / scaleFactor),
-                        @"height": @(componentRect.size.height / scaleFactor),
-                        @"bottom": @(CGRectGetMaxY(componentRect) / scaleFactor),
-                        @"left": @(componentRect.origin.x / scaleFactor),
-                        @"right": @(CGRectGetMaxX(componentRect) / scaleFactor),
-                        @"top": @(componentRect.origin.y / scaleFactor)
-                    }               forKey:@"size"];
+                    CGRect componentRect = [component.view.superview convertRect:component.view.frame toView:rootView];
+                    callbackRsp = [strongSelf _componentRectInfoWithViewFrame:componentRect];
+                    [callbackRsp setObject:@(true)forKey:@"result"];
                 }
                 callback(callbackRsp, false);
             });
@@ -214,6 +202,21 @@ WX_EXPORT_METHOD(@selector(getComponentRect:callback:))
     [self performBlockOnComponentManager:^(WXComponentManager *manager) {
         [manager unload];
     }];
+}
+
+- (NSMutableDictionary*)_componentRectInfoWithViewFrame:(CGRect)componentRect
+{
+    CGFloat scaleFactor = self.weexInstance.pixelScaleFactor;
+    NSMutableDictionary * callbackRsp = [NSMutableDictionary new];
+    [callbackRsp setObject:@{
+                             @"width":@(componentRect.size.width /scaleFactor),
+                             @"height":@(componentRect.size.height / scaleFactor),
+                             @"bottom":@(CGRectGetMaxY(componentRect) / scaleFactor),
+                             @"left":@(componentRect.origin.x / scaleFactor),
+                             @"right":@(CGRectGetMaxX(componentRect) / scaleFactor),
+                             @"top":@(componentRect.origin.y / scaleFactor)
+                             } forKey:@"size"];
+    return callbackRsp;
 }
 
 @end

@@ -221,7 +221,7 @@ public class HorizontalListComponent extends WXListComponent {
   }
 
   @Override
-  protected int getOrientation() {
+  public int getOrientation() {
     return Constants.Orientation.HORIZONTAL;
   }
 }

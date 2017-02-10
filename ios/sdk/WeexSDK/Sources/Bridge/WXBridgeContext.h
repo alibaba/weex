@@ -37,6 +37,11 @@
 - (void)destroyInstance:(NSString *)instance;
 
 /**
+ * Trigger full GC, for dev and debug only.
+ **/
+- (void)forceGarbageCollection;
+
+/**
  *  Refresh Instance Method
  *  @param instance  :   instance id
  *  @param data      :   external data

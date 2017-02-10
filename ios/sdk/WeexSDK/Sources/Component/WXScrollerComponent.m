@@ -41,11 +41,14 @@
 {
     CGSize _contentSize;
     BOOL _listenLoadMore;
+    BOOL _scrollEvent;
     CGFloat _loadMoreOffset;
     CGFloat _previousLoadMoreContentHeight;
+    CGFloat _offsetAccuracy;
     CGPoint _lastContentOffset;
+    CGPoint _lastScrollEventFiredOffset;
     BOOL _scrollable;
-    
+
     // vertical & horizontal
     WXScrollDirection _scrollDirection;
     // left & right & up & down
@@ -86,14 +89,15 @@ WX_EXPORT_METHOD(@selector(resetLoadmore))
         
         _stickyArray = [NSMutableArray array];
         _listenerArray = [NSMutableArray array];
-        
+        _scrollEvent = NO;
+        _lastScrollEventFiredOffset = CGPointMake(0, 0);
         _scrollDirection = attributes[@"scrollDirection"] ? [WXConvert WXScrollDirection:attributes[@"scrollDirection"]] : WXScrollDirectionVertical;
         _showScrollBar = attributes[@"showScrollbar"] ? [WXConvert BOOL:attributes[@"showScrollbar"]] : YES;
         _loadMoreOffset = attributes[@"loadmoreoffset"] ? [WXConvert CGFloat:attributes[@"loadmoreoffset"]] : 0;
         _loadmoreretry = attributes[@"loadmoreretry"] ? [WXConvert NSUInteger:attributes[@"loadmoreretry"]] : 0;
         _listenLoadMore = [events containsObject:@"loadmore"];
         _scrollable = attributes[@"scrollable"] ? [WXConvert BOOL:attributes[@"scrollable"]] : YES;
-
+        _offsetAccuracy = attributes[@"offsetAccuracy"] ? [WXConvert CGFloat:attributes[@"offsetAccuracy"]] : 0;
         _scrollerCSSNode = new_css_node();
         
         // let scroller fill the rest space if it is a child component and has no fixed height & width
@@ -181,6 +185,9 @@ WX_EXPORT_METHOD(@selector(resetLoadmore))
         _scrollable = attributes[@"scrollable"] ? [WXConvert BOOL:attributes[@"scrollable"]] : YES;
         ((UIScrollView *)self.view).scrollEnabled = _scrollable;
     }
+    if (attributes[@"offsetAccuracy"]) {
+        _offsetAccuracy = [WXConvert CGFloat:attributes[@"offsetAccuracy"]];
+    }
 }
 
 - (void)addEvent:(NSString *)eventName
@@ -188,12 +195,18 @@ WX_EXPORT_METHOD(@selector(resetLoadmore))
     if ([eventName isEqualToString:@"loadmore"]) {
         _listenLoadMore = YES;
     }
+    if ([eventName isEqualToString:@"scroll"]) {
+        _scrollEvent = YES;
+    }
 }
 
 - (void)removeEvent:(NSString *)eventName
 {
     if ([eventName isEqualToString:@"loadmore"]) {
         _listenLoadMore = NO;
+    }
+    if ([eventName isEqualToString:@"scroll"]) {
+        _scrollEvent = NO;
     }
 }
 
@@ -302,7 +315,7 @@ WX_EXPORT_METHOD(@selector(resetLoadmore))
     }
 }
 
-- (void)scrollToComponent:(WXComponent *)component withOffset:(CGFloat)offset
+- (void)scrollToComponent:(WXComponent *)component withOffset:(CGFloat)offset animated:(BOOL)animated
 {
     UIScrollView *scrollView = (UIScrollView *)self.view;
     CGPoint contentOffset = scrollView.contentOffset;
@@ -328,7 +341,7 @@ WX_EXPORT_METHOD(@selector(resetLoadmore))
         }
     }
     
-    [scrollView setContentOffset:contentOffset animated:YES];
+    [scrollView setContentOffset:contentOffset animated:animated];
 }
 
 - (BOOL)isNeedLoadMore
@@ -411,27 +424,37 @@ WX_EXPORT_METHOD(@selector(resetLoadmore))
     } else if(_lastContentOffset.y < scrollView.contentOffset.y) {
         _direction = @"up";
     }
-    
+    if (scrollView.dragging) {
+        [_refreshComponent pullingdown:@{
+            DISTANCE_Y: @(ABS(scrollView.contentOffset.y - _lastContentOffset.y)),
+            PULLING_DISTANCE: @(scrollView.contentOffset.y),
+            @"type":@"pullingdown"
+            }];
+    }
     _lastContentOffset = scrollView.contentOffset;
-    
+
     // check sticky
     [self adjustSticky];
     [self handleLoadMore];
     [self handleAppear];
     
-//    CGFloat vx = scrollView.contentInset.left + scrollView.contentOffset.x;
-//    CGFloat vy = scrollView.contentInset.top + scrollView.contentOffset.y;
-//    CGFloat vw = scrollView.frame.size.width - scrollView.contentInset.left - scrollView.contentInset.right;
-//    CGFloat vh = scrollView.frame.size.height - scrollView.contentInset.top - scrollView.contentInset.bottom;
-//    CGRect scrollRect = CGRectMake(vx, vy, vw, vh);;
-//    
-//    // notify action for appear & disappear
-//    for(WXScrollToTarget *target in self.listenerArray){
-//        [self scrollToTarget:target scrollRect:scrollRect];
-//    }
-    
     if (self.onScroll) {
         self.onScroll(scrollView);
+    }
+    if (_scrollEvent) {
+        NSDictionary *contentSizeData = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithFloat:scrollView.contentSize.width],@"width",[NSNumber numberWithFloat:scrollView.contentSize.height],@"height", nil];
+        //contentOffset values are replaced by (-contentOffset.x,-contentOffset.y) ,in order to be consistent with Android client.
+        NSDictionary *contentOffsetData = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithFloat:-scrollView.contentOffset.x],@"x",[NSNumber numberWithFloat:-scrollView.contentOffset.y],@"y", nil];
+        float distance = 0;
+        if (_scrollDirection == WXScrollDirectionHorizontal) {
+            distance = scrollView.contentOffset.x - _lastScrollEventFiredOffset.x;
+        } else {
+            distance = scrollView.contentOffset.y - _lastScrollEventFiredOffset.y;
+        }
+        if (ABS(distance) >= _offsetAccuracy) {
+            [self fireEvent:@"scroll" params:@{@"contentSize":contentSizeData,@"contentOffset":contentOffsetData} domChanges:nil];
+            _lastScrollEventFiredOffset = scrollView.contentOffset;
+        }
     }
 }
 
@@ -457,13 +480,14 @@ WX_EXPORT_METHOD(@selector(resetLoadmore))
 {
     [_loadingComponent.view setHidden:NO];
     [_refreshComponent.view setHidden:NO];
+    
     //refresh
-    if (_refreshComponent && scrollView.contentOffset.y + _refreshComponent.calculatedFrame.size.height < _refreshComponent.calculatedFrame.origin.y) {
+    if (_refreshComponent && scrollView.contentOffset.y < 0 && scrollView.contentOffset.y + _refreshComponent.calculatedFrame.size.height < _refreshComponent.calculatedFrame.origin.y) {
         [_refreshComponent refresh];
     }
     
     //loading
-    if (_loadingComponent &&
+    if (_loadingComponent && scrollView.contentOffset.y > 0 &&
         scrollView.contentOffset.y + scrollView.frame.size.height > _loadingComponent.view.frame.origin.y + _loadingComponent.calculatedFrame.size.height) {
         [_loadingComponent loading];
     }

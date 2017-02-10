@@ -124,7 +124,7 @@ extern _Nonnull SEL WXSwizzledSelectorForSelector(_Nonnull SEL selector);
 /**
  * @abstract JSON Decode Method
  *
- * @param JSON String.
+ * @param json String.
  *
  * @return A json object by decoding json string.
  *
@@ -136,7 +136,7 @@ extern _Nonnull SEL WXSwizzledSelectorForSelector(_Nonnull SEL selector);
 /**
  * @abstract JSON Encode Method
  *
- * @param JSON Object.
+ * @param object Object.
  *
  * @return A json string by encoding json object.
  *
@@ -160,7 +160,7 @@ extern _Nonnull SEL WXSwizzledSelectorForSelector(_Nonnull SEL selector);
 /**
  * @abstract JSON Object Copy Method
  *
- * @param JSON Object.
+ * @param object Object.
  *
  * @return A json object by copying.
  *
@@ -188,9 +188,9 @@ extern _Nonnull SEL WXSwizzledSelectorForSelector(_Nonnull SEL selector);
 /**
  * @abstract Returns a standard error object
  *
- * @param error code.
+ * @param code code.
  *
- * @param error message.
+ * @param message message.
  *
  * @return A error object type of NSError.
  *
@@ -200,13 +200,15 @@ extern _Nonnull SEL WXSwizzledSelectorForSelector(_Nonnull SEL selector);
 /**
  * @abstract Returns a Font Object by setting some properties such as size、weight、style and fontFamily.
  *
- * @param textSize.
+ * @param size font size
  *
- * @param textWeight.
+ * @param textWeight font weight
  *
- * @param textStyle. The type of WXTextStyle (Normal or Italic).
+ * @param textStyle  The type of WXTextStyle (Normal or Italic).
  *
- * @param fontFamily.
+ * @param fontFamily font family
+ *
+ * @param scaleFactor please use instance's scale factor
  *
  * @return A font object according to the above params.
  *
@@ -215,7 +217,7 @@ extern _Nonnull SEL WXSwizzledSelectorForSelector(_Nonnull SEL selector);
 
 /**
  * @abstract download remote font from specified url
- * @param url for remote font
+ * @param fontURL for remote font
  *
  */
 + (void)getIconfont:(NSURL * _Nonnull)fontURL completion:( void(^ _Nullable )(NSURL * _Nonnull url, NSError * _Nullable error)) completionBlock;
@@ -354,5 +356,36 @@ CGFloat WXPixelResize(CGFloat value) DEPRECATED_MSG_ATTRIBUTE("Use WXPixelScale 
 CGRect WXPixelFrameResize(CGRect value) DEPRECATED_MSG_ATTRIBUTE("Use WXPixelScale Instead");
 CGPoint WXPixelPointResize(CGPoint value) DEPRECATED_MSG_ATTRIBUTE("Use WXPixelScale Instead");
 + (UIFont  * _Nullable )fontWithSize:(CGFloat)size textWeight:(CGFloat)textWeight textStyle:(WXTextStyle)textStyle fontFamily:(NSString * _Nullable)fontFamily DEPRECATED_MSG_ATTRIBUTE("Use +[WXUtility fontWithSize:textWeight:textStyle:fontFamily:scaleFactor:]");
+
+/**
+ *  @abstract compare float a and b, if a equal b, return true,or reture false.
+ *
+ */
+BOOL WXFloatEqual(CGFloat a, CGFloat b);
+/**
+ *  @abstract compare float a and b, user give the compare precision, if a equal b, return true,or reture false.
+ *
+ */
+BOOL WXFloatEqualWithPrecision(CGFloat a, CGFloat b ,double precision);
+/**
+ *  @abstract compare float a and b, if a less than b, return true,or reture false.
+ *
+ */
+BOOL WXFloatLessThan(CGFloat a, CGFloat b);
+/**
+ *  @abstract compare float a and b,user give the compare precision, if a less than b,return true,or reture false.
+ *
+ */
+BOOL WXFloatLessThanWithPrecision(CGFloat a, CGFloat b,double precision);
+/**
+ *  @abstract compare float a and b, if a great than b, return true,or reture false.
+ *
+ */
+BOOL WXFloatGreaterThan(CGFloat a, CGFloat b);
+/**
+ *  @abstract compare float a and b, user give the compare precision,if a great than b, return true,or reture false.
+ *
+ */
+BOOL WXFloatGreaterThanWithPrecision(CGFloat a,CGFloat b,double precision);
 
 @end

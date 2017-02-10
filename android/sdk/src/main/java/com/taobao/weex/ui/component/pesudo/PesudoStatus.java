@@ -218,7 +218,7 @@ import java.util.Map;
 public class PesudoStatus {
 
   /**
-   * See {@link com.taobao.weex.common.Constants.PESUDO}
+   * See {@link Constants.PSEUDO}
    */
   private int[] mStatuses = new int[4];
 
@@ -238,21 +238,21 @@ public class PesudoStatus {
 
   /**
    *
-   * @param clzName See {@link com.taobao.weex.common.Constants.PESUDO}
+   * @param clzName See {@link Constants.PSEUDO}
    * @param status
    */
   public void setStatus(String clzName,boolean status){
     switch (clzName){
-      case Constants.PESUDO.ACTIVE:
+      case Constants.PSEUDO.ACTIVE:
         setStatus(PesudoStatus.CLASS_ACTIVE,status);
         break;
-      case Constants.PESUDO.DISABLED:
+      case Constants.PSEUDO.DISABLED:
         setStatus(PesudoStatus.CLASS_DISABLED,status);
         break;
-      case Constants.PESUDO.ENABLED:
+      case Constants.PSEUDO.ENABLED:
         setStatus(PesudoStatus.CLASS_ENABLED,status);
         break;
-      case Constants.PESUDO.FOCUS:
+      case Constants.PSEUDO.FOCUS:
         setStatus(PesudoStatus.CLASS_FOCUS,status);
         break;
     }
@@ -269,15 +269,15 @@ public class PesudoStatus {
   public @Nullable String getStatuses(){
     StringBuilder sb = new StringBuilder();
     if(isSet(CLASS_ACTIVE)){
-      sb.append(Constants.PESUDO.ACTIVE);
+      sb.append(Constants.PSEUDO.ACTIVE);
     }
     if(isSet(CLASS_DISABLED)){
-      sb.append(Constants.PESUDO.DISABLED);
+      sb.append(Constants.PSEUDO.DISABLED);
     }
     //enabled is ignored
 
     if(isSet(CLASS_FOCUS) && !isSet(CLASS_DISABLED)){
-      sb.append(Constants.PESUDO.FOCUS);
+      sb.append(Constants.PSEUDO.FOCUS);
     }
     return sb.length()==0?null:sb.toString();
   }

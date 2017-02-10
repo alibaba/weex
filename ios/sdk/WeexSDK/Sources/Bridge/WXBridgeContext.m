@@ -50,7 +50,7 @@ _Pragma("clang diagnostic pop") \
 @property (nonatomic) BOOL frameworkLoadFinished;
 //store some methods temporarily before JSFramework is loaded
 @property (nonatomic, strong) NSMutableArray *methodQueue;
-// store template service
+// store service
 @property (nonatomic, strong) NSMutableArray *jsServiceQueue;
 
 @end
@@ -252,9 +252,12 @@ _Pragma("clang diagnostic pop") \
     }
     
     [self callJSMethod:@"destroyInstance" args:@[instance]];
-    
+}
+
+- (void)forceGarbageCollection
+{
     if ([self.jsBridge respondsToSelector:@selector(garbageCollect)]) {
-         [self.jsBridge garbageCollect];
+        [self.jsBridge garbageCollect];
     }
 }
 

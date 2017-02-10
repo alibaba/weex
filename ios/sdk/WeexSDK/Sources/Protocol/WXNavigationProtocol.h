@@ -127,9 +127,9 @@ typedef void (^WXNavigationResultBlock)(NSString *code, NSDictionary * responseD
  *
  * @param param The data which is passed to the implementation of the protocol.
  *
- * @param block A block called once the action is completed successfully.
+ * @param success A block called once the action is completed successfully.
  *
- * @param block A block called once the action failed to be completed.
+ * @param failure A block called once the action failed to be completed.
  *
  * @param container The target controller.
  *
@@ -144,9 +144,9 @@ typedef void (^WXNavigationResultBlock)(NSString *code, NSDictionary * responseD
   *
   * @param param The data which is passed to the implementation of the protocol.
   *
-  * @param block A block called once the action is completed successfully.
+  * @param success A block called once the action is completed successfully.
   *
-  * @param block A block called once the action failed to be completed.
+  * @param failure A block called once the action failed to be completed.
   *
   * @param container The target controller.
   *

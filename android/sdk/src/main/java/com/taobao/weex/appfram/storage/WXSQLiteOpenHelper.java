@@ -226,8 +226,6 @@ public class WXSQLiteOpenHelper extends SQLiteOpenHelper {
 
     private long mMaximumDatabaseSize = 5 * 10 * 1024 * 1024L;//50mb
     static SimpleDateFormat sDateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-
-
     private Context mContext;
     private SQLiteDatabase mDb;
 

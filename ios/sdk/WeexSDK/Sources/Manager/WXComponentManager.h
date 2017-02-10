@@ -149,14 +149,14 @@ extern void WXPerformBlockOnComponentThread(void (^block)());
 /**
  *  @abstract add a component which has a fixed position
  *
- *  @param component
+ *  @param fixComponent the fixed component to add
  */
 - (void)addFixedComponent:(WXComponent *)fixComponent;
 
 /**
  *  @abstract remove a component which has a fixed position
  *
- *  @param component
+ *  @param fixComponent the fixed component to remove
  */
 - (void)removeFixedComponent:(WXComponent *)fixComponent;
 
