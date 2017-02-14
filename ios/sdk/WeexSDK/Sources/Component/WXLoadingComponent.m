@@ -114,13 +114,17 @@
         return;
     WXComponent *scroller = (WXComponent*)scrollerProtocol;
     CGPoint contentOffset = [scrollerProtocol contentOffset];
+    UIEdgeInsets inset = [scrollerProtocol contentInset];
     if (_displayState) {
         contentOffset.y = [scrollerProtocol contentSize].height - scroller.calculatedFrame.size.height + self.calculatedFrame.size.height;
+        inset.bottom = CGRectGetHeight(self.calculatedFrame);
         [_indicator start];
     } else {
         contentOffset.y = contentOffset.y - self.calculatedFrame.size.height;
+        inset.bottom = 0;
         [_indicator stop];
     }
+    [scrollerProtocol setContentInset:inset];
     [scrollerProtocol setContentOffset:contentOffset animated:YES];
 }
 

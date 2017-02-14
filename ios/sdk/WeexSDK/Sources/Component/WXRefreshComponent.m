@@ -133,13 +133,17 @@
         return;
     
     CGPoint offset = [scrollerProtocol contentOffset];
+    UIEdgeInsets inset = [scrollerProtocol contentInset];
     if (_displayState) {
         offset.y = -self.calculatedFrame.size.height;
+        inset.top = CGRectGetHeight(self.calculatedFrame);
         [_indicator start];
     } else {
         offset.y = 0;
+        inset.top = 0;
         [_indicator stop];
     }
+    [scrollerProtocol setContentInset:inset];
     [scrollerProtocol setContentOffset:offset animated:YES];
 }
 
