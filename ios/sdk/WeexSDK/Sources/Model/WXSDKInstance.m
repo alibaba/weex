@@ -174,9 +174,6 @@ typedef enum : NSUInteger {
         }
     });
     
-    // ensure default modules/components/handlers are ready before create instance
-    [WXSDKEngine registerDefaults];
-    
     [[WXSDKManager bridgeMgr] createInstance:self.instanceId template:mainBundleString options:dictionary data:_jsData];
     
     WX_MONITOR_PERF_SET(WXPTBundleSize, [mainBundleString lengthOfBytesUsingEncoding:NSUTF8StringEncoding], self);
