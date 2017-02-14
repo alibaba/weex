@@ -212,22 +212,16 @@
     CGFloat contentOffsetY = 0;
     
     WXComponent *cellComponent = component;
-    CGRect cellRect;
     while (cellComponent) {
         if ([cellComponent isKindOfClass:[WXCellComponent class]]) {
-            NSIndexPath *toIndexPath = [self indexPathForCell:(WXCellComponent*)cellComponent sections:_completedSections];
-            cellRect = [_tableView rectForRowAtIndexPath:toIndexPath];
-            break;
-        }
-        if ([cellComponent isKindOfClass:[WXHeaderComponent class]]) {
-            NSUInteger toIndex = [self indexForHeader:cellComponent sections:_completedSections];
-            cellRect = [_tableView rectForSection:toIndex];
             break;
         }
         contentOffsetY += cellComponent.calculatedFrame.origin.y;
         cellComponent = cellComponent.supercomponent;
     }
     
+    NSIndexPath *toIndexPath = [self indexPathForCell:(WXCellComponent*)cellComponent sections:_completedSections];
+    CGRect cellRect = [_tableView rectForRowAtIndexPath:toIndexPath];
     contentOffsetY += cellRect.origin.y;
     contentOffsetY += offset * self.weexInstance.pixelScaleFactor;
     
@@ -593,30 +587,15 @@
 - (NSIndexPath *)indexPathForCell:(WXCellComponent *)cell sections:(NSMutableArray<WXSection *> *)sections
 {
     __block NSIndexPath *indexPath;
-    [sections enumerateObjectsUsingBlock:^(WXSection * _Nonnull section, NSUInteger sectionIndex, BOOL * _Nonnull sectionStop) {
+    [sections enumerateObjectsUsingBlock:^(WXSection * _Nonnull section, NSUInteger sectionIndex, BOOL * _Nonnull stop) {
         [section.rows enumerateObjectsUsingBlock:^(WXCellComponent * _Nonnull row, NSUInteger rowIndex, BOOL * _Nonnull stop) {
             if (row == cell) {
                 indexPath = [NSIndexPath indexPathForRow:rowIndex inSection:sectionIndex];
-                *stop = YES;
-                *sectionStop = YES;
             }
         }];
     }];
     
     return indexPath;
-}
-
-- (NSUInteger)indexForHeader:(WXHeaderComponent *)header sections:(NSMutableArray<WXSection *> *)sections
-{
-    __block NSUInteger index;
-    [sections enumerateObjectsUsingBlock:^(WXSection * _Nonnull section, NSUInteger sectionIndex, BOOL * _Nonnull stop) {
-        if (section.header == header) {
-            index = sectionIndex;
-            *stop = YES;
-        }
-    }];
-    
-    return index;
 }
 
 - (NSIndexPath *)indexPathForSubIndex:(NSUInteger)index
