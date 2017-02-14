@@ -66,6 +66,18 @@
 #endif
 }
 
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+{
+    NSString *newUrlStr = url.absoluteString;
+    if([url.scheme isEqualToString:@"wxpage"]) {
+        newUrlStr = [newUrlStr stringByReplacingOccurrencesOfString:@"wxpage://" withString:@"http://"];
+    }
+    UIViewController * viewController = [self demoController];
+    ((WXDemoViewController*)viewController).url = [NSURL URLWithString:newUrlStr];
+    [(WXRootViewController*)self.window.rootViewController pushViewController:viewController animated:YES];
+    return YES;
+}
+
 #pragma mark weex
 - (void)initWeexSDK
 {

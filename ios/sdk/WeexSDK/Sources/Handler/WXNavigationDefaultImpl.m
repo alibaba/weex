@@ -70,9 +70,9 @@
                      withContainer:(UIViewController *)container
 {
     BOOL animated = YES;
-    NSString *obj = [[param objectForKey:@"animated"] lowercaseString];
-    if (obj && [obj isEqualToString:@"false"]) {
-        animated = NO;
+    id obj = [param objectForKey:@"animated"];
+    if (obj) {
+        animated = [WXConvert BOOL:obj];
     }
     
     [container.navigationController popViewControllerAnimated:animated];

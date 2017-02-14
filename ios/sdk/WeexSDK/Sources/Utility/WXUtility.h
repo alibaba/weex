@@ -91,9 +91,9 @@ extern void WXPerformBlockOnThread(void (^ _Nonnull block)(), NSThread *_Nonnull
  * @abstract swizzling methods.
  *
  */
-extern void WXSwizzleInstanceMethod(_Nonnull Class class, _Nonnull SEL original, _Nonnull SEL replaced);
+extern void WXSwizzleInstanceMethod(_Nonnull Class className, _Nonnull SEL original, _Nonnull SEL replaced);
 
-extern void WXSwizzleInstanceMethodWithBlock(_Nonnull Class class, _Nonnull SEL original, _Nonnull id block, _Nonnull SEL replaced);
+extern void WXSwizzleInstanceMethodWithBlock(_Nonnull Class className, _Nonnull SEL original, _Nonnull id block, _Nonnull SEL replaced);
 
 extern _Nonnull SEL WXSwizzledSelectorForSelector(_Nonnull SEL selector);
 

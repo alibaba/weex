@@ -199,9 +199,12 @@
 {
     float rotateAngle = [self getAngle:value[0]];
     CGAffineTransform cgTransform = CATransform3DGetAffineTransform(_view.layer.transform);
-    float originAngle = atan2f(cgTransform.b, cgTransform.a) * (180 / M_PI);
+    float originAngle = atan2f(cgTransform.b, cgTransform.a);
+    originAngle = originAngle < 0 ? originAngle + 2 * M_PI : originAngle;
     if (_isTransformRotate || fabs(rotateAngle - originAngle) <= M_PI+0.0001){
         _transform = CGAffineTransformRotate(_transform, rotateAngle);
+    } else if (originAngle != 0) {
+        _transform = CGAffineTransformRotate(_transform, originAngle);
     }
 
     _rotateAngle += rotateAngle;

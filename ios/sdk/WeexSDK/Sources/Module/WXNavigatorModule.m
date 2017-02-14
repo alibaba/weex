@@ -1,4 +1,4 @@
-/**
+ /**
  * Created by Weex.
  * Copyright (c) 2016, Alibaba, Inc. All rights reserved.
  *
@@ -45,14 +45,18 @@ WX_EXPORT_METHOD(@selector(setNavBarHidden:callback:))
 {
     id<WXNavigationProtocol> navigator = [self navigator];
     UIViewController *container = self.weexInstance.viewController;
-    [navigator open:param success:success failure:failure withContainer:container];
+    if (navigator && [navigator respondsToSelector:@selector(open:success:failure:withContainer:)]) {
+        [navigator open:param success:success failure:failure withContainer:container];
+    }
 }
     
 - (void)close:(NSDictionary *)param success:(WXModuleCallback)success failure:(WXModuleCallback)failure
 {
     id<WXNavigationProtocol> navigator = [self navigator];
     UIViewController *container = self.weexInstance.viewController;
-    [navigator close:param success:success failure:failure withContainer:container];
+    if (navigator && [navigator respondsToSelector:@selector(close:success:failure:withContainer:)]) {
+        [navigator close:param success:success failure:failure withContainer:container];
+    }
 }
     
 - (void)push:(NSDictionary *)param callback:(WXModuleCallback)callback
