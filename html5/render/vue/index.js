@@ -4,7 +4,9 @@ import * as components from './components'
 import styleMixin from './mixins/style'
 
 function install (Vue) {
-  setViewport()
+  if (!process.env.SKIP_VIEWPORT) {
+    setViewport()
+  }
 
   Vue.prototype.$getConfig = () => {
     console.warn('[Vue Render] "this.$getConfig" is deprecated, please use "weex.config" instead.')
