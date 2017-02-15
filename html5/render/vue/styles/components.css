@@ -224,12 +224,14 @@ body > .weex-scroller {
 }
 
 .weex-scroller-wrapper.weex-scroller-horizontal {
-  overflow-x: scroll;
   overflow-y: hidden;
 }
 
 .weex-scroller-horizontal .weex-scroller-inner {
-  display: block;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  overflow-x: scroll;
   width: auto;
   height: 100%;
 }
