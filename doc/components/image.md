@@ -17,7 +17,6 @@ This component supports no child components.
 
 - `src`: &lt;string&gt; image source url
 - `resize`: <span class="weex-version">0.5</span> &lt;string&gt; the 'ScaleType' of the component. The default value is ``stretch``, if this attribute is not specified. Possible values are ``cover``, ``contain``, each of which has the same meaning with w3c standard.
-- `placeholder`: <span class="weex-version">0.9</span> &lt;string&gt;image to display while the network image src is loading.
 
 Other attributes please check out the [common attributes](../references/common-attrs.md).
 
