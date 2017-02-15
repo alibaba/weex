@@ -2,7 +2,7 @@
 
 Since weex-html5 can run on a modern mobile browser, it's naturally supported to debug weex-html5 code in browsers' dev tools. Use browser's devTools to iterate, debug and profile your weex-html5 app. Take chrome's debug tool as a example:
 
-![chrome's debug tool](//gw.alicdn.com/mt/TB1V1hIMpXXXXaHXVXXXXXXXXXX-983-730.png)
+![chrome's debug tool](https://gw.alicdn.com/mt/TB1V1hIMpXXXXaHXVXXXXXXXXXX-983-730.png)
 
 ## Elements
 

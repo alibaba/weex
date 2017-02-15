@@ -48,6 +48,10 @@ Other attributes please check out the [common attributes](../references/common-a
 - support `click` event. Check out [common events](../references/common-event.md)
 - support `appear` / `disappear` event. Check out [common events](../references/common-event.md)
 
+### Notes
+* If a `height` is given in CSS, text will clip to the given height even if the height of text content is larger than that.
+* The default for `line-height` is the value of `font-size`. But, this **doesn't** mean `<text style="height:32;font-size:32">Hello World</text>` won't be clipped on any device. `font-size` **only** indicates the distance between top line and bottom line of the glyph. The typeface can draw glyph on anywhere it likes, even beyond the top line or bottom line.
+
 ### Example
 
 ```

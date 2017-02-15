@@ -41,22 +41,61 @@ Other attributes please check out the [common attributes](../references/common-a
 ```
 <template>
   <div>
-    <slider auto-play="true" onchange="change" style="...">
-      <image repeat="{{imageList}}" src="{{src}}" style="..."></image>
-      <indicator></indicator>
+    <slider class="slider" interval="3000" auto-play="true">
+      <div class="slider-pages" repeat="item in itemList">
+        <image class="img" src="{{item.pictureUrl}}"></image>
+        <text class="title">{{item.title}}</text>
+      </div>
+      <indicator class="indicator"></indicator>
     </slider>
   </div>
 </template>
 
+<style>
+  .img {
+    width: 714;
+    height: 150;
+  }
+  .title {
+    position: absolute;
+    top: 20;
+    left: 20;
+    color: #ff0000;
+    font-size: 48;
+    font-weight: bold;
+    background-color: #eeeeee;
+  }
+  .slider {
+    flex-direction: row;
+    margin: 18;
+    width: 714;
+    height: 230;
+  }
+  .slider-pages {
+    flex-direction: row;
+    width: 714;
+    height: 200;
+  }
+  .indicator {
+    width:714;
+    height:200;
+    position:absolute;
+    top:1;
+    left:1;
+    item-color: red;
+    item-selectedColor: blue;
+    item-size: 20;
+  }
+</style>
+
 <script>
   module.exports = {
     data: {
-      imageList: [{src: '...'}, {src: '...'}, ...]
-    },
-    methods: {
-      change: function (e) {
-        // e.index
-      }
+      itemList: [
+        {itemId: '520421163634', title: 'item1', pictureUrl: 'https://gd2.alicdn.com/bao/uploaded/i2/T14H1LFwBcXXXXXXXX_!!0-item_pic.jpg'},
+        {itemId: '522076777462', title: 'item2', pictureUrl: 'https://gd1.alicdn.com/bao/uploaded/i1/TB1PXJCJFXXXXciXFXXXXXXXXXX_!!0-item_pic.jpg'},
+        {itemId: '522076777462', title: 'iten3', pictureUrl: 'https://gd3.alicdn.com/bao/uploaded/i3/TB1x6hYLXXXXXazXVXXXXXXXXXX_!!0-item_pic.jpg'}
+      ]
     }
   }
 </script>

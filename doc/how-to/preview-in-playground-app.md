@@ -5,9 +5,9 @@
 2. Use Android Studio open Android Sample 。
 3. run Sample project.
 4. into Sample homePage，you will see this picture  
-![preview page](//gtms01.alicdn.com/tps/i1/TB10Ox2MpXXXXXKXpXXA0gJJXXX-720-1280.png)
+![preview page](https://gtms01.alicdn.com/tps/i1/TB10Ox2MpXXXXXKXpXXA0gJJXXX-720-1280.png)
 5. Click the icon to the top right of the page to enter the two-dimensional code scanning  
-![](//gtms04.alicdn.com/tps/i4/TB1Ph05MpXXXXcHXXXX2YSA3pXX-540-960.jpg)
+![](https://gtms04.alicdn.com/tps/i4/TB1Ph05MpXXXXcHXXXX2YSA3pXX-540-960.jpg)
 6. use[`Weex-Toolkit`](https://github.com/alibaba/weex_toolchain/tree/master/toolkit/ )make .we to a     QR code 
 7. you will see the page rended by Weex  
-![](//gtms03.alicdn.com/tps/i3/TB1ehVLMpXXXXa.XVXX2YSA3pXX-540-960.jpg)
+![](https://gtms03.alicdn.com/tps/i3/TB1ehVLMpXXXXa.XVXX2YSA3pXX-540-960.jpg)

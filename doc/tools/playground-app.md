@@ -7,7 +7,7 @@ Android and IOS version of Playground App can be downloaded [here](http://alibab
 
 ## Screenshot 
 
-![Weex playground App](//gw.alicdn.com/mt/TB1AoPdOXXXXXcXapXXXXXXXXXX-720-1280.png)
+![Weex playground App](https://gw.alicdn.com/mt/TB1AoPdOXXXXXcXapXXXXXXXXXX-720-1280.png)
 
 
 This is main interface of Weex Playground App , you can click the item to see the corresponding demo  . click top right  corner Icon will active QR scaner that  work with Weex [toolkit CLI](../tools/cli.md)

@@ -25,7 +25,7 @@ end
 ```
 You can get your `YourTarget` below
 
-![img](//img4.tbcdn.cn/L1/461/1/4d9f4d6a8441b44e4816c7778627824fb72c58de)
+![img](https://img4.tbcdn.cn/L1/461/1/4d9f4d6a8441b44e4816c7778627824fb72c58de)
 
 Run pod install in current directory, for a while, .xcworkspace will be created.  At this point, the dependencies have been established.
 
@@ -71,6 +71,7 @@ Something you have to do is to render weex view with specific URL, then add it t
     __weak typeof(self) weakSelf = self;
     _instance.onCreate = ^(UIView *view) {
         [weakSelf.weexView removeFromSuperview];
+        weakSelf.weexView = view;
         [weakSelf.view addSubview:weakSelf.weexView];
     };
     
@@ -106,4 +107,4 @@ We can also pack all the JS files into the app's resources. This way you can run
 * Move `index.js` to your app's Xcode project and add the file to your target.
 * Replace `[_instance renderWithURL:'httpURL']` with: `[_instance renderWithURL: [[NSBundle mainBundle] URLForResource:@"index" withExtension:@"js"]]`
 
-* Go for Product -> Archive in Xcode and follow the steps to build your .IPA file and submit it to the AppStore.
+* Go to Product -> Archive in Xcode and follow the steps to build your .IPA file and submit it to the AppStore.
