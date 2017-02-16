@@ -18,15 +18,15 @@ For example: If you want to implement an address jumping function, you can achie
 Refer to the following example: 
 
 ```java
-    public class WXEventModule extends WXModule{
-	
+public class WXEventModule extends WXModule{
+
 	private static final String WEEX_CATEGORY="com.taobao.android.intent.category.WEEX";
-	
-		@WXModuleAnno
-		public void openURL(String url){
-			//implement your module logic here
-		}
-    }
+
+	@JSMethod
+	public void openURL(String url){
+		//implement your module logic here
+	}
+}
 
 ```
 
@@ -34,7 +34,7 @@ Refer to the following example:
 
 ```java
 
-  WXSDKEngine.registerModule("event", WXEventModule.class);
+WXSDKEngine.registerModule("event", WXEventModule.class);
 
 ```
 
@@ -49,15 +49,16 @@ event.openURL("http://www.github.com");
 
 ### Javascript callback
 If the module need implement a callback to javascript, you just add `JSCallback` argument to the method you want expose to javascript:   
+
 ```java
 
-	@WXModuleAnno
-	public void openURL(String url,JSCallback callback){
-		//implement your module logic here
-		Map<String,Object> resp = new HashMap();
-		resp.put("result","ok");
-		callback.invoke(resp);
-	}
+@JSMethod
+public void openURL(String url,JSCallback callback){
+	//implement your module logic here
+	Map<String,Object> resp = new HashMap();
+	resp.put("result","ok");
+	callback.invoke(resp);
+}
 	
 ```
 At the javascript side, call the module with javascript function to receive callback data:   
@@ -86,32 +87,32 @@ Refer to the following example
 
 ```java
 
-	public class MyViewComponent extends WXComponent{ 
+public class MyViewComponent extends WXComponent{ 
 	public MyViewComponent(WXSDKInstance instance, WXDomObject dom,
-	                   WXVContainer parent, String instanceId, boolean isLazy) 
-	 { 
-	 public MyViewComponent(WXSDKInstance instance, WXDomObject dom,
-	   WXVContainer parent, String instanceId, boolean isLazy) {
-	  super(instance, dom, parent, instanceId, isLazy);
-	 }
-	 
-	 @Override
-	 protected void initView() {
-	    mHost = new TextView(mContext);
-	 }
-	 @WXComponentProp(name=WXDomPropConstant.WX_ATTR_VALUE)
-	 public void setMyViewValue(String value) {
-	    ((TextView)mHost).setText(value);
-	 }
+					WXVContainer parent, String instanceId, boolean isLazy) 
+	{ 
+		public MyViewComponent(WXSDKInstance instance, WXDomObject dom,
+		WXVContainer parent, String instanceId, boolean isLazy) {
+		super(instance, dom, parent, instanceId, isLazy);
+		}
+		
+		@Override
+		protected void initView() {
+			mHost = new TextView(mContext);
+		}
+		@WXComponentProp(name=WXDomPropConstant.WX_ATTR_VALUE)
+		public void setMyViewValue(String value) {
+			((TextView)mHost).setText(value);
+		}
 	}
-
+}
 ```
  
 #### Register the Component
 
 
 ```java 
-   WXSDKEngine.registerComponent("MyView", MyViewComponent.class);
+WXSDKEngine.registerComponent("MyView", MyViewComponent.class);
 ```
 
 ### Adapter extend
@@ -158,3 +159,31 @@ public class ImageAdapter implements IWXImgLoaderAdapter {
 }
 
 ```
+
+#### Component Method
+from WeexSDK `0.9.5`, you can define your component method by macro `WX_EXPORT_METHOD`,
+
+for example, define a method in component:
+
+```java
+
+@JSMethod
+public void focus(){
+	//method implementation
+}
+
+```
+after your registration for your own custom component, now you can call it in your js file.
+
+```html
+<template>
+	<mycomponent id='mycomponent'></mycomponent>
+</template>
+<script>
+module.exports = {
+	created: function() {
+			this.$el('mycomponent').focus();
+	}
+}
+</script>
+``` 

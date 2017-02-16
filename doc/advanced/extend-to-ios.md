@@ -251,8 +251,45 @@ Now you can use `<image>` and its attributes wherever you want in the template.
 ```
 <image style="your-custom-style" src="image-remote-source" resize="contain/cover/stretch"></image>
 ```
+#### Component Method
+from WeexSDK `0.9.5`, you can define your component method by macro `WX_EXPORT_METHOD`,
 
+for example:
 
+```
+
+@implementation WXMyComponent
+WX_EXPORT_METHOD(@selector(focus))
+- (instancetype)initWithRef:(NSString *)ref type:(NSString *)type styles:(NSDictionary *)styles attributes:(NSDictionary *)attributes events:(NSArray *)events weexInstance:(WXSDKInstance *)weexInstance
+{
+    if (self = [super initWithRef:ref type:type styles:styles attributes:attributes events:events weexInstance:weexInstance]) {
+        // handle your attributes
+        // handle your styles
+    }
+    
+    return self;
+}
+@end
+
+- (void)focus
+  {
+  	NSLog(@"you got it");
+  }
+  
+```
+after your registration for your own custom component, now you can call it in your js file.
+
+```
+<template>
+    <mycomponent id='mycomponent'></mycomponent>
+</template>
+<script>
+  module.exports = {
+   created: function() {
+   		this.$el('mycomponent').focus();
+   }
+  }
+``` 
 
 
 
