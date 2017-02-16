@@ -15,6 +15,9 @@ For now, there are four types of gestures:
 	* `panstart`
 	* `panmove`
 	* `panend`
+* **Horizontal/Vertical Pan** <span class="weex-version">0.10</span> . Mainly used for cell swipe gestures before conflict resolving system is completed. start/move/end state of the gesture will be passed by `state` property.
+  * `horizontalpan`
+  * `verticalpan`
 * **Swipe**. Swipe is fired when user swipe a touch point on the screen. A serial of motion will only trigger one Swipe gesture.
 * **LongPress**. Swipe is fired when a touch point is held for 500 ms or more.
 
@@ -29,20 +32,20 @@ Users may choose their gesture according to their situation.
 The following properties can be used in gesture callback:
 
 * `direction`. Only exists for **Swipe** gesture. Indicate the direcion of the swipe, choose from `up`, `left`, `bottom`, `right`.
-* `changedTouches`. An array of motion for every touch pointer that has contribute to the current gesture. 
+* `changedTouches`. An array of motion for every touch pointer that has contribute to the current gesture.
 
 ### changedTouches
 
 `changedTouches` is an array, with the following properties in its children:
 
 * `identifier`. A unique identifier for a touch pointer.
-* `pageX`. The X coordinate of the touch pointer relative to the left edge of the document. 
+* `pageX`. The X coordinate of the touch pointer relative to the left edge of the document.
 * `pageY`. The Y coordinate of the touch pointer relative to the top of the document.
 * `screenX`. The X coordinate of the touch point relative to the left edge of the screen.
 * `screenY`. The Y coordinate of the touch point relative to the top edge of the screen.
 
 ## Constrain
-Currently, Weex Android do not support listening to gesture on `scroller`, `list` and `webview`, as it would lead a large amount of event conflicting. 
+Currently, Weex Android do not support listening to gesture on `scroller`, `list` and `webview`, as it would lead a large amount of event conflicting.
 
 ## How to use
 
@@ -52,7 +55,7 @@ Example:
 	<template>
 	  <div ontouchstart="handleTouchstart"></div>
 	</template>
-	
+
 	<script>
 	module.exports = {
 	  methods: {

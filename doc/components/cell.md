@@ -11,7 +11,10 @@ This type of component supports all kinds of weex component as its child compone
 
 ### Attributes
 
-There is no specific attribute for this component other than the [common attributes](../references/common-attrs.md).
+**common attributes**: check out the [common attributes](../references/common-attrs.md).
+
+- support insert-animation('none'/'default'): specifies whether to perform animation when inserting the cell <span class="weex-version">0.10</span>
+- support delete-animation('none'/'default'): specifies whether to perform animation when deleting the cell <span class="weex-version">0.10</span>
 
 **Notes:** you can't give `<cell>` a `flex` value. Width of `<cell>` is equal to the width of its parent component `<list>`, and you don't need to specify its height.
 
@@ -23,6 +26,8 @@ There is no specific attribute for this component other than the [common attribu
 - support box model related styles
 - support ``position`` related styles
 - support ``opacity``, ``background-color`` etc.
+
+**Notes:** cell itself is a container, its layout info is managed by list, so specifying cell's margin info will not work.
 
 ### Events
 
