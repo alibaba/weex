@@ -206,12 +206,16 @@ package com.taobao.weex.ui.component.list;
 
 import com.taobao.weappplus_sdk.BuildConfig;
 import com.taobao.weex.WXSDKInstanceTest;
-import com.taobao.weex.common.Constants;
-import com.taobao.weex.dom.TestDomObject;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.WXListDomObject;
 import com.taobao.weex.ui.SimpleComponentHolder;
-import com.taobao.weex.ui.component.*;
+import com.taobao.weex.ui.component.ComponentTest;
+import com.taobao.weex.ui.component.WXComponent;
+import com.taobao.weex.ui.component.WXDiv;
+import com.taobao.weex.ui.component.WXDivTest;
+import com.taobao.weex.ui.component.WXHeaderTest;
+import com.taobao.weex.ui.component.WXVContainer;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -221,8 +225,8 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.lang.reflect.InvocationTargetException;
-
-import static org.junit.Assert.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by sospartan on 8/29/16.
@@ -272,7 +276,10 @@ public class WXListComponentTest {
     ComponentTest.create(child);
     component.addChild(child);
 
-    component.scrollTo(child,0);
+    Map<String, Object> options = new HashMap<>(2);
+    options.put("offset", 10);
+    options.put("animated", false);
+    component.scrollTo(child,options);
   }
 
   @Test

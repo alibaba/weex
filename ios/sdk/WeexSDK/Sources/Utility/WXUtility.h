@@ -388,4 +388,10 @@ BOOL WXFloatGreaterThan(CGFloat a, CGFloat b);
  */
 BOOL WXFloatGreaterThanWithPrecision(CGFloat a,CGFloat b,double precision);
 
+/**
+ *  @abstract convert returnKeyType to type string .
+ *
+ */
++ (NSString *_Nullable)returnKeyType:(UIReturnKeyType)type;
+
 @end

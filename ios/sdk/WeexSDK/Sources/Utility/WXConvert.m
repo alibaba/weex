@@ -469,6 +469,26 @@ WX_NUMBER_CONVERT(NSUInteger, unsignedIntegerValue)
     return NSTextAlignmentNatural;
 }
 
++ (UIReturnKeyType)UIReturnKeyType:(id)value
+{
+    if([value isKindOfClass:[NSString class]]){
+        NSString *string = (NSString *)value;
+        if ([string isEqualToString:@"defalut"])
+            return UIReturnKeyDefault;
+        else if ([string isEqualToString:@"go"])
+            return UIReturnKeyGo;
+        else if ([string isEqualToString:@"next"])
+            return UIReturnKeyNext;
+        else if ([string isEqualToString:@"search"])
+            return UIReturnKeySearch;
+        else if ([string isEqualToString:@"send"])
+            return UIReturnKeySend;
+        else if ([string isEqualToString:@"done"])
+            return UIReturnKeyDone;
+    }
+    return UIReturnKeyDefault;
+}
+
 + (WXTextStyle)WXTextStyle:(id)value
 {
     if([value isKindOfClass:[NSString class]]){

@@ -739,11 +739,26 @@ public class WXScroller extends WXVContainer<ViewGroup> implements WXScrollViewL
   }
 
   @Override
-  public void scrollTo(WXComponent component,int offset) {
+  public void scrollTo(WXComponent component, Map<String, Object> options) {
+    float offsetFloat = 0;
+    boolean smooth = true;
+
+    if (options != null) {
+      String offset = options.get(Constants.Name.OFFSET) == null ? "0" : options.get(Constants.Name.OFFSET).toString();
+      smooth = WXUtils.getBoolean(options.get(Constants.Name.ANIMATED), true);
+      if (offset != null) {
+        try {
+          offsetFloat = WXViewUtils.getRealPxByWidth(Float.parseFloat(offset), getInstance().getViewPortWidth());
+        }catch (Exception e ){
+          WXLogUtils.e("Float parseFloat error :"+e.getMessage());
+        }
+      }
+    }
+
     int viewYInScroller=component.getAbsoluteY() - getAbsoluteY();
     int viewXInScroller=component.getAbsoluteX() - getAbsoluteX();
 
-    scrollBy(viewXInScroller - getScrollX() + offset,viewYInScroller - getScrollY() + offset);
+    scrollBy(viewXInScroller - getScrollX() + (int) offsetFloat, viewYInScroller - getScrollY() + (int) offsetFloat, smooth);
   }
 
   /**
@@ -752,21 +767,29 @@ public class WXScroller extends WXVContainer<ViewGroup> implements WXScrollViewL
    * @param y vertical distance. Negative for scroll to top
    */
   public void scrollBy(final int x, final int y) {
+    scrollBy(x, y, false);
+  }
+
+  public void scrollBy(final int x, final int y, final boolean smooth) {
     if (getInnerView() == null) {
       return;
     }
 
     getInnerView().postDelayed(new Runnable() {
-
       @Override
       public void run() {
-        if(getInnerView()==null){
-          return;
-        }
-        if(mOrientation== Constants.Orientation.VERTICAL){
-          ((WXScrollView) getInnerView()).smoothScrollBy(0, y);
-        }else{
-          ((WXHorizontalScrollView)getInnerView()).smoothScrollBy(x,0);
+        if (mOrientation == Constants.Orientation.VERTICAL) {
+          if (smooth) {
+            ((WXScrollView) getInnerView()).smoothScrollBy(0, y);
+          } else {
+            ((WXScrollView) getInnerView()).scrollBy(0, y);
+          }
+        } else {
+          if (smooth) {
+            ((WXHorizontalScrollView) getInnerView()).smoothScrollBy(x, 0);
+          } else {
+            ((WXHorizontalScrollView) getInnerView()).scrollBy(x, 0);
+          }
         }
         getInnerView().invalidate();
       }

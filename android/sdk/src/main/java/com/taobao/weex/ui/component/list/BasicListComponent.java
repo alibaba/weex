@@ -215,6 +215,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.View;
@@ -573,7 +574,24 @@ public abstract class BasicListComponent<T extends ViewGroup & ListComponentView
   }
 
   @Override
-  public void scrollTo(WXComponent component, final int offset) {
+  public void scrollTo(WXComponent component, Map<String, Object> options) {
+    float offsetFloat = 0;
+    boolean smooth = true;
+
+    if (options != null) {
+      String offsetStr = options.get(Constants.Name.OFFSET) == null ? "0" : options.get(Constants.Name.OFFSET).toString();
+      smooth = WXUtils.getBoolean(options.get(Constants.Name.ANIMATED), true);
+      if (offsetStr != null) {
+        try {
+          offsetFloat = WXViewUtils.getRealPxByWidth(Float.parseFloat(offsetStr), getInstance().getViewPortWidth());
+        }catch (Exception e ){
+          WXLogUtils.e("Float parseFloat error :"+e.getMessage());
+        }
+      }
+    }
+
+    final int offset = (int) offsetFloat;
+
     T bounceRecyclerView = getHostView();
     if (bounceRecyclerView == null) {
       return;
@@ -588,31 +606,39 @@ public abstract class BasicListComponent<T extends ViewGroup & ListComponentView
       }
       parent = parent.getParent();
     }
+
     if (cell != null) {
-      int pos = mChildren.indexOf(cell);
+      final int pos = mChildren.indexOf(cell);
       final WXRecyclerView view = bounceRecyclerView.getInnerView();
-      view.scrollToPosition(pos);
-      final WXComponent cellComp = cell;
-      //scroll cell to top
-      view.postDelayed(new Runnable() {
-        @Override
-        public void run() {
-          if (cellComp.getHostView() == null) {
-            return;
-          }
-          View cellView = cellComp.getHostView();
-          if (getOrientation() == Constants.Orientation.VERTICAL) {
-            int scrollY = cellView.getTop() + offset;
-            view.smoothScrollBy(0, scrollY);
-          } else {
-            int scrollX = cellView.getLeft() + offset;
-            view.smoothScrollBy(scrollX, 0);
-          }
+
+      if (!smooth) {
+        RecyclerView.LayoutManager layoutManager = view.getLayoutManager();
+        if (layoutManager instanceof LinearLayoutManager) {
+          //GridLayoutManager is also instance of LinearLayoutManager
+          ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(pos, -offset);
+        } else if (layoutManager instanceof StaggeredGridLayoutManager) {
+          ((StaggeredGridLayoutManager) layoutManager).scrollToPositionWithOffset(pos, -offset);
         }
-      }, 50);
-
+        //Any else?
+      } else {
+        view.smoothScrollToPosition(pos);
+        if (offset != 0) {
+          view.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+              if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                if (getOrientation() == Constants.Orientation.VERTICAL) {
+                  recyclerView.smoothScrollBy(0, offset);
+                } else {
+                  recyclerView.smoothScrollBy(offset, 0);
+                }
+                recyclerView.removeOnScrollListener(this);
+              }
+            }
+          });
+        }
+      }
     }
-
   }
 
   @Override

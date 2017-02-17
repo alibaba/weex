@@ -672,6 +672,55 @@ static BOOL WXNotStat;
     
 }
 
+BOOL WXFloatEqual(CGFloat a, CGFloat b) {
+    return WXFloatEqualWithPrecision(a, b,FLT_EPSILON);
+}
+BOOL WXFloatEqualWithPrecision(CGFloat a, CGFloat b ,double precision){
+    return fabs(a - b) <= precision;
+}
+BOOL WXFloatLessThan(CGFloat a, CGFloat b) {
+    return WXFloatLessThanWithPrecision(a, b, FLT_EPSILON);
+}
+BOOL WXFloatLessThanWithPrecision(CGFloat a, CGFloat b ,double precision){
+    return a-b < - precision;
+}
+
+BOOL WXFloatGreaterThan(CGFloat a, CGFloat b) {
+    return WXFloatGreaterThanWithPrecision(a, b, FLT_EPSILON);
+}
+BOOL WXFloatGreaterThanWithPrecision(CGFloat a, CGFloat b ,double precision){
+    return a-b > precision;
+}
+
++ (NSString *_Nullable)returnKeyType:(UIReturnKeyType)type
+{
+    NSString *typeStr = @"defalut";
+    switch (type) {
+        case UIReturnKeyDefault:
+            typeStr = @"defalut";
+            break;
+        case UIReturnKeyGo:
+            typeStr = @"go";
+            break;
+        case UIReturnKeyNext:
+            typeStr = @"next";
+            break;
+        case UIReturnKeySearch:
+            typeStr = @"search";
+            break;
+        case UIReturnKeySend:
+            typeStr = @"send";
+            break;
+        case UIReturnKeyDone:
+            typeStr = @"done";
+            break;
+            
+        default:
+            break;
+    }
+    return typeStr;
+}
+
 @end
 
 
@@ -702,22 +751,4 @@ CGPoint WXPixelPointResize(CGPoint value)
     return new;
 }
 
-BOOL WXFloatEqual(CGFloat a, CGFloat b) {
-    return WXFloatEqualWithPrecision(a, b,FLT_EPSILON);
-}
-BOOL WXFloatEqualWithPrecision(CGFloat a, CGFloat b ,double precision){
-    return fabs(a - b) <= precision;
-}
-BOOL WXFloatLessThan(CGFloat a, CGFloat b) {
-    return WXFloatLessThanWithPrecision(a, b, FLT_EPSILON);
-}
-BOOL WXFloatLessThanWithPrecision(CGFloat a, CGFloat b ,double precision){
-    return a-b < - precision;
-}
 
-BOOL WXFloatGreaterThan(CGFloat a, CGFloat b) {
-    return WXFloatGreaterThanWithPrecision(a, b, FLT_EPSILON);
-}
-BOOL WXFloatGreaterThanWithPrecision(CGFloat a, CGFloat b ,double precision){
-    return a-b > precision;
-}
