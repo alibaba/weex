@@ -7,8 +7,8 @@ var path = require('path');
 var os = require('os');
 var util = require("../util.js");
 
-describe('weex mobile index', function () {
-  this.timeout(1 * 60 * 1000);
+describe('list scroll event', function () {
+  this.timeout(util.getTimeoutMills());
   var driver = wd(util.getConfig()).initPromiseChain();
   driver.configureHttp({
     timeout: 100000
@@ -44,6 +44,35 @@ describe('weex mobile index', function () {
     .then((text)=>{
       var y = Math.abs(parseInt(text))
       assert.equal(y > 400,true)
+    })
+  })
+});
+
+describe('scroller scroll event', function () {
+  this.timeout(util.getTimeoutMills());
+  var driver = wd(util.getConfig()).initPromiseChain();
+  driver.configureHttp({
+    timeout: 100000
+  });
+
+  before(function () {
+    return driver
+      .initDriver()
+      .get('wxpage://' + util.getDeviceHost() +'/scroller-scroll.js')
+      .sleep(1000);
+  });
+
+
+  it('#1 Drag scroller', () => {
+    return driver
+    .touch('drag', {fromX:200, fromY:500, toX:200, toY: 200})
+    .sleep(2000)
+    .touch('drag', {fromX:200, fromY:500, toX:100, toY:200})
+    .elementByXPath('//div/text')
+    .text()
+    .then((text)=>{
+      var y = Math.abs(parseInt(text))
+      assert.equal(y > 200,true)
     })
   })
 });

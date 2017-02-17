@@ -42,5 +42,8 @@ module.exports = {
     },
     getDeviceHost:function(){
         return getIpAddress()+":12581";
+    },
+    getTimeoutMills:function(){
+        return 5 * 60 * 1000;
     }
 }

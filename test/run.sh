@@ -5,13 +5,14 @@ function buildAndroid {
     builddir=$dir'/android/playground'
     current_dir=$PWD;
     cd $builddir;
-    ./gradlew clean assembleDebug;
+    ./gradlew assembleDebug;
     cd $current_dir;
     pwd
 }
 function runAndroid {
     buildAndroid
-    platform=android macaca run -d $1
+    ps -ef
+    platform=android macaca run -d $1 --verbose
 }
 
 function buildiOS {
@@ -19,7 +20,7 @@ function buildiOS {
     current_dir=$PWD
     cd $builddir
     product=$(PWD)'/build/Debug-iphoneos/WeexDemo.app'
-    pod install --silent
+    pod update --silent
     [ -f product ] && rm -rf product
 
     xcodebuild clean build -quiet -workspace WeexDemo.xcworkspace -sdk iphonesimulator -scheme Pods-WeexDemo SYMROOT=$(PWD)/build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO

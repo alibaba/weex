@@ -3,6 +3,16 @@ rvm: 2.0.0
 osx_image: xcode8.2
 before_install:
   - gem install danger danger-xcode_summary xcpretty xcpretty-json-formatter
+  - brew update
+  - brew install nvm
+  - source $(brew --prefix nvm)/nvm.sh
+  - nvm install 4.2.1
+  - brew install ios-webkit-debug-proxy
+  - npm install -g macaca-cli
+  - npm install -g macaca-ios
+  - npm install
 script:
   - xcodebuild -project ios/sdk/WeexSDK.xcodeproj test -scheme WeexSDKTests CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -destination 'platform=iOS Simulator,name=iPhone 6' | XCPRETTY_JSON_FILE_OUTPUT=ios/sdk/xcodebuild.json xcpretty -f `xcpretty-json-formatter`
   - bundle exec danger
+  - ./test/serve.sh &
+  - ./test/run.sh ios

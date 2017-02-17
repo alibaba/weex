@@ -8,7 +8,7 @@ var os = require('os');
 var util = require("./util.js");
 
 describe('weex mobile index', function () {
-  this.timeout(1 * 60 * 1000);
+  this.timeout(util.getTimeoutMills());
   var driver = wd(util.getConfig()).initPromiseChain();
   driver.configureHttp({
     timeout: 100000
