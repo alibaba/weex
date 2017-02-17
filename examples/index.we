@@ -1,58 +1,28 @@
 <template>
-  <example-list items="{{items}}" root="{{root}}"></example-list>
+  <div style="flex:1">
+    <input id="input" style="height:100px" value="1234567890"></input>
+    <text>{{ret}}</text>
+    <text style="margin-top:100px;font-size:80px" onclick="setRange">setSelectionRange</text>
+    <text style="margin-top:100px;font-size:80px" onclick="getRange">getSelectionRange</text>
+  </div>
 </template>
 
 <script>
-  require('./include/example-list.we');
   module.exports = {
     data: {
-      root: 'examples',
-      items: [
-        // FORMAT:
-        // `name` key is the example filename without '.we'
-        // Support sub directory, e.g. 'new-fashion/index'
-
-        // common
-        {name: 'hello', title: 'Hello World'},
-        {name: 'style/index', title: 'Common Style'},
-        {name: 'animation', title: 'Animation'},
-
-        // component
-        {name: 'component/text-demo', title: 'Text'},
-        {name: 'component/image-demo', title: 'Image'},
-        {name: 'component/input-demo', title: 'Input'},
-        {name: 'component/scroller-demo', title: 'Scroller'},
-        {name: 'component/list/list-basic', title: 'List (Basic)'},
-        {name: 'component/list/list-demo', title: 'List (Advanced)'},
-        {name: 'component/slider/index', title: 'Slider'},
-        {name: 'component/slider-neighbor/index', title: 'Slider Neighbor'},
-        {name: 'component/a-demo', title: 'A'},
-        {name: 'component/video-demo', title: 'Video'},
-        {name: 'component/countdown-demo', title: 'Countdown'},
-        {name: 'component/marquee-demo', title: 'Marquee'},
-        {name: 'component/web-demo', title: 'Web'},
-        {name: 'component/navigator-demo', title: 'Navigator'},
-        {name: 'component/tabbar/tabbar-demo', title: 'Tabbar'},
-        {name: 'component/process-bar-demo', title: 'ProcessBar'},
-
-        // module
-        {name: 'module/instance-api', title: 'Instance API'},
-        {name: 'module/modal', title: 'Modal'},
-        {name: 'module/stream-demo', title: 'Stream'},
-        {name: 'module/websocket-demo', title: 'WebSocket'},
-        {name: 'module/storage-demo',title:'Storage'},
-        {name: 'module/picker-demo',title:'Picker'},
-        {name: 'module/componentRect',title:'componentRect'},
-        {name: 'module/clipboard', title: 'Clipboard'},
-
-        // showcase
-        {name: 'showcase/new-fashion/index', title: 'Activity'},
-        {name: 'showcase/calculator', title: 'Calculator'},
-        {name: 'showcase/minesweeper', title: 'Minesweeper'},
-        {name: 'showcase/ui', title: 'UI Gallery'},
-        {name: 'showcase/dropdown/dropdown-demo', title: 'Dropdown'}
-      ]
+      ret:"-"
+    },
+    methods: {
+      setRange: function(e) {
+        console.log(this.$el("input"));
+        this.$el("input").setSelectionRange(2,6);
+      },
+      getRange: function(e) {
+        var self = this;
+        this.$el("input").getSelectionRange(function(e) {
+          self.ret = e;
+        });
+      }
     }
   }
 </script>
-

@@ -16,7 +16,8 @@ Weex.install(droot)
 Weex.install(extensions)
 
 global.registerComponents([
-  { type: 'input', methods: ['focus', 'blur'] }
+  { type: 'input', methods: ['focus', 'blur', 'setSelectionRange', 'getSelectionRange'] },
+  { type: 'textarea', methods: ['setSelectionRange', 'getSelectionRange'] }
 ])
 
 export default Weex

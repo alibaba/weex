@@ -44,7 +44,6 @@ const proto = {
   blur () {
     this.node.blur()
   },
-  
   setSelectionRange(selectionStart, selectionEnd) {
     this.node.focus()
     this.node.setSelectionRange(selectionStart, selectionEnd)
