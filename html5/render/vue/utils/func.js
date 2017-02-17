@@ -39,3 +39,15 @@ export function throttle (func, wait) {
     }
   }
 }
+
+export function setSelectionRange(selectionStart, selectionEnd) {
+  this.$el.focus()
+  this.$el.setSelectionRange(selectionStart, selectionEnd)
+}
+
+export function getSelectionRange(callback) {
+  callback({
+    selectionStart: this.$el.selectionStart,
+    selectionEnd: this.$el.selectionEnd
+  }) 
+}
