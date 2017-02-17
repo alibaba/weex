@@ -5,6 +5,7 @@ import a from './a'
 import div from './div'
 import image from './image'
 import input from './input'
+import header from './scrollable/header'
 import list from './scrollable/list'
 import cell from './scrollable/list/cell'
 import scroller from './scrollable/scroller'
@@ -25,6 +26,7 @@ export {
   image,
   image as img,
   input,
+  header,
   list,
   cell,
   scroller,

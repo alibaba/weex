@@ -5,7 +5,7 @@ a, .weex-a {
 }
 
 body > .weex-div {
-  min-height: 100%;
+  max-height: 100%;
 }
 
 .weex-div {
@@ -192,7 +192,7 @@ figure, img, .weex-image, .weex-img {
 
 body > .weex-list,
 body > .weex-scroller {
-  min-height: 100%;
+  max-height: 100%;
 }
 
 .weex-list-wrapper,
@@ -237,6 +237,11 @@ body > .weex-scroller {
 }
 .weex-scroller-horizontal .weex-scroller-inner > * {
   float: left;
+}
+
+.sticky {
+  position: fixed;
+  z-index: 9999;
 }
 
 .weex-cell {

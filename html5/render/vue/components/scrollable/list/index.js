@@ -61,9 +61,9 @@ export default {
       attrs: { 'weex-type': 'list' },
       staticClass: this.wrapperClass,
       on: extend(this.createEventMap(), {
-        scroll: debounce(bind(this.handleScroll, this), 30),
+        scroll: this.handleListScroll,
         touchstart: this.handleTouchStart,
-        touchmove: throttle(bind(this.handleTouchMove, this), 25),
+        touchmove: this.handleTouchMove,
         touchend: this.handleTouchEnd
       })
     }, this.createChildren(createElement))
