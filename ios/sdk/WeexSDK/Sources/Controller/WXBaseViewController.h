@@ -15,8 +15,7 @@
  * special bundle URL.
  */
 
-@interface WXBaseViewController : UIViewController <UIGestureRecognizerDelegate>
-
+@interface WXBaseViewController : UIViewController
 /**
  * @abstract initializes the viewcontroller with bundle url.
  *
