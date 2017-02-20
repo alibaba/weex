@@ -94,6 +94,11 @@ export default {
       const top = this.$el.offsetTop
 
       const h = this.$children.filter(vm => vm.$refs.header)
+
+      if (h.length <= 0) {
+        return
+      }
+
       if (scrollTop < h[0].initTop) {
         return h[0].removeSticky()
       }

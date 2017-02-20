@@ -19,6 +19,12 @@ export default {
     this.placeholder = window.document.createElement('div')
   },
 
+  updated () {
+    if (!this.sticky) {
+      this.initTop = this.$el.offsetTop
+    }
+  },
+
   methods: {
     addSticky (offsetY) {
       this.$el.style.position = ''
