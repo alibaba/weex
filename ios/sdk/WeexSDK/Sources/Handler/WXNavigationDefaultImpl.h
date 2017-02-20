@@ -9,6 +9,10 @@
 #import <Foundation/Foundation.h>
 #import "WXNavigationProtocol.h"
 
+typedef NSString *(^WXNavigationGeneratedUrlBlcok)(NSString *url);
+
 @interface WXNavigationDefaultImpl : NSObject <WXNavigationProtocol>
+
++ (void)setNavigationGeneratedUrlBlcok:(WXNavigationGeneratedUrlBlcok)blcok;
 
 @end

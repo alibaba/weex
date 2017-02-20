@@ -41,6 +41,13 @@
     return imageLoader;
 }
 
+static __strong WXNavigationGeneratedUrlBlcok _generatedUrlBlcok = nil;
+
++ (void)setNavigationGeneratedUrlBlcok:(WXNavigationGeneratedUrlBlcok)blcok
+{
+    _generatedUrlBlcok = blcok;
+}
+
 - (id)navigationControllerOfContainer:(UIViewController *)container
 {
     return container.navigationController;
@@ -59,8 +66,11 @@
     if (obj && [obj isEqualToString:@"false"]) {
         animated = NO;
     }
-    
-    WXBaseViewController *vc = [[WXBaseViewController alloc]initWithSourceURL:[NSURL URLWithString:param[@"url"]]];
+    NSString *url = param[@"url"];
+    if (_generatedUrlBlcok) {
+        url = _generatedUrlBlcok(url);
+    }
+    WXBaseViewController *vc = [[WXBaseViewController alloc]initWithSourceURL:[NSURL URLWithString:url]];
     vc.hidesBottomBarWhenPushed = YES;
     [container.navigationController pushViewController:vc animated:animated];
     [self callback:block code:MSG_SUCCESS data:nil];
