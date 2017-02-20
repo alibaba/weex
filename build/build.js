@@ -100,6 +100,11 @@ function zip (filePath, callback) {
   })
 }
 
+function now () {
+  const time = Date.now() - (new Date()).getTimezoneOffset() * 60000
+  return (new Date(time)).toISOString().replace('T', ' ').substring(0, 16)
+}
+
 function report (filePath) {
   const size = (fs.statSync(filePath).size / 1024).toFixed(2) + 'KB'
   const file = path.relative(process.cwd(), filePath)

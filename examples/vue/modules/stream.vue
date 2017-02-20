@@ -27,7 +27,7 @@
 </template>
 
 <script>
-  var stream = require('@weex-module/stream');
+  var stream = weex.requireModule('stream');
   module.exports = {
     data: function () {
       return {

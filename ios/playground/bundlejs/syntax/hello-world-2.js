@@ -45,7 +45,7 @@
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	var __weex_template__ = __webpack_require__(304)
+	var __weex_template__ = __webpack_require__(317)
 
 	__weex_define__('@weex-component/25608f094c039b891a20c8161b9c650b', [], function(__weex_require__, __weex_exports__, __weex_module__) {
 
@@ -57,7 +57,7 @@
 
 /***/ },
 
-/***/ 304:
+/***/ 317:
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -70,7 +70,7 @@
 	    {
 	      "type": "image",
 	      "attr": {
-	        "src": "http://alibaba.github.io/weex/img/weex_logo_blue@3x.png"
+	        "src": "https://alibaba.github.io/weex/img/weex_logo_blue@3x.png"
 	      },
 	      "style": {
 	        "width": 360,

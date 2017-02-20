@@ -1,3 +1,7 @@
 # do not lint test case source files
 html5/test/case/*/*.source.js
 html5/test/case/*/*.output.js
+html5/test/render/vue/vender/*
+*.css
+doc/themes/weex/source/*/*.js
+doc/themes/weex/source/*/*/*.js

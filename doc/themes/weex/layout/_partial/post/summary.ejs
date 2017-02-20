@@ -1,0 +1,43 @@
+<% var result = page.path.match(/(v-)(\d+(\.\d+))/) %>
+<% var version = result ? +result[2] : 2.1 %>
+
+<div class="summary">
+  <h2 class="part-title">
+    <% if (type) { %>
+      <%= _p('menu.' + type) %>
+    <% } %>
+  </h2>
+  <ul class="doc-summary">
+    <% var pagesArr = site.pages.find({type: type, lang: page.lang, version: version}).sort('order') %>
+    <% var pages = [] %>
+    <% pagesArr.each(function (item) { %>
+      <% var i = Math.floor(item.order) - 1 %>
+      <% if(pages[i]) { %>
+        <% pages[i].push(item) %>
+      <% } else { %>
+        <% pages[i] = [];pages[i].push(item) %>
+      <% } %>
+    <% }) %>
+   
+    <% pages.forEach(function (item, index) { %>
+      <li>
+        <h3 class="chapter-title"><a href="<%= url_for(item[0].path) %>" class="sidebar-link <%- is_current(item[0].path, 'strict') ? 'current' : '' %> <%- item[0].is_new ? 'new' : '' %>"><%- item[0].title %></a></h3>
+        <% if (item.length > 1) { %>
+          <ul class="chapter">
+            <% for (var i = 1; i < item.length; i++) { %>
+              <li>
+                <a href="<%= url_for(item[i].path) %>" class="sidebar-link <%- is_current(item[i].path, 'strict') ? 'current' : '' %> <%- item[i].is_new ? 'new' : '' %>"><%= item[i].title %></a>
+              </li>
+            <% } %>
+          </ul>
+        <% } %>
+      </li>
+    <% }) %>
+    
+    <% if (version == 2.1) { %>
+      <li>
+        <h3 class="chapter-title"><a href="<%- url_for_lang('v-0.10/' + page.type + '/index.html') %>" class="sidebar-link"><%- _p('menu.legacy') %></a></h3>
+      </li>
+    <% } %>
+  </ul>
+</div>

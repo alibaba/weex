@@ -212,6 +212,8 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.taobao.weex.WXEnvironment;
+import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.common.WXConfig;
 
 public class WXUtils {
 
@@ -230,36 +232,55 @@ public class WXUtils {
   }
 
   public static float getFloat(Object value) {
-    if (value == null) {
-      return Float.NaN;
-    }
-    String temp = value.toString().trim();
-    if (temp.endsWith("px")) {
-      temp = temp.substring(0, temp.indexOf("px"));
-    }
-    float result = Float.NaN;
-    try {
-      result = Float.parseFloat(temp);
-    } catch (NumberFormatException e) {
-      WXLogUtils.e("Argument format error!");
-    }
-    return result;
+    return getFloat(value, Float.NaN);
   }
 
   public static Float getFloat(Object value, @Nullable Float df) {
-
     if (value == null) {
       return df;
     }
 
-    try {
-      String temp = value.toString().trim();
-      temp = temp.replace("px","");
-      return Float.parseFloat(temp);
-    } catch (Exception cce) {
-      WXLogUtils.e("Argument error!");
+    String temp = value.toString().trim();
+    if (temp.endsWith("wx")) {
+      try {
+        return transferWx(temp);
+      } catch (NumberFormatException e) {
+        WXLogUtils.e("Argument format error! value is " + value, e);
+      } catch (Exception e) {
+        WXLogUtils.e("Argument error! value is " + value, e);
+      }
+    }else if (temp.endsWith("px")) {
+      try {
+        temp = temp.substring(0, temp.indexOf("px"));
+        return Float.parseFloat(temp);
+      } catch (NumberFormatException nfe) {
+        WXLogUtils.e("Argument format error! value is " + value, nfe);
+      } catch (Exception e) {
+        WXLogUtils.e("Argument error! value is " + value, e);
+      }
+    }else {
+      try {
+        return Float.parseFloat(temp);
+      } catch (NumberFormatException nfe) {
+        WXLogUtils.e("Argument format error! value is " + value, nfe);
+      } catch (Exception e) {
+        WXLogUtils.e("Argument error! value is " + value, e);
+      }
     }
     return df;
+  }
+
+  private static float transferWx(String stringWithWXPostfix) {
+    if(null == stringWithWXPostfix) {
+      return 0;
+    }
+    String temp = stringWithWXPostfix;
+    if(stringWithWXPostfix.endsWith("wx")) {
+      temp = stringWithWXPostfix.substring(0, stringWithWXPostfix.indexOf("wx"));
+    }
+    Float f = Float.parseFloat(temp);
+    float density = Float.parseFloat(WXEnvironment.getConfig().get(WXConfig.scale));
+    return density * f * WXSDKInstance.getViewPortWidth() / WXViewUtils.getScreenWidth();
   }
 
   public static float fastGetFloat(String raw, int precision){
@@ -287,8 +308,8 @@ public class WXUtils {
           int remainderLength=10;
           int counter=0;
           while(loc<raw.length() &&
-                counter<precision &&
-                ((digit=raw.charAt(loc))>='0'&& digit<='9')){
+                  counter<precision &&
+                  ((digit=raw.charAt(loc))>='0'&& digit<='9')){
             result+=(digit-'0')/(float)remainderLength;
             remainderLength*=10;
             loc++;
@@ -318,20 +339,7 @@ public class WXUtils {
   }
 
   public static int getInt(Object value) {
-    if (value == null) {
-      return 0;
-    }
-    String temp = value.toString().trim();
-    if (temp.endsWith("px")) {
-      temp = temp.substring(0, temp.indexOf("px"));
-    }
-    int result = 0;
-    try {
-      result = Integer.parseInt(temp);
-    } catch (NumberFormatException e) {
-
-    }
-    return result;
+    return getInteger(value, 0);
   }
 
   public static Integer getInteger(@Nullable Object value, @Nullable Integer df) {
@@ -344,52 +352,118 @@ public class WXUtils {
       return (Integer) value;
     } catch (ClassCastException cce) {
       String temp = value.toString().trim();
-      if (temp.endsWith("px")) {
-        temp = temp.substring(0, temp.indexOf("px"));
-      }
-      try {
-        return Integer.parseInt(temp);
-      } catch (NumberFormatException nfe) {
-        WXLogUtils.e("Argument format error!");
-      } catch (Exception e) {
-        WXLogUtils.e("Argument error!");
+
+      if (temp.endsWith("wx")) {
+        try {
+          return (int) transferWx(temp);
+        } catch (NumberFormatException e) {
+          WXLogUtils.e("Argument format error! value is " + value, e);
+        } catch (Exception e) {
+          WXLogUtils.e("Argument error! value is " + value, e);
+        }
+      }else if (temp.endsWith("px")) {
+        try {
+          temp = temp.substring(0, temp.indexOf("px"));
+          return Integer.parseInt(temp);
+        } catch (NumberFormatException nfe) {
+          WXLogUtils.e("Argument format error! value is " + value, nfe);
+        } catch (Exception e) {
+          WXLogUtils.e("Argument error! value is " + value, e);
+        }
+      }else {
+        try {
+          return Integer.parseInt(temp);
+        } catch (NumberFormatException nfe) {
+          WXLogUtils.e("Argument format error! value is " + value, nfe);
+        } catch (Exception e) {
+          WXLogUtils.e("Argument error! value is " + value, e);
+        }
       }
     }
 
     return df;
   }
 
+  /**
+   * Looks like no longer usage exists, Mark deprecate first.
+   * @param value
+   * @return
+   */
+  @Deprecated
   public static long getLong(Object value) {
     if (value == null) {
       return 0;
     }
-    String temp = value.toString().trim();
-    if (temp.endsWith("px")) {
-      temp = temp.substring(0, temp.indexOf("px"));
-    }
     long result = 0;
-    try {
-      result = Long.parseLong(temp);
-    } catch (NumberFormatException e) {
-      WXLogUtils.e("[WXUtils] getLong:", e);
+    String temp = value.toString().trim();
+    if (temp.endsWith("wx")) {
+      try {
+        return (long)transferWx(temp);
+      } catch (NumberFormatException e) {
+        WXLogUtils.e("Argument format error! value is " + value, e);
+      } catch (Exception e) {
+        WXLogUtils.e("Argument error! value is " + value, e);
+      }
+    }else if (temp.endsWith("px")) {
+      try {
+        temp = temp.substring(0, temp.indexOf("px"));
+        return Long.parseLong(temp);
+      } catch (NumberFormatException nfe) {
+        WXLogUtils.e("Argument format error! value is " + value, nfe);
+      } catch (Exception e) {
+        WXLogUtils.e("Argument error! value is " + value, e);
+      }
+    }else {
+      try {
+        return Long.parseLong(temp);
+      } catch (NumberFormatException nfe) {
+        WXLogUtils.e("Argument format error! value is " + value, nfe);
+      } catch (Exception e) {
+        WXLogUtils.e("Argument error! value is " + value, e);
+      }
     }
     return result;
   }
 
+  /**
+   * Looks like no longer usage exists, Mark deprecate first.
+   * @param value
+   * @return
+   */
+  @Deprecated
   public static double getDouble(Object value) {
     if (value == null) {
       return 0;
     }
-    String temp = value.toString().trim();
-    if (temp.endsWith("px")) {
-      temp = temp.substring(0, temp.indexOf("px"));
-    }
     double result = 0;
-    try {
-      result = Double.parseDouble(temp);
-    } catch (NumberFormatException e) {
-      WXLogUtils.e("[WXUtils] getDouble:", e);
+    String temp = value.toString().trim();
+    if (temp.endsWith("wx")) {
+      try {
+        return transferWx(temp);
+      } catch (NumberFormatException e) {
+        WXLogUtils.e("Argument format error! value is " + value, e);
+      } catch (Exception e) {
+        WXLogUtils.e("Argument error! value is " + value, e);
+      }
+    }else if (temp.endsWith("px")) {
+      try {
+        temp = temp.substring(0, temp.indexOf("px"));
+        return Double.parseDouble(temp);
+      } catch (NumberFormatException nfe) {
+        WXLogUtils.e("Argument format error! value is " + value, nfe);
+      } catch (Exception e) {
+        WXLogUtils.e("Argument error! value is " + value, e);
+      }
+    }else {
+      try {
+        return Double.parseDouble(temp);
+      } catch (NumberFormatException nfe) {
+        WXLogUtils.e("Argument format error! value is " + value, nfe);
+      } catch (Exception e) {
+        WXLogUtils.e("Argument error! value is " + value, e);
+      }
     }
+
     return result;
   }
 

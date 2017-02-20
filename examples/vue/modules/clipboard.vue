@@ -20,8 +20,8 @@
 </template>
 
 <script>
-  var modal = require('@weex-module/modal')
-  var clipboard = require('@weex-module/clipboard')
+  var modal = weex.requireModule('modal')
+  var clipboard = weex.requireModule('clipboard')
   module.exports = {
     data: function () {
       return {

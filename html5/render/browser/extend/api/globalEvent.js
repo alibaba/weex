@@ -15,7 +15,7 @@ const globalEvent = {
       handlerTraker[evt] = [cb]
     }
     else {
-      handlerTraker.push(cb)
+      handlerTraker[evt].push(cb)
     }
     document.addEventListener(evt, cb)
   },

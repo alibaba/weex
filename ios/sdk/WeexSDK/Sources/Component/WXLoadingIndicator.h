@@ -12,6 +12,5 @@
 
 - (void)start;
 - (void)stop;
-- (void)setFrame:(CGRect)frame;
 
 @end

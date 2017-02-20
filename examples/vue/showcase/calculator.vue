@@ -62,7 +62,7 @@
 
 <script>
   var OP = ['+', '-', '*', '/'];
-  var modal = require('@weex-module/modal')
+  var modal = weex.requireModule('modal')
   module.exports = {
     data: function () {
       return {

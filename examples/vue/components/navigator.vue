@@ -20,7 +20,7 @@
 </template>
 
 <script>
-  var navigator = require('@weex-module/navigator')
+  var navigator = weex.requireModule('navigator')
   var getBaseURL = require('../include/base-url.js').getBaseURL
   module.exports = {
     data: function () {

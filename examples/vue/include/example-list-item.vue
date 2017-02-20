@@ -12,7 +12,7 @@
 </style>
 
 <script>
-  var event = require('@weex-module/event')
+  var event = weex.requireModule('event')
   module.exports = {
     props: {
       title: { default: '456' },

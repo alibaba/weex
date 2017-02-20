@@ -520,8 +520,7 @@
 	  "panel-header-danger": {
 	    "backgroundColor": "rgb(217,83,79)",
 	    "color": "#ffffff"
-	  },
-	  "panel-body": {}
+	  }
 	}
 
 /***/ },
@@ -2281,22 +2280,23 @@
 	    },
 
 	    doCopy: function doCopy() {
-	      textToCopy = "autoGenerateTextToCopy" + Math.random();
+	      var self = this;
+	      var textToCopy = "autoGenerateTextToCopy" + Math.random();
 
-	      var $clipboard = __weex_require__('@weex-module/clipboard');
-	      $clipboard.setString(textToCopy);
+	      var clipboard = __weex_require__('@weex-module/clipboard');
+	      clipboard.setString(textToCopy);
 
-	      this.textToCopy = textToCopy;
-	      this.tips = "copy done. Now system clipboard has string of '" + textToCopy + "', try PASTE button, or paste in another app.";
+	      self.textToCopy = textToCopy;
+	      self.tips = "copy done. Now system clipboard has string of '" + textToCopy + "', try PASTE button, or paste in another app.";
 	    },
 
 	    doPaste: function doPaste() {
-	      var $clipboard = __weex_require__('@weex-module/clipboard');
+	      var clipboard = __weex_require__('@weex-module/clipboard');
 	      var me = this;
-	      $clipboard.getString(function (ret) {
+	      clipboard.getString(function (ret) {
 	        console.log("paste result is " + (0, _stringify2.default)(ret));
 
-	        me.textFromPaste = ret.data;
+	        me.textFromPaste = (0, _stringify2.default)(ret);
 	        me.tips = "Paste done. Only support native(Android/iOS) NOW. according to security reason, paste in html5 is not supported.";
 	      });
 	    }

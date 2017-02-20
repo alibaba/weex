@@ -19,6 +19,10 @@ const amdService = {
 
   // create a amd service.
   create: (id, env, config) => {
+    if (!env.framework.match(/Vue/i)) {
+      return
+    }
+
     const mod = {}
     modules[id] = mod
     const amdObject = {
@@ -54,7 +58,19 @@ const amdService = {
         }
         const exports = {}
         const module = { exports }
-        const ret = servMod.factory(amdObject.require, exports, module)
+        const { deps } = servMod
+        let ret
+        if (deps && deps.length >= 1) {
+          /**
+           * to support:
+           *   define(name, ['foo', 'bar'], function (foo, bar) { ... })
+           */
+          const args = deps.map(depName => require(depName))
+          ret = servMod.factory(...args)
+        }
+        else {
+          ret = servMod.factory(amdObject.require, exports, module)
+        }
         servMod.cached = ret || module.exports
         return servMod.cached
       }

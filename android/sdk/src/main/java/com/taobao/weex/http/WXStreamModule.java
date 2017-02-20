@@ -277,7 +277,7 @@ public class WXStreamModule extends WXModule {
     sendRequest(builder.createOptions(), new ResponseCallback() {
       @Override
       public void onResponse(WXResponse response, Map<String, String> headers) {
-        if(callback != null)
+        if(callback != null && mWXSDKInstance != null)
           WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callback,
             (response == null || response.originalData == null) ? "{}" :
               readAsString(response.originalData,

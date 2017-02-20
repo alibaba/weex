@@ -524,8 +524,7 @@
 	  "panel-header-danger": {
 	    "backgroundColor": "rgb(217,83,79)",
 	    "color": "#ffffff"
-	  },
-	  "panel-body": {}
+	  }
 	}
 
 /***/ },
@@ -2313,6 +2312,39 @@
 	              "attr": {
 	                "interval": function () {return this.sliders[0].interval},
 	                "autoPlay": function () {return this.sliders[0].autoPlay}
+	              },
+	              "children": [
+	                {
+	                  "type": "indicator",
+	                  "classList": [
+	                    "indicator"
+	                  ]
+	                },
+	                {
+	                  "type": "slider-page",
+	                  "repeat": function () {return this.sliders[0].sliderPages}
+	                }
+	              ]
+	            }
+	          ]
+	        },
+	        {
+	          "type": "wxc-panel",
+	          "attr": {
+	            "title": "auto-play = true & scrollable = false",
+	            "paddingBody": "0"
+	          },
+	          "children": [
+	            {
+	              "type": "slider",
+	              "classList": [
+	                "slider"
+	              ],
+	              "append": "tree",
+	              "attr": {
+	                "interval": function () {return this.sliders[0].interval},
+	                "autoPlay": function () {return this.sliders[0].autoPlay},
+	                "scrollable": "false"
 	              },
 	              "children": [
 	                {

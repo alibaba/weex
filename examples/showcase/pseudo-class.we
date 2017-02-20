@@ -1,0 +1,102 @@
+<template>
+    <div>
+        <scroller>
+            <wxc-panel title="active" type="primary">
+                <div class="wrapper" >
+                    <image src="{{logoUrl}}" class="logo" ></image>
+                    <text class="title">please click image</text>
+                </div>
+            </wxc-panel>
+
+
+            <wxc-panel title="focus" type="primary">
+                <input
+                        type="text"
+                        placeholder="Input Text"
+                        class="focusinput"
+                        autofocus="{{autofocus}}"
+                        value="test active"
+                        onchange="onchange"
+                        oninput="oninput"
+                />
+            </wxc-panel>
+
+
+            <wxc-panel title="enabled" type="primary">
+                <input
+                        type="text"
+                        placeholder="Input Text"
+                        class="enabledinput"
+                        autofocus="{{autofocus}}"
+                        value="test active"
+                        onchange="onchange"
+                        oninput="oninput"
+                />
+            </wxc-panel>
+
+
+            <wxc-panel title="disabled" type="primary">
+                <input
+                        type="text"
+                        placeholder="Input Text"
+                        class="disabledinput"
+                        autofocus="{{autofocus}}"
+                        value="test active"
+                        onchange="onchange"
+                        oninput="oninput"
+                        disabled=true
+                />
+            </wxc-panel>
+
+
+        </scroller>
+    </div>
+</template>
+
+
+<style>
+    .wrapper {align-items: center; margin-top: 20px;}
+    .title {font-size: 24px;}
+    .logo {width: 360px; height: 82px;background-color: green}
+    .logo:active {width: 180px; height: 82px;background-color: red}
+    .focusinput {
+        font-size: 60px;
+        height: 80px;
+        width: 700px;
+    }
+    .focusinput:focus {
+        color:green;
+        background-color: red;
+    }
+    .enabledinput {
+        font-size: 60px;
+        height: 80px;
+        width: 700px;
+    }
+    .enabledinput:enabled {
+        color:yellow;
+        background-color: blue;
+    }
+    .disabledinput {
+        font-size: 60px;
+        height: 80px;
+        width: 700px;
+    }
+    .disabledinput:disabled {
+        color:white;
+        background-color: gray;
+    }
+</style>
+
+
+<script>
+    require('weex-components');
+    module.exports = {
+        data: {
+            logoUrl: 'https://alibaba.github.io/weex/img/weex_logo_blue@3x.png',
+            autofocus: false
+        },
+        methods: {
+        }
+    }
+</script>

@@ -22,7 +22,7 @@
 
 
 <script>
-  var storage = require('@weex-module/storage')
+  var storage = weex.requireModule('storage')
   module.exports = {
     data: function () {
       return {

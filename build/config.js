@@ -61,9 +61,9 @@ const configs = {
     ]
   },
   'weex-vue-render': {
-    moduleName: 'VueRenderer',
+    moduleName: 'WeexVueRender',
     entry: absolute('html5/render/vue/index.js'),
-    dest: absolute('dist/weex-vue-render.js'),
+    dest: absolute('packages/weex-vue-render/index.js'),
     banner: `/* 'WEEX VUE RENDER ${subversion.vueRender}, Build ${now()}. */\n\n`,
     format: 'umd',
     plugins: [
@@ -88,6 +88,7 @@ function getConfig (name, minify) {
     plugins: opt.plugins.concat([
       json(),
       replace({
+        'process.env.VIEWPORT_WIDTH': 750,
         'process.env.NODE_ENV': JSON.stringify(minify ? 'production' : 'development'),
         'process.env.VUE_ENV': JSON.stringify('WEEX'),
         'process.env.NODE_DEBUG': false

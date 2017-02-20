@@ -45,9 +45,9 @@
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	var __weex_template__ = __webpack_require__(307)
-	var __weex_style__ = __webpack_require__(308)
-	var __weex_script__ = __webpack_require__(309)
+	var __weex_template__ = __webpack_require__(320)
+	var __weex_style__ = __webpack_require__(321)
+	var __weex_script__ = __webpack_require__(322)
 
 	__weex_define__('@weex-component/efbfb8ecf417c1cf14746fdf4099343d', [], function(__weex_require__, __weex_exports__, __weex_module__) {
 
@@ -66,7 +66,7 @@
 
 /***/ },
 
-/***/ 307:
+/***/ 320:
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -98,7 +98,7 @@
 
 /***/ },
 
-/***/ 308:
+/***/ 321:
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -117,14 +117,14 @@
 
 /***/ },
 
-/***/ 309:
+/***/ 322:
 /***/ function(module, exports) {
 
 	module.exports = function(module, exports, __weex_require__){'use strict';
 
 	module.exports = {
 	  data: function () {return {
-	    logoUrl: 'http://alibaba.github.io/weex/img/weex_logo_blue@3x.png',
+	    logoUrl: 'https://alibaba.github.io/weex/img/weex_logo_blue@3x.png',
 	    target: 'World'
 	  }}
 	};}

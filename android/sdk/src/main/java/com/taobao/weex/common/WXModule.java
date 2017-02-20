@@ -212,6 +212,7 @@ import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.ui.component.WXComponent;
+import com.taobao.weex.utils.WXUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -232,6 +233,7 @@ public abstract class WXModule implements IWXObject {
 
 
   public WXSDKInstance mWXSDKInstance;
+  private String mModuleName;
 
 
   protected final WXComponent findComponent(String ref){
@@ -279,7 +281,7 @@ public abstract class WXModule implements IWXObject {
     boolean isOnce = false;
     if (options != null && options.size() > 0 && options.containsKey("once")) {
       Object temp = options.get("once");
-      if ("true".equals(temp)) {
+      if (WXUtils.getBoolean(temp,false)) {
         isOnce = true;
       }
     }
@@ -309,5 +311,13 @@ public abstract class WXModule implements IWXObject {
 
   public boolean isOnce(String callback){
     return mKeepAlives.get(callback);
+  }
+
+  public String getModuleName() {
+    return mModuleName;
+  }
+
+  public void setModuleName(String moduleName) {
+    mModuleName = moduleName;
   }
 }

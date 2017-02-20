@@ -3,7 +3,7 @@
     @click="clickHandler"></image>
 </template>
 <script>
-  var modal = require('@weex-module/modal')
+  var modal = weex.requireModule('modal')
   module.exports = {
     props: ['width', 'height', 'src', 'href'],
     data: function () {

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Weex Vue Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-touch-fullscreen" content="yes" />
+  <meta name="format-detection" content="telephone=no, email=no" />
+
+  <!-- <script src="./node_modules/vue/dist/vue.runtime.min.js"></script> -->
+  <script src="./node_modules/vue/dist/vue.runtime.js"></script>
+  <!-- <script src="./node_modules/weex-vue-render/index.min.js"></script> -->
+  <script src="./packages/weex-vue-render/index.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    (function () {
+      function getUrlParam (key) {
+        var reg = new RegExp('[?|&]' + key + '=([^&]+)')
+        var match = location.search.match(reg)
+        return match && match[1]
+      }
+
+      var page = getUrlParam('page')
+      var defaultPage = 'examples/build/vue-web/vue/index.js'
+      if (!page) {
+        var url = location.href.replace(/\?|$/, function(f) {
+          var query = '?page=' + defaultPage
+          return f ? query + '&' : query
+        })
+        return location.href = url
+      }
+
+      var bundle = document.createElement('script')
+      bundle.src = page
+      document.body.appendChild(bundle)
+    })();
+  </script>
+</body>
+</html>

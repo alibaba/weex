@@ -1,3 +1,6 @@
+import CallbackManager from './callback-manager'
+import Element from './vdom/element'
+
 let fallback = function () {}
 
 // The API of TaskCenter would be re-design.
@@ -7,11 +10,65 @@ export class TaskCenter {
       enumerable: true,
       value: id
     })
+    Object.defineProperty(this, 'callbackManager', {
+      enumerable: true,
+      value: new CallbackManager()
+    })
     fallback = sendTasks || function () {}
+  }
+
+  callback (callbackId, data, ifKeepAlive) {
+    return this.callbackManager.consume(callbackId, data, ifKeepAlive)
+  }
+
+  destroyCallback () {
+    return this.callbackManager.close()
+  }
+
+  typof (v) {
+    const s = Object.prototype.toString.call(v)
+    return s.substring(8, s.length - 1).toLowerCase()
+  }
+
+  /**
+   * Normalize a value. Specially, if the value is a function, then generate a function id
+   * and save it to `CallbackManager`, at last return the function id.
+   * @param  {any}        v
+   * @param  {object}     app
+   * @return {primitive}
+   */
+  normalize (v) {
+    const type = this.typof(v)
+
+    switch (type) {
+      case 'undefined':
+      case 'null':
+        return ''
+      case 'regexp':
+        return v.toString()
+      case 'date':
+        return v.toISOString()
+      case 'number':
+      case 'string':
+      case 'boolean':
+      case 'array':
+      case 'object':
+        if (v instanceof Element) {
+          return v.ref
+        }
+        return v
+      case 'function':
+        return this.callbackManager.add(v).toString()
+      /* istanbul ignore next */
+      default:
+        return JSON.stringify(v)
+    }
   }
 
   send (type, options, args) {
     const { action, component, ref, module, method } = options
+
+    args = args.map(arg => this.normalize(arg))
 
     switch (type) {
       case 'dom':

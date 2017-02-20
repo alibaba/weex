@@ -335,6 +335,7 @@ public class Constants {
     String DISTANCE_Y = "dy";
     String PULLING_DISTANCE = "pullingDistance";
     String VIEW_HEIGHT = "viewHeight";
+    String PREVENT_MOVE_EVENT = "preventMoveEvent";
   }
 
   public interface Value {

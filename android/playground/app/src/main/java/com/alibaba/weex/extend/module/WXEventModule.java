@@ -7,6 +7,8 @@ import android.text.TextUtils;
 import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.common.WXModule;
 
+import java.util.HashMap;
+
 
 public class WXEventModule extends WXModule {
 
@@ -34,7 +36,11 @@ public class WXEventModule extends WXModule {
     mWXSDKInstance.getContext().startActivity(intent);
 
     if (mWXSDKInstance.checkModuleEventRegistered("event", this)) {
-      mWXSDKInstance.fireModuleEvent("event", this, null);
+      HashMap<String,Object> params=new HashMap<>();
+      params.put("param1","param1");
+      params.put("param2","param2");
+      params.put("param3","param3");
+      mWXSDKInstance.fireModuleEvent("event", this, params);
     }
   }
 }

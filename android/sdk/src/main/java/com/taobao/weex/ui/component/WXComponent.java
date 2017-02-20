@@ -215,7 +215,8 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
   private int mPreRealHeight = 0;
   private int mPreRealLeft = 0;
   private int mPreRealTop = 0;
-  private WXGesture wxGesture;
+  private int mStickyOffset = 0;
+  private WXGesture mGesture;
   private IFComponentHolder mHolder;
   private boolean isUsing = false;
   private List<OnClickListener> mHostClickListeners;
@@ -224,6 +225,7 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
   private Set<String> mAppendEvents = new HashSet<>();
   private WXAnimationModule.AnimationHolder mAnimationHolder;
   private PesudoStatus mPesudoStatus = new PesudoStatus();
+  private boolean mIsDestoryed = false;
 
   //Holding the animation bean when component is uninitialized
   public void postAnimation(WXAnimationModule.AnimationHolder holder) {
@@ -257,8 +259,9 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
       int[] anchor = new int[2];
       mHost.getLocationOnScreen(location);
       mInstance.getContainerView().getLocationOnScreen(anchor);
+
       int left = location[0] - anchor[0];
-      int top = location[1] - anchor[1];
+      int top = (location[1] - mStickyOffset) - anchor[1];
       int width = (int) mDomObj.getLayoutWidth();
       int height = (int) mDomObj.getLayoutHeight();
       size.set(left, top, left + width, top + height);
@@ -659,6 +662,11 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
      */
   protected boolean setProperty(String key, Object param) {
     switch (key) {
+      case Constants.Name.PREVENT_MOVE_EVENT:
+        if(mGesture != null){
+          mGesture.setPreventMoveEvent(WXUtils.getBoolean(param,false));
+        }
+        return true;
       case Constants.Name.DISABLED:
         Boolean disabled = WXUtils.getBoolean(param,null);
         if (disabled != null) {
@@ -832,11 +840,13 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
     } else if (view != null &&
                needGestureDetector(type)) {
       if (view instanceof WXGestureObservable) {
-        if (wxGesture == null) {
-          wxGesture = new WXGesture(this, mContext);
+        if (mGesture == null) {
+          mGesture = new WXGesture(this, mContext);
+          boolean isPreventMove = WXUtils.getBoolean(getDomObject().getAttrs().get(Constants.Name.PREVENT_MOVE_EVENT),false);
+          mGesture.setPreventMoveEvent(isPreventMove);
         }
         mGestureType.add(type);
-        ((WXGestureObservable) view).registerGestureListener(wxGesture);
+        ((WXGestureObservable) view).registerGestureListener(mGesture);
       } else {
         WXLogUtils.e(view.getClass().getSimpleName() + " don't implement " +
                      "WXGestureObservable, so no gesture is supported.");
@@ -1037,7 +1047,7 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
     }
     mAppendEvents.clear();//only clean append events, not dom's events.
     mGestureType.clear();
-    wxGesture = null;
+    mGesture = null;
     if (getRealView() != null &&
         getRealView() instanceof WXGestureObservable) {
       ((WXGestureObservable) getRealView()).registerGestureListener(null);
@@ -1290,6 +1300,12 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
     if (mDomObj != null) {
       mDomObj = null;
     }
+
+    mIsDestoryed = true;
+  }
+
+  public boolean isDestoryed() {
+    return mIsDestoryed;
   }
 
   /**
@@ -1395,7 +1411,7 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
     boolean hasActivePesudo = mDomObj.getStyles().getPesudoStyles().containsKey(Constants.PESUDO.ACTIVE);
     View view;
     if(hasActivePesudo && (view = getRealView()) != null) {
-      boolean hasTouchConsumer = (mHostClickListeners != null && mHostClickListeners.size() > 0) || wxGesture != null;
+      boolean hasTouchConsumer = (mHostClickListeners != null && mHostClickListeners.size() > 0) || mGesture != null;
       view.setOnTouchListener(new TouchActivePseudoListener(this,!hasTouchConsumer));
     }
   }
@@ -1438,5 +1454,17 @@ public abstract class  WXComponent<T extends View> implements IWXObject, IWXActi
     message.obj = task;
     message.what = WXDomHandler.MsgType.WX_DOM_UPDATE_STYLE;
     WXSDKManager.getInstance().getWXDomManager().sendMessage(message);
+  }
+
+  public int getStickyOffset() {
+    return mStickyOffset;
+  }
+
+  /**
+   * Sets the offset for the sticky
+   * @param stickyOffset child[y]-parent[y]
+   */
+  public void setStickyOffset(int stickyOffset) {
+    mStickyOffset = stickyOffset;
   }
 }

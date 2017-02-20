@@ -520,8 +520,7 @@
 	  "panel-header-danger": {
 	    "backgroundColor": "rgb(217,83,79)",
 	    "color": "#ffffff"
-	  },
-	  "panel-body": {}
+	  }
 	}
 
 /***/ },
@@ -2186,6 +2185,9 @@
 	      if ((typeof window === 'undefined' ? 'undefined' : (0, _typeof3.default)(window)) !== 'object') {
 	        this.baseURL = this.baseURL + 'navigator-demo.js?test=1';
 	      }
+
+	      console.log('push hit:' + this.baseURL);
+
 	      var params = {
 	        'url': this.baseURL,
 	        'animated': 'true'

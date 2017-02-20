@@ -211,6 +211,7 @@ import android.text.TextUtils;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.annotation.Component;
 import com.taobao.weex.common.Constants;
+import com.taobao.weex.dom.ImmutableDomObject;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.ui.component.list.WXListComponent;
 import com.taobao.weex.ui.view.WXFrameLayout;
@@ -246,7 +247,12 @@ public class WXRefresh extends WXBaseRefresh implements WXSwipeLayout.WXOnRefres
 
   @Override
   public void onRefresh() {
-    if (getDomObject().getEvents().contains(Constants.Event.ONREFRESH)) {
+    if(isDestoryed()){
+      return;
+    }
+    
+    ImmutableDomObject dom;
+    if ((dom = getDomObject())!= null && dom.getEvents().contains(Constants.Event.ONREFRESH)) {
       fireEvent(Constants.Event.ONREFRESH);
     }
   }

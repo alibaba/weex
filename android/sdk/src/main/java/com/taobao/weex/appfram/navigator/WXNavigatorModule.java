@@ -162,13 +162,13 @@ public class WXNavigatorModule extends WXModule {
                     } catch (Throwable e) {
                         e.printStackTrace();
                         result.put(CALLBACK_RESULT, MSG_FAILED);
-                        result.put(CALLBACK_MESSAGE, "open page failed");
+                        result.put(CALLBACK_MESSAGE, "Open page failed.");
                         callback = failure;
                     }
                 }
             } else {
                 result.put(CALLBACK_RESULT, MSG_PARAM_ERR);
-                result.put(CALLBACK_MESSAGE, "param error");
+                result.put(CALLBACK_MESSAGE, "The URL parameter is empty.");
                 callback = failure;
             }
 
@@ -187,7 +187,7 @@ public class WXNavigatorModule extends WXModule {
             ((Activity) mWXSDKInstance.getContext()).finish();
         } else {
             result.put(CALLBACK_RESULT, MSG_FAILED);
-            result.put(CALLBACK_MESSAGE, "close page failed");
+            result.put(CALLBACK_MESSAGE, "Close page failed.");
             callback = failure;
         }
         if (callback != null) {
@@ -201,7 +201,9 @@ public class WXNavigatorModule extends WXModule {
         if (!TextUtils.isEmpty(param)) {
             if (WXSDKEngine.getActivityNavBarSetter() != null) {
                 if (WXSDKEngine.getActivityNavBarSetter().push(param)) {
-                    callback.invoke(MSG_SUCCESS);
+                    if (callback != null) {
+                        callback.invoke(MSG_SUCCESS);
+                    }
                     return;
                 }
             }
@@ -220,15 +222,21 @@ public class WXNavigatorModule extends WXModule {
                     intent.addCategory(WEEX);
                     intent.putExtra(INSTANCE_ID, mWXSDKInstance.getInstanceId());
                     mWXSDKInstance.getContext().startActivity(intent);
-                    callback.invoke(MSG_SUCCESS);
+                    if (callback != null) {
+                        callback.invoke(MSG_SUCCESS);
+                    }
                 }
             } catch (Exception e) {
                 WXLogUtils.eTag(TAG, e);
-                callback.invoke(MSG_FAILED);
+                if (callback != null) {
+                    callback.invoke(MSG_FAILED);
+                }
             }
         }
 
-        callback.invoke(MSG_FAILED);
+        if (callback != null) {
+            callback.invoke(MSG_FAILED);
+        }
     }
 
     @JSMethod(uiThread = true)
@@ -236,13 +244,17 @@ public class WXNavigatorModule extends WXModule {
 
         if (WXSDKEngine.getActivityNavBarSetter() != null) {
             if (WXSDKEngine.getActivityNavBarSetter().pop(param)) {
-                callback.invoke(MSG_SUCCESS);
+                if (callback != null) {
+                    callback.invoke(MSG_SUCCESS);
+                }
                 return;
             }
         }
 
         if (mWXSDKInstance.getContext() instanceof Activity) {
-            callback.invoke(MSG_SUCCESS);
+            if (callback != null) {
+                callback.invoke(MSG_SUCCESS);
+            }
             ((Activity) mWXSDKInstance.getContext()).finish();
         }
     }
@@ -252,25 +264,32 @@ public class WXNavigatorModule extends WXModule {
         if (!TextUtils.isEmpty(param)) {
             if (WXSDKEngine.getActivityNavBarSetter() != null) {
                 if (WXSDKEngine.getActivityNavBarSetter().setNavBarRightItem(param)) {
-                    callback.invoke(MSG_SUCCESS);
+                    if (callback != null) {
+                        callback.invoke(MSG_SUCCESS);
+                    }
                     return;
                 }
             }
         }
 
-        callback.invoke(MSG_FAILED);
+        if (callback != null) {
+            callback.invoke(MSG_FAILED);
+        }
     }
 
     @JSMethod(uiThread = true)
     public void clearNavBarRightItem(String param, JSCallback callback) {
         if (WXSDKEngine.getActivityNavBarSetter() != null) {
             if (WXSDKEngine.getActivityNavBarSetter().clearNavBarRightItem(param)) {
-                callback.invoke(MSG_SUCCESS);
+                if (callback != null) {
+                    callback.invoke(MSG_SUCCESS);
+                }
                 return;
             }
         }
-
-        callback.invoke(MSG_FAILED);
+        if (callback != null) {
+            callback.invoke(MSG_FAILED);
+        }
     }
 
     @JSMethod(uiThread = true)
@@ -278,13 +297,17 @@ public class WXNavigatorModule extends WXModule {
         if (!TextUtils.isEmpty(param)) {
             if (WXSDKEngine.getActivityNavBarSetter() != null) {
                 if (WXSDKEngine.getActivityNavBarSetter().setNavBarLeftItem(param)) {
-                    callback.invoke(MSG_SUCCESS);
+                    if (callback != null) {
+                        callback.invoke(MSG_SUCCESS);
+                    }
                     return;
                 }
             }
         }
 
-        callback.invoke(MSG_FAILED);
+        if (callback != null) {
+            callback.invoke(MSG_FAILED);
+        }
 
     }
 
@@ -292,12 +315,16 @@ public class WXNavigatorModule extends WXModule {
     public void clearNavBarLeftItem(String param, JSCallback callback) {
         if (WXSDKEngine.getActivityNavBarSetter() != null) {
             if (WXSDKEngine.getActivityNavBarSetter().clearNavBarLeftItem(param)) {
-                callback.invoke(MSG_SUCCESS);
+                if (callback != null) {
+                    callback.invoke(MSG_SUCCESS);
+                }
                 return;
             }
         }
 
-        callback.invoke(MSG_FAILED);
+        if (callback != null) {
+            callback.invoke(MSG_FAILED);
+        }
     }
 
     @JSMethod(uiThread = true)
@@ -305,25 +332,33 @@ public class WXNavigatorModule extends WXModule {
         if (!TextUtils.isEmpty(param)) {
             if (WXSDKEngine.getActivityNavBarSetter() != null) {
                 if (WXSDKEngine.getActivityNavBarSetter().setNavBarMoreItem(param)) {
-                    callback.invoke(MSG_SUCCESS);
+                    if (callback != null) {
+                        callback.invoke(MSG_SUCCESS);
+                    }
                     return;
                 }
             }
         }
 
-        callback.invoke(MSG_FAILED);
+        if (callback != null) {
+            callback.invoke(MSG_FAILED);
+        }
     }
 
     @JSMethod(uiThread = true)
     public void clearNavBarMoreItem(String param, JSCallback callback) {
         if (WXSDKEngine.getActivityNavBarSetter() != null) {
             if (WXSDKEngine.getActivityNavBarSetter().clearNavBarMoreItem(param)) {
-                callback.invoke(MSG_SUCCESS);
+                if (callback != null) {
+                    callback.invoke(MSG_SUCCESS);
+                }
                 return;
             }
         }
 
-        callback.invoke(MSG_FAILED);
+        if (callback != null) {
+            callback.invoke(MSG_FAILED);
+        }
     }
 
     @JSMethod(uiThread = true)
@@ -331,13 +366,16 @@ public class WXNavigatorModule extends WXModule {
         if (!TextUtils.isEmpty(param)) {
             if (WXSDKEngine.getActivityNavBarSetter() != null) {
                 if (WXSDKEngine.getActivityNavBarSetter().setNavBarTitle(param)) {
-                    callback.invoke(MSG_SUCCESS);
+                    if (callback != null) {
+                        callback.invoke(MSG_SUCCESS);
+                    }
                     return;
                 }
             }
         }
-
-        callback.invoke(MSG_FAILED);
+        if (callback != null) {
+            callback.invoke(MSG_FAILED);
+        }
     }
 
     @JSMethod

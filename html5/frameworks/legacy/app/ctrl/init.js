@@ -88,14 +88,12 @@ export function init (app, code, data, services) {
           args[0](...args.slice(2))
         }
         timer.setTimeout(handler, args[1])
-        return app.uid.toString()
       },
       setInterval: (...args) => {
         const handler = function () {
           args[0](...args.slice(2))
         }
         timer.setInterval(handler, args[1])
-        return app.uid.toString()
       },
       clearTimeout: (n) => {
         timer.clearTimeout(n)

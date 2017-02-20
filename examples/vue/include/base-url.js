@@ -19,7 +19,7 @@ exports.getBaseURL = function (vm) {
     }
     nativeBase = 'http://' + host + '/' + vm.dir + '/build/';
   }
-  var h5Base = './index.html?page=./' + vm.dir + '/build/';
+  var h5Base = './vue.html?page=./' + vm.dir + '/build/';
   // in Native
   var base = nativeBase;
   if (typeof window === 'object') {

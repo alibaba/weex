@@ -6,7 +6,6 @@ chai.use(sinonChai)
 
 import App from '../../../../frameworks/legacy/app'
 import { Element, Document } from '../../../../runtime/vdom'
-import CallbackManager from '../../../../runtime/callback-manager'
 
 describe('App Instance', () => {
   const oriDocumentHandler = Document.handler
@@ -16,7 +15,7 @@ describe('App Instance', () => {
   beforeEach(() => {
     Document.handler = sendTasksSpy
     const id = Date.now() + ''
-    app = new App(id, {}, new CallbackManager(id))
+    app = new App(id, {})
   })
 
   afterEach(() => {
@@ -71,6 +70,8 @@ describe('App Instance', () => {
     })
 
     it('with function arg', (done) => {
+      const callbackId = '1'
+
       const tasks = [{
         module: 'dom',
         method: 'createBody',
@@ -78,8 +79,11 @@ describe('App Instance', () => {
       }]
 
       app.callTasks(tasks)
-      expect(sendTasksSpy.lastCall.args[1]).to.deep.equal(tasks)
-      expect(sendTasksSpy.lastCall.args[1][0].args[0]).to.be.a('string')
+      expect(sendTasksSpy.lastCall.args[1]).to.deep.equal([{
+        module: 'dom',
+        method: 'createBody',
+        args: [callbackId]
+      }])
       done()
     })
 
@@ -94,12 +98,17 @@ describe('App Instance', () => {
       }]
 
       app.callTasks(tasks)
-      expect(sendTasksSpy.lastCall.args[1]).to.deep.equal(tasks)
-      expect(sendTasksSpy.lastCall.args[1][0].args[0]).to.be.equal('1')
+      expect(sendTasksSpy.lastCall.args[1]).to.deep.equal([{
+        module: 'dom',
+        method: 'createBody',
+        args: [node.ref]
+      }])
       done()
     })
 
     it('with callback after close', (done) => {
+      const callbackId = '1'
+
       const tasks = [{
         module: 'dom',
         method: 'createBody',
@@ -109,8 +118,11 @@ describe('App Instance', () => {
       app.doc.close()
 
       app.callTasks(tasks)
-      expect(sendTasksSpy.lastCall.args[1]).to.deep.equal(tasks)
-      expect(sendTasksSpy.lastCall.args[1][0].args[0]).to.be.a('string')
+      expect(sendTasksSpy.lastCall.args[1]).to.deep.equal([{
+        module: 'dom',
+        method: 'createBody',
+        args: [callbackId]
+      }])
       done()
     })
   })

@@ -18,7 +18,8 @@
     "embed",
     "spinner",
     "web",
-    "neighbor"
+    "neighbor",
+    "richtext"
   ],
   "apis": [
     "animation",

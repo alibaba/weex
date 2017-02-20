@@ -45,10 +45,10 @@
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(222)
-	var __weex_template__ = __webpack_require__(226)
-	var __weex_style__ = __webpack_require__(227)
-	var __weex_script__ = __webpack_require__(228)
+	__webpack_require__(232)
+	var __weex_template__ = __webpack_require__(236)
+	var __weex_style__ = __webpack_require__(237)
+	var __weex_script__ = __webpack_require__(238)
 
 	__weex_define__('@weex-component/f7fd132bdb4ce0ff6745c3887b3163e2', [], function(__weex_require__, __weex_exports__, __weex_module__) {
 
@@ -93,12 +93,12 @@
 
 /***/ },
 
-/***/ 222:
+/***/ 232:
 /***/ function(module, exports, __webpack_require__) {
 
-	var __weex_template__ = __webpack_require__(223)
-	var __weex_style__ = __webpack_require__(224)
-	var __weex_script__ = __webpack_require__(225)
+	var __weex_template__ = __webpack_require__(233)
+	var __weex_style__ = __webpack_require__(234)
+	var __weex_script__ = __webpack_require__(235)
 
 	__weex_define__('@weex-component/we-dropdown', [], function(__weex_require__, __weex_exports__, __weex_module__) {
 
@@ -116,7 +116,7 @@
 
 /***/ },
 
-/***/ 223:
+/***/ 233:
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -222,7 +222,7 @@
 
 /***/ },
 
-/***/ 224:
+/***/ 234:
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -306,7 +306,7 @@
 
 /***/ },
 
-/***/ 225:
+/***/ 235:
 /***/ function(module, exports) {
 
 	module.exports = function(module, exports, __weex_require__){'use strict';
@@ -404,7 +404,7 @@
 
 /***/ },
 
-/***/ 226:
+/***/ 236:
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -502,7 +502,7 @@
 
 /***/ },
 
-/***/ 227:
+/***/ 237:
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -575,7 +575,7 @@
 
 /***/ },
 
-/***/ 228:
+/***/ 238:
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function(module, exports, __weex_require__){'use strict';
@@ -586,7 +586,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(222);
+	__webpack_require__(232);
 
 	var initData = '[{\"addTime\":\"2016-07-14\",\"questionStatus\":\"2\",\"questionStatusValue\":\"Closed\",\"title\":\"This is a demo\",\"vid\":\"AW5PMSC\"},{\"addTime\":\"2016-07-14\",\"questionStatus\":\"1\",\"questionStatusValue\":\"Waiting\",\"title\":\"This is a demo\",\"vid\":\"AW5PMSM\"},{\"addTime\":\"2016-07-14\",\"questionStatus\":\"2\",\"questionStatusValue\":\"Confirmed\",\"title\":\"This is a demo\",\"vid\":\"AW5PMSA\"}]';
 

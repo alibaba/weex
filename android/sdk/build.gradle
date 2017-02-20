@@ -112,6 +112,7 @@ android {
     }
     testOptions {
         unitTests.all {
+            maxHeapSize = "1024m"
             jvmArgs += ['-XX:-UseSplitVerifier', '-noverify','-Xverify:none']/* fix VerifyError  */
         }
     }

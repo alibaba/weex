@@ -1,0 +1,56 @@
+<div id="sidebar" class="<%= page_type === 'index' ? 'index-sidebar' : '' %>">
+  <div class="sidebar-menu">
+    <% if (page_type =='guide' || page_type === 'references') { %>
+      <%- partial('_partial/search-form', {id_name: 'search-input-sidebar'}) %>
+      <%- partial('_partial/post/summary', {post: page, index: false, type: page_type}) %>
+    <% } else { %>
+      <ul class="main-nav">
+        <li>
+          <%- partial('_partial/search-form', {id_name: 'search-input-sidebar'}) %>
+        </li>
+        <li>
+          <a class="" href="<%- url_for_lang('guide') %>">
+            <%= _p('menu.guide') %>
+          </a>
+        </li>
+        <li>
+          <a class="" href="<%= url_for_lang('references') %>">
+            <%= _p('menu.references') %>
+          </a>
+        </li>
+        <li>
+          <a href="<%= url_for_lang('faq') %>">
+            <%= _p('menu.faq') %>
+          </a>
+        </li>
+        <li>
+            <p><%= _p('menu.resources') %></p>
+            <ul class="subnav">
+              <li>
+                <a href="<%= url_for_lang('playground.html') %>">Playground</a>
+              </li>
+              <li>
+                <a href="https://www.npmjs.com/package/weex-devtool" target="_blank">Devtool</a>
+              </li>
+              <li>
+                <a href="https://www.npmjs.com/package/weexpack" target="_blank">Weexpack</a>
+              </li>
+              <li>
+                <a href="http://dotwe.org" target="_blank">Snippets</a>
+              </li>
+              </li>
+              <li>
+                <a href="https://market.weex-project.io/" target="_blank">Market</a>
+              </li>
+            </ul>
+        </li>
+        <li>
+          <a href="https://github.com/alibaba/weex" target="_blank">
+            <%= _p('menu.github') %>
+          </a>
+        </li>
+      </ul>
+    <% } %>
+    <a class="btn-close-sidebar iconfont  icon-close"></a>
+  </div>
+</div>

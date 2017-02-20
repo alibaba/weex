@@ -1,5 +1,5 @@
 <!--
-  * `var module = require('@weex-module/module')` to import a native module
+  * `var module = weex.requireModule('module')` to import a native module
   * `module.method(...)` to call a native API
 -->
 
@@ -14,7 +14,7 @@
 </style>
 
 <script>
-  var modal = require('@weex-module/modal')
+  var modal = weex.requireModule('modal')
   module.exports = {
     methods: {
       test: function () {

@@ -72,13 +72,9 @@ function createInstance (id, code, config, data) {
     config.env = JSON.parse(JSON.stringify(global.WXEnvironment || {}))
     console.debug(`[JS Framework] create an ${info.framework}@${config.bundleVersion} instance from ${config.bundleVersion}`)
 
-    // Init callback manager
-    const callbacks = new runtimeConfig.CallbackManager(id)
-
     const env = {
       info,
       config,
-      callbacks,
       created: Date.now(),
       framework: info.framework
     }

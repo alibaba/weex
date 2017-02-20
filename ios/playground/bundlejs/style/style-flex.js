@@ -44,10 +44,10 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(286)
-	var __weex_template__ = __webpack_require__(294)
-	var __weex_style__ = __webpack_require__(295)
-	var __weex_script__ = __webpack_require__(296)
+	__webpack_require__(299)
+	var __weex_template__ = __webpack_require__(307)
+	var __weex_style__ = __webpack_require__(308)
+	var __weex_script__ = __webpack_require__(309)
 
 	__weex_define__('@weex-component/601bcbb157cb7b89fd0d4cc63178b528', [], function(__weex_require__, __weex_exports__, __weex_module__) {
 
@@ -524,8 +524,7 @@
 	  "panel-header-danger": {
 	    "backgroundColor": "rgb(217,83,79)",
 	    "color": "#ffffff"
-	  },
-	  "panel-body": {}
+	  }
 	}
 
 /***/ },
@@ -2229,12 +2228,25 @@
 /* 283 */,
 /* 284 */,
 /* 285 */,
-/* 286 */
+/* 286 */,
+/* 287 */,
+/* 288 */,
+/* 289 */,
+/* 290 */,
+/* 291 */,
+/* 292 */,
+/* 293 */,
+/* 294 */,
+/* 295 */,
+/* 296 */,
+/* 297 */,
+/* 298 */,
+/* 299 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __weex_template__ = __webpack_require__(287)
-	var __weex_style__ = __webpack_require__(288)
-	var __weex_script__ = __webpack_require__(289)
+	var __weex_template__ = __webpack_require__(300)
+	var __weex_style__ = __webpack_require__(301)
+	var __weex_script__ = __webpack_require__(302)
 
 	__weex_define__('@weex-component/style-item', [], function(__weex_require__, __weex_exports__, __weex_module__) {
 
@@ -2251,7 +2263,7 @@
 
 
 /***/ },
-/* 287 */
+/* 300 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -2269,7 +2281,7 @@
 	}
 
 /***/ },
-/* 288 */
+/* 301 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -2288,7 +2300,7 @@
 	}
 
 /***/ },
-/* 289 */
+/* 302 */
 /***/ function(module, exports) {
 
 	module.exports = function(module, exports, __weex_require__){'use strict';
@@ -2307,11 +2319,11 @@
 
 
 /***/ },
-/* 290 */,
-/* 291 */,
-/* 292 */,
-/* 293 */,
-/* 294 */
+/* 303 */,
+/* 304 */,
+/* 305 */,
+/* 306 */,
+/* 307 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -2937,7 +2949,7 @@
 	}
 
 /***/ },
-/* 295 */
+/* 308 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -2954,7 +2966,7 @@
 	}
 
 /***/ },
-/* 296 */
+/* 309 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function(module, exports, __weex_require__){'use strict';

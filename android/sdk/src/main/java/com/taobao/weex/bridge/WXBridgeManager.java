@@ -219,6 +219,7 @@ import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXRenderErrorCode;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.adapter.IWXJSExceptionAdapter;
 import com.taobao.weex.adapter.IWXUserTrackAdapter;
 import com.taobao.weex.common.IWXBridge;
 import com.taobao.weex.common.IWXDebugProxy;
@@ -226,6 +227,7 @@ import com.taobao.weex.common.WXConfig;
 import com.taobao.weex.common.WXErrorCode;
 import com.taobao.weex.common.WXException;
 import com.taobao.weex.common.WXJSBridgeMsgType;
+import com.taobao.weex.common.WXJSExceptionInfo;
 import com.taobao.weex.common.WXPerformance;
 import com.taobao.weex.common.WXRefreshData;
 import com.taobao.weex.common.WXRuntimeException;
@@ -1304,11 +1306,19 @@ public class WXBridgeManager implements Callback,BactchExecutor {
     }
     WXSDKInstance instance;
     if (instanceId != null && (instance = WXSDKManager.getInstance().getSDKInstance(instanceId)) != null) {
-      // TODO add errCode
-      instance.onJSException(null, function, exception);
+      instance.onJSException(WXErrorCode.WX_ERR_JS_EXECUTE.getErrorCode(), function, exception);
 
-      String err="function:"+function+"#exception:"+exception;
-      commitJSBridgeAlarmMonitor(instanceId,WXErrorCode.WX_ERR_JS_EXECUTE,err);
+      String err = "function:" + function + "#exception:" + exception;
+      commitJSBridgeAlarmMonitor(instanceId, WXErrorCode.WX_ERR_JS_EXECUTE, err);
+
+      IWXJSExceptionAdapter adapter = WXSDKManager.getInstance().getIWXJSExceptionAdapter();
+      if (adapter != null) {
+        WXJSExceptionInfo jsException = new WXJSExceptionInfo(instanceId, instance.getBundleUrl(), WXErrorCode.WX_ERR_JS_EXECUTE.getErrorCode(), function, exception, null);
+        adapter.onJSException(jsException);
+        if (WXEnvironment.isApkDebugable()) {
+          WXLogUtils.d(jsException.toString());
+        }
+      }
     }
   }
 

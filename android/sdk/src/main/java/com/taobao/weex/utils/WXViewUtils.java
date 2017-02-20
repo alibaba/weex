@@ -538,8 +538,12 @@ public class WXViewUtils {
     /* According to https://developer.android.com/guide/topics/graphics/hardware-accel.html#unsupported
       API 18 or higher supports clipPath to canvas based on hardware acceleration.
      */
-    if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2 ||
-         !canvas.isHardwareAccelerated()) &&
+    /**
+     * According to https://code.google.com/p/android/issues/detail?id=225556&sort=-id&colspec=ID
+     * clipPath doesn't work with rotation nor scale when API level is 24 or higher.
+     */
+    if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2 || !canvas.isHardwareAccelerated()) &&
+        Build.VERSION.SDK_INT <= Build.VERSION_CODES.M &&
         ((drawable = targetView.getBackground()) instanceof BorderDrawable)) {
       BorderDrawable borderDrawable = (BorderDrawable) drawable;
       if(borderDrawable.isRounded()) {

@@ -15,7 +15,7 @@ const proto = {
     this.textNode.style.wordWrap = 'break-word'
     this.textNode.style.display = '-webkit-box'
     this.textNode.style.webkitBoxOrient = 'vertical'
-    this.style.lines.call(this, this.data.style.lines)
+    this.style.lines.call(this, (this.data.style || {}).lines)
     node.appendChild(this.textNode)
     return node
   },

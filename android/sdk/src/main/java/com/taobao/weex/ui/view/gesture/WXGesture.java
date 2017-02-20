@@ -218,6 +218,8 @@ import android.view.ViewParent;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.taobao.weex.common.Constants;
+import com.taobao.weex.ui.component.Scrollable;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.view.gesture.WXGestureType.GestureInfo;
 import com.taobao.weex.ui.view.gesture.WXGestureType.HighLevelGesture;
@@ -252,6 +254,8 @@ public class WXGesture extends GestureDetector.SimpleOnGestureListener implement
   private long swipeDownTime = -1;
   private long panDownTime = -1;
   private WXGestureType mPendingPan = null;//event type to notify when action_up or action_cancel
+  private int mParentOrientation =-1;
+  private boolean mIsPreventMoveEvent = false;
 
   public WXGesture(WXComponent wxComponent, Context context) {
     this.component = wxComponent;
@@ -261,6 +265,27 @@ public class WXGesture extends GestureDetector.SimpleOnGestureListener implement
     locEventOffset = new PointF();
     locLeftTop = new PointF();
     mGestureDetector = new GestureDetector(context, this, new GestureHandler());
+    Scrollable parentScrollable = wxComponent.getParentScroller();
+    if(parentScrollable != null) {
+      mParentOrientation = parentScrollable.getOrientation();
+    }
+  }
+
+  private boolean isParentScrollable() {
+    if(component == null) {
+      return true;
+    }
+    Scrollable parentScrollable = component.getParentScroller();
+    return parentScrollable == null || parentScrollable.isScrollable();
+  }
+
+  private boolean hasSameOrientationWithParent(){
+    return (mParentOrientation == Constants.Orientation.HORIZONTAL && component.containsGesture(HighLevelGesture.HORIZONTALPAN))
+        || (mParentOrientation == Constants.Orientation.VERTICAL && component.containsGesture(HighLevelGesture.VERTICALPAN));
+  }
+
+  public void setPreventMoveEvent(boolean preventMoveEvent) {
+    mIsPreventMoveEvent = preventMoveEvent;
   }
 
   @Override
@@ -270,6 +295,16 @@ public class WXGesture extends GestureDetector.SimpleOnGestureListener implement
       switch (event.getActionMasked()) {
         case MotionEvent.ACTION_POINTER_DOWN:
         case MotionEvent.ACTION_DOWN:
+          /**
+           * If component has same scroll orientation with it's parent and it's parent not scrollable
+           * , we should disallow parent in DOWN.
+           */
+          if(hasSameOrientationWithParent() && !isParentScrollable()){
+            ViewParent p;
+            if ((p = component.getRealView().getParent()) != null) {
+              p.requestDisallowInterceptTouchEvent(true);
+            }
+          }
           result |= handleMotionEvent(LowLevelGesture.ACTION_DOWN, event);
           break;
         case MotionEvent.ACTION_MOVE:
@@ -322,9 +357,13 @@ public class WXGesture extends GestureDetector.SimpleOnGestureListener implement
     String state = null;
     if (mPendingPan == HighLevelGesture.HORIZONTALPAN || mPendingPan == HighLevelGesture.VERTICALPAN) {
       state = getPanEventAction(motionEvent);
+
     }
 
     if (component.containsGesture(mPendingPan)) {
+      if(mIsPreventMoveEvent && MOVE.equals(state)){
+        return true;
+      }
       List<Map<String, Object>> list = createMultipleFireEventParam(motionEvent, state);
       for (Map<String, Object> map : list) {
         component.fireEvent(mPendingPan.toString(), map);

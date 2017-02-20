@@ -61,7 +61,8 @@ global.WXEnvironment = {
   osName: lib.env.browser ? lib.env.browser.name : null,
   osVersion: lib.env.browser ? lib.env.browser.version.val : null,
   deviceWidth: window.innerWidth,
-  deviceHeight: window.innerHeight
+  deviceHeight: window.innerHeight,
+  devicePixelRatio: window.devicePixelRatio ? window.devicePixelRatio : (window.screen.width >= 1440 ? 3.5 : (window.screen.width >= 1080 ? 3 : (window.screen.width >= 800 ? 2.5 : (window.screen.width >= 640 ? 2 : (window.screen.width >= 480 ? 1.5 : 1)))))
 }
 
 const _weexInstance = {}

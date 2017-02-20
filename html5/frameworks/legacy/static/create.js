@@ -11,10 +11,10 @@ import { resetTarget } from '../core/dep'
  * @param  {object} options
  *         option `HAS_LOG` enable print log
  * @param  {object} data
- * @param  {object} info { created, ... services, callbacks }
+ * @param  {object} info { created, ... services }
  */
 export function createInstance (id, code, options, data, info) {
-  const { services, callbacks } = info || {}
+  const { services } = info || {}
   resetTarget()
   let instance = instanceMap[id]
   /* istanbul ignore else */
@@ -22,7 +22,7 @@ export function createInstance (id, code, options, data, info) {
   let result
   /* istanbul ignore else */
   if (!instance) {
-    instance = new App(id, options, callbacks)
+    instance = new App(id, options)
     instanceMap[id] = instance
     result = initApp(instance, code, data, services)
   }

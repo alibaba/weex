@@ -265,11 +265,6 @@ public class WXSliderNeighbor extends WXSlider {
     @Override
     public void bindData(WXComponent component) {
         super.bindData(component);
-        if(mAdapter.getRealCount() > 3){
-            mViewPager.setOffscreenPageLimit(2);
-        }else if(mAdapter.getRealCount() == 3){
-            mViewPager.setOffscreenPageLimit(1);
-        }
     }
 
     @Override
@@ -294,44 +289,9 @@ public class WXSliderNeighbor extends WXSlider {
         mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
         registerActivityStateListener();
 
+        mViewPager.setPageTransformer(false, createTransformer());
+
         return view;
-    }
-
-    /**
-     * we do it in a hack way.
-     * travel the dom tree, to get how many children does this slider-neighbor have.
-     *
-     * @return
-     */
-    private int getNeighborChildrenCount() {
-
-        try {
-            WXDomManager domManager = WXSDKManager.getInstance().getWXDomManager();
-            Field domRegistriesField = domManager.getClass().getDeclaredField("mDomRegistries");
-            domRegistriesField.setAccessible(true);
-            ConcurrentHashMap<String, Object> domRegistriesMap = (ConcurrentHashMap<String, Object>) domRegistriesField.get(domManager);
-            Object domStatement = domRegistriesMap.get(getInstanceId()); // WXDomStatement
-            Field mRegistryField = domStatement.getClass().getDeclaredField("mRegistry");
-            mRegistryField.setAccessible(true);
-            ConcurrentHashMap<String, WXDomObject> mRegistryMap = (ConcurrentHashMap<String, WXDomObject>) mRegistryField.get(domStatement);
-            for(WXDomObject domObject : mRegistryMap.values()) {
-                if(domObject.getType().equalsIgnoreCase(WXBasicComponentType.SLIDER_NEIGHBOR)) {
-                    int sum = 0;
-                    for (int i = 0,count = domObject.getChildCount(); i < count; i++) {
-                        if(domObject.getChild(i) instanceof WXIndicator.IndicatorDomNode) {
-                            continue;
-                        }
-                        sum++;
-                    }
-                    return sum;
-                }
-            }
-        } catch (Exception e) {
-            // ignore
-        }
-
-        return -1;
-
     }
 
     ZoomTransformer createTransformer() {
@@ -342,7 +302,7 @@ public class WXSliderNeighbor extends WXSlider {
     }
 
     @Override
-    protected void addSubView(View view, int index) {
+    protected void addSubView(View view, final int index) {
         if (view == null || mAdapter == null) {
             return;
         }
@@ -357,18 +317,29 @@ public class WXSliderNeighbor extends WXSlider {
         view.setLayoutParams(params);
         wrapper.addView(view);
         super.addSubView(wrapper,index);
+
         updateAdapterScaleAndAlpha(mNeighborAlpha, mNeighborScale); // we need to set neighbor view status when added.
 
-        view.postDelayed(WXThread.secure(new Runnable() {
+        mViewPager.postDelayed(WXThread.secure(new Runnable() {
             @Override
             public void run() {
-                int childCountByDomTree = getNeighborChildrenCount();
-                if(mAdapter.getRealCount() == childCountByDomTree || childCountByDomTree == -1) { // -1 mean failed at get child count by travel the dom tree.
-                    mViewPager.setPageTransformer(false, createTransformer());
+                try {
+                    if(mViewPager.getRealCount() > 0 && index > 2) { // index > 2 mean more than two times, then need a fake drag
+                        // prevent a bug of init status. ZoomTransformer no called as excepted.
+                        mViewPager.beginFakeDrag();
+                        mViewPager.fakeDragBy(1); // must be 1
+                    }
+                }catch (IndexOutOfBoundsException e){
+                    // do nothing
+                } finally {
+                    try {
+                        mViewPager.endFakeDrag();
+                    }catch (Exception e) {
+                        // do nothing
+                    }
                 }
             }
-        }), 100); // we need to set the PageTransformer when all children has been rendered.
-
+        }), 50);
     }
 
     private void updateScaleAndAlpha(View view, float alpha, float scale) {
@@ -542,14 +513,17 @@ public class WXSliderNeighbor extends WXSlider {
         public void transformPage(View page, float position) {
             int pagePosition = mAdapter.getPagePosition(page);
             int curPosition = mViewPager.getCurrentItem();
+
+            int realCount = mAdapter.getRealCount();
+
             boolean ignore = false;
-            if(curPosition != 0 && curPosition != mAdapter.getRealCount() - 1 && Math.abs(pagePosition - curPosition) > 1)  {
+            if(curPosition != 0 && curPosition != realCount - 1 && Math.abs(pagePosition - curPosition) > 1)  {
                 ignore = true;
             }
-            if(curPosition == 0 && pagePosition < mAdapter.getRealCount() - 1 && pagePosition > 1) {
+            if(curPosition == 0 && pagePosition < realCount - 1 && pagePosition > 1) {
                 ignore = true;
             }
-            if(curPosition == mAdapter.getRealCount() - 1 && pagePosition < mAdapter.getRealCount() - 2 && pagePosition > 0) {
+            if(curPosition == realCount - 1 && pagePosition < realCount - 2 && pagePosition > 0) {
                 ignore = true;
             }
             // just transfer the neighbor(left & right) page.
@@ -563,11 +537,11 @@ public class WXSliderNeighbor extends WXSlider {
             }
             float alpha, scale;
 
-            if(position <= (-mAdapter.getRealCount() + 1)) {
-                position = position + mAdapter.getRealCount();
+            if(position <= (-realCount + 1)) {
+                position = position + realCount;
             }
-            if(position >= mAdapter.getRealCount() - 1) {
-                position = position - mAdapter.getRealCount();
+            if(position >= realCount - 1) {
+                position = position - realCount;
             }
 
             if (position >= -1 && position <= 1) {
@@ -585,17 +559,18 @@ public class WXSliderNeighbor extends WXSlider {
                     realView.setTranslationX(0);
                     updateAdapterScaleAndAlpha(mNeighborAlpha, mNeighborScale);
                 }else{
-                    if(mAdapter.getRealCount() == 2 && Math.abs(position) == 1) {
+                    if(realCount == 2 && Math.abs(position) == 1) {
                         return;
                     }
                     translation = (-position*translation);
                     realView.setTranslationX(translation);
                     page.setTranslationX(translation);
                 }
-                realView.setAlpha(alpha);
                 realView.setScaleX(scale);
                 realView.setScaleY(scale);
+                realView.setAlpha(alpha);
             }
+
         }
     }
 

@@ -65,6 +65,7 @@ WX_EXPORT_METHOD(@selector(transition:args:callback:))
             transform = [wxTransform getTransform:styles[property] withView:view withOrigin:transformOrigin isTransformRotate:NO];
             rotateAngle = [wxTransform getRotateAngle];
             CGFloat originAngle = [self getRotateAngleFromTransForm:layer.transform];
+            originAngle = originAngle < 0 ? (originAngle + 2 * M_PI) : originAngle;
             if (fabs(originAngle - rotateAngle) > M_PI + 0.0001) {
                 /**
                  Rotate >= 180 degree not working on UIView block animation, have not found any more elegant solution than using CAAnimation
@@ -72,6 +73,7 @@ WX_EXPORT_METHOD(@selector(transition:args:callback:))
                  **/
                 isUsingCAAnimation = YES;
             }
+            
             isAnimateTransform = YES;
         } else if ([property isEqualToString:@"backgroundColor"]) {
             backgroundColor = [WXConvert CGColor:styles[property]];
@@ -97,8 +99,7 @@ WX_EXPORT_METHOD(@selector(transition:args:callback:))
     [CATransaction setAnimationTimingFunction:[WXConvert CAMediaTimingFunction:args[@"timingFunction"]]];
     [CATransaction setCompletionBlock:^{
         if (isUsingCAAnimation) {
-            CGAffineTransform originTransform = CATransform3DGetAffineTransform(layer.transform);
-            layer.transform = CATransform3DMakeAffineTransform(CGAffineTransformRotate(originTransform, rotateAngle * M_PI / 180));
+            layer.transform = CATransform3DMakeAffineTransform(CGAffineTransformRotate(CGAffineTransformIdentity, rotateAngle));
         }
         if (callback) {
             callback(@"SUCCESS");
@@ -109,7 +110,10 @@ WX_EXPORT_METHOD(@selector(transition:args:callback:))
         CABasicAnimation* rotationAnimation;
         rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
         rotationAnimation.toValue = [NSNumber numberWithFloat: rotateAngle];
-        rotationAnimation.fromValue = @([self getRotateAngleFromTransForm:layer.transform]);
+        
+        CGFloat originAngle = [self getRotateAngleFromTransForm:layer.transform];
+        originAngle = originAngle < 0 ? (originAngle + 2 * M_PI) : originAngle;
+        rotationAnimation.fromValue = @(originAngle);
         rotationAnimation.duration = duration;
         rotationAnimation.cumulative = YES;
         rotationAnimation.fillMode = kCAFillModeForwards;
@@ -153,8 +157,7 @@ WX_EXPORT_METHOD(@selector(transition:args:callback:))
 {
     CGAffineTransform cgTransform = CATransform3DGetAffineTransform(transform);
     CGFloat radians = atan2f(cgTransform.b, cgTransform.a);
-    CGFloat degrees = radians * (180 / M_PI);
-    return degrees;
+    return radians;
 }
 
 @end

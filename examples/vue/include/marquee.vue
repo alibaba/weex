@@ -24,7 +24,7 @@
 </style>
 
 <script>
-  var animation = require('@weex-module/animation')
+  var animation = weex.requireModule('animation')
 
   module.exports = {
     props: {

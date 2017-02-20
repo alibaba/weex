@@ -208,6 +208,7 @@ import com.taobao.weex.adapter.IDrawableLoader;
 import com.taobao.weex.adapter.IWXDebugAdapter;
 import com.taobao.weex.adapter.IWXHttpAdapter;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
+import com.taobao.weex.adapter.IWXJSExceptionAdapter;
 import com.taobao.weex.adapter.IWXUserTrackAdapter;
 import com.taobao.weex.adapter.URIAdapter;
 import com.taobao.weex.appfram.storage.IWXStorageAdapter;
@@ -225,6 +226,7 @@ public class InitConfig {
   private IWXStorageAdapter storageAdapter;
   private URIAdapter mURIAdapter;
   private IWebSocketAdapterFactory webSocketAdapterFactory;
+  private IWXJSExceptionAdapter mJSExceptionAdapter;
   private String framework;
 
   public IWXHttpAdapter getHttpAdapter() {
@@ -262,6 +264,10 @@ public class InitConfig {
     return webSocketAdapterFactory;
   }
 
+  public IWXJSExceptionAdapter getJSExceptionAdapter() {
+    return mJSExceptionAdapter;
+  }
+
   private InitConfig() {
   }
 
@@ -273,6 +279,7 @@ public class InitConfig {
     IWXDebugAdapter debugAdapter;
     IWXStorageAdapter storageAdapter;
     URIAdapter mURIAdapter;
+    IWXJSExceptionAdapter mJSExceptionAdapter;
     String framework;
     IWebSocketAdapterFactory webSocketAdapterFactory;
     public Builder(){
@@ -314,6 +321,11 @@ public class InitConfig {
       return this;
     }
 
+    public Builder setJSExceptionAdapter(IWXJSExceptionAdapter JSExceptionAdapter) {
+      mJSExceptionAdapter = JSExceptionAdapter;
+      return this;
+    }
+
     public Builder setFramework(String framework){
       this.framework=framework;
       return this;
@@ -335,6 +347,7 @@ public class InitConfig {
       config.framework=this.framework;
       config.mURIAdapter = this.mURIAdapter;
       config.webSocketAdapterFactory = this.webSocketAdapterFactory;
+      config.mJSExceptionAdapter=this.mJSExceptionAdapter;
       return config;
     }
   }

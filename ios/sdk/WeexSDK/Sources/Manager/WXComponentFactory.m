@@ -215,6 +215,7 @@
         WXComponentConfig *config = [[WXComponentConfig alloc] initWithName:name class:clazz pros:nil];
         if(config){
             [_componentConfigs setValue:config forKey:name];
+            [config registerMethods];
         }
     }
     [_configLock unlock];

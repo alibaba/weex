@@ -45,9 +45,9 @@
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	var __weex_template__ = __webpack_require__(229)
-	var __weex_style__ = __webpack_require__(230)
-	var __weex_script__ = __webpack_require__(231)
+	var __weex_template__ = __webpack_require__(239)
+	var __weex_style__ = __webpack_require__(240)
+	var __weex_script__ = __webpack_require__(241)
 
 	__weex_define__('@weex-component/c0df89e239d226d3a0c6f418314cda04', [], function(__weex_require__, __weex_exports__, __weex_module__) {
 
@@ -66,7 +66,7 @@
 
 /***/ },
 
-/***/ 229:
+/***/ 239:
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -130,7 +130,7 @@
 
 /***/ },
 
-/***/ 230:
+/***/ 240:
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -155,7 +155,7 @@
 	  },
 	  "tile": {
 	    "margin": 2,
-	    "fontSize": 66,
+	    "fontSize": 56,
 	    "height": 80,
 	    "paddingTop": 0,
 	    "textAlign": "center"
@@ -164,7 +164,7 @@
 
 /***/ },
 
-/***/ 231:
+/***/ 241:
 /***/ function(module, exports) {
 
 	module.exports = function(module, exports, __weex_require__){"use strict";
@@ -177,8 +177,8 @@
 	    row: [],
 	    vector: [[-1, 0], [-1, -1], [0, -1], [1, -1], [1, 0], [1, 1], [0, 1], [-1, 1]],
 	    strings: {
-	      mine: "❎",
-	      flag: "✅",
+	      mine: "💣",
+	      flag: "🚩",
 	      win: "YOU WIN!",
 	      lose: "YOU LOSE~"
 	    },

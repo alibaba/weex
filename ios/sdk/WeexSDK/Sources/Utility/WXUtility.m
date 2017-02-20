@@ -55,14 +55,14 @@ void WXPerformBlockOnThread(void (^ _Nonnull block)(), NSThread *thread)
     [WXUtility performBlock:block onThread:thread];
 }
 
-void WXSwizzleInstanceMethod(Class class, SEL original, SEL replaced)
+void WXSwizzleInstanceMethod(Class className, SEL original, SEL replaced)
 {
-    Method originalMethod = class_getInstanceMethod(class, original);
-    Method newMethod = class_getInstanceMethod(class, replaced);
+    Method originalMethod = class_getInstanceMethod(className, original);
+    Method newMethod = class_getInstanceMethod(className, replaced);
     
-    BOOL didAddMethod = class_addMethod(class, original, method_getImplementation(newMethod), method_getTypeEncoding(newMethod));
+    BOOL didAddMethod = class_addMethod(className, original, method_getImplementation(newMethod), method_getTypeEncoding(newMethod));
     if (didAddMethod) {
-        class_replaceMethod(class, replaced, method_getImplementation(newMethod), method_getTypeEncoding(newMethod));
+        class_replaceMethod(className, replaced, method_getImplementation(newMethod), method_getTypeEncoding(newMethod));
     } else {
         method_exchangeImplementations(originalMethod, newMethod);
     }

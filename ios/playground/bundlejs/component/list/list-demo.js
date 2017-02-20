@@ -106,7 +106,8 @@
 	                "shopHeader"
 	              ],
 	              "style": {
-	                "flexDirection": "row"
+	                "flexDirection": "row",
+	                "overflow": "hidden"
 	              },
 	              "children": [
 	                {

@@ -1,0 +1,24 @@
+{
+  "name": "weex-vue-render",
+  "version": "0.2.0",
+  "description": "Weex built-in components for Vue 2.x.",
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:alibaba/weex.git"
+  },
+  "homepage": "http://alibaba.github.io/weex/",
+  "bugs": {
+    "url": "https://github.com/alibaba/weex/issues"
+  },
+  "keywords": [
+    "weex",
+    "vue",
+    "web",
+    "component"
+  ],
+  "peerDependencies": {
+    "vue": "^2.1.5"
+  }
+}

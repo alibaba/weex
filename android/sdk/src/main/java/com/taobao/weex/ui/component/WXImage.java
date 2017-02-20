@@ -398,13 +398,15 @@ public class WXImage extends WXComponent<ImageView> {
         }
       });
 
-      WXSDKInstance instance = getInstance();
-      if (getDomObject().getAttrs().containsKey(Constants.Name.PLACE_HOLDER)) {
-        String attr = (String) getDomObject().getAttrs().get(Constants.Name.PLACE_HOLDER);
-        if (TextUtils.isEmpty(attr)) {
-          imageStrategy.placeHolder = instance.rewriteUri(Uri.parse(attr), URIAdapter.IMAGE).toString();
+        String placeholder=null;
+        if(getDomObject().getAttrs().containsKey(Constants.Name.PLACEHOLDER)){
+            placeholder= (String) getDomObject().getAttrs().get(Constants.Name.PLACEHOLDER);
+        }else if(getDomObject().getAttrs().containsKey(Constants.Name.PLACE_HOLDER)){
+            placeholder=(String)getDomObject().getAttrs().get(Constants.Name.PLACE_HOLDER);
         }
-      }
+        if(placeholder!=null){
+            imageStrategy.placeHolder = getInstance().rewriteUri(Uri.parse(placeholder),URIAdapter.IMAGE).toString();
+        }
 
       IWXImgLoaderAdapter imgLoaderAdapter = getInstance().getImgLoaderAdapter();
       if (imgLoaderAdapter != null) {
