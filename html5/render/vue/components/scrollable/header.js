@@ -35,7 +35,9 @@ export default {
       this.$el.style.top = '0'
       try {
         this.$el.parentNode.removeChild(this.placeholder)
-      } catch (e) {}
+      }
+      catch (e) {
+      }
     },
 
     moveUp (offsetY) {

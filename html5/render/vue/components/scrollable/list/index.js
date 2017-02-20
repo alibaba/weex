@@ -1,6 +1,6 @@
 import { base, event, scrollable } from '../../../mixins'
 import { validateStyles } from '../../../validator'
-import { debounce, throttle, bind, extend } from '../../../utils'
+import { extend } from '../../../utils'
 import * as shared from '../shared'
 import listMixin from './listMixin'
 

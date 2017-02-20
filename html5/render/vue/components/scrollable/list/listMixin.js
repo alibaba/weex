@@ -90,10 +90,10 @@ export default {
 
     handleListScroll (event) {
       this.handleScroll(event)
-      let scrollTop = this.$el.scrollTop
-      let top = this.$el.offsetTop
+      const scrollTop = this.$el.scrollTop
+      const top = this.$el.offsetTop
 
-      let h = this.$children.filter(vm => vm.$refs.header)
+      const h = this.$children.filter(vm => vm.$refs.header)
       if (scrollTop < h[0].initTop) {
         return h[0].removeSticky()
       }
@@ -105,7 +105,8 @@ export default {
           if (scrollTop < h[i].initTop && scrollTop + h[i - 1].initHeight > h[i].initTop) {
             h[i - 1].moveUp(h[i].$refs.header.offsetTop - h[i - 1].initHeight)
             h[i].removeSticky()
-          } else if (scrollTop + h[i - 1].initHeight < h[i].initTop) {
+          }
+          else if (scrollTop + h[i - 1].initHeight < h[i].initTop) {
             h[i - 1].addSticky(top)
             h[i].removeSticky()
           }
