@@ -33,10 +33,14 @@ WX_EXPORT_METHOD(@selector(removeEventListener:))
 {
     WXThreadSafeMutableArray * array = nil;
     if (_eventCallback[event]) {
-        [_eventCallback[event] addObject:callback];
+        if (callback) {
+            [_eventCallback[event] addObject:callback];
+        }
     } else {
         array = [[WXThreadSafeMutableArray alloc] init];
-        [array addObject:callback];
+        if (callback) {
+            [array addObject:callback];
+        }
         _eventCallback[event] = array;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fireGlobalEvent:) name:event object:nil];
     }

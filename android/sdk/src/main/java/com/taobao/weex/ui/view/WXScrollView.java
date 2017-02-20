@@ -627,6 +627,10 @@ public class WXScrollView extends ScrollView implements Callback, IWXScroller,
     this.wxGesture = wxGesture;
   }
 
+  public Rect getContentFrame() {
+    return new Rect(0, 0, computeHorizontalScrollRange(), computeVerticalScrollRange());
+  }
+
   public interface WXScrollViewListener {
 
     void onScrollChanged(WXScrollView scrollView, int x, int y, int oldx, int oldy);

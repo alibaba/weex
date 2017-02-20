@@ -65,6 +65,7 @@
 @property (nonatomic) NSNumber *maxLength;
 @property (nonatomic) NSString * value;
 @property (nonatomic) BOOL autofocus;
+@property(nonatomic) UIReturnKeyType returnKeyType;
 @property (nonatomic) BOOL disabled;
 @property (nonatomic, copy) NSString *inputType;
 //style
@@ -80,6 +81,7 @@
 @property (nonatomic) BOOL focusEvent;
 @property (nonatomic) BOOL blurEvent;
 @property (nonatomic) BOOL changeEvent;
+@property (nonatomic) BOOL returnEvent;
 @property (nonatomic, strong) NSString *changeEventString;
 @property (nonatomic, assign) CGSize keyboardSize;
 
@@ -109,6 +111,7 @@ WX_EXPORT_METHOD(@selector(getSelectionRange:))
         _focusEvent = NO;
         _blurEvent = NO;
         _changeEvent = NO;
+        _returnEvent = NO;
         // handle attributes
         _autofocus = [attributes[@"autofocus"] boolValue];
         _disabled = [attributes[@"disabled"] boolValue];
@@ -120,6 +123,9 @@ WX_EXPORT_METHOD(@selector(getSelectionRange:))
         }
         if (attributes[@"maxlength"]) {
             _maxLength = [NSNumber numberWithUnsignedInteger:[attributes[@"maxlength"] integerValue]];
+        }
+        if (attributes[@"returnKeyType"]) {
+            _returnKeyType = [WXConvert UIReturnKeyType:attributes[@"returnKeyType"]];
         }
         
         // handle styles
@@ -141,7 +147,6 @@ WX_EXPORT_METHOD(@selector(getSelectionRange:))
         if (styles[@"textAlign"]) {
             _textAlignForStyle = [WXConvert NSTextAlignment:styles[@"textAlign"]];
         }
-        
         if (styles[@"placeholderColor"]) {
             _placeholderColor = [WXConvert UIColor:styles[@"placeholderColor"]];
         }else {
@@ -178,6 +183,7 @@ WX_EXPORT_METHOD(@selector(getSelectionRange:))
     [_inputView setTextColor:_colorForStyle];
     [_inputView setText:_value];
     [_inputView setEnabled:!_disabled];
+    [_inputView setReturnKeyType:_returnKeyType];
     [self updatePattern];
     
     UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(closeKeyboard)];
@@ -257,6 +263,9 @@ WX_EXPORT_METHOD(@selector(getSelectionRange:))
     if ([eventName isEqualToString:@"change"]) {
         _changeEvent = YES;
     }
+    if ([eventName isEqualToString:@"return"]) {
+        _returnEvent = YES;
+    }
 }
 
 #pragma Remove Event
@@ -275,6 +284,9 @@ WX_EXPORT_METHOD(@selector(getSelectionRange:))
     if ([eventName isEqualToString:@"change"]) {
         _changeEvent = NO;
     }
+    if ([eventName isEqualToString:@"return"]) {
+        _returnEvent = NO;
+    }
 }
 
 #pragma mark - upate attributes
@@ -284,12 +296,15 @@ WX_EXPORT_METHOD(@selector(getSelectionRange:))
     _attr = attributes;
     if (attributes[@"type"]) {
         _inputType = [WXConvert NSString:attributes[@"type"]];
+        [self setType];
     }
-    [self setType];
-    _autofocus = [attributes[@"autofocus"] boolValue];
-    [self setAutofocus:_autofocus];
-    _disabled = [attributes[@"disabled"] boolValue];
-    [_inputView setEnabled:!_disabled];
+    if (attributes[@"autofocus"]) {
+        self.autofocus = [attributes[@"autofocus"] boolValue];
+    }
+    if (attributes[@"disabled"]) {
+        _disabled = [attributes[@"disabled"] boolValue];
+        [_inputView setEnabled:!_disabled];
+    }
     if (attributes[@"maxlength"]) {
         _maxLength = [NSNumber numberWithInteger:[attributes[@"maxlength"] integerValue]];
     }
@@ -300,6 +315,10 @@ WX_EXPORT_METHOD(@selector(getSelectionRange:))
     if (attributes[@"value"]) {
         _value = [WXConvert NSString:attributes[@"value"]]?:@"";
         [_inputView setText:_value];
+    }
+    if (attributes[@"returnKeyType"]) {
+        _returnKeyType = [WXConvert UIReturnKeyType:attributes[@"returnKeyType"]];
+        [_inputView setReturnKeyType:_returnKeyType];
     }
 }
 
@@ -445,6 +464,15 @@ WX_EXPORT_METHOD(@selector(getSelectionRange:))
     if(self.pseudoClassStyles && [self.pseudoClassStyles count]>0){
         [self recoveryPseudoStyles:self.styles];
     }
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    if (_returnEvent) {
+        NSString *typeStr = [WXUtility returnKeyType:_returnKeyType];
+         [self fireEvent:@"return" params:@{@"value":[textField text],@"returnKeyType":typeStr} domChanges:@{@"attrs":@{@"value":[textField text]}}];
+    }
+    return YES;
 }
 
 - (void)textFiledEditChanged:(NSNotification *)notifi

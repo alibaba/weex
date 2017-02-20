@@ -102,7 +102,9 @@ WX_EXPORT_METHOD(@selector(transition:args:callback:))
     WXPerformBlockOnComponentThread(^{
         WXComponent *targetComponent = [self.weexInstance componentForRef:nodeRef];
         if (!targetComponent) {
-            callback([NSString stringWithFormat:@"No component find for ref:%@", nodeRef]);
+            if (callback) {
+                callback([NSString stringWithFormat:@"No component find for ref:%@", nodeRef]);
+            }
             return;
         }
         

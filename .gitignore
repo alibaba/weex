@@ -3,6 +3,7 @@
 *.iml
 .DS_Store
 .vscode
+*.sw*
 
 # Created by Builder
 examples/build

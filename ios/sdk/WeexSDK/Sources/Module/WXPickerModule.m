@@ -58,7 +58,9 @@ WX_EXPORT_METHOD(@selector(pickTime:callback:))
         [self createPicker:items index:index];
         self.callback = callback;
     } else {
-        callback(@{ @"result": @"error" });
+        if (callback) {
+            callback(@{ @"result": @"error" });
+        }
         self.callback = nil;
     }
 }
@@ -113,15 +115,19 @@ WX_EXPORT_METHOD(@selector(pickTime:callback:))
 -(void)cancel:(id)sender
 {
     [self hide];
-    self.callback(@{ @"result": @"cancel"});
-    self.callback=nil;
+    if (self.callback) {
+        self.callback(@{ @"result": @"cancel"});
+        self.callback=nil;
+    }
 }
 
 -(void)done:(id)sender
 {
     [self hide];
-    self.callback(@{ @"result": @"success",@"data":[NSNumber numberWithInteger:self.index]});
-    self.callback=nil;
+    if (self.callback) {
+        self.callback(@{ @"result": @"success",@"data":[NSNumber numberWithInteger:self.index]});
+        self.callback=nil;
+    }
 }
 
 -(BOOL)isRightItems:(NSArray *)array
@@ -228,7 +234,9 @@ WX_EXPORT_METHOD(@selector(pickTime:callback:))
     if ((UIDatePickerModeTime == self.datePickerMode) || (UIDatePickerModeDate == self.datePickerMode)) {
         [self createDatePicker:options callback:callback];
     } else {
-        callback(@{ @"result": @"error" });
+        if (callback) {
+            callback(@{ @"result": @"error" });
+        }
         self.callback = nil;
     }
 }
@@ -299,10 +307,12 @@ WX_EXPORT_METHOD(@selector(pickTime:callback:))
 -(void)cancelDatePicker:(id)sender
 {
     [self hide];
-    self.callback(@{ @"result": @"cancel"});
-    self.callback = nil;
+    if (self.callback) {
+        self.callback(@{ @"result": @"cancel"});
+        self.callback = nil;
+    }
 }
-    
+
 -(void)doneDatePicker:(id)sender
 {
     [self hide];
@@ -313,8 +323,10 @@ WX_EXPORT_METHOD(@selector(pickTime:callback:))
     {
         value = [WXUtility dateToString:self.datePicker.date];
     }
-    self.callback(@{ @"result": @"success",@"data":value});
-    self.callback=nil;
+    if (self.callback) {
+        self.callback(@{ @"result": @"success",@"data":value});
+        self.callback=nil;
+    }
 }
 
 @end

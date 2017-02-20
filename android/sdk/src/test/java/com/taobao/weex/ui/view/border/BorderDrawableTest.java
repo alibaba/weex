@@ -307,7 +307,7 @@ public class BorderDrawableTest {
     assertThat(none.getBorderRadius(BorderDrawable.BORDER_BOTTOM_LEFT_RADIUS), is(BorderDrawable.DEFAULT_BORDER_WIDTH));
 
     BorderDrawable full = new BorderDrawable();
-    full.setBorderRadius(Spacing.ALL, 12);
+    full.setBorderRadius(BorderDrawable.BORDER_RADIUS_ALL, 12);
     full.setBounds(new Rect(0, 0, 400, 400));
     full.draw(new Canvas());
     assertThat(full.getBorderRadius(BorderDrawable.BORDER_TOP_LEFT_RADIUS), is(12f));
@@ -534,7 +534,7 @@ public class BorderDrawableTest {
     assertThat(none.isRounded(), is(false));
 
     BorderDrawable full = new BorderDrawable();
-    full.setBorderRadius(Spacing.ALL, 12);
+    full.setBorderRadius(BorderDrawable.BORDER_RADIUS_ALL, 12);
     assertThat(full.isRounded(), is(true));
 
     BorderDrawable noneAndPart = new BorderDrawable();

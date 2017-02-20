@@ -207,7 +207,6 @@ package com.taobao.weex.ui.view.listview;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -255,7 +254,7 @@ public class WXRecyclerView extends RecyclerView implements WXGestureObservable 
     } else if (type == TYPE_STAGGERED_GRID_LAYOUT) {
       setLayoutManager(new StaggeredGridLayoutManager(2, orientation));
     } else if (type == TYPE_LINEAR_LAYOUT) {
-      setLayoutManager(new LinearLayoutManager(context,orientation,false){
+      setLayoutManager(new ExtendedLinearLayoutManager(context,orientation,false){
 
         @Override
         public boolean supportsPredictiveItemAnimations() {

@@ -10,7 +10,7 @@
 #import "WXUtility.h"
 #import <objc/message.h>
 
-//#if TARGET_OS_SIMULATOR
+#if TARGET_OS_SIMULATOR
 
 @interface UIEvent (WXSimulatorShortcutManager)
 
@@ -88,19 +88,19 @@
     NSString *modifiedInput = nil;
     NSString *unmodifiedInput = nil;
     UIKeyModifierFlags flags = 0;
-    if ([event respondsToSelector:@selector(_isKeyDown)]) {
+    if ([event respondsToSelector:NSSelectorFromString(@"_isKeyDown")]) {
         isKeyDown = [event _isKeyDown];
     }
     
-    if ([event respondsToSelector:@selector(_modifiedInput)]) {
+    if ([event respondsToSelector:NSSelectorFromString(@"_modifiedInput")]) {
         modifiedInput = [event _modifiedInput];
     }
     
-    if ([event respondsToSelector:@selector(_unmodifiedInput)]) {
+    if ([event respondsToSelector:NSSelectorFromString(@"_unmodifiedInput")]) {
         unmodifiedInput = [event _unmodifiedInput];
     }
     
-    if ([event respondsToSelector:@selector(_modifierFlags)]) {
+    if ([event respondsToSelector:NSSelectorFromString(@"_modifierFlags")]) {
         flags = [event _modifierFlags];
     }
     
@@ -115,4 +115,4 @@
 
 @end
 
-//#endif
+#endif

@@ -59,7 +59,7 @@ On Android Platform , Weex code is executed in [weex_v8core](https://github.com/
     0. `pod install`
     0. Open `WeexDemo.xcworkspace` in Xcode
     0. Click <img src="http://img1.tbcdn.cn/L1/461/1/5470b677a2f2eaaecf412cc55eeae062dbc275f9" height="16" > (`Run` button) or use default shortcut `cmd + r` in Xcode
-    0. If you want to run the demo on your device. In `DemoDefine.h`(you can search this file by Xcode default shortcut `cmd + shift + o`), modify `CURRENT_IP` to your local IP
+    0. If you want to run the demo on your device, don't need to modify `CURRENT_IP` manually. ~~In `DemoDefine.h`(you can search this file by Xcode default shortcut `cmd + shift + o`), modify `CURRENT_IP` to your local IP~~
 0. [Add an example](./examples/README.md#add-an-example)
 
 ## Scripts

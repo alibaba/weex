@@ -228,7 +228,8 @@ class BorderEdge {
   private final int mEdge;
   private final float mBorderWidth;
 
-  BorderEdge(@NonNull BorderCorner preCorner, @NonNull BorderCorner postCorner, int edge, float
+  BorderEdge(@NonNull BorderCorner preCorner, @NonNull BorderCorner postCorner,
+             @BorderWidthStyleColorType int edge, float
       borderWidth) {
     mPreCorner = preCorner;
     mPostCorner = postCorner;
@@ -290,7 +291,8 @@ class BorderEdge {
    * @return index of edge. May be one of
    * {@link Spacing#TOP},{@link Spacing#BOTTOM},{@link Spacing#RIGHT},{@link Spacing#LEFT}.
    */
-  public int getEdge() {
+  public @BorderWidthStyleColorType
+  int getEdge() {
     return mEdge;
   }
 }

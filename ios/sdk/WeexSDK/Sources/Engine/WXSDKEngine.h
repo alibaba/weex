@@ -126,6 +126,11 @@
 + (void)restart;
 
 /**
+ * @abstract restart Weex Engine with specify jsfm.
+ **/
++ (void)restartWithScript:(NSString*)script;
+
+/**
  * @abstract Returns the version of SDK
  *
  **/

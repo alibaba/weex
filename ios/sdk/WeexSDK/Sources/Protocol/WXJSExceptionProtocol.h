@@ -6,11 +6,16 @@
  * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
  */
 
-#import "WXComponent.h"
+#import "WXJSExceptionInfo.h"
 
-@interface WXLoadingIndicator : WXComponent
+@protocol WXJSExceptionProtocol<NSObject>
 
-- (void)start;
-- (void)stop;
+/**
+ * report js exception
+ *
+ * @param exception {@link WXJSException}
+ */
+
+- (void)onJSException:(WXJSExceptionInfo *)exception;
 
 @end

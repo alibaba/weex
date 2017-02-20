@@ -112,11 +112,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  cocoapods
-  danger
-  danger-xcode_summary
-  xcpretty
-  xcpretty-json-formatter
+  cocoapods!
+  danger!
+  danger-xcode_summary!
+  xcpretty!
+  xcpretty-json-formatter!
 
 BUNDLED WITH
    1.13.7

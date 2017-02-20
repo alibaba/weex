@@ -41,18 +41,24 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
 
 - (void)length:(WXModuleCallback)callback
 {
-    callback(@{@"result":@"success",@"data":@([[WXStorageModule memory] count])});
+    if (callback) {
+        callback(@{@"result":@"success",@"data":@([[WXStorageModule memory] count])});
+    }
 }
 
 - (void)getAllKeys:(WXModuleCallback)callback
 {
-    callback(@{@"result":@"success",@"data":[WXStorageModule memory].allKeys});
+    if (callback) {
+        callback(@{@"result":@"success",@"data":[WXStorageModule memory].allKeys});
+    }
 }
 
 - (void)getItem:(NSString *)key callback:(WXModuleCallback)callback
 {
     if ([self checkInput:key]) {
-        callback(@{@"result":@"failed",@"data":@"key must a string or number!"}); // forgive my english
+        if (callback) {
+            callback(@{@"result":@"failed",@"data":@"key must a string or number!"}); // forgive my english
+        }
         return;
     }
     
@@ -61,7 +67,9 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
     }
     
     if ([WXUtility isBlankString:key]) {
-        callback(@{@"result":@"failed",@"data":@"invalid_param"});
+        if (callback) {
+            callback(@{@"result":@"failed",@"data":@"invalid_param"});
+        }
         return ;
     }
     
@@ -79,22 +87,30 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
     }
     if (!value) {
         [self executeRemoveItem:key];
-        callback(@{@"result":@"failed"});
+        if (callback) {
+            callback(@{@"result":@"failed"});
+        }
         return;
     }
     [self updateTimestampForKey:key];
     [self updateIndexForKey:key];
-    callback(@{@"result":@"success",@"data":value});
+    if (callback) {
+        callback(@{@"result":@"success",@"data":value});
+    }
 }
 
 - (void)setItem:(NSString *)key value:(NSString *)value callback:(WXModuleCallback)callback
 {
     if ([self checkInput:key]) {
-        callback(@{@"result":@"failed",@"data":@"key must a string or number!"});
+        if (callback) {
+            callback(@{@"result":@"failed",@"data":@"key must a string or number!"});
+        }
         return;
     }
     if ([self checkInput:value]) {
-        callback(@{@"result":@"failed",@"data":@"value must a string or number!"});
+        if (callback) {
+            callback(@{@"result":@"failed",@"data":@"value must a string or number!"});
+        }
         return;
     }
     
@@ -107,7 +123,9 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
     }
     
     if ([WXUtility isBlankString:key]) {
-        callback(@{@"result":@"failed",@"data":@"invalid_param"});
+        if (callback) {
+            callback(@{@"result":@"failed",@"data":@"invalid_param"});
+        }
         return ;
     }
     [self setObject:value forKey:key persistent:NO callback:callback];
@@ -116,11 +134,15 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
 - (void)setItemPersistent:(NSString *)key value:(NSString *)value callback:(WXModuleCallback)callback
 {
     if ([self checkInput:key]) {
-        callback(@{@"result":@"failed",@"data":@"key must a string or number!"});
+        if (callback) {
+            callback(@{@"result":@"failed",@"data":@"key must a string or number!"});
+        }
         return;
     }
     if ([self checkInput:value]) {
-        callback(@{@"result":@"failed",@"data":@"value must a string or number!"});
+        if (callback) {
+            callback(@{@"result":@"failed",@"data":@"value must a string or number!"});
+        }
         return;
     }
     
@@ -133,7 +155,9 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
     }
     
     if ([WXUtility isBlankString:key]) {
-        callback(@{@"result":@"failed",@"data":@"invalid_param"});
+        if (callback) {
+            callback(@{@"result":@"failed",@"data":@"invalid_param"});
+        }
         return ;
     }
     [self setObject:value forKey:key persistent:YES callback:callback];
@@ -142,7 +166,9 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
 - (void)removeItem:(NSString *)key callback:(WXModuleCallback)callback
 {
     if ([self checkInput:key]) {
-        callback(@{@"result":@"failed",@"data":@"key must a string or number!"});
+        if (callback) {
+            callback(@{@"result":@"failed",@"data":@"key must a string or number!"});
+        }
         return;
     }
     
@@ -151,14 +177,20 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
     }
     
     if ([WXUtility isBlankString:key]) {
-        callback(@{@"result":@"failed",@"data":@"invalid_param"});
+        if (callback) {
+            callback(@{@"result":@"failed",@"data":@"invalid_param"});
+        }
         return ;
     }
     BOOL removed = [self executeRemoveItem:key];
     if (removed) {
-        callback(@{@"result":@"success"});
+        if (callback) {
+            callback(@{@"result":@"success"});
+        }
     } else {
-        callback(@{@"result":@"failed"});
+        if (callback) {
+            callback(@{@"result":@"failed"});
+        }
     }
 }
 
@@ -198,7 +230,9 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
         [self setInfo:@{@"persistent":@(persistent),@"size":@(obj.length)} ForKey:key];
         [self updateIndexForKey:key];
         [self checkStorageLimit];
-        callback(@{@"result":@"success"});
+        if (callback) {
+            callback(@{@"result":@"success"});
+        }
         return;
     }
     
@@ -218,7 +252,9 @@ WX_EXPORT_METHOD(@selector(removeItem:callback:))
     [self updateIndexForKey:key];
     
     [self checkStorageLimit];
-    callback(@{@"result":@"success"});
+    if (callback) {
+        callback(@{@"result":@"success"});
+    }
 }
 
 - (void)checkStorageLimit {

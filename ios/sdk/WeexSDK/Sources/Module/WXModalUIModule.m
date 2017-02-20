@@ -283,7 +283,9 @@ static const CGFloat WXToastDefaultPadding = 30.0;
 - (void)alert:(NSString *)message okTitle:(NSString *)okTitle cancelTitle:(NSString *)cancelTitle defaultText:(NSString *)defaultText type:(WXModalType)type callback:(WXModuleCallback)callback
 {
     if (!message) {
-        callback(@"Error: message should be passed correctly.");
+        if (callback) {
+            callback(@"Error: message should be passed correctly.");
+        }
         return;
     }
     

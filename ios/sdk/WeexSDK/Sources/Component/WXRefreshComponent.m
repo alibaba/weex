@@ -67,7 +67,7 @@
 
 - (void)refresh
 {
-    if (!_refreshEvent) {
+    if (!_refreshEvent || _displayState) {
         return;
     }
     [self fireEvent:@"refresh" params:nil];

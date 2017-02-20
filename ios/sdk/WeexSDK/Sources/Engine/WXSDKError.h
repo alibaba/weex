@@ -7,7 +7,7 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "WXSDkInstance.h"
+#import "WXSDKInstance.h"
 
 typedef NS_ENUM(int, WXSDKErrCode)
 {

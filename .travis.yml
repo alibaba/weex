@@ -1,8 +1,20 @@
 language: objective-c
 rvm: 2.0.0
 osx_image: xcode8.2
+jdk: oraclejdk8
+env:
+    matrix:
+        - TEST_SUITE=android
+        - TEST_SUITE=ios
+        - TEST_SUITE=danger
+        - TEST_SUITE=jsfm
+cache:
+  directories:
+  - node_modules
+  - $HOME/.m2
+  - $HOME/.gradle
 before_install:
-  - gem install danger danger-xcode_summary xcpretty xcpretty-json-formatter
+  - source test/ci-funcs.sh && setup_cpt $TEST_SUITE
 script:
-  - xcodebuild -project ios/sdk/WeexSDK.xcodeproj test -scheme WeexSDKTests CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -destination 'platform=iOS Simulator,name=iPhone 6' | XCPRETTY_JSON_FILE_OUTPUT=ios/sdk/xcodebuild.json xcpretty -f `xcpretty-json-formatter`
-  - bundle exec danger
+  - test_cpt $TEST_SUITE
+  

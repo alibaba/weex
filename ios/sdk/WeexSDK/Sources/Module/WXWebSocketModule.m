@@ -81,7 +81,9 @@ WX_EXPORT_METHOD(@selector(onclose:))
                 [callbackRsp setObject:[NSNumber numberWithInteger:code] forKey:@"code"];
                 [callbackRsp setObject:reason forKey:@"reason"];
                 [callbackRsp setObject:wasClean?@true:@false forKey:@"wasClean"];
-                weakSelf.closeCallBack(callbackRsp,false);
+                if (weakSelf.closeCallBack) {
+                    weakSelf.closeCallBack(callbackRsp,false);
+                }
             }
         }
     };

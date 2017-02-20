@@ -48,7 +48,7 @@ WX_NUMBER_CONVERT(NSUInteger, unsignedIntegerValue)
 {
     if ([value isKindOfClass:[NSString class]]) {
         NSString *valueString = (NSString *)value;
-        if ([valueString hasSuffix:@"px"]) {
+        if ([valueString hasSuffix:@"px"] || [valueString hasSuffix:@"wx"]) {
             valueString = [valueString substringToIndex:(valueString.length - 2)];
         }
         return [valueString doubleValue];
@@ -74,6 +74,9 @@ WX_NUMBER_CONVERT(NSUInteger, unsignedIntegerValue)
 {
     CGFloat pixel = [self CGFloat:value];
     
+    if ([value isKindOfClass:[NSString class]] && [value hasSuffix:@"wx"]) {
+        return pixel;
+    }
     return pixel * scaleFactor;
 }
 
@@ -464,6 +467,26 @@ WX_NUMBER_CONVERT(NSUInteger, unsignedIntegerValue)
             return NSTextAlignmentRight;
     }
     return NSTextAlignmentNatural;
+}
+
++ (UIReturnKeyType)UIReturnKeyType:(id)value
+{
+    if([value isKindOfClass:[NSString class]]){
+        NSString *string = (NSString *)value;
+        if ([string isEqualToString:@"defalut"])
+            return UIReturnKeyDefault;
+        else if ([string isEqualToString:@"go"])
+            return UIReturnKeyGo;
+        else if ([string isEqualToString:@"next"])
+            return UIReturnKeyNext;
+        else if ([string isEqualToString:@"search"])
+            return UIReturnKeySearch;
+        else if ([string isEqualToString:@"send"])
+            return UIReturnKeySend;
+        else if ([string isEqualToString:@"done"])
+            return UIReturnKeyDone;
+    }
+    return UIReturnKeyDefault;
 }
 
 + (WXTextStyle)WXTextStyle:(id)value

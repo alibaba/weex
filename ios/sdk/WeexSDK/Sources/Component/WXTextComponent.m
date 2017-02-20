@@ -385,8 +385,20 @@ do {\
                                  value:paragraphStyle
                                  range:(NSRange){0, attributedString.length}];
     }
+    if ([self adjustLineHeight]) {
+        if (_lineHeight > font.lineHeight) {
+            [attributedString addAttribute:NSBaselineOffsetAttributeName
+                                     value:@((_lineHeight - font.lineHeight)/ 2)
+                                     range:(NSRange){0, attributedString.length}];
+        }
+    }
 
     return attributedString;
+}
+
+- (BOOL)adjustLineHeight
+{
+    return YES;
 }
 
 - (NSTextStorage *)textStorageWithWidth:(CGFloat)width

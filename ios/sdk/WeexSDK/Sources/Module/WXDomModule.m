@@ -175,7 +175,9 @@ WX_EXPORT_METHOD(@selector(getComponentRect:callback:))
             NSMutableDictionary * callbackRsp = nil;
             callbackRsp = [self _componentRectInfoWithViewFrame:rootRect];
             [callbackRsp setObject:@(true) forKey:@"result"];
-            callback(callbackRsp, false);
+            if (callback) {
+                callback(callbackRsp, false);
+            }
         } else {
             WXComponent *component = [manager componentForRef:ref];
             __weak typeof (self) weakSelf = self;
@@ -190,7 +192,9 @@ WX_EXPORT_METHOD(@selector(getComponentRect:callback:))
                     callbackRsp = [strongSelf _componentRectInfoWithViewFrame:componentRect];
                     [callbackRsp setObject:@(true)forKey:@"result"];
                 }
-                callback(callbackRsp, false);
+                if (callback) {
+                    callback(callbackRsp, false);
+                }
             });
 
         }

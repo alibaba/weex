@@ -89,7 +89,9 @@ WX_EXPORT_METHOD(@selector(setNavBarHidden:callback:))
         [navigator setNavigationBarHidden:[param[@"hidden"] boolValue] animated:[param[@"animated"] boolValue] withContainer:self.weexInstance.viewController];
         result = MSG_SUCCESS;
     }
-    callback(result);
+    if (callback) {
+        callback(result);
+    }
 }
 
 #pragma mark Navigation Setup
@@ -98,13 +100,17 @@ WX_EXPORT_METHOD(@selector(setNavBarHidden:callback:))
 {
     NSString *backgroundColor = param[@"backgroundColor"];
     if (!backgroundColor) {
-        callback(MSG_PARAM_ERR);
+        if (callback) {
+            callback(MSG_PARAM_ERR);
+        }
     }
     
     id<WXNavigationProtocol> navigator = [self navigator];
     UIViewController *container = self.weexInstance.viewController;
     [navigator setNavigationBackgroundColor:[WXConvert UIColor:backgroundColor] withContainer:container];
-    callback(MSG_SUCCESS);
+    if (callback) {
+        callback(MSG_SUCCESS);
+    }
 }
 
 - (void)setNavBarRightItem:(NSDictionary *)param callback:(WXModuleCallback)callback

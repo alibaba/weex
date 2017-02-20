@@ -264,7 +264,9 @@ if ([removeEventName isEqualToString:@#eventName]) {\
 {
     NSMutableDictionary *position = [[NSMutableDictionary alloc] initWithCapacity:4];
     CGFloat scaleFactor = self.weexInstance.pixelScaleFactor;
-    
+    if (![self isViewLoaded]) {
+        return;
+    }
     if (!CGRectEqualToRect(self.view.frame, CGRectZero)) {
         CGRect frame = [self.view.superview convertRect:self.view.frame toView:self.view.window];
         position[@"x"] = @(frame.origin.x/scaleFactor);

@@ -35,7 +35,9 @@ WX_EXPORT_METHOD(@selector(getString:))
         [result setValue:@"" forKey:@"data"];
         [result setValue:@"fail" forKey:@"result"];
     }
-    callback(result);
+    if (callback) {
+        callback(result);
+    }
 
 }
 

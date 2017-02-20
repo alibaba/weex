@@ -7,10 +7,9 @@ var platform = process.env.platform || 'android';
 platform = platform.toLowerCase();
 
 var iOSOpts = {
-  platformVersion: '10.0',
-  deviceName: 'iPhone 6s Plus',
+  deviceName: 'iPhone 6',
   platformName: 'iOS',
-  reuse:2,
+  //reuse:2,
   app: path.join(__dirname, '..', '../ios/playground/build/Debug-iphonesimulator/WeexDemo.app')
 };
 
@@ -20,6 +19,11 @@ var androidOpts = {
 };
 
 const isIOS = platform === 'ios';
+const isRunInCI = process.env.run_in_ci?true:false;
+
+if(isRunInCI){
+    console.log("Running in CI Envirment");
+}
 
 function getIpAddress(){
     let ifs = os.networkInterfaces()
@@ -42,5 +46,11 @@ module.exports = {
     },
     getDeviceHost:function(){
         return getIpAddress()+":12581";
+    },
+    getTimeoutMills:function(){
+        return ( isRunInCI ? 60 : 10 ) * 60 * 1000;
+    },
+    getGETActionWaitTimeMills:function(){
+        return (isRunInCI ? 120 : 5 ) * 1000;
     }
 }

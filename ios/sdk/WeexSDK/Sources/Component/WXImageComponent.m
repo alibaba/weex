@@ -215,7 +215,7 @@ static dispatch_queue_t WXImageUpdateQueue;
        
         void(^downloadFailed)(NSString *, NSError *) = ^void(NSString *url, NSError *error) {
             weakSelf.imageDownloadFinish = YES;
-            WXLogError(@"Error downloading image:%@, detail:%@", url, [error localizedDescription]);
+            WXLogError(@"Error downloading image: %@, detail:%@", url, [error localizedDescription]);
         };
         
         [self updatePlaceHolderWithFailedBlock:downloadFailed];

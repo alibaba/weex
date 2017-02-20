@@ -366,7 +366,9 @@ WX_EXPORT_METHOD(@selector(fetch:callback:progressCallback:))
     };
     
     loader.onFailed = ^(NSError *error) {
-        callback(nil);
+        if (callback) {
+            callback(nil);
+        }
     };
 
     [loader start];

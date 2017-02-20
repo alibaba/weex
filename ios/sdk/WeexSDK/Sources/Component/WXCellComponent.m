@@ -23,6 +23,7 @@
     
     if (self) {
         _async = attributes[@"async"] ? [WXConvert BOOL:attributes[@"async"]] : YES;
+        _isRecycle = attributes[@"recycle"] ? [WXConvert BOOL:attributes[@"recycle"]] : YES;
         _insertAnimation = [WXConvert UITableViewRowAnimation:attributes[@"insertAnimation"]];
         _deleteAnimation = [WXConvert UITableViewRowAnimation:attributes[@"deleteAnimation"]];
         _lazyCreateView = YES;
@@ -61,6 +62,10 @@
 {
     if (attributes[@"async"]) {
         _async = [WXConvert BOOL:attributes[@"async"]];
+    }
+    
+    if (attributes[@"recycle"]) {
+        _isRecycle = [WXConvert BOOL:attributes[@"recycle"]];
     }
     
     if (attributes[@"insertAnimation"]) {

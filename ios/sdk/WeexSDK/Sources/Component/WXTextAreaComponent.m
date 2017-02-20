@@ -28,6 +28,7 @@ typedef UITextView WXTextAreaView;
 @property (nonatomic) BOOL autofocus;
 @property (nonatomic) BOOL disabled;
 @property (nonatomic, strong)NSString *textValue;
+@property(nonatomic) UIReturnKeyType returnKeyType;
 @property (nonatomic) NSUInteger rows;
 //style
 
@@ -43,6 +44,7 @@ typedef UITextView WXTextAreaView;
 @property (nonatomic) BOOL focusEvent;
 @property (nonatomic) BOOL blurEvent;
 @property (nonatomic) BOOL changeEvent;
+@property (nonatomic) BOOL returnEvent;
 @property (nonatomic) BOOL clickEvent;
 @property (nonatomic, strong) NSString *changeEventString;
 @property (nonatomic, assign) CGSize keyboardSize;
@@ -69,6 +71,7 @@ WX_EXPORT_METHOD(@selector(getSelectionRange:))
         _blurEvent = NO;
         _changeEvent = NO;
         _clickEvent = NO;
+        _returnEvent = NO;
         _padding = UIEdgeInsetsZero;
         _border = UIEdgeInsetsZero;
         
@@ -88,6 +91,9 @@ WX_EXPORT_METHOD(@selector(getSelectionRange:))
             if (placeHolder) {
                 _placeholderString = placeHolder;
             }
+        }
+        if (attributes[@"returnKeyType"]) {
+            _returnKeyType = [WXConvert UIReturnKeyType:attributes[@"returnKeyType"]];
         }
         if (!_placeholderString) {
             _placeholderString = @"";
@@ -189,6 +195,7 @@ WX_EXPORT_METHOD(@selector(getSelectionRange:))
     _padding = UIEdgeInsetsZero;
     _border = UIEdgeInsetsZero;
     [self updatePattern];
+    [_textView setReturnKeyType:_returnKeyType];
     
     [_textView setNeedsDisplay];
     [_textView setClipsToBounds:YES];
@@ -248,6 +255,9 @@ WX_EXPORT_METHOD(@selector(getSelectionRange:))
     if ([eventName isEqualToString:@"click"]) {
         _clickEvent = YES;
     }
+    if ([eventName isEqualToString:@"return"]) {
+        _returnEvent = YES;
+    }
 }
 
 -(void)removeEvent:(NSString *)eventName
@@ -266,6 +276,9 @@ WX_EXPORT_METHOD(@selector(getSelectionRange:))
     }
     if ([eventName isEqualToString:@"click"]) {
         _clickEvent = NO;
+    }
+    if ([eventName isEqualToString:@"return"]) {
+        _returnEvent = NO;
     }
 }
 
@@ -293,6 +306,10 @@ WX_EXPORT_METHOD(@selector(getSelectionRange:))
                 _placeHolderLabel.text = @"";
             }
         }
+    }
+    if (attributes[@"returnKeyType"]) {
+        _returnKeyType = [WXConvert UIReturnKeyType:attributes[@"returnKeyType"]];
+        [_textView setReturnKeyType:_returnKeyType];
     }
 }
 
@@ -436,6 +453,17 @@ WX_EXPORT_METHOD(@selector(getSelectionRange:))
     if(self.pseudoClassStyles && [self.pseudoClassStyles count]>0){
         [self recoveryPseudoStyles:self.styles];
     }
+}
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
+    if ([text isEqualToString:@"\n"]) {
+        if (_returnEvent) {
+            NSString *typeStr = [WXUtility returnKeyType:_returnKeyType];
+            [self fireEvent:@"return" params:@{@"value":[textView text],@"returnKeyType":typeStr} domChanges:@{@"attrs":@{@"value":[textView text]}}];
+        }
+    }
+    return YES;
 }
 
 #pragma mark - private method
