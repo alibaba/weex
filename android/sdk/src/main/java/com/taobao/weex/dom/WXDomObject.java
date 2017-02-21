@@ -204,6 +204,12 @@
  */
 package com.taobao.weex.dom;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -212,6 +218,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.bridge.WXAuthProcessor;
+import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.flex.CSSLayoutContext;
 import com.taobao.weex.dom.flex.CSSNode;
@@ -219,12 +227,6 @@ import com.taobao.weex.dom.flex.Spacing;
 import com.taobao.weex.ui.component.WXBasicComponentType;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXViewUtils;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * WXDomObject contains all the info about the given node, including style, attribute and event.
@@ -300,21 +302,24 @@ public class WXDomObject extends CSSNode implements Cloneable,ImmutableDomObject
     return mType;
   }
 
-  public @NonNull WXStyle getStyles(){
+  public @NonNull
+  WXStyle getStyles(){
     if(mStyles == null ){
       mStyles = new WXStyle();
     }
     return mStyles;
   }
 
-  public @NonNull WXAttr getAttrs(){
+  public @NonNull
+  WXAttr getAttrs(){
     if(mAttributes == null){
       mAttributes = new WXAttr();
     }
     return mAttributes;
   }
 
-  public @NonNull WXEvent getEvents(){
+  public @NonNull
+  WXEvent getEvents(){
     if(mEvents == null){
       mEvents = new WXEvent();
     }
@@ -322,7 +327,8 @@ public class WXDomObject extends CSSNode implements Cloneable,ImmutableDomObject
     return mEvents;
   }
 
-  public @NonNull DomContext getDomContext() {
+  public @NonNull
+  DomContext getDomContext() {
     return mDomContext;
   }
 
@@ -332,7 +338,7 @@ public class WXDomObject extends CSSNode implements Cloneable,ImmutableDomObject
     }
   }
 
-  public static void prepareRoot(WXDomObject domObj,float defaultHeight,float defaultWidth) {
+  public static void prepareRoot(WXDomObject domObj, float defaultHeight, float defaultWidth) {
     domObj.mRef = WXDomObject.ROOT;
 
     WXStyle domStyles = domObj.getStyles();
@@ -806,12 +812,31 @@ public class WXDomObject extends CSSNode implements Cloneable,ImmutableDomObject
    * @param json the original JSONObject
    * @return Dom Object corresponding to the JSONObject.
    */
-  public static  @Nullable WXDomObject parse(JSONObject json, WXSDKInstance wxsdkInstance){
+  public static  @Nullable
+  WXDomObject parse(JSONObject json, WXSDKInstance wxsdkInstance){
       if (json == null || json.size() <= 0) {
         return null;
       }
 
-      String type = (String) json.get(TYPE);
+      JSONObject domJson = json;
+
+      String type = (String) domJson.get(TYPE);
+    
+      if (wxsdkInstance.isNeedAuth()) {
+        WXAuthProcessor processor = WXBridgeManager.getInstance().getAuthProcessor();
+        if (processor != null) {
+            WXAuthProcessor.WXComponentAuthResult result = processor
+                    .onComponentAuth(wxsdkInstance, type, json);
+            if (result != null && !result.isSuccess) {
+                type = result.type;
+                if (result.replacedDomJson == null) {
+                    return null;
+                }
+              domJson = result.replacedDomJson;
+            }
+        }
+      }
+
       WXDomObject domObject = WXDomObjectFactory.newInstance(type);
 
       domObject.setViewPortWidth(wxsdkInstance.getViewPortWidth());
@@ -819,10 +844,10 @@ public class WXDomObject extends CSSNode implements Cloneable,ImmutableDomObject
       if(domObject == null){
         return null;
       }
-      domObject.parseFromJson(json);
+      domObject.parseFromJson(domJson);
       domObject.mDomContext = wxsdkInstance;
 
-      Object children = json.get(CHILDREN);
+      Object children = domJson.get(CHILDREN);
       if (children != null && children instanceof JSONArray) {
         JSONArray childrenArray = (JSONArray) children;
         int count = childrenArray.size();
