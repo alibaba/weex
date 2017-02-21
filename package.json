@@ -93,7 +93,7 @@
   },
   "devDependencies": {
     "xml2map": "^1.0.2",
-    "weex-wd": "^1.0.9",
+    "weex-wd": "^1.0.10",
     "macaca-utils": "^0.1.9",
     "babel-core": "^6.17.0",
     "babel-istanbul": "^0.11.0",
