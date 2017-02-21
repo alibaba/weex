@@ -212,6 +212,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.bridge.WXValidateProcessor;
 import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.common.Constants;
@@ -816,21 +817,17 @@ public class WXDomObject extends CSSNode implements Cloneable,ImmutableDomObject
       String type = (String) json.get(TYPE);
 
       if (wxsdkInstance.isNeedValidate()) {
-        WXValidateProcessor processor = WXBridgeManager.getInstance().getAuthProcessor();
-        if (processor != null) {
-          WXValidateProcessor.WXComponentAuthResult result = processor
-                  .onComponentValidate(wxsdkInstance, type, json);
-          if (result != null && !result.isSuccess) {
-
-            if (TextUtils.isEmpty(type)) {
-              type = "div";
-            }else {
-              type = result.type;
-            }
+          WXValidateProcessor processor = WXSDKManager.getInstance()
+                  .getValidateProcessor();
+          if (processor != null) {
+              WXValidateProcessor.WXComponentAuthResult result = processor
+                      .onComponentValidate(wxsdkInstance, type, json);
+              if (result != null && !result.isSuccess) {
+                  type = TextUtils.isEmpty(result.type) ? "div" : result.type;
+                  json.put("type", type);
+              }
           }
-        }
       }
-
 
       WXDomObject domObject = WXDomObjectFactory.newInstance(type);
 
