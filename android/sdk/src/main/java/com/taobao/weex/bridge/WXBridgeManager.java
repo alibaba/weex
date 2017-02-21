@@ -233,9 +233,6 @@ import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.common.WXThread;
 import com.taobao.weex.dom.WXDomModule;
 import com.taobao.weex.utils.WXFileUtils;
-import com.taobao.weex.utils.WXHack;
-import com.taobao.weex.utils.WXHack.HackDeclaration.HackAssertionException;
-import com.taobao.weex.utils.WXHack.HackedClass;
 import com.taobao.weex.utils.WXJsonUtils;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXUtils;
@@ -243,6 +240,8 @@ import com.taobao.weex.utils.WXViewUtils;
 import com.taobao.weex.utils.batch.BactchExecutor;
 import com.taobao.weex.utils.batch.Interceptor;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -356,25 +355,36 @@ public class WXBridgeManager implements Callback,BactchExecutor {
   }
 
   private void initWXBridge(boolean remoteDebug) {
-    if (WXEnvironment.isApkDebugable()) {
-      if (remoteDebug) {
-        WXEnvironment.sDebugServerConnectable = true;
-      }
+    if (remoteDebug) {
+      WXEnvironment.sDebugServerConnectable = true;
+    }
 
-      if (mWxDebugProxy != null) {
-        mWxDebugProxy.stop(false);
-      }
-      if (WXEnvironment.sDebugServerConnectable) {
-        try {
-          HackedClass<Object> debugProxyClass = WXHack.into("com.taobao.weex.devtools.debug.DebugServerProxy");
-          mWxDebugProxy = (IWXDebugProxy) debugProxyClass.constructor(Context.class, WXBridgeManager.class)
-              .getInstance(WXEnvironment.getApplication(), WXBridgeManager.this);
-          if (mWxDebugProxy != null) {
-            mWxDebugProxy.start();
+    if (mWxDebugProxy != null) {
+      mWxDebugProxy.stop(false);
+    }
+    if (WXEnvironment.sDebugServerConnectable) {
+      try {
+        Class clazz =  Class.forName("com.taobao.weex.devtools.debug.DebugServerProxy");
+        if (clazz != null) {
+          Constructor constructor = clazz.getConstructor(Context.class, WXBridgeManager.class);
+          if (constructor != null) {
+            mWxDebugProxy = (IWXDebugProxy) constructor.newInstance(
+                WXEnvironment.getApplication(), WXBridgeManager.this);
+            if (mWxDebugProxy != null) {
+              mWxDebugProxy.start();
+            }
           }
-        } catch (HackAssertionException e) {
-          WXLogUtils.e("initWXBridge HackAssertionException ", e);
         }
+      } catch (ClassNotFoundException e) {
+        // ignore
+      } catch (NoSuchMethodException e) {
+        // ignore
+      } catch (InstantiationException e) {
+        // ignore
+      } catch (IllegalAccessException e) {
+        // ignore
+      } catch (InvocationTargetException e) {
+        // ignore
       }
     }
     if (remoteDebug && mWxDebugProxy != null) {

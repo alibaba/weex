@@ -8,6 +8,8 @@ env:
         - TEST_SUITE=ios
         - TEST_SUITE=danger
         - TEST_SUITE=jsfm
+matrix:
+    fast_finish: true
 cache:
   directories:
   - node_modules
