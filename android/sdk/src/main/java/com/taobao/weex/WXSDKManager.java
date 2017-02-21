@@ -183,7 +183,7 @@ public class WXSDKManager {
   private URIAdapter mURIAdapter;
   private IWebSocketAdapterFactory mIWebSocketAdapterFactory;
 
-  private WXValidateProcessor mWXAuthProcessor;
+  private WXValidateProcessor mWXValidateProcessor;
 
   private WXSDKManager() {
     mWXRenderManager = new WXRenderManager();
@@ -402,11 +402,11 @@ public class WXSDKManager {
   }
 
   public void registerValidateProcessor(WXValidateProcessor processor){
-    this.mWXAuthProcessor = processor;
+    this.mWXValidateProcessor = processor;
   }
 
   public WXValidateProcessor getValidateProcessor(){
-    return mWXAuthProcessor;
+    return mWXValidateProcessor;
   }
 
 }
