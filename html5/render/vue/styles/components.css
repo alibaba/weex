@@ -5,7 +5,7 @@ a, .weex-a {
 }
 
 body > .weex-div {
-  max-height: 100%;
+  min-height: 100%;
 }
 
 .weex-div {
@@ -199,8 +199,6 @@ body > .weex-scroller {
 .weex-scroller-wrapper {
   display: block;
   position: relative;
-  overflow-x: hidden;
-  overflow-y: scroll;
 }
 
 .weex-list-inner,
@@ -210,8 +208,6 @@ body > .weex-scroller {
   display: -ms-flexbox;
   display: flex;
   width: 100%;
-  min-height: 100%;
-  overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
   -webkit-flex-direction: column;
@@ -223,15 +219,18 @@ body > .weex-scroller {
           justify-content: flex-start;
 }
 
+.weex-scroller-wrapper.weex-scroller-vertical {
+  overflow-y: scroll;
+}
+
 .weex-scroller-wrapper.weex-scroller-horizontal {
-  overflow-y: hidden;
+  overflow-x: scroll;
 }
 
 .weex-scroller-horizontal .weex-scroller-inner {
   -webkit-flex-direction: row;
       -ms-flex-direction: row;
           flex-direction: row;
-  overflow-x: scroll;
   width: auto;
   height: 100%;
 }

@@ -31,6 +31,9 @@ export default {
       if (this.scrollDirection === 'horizontal') {
         classArray.push('weex-scroller-horizontal')
       }
+      else {
+        classArray.push('weex-scroller-vertical')
+      }
       return classArray.join(' ')
     }
   },
