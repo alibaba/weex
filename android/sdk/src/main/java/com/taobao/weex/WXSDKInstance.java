@@ -204,16 +204,10 @@
  */
 package com.taobao.weex;
 
-import static com.taobao.weex.http.WXHttpUtil.KEY_USER_AGENT;
-
-import java.io.Serializable;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -225,19 +219,54 @@ import android.view.ViewGroup;
 import android.widget.ScrollView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.taobao.weex.adapter.*;
+import com.taobao.weex.adapter.IDrawableLoader;
+import com.taobao.weex.adapter.IWXHttpAdapter;
+import com.taobao.weex.adapter.IWXImgLoaderAdapter;
+import com.taobao.weex.adapter.IWXUserTrackAdapter;
+import com.taobao.weex.adapter.URIAdapter;
 import com.taobao.weex.appfram.websocket.IWebSocketAdapter;
 import com.taobao.weex.bridge.NativeInvokeHelper;
 import com.taobao.weex.bridge.SimpleJSCallback;
 import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.bridge.WXModuleManager;
-import com.taobao.weex.common.*;
-import com.taobao.weex.dom.*;
+import com.taobao.weex.common.Constants;
+import com.taobao.weex.common.Destroyable;
+import com.taobao.weex.common.OnWXScrollListener;
+import com.taobao.weex.common.WXErrorCode;
+import com.taobao.weex.common.WXModule;
+import com.taobao.weex.common.WXPerformance;
+import com.taobao.weex.common.WXRefreshData;
+import com.taobao.weex.common.WXRenderStrategy;
+import com.taobao.weex.common.WXRequest;
+import com.taobao.weex.common.WXResponse;
+import com.taobao.weex.dom.DomContext;
+import com.taobao.weex.dom.WXDomHandler;
+import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.dom.WXDomTask;
+import com.taobao.weex.dom.WXEvent;
 import com.taobao.weex.http.WXHttpUtil;
-import com.taobao.weex.ui.component.*;
+import com.taobao.weex.ui.component.NestedContainer;
+import com.taobao.weex.ui.component.WXBasicComponentType;
+import com.taobao.weex.ui.component.WXComponent;
+import com.taobao.weex.ui.component.WXComponentFactory;
+import com.taobao.weex.ui.component.WXVContainer;
 import com.taobao.weex.ui.view.WXScrollView;
 import com.taobao.weex.ui.view.WXScrollView.WXScrollViewListener;
-import com.taobao.weex.utils.*;
+import com.taobao.weex.utils.WXFileUtils;
+import com.taobao.weex.utils.WXJsonUtils;
+import com.taobao.weex.utils.WXLogUtils;
+import com.taobao.weex.utils.WXReflectionUtils;
+import com.taobao.weex.utils.WXViewUtils;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static com.taobao.weex.http.WXHttpUtil.KEY_USER_AGENT;
 
 
 /**
@@ -265,10 +294,10 @@ public class WXSDKInstance implements IWXActivityStateListener,DomContext, View.
   private boolean isCommit=false;
   private WXGlobalEventReceiver mGlobalEventReceiver=null;
   private boolean trackComponent;
-  private boolean needAuth = false;
+  private boolean needValidate = false;
 
-  public boolean isNeedAuth () {
-    return needAuth;
+  public boolean isNeedValidate() {
+    return needValidate;
   }
   /*
    *  store custom ViewPort Width
@@ -340,7 +369,7 @@ public class WXSDKInstance implements IWXActivityStateListener,DomContext, View.
   /**
    * For unittest only.
    */
-  WXSDKInstance(Context context, String id) {
+  WXSDKInstance(Context context,String id) {
     mInstanceId = id;
     init(context);
   }
@@ -378,7 +407,7 @@ public class WXSDKInstance implements IWXActivityStateListener,DomContext, View.
     mWXPerformance.WXSDKVersion = WXEnvironment.WXSDK_VERSION;
     mWXPerformance.JSLibInitTime = WXEnvironment.sJSLibInitTime;
 
-    mUserTrackAdapter= WXSDKManager.getInstance().getIWXUserTrackAdapter();
+    mUserTrackAdapter=WXSDKManager.getInstance().getIWXUserTrackAdapter();
   }
 
   public NativeInvokeHelper getNativeInvokeHelper() {
@@ -535,8 +564,8 @@ public class WXSDKInstance implements IWXActivityStateListener,DomContext, View.
     ensureRenderArchor();
     pageName = wrapPageName(pageName, url);
     mBundleUrl = url;
-    if(WXBridgeManager.getInstance().getAuthProcessor()!=null) {
-      needAuth = WXBridgeManager.getInstance().getAuthProcessor().needAuth(mBundleUrl);
+    if(WXSDKManager.getInstance().getValidateProcessor()!=null) {
+      needValidate = WXSDKManager.getInstance().getValidateProcessor().needValidate(mBundleUrl);
     }
 
     Map<String, Object> renderOptions = options;
@@ -556,11 +585,11 @@ public class WXSDKInstance implements IWXActivityStateListener,DomContext, View.
     IWXHttpAdapter adapter = WXSDKManager.getInstance().getIWXHttpAdapter();
 
     WXRequest wxRequest = new WXRequest();
-    wxRequest.url = rewriteUri(Uri.parse(url), URIAdapter.BUNDLE).toString();
+    wxRequest.url = rewriteUri(Uri.parse(url),URIAdapter.BUNDLE).toString();
     if (wxRequest.paramMap == null) {
       wxRequest.paramMap = new HashMap<String, String>();
     }
-    wxRequest.paramMap.put(KEY_USER_AGENT, WXHttpUtil.assembleUserAgent(mContext, WXEnvironment.getConfig()));
+    wxRequest.paramMap.put(KEY_USER_AGENT, WXHttpUtil.assembleUserAgent(mContext,WXEnvironment.getConfig()));
     adapter.sendRequest(wxRequest, new WXHttpListener(pageName, renderOptions, jsonInitData, flag, System.currentTimeMillis()));
   }
 
@@ -817,7 +846,7 @@ public class WXSDKInstance implements IWXActivityStateListener,DomContext, View.
     }
 
     Intent intent=new Intent(WXGlobalEventReceiver.EVENT_ACTION);
-    intent.putExtra(WXGlobalEventReceiver.EVENT_NAME, Constants.Event.PAUSE_EVENT);
+    intent.putExtra(WXGlobalEventReceiver.EVENT_NAME,Constants.Event.PAUSE_EVENT);
     intent.putExtra(WXGlobalEventReceiver.EVENT_WX_INSTANCEID,getInstanceId());
     mContext.sendBroadcast(intent);
   }
@@ -836,7 +865,7 @@ public class WXSDKInstance implements IWXActivityStateListener,DomContext, View.
     }
 
     Intent intent=new Intent(WXGlobalEventReceiver.EVENT_ACTION);
-    intent.putExtra(WXGlobalEventReceiver.EVENT_NAME, Constants.Event.RESUME_EVENT);
+    intent.putExtra(WXGlobalEventReceiver.EVENT_NAME,Constants.Event.RESUME_EVENT);
     intent.putExtra(WXGlobalEventReceiver.EVENT_WX_INSTANCEID,getInstanceId());
     mContext.sendBroadcast(intent);
 
@@ -1011,9 +1040,9 @@ public class WXSDKInstance implements IWXActivityStateListener,DomContext, View.
             mRenderListener.onRenderSuccess(WXSDKInstance.this, width, height);
             if (mUserTrackAdapter != null) {
               WXPerformance performance=new WXPerformance();
-              performance.errCode= WXErrorCode.WX_SUCCESS.getErrorCode();
+              performance.errCode=WXErrorCode.WX_SUCCESS.getErrorCode();
               performance.args=getBundleUrl();
-              mUserTrackAdapter.commit(mContext,null, IWXUserTrackAdapter.JS_BRIDGE,performance,getUserTrackParams());
+              mUserTrackAdapter.commit(mContext,null,IWXUserTrackAdapter.JS_BRIDGE,performance,getUserTrackParams());
             }
             if (WXEnvironment.isApkDebugable()) {
               WXLogUtils.d(WXLogUtils.WEEX_PERF_TAG, mWXPerformance.toString());
@@ -1237,8 +1266,8 @@ public class WXSDKInstance implements IWXActivityStateListener,DomContext, View.
 
   public void setBundleUrl(String url){
     mBundleUrl = url;
-    if(WXBridgeManager.getInstance().getAuthProcessor()!=null) {
-      needAuth = WXBridgeManager.getInstance().getAuthProcessor().needAuth(mBundleUrl);
+    if(WXSDKManager.getInstance().getValidateProcessor()!=null) {
+      needValidate = WXSDKManager.getInstance().getValidateProcessor().needValidate(mBundleUrl);
     }
   }
 
@@ -1379,7 +1408,7 @@ public class WXSDKInstance implements IWXActivityStateListener,DomContext, View.
    * @param module Events occur in this Module
    * @param params The parameters to be notified to WEEX are required
    */
-  public void fireModuleEvent(String eventName, WXModule module, Map<String, Object> params) {
+  public void fireModuleEvent(String eventName, WXModule module,Map<String, Object> params) {
     if (TextUtils.isEmpty(eventName) || module == null) {
       return;
     }
@@ -1528,18 +1557,18 @@ public class WXSDKInstance implements IWXActivityStateListener,DomContext, View.
             }
           }
           if(!"200".equals(response.statusCode)){
-            performance.errCode= WXErrorCode.WX_ERR_JSBUNDLE_DOWNLOAD.getErrorCode();
+            performance.errCode=WXErrorCode.WX_ERR_JSBUNDLE_DOWNLOAD.getErrorCode();
             performance.appendErrMsg(response.errorCode);
             performance.appendErrMsg("|");
             performance.appendErrMsg(response.errorMsg);
           }else if("200".equals(response.statusCode) && (response.originalData==null || response.originalData.length<=0)){
-            performance.errCode= WXErrorCode.WX_ERR_JSBUNDLE_DOWNLOAD.getErrorCode();
+            performance.errCode=WXErrorCode.WX_ERR_JSBUNDLE_DOWNLOAD.getErrorCode();
             performance.appendErrMsg(response.statusCode);
             performance.appendErrMsg("|template is null!");
           }else {
-            performance.errCode= WXErrorCode.WX_SUCCESS.getErrorCode();
+            performance.errCode=WXErrorCode.WX_SUCCESS.getErrorCode();
           }
-          mUserTrackAdapter.commit(getContext(),null, IWXUserTrackAdapter.JS_DOWNLOAD,performance,null);
+          mUserTrackAdapter.commit(getContext(),null,IWXUserTrackAdapter.JS_DOWNLOAD,performance,null);
         }
       }
       WXLogUtils.renderPerformanceLog("networkTime", mWXPerformance.networkTime);

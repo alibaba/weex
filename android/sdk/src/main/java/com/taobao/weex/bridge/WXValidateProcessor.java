@@ -210,22 +210,21 @@ import com.taobao.weex.WXSDKInstance;
 /**
  * Created by fengjunjie
  */
-public interface WXAuthProcessor {
+public interface WXValidateProcessor {
 
-    boolean onModuleAuth(WXSDKInstance wxsdkInstance, String moduleSt, String methodStr);
+    boolean onModuleValidate(WXSDKInstance wxsdkInstance, String moduleStr,
+            String methodStr);
 
-    WXComponentAuthResult onComponentAuth(WXSDKInstance wxsdkInstance,
-                                          String componentName, JSONObject domJson);
+    WXComponentAuthResult onComponentValidate(WXSDKInstance wxsdkInstance,
+            String componentName, JSONObject domJson);
 
-    boolean needAuth(String bundleUrl);
+    boolean needValidate(String bundleUrl);
 
     class WXComponentAuthResult {
 
         public boolean isSuccess;
 
         public String type;
-
-        public JSONObject replacedDomJson;
 
     }
 }
