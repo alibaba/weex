@@ -4,9 +4,9 @@ import { extend } from '../utils'
 // let warned = false
 
 function getHeadStyleMap () {
-  return Array.from(document.styleSheets)
+  return Array.from(document.styleSheets || [])
     .reduce((pre, styleSheet) => {
-      const rules = styleSheet.rules || styleSheet.cssRules
+      const rules = styleSheet.rules || styleSheet.cssRules || []
       Array.from(rules).forEach(rule => {
         const selector = rule.selectorText || ''
         const match = selector.match(/^\.([^.]+)$/)
