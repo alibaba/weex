@@ -214,12 +214,12 @@ public interface WXValidateProcessor {
     boolean onModuleValidate(WXSDKInstance wxsdkInstance, String moduleStr,
             String methodStr);
 
-    WXComponentAuthResult onComponentValidate(WXSDKInstance wxsdkInstance,
+    WXComponentValidateResult onComponentValidate(WXSDKInstance wxsdkInstance,
             String componentName);
 
     boolean needValidate(String bundleUrl);
 
-    class WXComponentAuthResult {
+    class WXComponentValidateResult {
 
         public boolean isSuccess;
 

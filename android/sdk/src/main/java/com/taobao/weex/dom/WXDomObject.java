@@ -819,11 +819,12 @@ public class WXDomObject extends CSSNode implements Cloneable,ImmutableDomObject
           WXValidateProcessor processor = WXSDKManager.getInstance()
                   .getValidateProcessor();
           if (processor != null) {
-              WXValidateProcessor.WXComponentAuthResult result = processor
+              WXValidateProcessor.WXComponentValidateResult result = processor
                       .onComponentValidate(wxsdkInstance, type);
               if (result != null && !result.isSuccess) {
-                  type = TextUtils.isEmpty(result.type) ? "div" : result.type;
-                  json.put("type", type);
+                  type = TextUtils.isEmpty(result.type) ? WXBasicComponentType.DIV
+                          : result.type;
+                  json.put(TYPE, type);
               }
           }
       }
