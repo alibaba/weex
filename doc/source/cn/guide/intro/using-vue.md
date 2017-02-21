@@ -57,6 +57,6 @@ Vue.js 最初是为 Web 设计的，虽然可以基于 Weex 开发移动应用�
 
 Vue.js 也有较多周边技术产品，如 [Vuex](https://github.com/vuejs/vuex) 和 [vue-router](https://github.com/vuejs/vue-router) 等，这些库也可以在 Weex 中很好的工作。
 
-关于 Vuex 和 vue-louter 的使用方法，可以参考[《在 Weex 项目中使用 Vuex 和 vue-router》](../../references/vue/difference-of-vuex.html)。
+关于 Vuex 和 vue-router 的使用方法，可以参考[《在 Weex 项目中使用 Vuex 和 vue-router》](../../references/vue/difference-of-vuex.html)。
 
 > 我们基于 Weex 和 Vue 开发了一个的完整项目 [weex-hackernews](https://github.com/weexteam/weex-hackernews) ，引入了包含 Vue 2.x 的 WeexSDK，创建了三端的项目和基本的编译配置。在项目中使用了 Vuex 和 vue-router ，能够实现同一份代码，在 iOS、Android、Web 下都能完整地工作。

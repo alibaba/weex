@@ -53,6 +53,6 @@ Web development and native development, after all, there are some differences in
 
 ## Using Vue-related Libs
 
-Vue.js also has more cool related libs. For example [Vuex](https://github.com/vuejs/vuex) and [vue-router](https://github.com/vuejs/vue-router). They all work well in Weex. For using Vuex and vue-louter, see [Using Vuex and vue-router in Weex》](../../references/vue/difference-of-vuex.html)。
+Vue.js also has more cool related libs. For example [Vuex](https://github.com/vuejs/vuex) and [vue-router](https://github.com/vuejs/vue-router). They all work well in Weex. For using Vuex and vue-router, see [Using Vuex and vue-router in Weex](../../references/vue/difference-of-vuex.html)。
 
 > We developed a complete project based on Weex and Vue 2.x which named [weex-hackernews](https://github.com/weepteam/web-ehackernews). It includes WeexSDK with Vue 2.x in iOS, Android and web. Also we use Vuex and vue-router. The whole project uses the same source code for three different platforms.
