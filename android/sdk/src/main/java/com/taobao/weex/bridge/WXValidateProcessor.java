@@ -204,7 +204,6 @@
  */
 package com.taobao.weex.bridge;
 
-import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXSDKInstance;
 
 /**
@@ -216,7 +215,7 @@ public interface WXValidateProcessor {
             String methodStr);
 
     WXComponentAuthResult onComponentValidate(WXSDKInstance wxsdkInstance,
-            String componentName, JSONObject domJson);
+            String componentName);
 
     boolean needValidate(String bundleUrl);
 
