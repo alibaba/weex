@@ -203,6 +203,7 @@ body > .weex-scroller {
 
 .weex-list-inner,
 .weex-scroller-inner {
+  -webkit-overflow-scrolling:touch;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -217,6 +218,10 @@ body > .weex-scroller {
   -webkit-justify-content: flex-start;
       -ms-flex-pack: start;
           justify-content: flex-start;
+}
+
+.weex-scroller-inner::-webkit-scrollbar {
+    width: 0;
 }
 
 .weex-scroller-wrapper.weex-scroller-vertical {

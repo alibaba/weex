@@ -8,6 +8,56 @@ function getParentScroller (vnode) {
   return getParentScroller(vnode.$parent)
 }
 
+function now () {
+  const now = window.performance && window.performance.now
+      ? window.performance.now.bind(window.performance) : Date.now
+  return now()
+}
+
+function scrollElement (dSuffix, position) {
+  // console.log('滚了！', this, dSuffix, position)
+  this[`scroll${dSuffix}`] = position
+}
+
+/**
+ * self invoked function that, given a context, steps through scrolling
+ * @method step
+ * @param {Object} context
+ */
+function step (context) {
+  // call method again on next available frame
+  context.frame = window.requestAnimationFrame(step.bind(window, context))
+
+  const time = now()
+  let elapsed = (time - context.startTime) / 468
+
+  // avoid elapsed times higher than one
+  elapsed = elapsed > 1 ? 1 : elapsed
+
+  // apply easing to elapsed time
+  const value = ease(elapsed)
+
+  const currentPosition = context.startPosition + (context.position - context.startPosition) * value
+
+  context.method.call(context.scrollable, context.dSuffix, currentPosition)
+
+  // return when end points have been reached
+  if (currentPosition === context.position) {
+    window.cancelAnimationFrame(context.frame)
+    return
+  }
+}
+
+/**
+ * returns result of applying ease math function to a number
+ * @method ease
+ * @param {Number} k
+ * @returns {Number}
+ */
+function ease (k) {
+  return 0.5 * (1 - Math.cos(Math.PI * k))
+}
+
 export default {
   /**
    * scrollToElement
@@ -36,8 +86,15 @@ export default {
           + 'otherwise it may not works well on native.')
       }
 
-      // TODO: add animation
-      scroller.$el[`scroll${dSuffix}`] = offset
+      step({
+        scrollable: scroller.$el,
+        startTime: now(),
+        frame: null,
+        startPosition: scroller.$el[`scroll${dSuffix}`],
+        position: offset,
+        method: scrollElement,
+        dSuffix: dSuffix
+      })
     }
   },
 
