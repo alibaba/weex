@@ -15,7 +15,6 @@ function now () {
 }
 
 function scrollElement (dSuffix, position) {
-  // console.log('滚了！', this, dSuffix, position)
   this[`scroll${dSuffix}`] = position
 }
 
