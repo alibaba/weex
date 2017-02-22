@@ -1,6 +1,7 @@
 export * from './func'
 export * from './event'
 export * from './component'
+export * from './lazyload'
 
 /**
  * Create a cached version of a pure function.

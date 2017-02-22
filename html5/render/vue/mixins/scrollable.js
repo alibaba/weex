@@ -1,3 +1,4 @@
+import { fireLazyload } from '../utils'
 
 export default {
   methods: {
@@ -11,6 +12,7 @@ export default {
     },
 
     handleScroll (event) {
+      fireLazyload(this.$el)
       if (this.reachBottom()) {
         this.$emit('loadmore', event)
       }

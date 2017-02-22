@@ -5,130 +5,130 @@
         <div class="shopHeader" style="flex-direction:row;">
           <div style="flex:2;flex-direction:row;">
             <div>
-              <image style="width:60;height:60;" :src="item.PersonPhoto"></image>
+              <image style="width:60px;height:60px;" :src="item.PersonPhoto"></image>
             </div>
-            <div style="flex-direction:column;margin-left:5;">
-              <div style="margin-top:5;">
-                <text style="font-size:20;">{{item.PersonName}}</text>
+            <div style="flex-direction:column;margin-left:5px;">
+              <div style="margin-top:5px;">
+                <text style="font-size:20px;">{{item.PersonName}}</text>
               </div>
-              <div style="margin-top:5;">
+              <div style="margin-top:5px;">
                 <text style="font-size:20;color:#cccccc;">{{item.PersonVisitTime}}</text>
               </div>
             </div>
           </div>
           <div style="flex:5;flex-direction:row;">
-            <div style="flex-direction:row;margin-left:10;margin-top:10;">
+            <div style="flex-direction:row;margin-left:10px;margin-top:10px;">
               <div>
-                <image style="width:20;height:20;"
+                <image style="width:20px;height:20px;"
                   src="https://img.alicdn.com/tps/i4/TB1zkDeIFXXXXXrXVXX07tlTXXX-200-200.png_88x88xz.jpg"></image>
               </div>
               <div>
-                <text style="font-size:20;">Hope</text>
+                <text style="font-size:20px;">Hope</text>
               </div>
             </div>
-            <div style="position:absolute;left:90;top:10;flex-direction:row;">
+            <div style="position:absolute;left:90px;top:10px;flex-direction:row;">
               <div>
-                <image style="width:20;height:20;"
+                <image style="width:20px;height:20px;"
                   src="https://img.alicdn.com/tps/i2/TB1hRb1IXXXXXX3XVXXXQaP.pXX-87-87.jpeg"></image>
               </div>
               <div>
-                <text style="font-size:20;">Mem</text>
+                <text style="font-size:20px;">Mem</text>
               </div>
             </div>
-            <div style="position:absolute;left:170;top:10;flex-direction:row;">
+            <div style="position:absolute;left:170px;top:10px;flex-direction:row;">
               <div>
-                <image style="width:20;height:20;"
+                <image style="width:20px;height:20px;"
                   src="https://img.alicdn.com/tps/i3/TB1DGkJJFXXXXaZXFXX07tlTXXX-200-200.png"></image>
               </div>
               <div>
-                <text style="font-size:20;">auth</text>
+                <text style="font-size:20px;">auth</text>
               </div>
             </div>
-            <div style="position:absolute;left:250;top:10;flex-direction:row;">
+            <div style="position:absolute;left:250px;top:10px;flex-direction:row;">
               <div>
-                <image style="width:20;height:20;"
+                <image style="width:20px;height:20px;"
                   src="https://img.alicdn.com/tps/i1/TB1nFvPIXXXXXbUXXXXUAkPJpXX-87-87.png"></image>
               </div>
               <div>
-                <text style="font-size:20;">Friend</text>
+                <text style="font-size:20px;">Friend</text>
               </div>
             </div>
-            <div style="position:absolute;left:330;top:10;flex-direction:row;">
+            <div style="position:absolute;left:330px;top:10px;flex-direction:row;">
               <div>
-                <image style="width:20;height:20;"
+                <image style="width:20px;height:20px;"
                   src="https://img.alicdn.com/tps/i2/TB1CpD7IXXXXXbSXXXXUAkPJpXX-87-87.png"></image>
               </div>
               <div>
-                <text style="font-size:20;">issue</text>
+                <text style="font-size:20px;">issue</text>
               </div>
             </div>
-            <div style="position:absolute;left:410;top:10;flex-direction:row;">
+            <div style="position:absolute;left:410px;top:10px;flex-direction:row;">
               <div>
-                <image style="width:20;height:20;"
+                <image style="width:20px;height:20px;"
                   src="https://gtms02.alicdn.com/tps/i2/TB11ZZfIVXXXXbMXFXXEDhGGXXX-32-32.png"></image>
               </div>
               <div>
-                <text style="font-size:20;">super</text>
+                <text style="font-size:20px;">super</text>
               </div>
             </div>
           </div>
         </div>
         <div class="shopBody" style="flex-direction:column;">
-          <div class="descDiv" style="margin-top:10;margin-left:10;">
-            <text class="shopDesc" style="font-size:25;">{{item.shopDesc}}</text>
+          <div class="descDiv" style="margin-top:10px;margin-left:10px;">
+            <text class="shopDesc" style="font-size:25px;">{{item.shopDesc}}</text>
           </div>
           <div style="flex-direction:row;">
-            <div class="imgDiv" style="flex:1;flex-direction:column;margin:10;" v-for="img in item.shopImgList">
+            <div class="imgDiv" style="flex:1;flex-direction:column;margin:10px;" v-for="img in item.shopImgList">
               <div>
                 <image class="shopImg" :style="{ width: img.shopImgWidth, height: img.shopImgHeight }" :src="img.shopImg"></image>
               </div>
-              <div style="flex:1;margin-top:10;flex-direction:row;">
+              <div style="flex:1;margin-top:10px;flex-direction:row;">
                 <div style="flex:1;justify-content:center;flex-direction:row;">
                   <div>
-                    <image style="width:20;height:20;"
+                    <image style="width:20px;height:20px;"
                            src="https://img.alicdn.com/tps/i1/TB1nFvPIXXXXXbUXXXXUAkPJpXX-87-87.png"></image>
                   </div>
-                  <div style="margin-left:5;">
-                    <text style="font-size:20;text-align:center;">Up</text>
+                  <div style="margin-left:5px;">
+                    <text style="font-size:20px;text-align:center;">Up</text>
                   </div>
                 </div>
                 <div style="flex:1;justify-content:center;flex-direction:row;">
                   <div>
-                    <image style="width:20;height:20;"
+                    <image style="width:20px;height:20px;"
                            src="https://img.alicdn.com/tps/i2/TB1CpD7IXXXXXbSXXXXUAkPJpXX-87-87.png"></image>
                   </div>
-                  <div style="margin-left:5;">
-                    <text style="font-size:20;text-align:center;">down</text>
+                  <div style="margin-left:5px;">
+                    <text style="font-size:20px;text-align:center;">down</text>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="shopFooter" style="flex-direction:row;margin-top:10;margin-left:10;justify-content:flex-end;">
-          <div style="margin-right:5;">
+        <div class="shopFooter" style="flex-direction:row;margin-top:10px;margin-left:10px;justify-content:flex-end;">
+          <div style="margin-right:5px;">
             <image class="shopLikeImg smallImg" :src="item.shopLikeImg"></image>
           </div>
-          <div style="margin-right:15;">
-            <text class="shopLikeText" style="font-size:20;">{{item.shopLikeText}}</text>
+          <div style="margin-right:15px;">
+            <text class="shopLikeText" style="font-size:20px;">{{item.shopLikeText}}</text>
           </div>
-          <div style="margin-right:5;">
+          <div style="margin-right:5px;">
             <image class="shopCommentImg smallImg" :src="item.shopCommentImg"></image>
           </div>
-          <div style="margin-right:15;">
-            <text class="shopCommentText" style="font-size:20;">{{item.shopCommentText}}</text>
+          <div style="margin-right:15px;">
+            <text class="shopCommentText" style="font-size:20px;">{{item.shopCommentText}}</text>
           </div>
-          <div style="margin-right:5;">
+          <div style="margin-right:5px;">
             <image class="shopLookImg smallImg" :src="item.shopLookImg"></image>
           </div>
-          <div style="margin-right:15;">
-            <text class="shopLookText" style="font-size:20;">{{item.shopLookText}}</text>
+          <div style="margin-right:15px;">
+            <text class="shopLookText" style="font-size:20px;">{{item.shopLookText}}</text>
           </div>
-          <div style="margin-right:5;">
+          <div style="margin-right:5px;">
             <image class="shareImg smallImg" :src="item.shareImg"></image>
           </div>
-          <div style="margin-right:20;">
-            <text class="shareText" style="font-size:20;">{{item.shareText}}</text>
+          <div style="margin-right:20px;">
+            <text class="shareText" style="font-size:20px;">{{item.shareText}}</text>
           </div>
         </div>
       </div>
@@ -162,57 +162,57 @@
   }
 
   .shopImg {
-    width: 220;
-    height: 220;
+    width: 220px;
+    height: 220px;
   }
 
   .list {
     flex-direction: column;
     overflow: hidden;
-    width: 750;
-    height: 1200;
+    width: 750px;
+    height: 1200px;
     background-color: #dddddd;
   }
 
   .cell {
     background-color: #dddddd;
     flex-direction: column;
-    width: 750;
+    width: 750px;
   }
 
   .shopDiv {
     flex-direction: column;
     background-color: #ffffff;
-    margin: 5;
-    padding: 10;
-    border-width: 1;
+    margin: 5px;
+    padding: 10px;
+    border-width: 1px;
     border-color: #cccccc;
     overflow: visible;
   }
 
   .shopRowList {
     flex-direction: column;
-    border-width: 1;
+    border-width: 1px;
     border-color: #cccccc;
     overflow: visible;
-    margin: 5;
-    padding: 10;
+    margin: 5px;
+    padding: 10px;
     background-color: #ffffff;
   }
 
   .shopHeader {
     flex-direction: row;
-    width: 720;
+    width: 720px;
   }
 
   .shopFooter {
     flex-direction: row;
-    width: 720;
+    width: 720px;
   }
 
   .smallImg {
-    width: 20;
-    height: 20;
+    width: 20px;
+    height: 20px;
   }
 </style>
 
@@ -230,16 +230,16 @@
             PersonVisitTime: 'today',
             shopDesc: 'Genius only means hard-working all one\'s life',
             shopImgList: [{
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd2.alicdn.com/bao/uploaded/i2/TB1rtOnHpXXXXXLaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
             }, {
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd4.alicdn.com/bao/uploaded/i4/TB15KrfFVXXXXXJXXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
             }, {
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd2.alicdn.com/bao/uploaded/i2/TB1t5YBGVXXXXXcaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
             }],
             shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
@@ -260,16 +260,16 @@
             PersonVisitTime: 'yesterday',
             shopDesc: 'The man who has made up his mind to win will never say "impossible "',
             shopImgList: [{
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd1.alicdn.com/imgextra/i1/2655929383/TB2.qITjpXXXXcIXXXXXXXXXXXX_!!2655929383.jpg_220x220.jpg'
             }, {
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd3.alicdn.com/imgextra/i3/2655929383/TB2eWwZjpXXXXbHXXXXXXXXXXXX_!!2655929383.jpg_220x220.jpg'
             }, {
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd2.alicdn.com/imgextra/i2/2655929383/TB2tgQWjpXXXXbZXXXXXXXXXXXX_!!2655929383.jpg_220x220.jpg'
             }],
             shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
@@ -290,16 +290,16 @@
             PersonVisitTime: 'yesterday',
             shopDesc: 'There is no such thing as a great talent without great will - power',
             shopImgList: [{
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd1.alicdn.com/imgextra/i1/TB1AFz9LXXXXXbrXVXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
             }, {
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd2.alicdn.com/imgextra/i2/2557954751/TB2is2njXXXXXatXpXXXXXXXXXX_!!2557954751.jpg_220x220.jpg'
             }, {
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd2.alicdn.com/imgextra/i2/2557954751/TB2PNYGjXXXXXbXXXXXXXXXXXXX_!!2557954751.jpg_220x220.jpg'
             }],
             shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
@@ -320,16 +320,16 @@
             PersonVisitTime: '3 day ago',
             shopDesc: 'Cease to struggle and you cease to live',
             shopImgList: [{
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd4.alicdn.com/imgextra/i4/69426324/TB2zbwdfXXXXXa4XpXXXXXXXXXX_!!69426324.jpg_220x220.jpg'
             }, {
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd4.alicdn.com/imgextra/i4/69426324/TB2L7ZAfXXXXXXOXXXXXXXXXXXX_!!69426324.jpg_220x220.jpg'
             }, {
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd4.alicdn.com/imgextra/i4/69426324/TB2p9wufXXXXXbiXXXXXXXXXXXX_!!69426324.jpg_220x220.jpg'
             }],
             shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
@@ -350,16 +350,16 @@
             PersonVisitTime: 'yesterday',
             shopDesc: 'A strong man will struggle with the storms of fate',
             shopImgList: [{
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd3.alicdn.com/bao/uploaded/i3/TB1MQ8_KVXXXXaLXVXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
             }, {
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd2.alicdn.com/imgextra/i2/53218032/TB2bGSqiXXXXXXyXpXXXXXXXXXX_!!53218032.jpg_220x220.jpg'
             }, {
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd2.alicdn.com/bao/uploaded/i2/TB1kP2zKFXXXXbIXXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
             }],
             shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
@@ -380,16 +380,16 @@
             PersonVisitTime: 'yesterday',
             shopDesc: 'Living without an aim is like sailing without a compass',
             shopImgList: [{
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd4.alicdn.com/bao/uploaded/i4/TB11yFnHXXXXXakaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
             }, {
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd4.alicdn.com/imgextra/i4/32720628/TB2CRJUcXXXXXXwXpXXXXXXXXXX_!!32720628.jpg_220x220.jpg'
             }, {
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd2.alicdn.com/bao/uploaded/i2/TB17LUzHXXXXXcEaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
             }],
             shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
@@ -410,16 +410,16 @@
             PersonVisitTime: 'today',
             shopDesc: 'Live a noble and honest life. Reviving past times in your old age will help you to enjoy your life again',
             shopImgList: [{
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd4.alicdn.com/bao/uploaded/i4/TB1hvNoJXXXXXaMaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
             }, {
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd4.alicdn.com/imgextra/i4/2058567235/TB2V8iygFXXXXaRXpXXXXXXXXXX_!!2058567235.jpg_220x220.jpg'
             }, {
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd2.alicdn.com/imgextra/i2/2058567235/TB2im1QgFXXXXX8XXXXXXXXXXXX_!!2058567235.jpg_220x220.jpg'
             }],
             shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
@@ -440,16 +440,16 @@
             PersonVisitTime: 'yesterday',
             shopDesc: 'Behind every successful man there\'s a lot u unsuccessful years',
             shopImgList: [{
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd1.alicdn.com/bao/uploaded/i1/TB18BZ2KFXXXXb8XFXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
             }, {
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd1.alicdn.com/imgextra/i1/2775383848/TB2r012jVXXXXXHXpXXXXXXXXXX_!!2775383848.jpg_220x220.jpg'
             }, {
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd3.alicdn.com/imgextra/i3/2775383848/TB2iI9VjVXXXXaoXpXXXXXXXXXX_!!2775383848.jpg_220x220.jpg'
             }],
             shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
@@ -470,16 +470,16 @@
             PersonVisitTime: 'today',
             shopDesc: 'Enrich your life today,. yesterday is history.tomorrow is mystery',
             shopImgList: [{
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd1.alicdn.com/bao/uploaded/i1/TB1JB.rLpXXXXXLXXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
             }, {
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd4.alicdn.com/imgextra/i4/2702739128/TB2JdvmjVXXXXXjXXXXXXXXXXXX_!!2702739128.jpg_220x220.jpg'
             }, {
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd2.alicdn.com/imgextra/i2/2702739128/TB2A.e6jVXXXXXGXpXXXXXXXXXX_!!2702739128.jpg_220x220.jpg'
             }],
             shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
@@ -500,16 +500,16 @@
             PersonVisitTime: 'yesterday',
             shopDesc: 'The secret of success is constancy to purpose',
             shopImgList: [{
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd3.alicdn.com/bao/uploaded/i3/TB17zXOGXXXXXbEXVXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
             }, {
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd1.alicdn.com/imgextra/i1/2265445951/TB22ACTbFXXXXXBXXXXXXXXXXXX_!!2265445951.jpg_220x220.jpg'
             }, {
-              shopImgWidth: 220,
-              shopImgHeight: 220,
+              shopImgWidth: '220px',
+              shopImgHeight: '220px',
               shopImg: 'https://gd3.alicdn.com/imgextra/i3/2265445951/TB2oXqUbFXXXXXIXXXXXXXXXXXX_!!2265445951.jpg_220x220.jpg'
             }],
             shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',

@@ -201,6 +201,10 @@ body > .weex-scroller {
   position: relative;
 }
 
+.weex-list-wrapper {
+  overflow-y: scroll !important;
+}
+
 .weex-list-inner,
 .weex-scroller-inner {
   -webkit-overflow-scrolling:touch;

@@ -13,15 +13,26 @@ export function hasIntersection (rect, ctRect) {
     && (rect.top < ctRect.bottom && rect.bottom > ctRect.top)
 }
 
+/**
+ * [isElementVisible description]
+ * @param  {HTMLElement}  el    a dom element.
+ * @param  {HTMLElement}  container  optional, the container of this el.
+ */
+export function isElementVisible (el, container) {
+  const ct = container || document.body
+  return hasIntersection(
+    el.getBoundingClientRect(),
+    ct.getBoundingClientRect())
+}
+
 export function isComponentVisible (component) {
   if (component.$el) {
     const scroller = getParentScroller(component)
     if (scroller && scroller.$el) {
-      const visible = hasIntersection(
+      return hasIntersection(
         component.$el.getBoundingClientRect(),
         scroller.$el.getBoundingClientRect()
       )
-      return visible
     }
   }
   return false
