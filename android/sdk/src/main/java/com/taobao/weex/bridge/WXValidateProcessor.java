@@ -223,7 +223,7 @@ public interface WXValidateProcessor {
 
         public boolean isSuccess;
 
-        public String type;
+        public String replacedComponent;
 
     }
 }
