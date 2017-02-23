@@ -224,13 +224,13 @@ public class WXFileUtils {
    * @param context Weex Context
    * @return the Content of the file
    */
-  public static String loadFile(String path, Context context) {
+  public static String loadFileOrAsset(String path, Context context) {
     if (!TextUtils.isEmpty(path)) {
       File file = new File(path);
       if (file.exists()) {
         try {
           FileInputStream fis = new FileInputStream(file);
-          return readFileToString(fis);
+          return readStreamToString(fis);
         } catch (FileNotFoundException e) {
           e.printStackTrace();
         }
@@ -254,14 +254,14 @@ public class WXFileUtils {
     InputStream inputStream = null;
     try {
       inputStream = context.getAssets().open(path);
-      return readFileToString(inputStream);
+      return readStreamToString(inputStream);
     } catch (IOException e) {
       e.printStackTrace();
     }
     return "";
   }
 
-  private static String readFileToString(InputStream inputStream) {
+  private static String readStreamToString(InputStream inputStream) {
     BufferedReader bufferedReader = null;
     try {
       StringBuilder builder = new StringBuilder(inputStream.available() + 10);
