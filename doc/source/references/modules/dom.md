@@ -17,7 +17,7 @@ A series of dom apis that sending virtual-dom's messages to the native renderer 
 
 Scroll the page to the specified node. This API should only be used on the element in the `scroller` or `list` component.
 
-<del>This API can be used by calling the VM's method `$scrollTo` **(deprecated)**.</del> You can use `require('@weex-module/dom').scrollToElement` to call this API in your `.we` file.
+<del>This API can be used by calling the VM's method `$scrollTo` **(deprecated)**.</del> You can use `weex.requireModule('dom').scrollToElement` to call this API in your `.we` file.
 
 #### Arguments
 
@@ -116,7 +116,7 @@ Scroll the page to the specified node. This API should only be used on the eleme
 
 [try it](../../examples/dom-scroll.html)
 
-### getComponentRect(ref,callback)<sup>v0.9.4+</sup>
+### getComponentRect(ref,callback) <span class="api-version">v0.9.4+</span>
 
 You can get the view rectangle information of named element.
 

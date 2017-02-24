@@ -24,7 +24,7 @@ version: 2.1
 
 ~~这个API也能通过调用VM的方法 `$scrollTo` 来使用（已弃用）~~
 
-要在你的 `.we` 文件中使用这个 API，可以使用 `require('@weex-module/dom').scrollToElement`。
+要在你的 `.we` 文件中使用这个 API，可以使用 `weex.requireModule('dom').scrollToElement`。
 
 #### 参数
 - `node {Node}`：你要滚动到的那个节点
@@ -122,7 +122,7 @@ version: 2.1
 
 [try it](../../../examples/dom-scroll.html)
 
-### getComponentRect(ref, callback)<sup>v0.9.4+</sup>
+### getComponentRect(ref, callback) <span class="api-version">v0.9.4+</span>
 
 通过标签的 `ref` 获得其布局信息，返回的信息在 `callBack` 中，格式参考如下：
 

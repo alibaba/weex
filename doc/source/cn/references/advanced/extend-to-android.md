@@ -48,7 +48,7 @@ JS 调用如下：
   module.exports = {
     methods: {
       click: function() {
-        require('@weex-module/myModule').printLog("我是一个测试!");
+        weex.requireModule('myModule').printLog("我是一个测试!");
       }
     }
   }
