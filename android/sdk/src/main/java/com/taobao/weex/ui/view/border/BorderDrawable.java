@@ -455,6 +455,10 @@ public class BorderDrawable extends Drawable {
     invalidateSelf();
   }
 
+  public boolean hasImage(){
+    return mShader!=null;
+  }
+
   public boolean isRounded() {
     return mBorderRadius != null &&
            (!FloatUtil.floatsEqual(getBorderRadius(mBorderRadius, BORDER_TOP_LEFT_RADIUS), 0) ||
