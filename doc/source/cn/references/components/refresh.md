@@ -19,7 +19,7 @@ version: 2.1
 
 ## 特性
 
-- `display {string}`：可选值为 `show` 或者 `hide`，仅隐藏 `<indicator>`，`<loading>` 其他子组件依然可见，`<loading>` 事件仍会被触发。
+- `display {string}`：可选值为 `show` 或者 `hide`，仅隐藏 `<indicator>`，`<refresh>` 其他子组件依然可见，`<refresh>` 事件仍会被触发。
 
 ## 样式
 

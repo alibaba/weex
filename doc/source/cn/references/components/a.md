@@ -46,7 +46,7 @@ version: 2.1
 1. **不能**直接在 `<a>` 中添加文本。
   错误示例，“click” 无法被正常渲染。
 
-  ```HTML
+  ```html
   <template>
     <div class="wrapper">
       <a href="http://dotwe.org/raw/dist/a468998152ee680413588c38bd61c29e.js">

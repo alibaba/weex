@@ -22,7 +22,7 @@ Loads the previous location in the history stack.
 #### Example
 
 ```
-var webview = require('@weex-module/webview');
+var webview = weex.requireModule('webview');
 var webElement = this.$el('webview');
 webview.goBack(webElement);
 ```
@@ -38,7 +38,7 @@ Loads the next location in the history stack.
 #### Example
 
 ```
-var webview = require('@weex-module/webview');
+var webview = weex.requireModule('webview');
 var webElement = this.$el('webview');
 webview.goForward(webElement);
 ```
@@ -54,7 +54,7 @@ Reloads the current web page.
 #### Example
 
 ```
-var webview = require('@weex-module/webview');
+var webview = weex.requireModule('webview');
 var webElement = this.$el('webview');
 webview.reload(webElement.ref);
 ```

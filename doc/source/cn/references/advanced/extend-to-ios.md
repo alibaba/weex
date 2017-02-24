@@ -58,7 +58,7 @@ Weex SDK 只提供渲染，而不是其他的能力，如果你需要 像网络�
     这里的  require 里面的event 就是在 上一步调用`registerModule:` 注册module 时候的name
    
    ```javascript
-    var eventModule = require('@weex-module/event'); 
+    var eventModule = weex.requireModule('event'); 
     eventModule.openURL('url',function(ret) {   
         nativeLog(ret);
     });

@@ -23,7 +23,7 @@ There is no specific attribute for this component.
 
 ### Styles
 
-**common styles**: check out the [common styles](../common-attrs.html)
+**common styles**: check out the [common styles](../common-style.html)
 
 - support flexbox related styles
 - support box model related styles

@@ -57,7 +57,7 @@ you can add  `` @JSMethod (uiThread = false or true ) `` annotation to choose th
 Now `event` moudle is avaiable in weex, use the module like this:   
 ```javascript
 
-var event = require('@weex-module/event');
+var event = weex.requireModule('event');
 event.openURL("http://www.github.com");
 
 ```
