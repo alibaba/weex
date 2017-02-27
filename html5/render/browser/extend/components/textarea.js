@@ -15,6 +15,18 @@ const proto = {
     node.classList.add('weex-element')
     node.classList.add('weex-textarea')
     return node
+  },
+  
+  setSelectionRange(selectionStart, selectionEnd) {
+    this.node.focus()
+    this.node.setSelectionRange(selectionStart, selectionEnd)
+  },
+  
+  getSelectionRange(callback) {
+    callback({
+      selectionStart: this.node.selectionStart,
+      selectionEnd: this.node.selectionEnd
+    }) 
   }
 }
 

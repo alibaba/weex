@@ -1,5 +1,5 @@
 import { base } from '../mixins'
-import { extend, mapFormEvents } from '../utils'
+import { extend, mapFormEvents, setSelectionRange, getSelectionRange } from '../utils'
 import { validateStyles } from '../validator'
 
 export default {
@@ -20,7 +20,10 @@ export default {
       default: 2
     }
   },
-
+  methods: {
+    setSelectionRange,
+    getSelectionRange
+  },
   render (createElement) {
     /* istanbul ignore next */
     if (process.env.NODE_ENV === 'development') {
