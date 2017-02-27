@@ -205,6 +205,7 @@
 package com.taobao.weex.ui.component.list;
 
 import android.content.Context;
+import android.view.View;
 
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.annotation.Component;
@@ -267,23 +268,35 @@ public class WXListComponent extends BasicListComponent<BounceRecyclerView> {
     }
     if (child instanceof WXRefresh) {
       getHostView().setOnRefreshListener((WXRefresh) child);
-      getHostView().postDelayed(new Runnable() {
+      getHostView().getSwipeLayout().addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
         @Override
-        public void run() {
+        public void onViewAttachedToWindow(View v) {
           getHostView().setHeaderView(child);
+          getHostView().getSwipeLayout().removeOnAttachStateChangeListener(this);
         }
-      }, 100);
+
+        @Override
+        public void onViewDetachedFromWindow(View v) {
+
+        }
+      });
       return true;
     }
 
     if (child instanceof WXLoading) {
       getHostView().setOnLoadingListener((WXLoading) child);
-      getHostView().postDelayed(new Runnable() {
+      getHostView().getSwipeLayout().addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
         @Override
-        public void run() {
+        public void onViewAttachedToWindow(View v) {
           getHostView().setFooterView(child);
+          getHostView().getSwipeLayout().removeOnAttachStateChangeListener(this);
         }
-      }, 100);
+
+        @Override
+        public void onViewDetachedFromWindow(View v) {
+
+        }
+      });
       return true;
     }
 
