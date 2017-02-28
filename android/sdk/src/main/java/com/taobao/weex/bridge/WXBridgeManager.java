@@ -406,7 +406,7 @@ public class WXBridgeManager implements Callback,BactchExecutor {
         if (wxsdkInstance.isNeedValidate()
                 && WXSDKManager.getInstance().getValidateProcessor() != null) {
             boolean result = WXSDKManager.getInstance().getValidateProcessor()
-                    .onModuleValidate(wxsdkInstance, moduleStr, methodStr);
+                    .onModuleValidate(wxsdkInstance, moduleStr, methodStr, args);
             if (result) {
                 return WXModuleManager.callModuleMethod(instanceId, moduleStr, methodStr,
                         args);
