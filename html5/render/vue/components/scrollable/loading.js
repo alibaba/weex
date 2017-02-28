@@ -15,21 +15,23 @@ export default {
   data () {
     return {
       height: -1,
-      viewHeight: 0,
+      viewHeight: 0
     }
   },
   mounted () {
     this.viewHeight = this.$el.offsetHeight
     if (this.display === 'hide') {
       this.height = 0
-    } else {
+    }
+    else {
       this.height = this.viewHeight
     }
   },
   updated () {
     if (this.display === 'hide') {
       this.$el.style.height = `${0}px`
-    } else {
+    }
+    else {
       this.$el.style.height = `${this.viewHeight}px`
     }
   },
@@ -40,7 +42,8 @@ export default {
     display (val) {
       if (val === 'hide') {
         this.height = 0
-      } else {
+      }
+      else {
         this.height = this.viewHeight
       }
     }
@@ -58,7 +61,8 @@ export default {
       if (this.height >= this.viewHeight) {
         this.pulling(this.viewHeight)
         this.$emit('loading')
-      } else {
+      }
+      else {
         this.pulling(0)
       }
     },

@@ -64,7 +64,8 @@ export default {
           this._touchParams.offsetY = offsetY
           if (reachTop && this._refresh) {
             this._refresh.child.pullingDown(offsetY)
-          } else if (reachBottom && this._loading) {
+          }
+          else if (reachBottom && this._loading) {
             this._loading.child.pullingUp(-offsetY)
           }
         }
@@ -76,16 +77,17 @@ export default {
       event.stopPropagation()
       if (this._touchParams) {
         const inner = this.$refs.inner
-        const { offsetY, reachTop, reachBottom } = this._touchParams
+        const { reachTop, reachBottom } = this._touchParams
         if (inner) {
           if (reachTop && this._refresh) {
             this._refresh.child.pullingEnd()
-          } else if (reachBottom && this._loading) {
+          }
+          else if (reachBottom && this._loading) {
             this._loading.child.pullingEnd()
           }
         }
       }
       delete this._touchParams
-    },
+    }
   }
 }
