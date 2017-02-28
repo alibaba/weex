@@ -1,0 +1,44 @@
+ght:200;
+  }
+  
+  .root{
+    background-color:#ffffff;
+    justify-content:center;
+    align-items:center
+  }
+</style>
+
+<template>
+    <container class="root">
+      <text class="text" repeat="{{(i,key) in keys}}" onclick="click()" data-index={{i}}>
+        {{key.key}}
+      </text>
+    </container>
+</template>
+
+<script>
+    module.exports = {
+        data: {
+            keys: [{
+              key:'notChange'
+            },{
+              key:'notChange'
+            },{
+              key:'notChange'
+            }]
+        },
+
+        methods: {
+            ready() {
+
+            },
+            click:function (e) {
+              var index = e.target.attr.dataIndex;
+              this.keys[index] ={key:'change'}; 
+
+	      // change one item of the array, you'd better use $set or splice to `force` to trigger ui diff.
+              this.keys.$set(index ,this.keys[index]);
+            }
+          }
+    };
+</script>
