@@ -208,12 +208,38 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class WXFileUtils {
+
+  /**
+   * Load file in device directory, if not exist, load from asset directory.
+   * @param path FilePath
+   * @param context Weex Context
+   * @return the Content of the file
+   */
+  public static String loadFile(String path, Context context) {
+    if (!TextUtils.isEmpty(path)) {
+      File file = new File(path);
+      if (file.exists()) {
+        try {
+          FileInputStream fis = new FileInputStream(file);
+          return readFileToString(fis);
+        } catch (FileNotFoundException e) {
+          e.printStackTrace();
+        }
+      } else {
+        return loadAsset(path, context);
+      }
+    }
+    return "";
+  }
 
   /**
    * Load file in asset directory.
@@ -226,9 +252,18 @@ public class WXFileUtils {
       return null;
     }
     InputStream inputStream = null;
-    BufferedReader bufferedReader = null;
     try {
       inputStream = context.getAssets().open(path);
+      return readFileToString(inputStream);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return "";
+  }
+
+  private static String readFileToString(InputStream inputStream) {
+    BufferedReader bufferedReader = null;
+    try {
       StringBuilder builder = new StringBuilder(inputStream.available() + 10);
       bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
       char[] data = new char[4096];

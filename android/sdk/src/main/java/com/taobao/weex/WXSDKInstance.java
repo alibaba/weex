@@ -570,7 +570,7 @@ public class WXSDKInstance implements IWXActivityStateListener,DomContext, View.
 
     Uri uri = Uri.parse(url);
     if (uri != null && TextUtils.equals(uri.getScheme(), "file")) {
-      render(pageName, WXFileUtils.loadAsset(assembleFilePath(uri), mContext), renderOptions, jsonInitData, flag);
+      render(pageName, WXFileUtils.loadFile(assembleFilePath(uri), mContext), renderOptions, jsonInitData, flag);
       return;
     }
 
