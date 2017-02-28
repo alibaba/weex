@@ -1,0 +1,77 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/modules/stream.md:1
+#, no-wrap
+msgid "stream"
+msgstr "流动 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/modules/stream.md:3
+#, no-wrap
+msgid "Summary"
+msgstr "总结 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/modules/stream.md:6
+msgid "A series of stream api. It provides a network request."
+msgstr "一系列的流接口。它提供了一个网络请求。 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/modules/stream.md:7
+#, no-wrap
+msgid "API"
+msgstr "美国石油学会 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/modules/stream.md:9
+#, no-wrap
+msgid "sendHttp(params, callback)"
+msgstr "sendhttp(params, callback)???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/modules/stream.md:11
+#, no-wrap
+msgid "Arguments"
+msgstr "争论 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/modules/stream.md:19
+#, no-wrap
+msgid ""
+"* `params`*(object)*: the request parameters.\n"
+"  * `method`*(string)*: the HTTP method like `GET`, `POST`.\n"
+"  * `url`*(string)*: the request url.\n"
+"  * `header`*(object)*: the HTTP request header.\n"
+"  * `body`*(string)*: the HTTP body.\n"
+"* `callback`*(function)*: A callback function whose argument is the response string of the request.\n"
+msgstr ""
+"*`params``*(object)*: the request parameters.\n"
+"  * ``method``*(string)*: the HTTP method like ``GET``, ``POST``.\n"
+"  * ``url``*(string)*: the request url.\n"
+"  * ``header``*(object)*: the HTTP request header.\n"
+"  * ``body``*(string)*: the HTTP body.\n"
+"* ``callback`*(function)*：一个回调函数的参数是请求的响应字符串。 ???\n"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/modules/stream.md:20
+#, no-wrap
+msgid "Example"
+msgstr "例子 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/modules/stream.md:31
+#, no-wrap
+msgid ""
+"```javascript\n"
+"var stream = require('@weex-module/stream');\n"
+"stream.sendHttp({\n"
+"  method: 'GET',\n"
+"  url: 'path/to/a/uri', // can't not support CORS yet!\n"
+"}, function(ret) {\n"
+"  // TODO after response\n"
+"});\n"
+"```\n"
+msgstr ""

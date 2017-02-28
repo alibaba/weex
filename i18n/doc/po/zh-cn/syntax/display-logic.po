@@ -1,0 +1,326 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/syntax/display-logic.md:1
+#, no-wrap
+msgid "Display Logic Control"
+msgstr "显示逻辑控制 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/display-logic.md:4
+msgid ""
+"There are two attributes for display logic control: `if` and `repeat`. We "
+"can create Weex page structure and effects more flexible with them."
+msgstr ""
+"有两个属性：显示逻辑控制`if`` and ``repeat`。我们可以创造weex页面结构和作用与"
+"他们更灵活。 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/syntax/display-logic.md:5
+#, no-wrap
+msgid "`if`"
+msgstr " `if`???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/display-logic.md:8
+msgid ""
+"`if` attribute can control the display of a component by a truthy/falsy "
+"value. If the value is truthy, then the component will generated, otherwise "
+"it will be removed."
+msgstr ""
+" `if`属性可以控制显示组件的一个真实性/ falsy价值。如果该值是真相，然后将生成"
+"的组件，否则将被删除。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/display-logic.md:16
+#, no-wrap
+msgid ""
+"```html\n"
+"<template>\n"
+"  <container>\n"
+"    <text onclick=\"toggle\">Toggle</text>\n"
+"    <image src=\"...\" if=\"{{shown}}\"></image>\n"
+"  </container>\n"
+"</template>\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/display-logic.md:30
+#, no-wrap
+msgid ""
+"<script>\n"
+"  module.exports = {\n"
+"    data: {\n"
+"      shown: true\n"
+"    },\n"
+"    methods: {\n"
+"      toggle: function () {\n"
+"        this.shown = !this.shown\n"
+"      }\n"
+"    }\n"
+"  }\n"
+"</script>\n"
+"```\n"
+msgstr ""
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/syntax/display-logic.md:31
+#, no-wrap
+msgid "`repeat`"
+msgstr " `repeat`???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/display-logic.md:34
+msgid ""
+"`repeat` statement is just for array rendering. Every item in an array is "
+"also a structed data. This means in `repeat`ed component, you can bind their "
+"item properties directly."
+msgstr ""
+" `repeat`` statement is just for array rendering. Every item in an array is "
+"also a structed data. This means in ``repeat`组件，你可以把他们的项目属性直"
+"接。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/display-logic.md:44
+#, no-wrap
+msgid ""
+"```html\n"
+"<template>\n"
+"  <container>\n"
+"    <container repeat=\"{{list}}\" class=\"{{gender}}\">\n"
+"      <image src=\"{{avatar}}\"></image>\n"
+"      <text>{{nickname}}</text>\n"
+"    </container>\n"
+"  </container>\n"
+"</template>\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/display-logic.md:49
+#: /home/dev/download/weex/doc/syntax/display-logic.md:79
+#, no-wrap
+msgid ""
+"<style>\n"
+"  .male {...}\n"
+"  .female {...}\n"
+"</style>\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/display-logic.md:62
+#, no-wrap
+msgid ""
+"<script>\n"
+"  module.exports = {\n"
+"    data: {\n"
+"      list: [\n"
+"        {gender: 'male', nickname: 'Li Lei', avatar: '...'},\n"
+"        {gender: 'female', nickname: 'Han Meimei', avatar: '...'},\n"
+"        ...\n"
+"      ]\n"
+"    }\n"
+"  }\n"
+"</script>\n"
+"```\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/display-logic.md:64
+msgid ""
+"The origin data properties which not belongs to the array will also be bound:"
+msgstr "不属于数组的原始数据属性也将被绑定： ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/display-logic.md:74
+#, no-wrap
+msgid ""
+"```html\n"
+"<template>\n"
+"  <container>\n"
+"    <container repeat=\"{{list}}\" class=\"{{gender}}\">\n"
+"      <image src=\"{{avatar}}\"></image>\n"
+"      <text>{{nickname}} - {{group}}</text>\n"
+"    </container>\n"
+"  </container>\n"
+"</template>\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/display-logic.md:93
+#, no-wrap
+msgid ""
+"<script>\n"
+"  module.exports = {\n"
+"    data: {\n"
+"      group: '...',\n"
+"      list: [\n"
+"        {gender: 'male', nickname: 'Li Lei', avatar: '...'},\n"
+"        {gender: 'female', nickname: 'Han Meimei', avatar: '...'},\n"
+"        ...\n"
+"      ]\n"
+"    }\n"
+"  }\n"
+"</script>\n"
+"```\n"
+msgstr ""
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/syntax/display-logic.md:94
+#, no-wrap
+msgid "A extension of repeat syntax"
+msgstr "重复语法的扩展 ???"
+
+#. type: Title ####
+#: /home/dev/download/weex/doc/syntax/display-logic.md:96
+#, no-wrap
+msgid "use default `$index` for the index of array."
+msgstr "对数组的索引使用默认`$index`。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/display-logic.md:99
+#: /home/dev/download/weex/doc/syntax/display-logic.md:109
+msgid "e.g."
+msgstr "例如 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/display-logic.md:105
+#, no-wrap
+msgid ""
+"```html\n"
+"<div repeat=\"{{list}}\">\n"
+"  <text>No. {{$index + 1}}</text>\n"
+"<div>\n"
+"```\n"
+msgstr ""
+
+#. type: Title ####
+#: /home/dev/download/weex/doc/syntax/display-logic.md:106
+#, no-wrap
+msgid "specify the key and value of array."
+msgstr "指定数组的键和值。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/display-logic.md:115
+#, no-wrap
+msgid ""
+"```html\n"
+"<div repeat=\"{{v in list}}\">\n"
+"  <text>No. {{$index + 1}}, {{v.nickname}}</text>\n"
+"</div>\n"
+"```\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/display-logic.md:121
+#, no-wrap
+msgid ""
+"```html\n"
+"<div repeat=\"{{(k, v) in list}}\">\n"
+"  <text>No. {{k + 1}}, {{v.nickname}}</text>\n"
+"</div>\n"
+"```\n"
+msgstr ""
+
+#. type: Title ####
+#: /home/dev/download/weex/doc/syntax/display-logic.md:122
+#, no-wrap
+msgid "use `track-by` to specify unique attribute"
+msgstr "使用`track-by`指定唯一的属性 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/display-logic.md:125
+msgid ""
+"By default when replacing an array, `repeat` will cause the entire list to "
+"be re-rendered. However you can use `track-by` to specify an unique "
+"attribute as a hint, so that weex can reuse existing elements as much as "
+"possible."
+msgstr ""
+"默认情况下，替换数组时，`repeat`` will cause the entire list to be re-"
+"rendered. However you can use ``track-by`指定一个独特的属性作为一个提示，让"
+"weex可以重用现有的元素尽可能多的。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/display-logic.md:127
+#, no-wrap
+msgid "**NOTE: DO NOT USE DATA-BINDING SYNTAX FOR `track-by`**\n"
+msgstr "*注意：不要用data-binding为`track-by`**语法 ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/display-logic.md:139
+#, no-wrap
+msgid ""
+"e.g.\n"
+"```html\n"
+"<template>\n"
+"  <container>\n"
+"    <container repeat=\"{{list}}\" track-by=\"nickname\" class=\"{{gender}}\">\n"
+"      <image src=\"{{avatar}}\"></image>\n"
+"      <text>{{nickname}} - {{group}}</text>\n"
+"    </container>\n"
+"  </container>\n"
+"</template>\n"
+"```\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/display-logic.md:141
+msgid ""
+"Later on, when you replace the array including an item of the same nickname, "
+"it knows it can reuse the existing scope and DOM elements associated with "
+"the same nickname."
+msgstr ""
+"后来，当你更换阵列包括相同昵称的一个项目，它知道它可以重用现有的范围和DOM元素"
+"拥有相同的昵称相关。 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/syntax/display-logic.md:142
+#, no-wrap
+msgid "Omitted mustach wrapper"
+msgstr "略胡子包装 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/display-logic.md:145
+msgid ""
+"Particularly for the `if` and `repeat` attribute, the mustache wrapper in "
+"values could be omitted: just the same as data-binding syntax."
+msgstr ""
+"特别是对`if`` and ``repeat`属性，在价值观的小胡子的包装可以省略：作为数据绑定"
+"语法一样。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/display-logic.md:153
+#, no-wrap
+msgid ""
+"```html\n"
+"<template>\n"
+"  <container>\n"
+"    <text if=\"shown\">Hello</text>\n"
+"    <text if=\"{{shown}}\">Hello</text>\n"
+"  </container>\n"
+"</template>\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/display-logic.md:160
+#, no-wrap
+msgid ""
+"<script>\n"
+"  module.exports = {\n"
+"    data: function () {return {shown: true}}\n"
+"  }\n"
+"</script>\n"
+"```\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/display-logic.md:162
+#, no-wrap
+msgid "The two `<text>` components are both displayed.\n"
+msgstr "两`<text>`组件都显示。 ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/display-logic.md:163
+msgid "Next is [render logic control](./render-logic.md)."
+msgstr "其次是逻辑控制(./render-logic.md)[渲染]。 ???"

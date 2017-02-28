@@ -1,0 +1,210 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/how-to/transform-code-into-js-bundle.md:1
+#, no-wrap
+msgid "Transform Code into Js Bundle"
+msgstr "变换编码成JS束 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/transform-code-into-js-bundle.md:5
+msgid ""
+"Paragraphs [Maintain Your Component Code](./maintain-your-component-code."
+"md), [Maintain Your Component Code](./maintain-your-component-code.md) and "
+"[Require 3rd Party Libs](./require-3rd-party-libs.md) show us how to write "
+"and organize weex code. However, Weex DSL code must be transformed to `js "
+"bundle` so that `js framework` can parse and execute it for iOS, Android and "
+"HTML5 portal. For more information, please refer to [How It Works ](/"
+"advanced/how-it-works.md) and [JS Bundle Format](../specs/js-bundle-format."
+"md)."
+msgstr ""
+"款[保持你(./maintain-your-component-code.md)组件代码]，[保持]和[(./maintain-"
+"your-component-code.md)组件代码需要第三方库](./require-3rd-party-libs.md)告诉"
+"我们如何撰写和组织weex代码。然而，weex DSL代码必须转化为`js bundle`` so that "
+"``js framework`可以解析和执行它的iOS，Android和HTML5的门户。有关更多信息，请"
+"参阅[如何]和[格式](/advanced/how-it-works.md)JS束(../specs/js-bundle-format."
+"md)。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/transform-code-into-js-bundle.md:7
+msgid ""
+"Now come back to the topic `transform code into js bundle`. There are "
+"several ways to achieve the goal."
+msgstr ""
+"现在回到主题`transform code into js bundle`。有几种方法来实现目标。 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/how-to/transform-code-into-js-bundle.md:8
+#, no-wrap
+msgid "transformer"
+msgstr "变压器 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/transform-code-into-js-bundle.md:13
+msgid "```bash tnpm install weex-transformer ```"
+msgstr ""
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/how-to/transform-code-into-js-bundle.md:14
+#, no-wrap
+msgid "CLI Tool"
+msgstr "CLI工具 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/transform-code-into-js-bundle.md:18
+#, no-wrap
+msgid ""
+"```\n"
+"  Usage: transformer [options] <file...>\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/transform-code-into-js-bundle.md:20
+#, no-wrap
+msgid "  Options:\n"
+msgstr "  选项： ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/transform-code-into-js-bundle.md:27
+#, no-wrap
+msgid ""
+"    -h, --help               output usage information\n"
+"    -V, --version            output the version number\n"
+"    -l, --oldFormat [value]  whether to transform to old format (default: false)\n"
+"    -e, --isEntry [value]    whether is an entry module which has `bootstrap` (default: true)\n"
+"    -o, --output [path]      the output file dirname\n"
+"```\n"
+msgstr ""
+"    -帮助输出使用信息 ???\n"
+"    - V，-版本输出版本号 ???\n"
+"    我，——oldformat [价值]是否变换旧格式(default: false)???\n"
+"    E——isEntry [价值]，是否是一个输入模块具有`bootstrap`` (default: true)\n"
+"    -o, --output [path]      the output file dirname\n"
+"`````???\n"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/how-to/transform-code-into-js-bundle.md:28
+#, no-wrap
+msgid "API"
+msgstr "美国石油学会 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/transform-code-into-js-bundle.md:31
+#, no-wrap
+msgid "** transform(name, code, path, elements, config) **\n"
+msgstr "* * * *变换(name, code, path, elements, config)???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/transform-code-into-js-bundle.md:36
+msgid ""
+"```javascript var transformer = require('weex-transformer')  var output = "
+"transformer.transform('foo', '/* code here */', '.', {})  ```"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/transform-code-into-js-bundle.md:38
+msgid "params:"
+msgstr "参数： ???"
+
+#. type: Bullet: '- '
+#: /home/dev/download/weex/doc/how-to/transform-code-into-js-bundle.md:46
+msgid "`name`: string, current bundle name"
+msgstr " `name`：字符串，电流束的名字 ???"
+
+#. type: Bullet: '- '
+#: /home/dev/download/weex/doc/how-to/transform-code-into-js-bundle.md:46
+msgid "`code`: string, source code"
+msgstr " `code`：字符串，源代码 ???"
+
+#. type: Bullet: '- '
+#: /home/dev/download/weex/doc/how-to/transform-code-into-js-bundle.md:46
+msgid ""
+"`path`: string *optional*, useful when find custom component in a certain "
+"path"
+msgstr " `path`：字符串*可选*，有用的时候，找到特定的路径的自定义组件 ???"
+
+#. type: Bullet: '- '
+#: /home/dev/download/weex/doc/how-to/transform-code-into-js-bundle.md:46
+msgid "`elements`: object *optional*, existed custom component map"
+msgstr " `elements`：对象*可选*，存在自定义组件图 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/transform-code-into-js-bundle.md:46
+#, no-wrap
+msgid ""
+"- `config`: object *optional*\n"
+"    * `oldFormat`: whether to transform to old format (default: false)\n"
+"    * `isEntry`: whether is an entry module which has `bootstrap` (default: true)\n"
+msgstr ""
+"-`config``: object *optional*\n"
+"    * ``oldFormat``: whether to transform to old format (default: false)\n"
+"    * ``isEntry``: whether is an entry module which has ``bootstrap`(default: true)???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/transform-code-into-js-bundle.md:48
+msgid "returns:"
+msgstr "返回： ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/transform-code-into-js-bundle.md:52
+#, no-wrap
+msgid ""
+"- an object with keys\n"
+"    * `result`: string, all custom components `define()` and final `bootstrap()`\n"
+"    * `logs`: array, corresponding warning & error logs\n"
+msgstr ""
+"-带有键的对象 ???\n"
+"    *`result``: string, all custom components ``define()`` and final ``bootstrap()``\n"
+"    * ``logs`：阵列，相应的警告和错误日志 ???\n"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/how-to/transform-code-into-js-bundle.md:53
+#, no-wrap
+msgid "gulp weex"
+msgstr "大口weex ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/transform-code-into-js-bundle.md:58
+msgid "```bash tnpm install gulp-weex ```"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/transform-code-into-js-bundle.md:62
+msgid ""
+"```javascript var gulp = require('gulp')  var weex = require('gulp-weex')"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/transform-code-into-js-bundle.md:69
+#, no-wrap
+msgid ""
+"gulp.task('default', function () {\n"
+"  return gulp.src('src/*.html')\n"
+"    .pipe(weex({}))\n"
+"    .pipe(gulp.dest('./dest'))\n"
+"})\n"
+"```\n"
+msgstr ""
+"gulp.task('default', function ()(){ ???\n"
+"  返回gulp.src('src/*.html')???\n"
+"    管(weex({})({}))。 ???\n"
+"    管(gulp.dest('./dest')('./dest'))。 ???\n"
+"}) ???\n"
+" ````???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/transform-code-into-js-bundle.md:71
+msgid "Options:"
+msgstr "选项： ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/transform-code-into-js-bundle.md:73
+msgid ""
+"- `oldFormat`: whether to transform to old format (default: false)  - "
+"`isEntry`: whether is an entry module which has `bootstrap` (default: true)"
+msgstr ""
+"-`oldFormat``: whether to transform to old format (default: false)  - "
+"``isEntry``: whether is an entry module which has ``bootstrap`(default: "
+"true)???"

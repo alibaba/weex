@@ -1,0 +1,442 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:1
+#, no-wrap
+msgid "##Extend to Android \n"
+msgstr "# #延伸到Android ???\n"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:3
+#, no-wrap
+msgid "Module extend"
+msgstr "扩展模块 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:5
+#, no-wrap
+msgid ""
+"weex sdk support Moulde extend,\n"
+"Weex SDK provides only rendering capabilities, rather than have other capabilities, such as network, picture, and URL redirection. If you want the these features, you need to implement it.  \n"
+msgstr ""
+"weex SDK支持模块扩展， ???\n"
+"weex SDK提供了唯一的渲染能力，而不是有其他的功能，如网络、图片、URL重定向。如果你想要这些功能，你需要实现它。 ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:8
+msgid ""
+"For example: If you want to implement an address jumping function, you can "
+"achieve a Module Follow the steps below."
+msgstr ""
+"例如：如果你想实现一个地址跳转功能，你可以实现一个模块按照下面的步骤。 ???"
+
+#. type: Title ####
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:8
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:68
+#, no-wrap
+msgid "Step to customize a module "
+msgstr "自定义模块的一步 ???"
+
+#. type: Bullet: '1. '
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:9
+msgid "Customize module must extend WXModule"
+msgstr "自定义模块必须延伸wxmodule ???"
+
+#. type: Bullet: '2. '
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:10
+msgid ""
+"@WXModuleAnno annotation must be added, as it is the only the way to "
+"recognized by Weex"
+msgstr "“wxmoduleanno注释必须补充说，这是唯一的路被weex ???"
+
+#. type: Bullet: '3. '
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:11
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:73
+msgid "The access levels of mehtod must be **public**"
+msgstr "访问级别的方法必须是**公共** ???"
+
+#. type: Bullet: '4. '
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:12
+msgid "The module class also can not be an inner class"
+msgstr "模块类也不能是一个内部类 ???"
+
+#. type: Bullet: '5. '
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:16
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:74
+msgid "Customize can not be obfuscated by tools like ProGuard"
+msgstr "自定义不能模糊工具如混淆器 ???"
+
+#. type: Bullet: '6. '
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:16
+msgid ""
+"Module methods will be invoked in UI thread, do not put time consuming "
+"operation there"
+msgstr "模块方法将在用户界面线程中调用，不要在那里投入耗时的操作 ???"
+
+#. type: Bullet: '7. '
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:16
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:77
+msgid ""
+"Weex params can be int, double, float, String, Map, List, self-defined class "
+"that implements WXObject interface"
+msgstr "weex参数可以是int，双，浮弦，图，表，自定义类实现wxobject接口 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:18
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:80
+msgid "Refer to the following example"
+msgstr "参考下面的例子 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:20
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:82
+msgid "```java"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:24
+#, no-wrap
+msgid ""
+"    import android.content.Intent;\n"
+"    import android.net.Uri;\n"
+"     ……………………\n"
+msgstr ""
+"    进口android.content.intent; ???\n"
+"    进口android.net.uri; ???\n"
+"     ........................ ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:26
+#, no-wrap
+msgid "    public class WXEventModule extends WXModule{\n"
+msgstr "    公共课wxeventmodule延伸wxmodule { ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:28
+#, no-wrap
+msgid "\tprivate static final String WEEX_CATEGORY=\"com.taobao.android.intent.category.WEEX\";\n"
+msgstr " private static final String WEEX_CATEGORY=\"com.taobao.android.intent.category.WEEX\";\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:42
+#, no-wrap
+msgid ""
+"\t@WXModuleAnno\n"
+"\tpublic void openURL(String url){\n"
+"\t\tif (TextUtils.isEmpty(url)) {\n"
+"\t\t\treturn;\n"
+"\t\t}\n"
+"\t\tStringBuilder builder=new StringBuilder(\"http:\");\n"
+"\t\tbuilder.append(url);\n"
+"\t\tUri uri = Uri.parse(builder.toString());\n"
+"        Intent intent = new Intent(Intent.ACTION_VIEW, uri);\n"
+"\t\tintent.addCategory(WEEX_CATEGORY);\n"
+"        mWXSDKInstance.getContext().startActivity(intent);\n"
+"\t   }\n"
+"    }\n"
+msgstr ""
+" @WXModuleAnno\n"
+" public void openURL(String url){\n"
+"  if (TextUtils.isEmpty(url)(url)) {\n"
+"   return;\n"
+"  }\n"
+"  StringBuilder builder=new StringBuilder(\"http:\");\n"
+"  builder.append(url);\n"
+"  Uri uri = Uri.parse(builder.toString()());\n"
+"        意图意图=新的意图(Intent.ACTION_VIEW, uri); ???\n"
+"  intent.addCategory(WEEX_CATEGORY);\n"
+"        mwxsdkinstance.getcontext()startActivity(intent); ???\n"
+"    }\n"
+"    } ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:44
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:62
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:108
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:178
+msgid "```"
+msgstr ""
+
+#. type: Title ####
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:45
+#, no-wrap
+msgid "Register the moulde"
+msgstr "登记的模具 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:58
+#, no-wrap
+msgid ""
+"```java\n"
+"/**\n"
+"   * Register module. This is a wrapper method for\n"
+"   * {@link WXModuleManager#registerModule(String, Class)}. \n"
+"   * The module register here only needto\n"
+"   * be singleton in {@link WXSDKInstance} level.\n"
+"   * @param moduleName  module name\n"
+"   * @param moduleClass module to be registered.\n"
+"   * @return true for registration success, false for otherwise.\n"
+"   * @see {@link WXModuleManager#registerModule(String, Class, boolean)}\n"
+"   */\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:60
+#, no-wrap
+msgid "  WXSDKEngine.registerModule(\"event\", WXEventModule.class);\n"
+msgstr "  wxsdkengine.registermodule(\"event\", WXEventModule.class); ???\n"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:64
+#, no-wrap
+msgid "Component extend"
+msgstr "组件扩展 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:66
+#, no-wrap
+msgid ""
+"<font color=\"gray\">\n"
+"There are label, image, div, scroll, ect. components in weex, you can also customize your own components.  \n"
+msgstr ""
+" <font color=\"gray\">???\n"
+"有标签，图像，DIV，滚动，等。在weex组件，您也可以定制自己的组件。 ???\n"
+
+#. type: Bullet: '1. '
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:70
+msgid "Customize components must extend WXComponent or WXContainer"
+msgstr "自定义组件必须延伸wxcomponent或wxcontainer ???"
+
+#. type: Bullet: '2. '
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:73
+msgid ""
+"@WXComponentProp(name=value(value is attr or style of dsl)) for it be "
+"recognized by weex SDK."
+msgstr ""
+"“wxcomponentprop(name=value(value is attr or style of dsl)(value is attr or "
+"style of dsl))它是由weex SDK的认可。 ???"
+
+#. type: Bullet: '4. '
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:73
+msgid "The component class can not be an inner class"
+msgstr "组件类不能是内部类 ???"
+
+#. type: Bullet: '6. '
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:75
+msgid ""
+"Component methods will be invoked in UI thread, do not put time consuming "
+"operation there."
+msgstr "组件方法将在用户界面线程中调用，不要在那里投入耗时的操作。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:85
+#, no-wrap
+msgid ""
+"\tpackage com.taobao.weextest;\n"
+"    ………………\n"
+msgstr ""
+" package com.taobao.weextest;\n"
+"    .................. ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:94
+#, no-wrap
+msgid ""
+"\tpublic class MyViewComponent extends WXComponent{ \n"
+"\tpublic MyViewComponent(WXSDKInstance instance, WXDomObject dom,\n"
+"\t                   WXVContainer parent, String instanceId, boolean isLazy) \n"
+"\t { \n"
+"\t public MyViewComponent(WXSDKInstance instance, WXDomObject dom,\n"
+"\t   WXVContainer parent, String instanceId, boolean isLazy) {\n"
+"\t  super(instance, dom, parent, instanceId, isLazy);\n"
+"\t }\n"
+msgstr ""
+" public class MyViewComponent extends WXComponent{ \n"
+" public MyViewComponent(WXSDKInstance instance, WXDomObject dom,\n"
+"\t                   WXVContainer parent, String instanceId, boolean isLazy) \n"
+"  { \n"
+"  public MyViewComponent(WXSDKInstance instance, WXDomObject dom,\n"
+"\t   WXVContainer parent, String instanceId, boolean isLazy) {\n"
+"   super(instance, dom, parent, instanceId, isLazy);\n"
+"  }\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:105
+#, no-wrap
+msgid ""
+"\t @Override\n"
+"\t protected void initView() {\n"
+"\t    mHost = new TextView(mContext);\n"
+"\t }\n"
+"\t @WXComponentProp(name=WXDomPropConstant.WX_ATTR_VALUE)\n"
+"\t public void setMyViewValue(String value) {\n"
+"\t    ((TextView)mHost).setText(value);\n"
+"\t }\n"
+"\t}\n"
+msgstr ""
+"  @Override\n"
+"  protected void initView() {\n"
+"     mHost = new TextView(mContext);\n"
+"  }\n"
+"  @WXComponentProp(name=WXDomPropConstant.WX_ATTR_VALUE)\n"
+"  public void setMyViewValue(String value) {\n"
+"      ((TextView)(TextView)mHost).setText(value);\n"
+"  }\n"
+" }\n"
+
+#. type: Title ####
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:109
+#, no-wrap
+msgid "Register the Component"
+msgstr "登记的组成部分 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:123
+#, no-wrap
+msgid ""
+"```java\n"
+"  /**\n"
+"   * Register component. The registration is singleton in {@link WXSDKEngine} level\n"
+"   * @param type name of component. Same as type filed in the JS.\n"
+"   * @param clazz the class of the {@link WXComponent} to be registered.\n"
+"   * @param appendTree true for appendTree flag\n"
+"   * @return true for registration success, false for otherwise.\n"
+"   * @throws WXException Throws exception if type conflicts.\n"
+"   */   \n"
+"   WXSDKEngine.registerComponent(\"MyView\", MyViewComponent.class);\n"
+"```\n"
+msgstr ""
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:124
+#, no-wrap
+msgid "Adapter extend"
+msgstr "适配器扩展 ???"
+
+#. type: Title ####
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:126
+#, no-wrap
+msgid "ImagedownloadAdapter"
+msgstr "imagedownloadadapter ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:129
+#, no-wrap
+msgid ""
+"<font color=\"gray\">\n"
+"Weex SDK has no image download capability, you need to implement IWXImgLoaderAdapter. Refer to the following examples.\n"
+msgstr ""
+" <font color=\"gray\">???\n"
+"weex SDK没有图像的下载功能，你需要实现iwximgloaderadapter。参考下面的例子。 ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:132
+msgid "```java package com.alibaba.weex.extend;"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:136
+msgid ""
+"import android.app.Activity; import android.text.TextUtils; import android."
+"widget.ImageView;"
+msgstr ""
+"进口android.app.activity;进口android.text.textutils;进口android.widget."
+"imageview; ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:142
+msgid ""
+"import com.squareup.picasso.Picasso; import com.taobao.weex.WXEnvironment; "
+"import com.taobao.weex.adapter.IWXImgLoaderAdapter; import com.taobao.weex."
+"common.WXImageStrategy; import com.taobao.weex.dom.WXImageQuality;"
+msgstr ""
+"进口com.squareup.picasso.picasso;进口com.taobao.weex.wxenvironment;进口com."
+"taobao.weex.adapter.iwximgloaderadapter;进口com.taobao.weex.common."
+"wximagestrategy;进口com.taobao.weex.dom.wximagequality; ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:144
+msgid "public class ImageAdapter implements IWXImgLoaderAdapter {"
+msgstr "公共类图片适配器实现了iwximgloaderadapter { ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:146
+#, no-wrap
+msgid "\tprivate Activity mContext;\n"
+msgstr " private Activity mContext;\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:150
+#, no-wrap
+msgid ""
+"\tpublic ImageAdapter(Activity activity) {\n"
+"\t\tmContext = activity;\n"
+"\t}\n"
+msgstr ""
+" public ImageAdapter(Activity activity) {\n"
+"  mContext = activity;\n"
+" }\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:155
+#, no-wrap
+msgid ""
+"\t@Override\n"
+"\tpublic void setImage(final String url, final ImageView view,\n"
+"\t\t\tWXImageQuality quality, WXImageStrategy strategy) {\n"
+"\t\tmContext.runOnUiThread(new Runnable() {\n"
+msgstr ""
+" @Override\n"
+" public void setImage(final String url, final ImageView view,\n"
+"\t\t\tWXImageQuality quality, WXImageStrategy strategy) {\n"
+"  mContext.runOnUiThread(new Runnable()() {\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/extend-to-android.md:177
+#, no-wrap
+msgid ""
+"\t\t\t@Override\n"
+"\t\t\tpublic void run() {\n"
+"\t\t\t\tif (TextUtils.isEmpty(url)) {\n"
+"\t\t\t\t\tview.setImageBitmap(null);\n"
+"\t\t\t\t\treturn;\n"
+"\t\t\t\t}\n"
+"\t\t\t\tString temp = url;\n"
+"\t\t\t\tif (url.startsWith(\"//\")){\n"
+"\t\t\t\t\ttemp = \"http:\" + url;\n"
+"\t\t\t\t}\n"
+"\t\t\t\tif (view.getLayoutParams().width<=0 || view.getLayoutParams().height<=0) {\n"
+"\t\t\t\t\treturn;\n"
+"\t\t\t\t}\n"
+"\t\t\t\tPicasso.with(WXEnvironment.getApplication())\n"
+"\t\t\t\t\t\t.load(temp)\n"
+"\t\t\t\t\t\t.resize(view.getLayoutParams().width,\n"
+"\t\t\t\t\t\t\t\tview.getLayoutParams().height).into(view);\n"
+"\t\t\t}\n"
+"\t\t});\n"
+"\t}\n"
+"}\n"
+msgstr ""
+"   @Override\n"
+"   public void run() {\n"
+"    if (TextUtils.isEmpty(url)(url)) {\n"
+"     view.setImageBitmap(null);\n"
+"     return;\n"
+"    }\n"
+"    String temp = url;\n"
+"    if (url.startsWith(\"//\")(\"//\")){\n"
+"     temp = \"http:\" + url;\n"
+"    }\n"
+"    if (view.getLayoutParams()().width<=0 || view.getLayoutParams().height<=0) {\n"
+"     return;\n"
+"    }\n"
+"    Picasso.with(WXEnvironment.getApplication()())\n"
+"      .load(temp)\n"
+"      .resize(view.getLayoutParams()().width,\n"
+"        view.getLayoutParams().height).into(view);\n"
+"   }\n"
+"  });\n"
+" }\n"
+"} ???\n"

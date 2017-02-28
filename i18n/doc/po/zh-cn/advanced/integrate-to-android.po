@@ -1,0 +1,459 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:1
+#, no-wrap
+msgid "import Weex Android to your project"
+msgstr "进口weex Android项目 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:4
+msgid ""
+"You will need to build Weex from source if you want to work on a new feature/"
+"bug fix, try out the latest features which are not released yet, or maintain "
+"your own fork with patches that cannot be merged to the core."
+msgstr ""
+"你将需要建立weex从源代码，如果你想做一个新的功能和bug修复，尝试新的功能并没有"
+"发布，或保持自己的叉的补丁，不能合并到核心。 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:5
+#, no-wrap
+msgid "Prerequisites"
+msgstr "先决条件 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:8
+msgid ""
+"Assuming you have the Android SDK installed, run `android` to open the "
+"Android SDK Manager."
+msgstr "假设你有Android SDK的安装、运行`android`打开Android SDK经理。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:10
+msgid "Make sure you have the following installed:"
+msgstr "确保您有以下安装： ???"
+
+#. type: Bullet: '1. '
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:15
+msgid ""
+"Android SDK version 23 (compileSdkVersion in [`build.gradle`](https://github."
+"com/alibaba/weex/blob/master/android/sdk/build.gradle))"
+msgstr ""
+"Android SDK 23版本(compileSdkVersion in [ z59813128476z ](https://github.com/"
+"alibaba/weex/blob/master/android/sdk/build.gradle)(https://github.com/"
+"alibaba/weex/blob/master/android/sdk/build.gradle)) ???"
+
+#. type: Bullet: '2. '
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:15
+msgid ""
+"SDK build tools version 23.0.1 (buildToolsVersion in [`build.gradle`]"
+"(https://github.com/alibaba/weex/blob/master/android/sdk/build.gradle))"
+msgstr ""
+"SDK构建工具的版本23.0.1(buildToolsVersion in [ z59813428476z ](https://"
+"github.com/alibaba/weex/blob/master/android/sdk/build.gradle)(https://github."
+"com/alibaba/weex/blob/master/android/sdk/build.gradle)) ???"
+
+#. type: Bullet: '3. '
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:15
+msgid "Android Support Repository >= 17 (for Android Support Library)"
+msgstr "Android支持库> = 17(for Android Support Library)???"
+
+#. type: Bullet: '4. '
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:15
+msgid ""
+"Android NDK (download & extraction instructions [here](http://developer."
+"android.com/ndk/downloads/index.html))"
+msgstr ""
+"Android NDK(download & extraction instructions [here](http://developer."
+"android.com/ndk/downloads/index.html)(http://developer.android.com/ndk/"
+"downloads/index.html)) ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:17
+msgid ""
+"Point Gradle to your Android SDK: either have `$ANDROID_SDK` and `"
+"$ANDROID_NDK ` defined, or create a local.properties file in the root of "
+"your react-native checkout with the following contents:"
+msgstr ""
+"点你的Android SDK工具：要么`$ANDROID_SDK`` and ``$ANDROID_NDK `定义，或创建在"
+"你的根本地检测反应local.properties文件中的以下内容： ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:22
+msgid ""
+"``` sdk.dir=absolute_path_to_android_sdk ndk."
+"dir=absolute_path_to_android_ndk ```"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:24
+msgid "Example:"
+msgstr "例子: ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:29
+msgid ""
+"``` sdk.dir=/Users/your_unix_name/android-sdk-macosx ndk.dir=/Users/"
+"your_unix_name/android-ndk/android-ndk-r10e ```"
+msgstr ""
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:31
+#, no-wrap
+msgid "Building the source"
+msgstr "建筑的来源 ???"
+
+#. type: Title ####
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:33
+#, no-wrap
+msgid "1. Clone source from github"
+msgstr "1。从GitHub的克隆源 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:36
+msgid "First, you need to git clone `weex` from github:"
+msgstr "首先，你需要git clone`weex`从GitHub： ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:40
+msgid "```shell git clone https://github.com/alibaba/weex.git ```"
+msgstr ""
+
+#. type: Title ####
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:41
+#, no-wrap
+msgid "2. Adding the `:weex_sdk_android` project"
+msgstr "2。添加`:weex_sdk_android`项目 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:44
+msgid "Add the `:weex_sdk_android` project in `android/settings.gradle`:"
+msgstr "添加`:weex_sdk_android`` project in ``android/settings.gradle`： ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:47
+msgid "```gradle include ':weex_sdk_android'"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:51
+#, no-wrap
+msgid ""
+"project(':weex_sdk_android').projectDir = new File(\n"
+"    rootProject.projectDir, '../weex_sdk_android')\n"
+"```\n"
+msgstr ""
+"项目(':weex_sdk_android')。projectdir =新的文件(\n"
+"    rootProject.projectDir, '../weex_sdk_android')???\n"
+" ````???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:53
+msgid ""
+"Modify your `android/app/build.gradle` to use the `:weex_sdk_android` "
+"project instead of the pre-compiled library, e.g. - replace `compile 'com."
+"taobao.android:weex_sdk:1.3.+'` with `compile project(':weex_sdk_android')`:"
+msgstr ""
+"修改你的`android/app/build.gradle`` to use the ``:weex_sdk_android`` project "
+"instead of the pre-compiled library, e.g. - replace ``compile 'com.taobao."
+"android:weex_sdk:1.3.+'`` with ``compile project(':weex_sdk_android')`： ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:58
+#, no-wrap
+msgid ""
+"```gradle\n"
+"dependencies {\n"
+"    compile fileTree(dir: 'libs', include: ['*.jar'])\n"
+"    compile 'com.android.support:appcompat-v7:23.0.1'\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:60
+#, no-wrap
+msgid "    compile project(':weex_sdk_android')\n"
+msgstr "    编制项目(':weex_sdk_android')???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:64
+#, no-wrap
+msgid ""
+"    ...\n"
+"}\n"
+"```\n"
+msgstr ""
+"    … ???\n"
+"} ???\n"
+" ````???\n"
+
+#. type: Title ####
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:65
+#, no-wrap
+msgid "3. Making 3rd-party modules use your fork"
+msgstr "3。使第三方模块使用你的叉子 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:68
+msgid ""
+"If you use 3rd-party weex modules, you need to override their dependencies "
+"so that they don't build the pre-compiled library. Otherwise you'll get an "
+"error while compiling - `Error: more than one library with package name 'com."
+"taobao.weex'`."
+msgstr ""
+"如果你使用第三方的weex模块，你需要重写他们的依赖使他们不建立预编译的库。否"
+"则，你会得到一个错误在编译-`Error: more than one library with package name "
+"'com.taobao.weex'`。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:70
+msgid ""
+"Modify your `android/app/build.gradle` and replace `compile project(':weex-"
+"custom-module')` with:"
+msgstr ""
+"修改你的`android/app/build.gradle`` and replace ``compile project(':weex-"
+"custom-module')`与： ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:76
+#, no-wrap
+msgid ""
+"```gradle\n"
+"compile(project(':weex-custom-module')) {\n"
+"    exclude group: 'com.taobao.weex', module: 'weex_sdk_android'\n"
+"}\n"
+"```\n"
+msgstr ""
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:77
+#, no-wrap
+msgid "Building from Android Studio"
+msgstr "从安卓工作室建设 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:80
+msgid ""
+"From the Welcome screen of Android Studio choose \"Import project\" and "
+"select the `android` folder of your app."
+msgstr ""
+"从Android工作室欢迎屏幕上选择“导入”，选择你的应用程序的`android`文件夹。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:82
+msgid "You should be able to use the _Run_ button to run your app on a device."
+msgstr "你应该能够使用_run_按钮在设备上运行你的应用程序。 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:82
+#, no-wrap
+msgid "Additional notes"
+msgstr "附加说明 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:85
+msgid ""
+"Since the packet size limit is currently only compiled arm , X86 does not "
+"support."
+msgstr "由于包大小限制，目前只编译ARM，x86不支持。 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:87
+#, no-wrap
+msgid "Troubleshooting"
+msgstr "故障排除 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:90
+msgid ""
+"Gradle build fails in `ndk-build`. See the section about `local.properties` "
+"file above."
+msgstr ""
+"在`ndk-build`Gradle构建失败`. See the section about ``local.properties`文件上"
+"面。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:91
+#, no-wrap
+msgid "#Quick access\n"
+msgstr "#快速访问 ???\n"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:93
+#, no-wrap
+msgid "Requirements"
+msgstr "要求 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:96
+msgid "an existing, gradle-based Android app"
+msgstr "现有的基于Android应用程序的工具 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:97
+#, no-wrap
+msgid "Prepare your app"
+msgstr "准备你的应用程序 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:100
+msgid "In your app's `build.gradle` file add the React Native dependency:"
+msgstr "在你的应用程序的`build.gradle`文件添加本地依赖性反应： ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:102
+#, no-wrap
+msgid "    compile 'com.taobao.weex:weex_sdk:1.3.+'\n"
+msgstr "    编译的COM。淘宝。weex：weex_sdk：1.3。” ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:104
+msgid ""
+"You can find the latest version of the react-native library on [Maven "
+"Central](). Next, make sure you have the Internet permission in your "
+"`AndroidManifest.xml`:"
+msgstr ""
+"你可以找到当地图书馆的反应[中央]()Maven的最新版本。接下来，确保你有你的"
+"`AndroidManifest.xml`Internet权限： ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:106
+#, no-wrap
+msgid "    <uses-permission android:name=\"android.permission.INTERNET\" />\n"
+msgstr "     <uses-permission android:name=\"android.permission.INTERNET\" />???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:108
+msgid ""
+"This is only really used in dev mode when reloading JavaScript from the "
+"development server, so you can strip this in release builds if you need to."
+msgstr ""
+"这才是真正用于开发模式时，加载JavaScript的开发服务器，所以你可以带这个发布版"
+"本如果你需要。 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:109
+#, no-wrap
+msgid "Add native code"
+msgstr "添加本地代码 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:112
+msgid ""
+"You need to add some native code in order to start the Weex runtime and get "
+"it to render something. To do this, we're going to create an `Application` "
+"to init weex, then we we're going to create an `Activity` that creates a "
+"WeexContainerView, starts a Weex application inside it and sets it as the "
+"main content view."
+msgstr ""
+"你需要添加一些代码来启动weex运行和得到它提供的东西。为此，我们要创建一个"
+"`Application`` to init weex, then we we're going to create an ``Activity`创建"
+"一个weexcontainerview，从里面weex应用并将其设置为主要内容的观点。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:119
+#, no-wrap
+msgid ""
+"```java\n"
+"public class WXApplication extends Application {\n"
+"    @Override\n"
+"    public void onCreate() {\n"
+"        super.onCreate();\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:123
+#, no-wrap
+msgid ""
+"        WXEnvironment.addCustomOptions(\"appName\",\"TBSample\");\n"
+"        WXSDKEngine.init(this);\n"
+"        try {\n"
+msgstr ""
+"        wxenvironment.addcustomoptions(\"appName\",\"TBSample\"); ???\n"
+"        wxsdkengine.init(this); ???\n"
+"        尝试{ ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:126
+#, no-wrap
+msgid ""
+"            WXSDKEngine.registerComponent(\"wtRichText\", WTRichText.class);\n"
+"            ......\n"
+msgstr ""
+"            wxsdkengine.registercomponent(\"wtRichText\", WTRichText.class); ???\n"
+"            ...... ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:134
+#, no-wrap
+msgid ""
+"            WXSDKEngine.registerModule(\"event\", WXEventModule.class);\n"
+"        } catch (WXException e) {\n"
+"            e.printStackTrace();\n"
+"        }\n"
+"    }\n"
+"}\n"
+"```\n"
+msgstr ""
+"            wxsdkengine.registermodule(\"event\", WXEventModule.class); ???\n"
+"        抓住(WXException e){ } ???\n"
+"            e.printstacktrace(); ???\n"
+"        } ???\n"
+"    } ???\n"
+"} ???\n"
+" ````???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:136
+msgid "Next,"
+msgstr "下一个， ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:162
+#, no-wrap
+msgid ""
+"```java\n"
+"//crate Weex instance\n"
+"WXSDKInstance mInstance = new WXSDKInstance(this);\n"
+"//set image Adapter\n"
+"mInstance.setImgLoaderAdapter(new ImageAdapter(this));\n"
+"//register render listener\n"
+"mInstance.registerRenderListener(new IWXRenderListener() {\n"
+"   @Override\n"
+"   public void onViewCreated(WXSDKInstance instance, View view) {\n"
+"       // addview\n"
+"       mViewGroup.addView(view);\n"
+"   } \n"
+"   @Override\n"
+"   public void onRenderSuccess(WXSDKInstance instance) {\n"
+"   }\n"
+"   @Override\n"
+"   public void onRefreshSuccess(WXSDKInstance instance) {\n"
+"   }\n"
+"   @Override\n"
+"   public void onException(WXSDKInstance instance, String errCode,String msg) {\n"
+"   }\n"
+"}); \n"
+"//start render weex view   \n"
+"mInstance.render(pageName,template, null, null, -1, -1, WXRenderStrategy.APPEND_ASYNC);\n"
+"```\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:164
+msgid "That's it, your activity is ready to run some JavaScript code."
+msgstr "就是这样，你的活动是准备运行一些JavaScript代码。 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:165
+#, no-wrap
+msgid "Reference Example   "
+msgstr "参考例子 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-android.md:167
+msgid "[`Weex Examples`](https://github.com/alibaba/weex/tree/master/examples)"
+msgstr ""
+"[`Weex Examples`](https://github.com/alibaba/weex/tree/master/examples)???"

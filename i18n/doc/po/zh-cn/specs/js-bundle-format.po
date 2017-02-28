@@ -1,0 +1,328 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:1
+#, no-wrap
+msgid "JS Bundle format"
+msgstr "js包格式 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:4
+msgid "v0.3.0"
+msgstr "v0.3.0 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:5
+#, no-wrap
+msgid "Whole Syntax and Structure"
+msgstr "整体语法和结构 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:8
+msgid ""
+"A JS Bundle is actually a JavaScript file which follows **ES5** standard. "
+"The code is organized by several modules with AMD-like format:"
+msgstr ""
+"一个js包实际上是一个JavaScript文件如下** ES5 **标准。该代码是通过与AMD的几个"
+"模块的组织形式： ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:13
+#, no-wrap
+msgid ""
+"```javascript\n"
+"define('moduleName1', function (require, exports, module) {\n"
+"  // content of module1\n"
+"})\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:17
+#, no-wrap
+msgid ""
+"define('moduleName2', function (require, exports, module) {\n"
+"  // content of module2\n"
+"})\n"
+msgstr ""
+"定义('moduleName2', function (require, exports, module)(require, exports, module){ ???\n"
+"  的第二模块/内容 ???\n"
+"}) ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:20
+msgid "...  ```"
+msgstr "…````???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:22
+msgid ""
+"A whole Weex JS Bundle is concatenated by these modules and last a "
+"`bootstrap(rootComponentName, optionalConfig, optionalExternalData)` "
+"function call."
+msgstr ""
+"整个weex JS束连接这些模块和一`bootstrap(rootComponentName, optionalConfig, "
+"optionalExternalData)`函数调用。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:27
+#, no-wrap
+msgid ""
+"```javascript\n"
+"define('@weex-component/a', function (require, exports, module) {\n"
+"  // content of composed component <a>\n"
+"})\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:31
+#, no-wrap
+msgid ""
+"define('@weex-component/b', function (require, exports, module) {\n"
+"  // content of composed component <b>\n"
+"})\n"
+msgstr ""
+"定义('@weex-component/b', function (require, exports, module)(require, exports, module){ ???\n"
+"  组成成分<b>/内容 ???\n"
+"}) ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:34
+msgid "bootstrap('@weex-component/b')  ```"
+msgstr "引导('@weex-component/b')````???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:36
+msgid ""
+"As the sample above, the component name should be hyphenated (a-z, 0-9, \"-"
+"\"). Other characters are not allowed."
+msgstr ""
+"正如上述示例，组件名称应联用(a-z, 0-9, \"-\")。其他字符是不允许的。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:38
+msgid ""
+"And, the method call `bootstrap()` allows 1~3 parameters: root module name "
+"(String), config info (optional JSON) and external data (optional JSON)."
+msgstr ""
+"而且，方法调用`bootstrap()`允许1 ~ 3参数：根模块名称(String)，配置信息"
+"(optional JSON)和外部数据(optional JSON)。 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:39
+#, no-wrap
+msgid "Content of Composed Components"
+msgstr "组成成分含量 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:42
+msgid ""
+"A module of composed component contains 3 parts: whole options definition, "
+"additional template option definition and additional style option definition."
+msgstr ""
+"构成组件的一个模块包含3个部分：整个选项的定义，额外的模板选项定义和附加样式选"
+"项定义。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:46
+msgid ""
+"- whole options is a piece of JavaScript code to put component options "
+"(except `template` option and `style` option) into `module.exports` - "
+"`template` option is a piece of JSON-like object assigned to `module.exports."
+"template` which describes the display structure of this component - `style` "
+"option is a piece of JSON object assigned to `module.exports.style` which "
+"describes the reusable styles in this component"
+msgstr ""
+"全选项是一段JavaScript代码把组件选项(除了`template`` option and ``style`` "
+"option) into ``module.exports`` - ``template`` option is a piece of JSON-"
+"like object assigned to ``module.exports.template`` which describes the "
+"display structure of this component - ``style`` option is a piece of JSON "
+"object assigned to ``module.exports.style`描述此组件的可重用的方式中 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:48
+msgid ""
+"The `template` option is required and appeared only once, and the `style` "
+"option and whole options definition are optional."
+msgstr ""
+"的`template`` option is required and appeared only once, and the ``style`期权"
+"和期权定义是可选的。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:50
+msgid ""
+"These options are defined and transformed by Transformer. Actually you can "
+"also ignore all the format limitation and write options to `module.exports` "
+"as the same result if you are not going to use Transformer. But that's not "
+"recommended."
+msgstr ""
+"这些选项被定义和转换的变压器。其实你也可以忽略所有格式的限制，写选项`module."
+"exports`为相同的结果，如果你不打算使用的变压器。但这不建议。 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:51
+#, no-wrap
+msgid "Details of template option definitions"
+msgstr "模板选项定义的详细信息 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:54
+msgid ""
+"A piece of multi-level embeded JSON-like object which describes the view "
+"structure."
+msgstr "一个多层次的嵌入式JSON格式的对象描述视图结构。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:56
+msgid "Every level JSON-like object has these members below:"
+msgstr "每一级的JSON格式的对象有下面这些成员： ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:67
+msgid "`type`: a required string, component name/type"
+msgstr " `type`：所需的字符串，组件名称/类型 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:67
+msgid ""
+"`component`: an optional boolean, whether this component is composed or "
+"native"
+msgstr " `component`：可选的布尔值，不管这个组件是由本土 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:67
+msgid ""
+"`attr`: an optional k-v pairs which contains all attributes of an element, "
+"the value could be a string, number, boolean or a function that bind some "
+"data value"
+msgstr ""
+" `attr`：可选K-V对包含一个元素的所有属性的值可以是一个字符串，数字，布尔值或"
+"一个函数，结合一些数据值 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:67
+msgid ""
+"`style`: an optional k-v pairs which contains all styles of an element, just "
+"the same format as the `attr`"
+msgstr ""
+" `style``: an optional k-v pairs which contains all styles of an element, "
+"just the same format as the ``attr`???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:67
+msgid ""
+"`classList`: an optional array of strings which contains class names for "
+"styleing."
+msgstr " `classList`：含有styleing类名字符串可选阵列。 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:67
+msgid ""
+"`events`: an optional k-v pairs whose keys are event type and values are "
+"corresponding method names"
+msgstr " `events`：可选K-V对其关键事件的类型和值对应的方法名 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:67
+msgid "`children`: an optional array of child components info"
+msgstr " `children`：子部件的一个可选的阵列信息 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:67
+msgid ""
+"`append`: an optional string which determines a compiling workflow strategy: "
+"append node-by-node singly or a whole node tree just one time. the defualt "
+"value is `node` and another supported value is `tree`."
+msgstr ""
+" `append``: an optional string which determines a compiling workflow "
+"strategy: append node-by-node singly or a whole node tree just one time. the "
+"defualt value is ``node`` and another supported value is ``tree`。 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:67
+msgid ""
+"`shown`: a optional function which returns a boolean value to determins "
+"whether this component should be displayed"
+msgstr " `shown`：一个可选的函数返回一个布尔值来确定此组件是否应显示 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:67
+msgid ""
+"`repeat`: a optional function which returns a list data to displays "
+"components with each"
+msgstr " `repeat`：一个可选的函数返回一个列表数据显示组件，每个 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:69
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:90
+#, no-wrap
+msgid "**Corresponding Keys to Weex Transformer:**\n"
+msgstr "*相应的键weex变压器：** ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:79
+msgid ""
+"- tag `name` in Weex file corresponds to `type` - attr `if` in Weex file "
+"corresponds to `shown` - attr `repeat` in Weex file corresponds to `repeat` "
+"- attr `append` in Weex file corresponds to `append` - attr `style` in Weex "
+"file with CSS syntax corresponds to `style` - attr `class` in Weex file with "
+"class names separated by blanks corresponds to `classList` - attr `on***` in "
+"Weex file with prefix `on` corresponds to a k-v pair in `events` - other "
+"attributes in Weex file corresponds to `attr` - Child nodes in Weex file "
+"corresponds to `children`"
+msgstr ""
+"标签`name`` in Weex file corresponds to ``type`` - attr ``if`` in Weex file "
+"corresponds to ``shown`` - attr ``repeat`` in Weex file corresponds to "
+"``repeat`` - attr ``append`` in Weex file corresponds to ``append`` - attr "
+"``style`` in Weex file with CSS syntax corresponds to ``style`` - attr "
+"``class`` in Weex file with class names separated by blanks corresponds to "
+"``classList`` - attr ``on***`` in Weex file with prefix ``on`` corresponds "
+"to a k-v pair in ``events`` - other attributes in Weex file corresponds to "
+"``attr`` - Child nodes in Weex file corresponds to ``children`???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:81
+msgid ""
+"All tag names, attr names are case-insensitive and transformed to lower-"
+"cased. But the attr values are case-sensitive."
+msgstr ""
+"所有的标签名，属性名区分大小写和转换为小写。但属性的值都是大小写敏感。 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:82
+#, no-wrap
+msgid "Details of style option definitions"
+msgstr "样式选项定义的详细信息 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:85
+msgid "Just a two-levels JSON object."
+msgstr "只是一二级的JSON对象。 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:88
+msgid "The first levels are class names."
+msgstr "第一个层次是类名称。 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:88
+msgid ""
+"The second levels are k-v pairs which describes style names & properties for "
+"each class name."
+msgstr "第二水平K-V对描述每一类名称的样式名称及性质。 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:93
+msgid "class name corresponds to first level keys"
+msgstr "类名称对应于一级键 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:93
+msgid "prop name corresponds to second level keys"
+msgstr "道具名称对应于第二级键 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/specs/js-bundle-format.md:93
+msgid "prop value corresponds to second level values"
+msgstr "支柱值对应于第二级值 ???"

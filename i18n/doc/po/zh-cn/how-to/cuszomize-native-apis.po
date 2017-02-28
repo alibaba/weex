@@ -1,0 +1,185 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/how-to/cuszomize-native-apis.md:1
+#, no-wrap
+msgid "How to customize native APIs ?"
+msgstr "如何自定义本地的原料药？ ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/cuszomize-native-apis.md:5
+#, no-wrap
+msgid ""
+"Weex SDK provides only rendering capabilities, rather than have other capabilities, such as network, picture, and URL redirection. If you want the these features, you need to implement it.   \n"
+"The example below will describe how to extend weex with native logic or 'bridge' your existed native code.\n"
+msgstr ""
+"weex SDK提供了唯一的渲染能力，而不是有其他的功能，如网络、图片、URL重定向。如果你想要这些功能，你需要实现它。 ???\n"
+"下面的示例将描述如何与本地逻辑或“桥”你的存在本机代码的扩展weex。 ???\n"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/how-to/cuszomize-native-apis.md:6
+#, no-wrap
+msgid "A URLHelper Example"
+msgstr "一个urlhelper例子 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/how-to/cuszomize-native-apis.md:7
+#, no-wrap
+msgid "Create your own `WXModule` in native:   "
+msgstr "创造你自己的`WXModule`本土： ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/cuszomize-native-apis.md:25
+#, no-wrap
+msgid ""
+"```java\n"
+"public class URLHelperModule extends WXModule{\n"
+"\tprivate static final String WEEX_CATEGORY=\"com.taobao.android.intent.category.WEEX\";\n"
+"\t@WXModuleAnno\n"
+"\tpublic void openURL(String url){\n"
+"\t\tif (TextUtils.isEmpty(url)) {\n"
+"\t\t\treturn;\n"
+"\t\t}\n"
+"\t\tStringBuilder builder=new StringBuilder(\"http:\");\n"
+"\t\tbuilder.append(url);\n"
+"\t\tUri uri = Uri.parse(builder.toString());\n"
+"        Intent intent = new Intent(Intent.ACTION_VIEW, uri);\n"
+"\t\tintent.addCategory(WEEX_CATEGORY);\n"
+"        mWXSDKInstance.getContext().startActivity(intent);\n"
+"\t}\n"
+"}\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/cuszomize-native-apis.md:27
+#: /home/dev/download/weex/doc/how-to/cuszomize-native-apis.md:64
+msgid "```"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/cuszomize-native-apis.md:30
+msgid ""
+"Notice the `@WXModuleAnno`, use this annotation to mark the methods you "
+"wanna expose to javascript.  If your also want to callback to javascript, "
+"you should define a `callbackId` parameter to received 'JS callback function "
+"id':"
+msgstr ""
+"注意`@WXModuleAnno``, use this annotation to mark the methods you wanna "
+"expose to javascript.  If your also want to callback to javascript, you "
+"should define a ``callbackId`参数接收的js回调函数的ID： ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/cuszomize-native-apis.md:33
+msgid "```java public class URLHelperModule extends WXModule{"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/cuszomize-native-apis.md:44
+#, no-wrap
+msgid ""
+"\t@WXModuleAnno\n"
+"\tpublic void openURL(String url,String callbackId){\n"
+"\t\t//...\n"
+"\t\t//callback to javascript \n"
+"\t\tMap<String, Object> result = new HashMap<String, Object>();\n"
+"\t\tresult.put(\"ts\", System.currentTimeMillis());\n"
+"\t\tWXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId(), callbackId, result);\n"
+"\t}\n"
+"}\n"
+"```\n"
+msgstr ""
+" @WXModuleAnno\n"
+" public void openURL(String url,String callbackId){\n"
+"  //...\n"
+"  //callback to javascript \n"
+"  Map<String, Object> result = new HashMap<String, Object>();\n"
+"  result.put(\"ts\", System.currentTimeMillis()());\n"
+"  WXBridgeManager.getInstance().callback(mWXSDKInstance.getInstanceId()(), callbackId, result);\n"
+" }\n"
+"} ???\n"
+" ````???\n"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/how-to/cuszomize-native-apis.md:46
+#, no-wrap
+msgid "Register your module to engine:   "
+msgstr "将您的模块注册到引擎： ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/cuszomize-native-apis.md:55
+#, no-wrap
+msgid ""
+"```\n"
+"try {\n"
+"\t WXSDKEngine.registerModule(\"myURL\", URLHelperModule.class);//'myURL' is the name you'll use in javascript\n"
+"\t} catch (WXException e) {\n"
+"\t   WXLogUtils.e(e.getMessage());\n"
+"\t}\n"
+"```\n"
+msgstr ""
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/how-to/cuszomize-native-apis.md:55
+#, no-wrap
+msgid "Now, you can use eventModule in javascript like this:   "
+msgstr "现在，你可以在JavaScript中使用像这样的eventmodule： ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/cuszomize-native-apis.md:62
+#, no-wrap
+msgid ""
+"```javascript\n"
+"let URLHelper = require('@weex-module/myURL');//same as you registered\n"
+"URLHelper.openURL(\"http://www.taobao.com\",function(ts){\n"
+"\tconsole.log(\"url is open at \"+ts);\n"
+"});\n"
+msgstr ""
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/how-to/cuszomize-native-apis.md:66
+#, no-wrap
+msgid "Things you need to note:"
+msgstr "你需要注意的事情： ???"
+
+#. type: Bullet: '1. '
+#: /home/dev/download/weex/doc/how-to/cuszomize-native-apis.md:67
+msgid "Customize components must extend WXModule"
+msgstr "自定义组件必须延伸wxmodule ???"
+
+#. type: Bullet: '2. '
+#: /home/dev/download/weex/doc/how-to/cuszomize-native-apis.md:68
+msgid ""
+"@WXModuleAnno annotation must be added, as it is the only the way to "
+"recognized by Weex"
+msgstr "“wxmoduleanno注释必须补充说，这是唯一的路被weex ???"
+
+#. type: Bullet: '3. '
+#: /home/dev/download/weex/doc/how-to/cuszomize-native-apis.md:69
+msgid "The access levels of mehtod must be **public**"
+msgstr "访问级别的方法必须是**公共** ???"
+
+#. type: Bullet: '4. '
+#: /home/dev/download/weex/doc/how-to/cuszomize-native-apis.md:70
+msgid "The module class also can not be an inner class"
+msgstr "模块类也不能是一个内部类 ???"
+
+#. type: Bullet: '5. '
+#: /home/dev/download/weex/doc/how-to/cuszomize-native-apis.md:73
+msgid "Customize can not be obfuscated by tools like ProGuard"
+msgstr "自定义不能模糊工具如混淆器 ???"
+
+#. type: Bullet: '6. '
+#: /home/dev/download/weex/doc/how-to/cuszomize-native-apis.md:73
+msgid ""
+"Module methods will be invoked in UI thread, do not put time consuming "
+"operation there"
+msgstr "模块方法将在用户界面线程中调用，不要在那里投入耗时的操作 ???"
+
+#. type: Bullet: '7. '
+#: /home/dev/download/weex/doc/how-to/cuszomize-native-apis.md:73
+msgid ""
+"Weex params can be int, double, float, String, Map, List, self-defined class "
+"that implements WXObject interface"
+msgstr "weex参数可以是int，双，浮弦，图，表，自定义类实现wxobject接口 ???"

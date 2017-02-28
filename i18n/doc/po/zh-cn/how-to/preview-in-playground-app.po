@@ -1,0 +1,69 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/how-to/preview-in-playground-app.md:1
+#, no-wrap
+msgid "How to preview weex code in sample-app ?"
+msgstr "如何预览在示例应用程序weex代码？ ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/how-to/preview-in-playground-app.md:3
+#, no-wrap
+msgid "Weex Sample Step By Step"
+msgstr "weex样本一步一步 ???"
+
+#. type: Bullet: '1. '
+#: /home/dev/download/weex/doc/how-to/preview-in-playground-app.md:7
+msgid ""
+"Clone Weex from github [`https://github.com/alibaba/weex/`](https://github."
+"com/alibaba/weex/)"
+msgstr ""
+"克隆weex从GitHub [`https://github.com/alibaba/weex/`](https://github.com/"
+"alibaba/weex/)???"
+
+#. type: Bullet: '2. '
+#: /home/dev/download/weex/doc/how-to/preview-in-playground-app.md:7
+msgid "Use Android Studio open Android Sample 。"
+msgstr "使用安卓工作室开放的安卓示例。 ???"
+
+#. type: Bullet: '3. '
+#: /home/dev/download/weex/doc/how-to/preview-in-playground-app.md:7
+msgid "run Sample project."
+msgstr "运行示例项目。 ???"
+
+#. type: Bullet: '4. '
+#: /home/dev/download/weex/doc/how-to/preview-in-playground-app.md:7
+msgid "into Sample homePage，you will see this picture"
+msgstr "到示例主页，你会看到这张照片 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/preview-in-playground-app.md:9
+#, no-wrap
+msgid ""
+"![preview page](http://gtms01.alicdn.com/tps/i1/TB10Ox2MpXXXXXKXpXXA0gJJXXX-720-1280.png)\n"
+"5. Click the icon to the top right of the page to enter the two-dimensional code scanning  \n"
+msgstr ""
+"![预览](http://gtms01.alicdn.com/tps/i1/TB10Ox2MpXXXXXKXpXXA0gJJXXX-720-1280.png)???\n"
+"5。单击该图标的右上角的图标输入二维码扫描 ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/preview-in-playground-app.md:12
+#, no-wrap
+msgid ""
+"![](http://gtms04.alicdn.com/tps/i4/TB1Ph05MpXXXXcHXXXX2YSA3pXX-540-960.jpg)\n"
+"6. use[`Weex-Toolkit`](https://github.com/alibaba/weex_toolchain/tree/master/toolkit/ )make .we to a     QR code \n"
+"7. you will see the page rended by Weex  \n"
+msgstr ""
+"![](http://gtms04.alicdn.com/tps/i4/TB1Ph05MpXXXXcHXXXX2YSA3pXX-540-960.jpg)???\n"
+"6。使用[`Weex-Toolkit`](https://github.com/alibaba/weex_toolchain/tree/master/toolkit/ )做。我们一个QR码 ???\n"
+"7。你会看到页面的weex撕裂 ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/preview-in-playground-app.md:13
+msgid ""
+"![](http://gtms03.alicdn.com/tps/i3/TB1ehVLMpXXXXa.XVXX2YSA3pXX-540-960.jpg)"
+msgstr ""
+"![](http://gtms03.alicdn.com/tps/i3/TB1ehVLMpXXXXa.XVXX2YSA3pXX-540-960."
+"jpg)???"

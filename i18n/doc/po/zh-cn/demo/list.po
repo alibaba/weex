@@ -1,0 +1,43 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/demo/list.md:2
+#, no-wrap
+msgid ""
+"Weex List Demo\n"
+"===============\n"
+msgstr ""
+"weex列表演示 ???\n"
+"=============== ???\n"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/demo/list.md:4
+#, no-wrap
+msgid "snapshot"
+msgstr "快照 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/demo/list.md:6
+msgid ""
+"![weex demo](http://gtms01.alicdn.com/tps/i1/TB1U."
+"vZMpXXXXakXXXXfoKlVpXX-278-474.gif)"
+msgstr ""
+"![weex演示](http://gtms01.alicdn.com/tps/i1/TB1U."
+"vZMpXXXXakXXXXfoKlVpXX-278-474.gif)???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/demo/list.md:7
+#, no-wrap
+msgid "weex code"
+msgstr "weex代码 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/demo/list.md:9
+msgid ""
+"See [list example](https://github.com/alibaba/weex/tree/master/examples/"
+"listDemo.we)."
+msgstr ""
+"看到[例](https://github.com/alibaba/weex/tree/master/examples/listDemo.we)列"
+"表。 ???"

@@ -1,0 +1,39 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title =
+#: /home/dev/download/weex/doc/demo/animation.md:2
+#, no-wrap
+msgid "Animation Demo\n"
+msgstr "动画演示 ???\n"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/demo/animation.md:4
+#, no-wrap
+msgid "snapshot"
+msgstr "快照 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/demo/animation.md:6
+msgid ""
+"![weex demo](http://gtms02.alicdn.com/tps/i2/"
+"TB1B5L2MpXXXXXhXXXXp.9cVpXX-278-424.gif)"
+msgstr ""
+"![weex演示](http://gtms02.alicdn.com/tps/i2/"
+"TB1B5L2MpXXXXXhXXXXp.9cVpXX-278-424.gif)???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/demo/animation.md:7
+#, no-wrap
+msgid "weex code"
+msgstr "weex代码 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/demo/animation.md:10
+msgid ""
+"See [animation example](https://github.com/alibaba/weex/tree/master/examples/"
+"animation.we)."
+msgstr ""
+"[例](https://github.com/alibaba/weex/tree/master/examples/animation.we)看动"
+"画。 ???"

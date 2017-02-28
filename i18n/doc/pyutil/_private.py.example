@@ -1,0 +1,9 @@
+
+# 百度翻译的 API http://api.fanyi.baidu.com/api/trans/product/index
+
+
+class BAIDU:
+
+    class TRANS:
+        ID = ""
+        KEY = ""

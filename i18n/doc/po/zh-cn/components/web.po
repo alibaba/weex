@@ -1,0 +1,139 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/components/web.md:1
+#, no-wrap
+msgid "&lt;web&gt;"
+msgstr "&lt;Web &gt; ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/web.md:3
+#, no-wrap
+msgid "Summary"
+msgstr "总结 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/web.md:6
+msgid ""
+"Use web component to display any web content in the weex page. The `src` "
+"attribute is used to specify a special source. You also can use `webview` "
+"module to control some web operation such as goBack、goForward and reload, "
+"see [webview module](../modules/webview.md)."
+msgstr ""
+"使用Web组件在weex页面显示任何网页内容。的`src`` attribute is used to specify "
+"a special source. You also can use ``webview`模块控制一些网络操作如再、前进和"
+"重装，看到[模块](../modules/webview.md)WebView。 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/web.md:8
+#, no-wrap
+msgid "Child Components"
+msgstr "子组件 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/web.md:11
+msgid "This component supports no child components."
+msgstr "此组件不支持子组件。 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/web.md:12
+#, no-wrap
+msgid "Attributes"
+msgstr "属性 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/web.md:15
+msgid ""
+"- `src`: &lt;string&gt; this attribute specifies the page source to load."
+msgstr "-`src`：&lt;字符串&gt;此属性指定要加载的页面源代码。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/web.md:17
+msgid ""
+"Other attributes please check out the [common attributes](../references/"
+"common-attrs.md)."
+msgstr "其他属性，请查看[共性](../references/common-attrs.md)。 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/web.md:18
+#, no-wrap
+msgid "Styles"
+msgstr "款式 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/web.md:22
+msgid ""
+"- `width`: &lt;length&gt; the width of the component. This style should be "
+"specified.  - `height`: &lt;length&gt; the height of the component. This "
+"style should be specifed."
+msgstr ""
+"-`width``: &lt;length&gt; the width of the component. This style should be "
+"specified.  - ``height`：&lt;长度&gt;组件的高度。这种风格应当指定。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/web.md:24
+#, no-wrap
+msgid "**common styles**: check out the [common styles](../references/common-attrs.md)\n"
+msgstr "* * *：常见的方式查看[共同](../references/common-attrs.md)风格 ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/web.md:28
+msgid ""
+"- support flexbox related styles - support box model related styles - "
+"support ``position`` related styles"
+msgstr ""
+"支持flexbox相关的风格支持盒模型相关的风格支持```position```相关的风格 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/web.md:29
+#, no-wrap
+msgid "Events"
+msgstr "事件 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/web.md:34
+msgid ""
+"- `pagestart`: sent after the web component starts loading a page.  - "
+"`pagefinish`: sent after the web component finishes loading a page.  - "
+"`error`: sent if the web component failed to load a page."
+msgstr ""
+"-`pagestart``: sent after the web component starts loading a page.  - "
+"``pagefinish``: sent after the web component finishes loading a page.  - "
+"``error`：如果Web组件未能加载页发送。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/web.md:37
+#, no-wrap
+msgid "*common events**: check out the [common events](../references/common-event.md)\n"
+msgstr "*普通事件*：查看[事件](../references/common-event.md)常见 ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/web.md:40
+msgid ""
+"- support `click` event. Check out [common events](../references/common-"
+"event.md)  - support `appear` / `disappear` event. Check out [common events]"
+"(../references/common-event.md)"
+msgstr ""
+"支持`click`` event. Check out [common events](../references/common-event."
+"md)  - support ``appear`` / ``disappear`事件。查看[事件](../references/"
+"common-event.md)常见 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/web.md:41
+#, no-wrap
+msgid "Example"
+msgstr "例子 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/web.md:48
+#, no-wrap
+msgid ""
+"```js\n"
+"<div>\n"
+"  <web style=\"width=...; height=...;\" src=\"...\" \tonpagestart=\"pagestart\" onpagefinish=\"pagefinish\" \tonerror=\"error\">\n"
+"  </web>\n"
+"</div>\n"
+"```\n"
+msgstr ""

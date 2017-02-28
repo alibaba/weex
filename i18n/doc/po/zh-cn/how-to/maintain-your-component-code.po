@@ -1,0 +1,14 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/how-to/maintain-your-component-code.md:1
+#, no-wrap
+msgid "How to maintain your components' code ?"
+msgstr "如何维护你的组件的代码？ ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/maintain-your-component-code.md:3
+msgid "TODO"
+msgstr "待办事项 ???"

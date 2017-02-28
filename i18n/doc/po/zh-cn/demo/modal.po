@@ -1,0 +1,39 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title =
+#: /home/dev/download/weex/doc/demo/modal.md:2
+#, no-wrap
+msgid "Weex Modal Demo\n"
+msgstr "weex模态演示 ???\n"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/demo/modal.md:4
+#, no-wrap
+msgid "snapshot"
+msgstr "快照 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/demo/modal.md:6
+msgid ""
+"![weex demo](http://gtms03.alicdn.com/tps/i3/"
+"TB1JcHRMpXXXXXhXpXXp.9cVpXX-278-424.gif)"
+msgstr ""
+"![weex演示](http://gtms03.alicdn.com/tps/i3/"
+"TB1JcHRMpXXXXXhXpXXp.9cVpXX-278-424.gif)???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/demo/modal.md:7
+#, no-wrap
+msgid "weex code"
+msgstr "weex代码 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/demo/modal.md:9
+msgid ""
+"See [modal example](https://github.com/alibaba/weex/tree/master/examples/"
+"modal.we)."
+msgstr ""
+"见[例](https://github.com/alibaba/weex/tree/master/examples/modal.we)模"
+"态。 ???"

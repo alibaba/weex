@@ -1,0 +1,149 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title =
+#: /home/dev/download/weex/doc/tools/cli.md:2
+#, no-wrap
+msgid "Weex-Toolkit\n"
+msgstr "weex工具包 ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/tools/cli.md:5
+msgid "Weex CLI tool set"
+msgstr "weex CLI工具集 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/tools/cli.md:6
+#, no-wrap
+msgid "Install"
+msgstr "安装 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/tools/cli.md:10
+msgid "``` $npm install -g weex-toolkit ```"
+msgstr ""
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/tools/cli.md:11
+#, no-wrap
+msgid "Usage"
+msgstr "使用 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/tools/cli.md:13
+#, no-wrap
+msgid "weex"
+msgstr "weex ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/tools/cli.md:18
+msgid ""
+"Weex file preview tool with hot reload ``` Usage: weex foo/bar/"
+"your_next_best_weex_script_file.we [options]"
+msgstr ""
+"热加载````使用weex文件预览工具：weex foo /酒吧/ "
+"your_next_best_weex_script_file.we [选项] ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/tools/cli.md:25
+#, no-wrap
+msgid ""
+"Options:\n"
+"  --qr    display QR code for Weex Playground app, default action.               \n"
+"  -o      transform weex JS bundle only, specify bundle file name using the option\n"
+"  -s      start a http file server, weex .we file will be transformed on the server. specify local root path using the option\n"
+"  --help  Show help                                                       \n"
+"```\n"
+msgstr ""
+"选项： ???\n"
+"  ——QR显示QR码weex操场APP，默认动作。 ???\n"
+"  o变换weex JS束，使用选项指定包文件名 ???\n"
+"  -开始一个HTTP文件服务器，weex。我们将文件服务器上的转化。使用选项指定本地根路径 ???\n"
+"  -帮助显示帮助 ???\n"
+" ````???\n"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/tools/cli.md:27
+#, no-wrap
+msgid "Issue & Feedback"
+msgstr "问题和反馈 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/tools/cli.md:30
+msgid "[Github Issue List](https://github.com/alibaba/weex_toolchain/issues)"
+msgstr "[问题](https://github.com/alibaba/weex_toolchain/issues)GitHub列表 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/tools/cli.md:31
+#, no-wrap
+msgid "Changelog"
+msgstr "更新日志 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/tools/cli.md:44
+msgid "160418 : temporary turnoff H5 preview"
+msgstr "160418：临时关闭H5预览 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/tools/cli.md:44
+msgid "160401 : format for opensource"
+msgstr "160401：格式开源 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/tools/cli.md:44
+msgid "160331 : update upstream lib , ready for opensource"
+msgstr "160331：更新上游库，准备开源 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/tools/cli.md:44
+msgid "160321 : update HTML5 runtime"
+msgstr "160321：更新HTML5运行 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/tools/cli.md:44
+msgid "160301 : add -s option & update upstream lib"
+msgstr "160301：添加选项和更新上游库 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/tools/cli.md:44
+msgid "160224 : update upstream weex-html5 lib , improve stability"
+msgstr "160224：更新上游weex-html5库，提高稳定性 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/tools/cli.md:44
+msgid "160223 : add -o option for transform weex JS bundle directly"
+msgstr "160223：添加-o选项weex JS束直接变换 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/tools/cli.md:44
+msgid ""
+"160201 : adopt new weex JS bundle style(define / require) & output "
+"transformer Error/Warning logs"
+msgstr ""
+"160201：采用新的weex JS捆绑式(define / require)输出变压器的错误/警告日志 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/tools/cli.md:44
+msgid "160129 : add native runtime support with --qr option"
+msgstr "160129：添加本机运行时支持，QR选项 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/tools/cli.md:44
+msgid "160122 : add -n , -h options & improve CLI feedback output"
+msgstr "160122：添加N、H选项和提高CLI输出反馈 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/tools/cli.md:44
+msgid "160119 : update upstream weex-html5 lib"
+msgstr "160119：更新weex-html5库上游 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/tools/cli.md:44
+msgid "160118 : hot reload function & English document"
+msgstr "160118：热重装功能和英文文档 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/tools/cli.md:44
+msgid "160114 : first version"
+msgstr "160114：第一个版本 ???"

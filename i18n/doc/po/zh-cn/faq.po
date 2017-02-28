@@ -1,0 +1,41 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/faq.md:1
+#, no-wrap
+msgid "FAQ"
+msgstr "常见问题解答 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/faq.md:3
+#, no-wrap
+msgid "Command errors in Windows"
+msgstr "窗口中的命令错误 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/faq.md:6
+msgid ""
+"Please install [Git for Windows](https://git-scm.com/download/win) first, "
+"see [For Windows](https://github.com/alibaba/weex/tree/dev#for-windows) for "
+"more information."
+msgstr ""
+"请安装Windows](https://git-scm.com/download/win)第一[Git，更多信息请看"
+"Windows(https://github.com/alibaba/weex/tree/dev#for-windows)[]。 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/faq.md:8
+#, no-wrap
+msgid "Gradle errors in Android Studio"
+msgstr "在Android Studio工具误差 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/faq.md:11
+msgid ""
+"Downloading `license-gradle-plugin.jar` may trigger errors, like `Connection "
+"reset` or `peer not authenticated`.  Maybe a network problem, try a proxy or "
+"VPN."
+msgstr ""
+"下载`license-gradle-plugin.jar`` may trigger errors, like ``Connection "
+"reset`` or ``peer not authenticated`。可能是网络问题，尝试代理或VPN。 ???"

@@ -1,0 +1,187 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/components/indicator.md:1
+#, no-wrap
+msgid "&lt;indicator&gt;"
+msgstr "&lt;指标&gt; ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/indicator.md:3
+#, no-wrap
+msgid "Summary"
+msgstr "总结 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/indicator.md:6
+msgid ""
+"This component must be used as a subcomponent of a [`slider`](slider.md) "
+"component."
+msgstr "这部分必须作为子一[`slider`](slider.md)组件。 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/indicator.md:7
+#, no-wrap
+msgid "Child Components"
+msgstr "子组件 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/indicator.md:10
+msgid "This component supports no child components."
+msgstr "此组件不支持子组件。 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/indicator.md:11
+#, no-wrap
+msgid "Attributes"
+msgstr "属性 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/indicator.md:14
+msgid ""
+"There is no specific attribute for this component other than the [common "
+"attributes](../references/common-attrs.md)."
+msgstr ""
+"在这个组件以外的共同属性] [(../references/common-attrs.md)没有特定的属"
+"性。 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/indicator.md:15
+#, no-wrap
+msgid "Styles"
+msgstr "款式 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/indicator.md:20
+msgid ""
+"- `item-color`: &lt;colors&gt; This style attribute sets the normal item "
+"color using either a named color or a color specified in the hexadecimal "
+"#RRGGBB format.  - `item-selectedColor`: &lt;colors&gt; This style attribute "
+"sets the selected item color using either a named color or a color specified "
+"in the hexadecimal #RRGGBB format.  - `item-size`: &lt;length&gt; The size "
+"of the indicator elements, which is an float attribute."
+msgstr ""
+"-`item-color``: &lt;colors&gt; This style attribute sets the normal item "
+"color using either a named color or a color specified in the hexadecimal "
+"#RRGGBB format.  - ``item-selectedColor``: &lt;colors&gt; This style "
+"attribute sets the selected item color using either a named color or a color "
+"specified in the hexadecimal #RRGGBB format.  - ``item-size`：&lt;长度&gt;的"
+"指示元素的大小，这是一个浮动属性。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/indicator.md:22
+#, no-wrap
+msgid "**common styles**: check out the [common styles](../references/common-attrs.md)\n"
+msgstr "* * *：常见的方式查看[共同](../references/common-attrs.md)风格 ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/indicator.md:27
+msgid ""
+"- support flexbox related styles - support box model related styles - "
+"support ``position`` related styles - support ``opacity``, ``background-"
+"color`` etc."
+msgstr ""
+"支持flexbox相关的风格支持盒模型相关的风格支持```position```` related styles "
+"- support ````opacity````, ````background-color```等 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/indicator.md:28
+#, no-wrap
+msgid "Events"
+msgstr "事件 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/indicator.md:31
+#, no-wrap
+msgid "**common events**: check out the [common events](../references/common-event.md)\n"
+msgstr "* * *：常见的事件查看[事件](../references/common-event.md)常见 ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/indicator.md:34
+msgid ""
+"- support `click` event. Check out [common events](../references/common-"
+"event.md)  - support `appear` / `disappear` event. Check out [common events]"
+"(../references/common-event.md)"
+msgstr ""
+"支持`click`` event. Check out [common events](../references/common-event."
+"md)  - support ``appear`` / ``disappear`事件。查看[事件](../references/"
+"common-event.md)常见 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/indicator.md:35
+#, no-wrap
+msgid "Example"
+msgstr "例子 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/indicator.md:44
+#, no-wrap
+msgid ""
+"```\n"
+"<template>\n"
+"  <slider class=\"slider\">\n"
+"    <div class=\"slider-pages\" repeat=\"{{itemList}}\">\n"
+"      <image class=\"img\" src=\"{{pictureUrl}}\"></image>\n"
+"      <text class=\"title\">{{title}}</text>\n"
+"    </div>\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/indicator.md:48
+#, no-wrap
+msgid ""
+"    <indicator class=\"indicator\"></indicator>\n"
+"  </slider>\n"
+"</template>\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/indicator.md:74
+#, no-wrap
+msgid ""
+"<style>\n"
+"  .img {width: 150; height: 150;}\n"
+"  .title {flex: 1; color: #ff0000; font-size: 48; font-weight: bold; background-color: #eeeeee;}\n"
+"  .slider {\n"
+"    flex-direction: row;\n"
+"    margin: 18;\n"
+"    width: 714;\n"
+"    height: 230;\n"
+"  }\n"
+"  .slider-pages {\n"
+"    flex-direction: row;\n"
+"    width: 714;\n"
+"    height: 200;\n"
+"  }\n"
+"  .indicator {\n"
+"    width:714;\n"
+"    height:200;\n"
+"    position:absolute;\n"
+"    top:1;\n"
+"    left:1;\n"
+"    item-color: red;\n"
+"    item-selectedColor: blue;\n"
+"    item-size: 20;\n"
+"  }\n"
+"</style>\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/indicator.md:86
+#, no-wrap
+msgid ""
+"<script>\n"
+"  module.exports = {\n"
+"    data: {\n"
+"      itemList: [\n"
+"        {itemId: '520421163634', title: 'item1', pictureUrl: 'https://gd2.alicdn.com/bao/uploaded/i2/T14H1LFwBcXXXXXXXX_!!0-item_pic.jpg'},\n"
+"        {itemId: '522076777462', title: 'item2', pictureUrl: 'https://gd1.alicdn.com/bao/uploaded/i1/TB1PXJCJFXXXXciXFXXXXXXXXXX_!!0-item_pic.jpg'},\n"
+"        {itemId: '522076777462', title: 'iten3', pictureUrl: 'https://gd3.alicdn.com/bao/uploaded/i3/TB1x6hYLXXXXXazXVXXXXXXXXXX_!!0-item_pic.jpg'}\n"
+"      ]\n"
+"    }\n"
+"  }\n"
+"</script>\n"
+"```\n"
+msgstr ""

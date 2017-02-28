@@ -1,0 +1,61 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title =
+#: /home/dev/download/weex/doc/tools/playground-app.md:2
+#, no-wrap
+msgid "Weex Playground App\n"
+msgstr "weex操场上的应用 ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/tools/playground-app.md:5
+msgid ""
+"One of best parts of Weex is Native Runtime . After preview your `we file` "
+"render in H5 using weex-toolkit CLI , you can try Native Runtime in a "
+"standalone App , this is Weex Playground App . More then that ,Weex "
+"playground App preset a lot of Demo & ShowCase ,so you will get to "
+"experience performance of Weex native runtime easily."
+msgstr ""
+"一个最好的部分是本地运行的weex。在预览weex H5使用CLI渲染你的`we file`工具包，"
+"你可以在一个独立的应用程序尝试本地运行，这是weex操场上的应用。然后，weex操场"
+"APP预置很多演示和展示，所以你会体验到weex本地运行时表现的很轻松。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/tools/playground-app.md:7
+msgid ""
+"Android version of Playground App can be downloaded [here](http://empty-"
+"now).  iOS version will soon be ready to download."
+msgstr ""
+"Android应用程序版本的操场上可以下载[这里](http://empty-now)。iOS版本将很快准"
+"备下载。 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/tools/playground-app.md:9
+#, no-wrap
+msgid "Screenshot "
+msgstr "截图 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/tools/playground-app.md:12
+msgid ""
+"![Weex playground App](http://gtms01.alicdn.com/tps/i1/"
+"TB1bC5LMpXXXXb7XXXXA0gJJXXX-720-1280.png)"
+msgstr ""
+"![应用](http://gtms01.alicdn.com/tps/i1/TB1bC5LMpXXXXb7XXXXA0gJJXXX-720-1280."
+"png)weex操场 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/tools/playground-app.md:15
+msgid ""
+"This is main interface of Weex Playground App , grey color list item is Demo/"
+"Showcase entry . click top right corner Icon will active QR scaner that work "
+"with Weex [toolkit CLI](../tools/cli.md)"
+msgstr ""
+"这是weex操场应用程序主界面，灰色的颜色列表项演示/展示入口。点击右上角的图标会"
+"主动QR扫描器的工作weex [工具箱](../tools/cli.md)CLI ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/tools/playground-app.md:17
+msgid "please refer to [Weex Tutorial](../tutorial.md)"
+msgstr "请参阅[教程](../tutorial.md)weex ???"

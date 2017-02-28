@@ -1,0 +1,72 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/references/main.md:1
+#, no-wrap
+msgid "References"
+msgstr "工具书类 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/references/main.md:26
+msgid "[Bootstrap](./bootstrap.md)"
+msgstr "[引导](./bootstrap.md)???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/references/main.md:26
+msgid "[Component Definition](./component-defs.md)"
+msgstr "[定义](./component-defs.md)???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/references/main.md:26
+msgid "[Instance APIs](./api.md)"
+msgstr "[例](./api.md)API ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/main.md:26
+#, no-wrap
+msgid ""
+"* [Built-in Components](../components/main.md)\n"
+"    * [Common Attributes](./common-attrs.md)\n"
+"    * [Common Style](./common-style.md)\n"
+"    * [Common Event](./common-event.md)\n"
+"    * [Special Element](../components/special-element.md)\n"
+"    * [&lt;div&gt;](../components/div.md)\n"
+"    * [&lt;scroller&gt;](../components/scroller.md)\n"
+"    * [&lt;list&gt;](../components/list.md)\n"
+"        * [&lt;cell&gt;](../components/cell.md)\n"
+"    * [&lt;text&gt;](../components/text.md)\n"
+"    * [&lt;image&gt;](../components/image.md)\n"
+"    * [&lt;input&gt;](../components/input.md)\n"
+"    * [&lt;switch&gt;](../components/switch.md)\n"
+"    * [&lt;slider&gt;](../components/slider.md)\n"
+"        * [&lt;indicator&gt;](../components/indicator.md)\n"
+"    * [&lt;video&gt;](../components/video.md)\n"
+"* [Built-in Modules](../modules/main.md)\n"
+"* Low-level Specs\n"
+"    * [JS Bundle Format](../specs/js-bundle-format.md)\n"
+"    * [JS Framework APIs](../specs/js-framework-apis.md)\n"
+"    * [Virtual DOM APIs](../specs/virtual-dom-apis.md)\n"
+msgstr ""
+"* [内部](../components/main.md)???\n"
+"    * [属性](./common-attrs.md)常见 ???\n"
+"    * [共同](./common-style.md)风格 ???\n"
+"    * [事件](./common-event.md)常见 ???\n"
+"    * [元](../components/special-element.md)???\n"
+"    * [&lt;div &gt;](../components/div.md)???\n"
+"    * [&lt;上卷&gt;](../components/scroller.md)???\n"
+"    * [&lt;列表&gt;](../components/list.md)???\n"
+"        * [&lt;细胞&gt;](../components/cell.md)???\n"
+"    * [&lt;文本&gt;](../components/text.md)???\n"
+"    * [&lt;图像&gt;](../components/image.md)???\n"
+"    * [&lt;输入&gt;](../components/input.md)???\n"
+"    * [&lt;开关&gt;](../components/switch.md)???\n"
+"    * [&lt;滑块&gt;](../components/slider.md)???\n"
+"        * [&lt;指示&gt;](../components/indicator.md)???\n"
+"    * [&lt;视频&gt;](../components/video.md)???\n"
+"* [建](../modules/main.md)模块 ???\n"
+"*低级别规格 ???\n"
+"    * [格式](../specs/js-bundle-format.md)JS束 ???\n"
+"    * [蜜蜂](../specs/js-framework-apis.md)js框架 ???\n"
+"    * [虚拟](../specs/virtual-dom-apis.md)DOM API ???\n"

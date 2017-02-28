@@ -1,0 +1,71 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/how-to/debug-with-remote-tools.md:1
+#, no-wrap
+msgid "How to debug With Weex-Toolkit ?"
+msgstr "如何调试与weex工具包？ ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/debug-with-remote-tools.md:4
+msgid ""
+"[Weex Toolkit](../tools/cli.md) is a multipurpose command line interface "
+"tool , it be designed to help you quickly preview Weex `we file` and debug "
+"your `we file`."
+msgstr ""
+"[工具] weex(../tools/cli.md)是一种多功能的命令行界面工具，它被设计来帮助你快"
+"速预览weex`we file`` and debug your ``we file`。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/debug-with-remote-tools.md:6
+msgid ""
+"At present the only debug assist function of Weex toolkit is `Hot reload` , "
+"we will add more utility debug function soon."
+msgstr ""
+"目前唯一的调试辅助weex工具包的功能是`Hot reload`，我们将添加更多的实用调试功"
+"能很快。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/debug-with-remote-tools.md:8
+msgid ""
+"After install weex toolkit， open your terminal and navigate to the "
+"directory where you save `we` file. then type"
+msgstr "weex工具包安装后，打开终端，导航到你保存的文件目录`we`。然后键入 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/debug-with-remote-tools.md:12
+msgid "``` weex the_next_great_we_file.we ```"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/debug-with-remote-tools.md:14
+msgid ""
+"A browser window will open automatically to display render result of your "
+"`we` file. Trying to change some content of your `we` file and save the "
+"file .  your browser will immediately display these changes."
+msgstr ""
+"一个浏览器窗口会自动打开显示渲染你的`we`` file. Trying to change some "
+"content of your ``we`文件和保存文件。您的浏览器将立即显示这些更改。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/debug-with-remote-tools.md:17
+msgid ""
+"`Hot Reload` also work with Native Runtime in Weex Playground App , type"
+msgstr " `Hot Reload`也工作在weex操场APP本地运行时类型 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/debug-with-remote-tools.md:21
+msgid "``` weex the_next_great_we_file.we --qr ```"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/debug-with-remote-tools.md:23
+msgid ""
+"An QR code will be display in the terminal window, scan the QR using Weex "
+"Playground App ,your `we` file will be render in playground App. Update the "
+"file the render result will be update automaticly."
+msgstr ""
+"一个二维码会在终端窗口显示，扫描使用weex操场应用QR，你`we`文件将在应用程序渲"
+"染的操场。更新文件的渲染结果会自动更新。 ???"

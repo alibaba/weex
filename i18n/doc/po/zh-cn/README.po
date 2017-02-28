@@ -1,0 +1,39 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/README.md:1
+#, no-wrap
+msgid "Weex"
+msgstr "Weex"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/README.md:4
+msgid "Table of Contents"
+msgstr "目录"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/README.md:10
+msgid "[Tutorial](./tutorial.md)"
+msgstr "[入门教程](./tutorial.md)"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/README.md:10
+msgid "[Guide](./guide.md)"
+msgstr "[使用指南](./guide.md)"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/README.md:10
+msgid "[References](./references/main.md)"
+msgstr "[参考文献](./references/main.md)"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/README.md:10
+msgid "[Examples](./demo/main.md)"
+msgstr "[演示案例](./demo/main.md)"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/README.md:10
+msgid "[Service & Tools](./tools/main.md)"
+msgstr "[实用工具](./tools/main.md)"

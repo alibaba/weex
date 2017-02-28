@@ -1,0 +1,101 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/how-to/preview-in-browser.md:1
+#, no-wrap
+msgid "How to preview weex code in browser ?"
+msgstr "如何在浏览器中预览weex代码？ ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/how-to/preview-in-browser.md:3
+#, no-wrap
+msgid "weex-toolkit"
+msgstr "weex工具包 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/preview-in-browser.md:6
+msgid ""
+"We strongly suggest you use weex-toolkit to preview weex code in your "
+"browser. This tool were Node.JS based, so you need to install Node at first. "
+"Please download and install latest stable version of Node from [https://"
+"nodejs.org/en/download/stable/](https://nodejs.org/en/download/stable/). "
+"Then you can install weex-toolkit using npm install:"
+msgstr ""
+"我们强烈建议你使用weex工具包预览您的浏览器weex代码。这个工具是基于Node.js，所"
+"以你需要先安装节点。请下载并安装最新的稳定版本节点https://nodejs.org/en/"
+"download/stable/(https://nodejs.org/en/download/stable/)[]。然后你可以安装"
+"weex工具包使用npm安装： ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/preview-in-browser.md:10
+msgid "``` npm install -g weex-toolkit ```"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/preview-in-browser.md:12
+msgid ""
+"Check whether the toolkit is working by typeing `weex` in cmd line. Normally "
+"you should see the following help text:"
+msgstr ""
+"检查是否被打`weex`工具包CMD线工作。通常情况下，您应该看到以下帮助文本： ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/preview-in-browser.md:15
+msgid "``` Usage: weex foo/bar/your_next_best_weex_script_file.we [options]"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/preview-in-browser.md:26
+#, no-wrap
+msgid ""
+"Options:\n"
+"  -n      do not open preview browser automatic                        [boolean]\n"
+"  --qr    display QR code for native runtime                           [boolean]\n"
+"  -h      specify weex server listen host                 [default: \"127.0.0.1\"]\n"
+"  -o      transform weex JS bundle only, specify bundle file name using the\n"
+"          option                                 [default: \"no JSBundle output\"]\n"
+"  -s      start a http file server, weex .we file will be transformed on the\n"
+"          server , specify local root path using the option     [default: false]\n"
+"  --help  Show help                                                    [boolean]\n"
+"```\n"
+msgstr ""
+"选项： ???\n"
+"  - n不打开预览浏览器自动[布尔] ???\n"
+"  对于本地运行[布尔】QR显示QR码 ???\n"
+"  H指定weex服务器监听主机[默认：“127.0.0.1”] ???\n"
+"  o变换weex JS捆绑，捆绑使用指定文件名 ???\n"
+"          选择[默认：“不jsbundle输出”] ???\n"
+"  -开始一个HTTP文件服务器，weex。我们的文件将被转换的 ???\n"
+"          服务器，指定本地根路径使用选项[默认：错误] ???\n"
+"  ——帮助显示帮助[布尔] ???\n"
+" ````???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/preview-in-browser.md:28
+msgid ""
+"If all works well, navigate to the path the xxx.we file you want to preview "
+"in, and type the command:"
+msgstr "如果一切正常，浏览路径你想预览在xxx.we文件，并输入命令： ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/preview-in-browser.md:32
+msgid "``` weex xxx.we ```"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/preview-in-browser.md:34
+msgid ""
+"A browser window will open automatically to display the page you want to "
+"preview:"
+msgstr "一个浏览器窗口将自动打开，显示你想预览的页面： ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/preview-in-browser.md:36
+msgid ""
+"![preview page](http://gtms02.alicdn.com/tps/i2/"
+"TB1y151LVXXXXXXaXXXoRYgWVXX-495-584.jpg)"
+msgstr ""
+"![预览](http://gtms02.alicdn.com/tps/i2/TB1y151LVXXXXXXaXXXoRYgWVXX-495-584."
+"jpg)???"

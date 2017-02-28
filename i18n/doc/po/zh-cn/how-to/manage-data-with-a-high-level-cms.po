@@ -1,0 +1,14 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/how-to/manage-data-with-a-high-level-cms.md:1
+#, no-wrap
+msgid "How to manage data with a high level cms ?"
+msgstr "如何管理一个高层次的管理数据？ ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/manage-data-with-a-high-level-cms.md:3
+msgid "TODO"
+msgstr "待办事项 ???"

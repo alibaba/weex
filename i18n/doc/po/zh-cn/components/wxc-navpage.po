@@ -1,0 +1,176 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/components/wxc-navpage.md:1
+#, no-wrap
+msgid "&lt;wxc-navpage&gt;"
+msgstr "&lt;WXC navpage &gt; ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/wxc-navpage.md:3
+#, no-wrap
+msgid "Summary"
+msgstr "总结 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/wxc-navpage.md:6
+msgid ""
+"The \"wxc-navpage\" tag implements a specialized component that contains a "
+"navbar at the top of the window and an embed content page. You can customize "
+"the navbar as you like. In addition, you can use `navigator` module to "
+"control the page jump, see [navigator module](../modules/navigator.md)."
+msgstr ""
+"“WXC navpage”的标签，实现了一个专门的组件包含在窗口顶部的导航栏和一个嵌入的内"
+"容页。您可以自定义导航栏的你喜欢的。此外，您可以使用`navigator`模块来控制页面"
+"跳转，看到[](../modules/navigator.md)导航模块。 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/wxc-navpage.md:7
+#, no-wrap
+msgid "Child Components"
+msgstr "子组件 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/wxc-navpage.md:10
+msgid ""
+"This type of component supports all kinds of weex component as its child "
+"components."
+msgstr "这种类型的组件支持各种weex组件的子组件。 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/wxc-navpage.md:11
+#, no-wrap
+msgid "Attributes"
+msgstr "属性 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/wxc-navpage.md:23
+msgid ""
+"- `height`: &lt;length&gt; The height of the navbar. Default value is 88.  - "
+"`background-color`: &lt;color&gt;The backgroudColor of the navbar. Default "
+"value is `white`.  - `title`: &lt;string&gt; The title of the navbar.  - "
+"`title-color`: &lt;color&gt;The color of the navbar title. Default value is "
+"`black`.  - `left-item-title`: &lt;string&gt; The title of the leftItem.  - "
+"`left-item-color`: &lt;color&gt; The color of the leftItem title. Default "
+"value is `black`.  - `right-item-title`: &lt;string&gt; The title of the "
+"rightItem.  - `right-item-color`: &lt;color&gt; The color of the rightItem "
+"title. Default value is `black`.  - `left-item-src`: &lt;string&gt; The "
+"imageURL of the leftItem you want to set.  - `right-item-src`: &lt;"
+"string&gt; The imageURL of the rightItem you want to set."
+msgstr ""
+"-`height``: &lt;length&gt; The height of the navbar. Default value is 88.  - "
+"``background-color``: &lt;color&gt;The backgroudColor of the navbar. Default "
+"value is ``white``.  - ``title``: &lt;string&gt; The title of the navbar.  - "
+"``title-color``: &lt;color&gt;The color of the navbar title. Default value "
+"is ``black``.  - ``left-item-title``: &lt;string&gt; The title of the "
+"leftItem.  - ``left-item-color``: &lt;color&gt; The color of the leftItem "
+"title. Default value is ``black``.  - ``right-item-title``: &lt;string&gt; "
+"The title of the rightItem.  - ``right-item-color``: &lt;color&gt; The color "
+"of the rightItem title. Default value is ``black``.  - ``left-item-src``: "
+"&lt;string&gt; The imageURL of the leftItem you want to set.  - ``right-item-"
+"src`：&lt;字符串&gt;你想设置的rightitem ImageUrl。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/wxc-navpage.md:25
+msgid ""
+"Other attributes please check out the [common attributes](../references/"
+"common-attrs.md)."
+msgstr "其他属性，请查看[共性](../references/common-attrs.md)。 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/wxc-navpage.md:26
+#, no-wrap
+msgid "Styles"
+msgstr "款式 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/wxc-navpage.md:29
+#, no-wrap
+msgid "**common styles**: check out the [common styles](../references/common-attrs.md)\n"
+msgstr "* * *：常见的方式查看[共同](../references/common-attrs.md)风格 ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/wxc-navpage.md:34
+msgid ""
+"- support flexbox related styles - support box model related styles - "
+"support ``position`` related styles - support ``opacity``, ``background-"
+"color`` etc."
+msgstr ""
+"支持flexbox相关的风格支持盒模型相关的风格支持```position```` related styles "
+"- support ````opacity````, ````background-color```等 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/wxc-navpage.md:35
+#, no-wrap
+msgid "Events"
+msgstr "事件 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/wxc-navpage.md:39
+msgid ""
+"- `naviBar.leftItem.click`: triggered when the leftItem of navbar is "
+"clicked. You need to register the observer in ready or create block.  - "
+"`naviBar.rightItem.click`: triggered when the rightItem of navbar is "
+"clicked. You need to register the observer in ready or create block."
+msgstr ""
+"-`naviBar.leftItem.click``: triggered when the leftItem of navbar is "
+"clicked. You need to register the observer in ready or create block.  - "
+"``naviBar.rightItem.click`：触发时的rightitem点击导航栏。您需要注册准备就绪或"
+"创建块的观察者。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/wxc-navpage.md:41
+#, no-wrap
+msgid "**common events**: check out the [common events](../references/common-event.md)\n"
+msgstr "* * *：常见的事件查看[事件](../references/common-event.md)常见 ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/wxc-navpage.md:44
+msgid ""
+"- support `click` event. Check out [common events](../references/common-"
+"event.md)  - support `appear` / `disappear` event. Check out [common events]"
+"(../references/common-event.md)"
+msgstr ""
+"支持`click`` event. Check out [common events](../references/common-event."
+"md)  - support ``appear`` / ``disappear`事件。查看[事件](../references/"
+"common-event.md)常见 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/wxc-navpage.md:45
+#, no-wrap
+msgid "Example"
+msgstr "例子 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/wxc-navpage.md:60
+#, no-wrap
+msgid ""
+"```js\n"
+"<template>\n"
+"  <wxc-navpage height={{...}} background-color=\"...\" title=\"...\" title-color=\"...\" left-item-title=\"...\" left-item-color=\"...\" right-item-src=\"...\">\n"
+"      <content> ...</content>\n"
+"  </wxc-navpage>\n"
+"</template>\n"
+"<script>\n"
+"  require('weex-components');\n"
+"  module.exports = {\n"
+"    created: function() {\n"
+"        this.$on('naviBar.rightItem.click',function(e){\n"
+"           //handle your click event here.\n"
+"        });\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/wxc-navpage.md:68
+#, no-wrap
+msgid ""
+"        this.$on('naviBar.leftItem.click',function(e){\n"
+"          //handle your click event here. \n"
+"        });\n"
+"    }\n"
+"  }\n"
+"</script>\n"
+"```\n"
+msgstr ""

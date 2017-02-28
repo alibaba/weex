@@ -1,0 +1,112 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/syntax/config-n-data.md:1
+#, no-wrap
+msgid "Page Config & Data"
+msgstr "页面配置和数据 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/config-n-data.md:4
+#, no-wrap
+msgid "You can write some instance config and data in some additional `<script>` at the **top-level** Weex component.\n"
+msgstr "你可以写一些实例配置和数据在一些额外的`<script>`在××××weex顶层组件。 ???\n"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/syntax/config-n-data.md:7
+msgid ""
+"the instance config could declare some meta informations like which sdk/"
+"client version it supports or \"downgrade\" to HTML5 renderer. This part "
+"would be extended more in the future."
+msgstr ""
+"实例配置可以宣布一些元信息喜欢SDK /客户端版本支持或“降级”的HTML5渲染。这一部"
+"分将在未来扩展更多。 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/syntax/config-n-data.md:7
+msgid ""
+"the instance data could set an external data which would be processed "
+"instead of the default top-level component data."
+msgstr "实例数据可以设置一个将要处理的外部数据，而不是默认的顶级组件数据。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/config-n-data.md:9
+msgid ""
+"They all make Weex files more extendable and configurable and works easy "
+"with other tools & services like CMS system."
+msgstr "他们都让weex文件更可扩展和可配置和易于与其他工具和服务如CMS系统。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/config-n-data.md:15
+#, no-wrap
+msgid ""
+"```html\n"
+"<!-- definition of sub components -->\n"
+"<element name=\"sub-component-a\">...</element>\n"
+"<element name=\"sub-component-b\">...</element>\n"
+"<element name=\"sub-component-c\">...</element>\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/config-n-data.md:24
+#, no-wrap
+msgid ""
+"<!-- definition of top-level component -->\n"
+"<template>...</template>\n"
+"<style>...</style>\n"
+"<script>\n"
+"  module.exports = {\n"
+"    data: function () {return {x: 1, y: 2}}\n"
+"  }\n"
+"</script>\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/config-n-data.md:46
+#, no-wrap
+msgid ""
+"<!-- instance config and data -->\n"
+"<script type=\"config\">\n"
+"  downgrade: {\n"
+"    ios: {\n"
+"      os: '9', // all of 9.x.x\n"
+"      app: '~5.3.2',\n"
+"      framework: '^1.3', // all of 1.3.x\n"
+"      deviceModel: ['AAAA', 'BBBB']\n"
+"    },\n"
+"    android: {\n"
+"      os: '*', // all of version\n"
+"      app: '^5',\n"
+"      framework: '',\n"
+"      deviceModel: ''\n"
+"    }\n"
+"  }\n"
+"</script>\n"
+"<script type=\"data\">\n"
+"  {y: 200}\n"
+"</script>\n"
+"```\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/config-n-data.md:48
+#, no-wrap
+msgid "Notice that these two additional `<script>` are both optinal and have `type=\"config|data\"` attribute and only works when it's the top-level component of a Weex instance.\n"
+msgstr "请注意这两个额外的`<script>`` are both optinal and have ``type=\"config|data\"`属性，只有当它是一个weex实例顶层组件。 ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/config-n-data.md:50
+msgid "So that's all about Weex syntax. For more reading, please check out:"
+msgstr "所以这是所有关于weex语法。更多的阅读，请检查： ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/syntax/config-n-data.md:52
+msgid "[how-tos](../how-to/main.md) articles and"
+msgstr "[如何](../how-to/main.md)文章 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/syntax/config-n-data.md:52
+msgid "[advanced](../advanced/main.md) topics."
+msgstr "[高级](../advanced/main.md)主题。 ???"

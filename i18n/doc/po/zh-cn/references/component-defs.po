@@ -1,0 +1,198 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/references/component-defs.md:1
+#, no-wrap
+msgid "Component Definition"
+msgstr "组件定义 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/component-defs.md:4
+#, no-wrap
+msgid "A component definition is a set of options to describe a component. It's always assigned to `module.exports` in `<script>`.\n"
+msgstr "组件定义是描述一个组件的一组选项。它总是给`module.exports`` in ``<script>`。 ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/component-defs.md:10
+#, no-wrap
+msgid ""
+"```javascript\n"
+"module.exports = {\n"
+"  // a set of options here\n"
+"}\n"
+"```\n"
+msgstr ""
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/references/component-defs.md:11
+#, no-wrap
+msgid "Data & Methods options"
+msgstr "数据和方法选项 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/component-defs.md:25
+#, no-wrap
+msgid ""
+"```javascript\n"
+"module.exports = {\n"
+"  data: function () {\n"
+"    return {x: 1, y: 2}\n"
+"  },\n"
+"  methods: {\n"
+"    doThis: function () {...},\n"
+"    doThat: function () {...}\n"
+"  },\n"
+"  ...\n"
+"}\n"
+"```\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/component-defs.md:28
+msgid ""
+"The `data` option is a function that return a observable data object for "
+"this ViewModel.  The `methods` option is a map which contains all ViewModel "
+"methods."
+msgstr ""
+"的`data`` option is a function that return a observable data object for this "
+"ViewModel.  The ``methods`选项是一个地图包含ViewModel方法。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/component-defs.md:30
+msgid ""
+"Each `data` or `methods` property will be proxied to the ViewModel instance. "
+"So you can read and write data with `this.x`, also you can call methods with "
+"`this.doThis(...)`."
+msgstr ""
+"每个`data`` or ``methods`` property will be proxied to the ViewModel "
+"instance. So you can read and write data with ``this.x``, also you can call "
+"methods with ``this.doThis(...)`。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/component-defs.md:32
+msgid "A whole example:"
+msgstr "一个完整的例子： ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/component-defs.md:50
+#, no-wrap
+msgid ""
+"```\n"
+"<template>\n"
+"  <div style=\"width: {{w}}; height: {{h}}; background-color: red;\" onclick=\"update\"></div>\n"
+"</template>\n"
+"<script>\n"
+"  module.exports = {\n"
+"    data: function () {\n"
+"      return {w: 750, h: 200}\n"
+"    },\n"
+"    methods: {\n"
+"      update: function (e) {\n"
+"        this.h += 200\n"
+"      }\n"
+"    }\n"
+"  }\n"
+"</script>\n"
+"```\n"
+msgstr ""
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/references/component-defs.md:51
+#, no-wrap
+msgid "Events options"
+msgstr "事件的选择 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/component-defs.md:70
+#, no-wrap
+msgid ""
+"```javascript\n"
+"module.exports = {\n"
+"  data: ...,\n"
+"  methods: {\n"
+"    foo: function () {\n"
+"      ...\n"
+"      this.$emit('customtype1', data)\n"
+"    }\n"
+"  },\n"
+"  events: {\n"
+"    customtype1: function (e) {\n"
+"      console.log(e.type, e.detail)\n"
+"    }\n"
+"  },\n"
+"  ...\n"
+"}\n"
+"```\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/component-defs.md:72
+msgid ""
+"The `events` options could allow you to add custom event listeners when "
+"ViewModel created. Then it will listen these type of events and handle them "
+"by the function-type value."
+msgstr ""
+"的`events`选项可以让你添加自定义事件侦听器时创建的视图模型。然后，它会听这些"
+"类型的事件，并处理它们的函数类型值。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/component-defs.md:74
+msgid ""
+"The first argument is a event object which contains event data in `e.detail`."
+msgstr "第一个参数是一个事件对象包含事件数据的`e.detail`。 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/references/component-defs.md:75
+#, no-wrap
+msgid "Lifecycle options"
+msgstr "生命周期的选择 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/component-defs.md:93
+#, no-wrap
+msgid ""
+"```javascript\n"
+"module.exports = {\n"
+"  data: ...,\n"
+"  methods: ...,\n"
+"  init: function () {\n"
+"    console.log('ViewModel constructor begins')\n"
+"  },\n"
+"  created: function () {\n"
+"    console.log('Data observation finished')\n"
+"  },\n"
+"  ready: function () {\n"
+"    console.log('Virtual DOM finished')\n"
+"  },\n"
+"  ...\n"
+"}\n"
+"```\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/component-defs.md:95
+msgid ""
+"Weex ViewModel now supports these lifecycle hook functions which could be "
+"write as component options:"
+msgstr "weex ViewModel现在支持这些生命周期挂钩函数可写为组件选项： ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/references/component-defs.md:98
+msgid "`init`: fired at the beginning of a ViewModel constructor call."
+msgstr " `init`：在ViewModel构造函数调用的开始了。 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/references/component-defs.md:98
+msgid ""
+"`created`: fired when ViewModel observes default data but not compile the "
+"template."
+msgstr " `created`：开枪时，ViewModel观察默认数据但不编译模板。 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/references/component-defs.md:98
+msgid ""
+"`ready`: fired when ViewModel observes default data and compiles the "
+"template to generate virtual DOM finally."
+msgstr " `ready`：发射时观察数据和编写ViewModel默认模板来生成虚拟DOM最后。 ???"

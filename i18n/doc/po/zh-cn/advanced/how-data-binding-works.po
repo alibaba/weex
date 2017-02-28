@@ -1,0 +1,110 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/advanced/how-data-binding-works.md:1
+#, no-wrap
+msgid "How data-binding works"
+msgstr "数据绑定如何工作 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/how-data-binding-works.md:4
+msgid ""
+"Weex JS Framework is a MVVM framework. It observe data and use `{{bindedKey}}"
+"` syntax to bind in views. When data is changed in anyway, the view will "
+"automatically be updated due to data-binding."
+msgstr ""
+"weex JS框架是一个MVVM框架。观察数据和使用`{{bindedKey}}`语法结合的观点。当数"
+"据被更改时，视图将自动被更新，由于数据绑定。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/how-data-binding-works.md:6
+#, no-wrap
+msgid "For example, The content of a `<text>` component is bound with the key `notes` in data:\n"
+msgstr "例如，在数据`<text>`` component is bound with the key ``notes`内容： ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/how-data-binding-works.md:13
+#, no-wrap
+msgid ""
+"```\n"
+"<template>\n"
+"  <div>\n"
+"    <text>{{notes}}</text>\n"
+"  </div>\n"
+"<template>\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/how-data-binding-works.md:22
+#, no-wrap
+msgid ""
+"<script>\n"
+"  module.exports = {\n"
+"    data: {\n"
+"        notes: 'Hello'\n"
+"    }\n"
+"  }\n"
+"</script>\n"
+"```\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/how-data-binding-works.md:24
+#, no-wrap
+msgid "Weex JS Framework first observe the data object to make sure each data change in the future will be observed. And then it will compile the whole `<template>`. When it finds that the content of the `<text>` is bound with `notes`, JS Framework will watch the `data.notes` changes and set a handler which will update the `<text>` content with new `data.notes`. So developer only need to manage the data, the view display could automatically do corresponding changes.\n"
+msgstr "weex js框架先观察数据对象来确定每个数据在未来的变化将是观察。然后将编译整个`<template>``. When it finds that the content of the ``<text>`` is bound with ``notes``, JS Framework will watch the ``data.notes`` changes and set a handler which will update the ``<text>`` content with new ``data.notes`。因此，开发人员只需要管理数据，视图显示可以自动做相应的修改。 ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/how-data-binding-works.md:26
+msgid "Some special data-binding syntax here:"
+msgstr "这里有一些特殊的数据绑定语法： ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/advanced/how-data-binding-works.md:30
+msgid ""
+"`<foo if=\"{{condition}}\">` will watch the condition value changes. When it "
+"changes to `true`, the `<foo>` element will be created and attached, "
+"otherwise it will be not created or removed."
+msgstr ""
+" `<foo if=\"{{condition}}\">`` will watch the condition value changes. When "
+"it changes to ``true``, the ``<foo>`元素将被创建和连接，否则将不能创建或删"
+"除。 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/advanced/how-data-binding-works.md:30
+msgid ""
+"`<foo repeat=\"{{list}}\">` will watch the mutations of a list. At the "
+"beginning the `<foo>` element will be cloned and attached with each item in "
+"list. When some items are added, removed or moved, the `<foo>` element list "
+"will be re-generated new content in the right order with minimum alterations."
+msgstr ""
+" `<foo repeat=\"{{list}}\">`` will watch the mutations of a list. At the "
+"beginning the ``<foo>`` element will be cloned and attached with each item "
+"in list. When some items are added, removed or moved, the ``<foo>`元素列表将"
+"重新生成以最小的改动以正确的新内容。 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/advanced/how-data-binding-works.md:30
+msgid ""
+"`<foo if=\"{{condition}}\" repeat=\"{{list}}\">` will process `repeat` first "
+"and `if` the second. In another way, it will walk through each item in list, "
+"if the item's condition value is true, a `<foo>` element will be cloned and "
+"attached with this certain item value."
+msgstr ""
+" `<foo if=\"{{condition}}\" repeat=\"{{list}}\">`` will process ``repeat`` "
+"first and ``if`` the second. In another way, it will walk through each item "
+"in list, if the item's condition value is true, a ``<foo>`元素将被克隆并附有"
+"一定的项目价值。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/how-data-binding-works.md:31
+msgid ""
+"Compared with virtual DOM diff algorithm, we just \"diff\" the data and only "
+"calculate/update the virtual DOM with minimum alterations for each user "
+"interaction or data-change operation. So it's more lightweight and fast "
+"especially for small views in mobile devices."
+msgstr ""
+"虚拟DOM diff算法相比，我们只是“diff”数据只计算/更新虚拟DOM以最小的改变每个用"
+"户交互或数据更改操作。因此，它更轻，特别是在移动设备的小视图。 ???"

@@ -1,0 +1,179 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/references/common-attrs.md:1
+#, no-wrap
+msgid "Common Attribute"
+msgstr "常见的属性 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/common-attrs.md:4
+msgid "All of weex tags share some common attributes"
+msgstr "所有weex标签共享一些共同的属性 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/references/common-attrs.md:5
+#, no-wrap
+msgid "id"
+msgstr "身份证件 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/common-attrs.md:11
+msgid "``` id=\"logo\" id=\"item-{{index}}\" ```"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/common-attrs.md:13
+#, no-wrap
+msgid "`id` gives weex tag a unique mark in `<template>` scope. With id attribute you can easily refer a weex tag.\n"
+msgstr " `id`` gives weex tag a unique mark in ``<template>`范围。ID属性你可以很容易地把weex标签。 ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/common-attrs.md:15
+msgid "[more information](../syntax/id.md)"
+msgstr "[](../syntax/id.md)更多信息 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/references/common-attrs.md:16
+#, no-wrap
+msgid "style"
+msgstr "风格 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/common-attrs.md:22
+msgid ""
+"``` style=\"width: 200; height: 200\" style=\"padding: {{x}}; margin: 0\" ```"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/common-attrs.md:24
+msgid "weex tag inline style."
+msgstr "weex内联样式。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/common-attrs.md:26
+msgid "[more information](../syntax/style-n-class.md)"
+msgstr "[](../syntax/style-n-class.md)更多信息 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/references/common-attrs.md:27
+#, no-wrap
+msgid "class"
+msgstr "班 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/common-attrs.md:33
+msgid "``` class=\"button\" class=\"button {{btnStatus}}\" ```"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/common-attrs.md:35
+msgid ""
+"to add classname for weex tag, you can use class attribute for tag "
+"classification."
+msgstr "添加weex标签名，你可以使用类的属性标签分类。 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/references/common-attrs.md:36
+#, no-wrap
+msgid "repeat"
+msgstr "重复 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/common-attrs.md:41
+msgid "``` repeat=\"{{items}}\" ```"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/common-attrs.md:43
+msgid ""
+"provide a list of data, using current tag as a template to repeatedly "
+"generate the same weex tags."
+msgstr ""
+"提供一个清单的数据，利用现有的标签作为一个模板重复产生相同的weex标签。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/common-attrs.md:45
+#: /home/dev/download/weex/doc/references/common-attrs.md:55
+msgid "[more information](../syntax/display-logic.md)"
+msgstr "[](../syntax/display-logic.md)更多信息 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/references/common-attrs.md:46
+#, no-wrap
+msgid "if"
+msgstr "如果 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/common-attrs.md:51
+msgid "``` if=\"{{opened}}\" ```"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/common-attrs.md:53
+msgid ""
+"provide a boolean value to decide whether or not to display current tag."
+msgstr "提供一个布尔值来决定是否显示当前标签。 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/references/common-attrs.md:56
+#, no-wrap
+msgid "append"
+msgstr "追加 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/common-attrs.md:61
+msgid "``` append=\"tree/node\" ```"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/common-attrs.md:63
+msgid ""
+"by providing the value of `tree` or `node`, it determines the progress of "
+"rendering."
+msgstr "通过提供`tree`` or ``node`价值，它决定了绘制的进展。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/common-attrs.md:65
+msgid "[more information](../syntax/render-logic.md)"
+msgstr "[](../syntax/render-logic.md)更多信息 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/references/common-attrs.md:66
+#, no-wrap
+msgid "Event Handing (on...)"
+msgstr "事件处理(on...)???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/common-attrs.md:72
+msgid "``` onclick=\"gotoDetail\" onappear=\"loadMore\" ```"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/common-attrs.md:74
+msgid "register event handlers on weex tag"
+msgstr "登记在weex标签事件处理程序 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/common-attrs.md:76
+msgid "[more information](../syntax/events.md)"
+msgstr "[](../syntax/events.md)更多信息 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/references/common-attrs.md:77
+#, no-wrap
+msgid "Notes!"
+msgstr "笔记! ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/common-attrs.md:79
+msgid ""
+"weex is basically following [HTML attribute](https://en.wikipedia.org/wiki/"
+"HTML_attribute) naming rule , so please **do not use CamelCase** in your "
+"attribute , **kebab-case** with “-” as delimiter is much better."
+msgstr ""
+"weex基本HTML属性]下面的[(https://en.wikipedia.org/wiki/HTML_attribute)命名规"
+"则，所以请不要在你的属性使用CamelCase * *，* * * *“串案”作为分隔符是更好"
+"的。 ???"

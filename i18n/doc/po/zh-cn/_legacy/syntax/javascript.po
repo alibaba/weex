@@ -1,0 +1,140 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/_legacy/syntax/javascript.md:1
+#, no-wrap
+msgid "Data&Logic"
+msgstr "数据和逻辑 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/_legacy/syntax/javascript.md:4
+#, no-wrap
+msgid "The most commonly used statement in script is   `module.exports =  {...}`  .  the object be used for assignment value contain three properties:  `data`, `methods` and `created` .\n"
+msgstr "在脚本中最常用的说法是`module.exports =  {...}``  .  the object be used for assignment value contain three properties:  ``data``, ``methods`` and ``created`。 ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/_legacy/syntax/javascript.md:20
+#, no-wrap
+msgid ""
+"```html\n"
+"<script>\n"
+"module.exports = {\n"
+"  data: {\n"
+"    ...\n"
+"  },\n"
+"  methods: {\n"
+"    ...\n"
+"  },\n"
+"  created: function() {\n"
+"    ...\n"
+"  }\n"
+"}\n"
+"</script>\n"
+"```\n"
+msgstr ""
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/_legacy/syntax/javascript.md:21
+#, no-wrap
+msgid "data"
+msgstr "数据 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/_legacy/syntax/javascript.md:24
+msgid "value for `data` must be a JSON object"
+msgstr "`data`值必须是一个JSON对象 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/_legacy/syntax/javascript.md:25
+#, no-wrap
+msgid "properties of the JSON object can be using in `<template>` and method context .  \n"
+msgstr "的JSON对象特性可以用在`<template>`和方法背景。 ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/_legacy/syntax/javascript.md:28
+msgid ""
+"please refer to [Data Binding](data-binding.md)  for more information about "
+"event."
+msgstr "请参阅[数据绑定](data-binding.md)有关事件的更多信息。 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/_legacy/syntax/javascript.md:29
+#, no-wrap
+msgid "`methods`"
+msgstr " `methods`???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/_legacy/syntax/javascript.md:32
+msgid ""
+"value for `methods` is a one level JSON object , every properties of the "
+"object must be function type."
+msgstr "值为一一的水平`methods`JSON对象，对象的每个属性必须是功能型。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/_legacy/syntax/javascript.md:34
+msgid "these function should be using as event handlers ."
+msgstr "这些函数应该使用作为事件处理程序。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/_legacy/syntax/javascript.md:36
+msgid "please refer to [Event](events.md)  for more information ."
+msgstr "请参阅[事件](events.md)更多信息。 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/_legacy/syntax/javascript.md:37
+#, no-wrap
+msgid "`created`"
+msgstr " `created`???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/_legacy/syntax/javascript.md:39
+#, no-wrap
+msgid "created should be optionally assign with function.  If this function provide , it will be called  just after weex context created.  \n"
+msgstr "创建的应该是可选的分配功能。如果这个函数提供的，就在weex上下文创建名为。 ???\n"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/_legacy/syntax/javascript.md:41
+#, no-wrap
+msgid "context"
+msgstr "语境 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/_legacy/syntax/javascript.md:44
+msgid ""
+"context can be reference by `this`. the object have properties of currenet "
+"script `data` , `methods` and weex common API."
+msgstr ""
+"语境是可以通过`this``. the object have properties of currenet script "
+"``data`` , ``methods`和weex常用API参考。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/_legacy/syntax/javascript.md:46
+msgid "data in context is writeable ; methods is executable."
+msgstr "数据在上下文中是可写的方法是可执行的。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/_legacy/syntax/javascript.md:48
+msgid ""
+"please refer to [Common API](../core-concepts/api.md)  for more information "
+"about common API."
+msgstr "请参阅[常用API](../core-concepts/api.md)有关通用API的更多信息。 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/_legacy/syntax/javascript.md:49
+#, no-wrap
+msgid "Notes"
+msgstr "笔记 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/_legacy/syntax/javascript.md:53
+#, no-wrap
+msgid ""
+"- `setTimeout` is available , but  `clearTimeout/setInterval/clearInterval/requestAnimationFrame/cancelAnimationFrame` is not.\n"
+"-  tag is immutable , we believe interface should be changed by status updates , please refer to [Data Binding](data-binding.md).\n"
+"-  at present , weex can't using external script (no `<script src=\"...\">`  or `require`) \n"
+msgstr ""
+"-`setTimeout`` is available , but  ``clearTimeout/setInterval/clearInterval/requestAnimationFrame/cancelAnimationFrame`` is not.\n"
+"-  tag is immutable , we believe interface should be changed by status updates , please refer to [Data Binding](data-binding.md).\n"
+"-  at present , weex can't using external script (no ``<script src=\"...\">``  or ``require`) ???\n"

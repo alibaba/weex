@@ -1,0 +1,14 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/how-to/debug-with-native.md:1
+#, no-wrap
+msgid "How to debug with native platform ?"
+msgstr "如何使用本地平台进行调试？ ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/how-to/debug-with-native.md:3
+msgid "TODO"
+msgstr "待办事项 ???"

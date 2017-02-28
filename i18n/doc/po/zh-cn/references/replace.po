@@ -1,0 +1,103 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/references/replace.md:1
+#, no-wrap
+msgid "Replace option"
+msgstr "替换选项 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/replace.md:4
+#, no-wrap
+msgid "The `replace` option is boolean type. It determined whether this composed component will be replaced with the `<template>` content or just as a normal `<div>` element which include the `<template>` content.\n"
+msgstr "的`replace`` option is boolean type. It determined whether this composed component will be replaced with the ``<template>`` content or just as a normal ``<div>`` element which include the ``<template>`内容。 ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/replace.md:6
+msgid "For example:"
+msgstr "例如： ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/replace.md:18
+#, no-wrap
+msgid ""
+"```\n"
+"<element name=\"foo\">\n"
+"  <template>\n"
+"    <text>Foo</text>\n"
+"  </template>\n"
+"  <script>\n"
+"    module.exports = {\n"
+"      replace: false // by default\n"
+"    }\n"
+"  </script>\n"
+"</element>\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/replace.md:23
+#: /home/dev/download/weex/doc/references/replace.md:50
+#, no-wrap
+msgid ""
+"<template>\n"
+"  <foo></foo>\n"
+"</template>\n"
+"```\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/replace.md:25
+#: /home/dev/download/weex/doc/references/replace.md:52
+msgid "will rendered as:"
+msgstr "将呈现为： ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/replace.md:31
+#, no-wrap
+msgid ""
+"```\n"
+"<div>\n"
+"  <text>Foo</text>\n"
+"</div>\n"
+"```\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/replace.md:33
+msgid "but:"
+msgstr "但： ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/replace.md:45
+#, no-wrap
+msgid ""
+"```\n"
+"<element name=\"foo\">\n"
+"  <template>\n"
+"    <text>Foo</text>\n"
+"  </template>\n"
+"  <script>\n"
+"    module.exports = {\n"
+"      replace: true\n"
+"    }\n"
+"  </script>\n"
+"</element>\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/replace.md:56
+#, no-wrap
+msgid ""
+"```\n"
+"<text>Foo</text>\n"
+"```\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/replace.md:57
+msgid ""
+"So you can choose a way you need or like to manage your virtual DOM "
+"structure."
+msgstr "所以你可以选择你需要或喜欢的方式来管理你的虚拟DOM结构。 ???"

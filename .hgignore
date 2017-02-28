@@ -1,0 +1,4 @@
+syntax: glob
+doc/_book
+_private.py
+i18n/doc/doc

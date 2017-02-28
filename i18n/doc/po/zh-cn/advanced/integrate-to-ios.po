@@ -1,0 +1,8 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/advanced/integrate-to-ios.md:1
+msgid "TODO"
+msgstr "待办事项 ???"

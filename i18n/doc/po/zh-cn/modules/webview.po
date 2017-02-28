@@ -1,0 +1,111 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/modules/webview.md:1
+#, no-wrap
+msgid "webview"
+msgstr "WebView ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/modules/webview.md:3
+#, no-wrap
+msgid "Summary"
+msgstr "总结 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/modules/webview.md:6
+msgid "A series of web operation api like `goBack`, `goForward`, and `reload`."
+msgstr "一系列的Web操作API像`goBack``, ``goForward``, and ``reload`。 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/modules/webview.md:7
+#, no-wrap
+msgid "API"
+msgstr "美国石油学会 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/modules/webview.md:9
+#, no-wrap
+msgid "goBack(ref)"
+msgstr "再(ref)???"
+
+#. type: Title ####
+#: /home/dev/download/weex/doc/modules/webview.md:11
+#: /home/dev/download/weex/doc/modules/webview.md:29
+#: /home/dev/download/weex/doc/modules/webview.md:45
+#, no-wrap
+msgid "Description"
+msgstr "描述 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/modules/webview.md:14
+msgid "Loads the previous location in the history stack."
+msgstr "载入历史堆栈中的前一个位置。 ???"
+
+#. type: Title ####
+#: /home/dev/download/weex/doc/modules/webview.md:15
+#: /home/dev/download/weex/doc/modules/webview.md:32
+#: /home/dev/download/weex/doc/modules/webview.md:48
+#, no-wrap
+msgid "Arguments"
+msgstr "争论 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/modules/webview.md:18
+#: /home/dev/download/weex/doc/modules/webview.md:35
+#: /home/dev/download/weex/doc/modules/webview.md:51
+msgid "`ref`*(string)*: the reference of the web component."
+msgstr " `ref`* *：(string)的Web组件的引用。 ???"
+
+#. type: Title #####
+#: /home/dev/download/weex/doc/modules/webview.md:19
+#: /home/dev/download/weex/doc/modules/webview.md:36
+#: /home/dev/download/weex/doc/modules/webview.md:52
+#, no-wrap
+msgid "Example"
+msgstr "例子 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/modules/webview.md:26
+msgid ""
+"```js var webview = require('@weex-module/webview'); var webElement = this."
+"$el('webview'); webview.goBack(webElement.ref); ```"
+msgstr ""
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/modules/webview.md:27
+#, no-wrap
+msgid "goForward(ref)"
+msgstr "(ref)前进 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/modules/webview.md:31
+msgid "Loads the next location in the history stack."
+msgstr "加载历史堆栈中的下一个位置。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/modules/webview.md:43
+msgid ""
+"```js var webview = require('@weex-module/webview'); var webElement = this."
+"$el('webview'); webview.goForward(webElement.ref); ```"
+msgstr ""
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/modules/webview.md:44
+#, no-wrap
+msgid "reload(ref)"
+msgstr "重装(ref)???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/modules/webview.md:47
+msgid "Reloads the current web page."
+msgstr "重新载入当前网页。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/modules/webview.md:59
+msgid ""
+"```js var webview = require('@weex-module/webview'); var webElement = this."
+"$el('webview'); webview.reload(webElement.ref); ```"
+msgstr ""

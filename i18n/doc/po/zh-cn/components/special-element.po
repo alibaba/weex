@@ -1,0 +1,62 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/components/special-element.md:1
+#, no-wrap
+msgid "Special Element"
+msgstr "特殊的元素 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/components/special-element.md:3
+#, no-wrap
+msgid "&lt;content&gt;"
+msgstr "&lt;内容&gt; ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/special-element.md:6
+msgid ""
+"The element serves as content distribution outlest in a composed component "
+"template. The element itself will be replaced."
+msgstr "元素作为内容分发outlest由组件模板。元素本身将被替换。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/special-element.md:8
+#, no-wrap
+msgid "alias: `<slot>`\n"
+msgstr "别名：`<slot>`???\n"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/special-element.md:9
+#, no-wrap
+msgid "Code Example"
+msgstr "代码示例 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/special-element.md:19
+#, no-wrap
+msgid ""
+"```html\n"
+"<we-element name=\"item\">\n"
+"  <template>\n"
+"    <div>\n"
+"      <content></content>\n"
+"    </div>\n"
+"  </template>\n"
+"</we-element>\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/special-element.md:28
+#, no-wrap
+msgid ""
+"<template>\n"
+"  <div>\n"
+"    <item>\n"
+"      <text>Content Text</text>\n"
+"    </item>\n"
+"  </div>\n"
+"</template>\n"
+"```\n"
+msgstr ""

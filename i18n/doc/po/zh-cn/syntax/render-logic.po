@@ -1,0 +1,84 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/syntax/render-logic.md:1
+#, no-wrap
+msgid "Render Logic Control"
+msgstr "使逻辑控制 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/syntax/render-logic.md:3
+#, no-wrap
+msgid "`append`"
+msgstr " `append`???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/render-logic.md:6
+msgid ""
+"Attribute `append` do not have data-binding. It won't change the final "
+"rendering effect. But it determines whether this component should be "
+"rendered as a whole tree or a single node with child nodes appended after."
+msgstr ""
+"`append`没有数据绑定属性。它不会改变最终的渲染效果。但它决定了这个组件是否应"
+"该被渲染为一个完整的树或一个单一的节点后添加的子节点。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/render-logic.md:8
+msgid "`append` has two key attributes, `tree` and `node`, the usage is:"
+msgstr " `append`` has two key attributes, ``tree`` and ``node`，使用： ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/render-logic.md:21
+#, no-wrap
+msgid ""
+"```html\n"
+"<template>\n"
+"  <container>\n"
+"    <container id=\"world\" append=\"tree\">\n"
+"      <text>Hello World!</text>\n"
+"    </container>\n"
+"    <container id=\"weex\" append=\"node\">\n"
+"      <text>Hello Weex!</text>\n"
+"    </container>\n"
+"  </container>\n"
+"</template>\n"
+"```\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/render-logic.md:23
+msgid ""
+"In the code snippet above, the element with id 'world' will wait for all its "
+"children to be rendered then it will be rendered entiely, while the element "
+"with id 'weex' will only render itself to the page, then its child elements "
+"will be rendered to page one by one."
+msgstr ""
+"在上面的代码片段中，ID为“世界”的元素将等待所有的孩子被渲染，然后将呈现完全，"
+"而我的weex的元素只会使自己的网页，然后它的子元素将由一个页面渲染。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/render-logic.md:25
+msgid ""
+"The rendering result is obvious, The latter statement will render the "
+"element a bit faster on the first-paint, but the total time might be longger "
+"than `append=\"tree\"` case."
+msgstr ""
+"渲染效果明显，后者的声明将使元快一点在第一漆，但总的时间可能会更长`append="
+"\"tree\"`情况比。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/render-logic.md:27
+msgid ""
+"By default, elements are rendered as `node` mode. Once an element is in "
+"`tree` rendering mode, its children elements will always be rendered in "
+"`tree` mode."
+msgstr ""
+"默认情况下，元素呈现为`node`` mode. Once an element is in ``tree`` rendering "
+"mode, its children elements will always be rendered in ``tree`模式。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/syntax/render-logic.md:28
+msgid "Next we will introduce [composed component](./composed-component.md)."
+msgstr "接下来我们将介绍[组成](./composed-component.md)。 ???"

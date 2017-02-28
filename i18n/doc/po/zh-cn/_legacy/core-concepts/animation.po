@@ -1,0 +1,92 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/_legacy/core-concepts/animation.md:1
+#, no-wrap
+msgid "Animation"
+msgstr "动画 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/_legacy/core-concepts/animation.md:4
+msgid ""
+"Weex provides the way of calling `$transition(...args)` api to perform a "
+"custom animation of a set of CSS properties."
+msgstr ""
+"weex提供呼叫`$transition(...args)`API来执行一组CSS属性的自定义动画的方"
+"法。 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/_legacy/core-concepts/animation.md:5
+#, no-wrap
+msgid "How to use"
+msgstr "如何使用 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/_legacy/core-concepts/animation.md:8
+msgid "Example:"
+msgstr "例子: ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/_legacy/core-concepts/animation.md:22
+#, no-wrap
+msgid ""
+"```\n"
+"this.$transition('foo', {\n"
+"    styles: {\n"
+"        color: '#FF0000',\n"
+"        transform: 'translate(100, 50)'\n"
+"    },\n"
+"    duration: 100, //ms\n"
+"    timingFunction: 'ease',\n"
+"    delay: 0 //ms\n"
+"}, function() {\n"
+"    // when the animation is end.\n"
+"})\n"
+"```\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/_legacy/core-concepts/animation.md:24
+msgid ""
+"According to above code, it performs a animation with the styles of color "
+"and transform in 100ms."
+msgstr "根据上面的代码，它执行一个与色彩风格的动画和变换在100ms。 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/_legacy/core-concepts/animation.md:25
+#, no-wrap
+msgid "The API"
+msgstr "API ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/_legacy/core-concepts/animation.md:28
+msgid ""
+"First, provide the id of the node. Second, provide some properties of "
+"`styles`, `duration`, `timingFunction` and `delay`. At last, provide a "
+"callback function."
+msgstr ""
+"首先，提供节点的标识。其次，提供`styles``, ``duration``, ``timingFunction`` "
+"and ``delay`的一些性质。最后，提供一个回调函数。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/_legacy/core-concepts/animation.md:33
+msgid ""
+"- The `styles` property - An object of CSS properties and values that the "
+"animation will move toward.  - The `duration` property - A number "
+"determining how long the animation will run.  - The `timingFunction` "
+"property - A string indicating which easing function to use for the "
+"transition.  - The `delay` property - A number determining how long the "
+"animation will delay."
+msgstr ""
+"-`styles`` property - An object of CSS properties and values that the "
+"animation will move toward.  - The ``duration`` property - A number "
+"determining how long the animation will run.  - The ``timingFunction`` "
+"property - A string indicating which easing function to use for the "
+"transition.  - The ``delay`财产数量确定动画将延迟多久。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/_legacy/core-concepts/animation.md:34
+msgid "For more information, please visite [APIs](api.md)."
+msgstr "有关更多信息，请访问[蜜蜂](api.md)。 ???"

@@ -1,0 +1,49 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/advanced/README.md:1
+#, no-wrap
+msgid "Advanced"
+msgstr "先进的 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/advanced/README.md:10
+msgid "[How It Works](./how-it-works.md)"
+msgstr "[如何](./how-it-works.md)???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/advanced/README.md:10
+msgid "[How Data Binding Works](./how-data-binding-works.md)"
+msgstr "[如何](./how-data-binding-works.md)数据绑定的工作 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/advanced/README.md:10
+msgid "[Integrate to iOS](./integrate-to-ios.md)"
+msgstr "[综合](./integrate-to-ios.md)iOS ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/advanced/README.md:10
+msgid "[Extend to iOS](./extend-to-ios.md)"
+msgstr "[延伸](./extend-to-ios.md)iOS ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/advanced/README.md:10
+msgid "[Integrate to Android](./integrate-to-android.md)"
+msgstr "[综合](./integrate-to-android.md)Android ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/advanced/README.md:10
+msgid "[Extend to Android](./extend-to-android.md)"
+msgstr "[延伸](./extend-to-android.md)Android ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/advanced/README.md:10
+msgid "[Integrate to HTML5](./integrate-to-html5.md)"
+msgstr "[综合](./integrate-to-html5.md)HTML5 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/advanced/README.md:10
+msgid "[Extend to HTML5](./extend-to-html5.md)"
+msgstr "[延伸](./extend-to-html5.md)HTML5 ???"

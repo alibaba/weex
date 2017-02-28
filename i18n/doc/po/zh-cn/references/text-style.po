@@ -1,0 +1,114 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/references/text-style.md:1
+#, no-wrap
+msgid "Text Style"
+msgstr "文本样式 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/text-style.md:4
+msgid ""
+"Text alike components share some common style rules. The text alike "
+"components currently includes [`text`](../components/text.md) and [`input`]"
+"(../components/input.md)."
+msgstr ""
+"文本相似的组件共享一些常见的样式规则。文本相似的组件目前包括[`text``](../"
+"components/text.md) and [``input`](../components/input.md)。 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/references/text-style.md:5
+#, no-wrap
+msgid "Properties"
+msgstr "性能 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/text-style.md:15
+msgid ""
+"- `color`: &lt;colors&gt; this property set the foreground color of an "
+"component's text content.  - `font-size`: &lt;length&gt; this property "
+"specifies the size of the font.  - `font-style`: &lt;enum&gt; `normal` | "
+"`italic`. This property lets you select italic or normal faces within a font-"
+"family. Default value is `normal`.  - `font-weight`: &lt;enum&gt; `normal` | "
+"`bold`. This property specifies the boldness of the font. Default value is "
+"`normal`.  - `text-decoration`: &lt;enum&gt; `none` | `underline` | `line-"
+"through`. This property is used to set the text formatting to underline or "
+"line-through. The default value is `none`.  - `text-align`: &lt;enum&gt; "
+"`left` | `center` | `right`. This property describes how inline content like "
+"text is aligned in its parent component. The default value is `left`.  - "
+"`font-family`:&lt;string&gt; this property set the font-family of the text. "
+"This property **doesn't guarteen** the given font will always be set to the "
+"text. If the specified font cannot be found at the device, a typeface "
+"fallback will occurr and the default typeface will be load. The fallback "
+"mechanism may vary in different devices.  - `text-overflow`:&lt;string&gt; "
+"`clip` | `ellipsis`. This property determines how overflowed content that is "
+"not displayed is signaled to users. It can be clipped, display an ellipsis."
+msgstr ""
+"-`color``: &lt;colors&gt; this property set the foreground color of an "
+"component's text content.  - ``font-size``: &lt;length&gt; this property "
+"specifies the size of the font.  - ``font-style``: &lt;enum&gt; ``normal`` | "
+"``italic``. This property lets you select italic or normal faces within a "
+"font-family. Default value is ``normal``.  - ``font-weight``: &lt;enum&gt; "
+"``normal`` | ``bold``. This property specifies the boldness of the font. "
+"Default value is ``normal``.  - ``text-decoration``: &lt;enum&gt; ``none`` | "
+"``underline`` | ``line-through``. This property is used to set the text "
+"formatting to underline or line-through. The default value is ``none``.  - "
+"``text-align``: &lt;enum&gt; ``left`` | ``center`` | ``right``. This "
+"property describes how inline content like text is aligned in its parent "
+"component. The default value is ``left``.  - ``font-family``:&lt;string&gt; "
+"this property set the font-family of the text. This property **doesn't "
+"guarteen** the given font will always be set to the text. If the specified "
+"font cannot be found at the device, a typeface fallback will occurr and the "
+"default typeface will be load. The fallback mechanism may vary in different "
+"devices.  - ``text-overflow``:&lt;string&gt; ``clip`` | ``ellipsis`。这个属性"
+"决定了不显示的内容是如何将用户溢出。它将显示一个省略号。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/text-style.md:17
+msgid ""
+"The property `color` support multiple fomats of values, contains rgb, rgba, "
+"#fff, #ffffff, named-color."
+msgstr ""
+"物业`color`支持多种方式的价值观，包括RGB，RGBA，# FFF，# ffffff，命名颜"
+"色。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/text-style.md:19
+msgid "Example:"
+msgstr "例子: ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/text-style.md:27
+msgid ""
+"``` .my-class { color: red; } .my-class { color: #f00; } .my-class { color: "
+"#ff0000; } .my-class { color: rgb(255, 0, 0); } .my-class { color: rgba(255, "
+"0, 0, 0.5); } ```"
+msgstr ""
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/references/text-style.md:28
+#, no-wrap
+msgid "Type of Style Value"
+msgstr "风格价值类型 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/text-style.md:33
+msgid ""
+"- length: number followed by length unit `px`, `px` can be omitted.  - "
+"colors: support multiple formats of values, including rgb (`rgb(255, 0, "
+"0)`), rgba (`rgba(255, 0, 0, 0.5)`), hexadecimal (`#ff0000`), short "
+"hexadecimal (`#f00`), named color (`red`).  - enumerated values: a limited "
+"number of string values."
+msgstr ""
+"长度：长度单位数依次`px``, ``px`` can be omitted.  - colors: support "
+"multiple formats of values, including rgb (``rgb(255, 0, 0)``), rgba "
+"(``rgba(255, 0, 0, 0.5)``), hexadecimal (``#ff0000``), short hexadecimal "
+"(``#f00``), named color (``red`)。枚举值：数量有限的字符串值。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/references/text-style.md:35
+#, no-wrap
+msgid "**Note:** [The list of color keywords.](./color-names.md)\n"
+msgstr "*注：* [关键词](./color-names.md)颜色列表。 ???\n"

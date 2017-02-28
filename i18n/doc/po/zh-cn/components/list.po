@@ -1,0 +1,168 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/components/list.md:1
+#, no-wrap
+msgid "&lt;list&gt;"
+msgstr "&lt;一览; ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/list.md:3
+#, no-wrap
+msgid "Summary"
+msgstr "总结 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/list.md:6
+msgid ""
+"A fixed height container which has multiple child components (cells) "
+"arranged in one column. If total height of its child components is higher "
+"then the height of itself, the whole child components are scrollable and "
+"it's high-performanced."
+msgstr ""
+"一个固定高度的容器，有多个孩子组成(cells)排列成一列。如果它的子组件的总高度高"
+"于本身的高度，整个子组件都是可滚动的，它的高性能。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/list.md:8
+#, no-wrap
+msgid "**Notes:** height of `list` must be specified (list's styles must contain `height` or pair of `top`, `bottom` or flex value if outter container's `flex-direction` value is `column`).\n"
+msgstr "*注：*高度`list`` must be specified (list's styles must contain ``height`` or pair of ``top``, ``bottom`` or flex value if outter container's ``flex-direction`` value is ``column`)。 ???\n"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/list.md:9
+#, no-wrap
+msgid "Child Components"
+msgstr "子组件 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/components/list.md:14
+msgid ""
+"`cell` is a available candidate to be used as a child component for `list`."
+msgstr ""
+" `cell`` is a available candidate to be used as a child component for "
+"``list`。 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/components/list.md:14
+msgid ""
+"`refresh` component can be used inside list to add pull to refresh "
+"functionality."
+msgstr " `refresh`组件可以应用在列表中添加下拉刷新功能。 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/components/list.md:14
+msgid ""
+"`loading` component can be used inside list to add loading view at the "
+"bottom of scroller."
+msgstr " `loading`组件可以用内部列表在滚动条的底部添加加载视图。 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/list.md:15
+#, no-wrap
+msgid "Attributes"
+msgstr "属性 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/list.md:18
+msgid ""
+"- `loadmoreoffset`: &lt;number&gt; the offset distance downwards the bottom "
+"of the list to trigger the loadmore event, which is triggered when the list "
+"scrolls down near enough to the bottom."
+msgstr ""
+"-`loadmoreoffset`：&lt;数&gt;偏移距离向下列表的事件触发负载量的底部，被触发"
+"时，列表中向下滚动靠近底部。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/list.md:20
+msgid ""
+"Other attributes please check out the [common attributes](../references/"
+"common-attrs.md)."
+msgstr "其他属性，请查看[共性](../references/common-attrs.md)。 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/list.md:21
+#, no-wrap
+msgid "Styles"
+msgstr "款式 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/list.md:24
+#, no-wrap
+msgid "**common styles**: check out [common styles for components](../references/common-style.md)\n"
+msgstr "* * *：常见的方式检查[组件](../references/common-style.md)常见的风格 ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/list.md:29
+msgid ""
+"- support flexbox related styles - support box model related styles - "
+"support ``position`` related styles - support ``opacity``, ``background-"
+"color`` etc."
+msgstr ""
+"支持flexbox相关的风格支持盒模型相关的风格支持```position```` related styles "
+"- support ````opacity````, ````background-color```等 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/list.md:30
+#, no-wrap
+msgid "Events"
+msgstr "事件 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/list.md:35
+msgid ""
+"- `loadmore`: if the list scrolls to bottom, this event will be triggered "
+"immediately. You can load the next page of items in this event handler.  - "
+"`onappear`: if the list's cells scroll to visible area, this event will be "
+"triggered when list is stopped. You can do something in this event handler.  "
+"- `ondisappear`: if the list's cells scroll to invisible area, this event "
+"will be triggered when list is stopped. You can do something in this event "
+"handler."
+msgstr ""
+"-`loadmore``: if the list scrolls to bottom, this event will be triggered "
+"immediately. You can load the next page of items in this event handler.  - "
+"``onappear``: if the list's cells scroll to visible area, this event will be "
+"triggered when list is stopped. You can do something in this event handler.  "
+"- ``ondisappear`：如果列表的细胞滚动到不可见区域，这一事件将被触发时，表停"
+"了。你可以在这个事件处理程序中做某事。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/list.md:38
+#, no-wrap
+msgid "**common events**: check out the [common events](../references/common-event.md)\n"
+msgstr "* * *：常见的事件查看[事件](../references/common-event.md)常见 ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/list.md:43
+msgid ""
+"- support `click` event. Check out [common events](../references/common-"
+"event.md)  - support `appear` / `disappear` event. Check out [common events]"
+"(../references/common-event.md)  - support `refresh` event .  If a refresh "
+"component is inside scroller, this event will be triggered when the scroller "
+"is swiping down.  - support `loading` event .  If a loading component is "
+"inside scroller, this event will be triggered when user scrolling to the "
+"bottom."
+msgstr ""
+"支持`click`` event. Check out [common events](../references/common-event."
+"md)  - support ``appear`` / ``disappear`` event. Check out [common events]"
+"(../references/common-event.md)  - support ``refresh`` event .  If a refresh "
+"component is inside scroller, this event will be triggered when the scroller "
+"is swiping down.  - support ``loading`事件。如果一个加载组件内滚动，该事件将"
+"被触发时，用户滚动至底部。 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/list.md:44
+#, no-wrap
+msgid "Example"
+msgstr "例子 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/list.md:46
+msgid ""
+"see [list-basic demo](https://github.com/alibaba/weex/blob/example/examples/"
+"component/list/list-basic.we)"
+msgstr ""
+"看到[列出基本演示](https://github.com/alibaba/weex/blob/example/examples/"
+"component/list/list-basic.we)???"

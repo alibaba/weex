@@ -1,0 +1,82 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/components/main.md:1
+#, no-wrap
+msgid "Build-in Components"
+msgstr "建立在组件 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/main.md:4
+msgid ""
+"Before see all built-in components, let's have a look at the common things "
+"about component."
+msgstr "在看到所有的内置组件之前，让我们看看关于组件的常见的事情。 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/components/main.md:8
+msgid "[Common Attributes](../references/common-attrs.md)"
+msgstr "[属性](../references/common-attrs.md)常见 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/components/main.md:8
+msgid "[Common Style](../references/common-style.md)"
+msgstr "[共同](../references/common-style.md)风格 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/components/main.md:8
+msgid "[Common Event](../references/common-event.md)"
+msgstr "[事件](../references/common-event.md)常见 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/main.md:10
+#, no-wrap
+msgid "**Special Element**\n"
+msgstr "**特殊元素 ???\n"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/components/main.md:12
+msgid "[&lt;content&gt; / &lt;slot&gt;](./special-element.md)"
+msgstr "[&lt;内容&gt;、&lt;槽&gt;](./special-element.md)???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/main.md:14
+#, no-wrap
+msgid "**Component List**\n"
+msgstr "**组件列表** ???\n"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/components/main.md:25
+msgid "[&lt;div&gt;](./div.md)"
+msgstr "[&lt;div &gt;](./div.md)???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/components/main.md:25
+msgid "[&lt;scroller&gt;](./scroller.md)"
+msgstr "[&lt;上卷&gt;](./scroller.md)???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/main.md:25
+#, no-wrap
+msgid ""
+"* [&lt;list&gt;](./list.md)\n"
+"    * [&lt;cell&gt;](./cell.md)\n"
+"* [&lt;text&gt;](./text.md)\n"
+"* [&lt;image&gt;](./image.md)\n"
+"* [&lt;input&gt;](./input.md)\n"
+"* [&lt;switch&gt;](./switch.md)\n"
+"* [&lt;slider&gt;](./slider.md)\n"
+"    * [&lt;indicator&gt;](./indicator.md)\n"
+"* [&lt;video&gt;](./video.md)\n"
+msgstr ""
+"* [&lt;列表&gt;](./list.md)???\n"
+"    * [&lt;细胞&gt;](./cell.md)???\n"
+"* [&lt;文本&gt;](./text.md)???\n"
+"* [&lt;图像&gt;](./image.md)???\n"
+"* [&lt;输入&gt;](./input.md)???\n"
+"* [&lt;开关&gt;](./switch.md)???\n"
+"* [&lt;滑块&gt;](./slider.md)???\n"
+"    * [&lt;指示&gt;](./indicator.md)???\n"
+"* [&lt;视频&gt;](./video.md)???\n"

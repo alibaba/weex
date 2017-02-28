@@ -1,0 +1,19 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/_legacy/integrating.md:1
+#, no-wrap
+msgid "Integrating Weex Into Your App"
+msgstr "weex集成到您的应用程序 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/_legacy/integrating.md:3
+msgid "[Android](./advanced/integrate-to-android.md)"
+msgstr "[安卓](./advanced/integrate-to-android.md)???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/_legacy/integrating.md:3
+msgid "[HTML5](./advanced/integrate-to-html5.md)"
+msgstr "[](./advanced/integrate-to-html5.md)HTML5 ???"

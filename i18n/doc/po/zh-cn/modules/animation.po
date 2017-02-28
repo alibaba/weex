@@ -1,0 +1,118 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/modules/animation.md:1
+#, no-wrap
+msgid "animation"
+msgstr "动画 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/modules/animation.md:3
+#, no-wrap
+msgid "Summary"
+msgstr "总结 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/modules/animation.md:6
+msgid "A series of animation api."
+msgstr "一系列动画的原料药。 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/modules/animation.md:7
+#, no-wrap
+msgid "API"
+msgstr "美国石油学会 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/modules/animation.md:9
+#, no-wrap
+msgid "transition(node, options, callback)"
+msgstr "过渡(node, options, callback)???"
+
+#. type: Title ####
+#: /home/dev/download/weex/doc/modules/animation.md:11
+#, no-wrap
+msgid "Arguments"
+msgstr "争论 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/modules/animation.md:26
+msgid "`node`*(Node)*: An element that will be animated."
+msgstr " `node`*(Node)*：一个元素，将动画。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/modules/animation.md:26
+#, no-wrap
+msgid ""
+"* `options`*(object)*: Transition options. \n"
+"  * `styles`*(object)*: Specify the names and values of styles to which a transition effect should be applied.\n"
+"    * `color`*(string)*: the color of the element when the animaiton finished.\n"
+"    * `transform`*(object)*: transform fuction to be applied to the element. Following value is supported.\n"
+"      * `translate/translateX/translateY`*(string)*: translate the element to the new location. The value can be a pixel or percent\n"
+"      * `rotate`*(string)*: the unit is degree.\n"
+"      * `scale`*(string)*: scale up or scale down the element.\n"
+"  * `duration`*(number)*: Specify the number of milliseconds a transition animation should take to complete. By default, the value is 0ms, meaning that no animation will occur.\n"
+"  * `timingFuncion`*(string)*: Used to describe how the intermediate values of the styles being affected by a transition effect are calculated. By default, the value is `linear`, and can also be one of `ease-in`, `ease-out`, `ease-in-out`, `linear` or `cubic-bezier(x1, y1, x2, y2)`.\n"
+"  * `delay`*(number)*: Specify the amount of milliseconds to wait between a change being requested to a property that is to be transitioned and the start of the transition effect. By default, the value is 0ms.\n"
+"  * `transform-origin`*(string)*: The center of scale and rotation. The value can be number of pixel in `x, y` format or keyword like `left`, `right`, `bottom`, `top`, `center`.\n"
+"* **callback** Callback which is called after the completion of transition.\n"
+msgstr ""
+"*`options``*(object)*: Transition options. \n"
+"  * ``styles``*(object)*: Specify the names and values of styles to which a transition effect should be applied.\n"
+"    * ``color``*(string)*: the color of the element when the animaiton finished.\n"
+"    * ``transform``*(object)*: transform fuction to be applied to the element. Following value is supported.\n"
+"      * ``translate/translateX/translateY``*(string)*: translate the element to the new location. The value can be a pixel or percent\n"
+"      * ``rotate``*(string)*: the unit is degree.\n"
+"      * ``scale``*(string)*: scale up or scale down the element.\n"
+"  * ``duration``*(number)*: Specify the number of milliseconds a transition animation should take to complete. By default, the value is 0ms, meaning that no animation will occur.\n"
+"  * ``timingFuncion``*(string)*: Used to describe how the intermediate values of the styles being affected by a transition effect are calculated. By default, the value is ``linear``, and can also be one of ``ease-in``, ``ease-out``, ``ease-in-out``, ``linear`` or ``cubic-bezier(x1, y1, x2, y2)``.\n"
+"  * ``delay``*(number)*: Specify the amount of milliseconds to wait between a change being requested to a property that is to be transitioned and the start of the transition effect. By default, the value is 0ms.\n"
+"  * ``transform-origin``*(string)*: The center of scale and rotation. The value can be number of pixel in ``x, y`` format or keyword like ``left``, ``right``, ``bottom``, ``top``, ``center`。 ???\n"
+"***回调回调函数完成后调用的回调函数。 ???\n"
+
+#. type: Title ####
+#: /home/dev/download/weex/doc/modules/animation.md:27
+#, no-wrap
+msgid "Example"
+msgstr "例子 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/modules/animation.md:35
+#, no-wrap
+msgid ""
+"```html\n"
+"<template>\n"
+"  <div class=\"ct\">\n"
+"    <div id=\"test\"></div>\n"
+"  </div>\n"
+"</template>\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/modules/animation.md:57
+#, no-wrap
+msgid ""
+"<script>\n"
+"  module.exports = {\n"
+"    ready: function () {\n"
+"      var animation = require('@weex-module/animation');\n"
+"      var testEl = this.$el('test');\n"
+"      animation.transition(testEl, {\n"
+"        styles: {\n"
+"          color: '#FF0000',\n"
+"          transform: 'translate(1, 1)'\n"
+"        },\n"
+"        duration: 0, //ms\n"
+"        timingFunction: 'ease',\n"
+"        transform-origin: 'center center',\n"
+"        delay: 0 //ms\n"
+"      }, function () {\n"
+"        nativeLog('animation finished.')\n"
+"      })\n"
+"    }\n"
+"  }\n"
+"</script>\n"
+"```\n"
+msgstr ""

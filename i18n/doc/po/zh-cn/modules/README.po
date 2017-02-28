@@ -1,0 +1,72 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/modules/README.md:1
+#, no-wrap
+msgid "Built-in Modules"
+msgstr "内置模块 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/modules/README.md:3
+#, no-wrap
+msgid "How to use"
+msgstr "如何使用 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/modules/README.md:6
+msgid ""
+"You can use a simply way like `require('@weex-module/name')` to access the "
+"apis of module. e.g."
+msgstr ""
+"你可以使用一个简单的方式像`require('@weex-module/name')`访问模块的API。例"
+"如 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/modules/README.md:13
+#, no-wrap
+msgid ""
+"```javascript\n"
+"var dom = require('@weex-module/dom');\n"
+"dom.scrollTo(this.$el('someIdForElement'), {\n"
+"    offset: 0\n"
+"});\n"
+"```\n"
+msgstr ""
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/modules/README.md:14
+#, no-wrap
+msgid "Table of Contents"
+msgstr "表的内容 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/modules/README.md:21
+msgid "[dom](./dom.md)"
+msgstr "[唐](./dom.md)???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/modules/README.md:21
+msgid "[steam](./stream.md)"
+msgstr "[蒸汽](./stream.md)???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/modules/README.md:21
+msgid "[modal](./modal.md)"
+msgstr "[模式](./modal.md)???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/modules/README.md:21
+msgid "[animation](./animation.md)"
+msgstr "[动画](./animation.md)???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/modules/README.md:21
+msgid "[navigator](./navigator.md)"
+msgstr "[导航](./navigator.md)???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/modules/README.md:21
+msgid "[webview](./webview.md)"
+msgstr "[使用](./webview.md)???"

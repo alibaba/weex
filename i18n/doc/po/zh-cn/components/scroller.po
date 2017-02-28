@@ -1,0 +1,141 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/components/scroller.md:1
+#, no-wrap
+msgid "&lt;scroller&gt;"
+msgstr "&lt;上卷&gt; ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/scroller.md:3
+#, no-wrap
+msgid "Summary"
+msgstr "总结 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/scroller.md:6
+msgid ""
+"A vertical scroller which can have multiple child components arranged in one "
+"column. If total height of its child components is higher then the height of "
+"itself, the whole child components are scrollable."
+msgstr ""
+"垂直滚动条可以有多个子组件安装在一个柱。如果它的子组件的总高度高于本身的高"
+"度，整个子组件都是可滚动的。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/scroller.md:8
+#, no-wrap
+msgid "**Notes:** A `<scroller>` can be used as a root element or a embed element. The scoll direction of this component is column, and it can't be changed.\n"
+msgstr "*注：* *`<scroller>`可以作为根元素或嵌套元素。此组件将方向柱，这是不可改变的。 ???\n"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/scroller.md:9
+#, no-wrap
+msgid "Child Components"
+msgstr "子组件 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/scroller.md:12
+msgid "It supports all kinds of weex components as its child components."
+msgstr "它支持各种weex组件的子组件。 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/scroller.md:13
+#, no-wrap
+msgid "Attributes"
+msgstr "属性 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/scroller.md:16
+msgid ""
+"There is no specific attribute for this component other than the [common "
+"attributes](../references/common-attrs.md)."
+msgstr ""
+"在这个组件以外的共同属性] [(../references/common-attrs.md)没有特定的属"
+"性。 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/scroller.md:17
+#, no-wrap
+msgid "Styles"
+msgstr "款式 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/scroller.md:20
+#, no-wrap
+msgid "**common styles**: check out [common styles for components](../references/common-style.md)\n"
+msgstr "* * *：常见的方式检查[组件](../references/common-style.md)常见的风格 ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/scroller.md:25
+msgid ""
+"- support flexbox related styles - support box model related styles - "
+"support ``position`` related styles - support ``opacity``, ``background-"
+"color`` etc."
+msgstr ""
+"支持flexbox相关的风格支持盒模型相关的风格支持```position```` related styles "
+"- support ````opacity````, ````background-color```等 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/scroller.md:26
+#, no-wrap
+msgid "Events"
+msgstr "事件 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/scroller.md:29
+#, no-wrap
+msgid "**common events**: check out the [common events](../references/common-event.md)\n"
+msgstr "* * *：常见的事件查看[事件](../references/common-event.md)常见 ???\n"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/scroller.md:32
+msgid ""
+"- support `click` event. Check out [common events](../references/common-"
+"event.md)  - support `appear` / `disappear` event. Check out [common events]"
+"(../references/common-event.md)"
+msgstr ""
+"支持`click`` event. Check out [common events](../references/common-event."
+"md)  - support ``appear`` / ``disappear`事件。查看[事件](../references/"
+"common-event.md)常见 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/components/scroller.md:33
+#, no-wrap
+msgid "Example"
+msgstr "例子 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/scroller.md:43
+#, no-wrap
+msgid ""
+"```\n"
+"<template>\n"
+"  <scroller>\n"
+"    <div repeat=\"{{list}}\">\n"
+"      <text>{{name}}: ${{price}}</text>\n"
+"    </div>\n"
+"  </scroller>\n"
+"</template>\n"
+msgstr ""
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/components/scroller.md:57
+#, no-wrap
+msgid ""
+"<script>\n"
+"  module.exports = {\n"
+"    data: {\n"
+"      list: [\n"
+"        {name: '...', price: 100},\n"
+"        {name: '...', price: 500},\n"
+"        {name: '...', price: 1.5},\n"
+"        ...\n"
+"      ]\n"
+"    }\n"
+"  }\n"
+"</script>\n"
+"```\n"
+msgstr ""

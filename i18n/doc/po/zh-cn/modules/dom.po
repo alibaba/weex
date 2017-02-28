@@ -1,0 +1,66 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. type: Title #
+#: /home/dev/download/weex/doc/modules/dom.md:1
+#, no-wrap
+msgid "dom"
+msgstr "DOM ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/modules/dom.md:3
+#, no-wrap
+msgid "Summary"
+msgstr "总结 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/modules/dom.md:6
+msgid "A series of dom api."
+msgstr "一系列的DOM API。 ???"
+
+#. type: Title ##
+#: /home/dev/download/weex/doc/modules/dom.md:7
+#, no-wrap
+msgid "API"
+msgstr "美国石油学会 ???"
+
+#. type: Title ###
+#: /home/dev/download/weex/doc/modules/dom.md:9
+#, no-wrap
+msgid "scrollTo(node, options)"
+msgstr "scrollto(node, options)???"
+
+#. type: Title ####
+#: /home/dev/download/weex/doc/modules/dom.md:11
+#, no-wrap
+msgid "Arguments"
+msgstr "争论 ???"
+
+#. type: Bullet: '* '
+#: /home/dev/download/weex/doc/modules/dom.md:16
+msgid "`node`*(Node)*: an element that scrolled into the view."
+msgstr " `node`*(Node)*：一元，滚动到视图。 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/modules/dom.md:16
+#, no-wrap
+msgid ""
+"* `options`*(object)*: some options.\n"
+"  * `offset`*(number)*: An offset to the visible position, default is `0`.\n"
+msgstr ""
+"*`options``*(object)*: some options.\n"
+"  * ``offset``*(number)*: An offset to the visible position, default is ``0`。 ???\n"
+
+#. type: Title ####
+#: /home/dev/download/weex/doc/modules/dom.md:17
+#, no-wrap
+msgid "Example"
+msgstr "例子 ???"
+
+#. type: Plain text
+#: /home/dev/download/weex/doc/modules/dom.md:23
+msgid ""
+"```javascript var dom = require('@weex-module/dom'); dom.scrollTo(this."
+"$el('someId'), {offset: 10}); ```"
+msgstr ""
