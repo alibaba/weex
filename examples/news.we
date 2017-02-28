@@ -1,0 +1,113 @@
+
+  <template>
+   <list style="top:0;bottom:0;">
+    <cell>
+     <div class="cell">
+      <div class="post">
+       <text class="title">
+        不愿伴随美元走强 近期人民币走势显著脱离美元
+       </text>
+       <text class="brief">
+        人民币在美元走弱的背景下曾维持了一段美好时光：对美元保持稳定，对一篮子货币贬值。但随着美元走强，人民币并未随着上扬，二者的走势开始出现分化。今天人民币中间价下调185点至为3月28日来最低，昨日中间价降幅达到378点。在岸人民币三天贬值幅度为0.4%，美元指数则连续三日走升。
+       </text>
+       <img src="http://o3g5m3mko.qnssl.com/118093?imageMogr2/auto-orient/strip/thumbnail/!1380x920r/gravity/Center/crop/1380x920/format/webp" class="thumb" />
+      </div>
+      <div class="meta">
+       <text class="meta_site">
+        港股那点事
+       </text>
+       <text class="meta_date">
+        3分钟前
+       </text>
+      </div>
+     </div>
+    </cell>
+    <cell>
+     <div class="cell">
+      <div class="post">
+       <text class="title">
+        大败局思考之三：AOL的巅峰和陨落
+       </text>
+       <text class="brief">
+        历史永远是最好的一面镜子，回顾公司和时代的发展会有很多收获。今年除了会继续写的“十倍股系列外”，我还会增加一个专题研究“那些年没有实现的梦想”。从那些曾经给予我们梦想，却最终并没有实现的案例中，去反思企业和行业的发展以及 … …
+       </text>
+       <img src="http://o3g5m3mko.qnssl.com/117134?imageMogr2/auto-orient/strip/thumbnail/!1380x920r/gravity/Center/crop/1380x920/format/webp" class="thumb" />
+      </div>
+      <div class="meta">
+       <text class="meta_site">
+        华尔街见闻
+       </text>
+       <text class="meta_date">
+        20:32
+       </text>
+      </div>
+     </div>
+    </cell>
+    <cell>
+     <div class="cell">
+      <div class="post">
+       <text class="title">
+        Sell in May？I don’t believe！五月应是看多时！
+       </text>
+       <text class="brief">
+        凡是做港股的，肯定都听说过sell in mayand go away。意思就是5月份基本上没什么行情，还不如卖了股票出去玩玩。其实统计过去几年的数据，5月的确是跌的时候大大多过涨的时候，1999年至今，只有5年是上涨，其余都为下跌。在进入2016年5月 … …
+       </text>
+      </div>
+      <div class="meta">
+       <text class="meta_site">
+        金融启示录
+       </text>
+       <text class="meta_date">
+        5-4
+       </text>
+      </div>
+     </div>
+    </cell>
+    <cell>
+     <div class="cell">
+      <div class="post">
+       <text class="title">
+        营改增的最大受益者是谁？
+       </text>
+       <text class="brief">
+        在国金证券电话会上，税务专家认为，原本增值税纳税人和小规模纳税人受益较大；另一方面，按行业分析，受益程度由大到小排列为：生活服务类&gt;房地产业&gt;金融业&gt;建筑业。由于人工支出不能抵税，营改增鼓励采购设备，在一定程度上鼓励劳动密集型企业以机器替代人工。
+       </text>
+      </div>
+      <div class="meta">
+       <text class="meta_site">
+        华尔街日报
+       </text>
+       <text class="meta_date">
+        5-3
+       </text>
+      </div>
+     </div>
+    </cell>
+   </list>
+  </template>
+  <style>
+</style>
+  <style>
+.post { padding: 45; }
+
+.cell { border-bottom-style: solid; background-color: #ffffff; border-bottom-width: 1px; border-bottom-color: #aaa; }
+
+.thumb { margin-top: 30; width: 100%; height: 440; }
+
+.meta_date { right: 0; }
+.meta_date, .meta_site { font-size: 26; color: #999; }
+
+.meta { flex-direction: row;justify-content:space-between;background-color: #f5f5f5; padding: 30; padding-left: 45; padding-right: 45; border-top-width: 1px; border-top-color: #eee; } 
+.title { line-height: 1.8; font-family: "PT Serif", "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans CN", "Microsoft YaHei", sans-serif; color: #000; font-size: 45; font-weight: bold; }
+
+.brief {
+font-family: Lato, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans CN",
+"Microsoft YaHei", "微软雅黑", STHeiti, "WenQuanYi Micro Hei", SimSun, sans-serif;
+font-weight: light;
+line-height: 1.8;
+font-size: 34;
+color: #999;
+font-weight: lighter;
+margin-top: 20; 
+}
+</style>
