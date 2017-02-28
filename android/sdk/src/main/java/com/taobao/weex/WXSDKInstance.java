@@ -447,7 +447,7 @@ public class WXSDKInstance implements IWXActivityStateListener,DomContext, View.
    *                 weexversion    Weex version(like 1.0.0)
    *                 appversion     App version(like 1.0.0)
    *                 devid        Device id(like Aqh9z8dRJNBhmS9drLG5BKCmXhecHUXIZoXOctKwFebH)
-   *                 sysversion    Device system version(like 5.4.4�?.0.4, should be used with os)
+   *                 sysversion    Device system version(like 5.4.4ã?.0.4, should be used with os)
    *                 sysmodel     Device model(like iOS:"MGA82J/A", android:"MI NOTE LTE")
    *                 Time    UNIX timestamp, UTC+08:00
    *                 TTID(Optional)
@@ -467,7 +467,7 @@ public class WXSDKInstance implements IWXActivityStateListener,DomContext, View.
    *                 weexversion    Weex version(like 1.0.0)
    *                 appversion     App version(like 1.0.0)
    *                 devid        Device id(like Aqh9z8dRJNBhmS9drLG5BKCmXhecHUXIZoXOctKwFebH)
-   *                 sysversion    Device system version(like 5.4.4�?.0.4, should be used with os)
+   *                 sysversion    Device system version(like 5.4.4ã?.0.4, should be used with os)
    *                 sysmodel     Device model(like iOS:"MGA82J/A", android:"MI NOTE LTE")
    *                 Time    UNIX timestamp, UTC+08:00
    *                 TTID(Optional)
@@ -490,7 +490,7 @@ public class WXSDKInstance implements IWXActivityStateListener,DomContext, View.
    *                 weexversion    Weex version(like 1.0.0)
    *                 appversion     App version(like 1.0.0)
    *                 devid        Device id(like Aqh9z8dRJNBhmS9drLG5BKCmXhecHUXIZoXOctKwFebH)
-   *                 sysversion    Device system version(like 5.4.4�?.0.4, should be used with os)
+   *                 sysversion    Device system version(like 5.4.4ã?.0.4, should be used with os)
    *                 sysmodel     Device model(like iOS:"MGA82J/A", android:"MI NOTE LTE")
    *                 Time    UNIX timestamp, UTC+08:00
    *                 TTID(Optional)
@@ -1571,12 +1571,7 @@ public class WXSDKInstance implements IWXActivityStateListener,DomContext, View.
           onRenderError(WXRenderErrorCode.WX_TARGETFILE_IFOF_HTML_ERROR, response.errorMsg);
         }
         else {
-          String verId_timestamp = (String)options.get("WeexBlockVerId");
-          if ((verId_timestamp != null) && (verId_timestamp.length() > 0)) {
-            //saveWeexBlockCacheByUrl(mBundleUrl, verId_timestamp + template);
-            saveWeexBlockCacheByUrl(mBundleUrl, template);//modify by zhouhe
-          }
-          WXLogUtils.d("onHttpFinish response.originalData of weex and render now");
+          WXLogUtils.d("onHttpFinish response.originalData is of weex and render now");
           render(pageName, template, options, jsonInitData, flag);
         }
 
@@ -1589,20 +1584,7 @@ public class WXSDKInstance implements IWXActivityStateListener,DomContext, View.
 
     }
   }
-  //add by zhouhe 2016.12.06
-  private void saveWeexBlockCacheByUrl(String urlstr, String weexblock_jsbundle){
-    IWXStorageAdapter storageAdapter = WXSDKManager.getInstance().getIWXStorageAdapter();
-    if (storageAdapter != null){
-      storageAdapter.setItem(urlstr, weexblock_jsbundle, new IWXStorageAdapter.OnResultReceivedListener(){
-        @Override
-        public void onReceived(Map<String, Object> data) {
-          Log.d("onReceived", data.toString());
-        }
-      });
-      storageAdapter.close();
-    }
-  }
-
+  
   public interface NestedInstanceInterceptor {
     void onCreateNestInstance(WXSDKInstance instance, NestedContainer container);
   }
