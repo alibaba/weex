@@ -34,6 +34,58 @@ export default {
         return wrapper.scrollTop >= innerHeight - wrapperHeight - offset
       }
       return false
-    }
+    },
+
+    handleTouchStart (event) {
+      // event.preventDefault()
+      event.stopPropagation()
+      if (this._loading || this._refresh) {
+        const touch = event.changedTouches[0]
+        this._touchParams = {
+          reachTop: this.reachTop(),
+          reachBottom: this.reachBottom(),
+          startTouchEvent: touch,
+          startX: touch.pageX,
+          startY: touch.pageY,
+          timeStamp: event.timeStamp
+        }
+      }
+    },
+
+    handleTouchMove (event) {
+      // event.preventDefault()
+      event.stopPropagation()
+      if (this._touchParams) {
+        const inner = this.$refs.inner
+        const { startY, reachTop, reachBottom } = this._touchParams
+        if (inner) {
+          const touch = event.changedTouches[0]
+          const offsetY = touch.pageY - startY
+          this._touchParams.offsetY = offsetY
+          if (reachTop && this._refresh) {
+            this._refresh.child.pullingDown(offsetY)
+          } else if (reachBottom && this._loading) {
+            this._loading.child.pullingUp(-offsetY)
+          }
+        }
+      }
+    },
+
+    handleTouchEnd (event) {
+      // event.preventDefault()
+      event.stopPropagation()
+      if (this._touchParams) {
+        const inner = this.$refs.inner
+        const { offsetY, reachTop, reachBottom } = this._touchParams
+        if (inner) {
+          if (reachTop && this._refresh) {
+            this._refresh.child.pullingEnd()
+          } else if (reachBottom && this._loading) {
+            this._loading.child.pullingEnd()
+          }
+        }
+      }
+      delete this._touchParams
+    },
   }
 }

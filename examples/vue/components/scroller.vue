@@ -1,5 +1,8 @@
 <template>
   <scroller class="list" append="tree">
+    <refresh class="refresh-view" :display="refresh_display" @refresh="onrefresh" @pullingdown="pullingdown">
+      <img id="roate" ref="roate" src="http://gw.alicdn.com/bao/uploaded/TB1xDrVNFXXXXbEXFXXXXXXXXXX-48-48.png" style="width: 50px;height: 50px;"></img>
+    </refresh>
     <div v-for="sec in sections" class="section">
       <div class="header">
         <text class="header-title">{{sec.title}}</text>
@@ -8,8 +11,8 @@
         <text class="item-title">row {{item.id}}</text>
       </div>
     </div>
-    <loading class="loading-view" :display="loading_display" onloading="onloading">
-      <loading-indicator style="height: 60; width: 60"></loading-indicator>
+    <loading class="loading-view" :display="loading_display" @loading="onloading">
+      <loading-indicator style="height: 60px; width: 60px;"></loading-indicator>
     </loading>
   </scroller>
 </template>
@@ -37,6 +40,7 @@
     width: 750px;
     justify-content: center;
     align-items: center;
+    background-color: #c0c0c0;
   }
 
   .indicator {
@@ -77,14 +81,19 @@
         self.refresh_display = 'show';
         setTimeout(function () {
           self.refresh_display = 'hide';
-        }, 1000)
+        }, 3000)
       },
       onloading: function(e) {
         var self = this;
         self.loading_display = 'show';
         setTimeout(function () {
           self.loading_display = 'hide';
-        }, 1000)
+        }, 3000)
+      },
+      pullingdown: function(e){
+        var dy = e.dy;
+        var pullingDistance = e.pullingDistance;
+        var viewHeight = e.viewHeight;
       }
     },
     data: function () {
@@ -104,6 +113,17 @@
           },
           {
             title: 'Header 2',
+            items: [
+              {id: 6},
+              {id: 7},
+              {id: 8},
+              {id: 9},
+              {id: 10},
+              {id: 11}
+            ]
+          },
+          {
+            title: 'Header 3',
             items: [
               {id: 6},
               {id: 7},

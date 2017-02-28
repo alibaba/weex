@@ -14,19 +14,53 @@ export default {
   },
   data () {
     return {
-      height: 0
+      height: -1,
+      viewHeight: 0,
+    }
+  },
+  mounted () {
+    this.viewHeight = this.$el.offsetHeight
+    if (this.display === 'hide') {
+      this.height = 0
+    } else {
+      this.height = this.viewHeight
+    }
+  },
+  updated () {
+    if (this.display === 'hide') {
+      this.$el.style.height = `${0}px`
+    } else {
+      this.$el.style.height = `${this.viewHeight}px`
+    }
+  },
+  watch: {
+    height (val) {
+      this.$el.style.height = val + 'px'
+    },
+    display (val) {
+      if (val === 'hide') {
+        this.height = 0
+      } else {
+        this.height = this.viewHeight
+      }
     }
   },
   methods: {
-    show () {
-      this.$emit('loading')
-      this.height = '1.6rem'
-      this.visibility = 'visible'
+    pulling (offsetY = 0) {
+      this.height = offsetY
     },
-    reset () {
-      this.height = 0
-      this.visibility = 'hidden'
-      this.$emit('loadingfinish')
+    pullingUp (offsetY) {
+      this.$el.style.transition = `height 0s`
+      this.pulling(offsetY)
+    },
+    pullingEnd () {
+      this.$el.style.transition = `height .2s`
+      if (this.height >= this.viewHeight) {
+        this.pulling(this.viewHeight)
+        this.$emit('loading')
+      } else {
+        this.pulling(0)
+      }
     },
     getChildren () {
       const children = this.$slots.default || []
@@ -43,7 +77,6 @@ export default {
     return createElement('aside', {
       ref: 'loading',
       attrs: { 'weex-type': 'loading' },
-      style: { height: this.height, visibility: this.visibility },
       staticClass: 'weex-loading'
     }, this.getChildren())
   }
