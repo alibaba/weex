@@ -33,6 +33,16 @@
         <image class="img" style=" width: 600px; height: 200px;border-style: solid;border-width: 1px;border-color: #333;" src="{{img}}" resize="cover"></image>
       </wxc-panel>
     </wxc-panel>
+    
+    <wxc-panel title="placeholder">
+      <image class="img" style=" width: 200px;height:200px" src="{{placeholderImg}}" place-holder="{{placeholder}}"></image>
+    </wxc-panel>
+    <wxc-panel title="load event">
+      <div>
+        <image class="img" onload="loadresult" style="width: 200px; height: 200px;" src="{{img}}" place-holder="{{placeholder}}"></image>
+        <text value='result: {{text}}'><text>
+      </div>
+    </wxc-panel>
   </scroller>
 </template>
 <style>
@@ -44,7 +54,16 @@
 require('weex-components');
 module.exports = {
   data: {
-    img: '//gw.alicdn.com/tps/i2/TB1DpsmMpXXXXabaXXX20ySQVXX-512-512.png_400x400.jpg'
+    img: '//gw.alicdn.com/tps/i2/TB1DpsmMpXXXXabaXXX20ySQVXX-512-512.png_400x400.jpg',
+    placeholderImg: '//gw.alicdn.com/tps/i2/TB1DpsmMpXXXXabaXXX20ySQVXX-512-512.png_400x400.jpg',
+    placeholder: 'http://www.w3school.com.cn/i/eg_tulip.jpg',
+    text: 'false'
+  },
+  methods: {
+    loadresult: function (e) {
+      console.log('result:', JSON.stringify(e), e.success);
+      this.text = e.success;
+    }
   }
 }
 </script>
