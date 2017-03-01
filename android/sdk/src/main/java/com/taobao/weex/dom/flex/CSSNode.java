@@ -7,6 +7,8 @@ package com.taobao.weex.dom.flex;
 
 //import javax.annotation.Nullable;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
 
 import static com.taobao.weex.dom.flex.CSSLayout.DIMENSION_HEIGHT;
@@ -339,7 +341,7 @@ public class CSSNode {
   /**
    * Get this node's margin, as defined by cssstyle + default margin.
    */
-  public Spacing getMargin() {
+  public @NonNull Spacing getMargin() {
     return cssstyle.margin;
   }
 
@@ -380,7 +382,7 @@ public class CSSNode {
   /**
    * Get this node's padding, as defined by cssstyle + default padding.
    */
-  public Spacing getPadding() {
+  public @NonNull Spacing getPadding() {
     return cssstyle.padding;
   }
 
@@ -393,7 +395,7 @@ public class CSSNode {
   /**
    * Get this node's border, as defined by cssstyle.
    */
-  public Spacing getBorder() {
+  public @NonNull Spacing getBorder() {
     return cssstyle.border;
   }
 
