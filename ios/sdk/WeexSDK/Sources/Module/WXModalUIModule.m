@@ -118,7 +118,7 @@ static const CGFloat WXToastDefaultPadding = 30.0;
 - (void)toast:(NSString *)message duration:(double)duration
 {
     WXAssertMainThread();
-    UIView *superView =  [[[UIApplication sharedApplication] windows] objectAtIndex:0];
+    UIView *superView =  [[[UIApplication sharedApplication] delegate] window];
     if (!superView) {
         superView =  self.weexInstance.rootView;
     }
@@ -156,7 +156,7 @@ static const CGFloat WXToastDefaultPadding = 30.0;
                                     )];
     
     CGPoint point = CGPointZero;
-    UIWindow *window = [[[UIApplication sharedApplication] windows] objectAtIndex:0];
+    UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
     
     // adjust to screen orientation
     UIInterfaceOrientation orientation = (UIInterfaceOrientation)[[UIApplication sharedApplication] statusBarOrientation];
