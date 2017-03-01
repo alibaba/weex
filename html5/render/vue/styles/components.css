@@ -265,9 +265,14 @@ body > .weex-scroller {
   height: 100%;
 }
 .weex-scroller-horizontal .weex-scroller-inner > * {
-  /*float: left;*/
-  /*width: auto !important;*/
-  /*flex: 0 0 100px;*/
+
+}
+
+.iossticky {
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  z-index: 9999;
+  top: 0;
 }
 
 .iossticky {
