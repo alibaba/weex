@@ -14,9 +14,15 @@ export function normalizeStyles (style) {
   return normalize(style)
 }
 
+let support = null
+
 export function supportSticky () {
+  if (support !== null) {
+    return support
+  }
   const element = window.document.createElement('div')
   const elementStyle = element.style
   elementStyle.cssText = 'position:-webkit-sticky;position:sticky;'
-  return elementStyle.position.indexOf('sticky') !== -1
+  support = elementStyle.position.indexOf('sticky') !== -1
+  return support
 }

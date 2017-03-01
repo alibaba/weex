@@ -5,16 +5,14 @@ export default {
   data () {
     return {
       sticky: false,
-      move: false,
       initTop: 0,
-      initHeight: 0,
-      placeholder: null
+      placeholder: null,
+      supportSticky: supportSticky()
     }
   },
 
   mounted () {
     this.initTop = this.$el.offsetTop
-    this.initHeight = this.$el.offsetHeight
     this.placeholder = window.document.createElement('div')
   },
 
@@ -25,10 +23,8 @@ export default {
   },
 
   methods: {
-    addSticky (offsetY) {
-      this.move = false
+    addSticky () {
       this.sticky = true
-      this.$el.style.top = offsetY + 'px'
       this.placeholder.style.display = 'block'
       this.placeholder.style.width = this.$el.offsetWidth + 'px'
       this.placeholder.style.height = this.$el.offsetHeight + 'px'
@@ -37,17 +33,11 @@ export default {
 
     removeSticky () {
       this.sticky = false
-      this.$el.style.top = '0'
       try {
         this.$el.parentNode.removeChild(this.placeholder)
       }
       catch (e) {
       }
-    },
-
-    moveUp (offsetY) {
-      this.move = true
-      this.$el.style.top = offsetY + 'px'
     }
   },
 
@@ -62,7 +52,7 @@ export default {
       on: this._createEventMap(),
       ref: 'header',
       staticClass: 'weex-header',
-      class: { sticky: this.sticky, iossticky: supportSticky(), absolute: this.move }
+      class: { sticky: this.sticky, iossticky: this.supportSticky }
     }, this.$slots.default)
   }
 }
