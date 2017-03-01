@@ -1,7 +1,14 @@
+import { supportSticky } from '../../../utils/style'
+
 export default {
   methods: {
     handleListScroll (event) {
       this.handleScroll(event)
+
+      if (supportSticky()) {
+        return
+      }
+
       const scrollTop = this.$el.scrollTop
       const top = this.$el.offsetTop
 

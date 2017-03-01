@@ -13,3 +13,10 @@ export function trimComment (cssText) {
 export function normalizeStyles (style) {
   return normalize(style)
 }
+
+export function supportSticky () {
+  const element = window.document.createElement('div')
+  const elementStyle = element.style
+  elementStyle.cssText = 'position:-webkit-sticky;position:sticky;'
+  return elementStyle.position.indexOf('sticky') !== -1
+}

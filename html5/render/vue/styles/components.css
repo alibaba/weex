@@ -257,15 +257,24 @@ body > .weex-scroller {
 }
 
 .weex-scroller-horizontal .weex-scroller-inner {
-  -webkit-box-orient: horizontal;
   -webkit-flex-direction: row;
       -ms-flex-direction: row;
           flex-direction: row;
-  width: auto;
+          
+  -webkit-box-orient: horizontal;
   height: 100%;
 }
 .weex-scroller-horizontal .weex-scroller-inner > * {
-  float: left;
+  /*float: left;*/
+  /*width: auto !important;*/
+  /*flex: 0 0 100px;*/
+}
+
+.iossticky {
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  z-index: 9999;
+  top: 0;
 }
 
 .sticky {
@@ -274,7 +283,7 @@ body > .weex-scroller {
 }
 
 .absolute {
-  position: absolute;
+  position: absolute !important;
 }
 
 .weex-cell {
