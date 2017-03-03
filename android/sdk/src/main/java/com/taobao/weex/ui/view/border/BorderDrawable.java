@@ -633,7 +633,6 @@ public class BorderDrawable extends Drawable {
     Shader shader = borderStyle.getLineShader(borderWidth, color, side);
     mPaint.setShader(shader);
     mPaint.setColor(color);
-    mPaint.setStrokeWidth(borderWidth);
     mPaint.setStrokeCap(Paint.Cap.ROUND);
   }
 }
