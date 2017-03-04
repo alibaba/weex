@@ -62,12 +62,21 @@ export function debounce (func, wait) {
   }
 }
 
-export function throttle (func, wait) {
+export function throttle (func, wait, callLastTime, tag) {
   let last = 0
+  let lastTimer = null
+  const lastTimeDuration = wait + (wait > 25 ? wait : 25)  // plus half wait time.
   return function (...args) {
     const context = this
     const time = new Date().getTime()
     if (time - last > wait) {
+      if (callLastTime) {
+        lastTimer && clearTimeout(lastTimer)
+        lastTimer = setTimeout(function () {
+          lastTimer = null
+          func.apply(context, args)
+        }, lastTimeDuration)
+      }
       func.apply(context, args)
       last = time
     }

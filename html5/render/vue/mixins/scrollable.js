@@ -1,4 +1,4 @@
-import { fireLazyload } from '../utils'
+import { getThrottleLazyload } from '../utils'
 
 export default {
   methods: {
@@ -12,7 +12,7 @@ export default {
     },
 
     handleScroll (event) {
-      fireLazyload(this.$el)
+      getThrottleLazyload(25, this.$el, 'scroll')()
       if (this.reachBottom()) {
         this.$emit('loadmore', event)
       }

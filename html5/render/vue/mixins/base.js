@@ -1,4 +1,4 @@
-import { watchAppear, fireLazyload } from '../utils'
+import { getThrottleLazyload, watchAppear } from '../utils'
 
 const supportedEvents = [
   'click', 'longpress', 'appear', 'disappear'
@@ -11,25 +11,15 @@ let lazyloadWatched = false
 function watchLazyload () {
   lazyloadWatched = true
   ; [
-    'scroll',
-    'transitionend',
-    'webkitTransitionEnd',
-    'animationend',
-    'webkitAnimationEnd',
-    'resize'
+    'scroll'
+    // 'transitionend',
+    // 'webkitTransitionEnd',
+    // 'animationend',
+    // 'webkitAnimationEnd',
+    // 'resize'
   ].forEach(evt => {
-    window.addEventListener(evt, function () {
-      fireLazyload()
-    })
+    window.addEventListener(evt, getThrottleLazyload(25, document.body))
   })
-}
-
-function _getParentScroller (vnode) {
-  if (!vnode) return null
-  if (scrollableTypes.indexOf(vnode.weexType) > -1) {
-    return vnode
-  }
-  return _getParentScroller(vnode.$parent)
 }
 
 export default {
@@ -67,7 +57,11 @@ export default {
     },
 
     _getParentScroller () {
-      return _getParentScroller(this.$vnode)
+      let parent = this
+      while (parent && scrollableTypes.indexOf(parent.$options._componentTag) <= -1) {
+        parent = parent.$options.parent
+      }
+      return parent
     },
 
     _createEventMap (extras = []) {
@@ -78,9 +72,8 @@ export default {
       return eventMap
     },
 
-    _fireLazyload () {
-      const scroller = this._getParentScroller()
-      fireLazyload(scroller && scroller.$el || document.body)
+    _fireLazyload (el) {
+      getThrottleLazyload(16)()
     }
   }
 }

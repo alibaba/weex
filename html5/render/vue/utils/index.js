@@ -3,6 +3,7 @@ export * from './event'
 export * from './component'
 export * from './lazyload'
 export * from './style'
+export * from './type'
 
 /**
  * Create a cached version of a pure function.
@@ -61,20 +62,6 @@ export function appendStyle (css, styleId, replace) {
     document.getElementsByTagName('head')[0].appendChild(style)
   }
   style.appendChild(document.createTextNode(css))
-}
-
-/**
- * Strict object type check. Only returns true
- * for plain JavaScript objects.
- *
- * @param {*} obj
- * @return {Boolean}
- */
-
-const toString = Object.prototype.toString
-const OBJECT_STRING = '[object Object]'
-export function isPlainObject (obj) {
-  return toString.call(obj) === OBJECT_STRING
 }
 
 export function nextFrame (callback) {
