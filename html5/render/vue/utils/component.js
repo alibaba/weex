@@ -55,18 +55,18 @@ export function watchAppear (context) {
         context._visible = isComponentVisible(context)
         if (context._visible) {
           // TODO: create custom event object
-          on.appear && on.appear.fn({})
+          on.appear && on.appear({})
         }
         const handler = throttle(event => {
           const visible = isComponentVisible(context)
           if (visible !== context._visible) {
             context._visible = visible
             const listener = visible ? on.appear : on.disappear
-            if (listener && listener.fn) {
-              listener.fn(event)
+            if (listener) {
+              listener(event)
             }
           }
-        }, 100)
+        }, 10)
 
         // TODO: more reliable
         const scroller = getParentScroller(context)
