@@ -67,7 +67,7 @@ WX_EXPORT_METHOD(@selector(onclose:))
         if (weakSelf) {
             WXLogError(@":( Websocket Failed With Error %@", error);
             NSMutableDictionary *dict = [NSMutableDictionary new];
-            [dict setObject:error.userInfo forKey:@"data"];
+            [dict setObject:error.userInfo?[WXUtility JSONString:error.userInfo]:@"" forKey:@"data"];
             if (weakSelf.errorCallBack) {
                 weakSelf.errorCallBack(dict, true);
             }
@@ -79,7 +79,7 @@ WX_EXPORT_METHOD(@selector(onclose:))
                 WXLogInfo(@"Websocket colse ");
                 NSMutableDictionary * callbackRsp = [[NSMutableDictionary alloc] init];
                 [callbackRsp setObject:[NSNumber numberWithInteger:code] forKey:@"code"];
-                [callbackRsp setObject:reason forKey:@"reason"];
+                [callbackRsp setObject:reason?reason:@"" forKey:@"reason"];
                 [callbackRsp setObject:wasClean?@true:@false forKey:@"wasClean"];
                 if (weakSelf.closeCallBack) {
                     weakSelf.closeCallBack(callbackRsp,false);
