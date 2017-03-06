@@ -211,4 +211,7 @@ public class WXRenderErrorCode {
   public static final String WX_NETWORK_ERROR = "wx_network_error";
 
   public static final String WX_USER_INTERCEPT_ERROR = "wx_user_intercept_error";
+  
+  //
+  public static final String WX_TARGETFILE_IFOF_HTML_ERROR = "wx_targetfile_isof_html_error";
 }
