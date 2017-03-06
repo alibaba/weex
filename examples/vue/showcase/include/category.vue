@@ -2,21 +2,21 @@
   <div>
     <image v-if="ds.floorTitle" class="title" :src="ds.floorTitle"></image>
     <div class="item-container">
-      <div v-for="(i,item) in items" :style="{ width: 750, paddingBottom: 14, backgroundColor: item.colour }">
+      <div v-for="(item,i) in items" :key="i" :style="{ width: 750, paddingBottom: 14, backgroundColor: item.colour }">
         <div>
           <banner :width="NUMBER_750" :height="NUMBER_237"
             :src="i % 2 === 0 ? item.leftBannerImg : item.rightBannerImg"
             :href="item.bannerUrl"></banner>
         </div>
         <div class="shop-list">
-          <div v-for="shop in item.shopList" class="shop-img-container">
+          <div v-for="(i, shop) in item.shopList" :key="i" class="shop-img-container">
             <banner :width="NUMBER_186" :height="NUMBER_208" :src="shop.picUrl" :href="shop.shopUrl"></banner>
           </div>
         </div>
       </div>
     </div>
     <div class="sub-item-container" :style="{ height: Math.round(subItems.length / 3) * (241 + 3) }">
-      <div v-for="(i,item) in subItems" class="sub-item" :style="{top: getSubItemTop(i), left: getSubItemLeft(i) }">
+      <div v-for="(item,i) in subItems" :key="i" class="sub-item" :style="{top: getSubItemTop(i), left: getSubItemLeft(i) }">
         <image class="sub-item-bg" :src="subItemBg"></image>
         <div class="sub-item-img">
           <banner :width="NUMBER_248" :height="NUMBER_155"

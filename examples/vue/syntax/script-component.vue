@@ -6,7 +6,7 @@
 
 <template>
   <list>
-    <cell v-for="item in items">
+    <cell v-for="(item,i) in items" :key="i" >
       <text>{{item.title}}</text>
       <item :title="'a'"></item>
     </cell>

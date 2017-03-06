@@ -2,7 +2,7 @@
   <div v-if="!ds.isHide">
     <image v-if="ds.floorTitle" class="title" :src="ds.floorTitle"></image>
     <slider class="slider" show-indicators="true" auto-play="true" interval="3000">
-      <div class="pannel" v-for="item in ds.bannerItems">
+      <div class="pannel" v-for="(item,i) in ds.bannerItems" :key="i" >
         <div>
           <banner style="margin-bottom:4" :width="NUMBER_251" :height="NUMBER_292" :src="item.img1" :href="item.url1"></banner>
           <banner :width="NUMBER_251" :height="NUMBER_292" :src="item.img2" :href="item.url2"></banner>

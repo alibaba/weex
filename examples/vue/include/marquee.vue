@@ -52,7 +52,7 @@
       },
       animation: function (cb) {
         var offset = -this.step * this.index;
-        animation.transition(this.$refs.anim.ref, {
+        animation.transition(this.$refs.anim, {
           styles: {
             transform: 'translateY(' + offset + 'px) translateZ(0)'
           },

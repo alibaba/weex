@@ -5,6 +5,7 @@
         v-for="(v,i) in rows"
         append="tree"
         :index="i"
+        :key="i"
         class="row"
         @appear="onappear"
         @disappear="ondisappear">

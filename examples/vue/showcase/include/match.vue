@@ -4,7 +4,7 @@
     <div class="tm-banner" v-if="ds.isShowTmSpecBanner && ds.tmSpecBanner">
       <banner :width="NUMBER_750" :height="NUMBER_200" :src="ds.tmSpecBanner.img" :href="ds.tmSpecBanner.url"></banner>
     </div>
-    <div v-for="item in ds.bannerItems" :style="{ flexDirection: 'row', marginBottom: NUMBER_4 }">
+    <div v-for="(item,i) in ds.bannerItems" :key="i" :style="{ flexDirection: 'row', marginBottom: NUMBER_4 }">
       <div :style="{ marginRight: NUMBER_4 }">
         <banner :width="NUMBER_373" :height="NUMBER_240" :src="item.leftImg" :href="item.leftUrl"></banner>
       </div>

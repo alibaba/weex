@@ -22,7 +22,7 @@
       <panel title="method = PATCH">
         <text>{{patchResult}}</text>
       </panel>
-    </wxc-panel>
+    </panel>
   </scroller>
 </template>
 

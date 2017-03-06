@@ -1,6 +1,6 @@
 <template>
   <list class="list" @loadmore="loadmore" loadmoreoffset=2000>
-    <cell class="cell" v-for="item in shopList" :scope="item.scopeValue" @click="oncellclick(item.id)">
+    <cell class="cell" v-for="(item,i) in shopList" :key="i" :scope="item.scopeValue" @click="oncellclick(item.id)">
       <div class="shopDiv">
         <div class="shopHeader" style="flex-direction:row;">
           <div style="flex:2;flex-direction:row;">
