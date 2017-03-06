@@ -12,6 +12,7 @@
 @implementation WXLoadingIndicator {
     UIActivityIndicatorView *_indicator;
     UIColor *_indicatorColor;
+    BOOL _isAnimating;
 }
 
 - (instancetype)initWithRef:(NSString *)ref type:(NSString *)type styles:(NSDictionary *)styles attributes:(NSDictionary *)attributes events:(NSArray *)events weexInstance:(WXSDKInstance *)weexInstance {
@@ -34,6 +35,9 @@
     if (_indicatorColor) {
         _indicator.color = _indicatorColor;
     }
+    if (_isAnimating) {
+        [_indicator startAnimating];
+    }
 }
 
 - (void)updateStyles:(NSDictionary *)styles {
@@ -53,12 +57,14 @@
 }
 
 - (void)start {
+    _isAnimating = YES;
     if (_indicator) {
         [_indicator startAnimating];
     }
 }
 
 - (void)stop {
+    _isAnimating = NO;
     if (_indicator) {
         [_indicator stopAnimating];
     }
