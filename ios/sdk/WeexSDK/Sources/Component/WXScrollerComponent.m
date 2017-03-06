@@ -441,7 +441,6 @@ WX_EXPORT_METHOD(@selector(resetLoadmore))
     // check sticky
     [self adjustSticky];
     [self handleAppear];
-    
     if (self.onScroll) {
         self.onScroll(scrollView);
     }
