@@ -364,10 +364,18 @@ static BOOL WXNotStat;
             font = [UIFont fontWithName:fontFamily size:fontSize];
             if (!font) {
                 WXLogWarning(@"Unknown fontFamily:%@", fontFamily);
-                font = [UIFont systemFontOfSize:fontSize weight:textWeight];
+                if(WX_SYS_VERSION_LESS_THAN(@"8.2")) {
+                    font = [UIFont systemFontOfSize:fontSize];
+                } else {
+                    font = [UIFont systemFontOfSize:fontSize weight:textWeight];
+                }
             }
         } else {
-            font = [UIFont systemFontOfSize:fontSize weight:textWeight];
+            if (WX_SYS_VERSION_LESS_THAN(@"8.2")) {
+                font = [UIFont systemFontOfSize:fontSize];
+            } else {
+                font = [UIFont systemFontOfSize:fontSize weight:textWeight];
+            }
         }
     }
     UIFontDescriptor *fontD = font.fontDescriptor;
