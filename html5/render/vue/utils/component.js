@@ -1,4 +1,5 @@
 import { throttle } from './func'
+import { createEvent } from '../utils'
 
 export function getParentScroller (vnode) {
   if (!vnode) return null
@@ -52,25 +53,41 @@ export function watchAppear (context) {
     if (context.$options && context.$options._parentListeners) {
       const on = context.$options._parentListeners
       if (on.appear || on.disappear) {
+        const scroller = getParentScroller(context)
+        const element = (scroller && scroller.$el) || window
+        let lastScrollTop = element.scrollTop
+
         context._visible = isComponentVisible(context)
-        if (context._visible) {
-          // TODO: create custom event object
-          on.appear && on.appear({})
+        if (context._visible && on.appear) {
+          if (on.appear.fn) {
+            on.appear = on.appear.fn
+          }
+          on.appear(createEvent(context.$el, 'appear', { direction: 'down' }))
         }
         const handler = throttle(event => {
           const visible = isComponentVisible(context)
+          let listener = null
+          let type = null
           if (visible !== context._visible) {
             context._visible = visible
-            const listener = visible ? on.appear : on.disappear
-            if (listener) {
-              listener(event)
+            if (visible) {
+              listener = on.appear
+              type = 'appear'
             }
+            else {
+              listener = on.disappear
+              type = 'disappear'
+            }
+            if (listener.fn) {
+              listener = listener.fn
+            }
+            listener(createEvent(context.$el, type, {
+              direction: element.scrollTop > lastScrollTop ? 'down' : 'up'
+            }))
+            lastScrollTop = element.scrollTop
           }
         }, 10)
 
-        // TODO: more reliable
-        const scroller = getParentScroller(context)
-        const element = (scroller && scroller.$el) || window
         element.addEventListener('scroll', handler, false)
       }
     }
