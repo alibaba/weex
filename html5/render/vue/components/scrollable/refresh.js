@@ -30,12 +30,6 @@ export default {
     }
   },
   updated () {
-    if (this.display === 'hide') {
-      this.$el.style.height = `${0}px`
-    }
-    else {
-      this.$el.style.height = `${this.viewHeight}px`
-    }
   },
   watch: {
     height (val) {
