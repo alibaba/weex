@@ -3,11 +3,11 @@
     <refresh class="refresh-view" :display="refresh_display" @refresh="onrefresh" @pullingdown="pullingdown">
       <img id="roate" ref="roate" src="http://gw.alicdn.com/bao/uploaded/TB1xDrVNFXXXXbEXFXXXXXXXXXX-48-48.png" style="width: 50px;height: 50px;"></img>
     </refresh>
-    <div v-for="sec in sections" class="section">
+    <div v-for="(sec, i) in sections" :key="i" class="section">
       <div class="header">
         <text class="header-title">{{sec.title}}</text>
       </div>
-      <div v-for="item in sec.items" class="item">
+      <div v-for="item in sec.items" class="item" :key="item.index">
         <text class="item-title">row {{item.id}}</text>
       </div>
     </div>

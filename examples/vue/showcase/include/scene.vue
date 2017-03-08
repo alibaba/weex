@@ -2,7 +2,7 @@
   <div>
     <image v-if="ds.floorTitle" class="title" :src="ds.floorTitle"></image>
     <div class="small-item-container" :style="{ height: Math.round(smallItems.length/2)*234 }">
-      <div v-for="(i,item) in smallItems" class="small-item" :style="{ top: getItemTop(i), left: getItemLeft(i) }">
+      <div v-for="(item,i) in smallItems" :key="i" class="small-item" :style="{ top: getItemTop(i), left: getItemLeft(i) }">
         <div>
           <image class="small-item-bg" :src="smallItemBg"></image>
         </div>

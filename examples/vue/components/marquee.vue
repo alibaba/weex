@@ -16,7 +16,8 @@
         }"
         @change="marqueeChange">
         <div
-          v-for="item in marquee.list"
+          v-for="(item,i) in marquee.list"
+          :key="i"
           :style="{
             height: marquee.height * marquee.length,
             paddingTop: marquee.height * 0.5,

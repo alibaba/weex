@@ -6,11 +6,11 @@
 <template>
   <div>
     <text class="title">Custom item</text>
-    <text class="subtitle" v-for="item in list">{{item}}</text>
+    <text class="subtitle" v-for="item in list" :key="item.index" >{{item}}</text>
     <text class="title">Custom key and item</text>
-    <text class="subtitle" v-for="(i,v) in list">{{i}}-{{v}}</text>
+    <text class="subtitle" v-for="(v,i) in list" :key="i" >{{i}}-{{v}}</text>
     <text class="title">Array of Object</text>
-    <text class="subtitle" v-for="(item, k, index) in list2">> {{index}}-{{item.text}}</text>
+    <text class="subtitle" v-for="(item, k, index) in list2" :key="index" >> {{index}}-{{item.text}}</text>
   </div>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <text class="title" v-for="value in list">{{value}}</text>
+    <text class="title" v-for="(value, i) in list" :key="i" >{{value}}</text>
   </div>
 </template>
 

@@ -5,9 +5,10 @@
         v-for="(v,i) in rows"
         append="tree"
         :index="i"
+        :key="i"
         class="row"
-        @appear="onappear"
-        @disappear="ondisappear">
+        @appear="onappear(i, $event)"
+        @disappear="ondisappear(i, $event)">
         <div class="item">
           <text class="item-title">row {{v.id}}</text>
         </div>
@@ -47,16 +48,16 @@
 <script>
   module.exports = {
     methods: {
-      onappear: function (e) {
-        var appearId = this.rows[e.target.attr.index].id;
-        nativeLog('+++++', appearId);
+      onappear: function (idx, e) {
+        var appearId = this.rows[idx].id;
+        console.log('+++++', appearId);
         var appearIds = this.appearIds;
         appearIds.push(appearId);
         this.getMinAndMaxIds(appearIds);
       },
-      ondisappear:function (e) {
-        var disAppearId = this.rows[e.target.attr.index].id;
-        nativeLog('+++++', disAppearId);
+      ondisappear:function (idx, e) {
+        var disAppearId = this.rows[idx].id;
+        console.log('+++++', disAppearId);
         var appearIds = this.appearIds;
         var index = appearIds.indexOf(disAppearId);
         if (index > -1) {

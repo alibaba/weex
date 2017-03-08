@@ -1,6 +1,6 @@
 <template>
   <list>
-    <cell v-for="item in items" append="tree">
+    <cell v-for="(item, i) in items" :key="i" append="tree">
       <example-list-item :title="item.title" :url="item.url"></example-list-item>
     </cell>
   </list>
