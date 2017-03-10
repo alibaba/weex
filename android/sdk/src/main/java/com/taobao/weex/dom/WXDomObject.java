@@ -212,6 +212,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.bridge.WXValidateProcessor;
 import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.flex.CSSLayoutContext;
 import com.taobao.weex.dom.flex.CSSNode;
@@ -812,6 +814,21 @@ public class WXDomObject extends CSSNode implements Cloneable,ImmutableDomObject
       }
 
       String type = (String) json.get(TYPE);
+
+      if (wxsdkInstance.isNeedValidate()) {
+          WXValidateProcessor processor = WXSDKManager.getInstance()
+                  .getValidateProcessor();
+          if (processor != null) {
+              WXValidateProcessor.WXComponentValidateResult result = processor
+                      .onComponentValidate(wxsdkInstance, type);
+              if (result != null && !result.isSuccess) {
+                  type = TextUtils.isEmpty(result.replacedComponent) ? WXBasicComponentType.DIV
+                          : result.replacedComponent;
+                  json.put(TYPE, type);
+              }
+          }
+      }
+
       WXDomObject domObject = WXDomObjectFactory.newInstance(type);
 
       domObject.setViewPortWidth(wxsdkInstance.getViewPortWidth());

@@ -404,8 +404,21 @@ public class WXBridgeManager implements Callback,BactchExecutor {
     }
   }
 
-    public Object callModuleMethod(String instanceId, String moduleStr, String methodStr, JSONArray args) {
-    return WXModuleManager.callModuleMethod(instanceId, moduleStr, methodStr, args);
+  public Object callModuleMethod(final String instanceId, final String moduleStr, final String methodStr, final JSONArray args) {
+        WXSDKInstance wxsdkInstance = WXSDKManager.getInstance()
+                .getSDKInstance(instanceId);
+        if (wxsdkInstance.isNeedValidate()
+                && WXSDKManager.getInstance().getValidateProcessor() != null) {
+            boolean result = WXSDKManager.getInstance().getValidateProcessor()
+                    .onModuleValidate(wxsdkInstance, moduleStr, methodStr, args);
+            if (result) {
+                return WXModuleManager.callModuleMethod(instanceId, moduleStr, methodStr,
+                        args);
+            } else {
+                return null;
+            }
+        }
+        return WXModuleManager.callModuleMethod(instanceId, moduleStr, methodStr, args);
   }
 
   /**
@@ -499,7 +512,7 @@ public class WXBridgeManager implements Callback,BactchExecutor {
               WXDomModule dom = getDomModule(instanceId);
               return dom.callDomMethod(method,arguments);
             }else {
-              return WXModuleManager.callModuleMethod(instanceId, module,
+              return callModuleMethod(instanceId, module,
                       method, arguments);
             }
         } catch (Exception e) {
@@ -577,8 +590,8 @@ public class WXBridgeManager implements Callback,BactchExecutor {
                 WXDomModule dom = getDomModule(instanceId);
                 dom.callDomMethod(task);
               }else {
-                WXModuleManager.callModuleMethod(instanceId, (String) target,
-                    (String) task.get(METHOD), (JSONArray) task.get(ARGS));
+                callModuleMethod(instanceId, (String) target,
+                        (String) task.get(METHOD), (JSONArray) task.get(ARGS));
               }
             }else if(task.get(COMPONENT) != null){
               //call component
