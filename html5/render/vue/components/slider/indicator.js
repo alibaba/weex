@@ -70,11 +70,11 @@ function _getLtbr (context, mergedStyle) {
  * get indicator's rect (width, height).
  */
 function _getIndicatorRect (el) {
-  let width, height
+  let width = 0, height = 0
   if (el.children.length === 1) {
     width = height = window.getComputedStyle(el.children[0])
   }
-  else {
+  if (el.children.length > 1){
     const itemComputedStyle = window.getComputedStyle(el.children[1])
     const padding = parseFloat(itemComputedStyle.marginLeft)
     height = parseFloat(itemComputedStyle.height)
