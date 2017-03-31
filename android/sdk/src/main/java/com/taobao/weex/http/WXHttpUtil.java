@@ -219,6 +219,8 @@ public class WXHttpUtil {
 
   private static String sDefautUA = null;
 
+  public static final String KEY_USER_AGENT = "user-agent";
+
   public static String assembleUserAgent(Context ctx,Map<String, String> config) {
     if (TextUtils.isEmpty(sDefautUA)) {
       StringBuilder builder = new StringBuilder();

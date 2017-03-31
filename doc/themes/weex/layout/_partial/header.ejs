@@ -1,0 +1,49 @@
+<header id="header">
+  <div class="navbar">
+    <a id="logo" href="<%= url_for_lang('/') %>">
+      <img src="//img.alicdn.com/tps/TB1zBLaPXXXXXXeXXXXXXXXXXXX-121-59.svg" />
+    </a>
+    <div class="main-nav">
+      <ul class="links">
+        <li><a href="<%= url_for_lang('guide') %>"><%= _p('menu.guide') %></a></li>
+        <li><a href="<%= url_for_lang('references') %>"><%= _p('menu.references') %></a></li>
+        <li><a href="<%= url_for_lang('faq.html') %>"><%= _p('menu.faq') %></a></li>
+        <li class="dropdown">
+            <a href="javascript:;"><%= _p('menu.resources') %></a>
+            <ul class="dropdown-menu subnav">
+              <li>
+                <a href="<%= url_for_lang('playground.html') %>">Playground</a>
+              </li>
+              <li>
+                <a href="https://www.npmjs.com/package/weex-devtool" target="_blank">Devtool</a>
+              </li>
+              <li>
+                <a href="https://www.npmjs.com/package/weexpack" target="_blank">Weexpack</a>
+              </li>
+              <li>
+                <a href="http://dotwe.org" target="_blank">Snippets</a>
+              </li>
+              <li>
+                <a href="https://market.weex-project.io/" target="_blank">Market</a>
+              </li>
+            </ul>
+        </li>
+      </ul>
+      <ul class="info">
+        <li><a href="https://github.com/alibaba/weex/" target="_blank"><span class="btn-github iconfont icon-github"></span></a></li>
+      </ul>
+      <ul class="tools">
+        <li>
+          <%- partial('_partial/search-form', {id_name: 'search-input-header'}) %>
+        </li>
+        <!--<li></li>-->
+      </ul>
+    </div>
+  </div>
+  <div id="mobile-nav">
+    <a id="logo" href="<%= url_for_lang('/') %>">
+      <img src="//img.alicdn.com/tps/TB1zBLaPXXXXXXeXXXXXXXXXXXX-121-59.svg" />
+    </a>
+    <a class="btn-menu"><span class="iconfont icon-nav"></span></a>
+  </div>
+</header>

@@ -229,7 +229,10 @@ public class WXRequest {
   /**
    * The request time out
    */
-  public int timeoutMs = 2500;
+  public int timeoutMs = WXRequest.DEFAULT_TIMEOUT_MS;
 
-
+  /**
+   * The default timeout
+   */
+  public static final int DEFAULT_TIMEOUT_MS = 3000;
 }

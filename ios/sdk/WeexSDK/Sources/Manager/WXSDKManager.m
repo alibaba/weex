@@ -13,8 +13,6 @@
 
 @property (nonatomic, strong) WXBridgeManager *bridgeMgr;
 
-@property (nonatomic, strong) WXModuleManager *moduleMgr;
-
 @property (nonatomic, strong) WXThreadSafeMutableDictionary *instanceDict;
 
 @end
@@ -45,16 +43,6 @@ static WXSDKManager *_sharedInstance = nil;
     return bridgeMgr;
 }
 
-+ (WXModuleManager *)moduleMgr
-{
-    WXModuleManager *moduleMgr = [self sharedInstance].moduleMgr;
-    if (!moduleMgr) {
-        moduleMgr = [[WXModuleManager alloc] init];
-        [self sharedInstance].moduleMgr = moduleMgr;
-    }
-    return moduleMgr;
-}
-
 + (id)instanceForID:(NSString *)identifier
 {
     return [[self sharedInstance].instanceDict objectForKey:identifier];
@@ -67,7 +55,24 @@ static WXSDKManager *_sharedInstance = nil;
 
 + (void)removeInstanceforID:(NSString *)identifier
 {
-    [[self sharedInstance].instanceDict removeObjectForKey:identifier];
+    if (identifier) {
+        [[self sharedInstance].instanceDict removeObjectForKey:identifier];
+    }
+}
+
++ (void)unload
+{
+    for (NSString *instanceID in [self sharedInstance].instanceDict) {
+        WXSDKInstance *instance = [[self sharedInstance].instanceDict objectForKey:instanceID];
+        [instance destroyInstance];
+    }
+    
+    [self sharedInstance].bridgeMgr = nil;
+}
+
++ (WXModuleManager *)moduleMgr
+{
+    return nil;
 }
 
 @end

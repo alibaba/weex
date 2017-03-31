@@ -41,7 +41,8 @@
     return imageLoader;
 }
 
-- (id)navigationControllerOfContainer:(UIViewController *)container{
+- (id)navigationControllerOfContainer:(UIViewController *)container
+{
     return container.navigationController;
 }
 
@@ -54,7 +55,7 @@
     }
     
     BOOL animated = YES;
-    NSString *obj = [[param objectForKey:@"animated"] uppercaseString];
+    NSString *obj = [[param objectForKey:@"animated"] lowercaseString];
     if (obj && [obj isEqualToString:@"false"]) {
         animated = NO;
     }
@@ -69,9 +70,9 @@
                      withContainer:(UIViewController *)container
 {
     BOOL animated = YES;
-    NSString *obj = [[param objectForKey:@"animated"] uppercaseString];
-    if (obj && [obj isEqualToString:@"false"]) {
-        animated = NO;
+    id obj = [param objectForKey:@"animated"];
+    if (obj) {
+        animated = [WXConvert BOOL:obj];
     }
     
     [container.navigationController popViewControllerAnimated:animated];
@@ -83,7 +84,7 @@
                            withContainer:(UIViewController *)container
 {
     BOOL animated = YES;
-    NSString *obj = [[param objectForKey:@"animated"] uppercaseString];
+    NSString *obj = [[param objectForKey:@"animated"] lowercaseString];
     if (obj && [obj isEqualToString:@"false"]) {
         animated = NO;
     }
@@ -95,7 +96,6 @@
 - (void)setNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated
                  withContainer:(UIViewController *)container
 {
-    //If weex launchs in the WXBaseViewController, the navigationBar is hidden according to our design.
     if (![container isKindOfClass:[WXBaseViewController class]]) {
         return;
     }
@@ -319,7 +319,7 @@
     if (button.instanceId) {
         if (button.nodeRef)
         {
-            [[WXSDKManager bridgeMgr] fireEvent:button.instanceId ref:button.nodeRef type:@"click" params:nil];
+            [[WXSDKManager bridgeMgr] fireEvent:button.instanceId ref:button.nodeRef type:@"click" params:nil domChanges:nil] ;
         }
         else
         {
@@ -338,7 +338,7 @@
                     break;
             }
             
-           [[WXSDKManager bridgeMgr] fireEvent:button.instanceId ref:WX_SDK_ROOT_REF type:eventType params:nil];
+           [[WXSDKManager bridgeMgr] fireEvent:button.instanceId ref:WX_SDK_ROOT_REF type:eventType params:nil domChanges:nil];
         }
     }
 }

@@ -1,0 +1,323 @@
+# Hexo Configuration
+## Docs: https://hexo.io/docs/configuration.html
+## Source: https://github.com/hexojs/hexo/
+
+# Site
+title: Weex
+subtitle:
+description:
+author: Jinjiang
+language: 
+  - en
+  - cn
+
+timezone:
+
+jsonContent:
+  meta: true
+  keywords: false # language name option
+  dateFormat: undefined # format string
+  root: true
+  lang: 
+    - default
+    - cn
+  ignore:
+    - index.html
+    - faq.html
+    - download.html
+    - playground.html
+    - cn/index.html
+    - cn/faq.html
+    - cn/download.html
+    - cn/playground.html
+    - examples/
+    - doc/
+  pages:
+    title: true
+    path: true
+    link: true
+    permalink: true
+    text: true
+    content: false
+    type: true
+  posts:
+    title: true
+    path: true
+    link: true
+    permalink: true
+    text: true
+    content: false
+    type: true
+
+
+# Deployment
+## Docs: https://hexo.io/docs/deployment.html
+deploy:
+  type: git
+  repo: git@github.com:DoranYun/weex.git
+  branch: gh-pages
+
+# URL
+## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
+url: https://weex-project.io
+root: /
+permalink_defaults:
+  lang: en
+permalink: :lang/:title/
+new_post_name: :lang/:title.md
+
+# Directory
+source_dir: source
+public_dir: public
+tag_dir: tags
+archive_dir: archives
+category_dir: categories
+code_dir: downloads/code
+i18n_dir: :lang
+skip_render:
+
+# Writing
+default_layout: post
+# auto_spacing: false # Add spaces between asian characters and western characters
+titlecase: false # Transform title into titlecase
+external_link: true # Open external links in new tab
+filename_case: 0
+render_drafts: false
+post_asset_folder: false
+relative_link: false
+future: true
+highlight:
+  enable: true
+  line_number: false
+  auto_detect: false
+  tab_replace: 2
+
+# Category & Tag
+default_category: uncategorized
+category_map:
+tag_map:
+
+# Date / Time format
+## Hexo uses Moment.js to parse and display date
+## You can customize the date format as defined in
+## http://momentjs.com/docs/#/displaying/format/
+date_format: YYYY-MM-DD
+time_format: HH:mm:ss
+
+# Pagination
+## Set per_page to 0 to disable pagination
+per_page: 10
+pagination_dir: page
+
+# Extensions
+## Plugins: https://hexo.io/plugins/
+## Themes: https://hexo.io/themes/
+theme: weex
+
+# css autoprefixer
+autoprefixer:
+  exclude:
+  browsers:
+    - 'last 5 versions'
+
+alias:
+  doc/index.html: index.html
+  doc/guide.html: guide/index.html
+  doc/tutorial.html: guide/index.html
+  doc/syntax/main.html: guide/index.html
+  doc/syntax/data-binding.html: guide/index.html
+  doc/syntax/style-n-class.html: guide/index.html
+  doc/syntax/events.html: guide/index.html
+  doc/syntax/display-logic.html: guide/index.html
+  doc/syntax/render-logic.html: guide/index.html
+  doc/syntax/composed-component.html: guide/index.html
+  doc/syntax/id.html: guide/index.html
+  doc/syntax/comm.html: guide/index.html
+  doc/syntax/config-n-data.html: guide/index.html
+  doc/syntax/path.html: guide/index.html
+  doc/how-to/main.html: guide/index.html
+  doc/how-to/preview-in-browser.html: guide/index.html
+  doc/how-to/preview-in-playground-app.html: guide/index.html
+  doc/how-to/customize-a-native-component.html: guide/index.html
+  doc/how-to/cuszomize-native-apis.html: guide/index.html
+  doc/how-to/debug-with-html5.html: guide/index.html
+  doc/how-to/require-3rd-party-libs.html: guide/index.html
+  doc/how-to/transform-code-into-js-bundle.html: guide/index.html
+  doc/advanced/main.html: references/advanced/index.html
+  doc/advanced/how-it-works.html: guide/intro/index.html
+  doc/advanced/how-data-binding-works.html: references/advanced/index.html
+  doc/advanced/integrate-to-android.html: references/advanced/index.html
+  doc/advanced/integrate-to-ios.html: references/advanced/index.html
+  doc/advanced/integrate-to-html5.html: references/advanced/index.html
+  doc/advanced/extend-to-android.html: references/advanced/extend-to-android.html
+  doc/advanced/extend-to-ios.html: references/advanced/extend-to-ios.html
+  doc/advanced/extend-to-html5.html: references/advanced/extend-to-html5.html
+  doc/references/main.html: references/index.html
+  doc/references/bootstrap.html: references/index.html
+  doc/references/component-defs.html: references/index.html
+  doc/references/api.html: references/index.html
+  doc/references/gesture.html: references/gesture.html
+  doc/components/main.html: references/components/index.html
+  doc/references/common-attrs.html: references/index.html
+  doc/references/common-style.html: references/common-style.html
+  doc/references/text-style.html: references/text-style.html
+  doc/references/color-names.html: references/color-names.html
+  doc/references/common-event.html: references/common-event.html
+  doc/components/special-element.html: references/components/index.html
+  doc/components/div.html: references/components/div.html
+  doc/components/scroller.html: references/components/scroller.html
+  doc/components/list.html: references/components/list.html
+  doc/components/cell.html: references/components/cell.html
+  doc/components/refresh-loading.html: references/components/refresh.html
+  doc/components/text.html: references/components/text.html
+  doc/components/image.html: references/components/image.html
+  doc/components/input.html: references/components/input.html
+  doc/components/textarea.html: references/components/textarea.html
+  doc/components/switch.html: references/components/switch.html
+  doc/components/slider.html: references/components/slider.html
+  doc/components/indicator.html: references/components/indicator.html
+  doc/components/video.html: references/components/video.html
+  doc/components/a.html: references/components/index.html
+  doc/components/web.html: references/components/web.html
+  doc/components/wxc-tabbar.html: references/components/index.html
+  doc/components/wxc-navpage.html: references/components/index.html
+  doc/modules/main.html: references/modules/index.html
+  doc/modules/dom.html: references/modules/dom.html
+  doc/modules/stream.html: references/modules/stream.html
+  doc/modules/picker.html: references/modules/picker.html
+  doc/modules/modal.html: references/modules/modal.html
+  doc/modules/animation.html: references/modules/animation.html
+  doc/modules/webview.html: references/modules/webview.html
+  doc/modules/navigator.html: references/modules/navigator.html
+  doc/modules/storage.html: references/modules/storage.html
+  doc/modules/timer.html: references/modules/index.html
+  doc/modules/clipboard.html: references/modules/clipboard.html
+  doc/modules/globalevent.html: references/modules/globalevent.html
+  doc/specs/js-bundle-format.html: references/index.html
+  doc/specs/js-framework-apis.html: references/index.html
+  doc/specs/virtual-dom-apis.html: references/index.html
+  doc/demo/hello-world.html: index.html
+  doc/demo/modal.html: index.html
+  doc/demo/clipboard.html: index.html
+  doc/demo/list.html: index.html
+  doc/demo/slider.html: index.html
+  doc/demo/animation.html: index.html
+  doc/tools/cli.html: index.html
+  doc/tools/devtools.html: index.html
+  doc/tools/devtools-android.html: index.html
+  doc/tools/devtools-ios.html: index.html
+  doc/tools/transformer.html: index.html
+  doc/tools/playground-app.html: playground.html
+  doc/faq.html: faq.html
+  cn/doc/index.html: cn/index.html
+  cn/doc/develop-on-your-local-machine.html: cn/guide/index.html
+  cn/doc/get-started.html: cn/guide/index.html
+  cn/doc/guide.html: cn/guide/index.html
+  cn/doc/tutorial.html: cn/guide/index.html
+  cn/doc/syntax/main.html: cn/guide/index.html
+  cn/doc/syntax/data-binding.html: cn/guide/index.html
+  cn/doc/syntax/style-n-class.html: cn/guide/index.html
+  cn/doc/syntax/events.html: cn/guide/index.html
+  cn/doc/syntax/display-logic.html: cn/guide/index.html
+  cn/doc/syntax/render-logic.html: cn/guide/index.html
+  cn/doc/syntax/composed-component.html: cn/guide/index.html
+  cn/doc/syntax/id.html: cn/guide/index.html
+  cn/doc/syntax/comm.html: cn/guide/index.html
+  cn/doc/syntax/config-n-data.html: cn/guide/index.html
+  cn/doc/syntax/path.html: cn/guide/index.html
+  cn/doc/how-to/main.html: cn/guide/index.html
+  cn/doc/how-to/preview-in-browser.html: cn/guide/index.html
+  cn/doc/how-to/preview-in-playground-app.html: cn/guide/index.html
+  cn/doc/how-to/customize-a-native-component.html: cn/guide/index.html
+  cn/doc/how-to/cuszomize-native-apis.html: cn/guide/index.html
+  cn/doc/how-to/debug-with-html5.html: cn/guide/index.html
+  cn/doc/how-to/debug-with-devtools.html: cn/guide/index.html
+  cn/doc/how-to/require-3rd-party-libs.html: cn/guide/index.html
+  cn/doc/how-to/transform-code-into-js-bundle.html: cn/guide/index.html
+  cn/doc/advanced/main.html: cn/references/advanced/index.html
+  cn/doc/advanced/how-it-works.html: cn/guide/intro/index.html
+  cn/doc/advanced/how-data-binding-works.html: cn/references/advanced/index.html
+  cn/doc/advanced/integrate-to-android.html: cn/references/advanced/index.html
+  cn/doc/advanced/integrate-to-ios.html: cn/references/advanced/index.html
+  cn/doc/advanced/integrate-to-html5.html: cn/references/advanced/index.html
+  cn/doc/advanced/extend-to-android.html: cn/references/advanced/extend-to-android.html
+  cn/doc/advanced/extend-to-ios.html: cn/references/advanced/extend-to-ios.html
+  cn/doc/advanced/extend-to-html5.html: cn/references/advanced/extend-to-html5.html
+  cn/doc/references/main.html: cn/references/index.html
+  cn/doc/references/bootstrap.html: cn/references/index.html
+  cn/doc/references/component-defs.html: cn/references/index.html
+  cn/doc/references/api.html: cn/references/index.html
+  cn/doc/references/gesture.html: cn/references/gesture.html
+  cn/doc/components/main.html: cn/references/components/index.html
+  cn/doc/references/common-attrs.html: cn/references/index.html
+  cn/doc/references/common-style.html: cn/references/common-style.html
+  cn/doc/references/text-style.html: cn/references/text-style.html
+  cn/doc/references/color-names.html: cn/references/color-names.html
+  cn/doc/references/common-event.html: cn/references/common-event.html
+  cn/doc/references/styles/units.html: cn/references/unit.html
+  cn/doc/components/special-element.html: cn/references/components/index.html
+  cn/doc/components/div.html: cn/references/components/div.html
+  cn/doc/components/scroller.html: cn/references/components/scroller.html
+  cn/doc/components/list.html: cn/references/components/list.html
+  cn/doc/components/cell.html: cn/references/components/cell.html
+  cn/doc/components/refresh.html: cn/references/components/refresh.html
+  cn/doc/components/loading.html: cn/references/components/loading.html
+  cn/doc/components/text.html: cn/references/components/text.html
+  cn/doc/components/image.html: cn/references/components/image.html
+  cn/doc/components/input.html: cn/references/components/input.html
+  cn/doc/components/textarea.html: cn/references/components/textarea.html
+  cn/doc/components/switch.html: cn/references/components/switch.html
+  cn/doc/components/slider.html: cn/references/components/slider.html
+  cn/doc/components/indicator.html: cn/references/components/indicator.html
+  cn/doc/components/video.html: cn/references/components/video.html
+  cn/doc/components/a.html: cn/references/components/index.html
+  cn/doc/components/web.html: cn/references/components/web.html
+  cn/doc/components/wxc-tabbar.html: cn/references/components/index.html
+  cn/doc/components/wxc-navpage.html: cn/references/components/index.html
+  cn/doc/modules/main.html: cn/references/modules/index.html
+  cn/doc/modules/dom.html: cn/references/modules/dom.html
+  cn/doc/modules/stream.html: cn/references/modules/stream.html
+  cn/doc/modules/picker.html: cn/references/modules/picker.html
+  cn/doc/modules/modal.html: cn/references/modules/modal.html
+  cn/doc/modules/animation.html: cn/references/modules/animation.html
+  cn/doc/modules/webview.html: cn/references/modules/webview.html
+  cn/doc/modules/navigator.html: cn/references/modules/navigator.html
+  cn/doc/modules/storage.html: cn/references/modules/storage.html
+  cn/doc/modules/timer.html: cn/references/modules/index.html
+  cn/doc/modules/clipboard.html: cn/references/modules/clipboard.html
+  cn/doc/modules/globalevent.html: cn/references/modules/globalevent.html
+  cn/doc/specs/js-bundle-format.html: cn/references/index.html
+  cn/doc/specs/js-framework-apis.html: cn/references/index.html
+  cn/doc/specs/virtual-dom-apis.html: cn/references/index.html
+  cn/doc/demo/hello-world.html: cn/index.html
+  cn/doc/demo/modal.html: cn/index.html
+  cn/doc/demo/clipboard.html: cn/index.html
+  cn/doc/demo/list.html: cn/index.html
+  cn/doc/demo/slider.html: cn/index.html
+  cn/doc/demo/animation.html: cn/index.html
+  cn/doc/tools/cli.html: cn/index.html
+  cn/doc/tools/devtools.html: cn/index.html
+  cn/doc/tools/devtools-android.html: cn/index.html
+  cn/doc/tools/devtools-ios.html: cn/index.html
+  cn/doc/tools/transformer.html: cn/index.html
+  cn/doc/tools/playground-app.html: cn/playground.html
+  cn/doc/faq.html: cn/faq.html
+  cn/doc/references/cheatsheet.html: cn/references/index.html
+  cn/doc/references/styles/background-color.html: cn/references/index.html
+  cn/doc/references/styles/color.html: cn/references/index.html
+  cn/doc/references/styles/font-family.html: cn/references/index.html
+  cn/doc/references/styles/font-size.html: cn/references/index.html
+  cn/doc/references/styles/font-style.html: cn/references/index.html
+  cn/doc/references/styles/font-weight.html: cn/references/index.html
+  cn/doc/references/styles/line-height.html: cn/references/index.html
+  cn/doc/references/styles/lines.html: cn/references/index.html
+  cn/doc/references/styles/opacity.html: cn/references/index.html
+  cn/doc/references/styles/position.html: cn/references/index.html
+  cn/doc/references/styles/text-align.html: cn/references/index.html
+  cn/doc/references/styles/text-decoration.html: cn/references/index.html
+  cn/doc/references/styles/text-overflow.html: cn/references/index.html
+  cn/doc/references/events/appear.html: cn/references/index.html
+  cn/doc/references/events/change.html: cn/references/index.html
+  cn/doc/references/events/blur.html: cn/references/index.html
+  cn/doc/references/events/input.html: cn/references/index.html
+  cn/doc/references/events/focus.html: cn/references/index.html

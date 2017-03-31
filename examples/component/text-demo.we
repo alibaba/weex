@@ -11,9 +11,9 @@
 
     <wxc-panel title="font-size" type="primary">
       <!--<div style="flex-direction: row">-->
-        <text class="txt" style="font-size: 32px;">32</text>
-        <text class="txt" style="font-size: 64px;">64</text>
-        <text class="txt" style="font-size: 100px;">100</text>
+      <text class="txt" style="font-size: 32px;">32</text>
+      <text class="txt" style="font-size: 64px;">64</text>
+      <text class="txt" style="font-size: 100px;">100</text>
       <!--</div>-->
     </wxc-panel>
 
@@ -25,6 +25,15 @@
     <wxc-panel title="font-weight" type="primary">
       <text class="txt" style="font-weight: normal">normal</text>
       <text class="txt" style="font-weight: bold">bold</text>
+      <text class="txt" style="font-weight: 100">100</text>
+      <text class="txt" style="font-weight: 200">200</text>
+      <text class="txt" style="font-weight: 300">300</text>
+      <text class="txt" style="font-weight: 400">400</text>
+      <text class="txt" style="font-weight: 500">500</text>
+      <text class="txt" style="font-weight: 600">600</text>
+      <text class="txt" style="font-weight: 700">700</text>
+      <text class="txt" style="font-weight: 800">800</text>
+      <text class="txt" style="font-weight: 900">900</text>
     </wxc-panel>
 
     <wxc-panel title="text-decoration" type="primary">
@@ -43,6 +52,11 @@
       <text class="txt" style="lines:1">no text-overflow, no text-overflow</text>
       <text class="txt" style="text-overflow:clip;width: 450px;lines:1">text-overflow: clip, text-overflow: clip</text>
       <text class="txt" style="text-overflow:ellipsis;width: 450px;lines:1">text-overflow: ellipsis, text-overflow: ellipsis</text>
+    </wxc-panel>
+    <wxc-panel title="line-height" type="primary">
+      <text class="txt">no lineheight setting</text>
+      <text class="txt" style="line-height: 50">lineheight 50</text>
+      <text class="txt" style="line-height: 80"> lineheight 80</text>
     </wxc-panel>
   </scroller>
 </template>

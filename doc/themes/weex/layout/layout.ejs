@@ -1,0 +1,17 @@
+<%- partial('_partial/head') %>
+<body id="<%- page.type ? page.type : page.path.slice(0, -5) %>" class="lang-<%- page.lang %>">
+  <% page_type = page.type ? page.type : page.path.slice(0, -5) %>
+  <script>
+    window.PAGE_TYPE = "<%= page_type %>";
+    window.ROOT = "<%= config.root ? config.root : '/' %>"
+  </script>
+  <%- partial('_partial/header') %>
+  <%- partial('_partial/sidebar', {post: page, page_type: page_type}) %>
+  <%- body %>
+  
+  <%- partial('_partial/footer') %>
+  <%- partial('_partial/after-footer') %>
+  <%- js('js/reqwest.js') %>
+  <%- js('js/common.js') %>
+</body>
+</html>

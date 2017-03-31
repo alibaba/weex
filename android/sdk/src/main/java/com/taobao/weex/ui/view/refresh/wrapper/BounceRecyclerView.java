@@ -205,138 +205,183 @@
 package com.taobao.weex.ui.view.refresh.wrapper;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.OrientationHelper;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
+import com.taobao.weex.common.WXThread;
 import com.taobao.weex.ui.component.WXComponent;
+import com.taobao.weex.ui.component.list.ListComponentView;
 import com.taobao.weex.ui.component.list.WXCell;
+import com.taobao.weex.ui.view.gesture.WXGesture;
+import com.taobao.weex.ui.view.gesture.WXGestureObservable;
 import com.taobao.weex.ui.view.listview.WXRecyclerView;
 import com.taobao.weex.ui.view.listview.adapter.RecyclerViewBaseAdapter;
 
 import java.util.Stack;
 
-public class BounceRecyclerView extends BaseBounceView<WXRecyclerView> {
+public class BounceRecyclerView extends BaseBounceView<WXRecyclerView> implements ListComponentView,WXGestureObservable {
 
-    private RecyclerViewBaseAdapter adapter = null;
-    private Stack<FrameLayout> headerViewStack = new Stack<>();
-    private Stack<FrameLayout> tempViewStack = new Stack<>();
-    private Stack<WXCell> headComponentStack = new Stack<>();
+  private RecyclerViewBaseAdapter adapter = null;
+  private Stack<View> headerViewStack = new Stack<>();
+  private Stack<WXCell> headComponentStack = new Stack<>();
+  private WXGesture mGesture;
 
-    public BounceRecyclerView(Context context,int orientation) {
-        super(context,orientation);
+  @Override
+  public boolean postDelayed(Runnable action, long delayMillis) {
+    return super.postDelayed(WXThread.secure(action), delayMillis);
+  }
+
+  public BounceRecyclerView(Context context, int orientation) {
+    super(context, orientation);
+  }
+
+  public BounceRecyclerView(Context context, AttributeSet attrs) {
+    super(context, attrs, OrientationHelper.VERTICAL);
+  }
+
+  public void setRecyclerViewBaseAdapter(RecyclerViewBaseAdapter adapter) {
+    this.adapter = adapter;
+    if (getInnerView() != null) {
+      getInnerView().setAdapter(adapter);
     }
+  }
 
-    public BounceRecyclerView(Context context, AttributeSet attrs) {
-        super(context, attrs, OrientationHelper.VERTICAL);
-    }
+  public RecyclerViewBaseAdapter getRecyclerViewBaseAdapter() {
+    return adapter;
+  }
 
-    public void setAdapter(RecyclerViewBaseAdapter adapter) {
-        this.adapter = adapter;
-        if (getInnerView() != null)
-            getInnerView().setAdapter(adapter);
+  @Override
+  public boolean onTouchEvent(MotionEvent event) {
+    boolean result = super.onTouchEvent(event);
+    if (mGesture != null) {
+      result |= mGesture.onTouch(this, event);
     }
+    return result;
+  }
+    
+  @Override
+  public WXRecyclerView setInnerView(Context context) {
+    WXRecyclerView wxRecyclerView = new WXRecyclerView(context);
+    wxRecyclerView.initView(context, WXRecyclerView.TYPE_LINEAR_LAYOUT, getOrientation());
+    return wxRecyclerView;
+  }
 
-    public RecyclerViewBaseAdapter getAdapter() {
-        return adapter;
+  @Override
+  public void onRefreshingComplete() {
+    if (adapter != null) {
+      adapter.notifyDataSetChanged();
     }
+  }
 
-    @Override
-    public WXRecyclerView setInnerView(Context context) {
-        WXRecyclerView wxRecyclerView = new WXRecyclerView(context);
-        wxRecyclerView.initView(context, WXRecyclerView.TYPE_LINEAR_LAYOUT, getOrientation());
-        return wxRecyclerView;
+  @Override
+  public void onLoadmoreComplete() {
+    if (adapter != null) {
+      adapter.notifyDataSetChanged();
     }
-
-    @Override
-    public void onRefreshingComplete() {
-        if (adapter != null)
-            adapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onLoadmoreComplete() {
-        if (adapter != null)
-            adapter.notifyDataSetChanged();
-    }
+  }
 
   /**
-   * Sticky cell disappear
    * @param component
-   * @param index
    */
-    public void notifyStickyShow(WXCell component, int index) {
-        if (!headComponentStack.isEmpty()) {
-            WXCell oldCom = headComponentStack.pop();
-            if (!oldCom.getRef().equals(component.getRef())) {
-                headComponentStack.push(oldCom);
-                headComponentStack.push(component);
-                showSticky();
-            } else {
-                headComponentStack.push(oldCom);
-                return;
-            }
-        } else {
-            headComponentStack.push(component);
-            showSticky();
+  public void notifyStickyShow(WXCell component) {
+    if (component == null)
+      return;
+    if (!headComponentStack.isEmpty()) {
+      WXCell oldCom = headComponentStack.pop();
+      if (!oldCom.getRef().equals(component.getRef())) {
+        headComponentStack.push(oldCom);
+        headComponentStack.push(component);
+        showSticky();
+      } else {
+        headComponentStack.push(oldCom);
+        return;
+      }
+    } else {
+      headComponentStack.push(component);
+      showSticky();
+    }
+  }
+
+  /**
+   * @param component
+   */
+  public void notifyStickyRemove(WXCell component) {
+    if (component == null)
+      return;
+    if (!headComponentStack.isEmpty() && !headerViewStack.isEmpty()) {
+      removeSticky(component);
+    }
+  }
+
+  /**
+   * Pop stickyView to stack
+   */
+  private void showSticky() {
+    WXCell headComponent = headComponentStack.pop();
+    headComponentStack.push(headComponent);
+    final View headerView = headComponent.getRealView();
+    if (headerView == null)
+      return;
+    headerViewStack.push(headerView);
+    //record translation, it should not change after transformation
+    final float translationX = headerView.getTranslationX();
+    final float translationY = headerView.getTranslationY();
+    headComponent.removeSticky();
+    post(WXThread.secure(new Runnable() {
+      @Override
+      public void run() {
+        ViewGroup existedParent;
+        if((existedParent = (ViewGroup)headerView.getParent())!= null){
+          existedParent.removeView(headerView);
         }
-    }
+        addView(headerView);
+        //recover translation, sometimes it will be changed on fling
+        headerView.setTranslationX(translationX);
+        headerView.setTranslationY(translationY);
+      }
+    }));
+  }
 
-    /**
-     * Sticky cell appear
-     * @param component
-     * @param index
-     */
-    public void notifyStickyRemove(WXCell component,int index) {
-        if (!headComponentStack.isEmpty() && !headerViewStack.isEmpty() && !tempViewStack.isEmpty())
-            removeSticky(component);
+  /**
+   * remove top stickyView
+   * @param component
+   */
+  private void removeSticky(WXComponent component) {
+    final WXCell headComponent = headComponentStack.pop();
+    if (!component.getRef().equals(headComponent.getRef())) {
+      headComponentStack.push(headComponent);
+      return;
     }
+    final View headerView = headerViewStack.pop();
+    post(WXThread.secure(new Runnable() {
+      @Override
+      public void run() {
+        removeView(headerView);
+        headComponent.recoverySticky();
+      }
+    }));
+  }
 
-    private void showSticky() {
-        WXCell headComponent = headComponentStack.pop();
-        headComponentStack.push(headComponent);
-        FrameLayout headerView = (FrameLayout) headComponent.getView().getChildAt(0);
-        headerViewStack.push(headerView);
-        int headerViewOffsetX = getLeft();
-        int headerViewOffsetY = getTop();
-        headComponent.getView().removeView(headerView);
-        FrameLayout tempView = new FrameLayout(getContext());
-        tempViewStack.push(tempView);
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(headerView.getMeasuredWidth(),
-                                                                   headerView.getMeasuredHeight());
-        headComponent.getView().addView(tempView,lp);
-        ((ViewGroup)getParent()).addView(headerView);
-        headerView.setTranslationX(headerViewOffsetX);
-        headerView.setTranslationY(headerViewOffsetY);
+  /**
+   * Clear All Sticky of stack
+   */
+  public void clearSticky() {
+    int size = headComponentStack.size();
+    while (size > 0 && headerViewStack.size() == size) {
+      WXCell headComponent = headComponentStack.pop();
+      View headerView = headerViewStack.pop();
+      ((ViewGroup) getParent()).removeView(headerView);
+      headComponent.recoverySticky();
     }
+  }
 
-    private void removeSticky(WXComponent component) {
-        WXCell headComponent = headComponentStack.pop();
-        if (!component.getRef().equals(headComponent.getRef())) {
-            headComponentStack.push(headComponent);
-            return;
-        }
-        FrameLayout tempView = tempViewStack.pop();
-        FrameLayout headerView = headerViewStack.pop();
-        headComponent.getView().removeView(tempView);
-        ((ViewGroup) getParent()).removeView(headerView);
-        headComponent.getView().addView(headerView);
-        headerView.setTranslationX(0);
-        headerView.setTranslationY(0);
-    }
-
-    public void clearSticky() {
-        int size = headComponentStack.size();
-        while (size > 0 && tempViewStack.size() == size && headerViewStack.size() == size) {
-            WXCell headComponent = headComponentStack.pop();
-            FrameLayout tempView = tempViewStack.pop();
-            FrameLayout headerView = headerViewStack.pop();
-            headComponent.getView().removeView(tempView);
-            ((ViewGroup) getParent()).removeView(headerView);
-            headComponent.getView().addView(headerView);
-            headerView.setTranslationX(0);
-            headerView.setTranslationY(0);
-        }
-    }
+  @Override
+  public void registerGestureListener(@Nullable WXGesture wxGesture) {
+    mGesture = wxGesture;
+    getInnerView().registerGestureListener(wxGesture);
+  }
 }

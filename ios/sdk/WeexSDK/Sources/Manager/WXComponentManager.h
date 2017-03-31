@@ -6,6 +6,7 @@
  * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
  */
 
+@class WXBridgeMethod;
 @class WXSDKInstance;
 @class WXComponent;
 
@@ -32,6 +33,11 @@ extern void WXPerformBlockOnComponentThread(void (^block)());
  **/
 - (void)startComponentTasks;
 
+/**
+ * @abstract tell the component manager that instance root view's frame has been changed
+ **/
+- (void)rootViewFrameDidChange:(CGRect)frame;
+
 ///--------------------------------------
 /// @name Component Tree Building
 ///--------------------------------------
@@ -57,9 +63,19 @@ extern void WXPerformBlockOnComponentThread(void (^block)());
 - (void)moveComponent:(NSString *)ref toSuper:(NSString *)superRef atIndex:(NSInteger)index;
 
 /**
- * @abstract return component for specific ref
+ * @abstract return component for specific ref, must be called on component thread by calling WXPerformBlockOnComponentThread
  */
 - (WXComponent *)componentForRef:(NSString *)ref;
+
+/**
+ * @abstract return root component
+ */
+- (WXComponent *)componentForRoot;
+
+/**
+ * @abstract number of components created, must be called on component thread by calling WXPerformBlockOnComponentThread
+ */
+- (NSUInteger)numberOfComponents;
 
 
 ///--------------------------------------
@@ -70,6 +86,16 @@ extern void WXPerformBlockOnComponentThread(void (^block)());
  * @abstract update styles
  **/
 - (void)updateStyles:(NSDictionary *)styles forComponent:(NSString *)ref;
+
+///--------------------------------------
+/// @name Updating pseudo class
+///--------------------------------------
+
+/**
+ * @abstract update  pseudo class styles
+ **/
+
+- (void)updatePseudoClassStyles:(NSDictionary *)styles forComponent:(NSString *)ref;
 
 /**
  * @abstract update attributes
@@ -90,7 +116,6 @@ extern void WXPerformBlockOnComponentThread(void (^block)());
  * @abstract scroll to specific component
  **/
 - (void)scrollToComponent:(NSString *)ref options:(NSDictionary *)options;
-
 
 ///--------------------------------------
 /// @name Life Cycle
@@ -124,16 +149,18 @@ extern void WXPerformBlockOnComponentThread(void (^block)());
 /**
  *  @abstract add a component which has a fixed position
  *
- *  @param component
+ *  @param fixComponent the fixed component to add
  */
 - (void)addFixedComponent:(WXComponent *)fixComponent;
 
 /**
  *  @abstract remove a component which has a fixed position
  *
- *  @param component
+ *  @param fixComponent the fixed component to remove
  */
 - (void)removeFixedComponent:(WXComponent *)fixComponent;
+
+- (void)_addUITask:(void (^)())block;
 
 
 @end

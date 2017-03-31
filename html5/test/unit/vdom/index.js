@@ -4,16 +4,14 @@ import sinonChai from 'sinon-chai'
 const { expect } = chai
 chai.use(sinonChai)
 
-global.callNative = function () {}
-
 import {
-  instanceMap,
   Document,
   Element,
-  Comment
-} from '../../../vdom'
-
-global.callNative = function () {}
+  Comment,
+  elementTypes,
+  registerElement,
+  clearElementTypes
+} from '../../../runtime/vdom'
 
 describe('document constructor', () => {
   it('create & destroy document', () => {
@@ -21,11 +19,52 @@ describe('document constructor', () => {
     expect(doc).is.an.object
     expect(doc.id).eql('foo')
     expect(doc.URL).eql('http://path/to/url')
-    expect(instanceMap.foo).equal(doc)
     expect(doc.documentElement).is.an.object
     expect(doc.documentElement.role).equal('documentElement')
     doc.destroy()
-    expect(instanceMap.foo).is.undefined
+  })
+})
+
+describe('component methods management', () => {
+  before(() => {
+    registerElement('x', ['foo', 'bar'])
+    registerElement('y', [])
+    registerElement('z')
+  })
+
+  after(() => {
+    clearElementTypes()
+  })
+
+  it('has registered element types', () => {
+    expect(Object.keys(elementTypes)).eql(['x'])
+  })
+
+  it('will call component method', () => {
+    const spy = sinon.spy()
+    const doc = new Document('test', '', spy)
+    const x = new Element('x')
+    const y = new Element('y')
+    const z = new Element('z')
+    const n = new Element('n')
+    expect(x.foo).is.function
+    expect(x.bar).is.function
+    expect(x.baz).is.undefined
+    expect(y.foo).is.undefined
+    expect(z.foo).is.undefined
+    expect(n.foo).is.undefined
+
+    doc.createBody('r')
+    doc.documentElement.appendChild(doc.body)
+    doc.body.appendChild(x)
+    doc.body.appendChild(y)
+    doc.body.appendChild(z)
+    doc.body.appendChild(n)
+    expect(spy.args.length).eql(5)
+
+    x.foo(1, 2, 3)
+    expect(spy.args.length).eql(6)
+    expect(spy.args[5]).eql([[{ component: 'x', method: 'foo', ref: x.ref, args: [1, 2, 3] }]])
   })
 })
 
@@ -33,7 +72,7 @@ describe('document methods', () => {
   let doc
 
   beforeEach(() => {
-    doc = new Document('foo')
+    doc = new Document('foo', null, function () {})
   })
 
   afterEach(() => {
@@ -98,7 +137,7 @@ describe('Element in document methods', () => {
   let doc, el, el2, el3
 
   beforeEach(() => {
-    doc = new Document('foo')
+    doc = new Document('foo', null, function () {})
     el = new Element('bar', {
       attr: { a: 11, b: 12 },
       style: { c: 13, d: 14 },
@@ -317,14 +356,18 @@ describe('Element in document methods', () => {
     expect(el.toJSON().attr).eql({ a: 21, b: 12 })
     el.setAttr('a', 22, true)
     expect(el.toJSON().attr).eql({ a: 22, b: 12 })
+    el.setAttr('a', 23, false)
+    expect(el.toJSON().attr).eql({ a: 23, b: 12 })
 
     el.setStyle('c', 21)
     expect(el.toJSON().style).eql({ a: 211, c: 21, d: 14 })
     el.setStyle('c', 22, true)
     expect(el.toJSON().style).eql({ a: 211, c: 22, d: 14 })
+    el.setStyle('c', 23, false)
+    expect(el.toJSON().style).eql({ a: 211, c: 23, d: 14 })
 
     el.setClassStyle({ a: 311, c: 313 })
-    expect(el.toJSON().style).eql({ a: 311, c: 22, d: 14 })
+    expect(el.toJSON().style).eql({ a: 311, c: 23, d: 14 })
 
     const handler = function () {}
     el.addEvent('click', handler)
@@ -422,12 +465,12 @@ describe('complicated situations', () => {
     doc = new Document('foo', '', spy)
     doc.createBody('r')
     doc.documentElement.appendChild(doc.body)
-    el = new Element('bar', null, doc)
-    el2 = new Element('baz', null, doc)
-    el3 = new Element('qux', null, doc)
-    c = new Comment('aaa', doc)
-    c2 = new Comment('bbb', doc)
-    c3 = new Comment('ccc', doc)
+    el = new Element('bar')
+    el2 = new Element('baz')
+    el3 = new Element('qux')
+    c = new Comment('aaa')
+    c2 = new Comment('bbb')
+    c3 = new Comment('ccc')
   })
 
   afterEach(() => {

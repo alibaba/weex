@@ -1,4 +1,4 @@
-/**
+ /**
  * Created by Weex.
  * Copyright (c) 2016, Alibaba, Inc. All rights reserved.
  *
@@ -31,7 +31,7 @@
         if (attributes[@"display"]) {
             if ([attributes[@"display"] isEqualToString:@"show"]) {
                 _displayState = YES;
-            } else if ([attributes[@"display"] isEqualToString:@"hide"]){
+            } else if ([attributes[@"display"] isEqualToString:@"hide"]) {
                 _displayState = NO;
             } else {
                 WXLogError(@"");
@@ -54,7 +54,6 @@
     if (attributes[@"display"]) {
         if ([attributes[@"display"] isEqualToString:@"show"]) {
             _displayState = YES;
-            
         } else if ([attributes[@"display"] isEqualToString:@"hide"]) {
             _displayState = NO;
         } else {
@@ -67,6 +66,23 @@
 - (void)viewDidLoad
 {
     _initFinished = YES;
+    
+    if (!_displayState) {
+        [_indicator.view setHidden:YES];
+    }
+    [self.view setFrame: (CGRect){
+        .size = self.calculatedFrame.size,
+        .origin.x = self.calculatedFrame.origin.x,
+        .origin.y = self.view.frame.origin.y + CGRectGetHeight(self.calculatedFrame)
+    }];
+}
+
+- (void)layoutDidFinish {
+    [self.view setFrame: (CGRect){
+        .size = self.calculatedFrame.size,
+        .origin.x = self.calculatedFrame.origin.x,
+        .origin.y = self.view.frame.origin.y + CGRectGetHeight(self.calculatedFrame)
+    }];
 }
 
 - (void)addEvent:(NSString *)eventName
@@ -85,7 +101,7 @@
 
 - (void)loading
 {
-    if (!_loadingEvent)
+    if (!_loadingEvent || _displayState)
         return;
     
     [self fireEvent:@"loading" params:nil];
@@ -93,23 +109,19 @@
 
 - (void)setDisplay
 {
-    id<WXScrollerProtocol> scrollerProtocol = self.ancestorScroller;
+    id<WXScrollerProtocol> scrollerProtocol = [self ancestorScroller];
     if (scrollerProtocol == nil || !_initFinished)
         return;
-    
     WXComponent *scroller = (WXComponent*)scrollerProtocol;
     CGPoint contentOffset = [scrollerProtocol contentOffset];
     if (_displayState) {
-        contentOffset.y = [scrollerProtocol contentSize].height - scroller.calculatedFrame.size.height + self.view.frame.size.height;
-        [scrollerProtocol setContentOffset:contentOffset animated:YES];
+        contentOffset.y = [scrollerProtocol contentSize].height - scroller.calculatedFrame.size.height + self.calculatedFrame.size.height;
         [_indicator start];
     } else {
-        UIEdgeInsets insets = [scrollerProtocol contentInset];
-        insets.bottom = 0;
-        
-        [scrollerProtocol setContentInset:insets];
+        contentOffset.y = contentOffset.y - self.calculatedFrame.size.height;
         [_indicator stop];
     }
+    [scrollerProtocol setContentOffset:contentOffset animated:YES];
 }
 
 - (void)_insertSubcomponent:(WXComponent *)subcomponent atIndex:(NSInteger)index
@@ -122,9 +134,14 @@
     }
 }
 
+- (BOOL)displayState
+{
+    return _displayState;
+}
+
 - (void)resizeFrame
 {
-    CGRect rect = self.view.frame;
+    CGRect rect = self.calculatedFrame;
     
     id<WXScrollerProtocol> scrollerProtocol = self.ancestorScroller;
     if (scrollerProtocol) {

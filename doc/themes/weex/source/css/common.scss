@@ -1,0 +1,250 @@
+@import "variable.scss";
+
+/***********************
+* Reset
+***********************/
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  /*overflow-x: hidden;
+  overflow-y: auto;*/
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: $bg-gray;
+  font-family: "PingFang SC","Helvetica Neue",Arial,STHeiti,"Microsoft YaHei","Source Han Sans SC","Noto Sans CJK SC","Source Han Sans CN","Noto Sans SC","Noto Sans CJK TC",SimSun,sans-serif;
+  font-size: 14px;
+  line-height: 1.2;
+  color: $text-light-black;
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+@font-face {font-family: "iconfont";
+  src: url('//at.alicdn.com/t/font_i0r1euwhok5oecdi.eot?t=1481812721653'); /* IE9*/
+  src: url('//at.alicdn.com/t/font_i0r1euwhok5oecdi.eot?t=1481812721653#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('//at.alicdn.com/t/font_i0r1euwhok5oecdi.woff?t=1481812721653') format('woff'), /* chrome, firefox */
+  url('//at.alicdn.com/t/font_i0r1euwhok5oecdi.ttf?t=1481812721653') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('//at.alicdn.com/t/font_i0r1euwhok5oecdi.svg?t=1481812721653#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont {
+  font-family:"iconfont" !important;
+  font-size: 20px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-nav:before { content: "\e60c"; }
+
+.icon-github:before { content: "\e69f"; }
+
+.icon-search:before { content: "\e605"; }
+
+.icon-arrow:before { content: "\e623"; }
+
+.icon-close:before { content: "\e780"; }
+
+.icon-arrow-small:before { content: "\e67c"; }
+
+.icon-baichuan:before { content: "\e602"; }
+
+.icon-back2top:before { content: "\e604"; }
+
+a {
+  cursor: pointer;
+  color: $text-light-black;
+  text-decoration: none;
+  &:hover {
+    color: $text-gray;
+  }
+}
+
+img {
+  max-width: 100%;
+  vertical-align:middle;
+}
+
+h1,h2,h3,h4,h5,h6,p {
+  font-weight: normal;
+  margin: 0 0 1em;
+}
+
+h1 {
+  font-size: 2em;
+}
+
+h2 {
+  font-size: 1.75em;
+}
+
+h3 {
+  font-size: 1.5em;
+}
+
+h4 {
+  font-size: 1.25em;
+}
+
+h5 {
+  font-size: 1.1em;
+}
+
+blockquote {
+  margin: 0;
+  padding: 1em 0 1px 20px;
+  border-left: 5px solid #ddd;
+}
+/***********************
+* Common style
+***********************/
+.button {
+  display: inline-block;
+  font-size: 1.05em;
+  width: 10em;
+  height: 2.5em;
+  line-height: 2.5em;
+  text-align: center;
+  color: #fff;
+  background: #ff3e33;
+  border: #ff3e33 1px solid;
+  border-radius: 2em;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, .16);
+
+  &:hover {
+    background: #d63f36;
+    border: #d63f36 1px solid;
+  }
+}
+
+.clearfix {
+  &:before, &:after {
+    display: table;
+    content: " "
+  }
+
+  &:after {
+    clear: both
+  }
+}
+
+.imgbox {
+  width: 100%;
+  height: 100%;
+
+  img {
+    width: 100%;
+  }
+}
+
+.dropdown {
+  position: relative;
+
+  .dropdown-toggle {
+    display: block;
+    font-size: 14px;
+    text-align: center;
+    color: $text-light-black;
+    text-decoration: none;
+  }
+
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 999;
+    float: left;
+    padding: 5px 0;
+    margin: 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #999ba4;
+    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
+
+    & > li > a {
+      display: block;
+      padding: 3px 20px;
+      clear: both;
+      font-weight: 400;
+      line-height: 1.42857143;
+      color: $text-light-black;
+      white-space: nowrap;
+      
+      &:hover {
+        color: $text-light-black;
+        text-decoration: none;
+        background-color: #f5f5f5;
+      }
+    }
+  }
+
+  &:hover .dropdown-menu {
+    display: block;
+  } 
+}
+
+
+a.current {
+  border-bottom: .2em solid $text-blue;
+}
+
+.scrollbar-measure {
+  position: absolute;
+  top: -9999px;
+  width: 50px;
+  height: 50px;
+  overflow: scroll;
+}
+
+.show {
+  display: block !important;
+}
+
+.hide {
+  display: none !important;
+}
+
+table {
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    overflow: auto
+}
+
+table td, table th {
+    padding: 6px 13px;
+    border: 1px solid #ddd
+}
+
+table tr {
+    background-color: #fff;
+    border-top: 1px solid #ccc
+}
+
+table tr:nth-child(2n) {
+    background-color: #f8f8f8
+}
+
+table th {
+    font-weight: 700
+}
+
+.api-version {
+  font-size: 12px;
+  padding: 1px 7px;
+  background: $text-blue;
+  color: #fff;
+  border-radius: 20px;
+}

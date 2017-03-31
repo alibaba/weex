@@ -12,8 +12,8 @@ typedef NS_ENUM(NSInteger, WXLogFlag) {
     WXLogFlagError      = 1 << 0,
     WXLogFlagWarning    = 1 << 1,
     WXLogFlagInfo       = 1 << 2,
-    WXLogFlagDebug      = 1 << 3,
-    WXLogFlagVerbose    = 1 << 4
+    WXLogFlagLog        = 1 << 3,
+    WXLogFlagDebug      = 1 << 4
 };
 
 /**
@@ -41,14 +41,14 @@ typedef NS_ENUM(NSUInteger, WXLogLevel){
     WXLogLevelInfo      = WXLogLevelWarning | WXLogFlagInfo,
     
     /**
-     *  Error, warning, info and debug logs
+     *  Log, warning info
      */
-    WXLogLevelDebug     = WXLogLevelInfo | WXLogFlagDebug,
+    WXLogLevelLog       = WXLogFlagLog | WXLogLevelInfo,
     
     /**
-     *  Error, warning, info, debug and verbose
+     *  Error, warning, info and debug logs
      */
-    WXLogLevelVerbose   = WXLogLevelDebug | WXLogFlagVerbose,
+    WXLogLevelDebug     = WXLogLevelLog | WXLogFlagDebug,
     
     /**
      *  All
@@ -82,7 +82,11 @@ typedef NS_ENUM(NSUInteger, WXLogLevel){
 
 + (void)setLogLevelString:(NSString *)levelString;
 
-+ (void)log:(WXLogFlag)flag file:(const char *)fileName line:(NSUInteger)line format:(NSString *)format, ... NS_FORMAT_FUNCTION(4,5);
+//+ (void)log:(WXLogFlag)flag file:(const char *)fileName line:(NSUInteger)line format:(NSString *)format, ... NS_FORMAT_FUNCTION(4,5);
+
++ (void)log:(WXLogFlag)flag file:(const char *)fileName line:(NSUInteger)line message:(NSString *)message;
+
++ (void)devLog:(WXLogFlag)flag file:(const char *)fileName line:(NSUInteger)line format:(NSString *)format, ... NS_FORMAT_FUNCTION(4,5);
 
 + (void)registerExternalLog:(id<WXLogProtocol>)externalLog;
 
@@ -90,16 +94,19 @@ typedef NS_ENUM(NSUInteger, WXLogLevel){
 
 #define WX_FILENAME (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 
+ 
 #define WX_LOG(flag, fmt, ...)          \
 do {                                    \
-    [WXLog log:flag                     \
-          file:WX_FILENAME              \
-          line:__LINE__                 \
-        format:(fmt), ## __VA_ARGS__];  \
+    [WXLog devLog:flag                     \
+             file:WX_FILENAME              \
+             line:__LINE__                 \
+           format:(fmt), ## __VA_ARGS__];  \
 } while(0)
 
-#define WXLogVerbose(format, ...)       WX_LOG(WXLogFlagVerbose, format, ##__VA_ARGS__)
+extern void _WXLogObjectsImpl(NSString *severity, NSArray *arguments);
+
+#define WXLog(format,...)               WX_LOG(WXLogFlagLog, format, ##__VA_ARGS__)
 #define WXLogDebug(format, ...)         WX_LOG(WXLogFlagDebug, format, ##__VA_ARGS__)
 #define WXLogInfo(format, ...)          WX_LOG(WXLogFlagInfo, format, ##__VA_ARGS__)
-#define WXLogWarning(format, ...)       WX_LOG(WXLogFlagWarning, format, ##__VA_ARGS__)
+#define WXLogWarning(format, ...)       WX_LOG(WXLogFlagWarning, format ,##__VA_ARGS__)
 #define WXLogError(format, ...)         WX_LOG(WXLogFlagError, format, ##__VA_ARGS__)

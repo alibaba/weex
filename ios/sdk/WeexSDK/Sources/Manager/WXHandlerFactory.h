@@ -26,4 +26,9 @@
  **/
 + (id)handlerForProtocol:(Protocol *)protocol;
 
+/**
+ * @abstract Returns the registered handlers.
+ */
++ (NSDictionary *)handlerConfigs;
+
 @end

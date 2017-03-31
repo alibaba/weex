@@ -6,14 +6,17 @@
  * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
  */
 
-#import "WXCellComponent.h"
 #import "WXScrollerComponent.h"
 
+@class WXCellComponent;
+@class WXHeaderComponent;
 @interface WXListComponent : WXScrollerComponent
 
 - (void)cellDidRemove:(WXCellComponent *)cell;
 
 - (void)cellDidLayout:(WXCellComponent *)cell;
+
+- (void)headerDidLayout:(WXHeaderComponent *)header;
 
 - (void)cellDidRendered:(WXCellComponent *)cell;
 

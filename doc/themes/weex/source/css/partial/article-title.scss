@@ -1,0 +1,28 @@
+@import "../variable.scss";
+
+.article-header {
+  position: relative;
+  padding-bottom: 10px;
+  border-bottom: 1px solid $border-light;
+  margin-bottom: 3.5em;
+
+  h1 {
+    font-size: 2em;
+    color: #333;
+    margin: 0;
+
+    .article-title {
+      &:hover {
+        color: $text-blue;
+      }
+    }
+  }
+
+  .article-date {
+    position: absolute;
+    bottom: -25px;
+    left: 0px;
+    font-size: .9em;
+    color: $text-gray;
+  }
+}

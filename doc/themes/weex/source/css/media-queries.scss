@@ -1,0 +1,190 @@
+@import "variable.scss";
+
+@media screen and (max-width: $content-max-width) {
+
+  /***********************************************
+   * Global
+   **********************************************/
+  body {
+    user-select: none;
+    font-size: 13px;
+  }
+
+  #header {
+    .navbar {
+      display: none !important;
+    }
+
+    #mobile-nav {
+      display: flex;
+    }
+  }
+
+  #sidebar {
+    display: block !important;
+    transform: translateX(-320px);
+    transition: all .3s ease;
+    &.open {
+      transform: translateX(0);
+    }
+  }
+
+  #footer {
+    padding: 0 20px;
+  }
+
+  /***********************************************
+   * Index
+   **********************************************/
+  .header .galaxy {
+    display: none;
+  }
+
+  .edge .scene-container {
+    .textbox {
+      flex: 2;
+    }
+
+    .inner-box:nth-child(3) {
+      flex: 0 0 240px;
+    }
+    .sketch-content {
+      /*flex-direction: column; 
+      align-items: center;*/
+    }
+  }
+
+  .horizon .sketch-content {
+    padding: 0 5em;
+  }
+
+  .horizon .sketch-content .inner-box {
+    padding: 0 2em;
+  }
+
+  .users .scene-container .textbox {
+    flex: 1;
+  }
+
+  .feedback .sketch-content {
+    align-content: center;
+  }
+
+  .feedback .scene-container .textbox {
+    flex: 1;
+  }
+
+  /***********************************************
+   * Post
+   **********************************************/
+  .article-wrapper .doc-nav {
+    display: none;
+  }
+  
+  .article-wrapper .article {
+    margin-left: 0;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  /***********************************************
+   * Index
+   **********************************************/
+
+  .edge .scene-container {
+    .textbox {
+      flex: 1;
+    }
+    .sketch-content {
+      flex-direction: column; 
+      align-items: center;
+    }
+  }
+
+  .scene.overlength {
+    height: auto;
+    min-height: 100%;
+    min-height: calc(100% - 72px);
+  }
+
+  .horizon .textbox {
+    flex: 4;
+  }
+
+  .horizon .sketch-content {
+    padding: 0 1em;
+  }
+
+  .horizon .sketch-content .inner-box {
+    padding: 0 1em;
+  }
+
+  .horizon .textbox p {
+    width: 100%;
+  }
+
+  .header {
+
+    .slide-content {
+      .page-title {
+        width: 320px;
+        margin-left: -160px;
+      }
+      .btn-group {
+        bottom: 10%;
+      }
+    }
+  }
+
+  .feature {
+
+    .right-box {
+      width: 500px;
+      height: 245.45px;
+      top: 50%;
+      right: -65px;
+      
+      .level1, .level2, .level3, .level4 {
+        width: 500px;
+        height: 245.45px;
+      }
+    }
+  }
+
+  .cross-platform {
+    .sketch-content {
+      height: 200px;
+    }
+  }
+
+  .supporting-vue {
+    .sketch-content.imgbox .imgbox {
+      background-size: 80px;
+    }
+  }
+
+  .users .sketch-content {
+    .user-logo {
+      width: 140px;
+      height: 140px;
+      background-size: 45px;
+    }
+
+    .user-info p {
+      @include lines(3);
+    }
+
+    .user-logo h3 {
+      margin-top: 110px;
+    }
+  }
+
+  .feedback {
+    .user-feedback {
+      /*flex: 1 0 140px;*/
+    }
+    .scene-container .go-2-doc {
+      margin-top: 0;
+    }
+  }
+}

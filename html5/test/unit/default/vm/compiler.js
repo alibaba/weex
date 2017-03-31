@@ -4,11 +4,11 @@ import sinonChai from 'sinon-chai'
 const { expect } = chai
 chai.use(sinonChai)
 
-import * as compiler from '../../../../default/vm/compiler'
-import * as directive from '../../../../default/vm/directive'
-import * as state from '../../../../default/core/state'
+import * as compiler from '../../../../frameworks/legacy/vm/compiler'
+import * as directive from '../../../../frameworks/legacy/vm/directive'
+import { initState } from '../../../../frameworks/legacy/core/state'
 
-describe('generate workflow', () => {
+describe.skip('generate workflow', () => {
   let contentIndex = 0
   const vm = {}
   Object.assign(vm, compiler, directive, {
@@ -194,6 +194,28 @@ describe('generate workflow', () => {
     check()
   })
 
+  it('can\'t not use repeat on root element', (done) => {
+    const target = {
+      type: 'a',
+      repeat: () => [1, 2, 3]
+    }
+    const dest = {
+      type: 'document'
+    }
+
+    function check () {
+      expect(vm._compile).callCount(1)
+      expect(vm._createBody).callCount(0)
+      expect(vm._createBlock).callCount(0)
+      expect(vm._mergeContext).callCount(0)
+      expect(vm.constructor).callCount(0)
+      done()
+    }
+
+    vm._compile(target, dest)
+    check()
+  })
+
   it('generate a shown element', (done) => {
     const target = {
       type: 'a',
@@ -209,6 +231,28 @@ describe('generate workflow', () => {
       expect(vm._compile.args[1][1].display).eql(true)
       expect(vm._compile.args[1][2]).eql({ shown: true })
       expect(vm._createBlock).callCount(1)
+      expect(vm._mergeContext).callCount(0)
+      expect(vm.constructor).callCount(0)
+      done()
+    }
+
+    vm._compile(target, dest)
+    check()
+  })
+
+  it('can\'t not use shown on root element', (done) => {
+    const target = {
+      type: 'a',
+      shown: () => true
+    }
+    const dest = {
+      type: 'document'
+    }
+
+    function check () {
+      expect(vm._compile).callCount(1)
+      expect(vm._createBody).callCount(0)
+      expect(vm._createBlock).callCount(0)
       expect(vm._mergeContext).callCount(0)
       expect(vm.constructor).callCount(0)
       done()
@@ -502,16 +546,15 @@ describe('generate workflow', () => {
   })
 })
 
-describe('merge context', () => {
+describe.skip('merge context', () => {
+  const { mergeContext } = compiler
   let vm
 
   beforeEach(() => {
     vm = {
-      _data: { a: 1, b: 2 },
-      _mergeContext: compiler._mergeContext
+      _data: { a: 1, b: 2 }
     }
-    Object.assign(vm, state)
-    vm._initState()
+    initState(vm)
   })
 
   afterEach(() => {
@@ -519,14 +562,14 @@ describe('merge context', () => {
   })
 
   it('merge external data', () => {
-    const context = vm._mergeContext({ a: 3 })
+    const context = mergeContext(vm, { a: 3 })
     expect(context).not.equal(vm)
     expect(context.a).eql(3)
     expect(context.b).eql(2)
   })
 
   it('react with changes, but not with internal for ext-key', () => {
-    const context = vm._mergeContext({ a: 3 })
+    const context = mergeContext(vm, { a: 3 })
     vm.a = 4
     vm.b = 5
     expect(context.a).eql(3)
@@ -536,7 +579,7 @@ describe('merge context', () => {
   })
 
   it('merge external data if key not bound', () => {
-    const context = vm._mergeContext({ c: 3 })
+    const context = mergeContext(vm, { c: 3 })
     expect(context).not.equal(vm)
     expect(context.a).eql(1)
     expect(context.b).eql(2)
@@ -544,7 +587,7 @@ describe('merge context', () => {
   })
 
   it('not react with changes for extra key', () => {
-    const context = vm._mergeContext({ c: 3 })
+    const context = mergeContext(vm, { c: 3 })
     vm.c = 9
     expect(context.a).eql(1)
     expect(context.b).eql(2)

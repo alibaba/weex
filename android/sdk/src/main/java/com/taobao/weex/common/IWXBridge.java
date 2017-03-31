@@ -212,6 +212,10 @@ import com.taobao.weex.bridge.WXParams;
  */
 public interface IWXBridge extends IWXObject {
 
+  int DESTROY_INSTANCE = -1;
+  int INSTANCE_RENDERING = 1;
+  int INSTANCE_RENDERING_ERROR = 0;
+
   /**
    * init Weex
    *
@@ -225,11 +229,19 @@ public interface IWXBridge extends IWXObject {
    */
   int execJS(String instanceId, String namespace, String function, WXJSObject[] args);
 
+  int execJSService(String javascript);
+
   /**
    * js call native
 
    */
   int callNative(String instanceId, String tasks, String callback);
 
+  int callAddElement(String instanceId, String ref,String dom,String index, String callback);
+
   void reportJSException(String instanceId, String func, String exception);
+
+  Object callNativeModule(String instanceId, String module, String method,  byte [] arguments,  byte [] options);
+
+  void callNativeComponent(String instanceId, String componentRef, String method,  byte [] arguments,  byte [] options);
 }

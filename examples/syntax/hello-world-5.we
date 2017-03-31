@@ -23,7 +23,7 @@
 <script>
   module.exports = {
     data: {
-      logoUrl: 'http://alibaba.github.io/weex/img/weex_logo_blue@3x.png',
+      logoUrl: 'https://alibaba.github.io/weex/img/weex_logo_blue@3x.png',
       target: 'World'
     },
     methods: {

@@ -1,2 +1,0 @@
--keep class com.taobao.weex.devtools.** { *; }
--dontwarn com.taobao.weex.devtools.**

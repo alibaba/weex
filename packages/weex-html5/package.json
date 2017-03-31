@@ -1,0 +1,23 @@
+{
+  "name": "weex-html5",
+  "version": "0.5.0",
+  "description": "Weex HTML5 Renderer",
+  "main": "dist/weex.common.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/alibaba/weex.git"
+  },
+  "keywords": [
+    "weex",
+    "html5"
+  ],
+  "author": {
+    "name": "mr.raindrop"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://alibaba.github.io/weex",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/alibaba/weex/issues"
+  }
+}

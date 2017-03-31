@@ -1,0 +1,48 @@
+@import "../variable.scss";
+
+.summary {
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+
+  ul, li , ol {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+
+  a {
+    &.current {
+      border: none;
+      color: $text-blue;
+    }
+    &:hover {
+      color: $text-blue;
+    }
+  }
+
+  h2.part-title {
+    color: $text-blue;
+    font-size: 1.2em;
+    font-weight: 600;
+  }
+    
+  h3.chapter-title {
+    font-size: 1.1em;
+  }
+    
+  ul.chapter {
+    margin-left: 15px;
+    li {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;    
+      padding-bottom: 15px;
+    }
+  }
+
+}
+
+.lang-en .summary h3.chapter-title{
+  font-weight: 600;
+}

@@ -1,0 +1,50 @@
+@import "variable.scss";
+
+#playground {
+  height: auto;
+  display: flex;
+  flex-flow: column;
+}
+
+.playground-wrapper {
+  flex: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  padding-top: 100px;
+
+  .left {
+    width: 320px;
+    padding: 20px;
+    float: left;
+  }
+
+  .qr-code {
+    float: left;
+    width: 120px;
+  }
+
+  .download {
+    margin: 30px 0;  
+  }
+
+  .links {
+    float: left;
+    list-style: none;
+    margin: 0;
+    padding: 10px 0 10px 10px;
+
+    .link {
+      display: inline-block;
+      text-align: center;
+      width: 130px;
+      height: 30px;
+      line-height: 30px;
+      border: 1px solid currentColor;
+      border-radius: 20px;
+    }
+
+    #android-link {
+      margin-top: 40px;
+    }
+  }
+}

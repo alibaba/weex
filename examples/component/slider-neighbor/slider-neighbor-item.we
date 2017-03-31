@@ -1,0 +1,34 @@
+<template>
+  <div class="slider-item-container">
+    <image class="slider-item-image" src="{{image}}"></image>
+  </div>
+</template>
+
+<script>
+  module.exports = {
+    data: {
+      image: '',
+      link: '',
+      href: ''
+    },
+    methods: {
+      ready: function() {
+        this.href = this.link;
+      }
+    }
+  };
+</script>
+
+<style>
+  .slider-item-container {
+    width: 542px;
+    height: 360px;
+    justify-content: center;
+    flex-direction: row;
+    padding: 10px;
+  }
+  .slider-item-image {
+    width: 542px;
+    height: 360px;
+  }
+</style>

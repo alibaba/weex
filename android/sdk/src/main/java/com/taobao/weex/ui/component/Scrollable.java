@@ -205,25 +205,41 @@
 package com.taobao.weex.ui.component;
 
 import android.view.ViewGroup;
-import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.common.Component;
-import com.taobao.weex.dom.WXDomObject;
+
+import java.util.Map;
 
 /**
  * Created by sospartan on 7/5/16.
  */
 public interface Scrollable {
 
-  public void bindStickStyle(WXComponent component);
-  public void unbindStickStyle(WXComponent component);
-  public void bindAppearEvent(WXComponent component);
-  public void bindDisappearEvent(WXComponent component);
-  public void unbindAppearEvent(WXComponent component);
-  public void unbindDisappearEvent(WXComponent component);
-  public ViewGroup getView();
-  public void scrollTo(WXComponent component,int offset);
-  public String getRef();
+  void bindStickStyle(WXComponent component);
 
-  public int getScrollY();
-  public int getScrollX();
+  void unbindStickStyle(WXComponent component);
+
+  void bindAppearEvent(WXComponent component);
+
+  void bindDisappearEvent(WXComponent component);
+
+  void unbindAppearEvent(WXComponent component);
+
+  void unbindDisappearEvent(WXComponent component);
+
+  ViewGroup getView();
+
+  void scrollTo(WXComponent component, Map<String, Object> options);
+
+  String getRef();
+
+  int getScrollY();
+
+  int getScrollX();
+
+  /**
+   *
+   * @return {@link com.taobao.weex.common.Constants.Orientation#HORIZONTAL} or {@link com.taobao.weex.common.Constants.Orientation#VERTICAL}
+   */
+  int getOrientation();
+
+  boolean isScrollable();
 }

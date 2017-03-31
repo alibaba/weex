@@ -204,6 +204,9 @@
  */
 package com.taobao.weex.ui.component;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
 import android.view.View;
@@ -214,73 +217,132 @@ import android.widget.FrameLayout;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
-import com.taobao.weex.common.WXDomPropConstant;
+import com.taobao.weex.annotation.Component;
+import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.WXEvent;
+import com.taobao.weex.ui.ComponentCreator;
 import com.taobao.weex.ui.view.WXCircleIndicator;
 import com.taobao.weex.ui.view.WXCirclePageAdapter;
 import com.taobao.weex.ui.view.WXCircleViewPager;
-import com.taobao.weex.ui.view.WXEditText;
+import com.taobao.weex.ui.view.gesture.WXGestureType;
 import com.taobao.weex.utils.WXLogUtils;
+import com.taobao.weex.utils.WXUtils;
 import com.taobao.weex.utils.WXViewUtils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WXSlider extends WXVContainer implements OnPageChangeListener {
+@Component(lazyload = false)
+
+public class WXSlider extends WXVContainer<FrameLayout> {
+
+  public static final String INDEX = "index";
 
   Map<String, Object> params = new HashMap<>();
+  private float offsetXAccuracy = 0.1f;
+
+  public static class Creator implements ComponentCreator {
+    public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+      return new WXSlider(instance, node, parent);
+    }
+  }
+
   /**
    * Scrollable sliderview
    */
-  private WXCircleViewPager mViewPager;
+  /**
+   * package
+   **/
+  WXCircleViewPager mViewPager;
   /**
    * Circle indicator
    */
-  private WXIndicator mIndicator;
+  protected WXIndicator mIndicator;
 
   /**
    * Adapter for sliderview
    */
-  private WXCirclePageAdapter mAdapter;
-  /**
-   * Container for sliderview
-   */
-  private FrameLayout mRoot;
+  protected WXCirclePageAdapter mAdapter;
 
-  private boolean mShowIndicators;
+  protected boolean mShowIndicators;
 
-  public WXSlider(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
-    super(instance, node, parent, lazy);
+  protected OnPageChangeListener mPageChangeListener = new SliderPageChangeListener();
+
+  @Deprecated
+  public WXSlider(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
+    this(instance, dom, parent);
+  }
+
+  public WXSlider(WXSDKInstance instance, WXDomObject node, WXVContainer parent) {
+    super(instance, node, parent);
   }
 
   @Override
-  protected void initView() {
-    mRoot = new FrameLayout(mContext);
+  protected FrameLayout initComponentHostView(@NonNull Context context) {
+    FrameLayout view = new FrameLayout(context);
     // init view pager
     FrameLayout.LayoutParams pagerParams = new FrameLayout.LayoutParams(
         LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-    mViewPager = new WXCircleViewPager(mContext);
+    mViewPager = new WXCircleViewPager(context);
     mViewPager.setLayoutParams(pagerParams);
 
     // init adapter
     mAdapter = new WXCirclePageAdapter();
     mViewPager.setAdapter(mAdapter);
     // add to parent
-    mRoot.addView(mViewPager);
-    mHost = mRoot;
-    mViewPager.setOnPageChangeListener(this);
+    view.addView(mViewPager);
+    mViewPager.addOnPageChangeListener(mPageChangeListener);
+
     registerActivityStateListener();
+
+    return view;
   }
 
-  //TODO Slider don't support any gesture for now.
+  /**
+   * Slider is not a regular container,top/left/right/bottom not apply to view,expect indicator.
+   */
+  @Override
+  public LayoutParams getChildLayoutParams(WXComponent child,View childView, int width, int height, int left, int right, int top, int bottom) {
+    ViewGroup.LayoutParams lp = childView.getLayoutParams();
+    if (lp == null) {
+      lp = new FrameLayout.LayoutParams(width, height);
+    } else {
+      lp.width = width;
+      lp.height = height;
+    }
+
+    if (lp instanceof ViewGroup.MarginLayoutParams) {
+      //expect indicator .
+      if (child instanceof WXIndicator) {
+        ((ViewGroup.MarginLayoutParams) lp).setMargins(left, top, right, bottom);
+      } else {
+        ((ViewGroup.MarginLayoutParams) lp).setMargins(0, 0, 0, 0);
+      }
+    }
+    return lp;
+  }
+
+
   @Override
   public void addEvent(String type) {
     super.addEvent(type);
     if (getRealView() != null) {
       getRealView().setOnTouchListener(null);
     }
-    mGestureType.clear();
+    if (Constants.Event.SCROLL.equals(type)) {
+      if (mViewPager == null) {
+        return;
+      }
+      mViewPager.addOnPageChangeListener(new SliderOnScrollListener(this));
+    }
+  }
+
+  @Override
+  public boolean containsGesture(WXGestureType WXGestureType) {
+    //TODO Slider don't support any gesture for now.
+    return false;
   }
 
   @Override
@@ -298,26 +360,22 @@ public class WXSlider extends WXVContainer implements OnPageChangeListener {
       return;
     }
     mAdapter.addPageView(view);
-    mAdapter.notifyDataSetChanged();
+    mViewPager.setCurrentItem(0);
     if (mIndicator != null) {
-      mIndicator.getView().forceLayout();
-      mIndicator.getView().requestLayout();
+      mIndicator.getHostView().forceLayout();
+      mIndicator.getHostView().requestLayout();
     }
-  }
-
-  @Override
-  public void remove(WXComponent child) {
-    remove(child,true);
   }
 
   @Override
   public void remove(WXComponent child, boolean destroy) {
-    if (child == null || child.getView() == null || mAdapter == null) {
+    if (child == null || child.getHostView() == null || mAdapter == null) {
       return;
     }
 
-    mAdapter.removePageView(child.getView());
+    mAdapter.removePageView(child.getHostView());
     mAdapter.notifyDataSetChanged();
+    super.remove(child,destroy);
   }
 
   @Override
@@ -332,7 +390,7 @@ public class WXSlider extends WXVContainer implements OnPageChangeListener {
 
   @Override
   public void onActivityResume() {
-    if (mViewPager != null) {
+    if (mViewPager != null && mViewPager.isAutoScroll()) {
       mViewPager.startAutoScroll();
     }
   }
@@ -340,46 +398,90 @@ public class WXSlider extends WXVContainer implements OnPageChangeListener {
   @Override
   public void onActivityStop() {
     if (mViewPager != null) {
-      mViewPager.stopAutoScroll();
+      mViewPager.pauseAutoScroll();
     }
   }
-
-//  @Override
-//  protected void bindImpl(View view) {
-//    if(view==null){
-//      super.bindImpl(view);
-//    }
-//    else if(view instanceof ViewGroup){
-//      if(((ViewGroup) view).getChildAt(0) instanceof WXCircleViewPager){
-//        super.bindImpl(((ViewGroup) view).getChildAt(0));
-//      }
-//    }
-//  }
 
   public void addIndicator(WXIndicator indicator) {
+    FrameLayout root = getHostView();
+    if (root == null) {
+      return;
+    }
     mIndicator = indicator;
-    mIndicator.getView().setCircleViewPager(mViewPager);
-    mIndicator.getView().setOnPageChangeListener(this);
-    mRoot.addView(mIndicator.getView());
+    WXCircleIndicator indicatorView = indicator.getHostView();
+    if (indicatorView != null) {
+      indicatorView.setCircleViewPager(mViewPager);
+      // indicatorView.setOnPageChangeListener(mPageChangeListener);  // commented for twice onChange() called when do slide.
+      root.addView(indicatorView);
+    }
+
   }
 
-  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SLIDER_VALUE)
+  @Override
+  protected boolean setProperty(String key, Object param) {
+    switch (key) {
+      case Constants.Name.VALUE:
+        String value = WXUtils.getString(param, null);
+        if (value != null) {
+          setValue(value);
+        }
+        return true;
+      case Constants.Name.AUTO_PLAY:
+        String aotu_play = WXUtils.getString(param, null);
+        if (aotu_play != null) {
+          setAutoPlay(aotu_play);
+        }
+        return true;
+      case Constants.Name.SHOW_INDICATORS:
+        String indicators = WXUtils.getString(param, null);
+        if (indicators != null) {
+          setShowIndicators(indicators);
+        }
+        return true;
+      case Constants.Name.INTERVAL:
+        Integer interval = WXUtils.getInteger(param, null);
+        if (interval != null) {
+          setInterval(interval);
+        }
+        return true;
+      case Constants.Name.INDEX:
+        Integer index = WXUtils.getInteger(param, null);
+        if (index != null) {
+          setIndex(index);
+        }
+        return true;
+      case Constants.Name.OFFSET_X_ACCURACY:
+        Float accuracy = WXUtils.getFloat(param, 0.1f);
+        if (accuracy != 0) {
+          setOffsetXAccuracy(accuracy);
+        }
+        return true;
+      case Constants.Name.SCROLLABLE:
+        boolean scrollable = WXUtils.getBoolean(param, true);
+        setScrollable(scrollable);
+        return true;
+    }
+    return super.setProperty(key, param);
+  }
+
+  @Deprecated
+  @WXComponentProp(name = Constants.Name.VALUE)
   public void setValue(String value) {
-    if (value == null || mHost == null) {
+    if (value == null || getHostView() == null) {
       return;
     }
-    int i ;
+    int i;
     try {
-      i = Integer.valueOf(value);
-    }catch (NumberFormatException e){
-      e.printStackTrace();
+      i = Integer.parseInt(value);
+    } catch (NumberFormatException e) {
+      WXLogUtils.e("", e);
       return;
     }
 
-    mViewPager.setCurrentItem(i);
+    setIndex(i);
   }
 
-  @WXComponentProp(name = "autoPlay")
+  @WXComponentProp(name = Constants.Name.AUTO_PLAY)
   public void setAutoPlay(String autoPlay) {
     if (TextUtils.isEmpty(autoPlay) || autoPlay.equals("false")) {
       mViewPager.stopAutoScroll();
@@ -389,7 +491,7 @@ public class WXSlider extends WXVContainer implements OnPageChangeListener {
     }
   }
 
-  @WXComponentProp(name = "showIndicators")
+  @WXComponentProp(name = Constants.Name.SHOW_INDICATORS)
   public void setShowIndicators(String show) {
     if (TextUtils.isEmpty(show) || show.equals("false")) {
       mShowIndicators = false;
@@ -403,44 +505,148 @@ public class WXSlider extends WXVContainer implements OnPageChangeListener {
     mIndicator.setShowIndicators(mShowIndicators);
   }
 
-  @Override
-  public void onPageScrolled(int arg0, float arg1, int arg2) {
-
-  }
-
-  @Override
-  public void onPageSelected(int pos) {
-    if (WXEnvironment.isApkDebugable()) {
-      WXLogUtils.d("onPageSelected >>>>" + pos);
-    }
-    if (mAdapter == null || mAdapter.getRealCount() == 0) {
-      return;
-    }
-
-    int realPosition = pos % mAdapter.getRealCount();
-    if (mChildren == null || realPosition >= mChildren.size()) {
-      return;
-    }
-
-    if (getDomObject().event == null || getDomObject().event.size() == 0) {
-      return;
-    }
-    WXEvent event = getDomObject().event;
-    String ref = getDomObject().ref;
-    if (event.contains(WXEventType.SLIDER_CHANGE) && WXViewUtils.onScreenArea(mHost)) {
-      params.put("index", realPosition);
-
-      Map<String, Object> domChanges = new HashMap<>();
-      Map<String, Object> attrsChanges = new HashMap<>();
-      attrsChanges.put("value",realPosition);
-      domChanges.put("attrs",attrsChanges);
-      WXSDKManager.getInstance().fireEvent(mInstanceId, ref,
-                                           WXEventType.SLIDER_CHANGE, params,domChanges);
+  @WXComponentProp(name = Constants.Name.INTERVAL)
+  public void setInterval(int intervalMS) {
+    if (mViewPager != null && intervalMS > 0) {
+      mViewPager.setIntervalTime(intervalMS);
     }
   }
 
-  @Override
-  public void onPageScrollStateChanged(int arg0) {
+  @WXComponentProp(name = Constants.Name.INDEX)
+  public void setIndex(int index) {
+    if (mViewPager != null && mAdapter != null) {
+      if (index >= mAdapter.getRealCount() || index < 0) {
+        return;
+      }
+      mViewPager.setCurrentItem(index);
+      if (mIndicator != null && mIndicator.getHostView() != null
+              && mIndicator.getHostView().getRealCurrentItem() != index) {
+        //OnPageChangeListener not triggered
+        WXLogUtils.d("setIndex >>>> correction indicator to " + index);
+        mIndicator.getHostView().setRealCurrentItem(index);
+        mIndicator.getHostView().invalidate();
 
+        if (mPageChangeListener != null && mAdapter != null) {
+          mPageChangeListener.onPageSelected(mAdapter.getFirst() + index);
+        }
+      }
+    }
+  }
+  @WXComponentProp(name = Constants.Name.SCROLLABLE)
+  public void setScrollable(boolean scrollable) {
+    if (mViewPager != null && mAdapter != null) {
+      if(mAdapter.getRealCount() > 0){
+        mViewPager.setScrollable(scrollable);
+      }
+    }
+  }
+
+  @WXComponentProp(name = Constants.Name.OFFSET_X_ACCURACY)
+  public void setOffsetXAccuracy(float accuracy) {
+    this.offsetXAccuracy = accuracy;
+  }
+
+  protected class SliderPageChangeListener implements OnPageChangeListener {
+
+    private int lastPos = -1;
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int pos) {
+      if (mAdapter.getRealPosition(pos) == lastPos) {
+        return;
+      }
+      if (WXEnvironment.isApkDebugable()) {
+        WXLogUtils.d("onPageSelected >>>>" + mAdapter.getRealPosition(pos) + " lastPos: " + lastPos);
+      }
+      if (mAdapter == null || mAdapter.getRealCount() == 0) {
+        return;
+      }
+
+      int realPosition = mAdapter.getRealPosition(pos);
+      if (mChildren == null || realPosition >= mChildren.size()) {
+        return;
+      }
+
+      if (getDomObject().getEvents().size() == 0) {
+        return;
+      }
+      WXEvent event = getDomObject().getEvents();
+      String ref = getDomObject().getRef();
+      if (event.contains(Constants.Event.CHANGE) && WXViewUtils.onScreenArea(getHostView())) {
+        params.put(INDEX, realPosition);
+
+        Map<String, Object> domChanges = new HashMap<>();
+        Map<String, Object> attrsChanges = new HashMap<>();
+        attrsChanges.put(INDEX, realPosition);
+        domChanges.put("attrs", attrsChanges);
+        WXSDKManager.getInstance().fireEvent(getInstanceId(), ref,
+            Constants.Event.CHANGE, params, domChanges);
+      }
+
+      mViewPager.requestLayout();
+      getHostView().invalidate();
+      lastPos = mAdapter.getRealPosition(pos);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int arg0) {
+      FrameLayout root = getHostView();
+      if (null != root) {
+        root.invalidate();
+      }
+    }
+  }
+
+  protected static class SliderOnScrollListener implements OnPageChangeListener {
+    private float lastPositionOffset = 99f;
+    private int selectedPosition;
+    private WXSlider target;
+
+    public SliderOnScrollListener(WXSlider target) {
+      this.target = target;
+      this.selectedPosition = target.mViewPager.superGetCurrentItem();
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+      if (lastPositionOffset == 99f) {
+        lastPositionOffset = positionOffset;
+        return;
+      }
+
+      float offset = positionOffset - lastPositionOffset;
+
+      if (Math.abs(offset) >= target.offsetXAccuracy) {
+        if (position == selectedPosition) {
+          //slide to left. positionOffset[0 -> 1]
+          Map<String,Object> event = new HashMap<>(1);
+          event.put(Constants.Name.OFFSET_X_RATIO, -positionOffset);
+          target.fireEvent(Constants.Event.SCROLL, event);
+        } else if (position < selectedPosition) {
+          //slide to right. positionOffset[1 -> 0]
+          Map<String,Object> event = new HashMap<>(1);
+          event.put(Constants.Name.OFFSET_X_RATIO, (1f - positionOffset));
+          target.fireEvent(Constants.Event.SCROLL, event);
+        }
+        lastPositionOffset = positionOffset;
+      }
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+      selectedPosition = position;
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+      if (state == ViewPager.SCROLL_STATE_IDLE) {
+        lastPositionOffset = 99f;
+      }
+    }
   }
 }

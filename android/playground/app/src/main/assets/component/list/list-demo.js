@@ -40,362 +40,36 @@
 /******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
-/***/ function(module, exports) {
+/******/ ({
 
-	;__weex_define__("@weex-component/1518171e61dbbc39d28ab3409c7cfdff", [], function(__weex_require__, __weex_exports__, __weex_module__){
+/***/ 0:
+/***/ function(module, exports, __webpack_require__) {
 
-	;
-	  __weex_module__.exports = {
-	    data: function () {return {
-	      refresh_display : 'hide',
-	      loading_display : 'hide',
-	      backgroundColor: 'red',
-	      composite: 'false',
-	      shopList: [
-	        {
-	          id: 1,
-	          scopeValue: 1,
-	          PersonPhoto: 'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-	          PersonName: 'Mendeleyev',
-	          PersonVisitTime: 'today',
-	          shopDesc: 'Genius only means hard-working all one\'s life',
-	          shopImgList: [{
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd2.alicdn.com/bao/uploaded/i2/TB1rtOnHpXXXXXLaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd4.alicdn.com/bao/uploaded/i4/TB15KrfFVXXXXXJXXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd2.alicdn.com/bao/uploaded/i2/TB1t5YBGVXXXXXcaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
-	          }],
-	          shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
-	          shopLikeText: '6',
-	          shopCommentImg: 'https://img.alicdn.com/tps/i1/TB1kTKyIVXXXXacXFXX07tlTXXX-200-200.png_88x88xz.jpg',
-	          shopCommentText: '97',
-	          shopLookImg: 'https://img.alicdn.com/imgextra/i4/397746073/TB2IseKeFXXXXcVXXXXXXXXXXXX-397746073.png_88x88xz.jpg',
-	          shopLookText: '1003',
-	          shareImg: 'https://cbu01.alicdn.com/cms/upload/2015/930/224/2422039_702806130.png_88x88xz.jpg',
-	          shareText: "10",
+	var __weex_template__ = __webpack_require__(100)
+	var __weex_style__ = __webpack_require__(101)
+	var __weex_script__ = __webpack_require__(102)
 
-	        },
-	        {
-	          id: 2,
-	          scopeValue: 2,
-	          PersonPhoto: 'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-	          PersonName: 'Napoleon',
-	          PersonVisitTime: 'yesterday',
-	          shopDesc: 'The man who has made up his mind to win will never say "impossible "',
-	          shopImgList: [{
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd1.alicdn.com/imgextra/i1/2655929383/TB2.qITjpXXXXcIXXXXXXXXXXXX_!!2655929383.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd3.alicdn.com/imgextra/i3/2655929383/TB2eWwZjpXXXXbHXXXXXXXXXXXX_!!2655929383.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd2.alicdn.com/imgextra/i2/2655929383/TB2tgQWjpXXXXbZXXXXXXXXXXXX_!!2655929383.jpg_220x220.jpg'
-	          }],
-	          shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
-	          shopLikeText: '6',
-	          shopCommentImg: 'https://img.alicdn.com/tps/i1/TB1kTKyIVXXXXacXFXX07tlTXXX-200-200.png_88x88xz.jpg',
-	          shopCommentText: '97',
-	          shopLookImg: 'https://img.alicdn.com/imgextra/i4/397746073/TB2IseKeFXXXXcVXXXXXXXXXXXX-397746073.png_88x88xz.jpg',
-	          shopLookText: '1003',
-	          shareImg: 'https://cbu01.alicdn.com/cms/upload/2015/930/224/2422039_702806130.png_88x88xz.jpg',
-	          shareText: "10",
+	__weex_define__('@weex-component/3226d5b3a8f5b1ae43875db22de0785e', [], function(__weex_require__, __weex_exports__, __weex_module__) {
 
-	        },
-	        {
-	          id: 3,
-	          scopeValue: 3,
-	          PersonPhoto: 'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-	          PersonName: 'Balzac',
-	          PersonVisitTime: 'yesterday',
-	          shopDesc: 'There is no such thing as a great talent without great will - power',
-	          shopImgList: [{
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd1.alicdn.com/imgextra/i1/TB1AFz9LXXXXXbrXVXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd2.alicdn.com/imgextra/i2/2557954751/TB2is2njXXXXXatXpXXXXXXXXXX_!!2557954751.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd2.alicdn.com/imgextra/i2/2557954751/TB2PNYGjXXXXXbXXXXXXXXXXXXX_!!2557954751.jpg_220x220.jpg'
-	          }],
-	          shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
-	          shopLikeText: '6',
-	          shopCommentImg: 'https://img.alicdn.com/tps/i1/TB1kTKyIVXXXXacXFXX07tlTXXX-200-200.png_88x88xz.jpg',
-	          shopCommentText: '97',
-	          shopLookImg: 'https://img.alicdn.com/imgextra/i4/397746073/TB2IseKeFXXXXcVXXXXXXXXXXXX-397746073.png_88x88xz.jpg',
-	          shopLookText: '1003',
-	          shareImg: 'https://cbu01.alicdn.com/cms/upload/2015/930/224/2422039_702806130.png_88x88xz.jpg',
-	          shareText: "10",
-
-	        },
-	        {
-	          id: 4,
-	          scopeValue: 4,
-	          PersonPhoto: 'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-	          PersonName: 'Thomas Carlyle',
-	          PersonVisitTime: '3 day ago',
-	          shopDesc: 'Cease to struggle and you cease to live',
-	          shopImgList: [{
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd4.alicdn.com/imgextra/i4/69426324/TB2zbwdfXXXXXa4XpXXXXXXXXXX_!!69426324.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd4.alicdn.com/imgextra/i4/69426324/TB2L7ZAfXXXXXXOXXXXXXXXXXXX_!!69426324.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd4.alicdn.com/imgextra/i4/69426324/TB2p9wufXXXXXbiXXXXXXXXXXXX_!!69426324.jpg_220x220.jpg'
-	          }],
-	          shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
-	          shopLikeText: '6',
-	          shopCommentImg: 'https://img.alicdn.com/tps/i1/TB1kTKyIVXXXXacXFXX07tlTXXX-200-200.png_88x88xz.jpg',
-	          shopCommentText: '97',
-	          shopLookImg: 'https://img.alicdn.com/imgextra/i4/397746073/TB2IseKeFXXXXcVXXXXXXXXXXXX-397746073.png_88x88xz.jpg',
-	          shopLookText: '1003',
-	          shareImg: 'https://cbu01.alicdn.com/cms/upload/2015/930/224/2422039_702806130.png_88x88xz.jpg',
-	          shareText: "10",
-
-	        },
-	        {
-	          id: 5,
-	          scopeValue: 5,
-	          PersonPhoto: 'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-	          PersonName: 'Addison',
-	          PersonVisitTime: 'yesterday',
-	          shopDesc: 'A strong man will struggle with the storms of fate',
-	          shopImgList: [{
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd3.alicdn.com/bao/uploaded/i3/TB1MQ8_KVXXXXaLXVXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd2.alicdn.com/imgextra/i2/53218032/TB2bGSqiXXXXXXyXpXXXXXXXXXX_!!53218032.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd2.alicdn.com/bao/uploaded/i2/TB1kP2zKFXXXXbIXXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
-	          }],
-	          shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
-	          shopLikeText: '6',
-	          shopCommentImg: 'https://img.alicdn.com/tps/i1/TB1kTKyIVXXXXacXFXX07tlTXXX-200-200.png_88x88xz.jpg',
-	          shopCommentText: '97',
-	          shopLookImg: 'https://img.alicdn.com/imgextra/i4/397746073/TB2IseKeFXXXXcVXXXXXXXXXXXX-397746073.png_88x88xz.jpg',
-	          shopLookText: '1003',
-	          shareImg: 'https://cbu01.alicdn.com/cms/upload/2015/930/224/2422039_702806130.png_88x88xz.jpg',
-	          shareText: "10",
-
-	        },
-	        {
-	          id: 6,
-	          scopeValue: 1,
-	          PersonPhoto: 'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-	          PersonName: 'Ruskin',
-	          PersonVisitTime: 'yesterday',
-	          shopDesc: 'Living without an aim is like sailing without a compass',
-	          shopImgList: [{
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd4.alicdn.com/bao/uploaded/i4/TB11yFnHXXXXXakaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd4.alicdn.com/imgextra/i4/32720628/TB2CRJUcXXXXXXwXpXXXXXXXXXX_!!32720628.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd2.alicdn.com/bao/uploaded/i2/TB17LUzHXXXXXcEaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
-	          }],
-	          shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
-	          shopLikeText: '6',
-	          shopCommentImg: 'https://img.alicdn.com/tps/i1/TB1kTKyIVXXXXacXFXX07tlTXXX-200-200.png_88x88xz.jpg',
-	          shopCommentText: '97',
-	          shopLookImg: 'https://img.alicdn.com/imgextra/i4/397746073/TB2IseKeFXXXXcVXXXXXXXXXXXX-397746073.png_88x88xz.jpg',
-	          shopLookText: '1003',
-	          shareImg: 'https://cbu01.alicdn.com/cms/upload/2015/930/224/2422039_702806130.png_88x88xz.jpg',
-	          shareText: "10",
-
-	        },
-	        {
-	          id: 7,
-	          scopeValue: 2,
-	          PersonPhoto: 'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-	          PersonName: 'Yiming',
-	          PersonVisitTime: 'today',
-	          shopDesc: 'Live a noble and honest life. Reviving past times in your old age will help you to enjoy your life again',
-	          shopImgList: [{
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd4.alicdn.com/bao/uploaded/i4/TB1hvNoJXXXXXaMaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd4.alicdn.com/imgextra/i4/2058567235/TB2V8iygFXXXXaRXpXXXXXXXXXX_!!2058567235.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd2.alicdn.com/imgextra/i2/2058567235/TB2im1QgFXXXXX8XXXXXXXXXXXX_!!2058567235.jpg_220x220.jpg'
-	          }],
-	          shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
-	          shopLikeText: '6',
-	          shopCommentImg: 'https://img.alicdn.com/tps/i1/TB1kTKyIVXXXXacXFXX07tlTXXX-200-200.png_88x88xz.jpg',
-	          shopCommentText: '97',
-	          shopLookImg: 'https://img.alicdn.com/imgextra/i4/397746073/TB2IseKeFXXXXcVXXXXXXXXXXXX-397746073.png_88x88xz.jpg',
-	          shopLookText: '1003',
-	          shareImg: 'https://cbu01.alicdn.com/cms/upload/2015/930/224/2422039_702806130.png_88x88xz.jpg',
-	          shareText: "10",
-
-	        },
-	        {
-	          id: 8,
-	          scopeValue: 3,
-	          PersonPhoto: 'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-	          PersonName: 'Brown',
-	          PersonVisitTime: 'yesterday',
-	          shopDesc: 'Behind every successful man there\'s a lot u unsuccessful years',
-	          shopImgList: [{
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd1.alicdn.com/bao/uploaded/i1/TB18BZ2KFXXXXb8XFXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd1.alicdn.com/imgextra/i1/2775383848/TB2r012jVXXXXXHXpXXXXXXXXXX_!!2775383848.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd3.alicdn.com/imgextra/i3/2775383848/TB2iI9VjVXXXXaoXpXXXXXXXXXX_!!2775383848.jpg_220x220.jpg'
-	          }],
-	          shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
-	          shopLikeText: '6',
-	          shopCommentImg: 'https://img.alicdn.com/tps/i1/TB1kTKyIVXXXXacXFXX07tlTXXX-200-200.png_88x88xz.jpg',
-	          shopCommentText: '97',
-	          shopLookImg: 'https://img.alicdn.com/imgextra/i4/397746073/TB2IseKeFXXXXcVXXXXXXXXXXXX-397746073.png_88x88xz.jpg',
-	          shopLookText: '1003',
-	          shareImg: 'https://cbu01.alicdn.com/cms/upload/2015/930/224/2422039_702806130.png_88x88xz.jpg',
-	          shareText: "10",
-
-	        },
-	        {
-	          id: 9,
-	          scopeValue: 4,
-	          PersonPhoto: 'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-	          PersonName: 'YIMING',
-	          PersonVisitTime: 'today',
-	          shopDesc: 'Enrich your life today,. yesterday is history.tomorrow is mystery',
-	          shopImgList: [{
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd1.alicdn.com/bao/uploaded/i1/TB1JB.rLpXXXXXLXXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd4.alicdn.com/imgextra/i4/2702739128/TB2JdvmjVXXXXXjXXXXXXXXXXXX_!!2702739128.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd2.alicdn.com/imgextra/i2/2702739128/TB2A.e6jVXXXXXGXpXXXXXXXXXX_!!2702739128.jpg_220x220.jpg'
-	          }],
-	          shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
-	          shopLikeText: '6',
-	          shopCommentImg: 'https://img.alicdn.com/tps/i1/TB1kTKyIVXXXXacXFXX07tlTXXX-200-200.png_88x88xz.jpg',
-	          shopCommentText: '97',
-	          shopLookImg: 'https://img.alicdn.com/imgextra/i4/397746073/TB2IseKeFXXXXcVXXXXXXXXXXXX-397746073.png_88x88xz.jpg',
-	          shopLookText: '1003',
-	          shareImg: 'https://cbu01.alicdn.com/cms/upload/2015/930/224/2422039_702806130.png_88x88xz.jpg',
-	          shareText: "10",
-
-	        },
-	        {
-	          id: 10,
-	          scopeValue: 5,
-	          PersonPhoto: 'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
-	          PersonName: 'YIMING',
-	          PersonVisitTime: 'yesterday',
-	          shopDesc: 'The secret of success is constancy to purpose',
-	          shopImgList: [{
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd3.alicdn.com/bao/uploaded/i3/TB17zXOGXXXXXbEXVXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd1.alicdn.com/imgextra/i1/2265445951/TB22ACTbFXXXXXBXXXXXXXXXXXX_!!2265445951.jpg_220x220.jpg'
-	          }, {
-	            shopImgWidth: 220,
-	            shopImgHeight: 220,
-	            shopImg: 'https://gd3.alicdn.com/imgextra/i3/2265445951/TB2oXqUbFXXXXXIXXXXXXXXXXXX_!!2265445951.jpg_220x220.jpg'
-	          }],
-	          shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
-	          shopLikeText: '6',
-	          shopCommentImg: 'https://img.alicdn.com/tps/i1/TB1kTKyIVXXXXacXFXX07tlTXXX-200-200.png_88x88xz.jpg',
-	          shopCommentText: '97',
-	          shopLookImg: 'https://img.alicdn.com/imgextra/i4/397746073/TB2IseKeFXXXXcVXXXXXXXXXXXX-397746073.png_88x88xz.jpg',
-	          shopLookText: '1003',
-	          shareImg: 'https://cbu01.alicdn.com/cms/upload/2015/930/224/2422039_702806130.png_88x88xz.jpg',
-	          shareText: "10",
-	        }
-	      ],
-	    }},
-	    methods: {
-	      onrefresh: function(e) {
-	        var self = this;
-	        self.refresh_display = 'show';
-	        this.$call('modal', 'toast', {
-	          'message': "onrefresh",
-	          'duration': 2
-	        });
-	        self.refresh_display = 'hide';
-	      },
-	      onloading: function(e) {
-	        var self = this;
-	        self.loading_display = 'show';
-	        this.$call('modal', 'toast', {
-	          'message': "onloading",
-	          'duration': 2
-	        });
-	        self.loading_display = 'hide';
-	      },
-	      oncellclick: function(e) {
-	        this.$call('modal', 'toast', {
-	          'message': 'row ' + e.target.attr.rownumber + ' clicked',
-	          'duration': 2.0
-	        });
-	      },
-	      onfixedclick: function(e) {
-	        if (e.target.style.backgroundColor == 'red') {
-	          this.backgroundColor = 'green';
-	          this.composite = true;
-	        }
-	        else {
-	          this.backgroundColor = 'red';
-	          this.composite = false;
-	        }
-	      }
+	    __weex_script__(__weex_module__, __weex_exports__, __weex_require__)
+	    if (__weex_exports__.__esModule && __weex_exports__.default) {
+	      __weex_module__.exports = __weex_exports__.default
 	    }
 
-	  }
+	    __weex_module__.exports.template = __weex_template__
 
-	;__weex_module__.exports.template = __weex_module__.exports.template || {}
-	;Object.assign(__weex_module__.exports.template, {
+	    __weex_module__.exports.style = __weex_style__
+
+	})
+
+	__weex_bootstrap__('@weex-component/3226d5b3a8f5b1ae43875db22de0785e',undefined,undefined)
+
+/***/ },
+
+/***/ 100:
+/***/ function(module, exports) {
+
+	module.exports = {
 	  "type": "list",
 	  "classList": [
 	    "list"
@@ -404,42 +78,6 @@
 	    "loadmoreoffset": "2000"
 	  },
 	  "children": [
-	    {
-	      "type": "refresh",
-	      "classList": [
-	        "refresh-view"
-	      ],
-	      "attr": {
-	        "display": function () {return this.refresh_display}
-	      },
-	      "events": {
-	        "refresh": "onrefresh"
-	      },
-	      "children": [
-	        {
-	          "type": "loading-indicator",
-	          "style": {
-	            "height": 60,
-	            "width": 60,
-	            "color": "rgb(238,162,54)"
-	          }
-	        },
-	        {
-	          "type": "text",
-	          "classList": [
-	            "refresh-arrow"
-	          ],
-	          "style": {
-	            "textAlign": "center",
-	            "color": "rgb(238,162,54)"
-	          },
-	          "shown": function () {return (this.refresh_display==='hide')},
-	          "attr": {
-	            "value": "Pull To Refresh"
-	          }
-	        }
-	      ]
-	    },
 	    {
 	      "type": "cell",
 	      "append": "tree",
@@ -468,7 +106,8 @@
 	                "shopHeader"
 	              ],
 	              "style": {
-	                "flexDirection": "row"
+	                "flexDirection": "row",
+	                "overflow": "hidden"
 	              },
 	              "children": [
 	                {
@@ -1167,9 +806,14 @@
 	      ]
 	    }
 	  ]
-	})
-	;__weex_module__.exports.style = __weex_module__.exports.style || {}
-	;Object.assign(__weex_module__.exports.style, {
+	}
+
+/***/ },
+
+/***/ 101:
+/***/ function(module, exports) {
+
+	module.exports = {
 	  "flexRow": {
 	    "flexDirection": "row"
 	  },
@@ -1240,11 +884,340 @@
 	    "WebkitBoxAlign": "center",
 	    "alignItems": "center"
 	  }
-	})
-	})
-	;__weex_bootstrap__("@weex-component/1518171e61dbbc39d28ab3409c7cfdff", {
-	  "transformerVersion": "0.3.1"
-	},undefined)
+	}
+
+/***/ },
+
+/***/ 102:
+/***/ function(module, exports) {
+
+	module.exports = function(module, exports, __weex_require__){'use strict';
+
+	module.exports = {
+	  data: function () {return {
+	    refresh_display: 'hide',
+	    loading_display: 'hide',
+	    backgroundColor: 'red',
+	    composite: 'false',
+	    shopList: [{
+	      id: 1,
+	      scopeValue: 1,
+	      PersonPhoto: 'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
+	      PersonName: 'Mendeleyev',
+	      PersonVisitTime: 'today',
+	      shopDesc: 'Genius only means hard-working all one\'s life',
+	      shopImgList: [{
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd2.alicdn.com/bao/uploaded/i2/TB1rtOnHpXXXXXLaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
+	      }, {
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd4.alicdn.com/bao/uploaded/i4/TB15KrfFVXXXXXJXXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
+	      }, {
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd2.alicdn.com/bao/uploaded/i2/TB1t5YBGVXXXXXcaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
+	      }],
+	      shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
+	      shopLikeText: '6',
+	      shopCommentImg: 'https://img.alicdn.com/tps/i1/TB1kTKyIVXXXXacXFXX07tlTXXX-200-200.png_88x88xz.jpg',
+	      shopCommentText: '97',
+	      shopLookImg: 'https://img.alicdn.com/imgextra/i4/397746073/TB2IseKeFXXXXcVXXXXXXXXXXXX-397746073.png_88x88xz.jpg',
+	      shopLookText: '1003',
+	      shareImg: 'https://cbu01.alicdn.com/cms/upload/2015/930/224/2422039_702806130.png_88x88xz.jpg',
+	      shareText: "10"
+
+	    }, {
+	      id: 2,
+	      scopeValue: 2,
+	      PersonPhoto: 'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
+	      PersonName: 'Napoleon',
+	      PersonVisitTime: 'yesterday',
+	      shopDesc: 'The man who has made up his mind to win will never say "impossible "',
+	      shopImgList: [{
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd1.alicdn.com/imgextra/i1/2655929383/TB2.qITjpXXXXcIXXXXXXXXXXXX_!!2655929383.jpg_220x220.jpg'
+	      }, {
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd3.alicdn.com/imgextra/i3/2655929383/TB2eWwZjpXXXXbHXXXXXXXXXXXX_!!2655929383.jpg_220x220.jpg'
+	      }, {
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd2.alicdn.com/imgextra/i2/2655929383/TB2tgQWjpXXXXbZXXXXXXXXXXXX_!!2655929383.jpg_220x220.jpg'
+	      }],
+	      shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
+	      shopLikeText: '6',
+	      shopCommentImg: 'https://img.alicdn.com/tps/i1/TB1kTKyIVXXXXacXFXX07tlTXXX-200-200.png_88x88xz.jpg',
+	      shopCommentText: '97',
+	      shopLookImg: 'https://img.alicdn.com/imgextra/i4/397746073/TB2IseKeFXXXXcVXXXXXXXXXXXX-397746073.png_88x88xz.jpg',
+	      shopLookText: '1003',
+	      shareImg: 'https://cbu01.alicdn.com/cms/upload/2015/930/224/2422039_702806130.png_88x88xz.jpg',
+	      shareText: "10"
+
+	    }, {
+	      id: 3,
+	      scopeValue: 3,
+	      PersonPhoto: 'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
+	      PersonName: 'Balzac',
+	      PersonVisitTime: 'yesterday',
+	      shopDesc: 'There is no such thing as a great talent without great will - power',
+	      shopImgList: [{
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd1.alicdn.com/imgextra/i1/TB1AFz9LXXXXXbrXVXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
+	      }, {
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd2.alicdn.com/imgextra/i2/2557954751/TB2is2njXXXXXatXpXXXXXXXXXX_!!2557954751.jpg_220x220.jpg'
+	      }, {
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd2.alicdn.com/imgextra/i2/2557954751/TB2PNYGjXXXXXbXXXXXXXXXXXXX_!!2557954751.jpg_220x220.jpg'
+	      }],
+	      shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
+	      shopLikeText: '6',
+	      shopCommentImg: 'https://img.alicdn.com/tps/i1/TB1kTKyIVXXXXacXFXX07tlTXXX-200-200.png_88x88xz.jpg',
+	      shopCommentText: '97',
+	      shopLookImg: 'https://img.alicdn.com/imgextra/i4/397746073/TB2IseKeFXXXXcVXXXXXXXXXXXX-397746073.png_88x88xz.jpg',
+	      shopLookText: '1003',
+	      shareImg: 'https://cbu01.alicdn.com/cms/upload/2015/930/224/2422039_702806130.png_88x88xz.jpg',
+	      shareText: "10"
+
+	    }, {
+	      id: 4,
+	      scopeValue: 4,
+	      PersonPhoto: 'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
+	      PersonName: 'Thomas Carlyle',
+	      PersonVisitTime: '3 day ago',
+	      shopDesc: 'Cease to struggle and you cease to live',
+	      shopImgList: [{
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd4.alicdn.com/imgextra/i4/69426324/TB2zbwdfXXXXXa4XpXXXXXXXXXX_!!69426324.jpg_220x220.jpg'
+	      }, {
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd4.alicdn.com/imgextra/i4/69426324/TB2L7ZAfXXXXXXOXXXXXXXXXXXX_!!69426324.jpg_220x220.jpg'
+	      }, {
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd4.alicdn.com/imgextra/i4/69426324/TB2p9wufXXXXXbiXXXXXXXXXXXX_!!69426324.jpg_220x220.jpg'
+	      }],
+	      shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
+	      shopLikeText: '6',
+	      shopCommentImg: 'https://img.alicdn.com/tps/i1/TB1kTKyIVXXXXacXFXX07tlTXXX-200-200.png_88x88xz.jpg',
+	      shopCommentText: '97',
+	      shopLookImg: 'https://img.alicdn.com/imgextra/i4/397746073/TB2IseKeFXXXXcVXXXXXXXXXXXX-397746073.png_88x88xz.jpg',
+	      shopLookText: '1003',
+	      shareImg: 'https://cbu01.alicdn.com/cms/upload/2015/930/224/2422039_702806130.png_88x88xz.jpg',
+	      shareText: "10"
+
+	    }, {
+	      id: 5,
+	      scopeValue: 5,
+	      PersonPhoto: 'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
+	      PersonName: 'Addison',
+	      PersonVisitTime: 'yesterday',
+	      shopDesc: 'A strong man will struggle with the storms of fate',
+	      shopImgList: [{
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd3.alicdn.com/bao/uploaded/i3/TB1MQ8_KVXXXXaLXVXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
+	      }, {
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd2.alicdn.com/imgextra/i2/53218032/TB2bGSqiXXXXXXyXpXXXXXXXXXX_!!53218032.jpg_220x220.jpg'
+	      }, {
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd2.alicdn.com/bao/uploaded/i2/TB1kP2zKFXXXXbIXXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
+	      }],
+	      shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
+	      shopLikeText: '6',
+	      shopCommentImg: 'https://img.alicdn.com/tps/i1/TB1kTKyIVXXXXacXFXX07tlTXXX-200-200.png_88x88xz.jpg',
+	      shopCommentText: '97',
+	      shopLookImg: 'https://img.alicdn.com/imgextra/i4/397746073/TB2IseKeFXXXXcVXXXXXXXXXXXX-397746073.png_88x88xz.jpg',
+	      shopLookText: '1003',
+	      shareImg: 'https://cbu01.alicdn.com/cms/upload/2015/930/224/2422039_702806130.png_88x88xz.jpg',
+	      shareText: "10"
+
+	    }, {
+	      id: 6,
+	      scopeValue: 1,
+	      PersonPhoto: 'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
+	      PersonName: 'Ruskin',
+	      PersonVisitTime: 'yesterday',
+	      shopDesc: 'Living without an aim is like sailing without a compass',
+	      shopImgList: [{
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd4.alicdn.com/bao/uploaded/i4/TB11yFnHXXXXXakaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
+	      }, {
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd4.alicdn.com/imgextra/i4/32720628/TB2CRJUcXXXXXXwXpXXXXXXXXXX_!!32720628.jpg_220x220.jpg'
+	      }, {
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd2.alicdn.com/bao/uploaded/i2/TB17LUzHXXXXXcEaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
+	      }],
+	      shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
+	      shopLikeText: '6',
+	      shopCommentImg: 'https://img.alicdn.com/tps/i1/TB1kTKyIVXXXXacXFXX07tlTXXX-200-200.png_88x88xz.jpg',
+	      shopCommentText: '97',
+	      shopLookImg: 'https://img.alicdn.com/imgextra/i4/397746073/TB2IseKeFXXXXcVXXXXXXXXXXXX-397746073.png_88x88xz.jpg',
+	      shopLookText: '1003',
+	      shareImg: 'https://cbu01.alicdn.com/cms/upload/2015/930/224/2422039_702806130.png_88x88xz.jpg',
+	      shareText: "10"
+
+	    }, {
+	      id: 7,
+	      scopeValue: 2,
+	      PersonPhoto: 'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
+	      PersonName: 'Yiming',
+	      PersonVisitTime: 'today',
+	      shopDesc: 'Live a noble and honest life. Reviving past times in your old age will help you to enjoy your life again',
+	      shopImgList: [{
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd4.alicdn.com/bao/uploaded/i4/TB1hvNoJXXXXXaMaXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
+	      }, {
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd4.alicdn.com/imgextra/i4/2058567235/TB2V8iygFXXXXaRXpXXXXXXXXXX_!!2058567235.jpg_220x220.jpg'
+	      }, {
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd2.alicdn.com/imgextra/i2/2058567235/TB2im1QgFXXXXX8XXXXXXXXXXXX_!!2058567235.jpg_220x220.jpg'
+	      }],
+	      shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
+	      shopLikeText: '6',
+	      shopCommentImg: 'https://img.alicdn.com/tps/i1/TB1kTKyIVXXXXacXFXX07tlTXXX-200-200.png_88x88xz.jpg',
+	      shopCommentText: '97',
+	      shopLookImg: 'https://img.alicdn.com/imgextra/i4/397746073/TB2IseKeFXXXXcVXXXXXXXXXXXX-397746073.png_88x88xz.jpg',
+	      shopLookText: '1003',
+	      shareImg: 'https://cbu01.alicdn.com/cms/upload/2015/930/224/2422039_702806130.png_88x88xz.jpg',
+	      shareText: "10"
+
+	    }, {
+	      id: 8,
+	      scopeValue: 3,
+	      PersonPhoto: 'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
+	      PersonName: 'Brown',
+	      PersonVisitTime: 'yesterday',
+	      shopDesc: 'Behind every successful man there\'s a lot u unsuccessful years',
+	      shopImgList: [{
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd1.alicdn.com/bao/uploaded/i1/TB18BZ2KFXXXXb8XFXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
+	      }, {
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd1.alicdn.com/imgextra/i1/2775383848/TB2r012jVXXXXXHXpXXXXXXXXXX_!!2775383848.jpg_220x220.jpg'
+	      }, {
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd3.alicdn.com/imgextra/i3/2775383848/TB2iI9VjVXXXXaoXpXXXXXXXXXX_!!2775383848.jpg_220x220.jpg'
+	      }],
+	      shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
+	      shopLikeText: '6',
+	      shopCommentImg: 'https://img.alicdn.com/tps/i1/TB1kTKyIVXXXXacXFXX07tlTXXX-200-200.png_88x88xz.jpg',
+	      shopCommentText: '97',
+	      shopLookImg: 'https://img.alicdn.com/imgextra/i4/397746073/TB2IseKeFXXXXcVXXXXXXXXXXXX-397746073.png_88x88xz.jpg',
+	      shopLookText: '1003',
+	      shareImg: 'https://cbu01.alicdn.com/cms/upload/2015/930/224/2422039_702806130.png_88x88xz.jpg',
+	      shareText: "10"
+
+	    }, {
+	      id: 9,
+	      scopeValue: 4,
+	      PersonPhoto: 'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
+	      PersonName: 'YIMING',
+	      PersonVisitTime: 'today',
+	      shopDesc: 'Enrich your life today,. yesterday is history.tomorrow is mystery',
+	      shopImgList: [{
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd1.alicdn.com/bao/uploaded/i1/TB1JB.rLpXXXXXLXXXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
+	      }, {
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd4.alicdn.com/imgextra/i4/2702739128/TB2JdvmjVXXXXXjXXXXXXXXXXXX_!!2702739128.jpg_220x220.jpg'
+	      }, {
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd2.alicdn.com/imgextra/i2/2702739128/TB2A.e6jVXXXXXGXpXXXXXXXXXX_!!2702739128.jpg_220x220.jpg'
+	      }],
+	      shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
+	      shopLikeText: '6',
+	      shopCommentImg: 'https://img.alicdn.com/tps/i1/TB1kTKyIVXXXXacXFXX07tlTXXX-200-200.png_88x88xz.jpg',
+	      shopCommentText: '97',
+	      shopLookImg: 'https://img.alicdn.com/imgextra/i4/397746073/TB2IseKeFXXXXcVXXXXXXXXXXXX-397746073.png_88x88xz.jpg',
+	      shopLookText: '1003',
+	      shareImg: 'https://cbu01.alicdn.com/cms/upload/2015/930/224/2422039_702806130.png_88x88xz.jpg',
+	      shareText: "10"
+
+	    }, {
+	      id: 10,
+	      scopeValue: 5,
+	      PersonPhoto: 'https://gw.alicdn.com/tps/i3/TB1yeWeIFXXXXX5XFXXuAZJYXXX-210-210.png_60x60.jpg',
+	      PersonName: 'YIMING',
+	      PersonVisitTime: 'yesterday',
+	      shopDesc: 'The secret of success is constancy to purpose',
+	      shopImgList: [{
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd3.alicdn.com/bao/uploaded/i3/TB17zXOGXXXXXbEXVXXXXXXXXXX_!!0-item_pic.jpg_220x220.jpg'
+	      }, {
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd1.alicdn.com/imgextra/i1/2265445951/TB22ACTbFXXXXXBXXXXXXXXXXXX_!!2265445951.jpg_220x220.jpg'
+	      }, {
+	        shopImgWidth: 220,
+	        shopImgHeight: 220,
+	        shopImg: 'https://gd3.alicdn.com/imgextra/i3/2265445951/TB2oXqUbFXXXXXIXXXXXXXXXXXX_!!2265445951.jpg_220x220.jpg'
+	      }],
+	      shopLikeImg: 'https://img.alicdn.com/tps/i1/TB1jTxXIVXXXXb8XXXX07tlTXXX-200-200.png_88x88xz.jpg',
+	      shopLikeText: '6',
+	      shopCommentImg: 'https://img.alicdn.com/tps/i1/TB1kTKyIVXXXXacXFXX07tlTXXX-200-200.png_88x88xz.jpg',
+	      shopCommentText: '97',
+	      shopLookImg: 'https://img.alicdn.com/imgextra/i4/397746073/TB2IseKeFXXXXcVXXXXXXXXXXXX-397746073.png_88x88xz.jpg',
+	      shopLookText: '1003',
+	      shareImg: 'https://cbu01.alicdn.com/cms/upload/2015/930/224/2422039_702806130.png_88x88xz.jpg',
+	      shareText: "10"
+	    }]
+	  }},
+	  methods: {
+	    oncellclick: function oncellclick(e) {
+	      this.$call('modal', 'toast', {
+	        'message': 'row ' + e.target.attr.rownumber + ' clicked',
+	        'duration': 2.0
+	      });
+	    },
+	    onfixedclick: function onfixedclick(e) {
+	      if (e.target.style.backgroundColor == 'red') {
+	        this.backgroundColor = 'green';
+	        this.composite = true;
+	      } else {
+	        this.backgroundColor = 'red';
+	        this.composite = false;
+	      }
+	    },
+	    onloading: function onloading(e) {
+	      this.loading_display = "show";
+	      setTimeout(function () {
+	        this.loading_display = 'hide';
+	      }.bind(this), 1000);
+	    }
+	  }
+
+	};}
+	/* generated by weex-loader */
+
 
 /***/ }
-/******/ ]);
+
+/******/ });

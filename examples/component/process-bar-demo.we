@@ -1,0 +1,30 @@
+<template>
+  <scroller>
+    <wxc-panel title="Basic" type="primary">
+      <div style="width:{{fullW}};border-color:#333;border-width:1;border-style:solid;">
+        <div style="width:{{w}};height:60;background-color:#333;">
+        </div>
+      </div>
+    </wxc-panel>
+  </scroller>
+</template>
+<style>
+</style>
+<script>
+require('weex-components');
+var INC = 20;
+module.exports = {
+  data: {
+    fullW: 600,
+    w: 40
+  },
+  ready: function() {
+    var me = this;
+    setInterval(function() {
+      //console.log(me.w);
+      if (me.w >= me.fullW) me.w = 0;
+      me.w = (me.w + INC >= me.fullW) ? me.fullW : me.w + INC;
+    }, 33);
+  }
+};
+</script>

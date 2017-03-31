@@ -1,0 +1,286 @@
+/**
+ *
+ *                                  Apache License
+ *                            Version 2.0, January 2004
+ *                         http://www.apache.org/licenses/
+ *
+ *    TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+ *
+ *    1. Definitions.
+ *
+ *       "License" shall mean the terms and conditions for use, reproduction,
+ *       and distribution as defined by Sections 1 through 9 of this document.
+ *
+ *       "Licensor" shall mean the copyright owner or entity authorized by
+ *       the copyright owner that is granting the License.
+ *
+ *       "Legal Entity" shall mean the union of the acting entity and all
+ *       other entities that control, are controlled by, or are under common
+ *       control with that entity. For the purposes of this definition,
+ *       "control" means (i) the power, direct or indirect, to cause the
+ *       direction or management of such entity, whether by contract or
+ *       otherwise, or (ii) ownership of fifty percent (50%) or more of the
+ *       outstanding shares, or (iii) beneficial ownership of such entity.
+ *
+ *       "You" (or "Your") shall mean an individual or Legal Entity
+ *       exercising permissions granted by this License.
+ *
+ *       "Source" form shall mean the preferred form for making modifications,
+ *       including but not limited to software source code, documentation
+ *       source, and configuration files.
+ *
+ *       "Object" form shall mean any form resulting from mechanical
+ *       transformation or translation of a Source form, including but
+ *       not limited to compiled object code, generated documentation,
+ *       and conversions to other media types.
+ *
+ *       "Work" shall mean the work of authorship, whether in Source or
+ *       Object form, made available under the License, as indicated by a
+ *       copyright notice that is included in or attached to the work
+ *       (an example is provided in the Appendix below).
+ *
+ *       "Derivative Works" shall mean any work, whether in Source or Object
+ *       form, that is based on (or derived from) the Work and for which the
+ *       editorial revisions, annotations, elaborations, or other modifications
+ *       represent, as a whole, an original work of authorship. For the purposes
+ *       of this License, Derivative Works shall not include works that remain
+ *       separable from, or merely link (or bind by name) to the interfaces of,
+ *       the Work and Derivative Works thereof.
+ *
+ *       "Contribution" shall mean any work of authorship, including
+ *       the original version of the Work and any modifications or additions
+ *       to that Work or Derivative Works thereof, that is intentionally
+ *       submitted to Licensor for inclusion in the Work by the copyright owner
+ *       or by an individual or Legal Entity authorized to submit on behalf of
+ *       the copyright owner. For the purposes of this definition, "submitted"
+ *       means any form of electronic, verbal, or written communication sent
+ *       to the Licensor or its representatives, including but not limited to
+ *       communication on electronic mailing lists, source code control systems,
+ *       and issue tracking systems that are managed by, or on behalf of, the
+ *       Licensor for the purpose of discussing and improving the Work, but
+ *       excluding communication that is conspicuously marked or otherwise
+ *       designated in writing by the copyright owner as "Not a Contribution."
+ *
+ *       "Contributor" shall mean Licensor and any individual or Legal Entity
+ *       on behalf of whom a Contribution has been received by Licensor and
+ *       subsequently incorporated within the Work.
+ *
+ *    2. Grant of Copyright License. Subject to the terms and conditions of
+ *       this License, each Contributor hereby grants to You a perpetual,
+ *       worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+ *       copyright license to reproduce, prepare Derivative Works of,
+ *       publicly display, publicly perform, sublicense, and distribute the
+ *       Work and such Derivative Works in Source or Object form.
+ *
+ *    3. Grant of Patent License. Subject to the terms and conditions of
+ *       this License, each Contributor hereby grants to You a perpetual,
+ *       worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+ *       (except as stated in this section) patent license to make, have made,
+ *       use, offer to sell, sell, import, and otherwise transfer the Work,
+ *       where such license applies only to those patent claims licensable
+ *       by such Contributor that are necessarily infringed by their
+ *       Contribution(s) alone or by combination of their Contribution(s)
+ *       with the Work to which such Contribution(s) was submitted. If You
+ *       institute patent litigation against any entity (including a
+ *       cross-claim or counterclaim in a lawsuit) alleging that the Work
+ *       or a Contribution incorporated within the Work constitutes direct
+ *       or contributory patent infringement, then any patent licenses
+ *       granted to You under this License for that Work shall terminate
+ *       as of the date such litigation is filed.
+ *
+ *    4. Redistribution. You may reproduce and distribute copies of the
+ *       Work or Derivative Works thereof in any medium, with or without
+ *       modifications, and in Source or Object form, provided that You
+ *       meet the following conditions:
+ *
+ *       (a) You must give any other recipients of the Work or
+ *           Derivative Works a copy of this License; and
+ *
+ *       (b) You must cause any modified files to carry prominent notices
+ *           stating that You changed the files; and
+ *
+ *       (c) You must retain, in the Source form of any Derivative Works
+ *           that You distribute, all copyright, patent, trademark, and
+ *           attribution notices from the Source form of the Work,
+ *           excluding those notices that do not pertain to any part of
+ *           the Derivative Works; and
+ *
+ *       (d) If the Work includes a "NOTICE" text file as part of its
+ *           distribution, then any Derivative Works that You distribute must
+ *           include a readable copy of the attribution notices contained
+ *           within such NOTICE file, excluding those notices that do not
+ *           pertain to any part of the Derivative Works, in at least one
+ *           of the following places: within a NOTICE text file distributed
+ *           as part of the Derivative Works; within the Source form or
+ *           documentation, if provided along with the Derivative Works; or,
+ *           within a display generated by the Derivative Works, if and
+ *           wherever such third-party notices normally appear. The contents
+ *           of the NOTICE file are for informational purposes only and
+ *           do not modify the License. You may add Your own attribution
+ *           notices within Derivative Works that You distribute, alongside
+ *           or as an addendum to the NOTICE text from the Work, provided
+ *           that such additional attribution notices cannot be construed
+ *           as modifying the License.
+ *
+ *       You may add Your own copyright statement to Your modifications and
+ *       may provide additional or different license terms and conditions
+ *       for use, reproduction, or distribution of Your modifications, or
+ *       for any such Derivative Works as a whole, provided Your use,
+ *       reproduction, and distribution of the Work otherwise complies with
+ *       the conditions stated in this License.
+ *
+ *    5. Submission of Contributions. Unless You explicitly state otherwise,
+ *       any Contribution intentionally submitted for inclusion in the Work
+ *       by You to the Licensor shall be under the terms and conditions of
+ *       this License, without any additional terms or conditions.
+ *       Notwithstanding the above, nothing herein shall supersede or modify
+ *       the terms of any separate license agreement you may have executed
+ *       with Licensor regarding such Contributions.
+ *
+ *    6. Trademarks. This License does not grant permission to use the trade
+ *       names, trademarks, service marks, or product names of the Licensor,
+ *       except as required for reasonable and customary use in describing the
+ *       origin of the Work and reproducing the content of the NOTICE file.
+ *
+ *    7. Disclaimer of Warranty. Unless required by applicable law or
+ *       agreed to in writing, Licensor provides the Work (and each
+ *       Contributor provides its Contributions) on an "AS IS" BASIS,
+ *       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ *       implied, including, without limitation, any warranties or conditions
+ *       of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+ *       PARTICULAR PURPOSE. You are solely responsible for determining the
+ *       appropriateness of using or redistributing the Work and assume any
+ *       risks associated with Your exercise of permissions under this License.
+ *
+ *    8. Limitation of Liability. In no event and under no legal theory,
+ *       whether in tort (including negligence), contract, or otherwise,
+ *       unless required by applicable law (such as deliberate and grossly
+ *       negligent acts) or agreed to in writing, shall any Contributor be
+ *       liable to You for damages, including any direct, indirect, special,
+ *       incidental, or consequential damages of any character arising as a
+ *       result of this License or out of the use or inability to use the
+ *       Work (including but not limited to damages for loss of goodwill,
+ *       work stoppage, computer failure or malfunction, or any and all
+ *       other commercial damages or losses), even if such Contributor
+ *       has been advised of the possibility of such damages.
+ *
+ *    9. Accepting Warranty or Additional Liability. While redistributing
+ *       the Work or Derivative Works thereof, You may choose to offer,
+ *       and charge a fee for, acceptance of support, warranty, indemnity,
+ *       or other liability obligations and/or rights consistent with this
+ *       License. However, in accepting such obligations, You may act only
+ *       on Your own behalf and on Your sole responsibility, not on behalf
+ *       of any other Contributor, and only if You agree to indemnify,
+ *       defend, and hold each Contributor harmless for any liability
+ *       incurred by, or claims asserted against, such Contributor by reason
+ *       of your accepting any such warranty or additional liability.
+ *
+ *    END OF TERMS AND CONDITIONS
+ *
+ *    APPENDIX: How to apply the Apache License to your work.
+ *
+ *       To apply the Apache License to your work, attach the following
+ *       boilerplate notice, with the fields enclosed by brackets "[]"
+ *       replaced with your own identifying information. (Don't include
+ *       the brackets!)  The text should be enclosed in the appropriate
+ *       comment syntax for the file format. We also recommend that a
+ *       file or class name and description of purpose be included on the
+ *       same "printed page" as the copyright notice for easier
+ *       identification within third-party archives.
+ *
+ *    Copyright 2016 Alibaba Group
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package com.taobao.weex.utils;
+
+import com.alibaba.fastjson.JSON;
+import org.junit.Test;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import static org.junit.Assert.*;
+
+/**
+ * Created by sospartan on 8/2/16.
+ */
+public class WXJsonUtilsTest {
+
+
+  static class TestObj{
+    int a;
+
+    public int getA() {
+      return a;
+    }
+
+    public void setA(int a) {
+      this.a = a;
+    }
+  }
+
+  @Test
+  public void testGetList() throws Exception {
+    List<TestObj> list = WXJsonUtils.getList("[{'a':1},{'a':2}]",TestObj.class);
+
+    assertEquals(list.size(),2);
+    assertEquals(list.get(0).getA(),1);
+    assertEquals(list.get(1).getA(),2);
+
+    list = WXJsonUtils.getList("{}",TestObj.class);
+
+    assertEquals(list.size(),0);
+  }
+
+  @Test
+  public void testFromObjectToJSONString() throws Exception {
+    TestObj obj = new TestObj();
+    obj.a  = 1;
+    assertEquals(WXJsonUtils.fromObjectToJSONString(obj),"{\"a\":1}");
+    assertEquals(WXJsonUtils.fromObjectToJSONString(null),"null");
+    assertEquals(WXJsonUtils.fromObjectToJSONString(new Object()),"{}");
+
+    Map<String,Object> data = new HashMap<>();
+    data.put("a",536649655068L);
+    BigDecimal d = new BigDecimal(536649655068L);
+    data.put("d",d);
+    data.put("b",new Long(536649655068L));
+
+
+    Object resp = JSON.parse("[{\"offerId\":536449659068,\"subject\":\"jv2测试offer\",\"offerUnit\":\"千克\",\"price\":{\"price\":234.0},\"imageList\":[\"http://product.1688nongchanping.com/offer/7730-1503041G910-51.jpg\",\"http://product.1688nongchanping.com/offer/7730-1503041G910-51.jpg\",\"http://product.1688nongchanping.com/offer/140-150302120045.jpg\"],\"featureList\":[],\"companyInfo\":null,\"saleInfo\":{\"saledCount\":null,\"avaliableAmount\":100.0},\"detailURL\":\"<p>http://view.m.1688.com/cms/native/offerdetail.html?url=http://img02.taobaocdn.com/tfscom/TB18Z_5KVXXXXbAXXXXXXXXXXXX</p>\"},{\"offerId\":536489059003,\"subject\":\"jv 测试offer——detailURL\",\"offerUnit\":\"千克\",\"price\":{\"price\":12.0},\"imageList\":[\"http://product.1688nongchanping.com/offer/1139304780d4f14e57o.jpg\",\"http://product.1688nongchanping.com/offer/1139304780d4f14e57o.jpg\"],\"featureList\":[],\"companyInfo\":null,\"saleInfo\":{\"saledCount\":null,\"avaliableAmount\":100.0},\"detailURL\":\"<p style=\\\"text-align: center;\\\"><img style=\\\"visibility: visible;\\\" src=\\\"http://cbu01.alicdn.com/img/ibank/2016/147/565/3280565741_1600896868.jpg\\\" /><img style=\\\"visibility: visible;\\\" src=\\\"http://cbu01.alicdn.com/img/ibank/2016/741/475/3280574147_1600896868.jpg\\\" /><img style=\\\"visibility: visible;\\\" src=\\\"http://cbu01.alicdn.com/img/ibank/2016/790/816/3280618097_1600896868.jpg\\\" /><img style=\\\"visibility: visible;\\\" src=\\\"http://cbu01.alicdn.com/img/ibank/2016/841/475/3280574148_1600896868.jpg\\\" /><img style=\\\"visibility: visible;\\\" src=\\\"http://cbu01.alicdn.com/img/ibank/2016/232/516/3280615232_1600896868.jpg\\\" /><img style=\\\"visibility: visible;\\\" src=\\\"http://cbu01.alicdn.com/img/ibank/2016/222/949/3281949222_1600896868.jpg\\\" /><img style=\\\"visibility: visible;\\\" src=\\\"http://cbu01.alicdn.com/img/ibank/2016/247/565/3280565742_1600896868.jpg\\\" /><img style=\\\"visibility: visible;\\\" src=\\\"http://cbu01.alicdn.com/img/ibank/2016/332/516/3280615233_1600896868.jpg\\\" /><img style=\\\"visibility: visible;\\\" src=\\\"http://cbu01.alicdn.com/img/ibank/2016/896/865/3280568698_1600896868.jpg\\\" /><img style=\\\"visibility: visible;\\\" src=\\\"http://cbu01.alicdn.com/img/ibank/2016/790/259/3281952097_1600896868.jpg\\\" /></p>\"},{\"offerId\":536489059017,\"subject\":\"jv测试offer9\",\"offerUnit\":\"千克\",\"price\":{\"price\":12.0},\"imageList\":[\"http://product.1688nongchanping.com/offer/b356b09004d94f429f39c59c68768a38.jpg\",\"http://product.1688nongchanping.com/offer/b356b09004d94f429f39c59c68768a38.jpg\",\"http://product.1688nongchanping.com/offer/140-150302120045.jpg\"],\"featureList\":[],\"companyInfo\":null,\"saleInfo\":{\"saledCount\":null,\"avaliableAmount\":122.0},\"detailURL\":\"<div style=\\\"margin: 0px; padding: 0px;\\\">\\r\\n<p style=\\\"text-align: center;\\\"><img style=\\\"visibility: visible;\\\" src=\\\"http://cbu01.alicdn.com/img/ibank/2016/147/565/3280565741_1600896868.jpg\\\" /><img style=\\\"visibility: visible;\\\" src=\\\"http://cbu01.alicdn.com/img/ibank/2016/741/475/3280574147_1600896868.jpg\\\" /><img style=\\\"visibility: visible;\\\" src=\\\"http://cbu01.alicdn.com/img/ibank/2016/790/816/3280618097_1600896868.jpg\\\" /><img style=\\\"visibility: visible;\\\" src=\\\"http://cbu01.alicdn.com/img/ibank/2016/841/475/3280574148_1600896868.jpg\\\" /><img style=\\\"visibility: visible;\\\" src=\\\"http://cbu01.alicdn.com/img/ibank/2016/232/516/3280615232_1600896868.jpg\\\" /><img style=\\\"visibility: visible;\\\" src=\\\"http://cbu01.alicdn.com/img/ibank/2016/222/949/3281949222_1600896868.jpg\\\" /><img style=\\\"visibility: visible;\\\" src=\\\"http://cbu01.alicdn.com/img/ibank/2016/247/565/3280565742_1600896868.jpg\\\" /><img style=\\\"visibility: visible;\\\" src=\\\"http://cbu01.alicdn.com/img/ibank/2016/332/516/3280615233_1600896868.jpg\\\" /><img style=\\\"visibility: visible;\\\" src=\\\"http://cbu01.alicdn.com/img/ibank/2016/896/865/3280568698_1600896868.jpg\\\" /><img style=\\\"visibility: visible;\\\" src=\\\"http://cbu01.alicdn.com/img/ibank/2016/790/259/3281952097_1600896868.jpg\\\" /></p>\\r\\n</div>\"},{\"offerId\":536489059001,\"subject\":\"正儿八经测试3\",\"offerUnit\":\"千克\",\"price\":{\"price\":12.0},\"imageList\":[\"http://product.1688nongchanping.com/offer/3132872979_999566913.jpg\",\"http://product.1688nongchanping.com/offer/3132872979_999566913.jpg\",\"http://product.1688nongchanping.com/offer/3214597083_919536840.jpg\"],\"featureList\":[],\"companyInfo\":null,\"saleInfo\":{\"saledCount\":null,\"avaliableAmount\":2323232.0},\"detailURL\":\"<p>&lt;p data-type=\\\"label-view\\\" style=\\\"color: rgb(255, 255, 255); font-size: 9px; height: 13px; margin-left: 15px; margin-top: 64px; width: 46px; background-image: url(&amp;quot;http://gtms02.alicdn.com/tps/i2/TB1dYb9KVXXXXX5XVXXjm1NHpXX-204-56.png&amp;quot;); background-size: contain; background-repeat: no-repeat;\\\" data-gravity=\\\"5\\\" roc-id=\\\"roc-13\\\"&gt;</p>\\r\\n<p>&nbsp; &nbsp; &lt;span class=\\\"label-content\\\" style=\\\"left: 0px; top: -2.5px;\\\"&gt;JV测试测试测试&lt;/span&gt;</p>\\r\\n<p>&lt;/p&gt;</p>\"},{\"offerId\":536449539162,\"subject\":\"正儿八经测试商品1\",\"offerUnit\":\"千克\",\"price\":{\"price\":23.0},\"imageList\":[\"http://product.1688nongchanping.com/offer/3211026576_999566913.jpg\",\"http://product.1688nongchanping.com/offer/3211026576_999566913.jpg\",\"http://product.1688nongchanping.com/offer/3132872979_999566913.jpg\"],\"featureList\":[],\"companyInfo\":null,\"saleInfo\":{\"saledCount\":null,\"avaliableAmount\":34567.0},\"detailURL\":\"<table>\\r\\n<tbody>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\"><span class=\\\"html-comment\\\">&lt;!----&gt;</span><span class=\\\"html-doctype\\\">&lt;!DOCTYPE html&gt;</span></td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\"><span class=\\\"html-tag\\\">&lt;html&gt;</span></td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\"><span class=\\\"html-tag\\\">&lt;head&gt;</span></td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\"><span class=\\\"html-tag\\\">&lt;title&gt;</span>图文详情<span class=\\\"html-tag\\\">&lt;/title&gt;</span></td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\"><span class=\\\"html-tag\\\">&lt;meta <span class=\\\"html-attribute-name\\\">charset</span>=\\\"<span class=\\\"html-attribute-value\\\">gbk</span>\\\"&gt;</span></td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\"><span class=\\\"html-tag\\\">&lt;meta <span class=\\\"html-attribute-name\\\">name</span>=\\\"<span class=\\\"html-attribute-value\\\">data-spm</span>\\\" <span class=\\\"html-attribute-name\\\">content</span>=\\\"<span class=\\\"html-attribute-value\\\">a260g</span>\\\" /&gt;</span><span class=\\\"html-tag\\\">&lt;meta <span class=\\\"html-attribute-name\\\">name</span>='<span class=\\\"html-attribute-value\\\">date</span>' <span class=\\\"html-attribute-name\\\">content</span>='<span class=\\\"html-attribute-value\\\">1469761837251</span>'/&gt;</span></td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\"><span class=\\\"html-tag\\\">&lt;meta <span class=\\\"html-attribute-name\\\">name</span>=\\\"<span class=\\\"html-attribute-value\\\">viewport</span>\\\" <span class=\\\"html-attribute-name\\\">content</span>=\\\"<span class=\\\"html-attribute-value\\\">width=790px</span>\\\"&gt;</span></td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\"><span class=\\\"html-tag\\\">&lt;link <span class=\\\"html-attribute-name\\\">rel</span>=\\\"<span class=\\\"html-attribute-value\\\">stylesheet</span>\\\" <span class=\\\"html-attribute-name\\\">href</span>=\\\"<a class=\\\"html-attribute-value html-resource-link\\\" href=\\\"http://astyle.alicdn.com/fdevlib/css/lofty/port/lofty.css?_v=4900687.css\\\" target=\\\"_blank\\\">//astyle.alicdn.com/fdevlib/css/lofty/port/lofty.css?_v=4900687.css</a>\\\" /&gt;</span><span class=\\\"html-tag\\\">&lt;/link&gt;</span></td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\"><span class=\\\"html-tag\\\">&lt;script <span class=\\\"html-attribute-name\\\">type</span>=\\\"<span class=\\\"html-attribute-value\\\">text/javascript</span>\\\" <span class=\\\"html-attribute-name\\\">src</span>=\\\"<a class=\\\"html-attribute-value html-resource-link\\\" href=\\\"http://astyle.alicdn.com/m/lofty/port/lofty.js?_v=4900687.js\\\" target=\\\"_blank\\\">//astyle.alicdn.com/m/lofty/port/lofty.js?_v=4900687.js</a>\\\"&gt;</span><span class=\\\"html-tag\\\">&lt;/script&gt;</span></td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\"><span class=\\\"html-tag\\\">&lt;script <span class=\\\"html-attribute-name\\\">type</span>=\\\"<span class=\\\"html-attribute-value\\\">text/javascript</span>\\\" <span class=\\\"html-attribute-name\\\">src</span>=\\\"<a class=\\\"html-attribute-value html-resource-link\\\" href=\\\"http://astyle.alicdn.com/fdevlib/js/gallery/jquery/jquery-latest.js?_v=4900687.js\\\" target=\\\"_blank\\\">//astyle.alicdn.com/fdevlib/js/gallery/jquery/jquery-latest.js?_v=4900687.js</a>\\\"&gt;</span><span class=\\\"html-tag\\\">&lt;/script&gt;</span></td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\"><span class=\\\"html-tag\\\">&lt;style&gt;</span></td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">div,p,td,a,strong,b,span{word-break:break-word}</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">body img{</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">max-width:790px;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">vertical-align:bottom;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">}</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\"><span class=\\\"html-tag\\\">&lt;/style&gt;</span></td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\"><span class=\\\"html-tag\\\">&lt;/head&gt;</span></td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\"><span class=\\\"html-tag\\\">&lt;body <span class=\\\"html-attribute-name\\\">data-spm</span>=\\\"<span class=\\\"html-attribute-value\\\">8029192</span>\\\"&gt;</span><span class=\\\"html-tag\\\">&lt;script <span class=\\\"html-attribute-name\\\">type</span>=<span class=\\\"html-attribute-value\\\">text/javascript</span>&gt;</span>var dmtrack_c='{-}'; var dmtrack_pageid='0ac6d5d80a6738c01470206317';</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">(function(d){var t=d.createElement('script');t.type='text/javascript';t.async=true;t.src='//astyle-src.alicdn.com/sys/js/beacon/cnb.js';d.getElementsByTagName('head')[0].appendChild(t);}(document));<span class=\\\"html-tag\\\">&lt;/script&gt;</span></td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\"><span class=\\\"html-tag\\\">&lt;noscript&gt;</span>&lt;img src=\\\"//dmtracking.1688.com/b.jpg?cD0yJnU9e3ZpZXcubS4xNjg4LmNvbSUyZmNtcyUyZm5hdGl2ZSUyZm9mZmVyZGV0YWlsJTJlaHRtbD91cmw9aHR0cCUzYSUyZiUyZmRzYyUyZXRhb2Jhb2NkbiUyZWNvbSUyZmk4JTJmNTMwJTJmMzgwJTJmNTM2MzgxODI4NjQ5JTJmVEIxRFpXb0xYWFhYWGJqWEZYWDhxdHBGWGxYJTJlZGVzYyUyNTdDdmFyJTI1NUVkZXNjJTI1M0JsYW5nJTI1NUVnYmslMjUzQnNpZ24lMjU1RTEwZDUwYzk3OTVmZmM0N2I3YmYwODhmZTAyZjExMzMzJTI1M0J0JTI1NUUxNDY5Njk3MDgzfSZtPXtHRVR9JnM9ezIwMH0mcj17LX0mYT17JTIyY19tcz0xfGNfbXQ9M3xjX21pZD1iMmItNjAyNDQ5Mjg4fGNfbGlkPW1yJTI1RTklMjVBMyUyNThFJTI1RTYlMjVCNSUyNTgxJTI1RTYlMjVCNiUyNTk1JTI1RTYlMjVCNyUyNThDJTIyfSZiPS0mYz17LX0K&amp;ver=40&amp;pageid=0ac6d5d80a6738c01470206317&amp;time=1470206317\\\" width=\\\"1\\\" height=\\\"1\\\" style=\\\"display:none\\\"&gt;<span class=\\\"html-tag\\\">&lt;/noscript&gt;</span></td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\"><span class=\\\"html-tag\\\">&lt;script <span class=\\\"html-attribute-name\\\">type</span>=<span class=\\\"html-attribute-value\\\">text/javascript</span>&gt;</span> var _SPM_a='{-}'; var _SPM_b='{-}';var _SPM_app_name='{-}';var _SPM_template_path='{-}';<span class=\\\"html-tag\\\">&lt;/script&gt;</span></td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\"><span class=\\\"html-tag\\\">&lt;script&gt;</span></td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">with(document)with(body)with(insertBefore(createElement(\\\"script\\\"),firstChild))setAttribute(\\\"exparams\\\",\\\"category=&amp;userid=602449288&amp;aplus&amp;&amp;asid=AYil6CNtkaFXdONiEQAAAABPw8F55NX8kg==&amp;aat=%22c%5fms%3d1%7cc%5fmt%3d3%7cc%5fmid%3db2b%2d602449288%7cc%5flid%3dmr%25E9%25A3%258E%25E6%25B5%2581%25E6%25B6%2595%25E6%25B7%258C%22&amp;abi=42%2e120%2e74%2e159%2e1456797195765%2e338553%2e3&amp;abb=&amp;\\\",id=\\\"tb-beacon-aplus\\\",src=(location&gt;\\\"https\\\"?\\\"//g\\\":\\\"//g\\\")+\\\".alicdn.com/alilog/mlog/aplus_b2b.js\\\")</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\"><span class=\\\"html-tag\\\">&lt;/script&gt;</span></td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">&nbsp;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">&nbsp;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\"><span class=\\\"html-tag\\\">&lt;/body&gt;</span></td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\"><span class=\\\"html-tag\\\">&lt;script <span class=\\\"html-attribute-name\\\">type</span>=\\\"<span class=\\\"html-attribute-value\\\">text/javascript</span>\\\"&gt;</span></td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">define(['util/lazyload/1.0','jquery'],function(LazyLoad,J){</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">var main={</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">init:function(){</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">this.detailUrl =this._getUrlVars('url');</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">this.config = {},</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">this.container=J('body');</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">this._loadDesc();</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">},</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">_getUrlVars: function(name){</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">var vars = [], hash;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&amp;');</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">&nbsp;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">for(var i = 0; i &lt; hashes.length; i++){</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">hash = hashes[i].split('=');</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">vars.push(hash[0]);</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">vars[hash[0]] = hash[1];</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">}</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">&nbsp;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">return decodeURI(vars[name]);</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">},</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">_loadDesc: function() {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">if (this.detailUrl) {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">this._initLazyLoadDescriptionTFS();</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">} else {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">this._initLazyLoadDescription();</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">}</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">},</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">&nbsp;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">_initLazyLoadDescriptionTFS: function() {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">var that = this,</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">descURLTFS = that.detailUrl;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">&nbsp;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">//新老地址处理</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">if (typeof(descURLTFS) === \\\"string\\\" &amp;&amp; descURLTFS.indexOf(\\\"/tfscom/\\\") &gt;= 0 &amp;&amp; descURLTFS.indexOf(\\\"?t=\\\") &lt; 0) {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">descURLTFS = descURLTFS + '?t=' + new Date().getTime();</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">}</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">&nbsp;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">J.ajax({</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">url: descURLTFS,</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">dataType: 'script',</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">timeout: 3000,</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">cache: true,</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">success: function() {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">if (descURLTFS.indexOf(\\\"/tfscom/\\\") &gt;= 0) {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">if (window.offer_details &amp;&amp; window.offer_details.content) {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">that._descriptionSuccessCallback(window.offer_details.content);</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">} else {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">that._initLazyLoadDescription();</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">}</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">} else {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">if (window.desc) {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">that._descriptionSuccessCallback(window.desc);</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">} else {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">that._initLazyLoadDescription();</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">}</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">}</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">},</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">error: function() {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">that._initLazyLoadDescription();</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">}</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">});</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">},</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">&nbsp;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">_initLazyLoadDescription: function() {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">var that = this;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">var descURL = that.detailUrl;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">//获取offer详情的数据</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">J.ajax(descURL, {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">dataType: 'jsonp',</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">data: {},</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">success: function(o) {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">if (o.success === true) {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">that._descriptionSuccessCallback(o.offerDesc);</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">} else {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">that.container.html('详情加载失败');</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">}</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">},</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">error: function() {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">that.container.html('详情加载失败');</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">}</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">});</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">},</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">&nbsp;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">_descriptionSuccessCallback: function(o) {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">var self = this,</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">heightStyle = '',</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">widthStyle = '',</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">styles='',</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">imgRegx = /(&lt;img[^&gt;]*)(src *= *(\\\"[^\\\"]*\\\"|'[^']*'|[^ &gt;]*)) *[^&gt;]*&gt;/g,</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">heightRegx = /(height[^:]*=\\\\s*(\\\"[^\\\"]*\\\"|'[^']*'|[^ &gt;]*))/g,</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">widthRegx = /(width[^:]*=\\\\s*(\\\"[^\\\"]*\\\"|'[^']*'|[^ &gt;]*))/g,</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">styleRegx =/style[^=]*=\\\\s*\\\"[^\\\"]*\\\"/g,</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">html = '',</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">imgCount, count = 0,</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">imgs, tempEl,</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">SPACEBALL = '//cbu01.alicdn.com/cms/upload/other/lazyload.png',</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">that = this;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">&nbsp;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">html = o || '';</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">&nbsp;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">imgCount = html.match(imgRegx) ? html.match(imgRegx).length : 0;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">html = html.replace(imgRegx, function(m, p1, p2, p3) {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">count++;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">//if (count &lt; 1) return m; // 前 1 个图片不处理</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">if (m.match(widthRegx)) {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">widthStyle = m.match(widthRegx);</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">} else {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">widthStyle = '';</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">}</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">&nbsp;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">if(m.match(styleRegx)){</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">styles = m.match(styleRegx);</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">}else{</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">styles = '';</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">}</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">&nbsp;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">if (m.indexOf('height') !== -1) {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">heightStyle = m.match(heightRegx);</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">} else {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">heightStyle = '';</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">}</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">if (self.config.platform === 'iOS' &amp;&amp; (self.config.networkType === '2g' || self.config.networkType === '3g' || J(window).height() &lt; 481)) {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">p3 = handleImgSize(p3, '450x5000', '200x200');</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">// } else {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">// p3 = handleImgSize(p3, '450x5000', '400x400');</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">&nbsp;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">}</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">return [</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">'&lt;img ',</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">'src=\\\"https:' + SPACEBALL + '\\\" data-lazyload-src=',</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">p3.replace(/_\\\\.webp\\\"$/,'\\\"') + ' ',</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">styles + ' ',</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">widthStyle + ' ',</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">heightStyle + ' &gt;'</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">].join('');</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">});</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">/* ref: http://blog.stevenlevithan.com/archives/faster-than-innerhtml */</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">this.container.html(html);</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">&nbsp;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">if (this.container.html() === '' || this.container.html() == '&lt;p&gt;&lt;/p&gt;') {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">this.container.html('卖家暂未添加产品描述');</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">}</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">this._initLink();</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">&nbsp;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">imgs = J('img', this.container);</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">for (var i = 0, l = imgs.length; i &lt; l; i++) {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">//显示图片，一开始的时候图片都是隐藏的</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">imgs.eq(i).css('visibility', 'visible');</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">}</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">//图片加载后缩放到detail页宽度</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">imgs.bind('load', function() {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">J(this).css('visibility', 'visible');</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">if (this.width &gt; that.detailWidth &amp;&amp; J(this).closest('table').length === 0) {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">J(this).width('100%');</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">J(this).height('auto');</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">}</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">}).error(function() {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">J(this).hide();</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">});</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">&nbsp;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">this._initScroller();</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">&nbsp;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">function handleImgSize(img, size, taobaoSize) {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">var p = img.match(/(\\\\S+)(\\\\.jpg'|\\\\.jpg\\\"|\\\\.jpg)((\\\\?)?(\\\\S+))J/),</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">_img;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">&nbsp;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">if (img.search(/(\\\\d+)x(\\\\d+)\\\\.jpg/) == -1 &amp;&amp; img.search(/(\\\\.jpg'|\\\\.jpg\\\"|\\\\.jpg)J/) !== -1) {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">if (img.indexOf('taobaocdn') !== -1 || img.indexOf('img.alicdn.com') !== -1) {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">// _img = p[1]+'.jpg_'+ taobaoSize + p[2];</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">_img = img;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">} else {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">_img = p[1] + '.' + size + p[2]+p[3];</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">}</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">} else {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">_img = img;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">}</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">// var _img = img.replace(/(\\\\S+\\\\.jpg['\\\"]?)\\\\??[^\\\"']*([\\\"'])?J/, function(p, p1, p2) {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">// return p1 + (p2 || '');</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">// });</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">return _img;</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">}</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">},</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">_initLink: function() {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">this.container.on('click', 'a', function(e) {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">e.preventDefault();</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">/*var href = J(this).attr('href'),</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">result = href.match(/(\\\\d+)\\\\.html/);</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">result[1] &amp;&amp; Wing.navigator.rewrite('URL', 'http://detail.m.1688.com/page/index.html?offerId=' + result[1]);*/</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">});</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">},</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">_initScroller: function() {</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">// setTimeout(function(){</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">// var myScroll = new Scroller({</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">// container: '#d-content',</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">// hScroll:true,</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">// vScroll:true,</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">// zoom: true,</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">// checkDOMChanges: true</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">// });</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">var lazy = new LazyLoad({</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">container: 'body'</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">// scroller: myScroll</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">});</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">//lazy.init();</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">// }, 200);</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">}</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">};</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">J(function(){</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">main.init()</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">});</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\">});</td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\"><span class=\\\"html-tag\\\">&lt;/script&gt;</span></td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\"><span class=\\\"html-tag\\\">&lt;/html&gt;</span></td>\\r\\n</tr>\\r\\n<tr>\\r\\n<td class=\\\"line-number\\\">&nbsp;</td>\\r\\n<td class=\\\"line-content\\\"><span class=\\\"html-comment\\\">&lt;!-- user defined footer --&gt;</span> <span class=\\\"html-end-of-file\\\"></span></td>\\r\\n</tr>\\r\\n</tbody>\\r\\n</table>\"}]");
+
+    data.put("c",resp);
+//    System.out.println("max long:"+Long.MAX_VALUE);
+    String result = WXJsonUtils.fromObjectToJSONString(data);
+    System.out.println(result);
+
+  }
+
+  static class TestObject{
+
+    private BigDecimal big = new BigDecimal(536649655068L);
+
+    public BigDecimal getBig() {
+      return big;
+    }
+
+    public void setBig(BigDecimal big) {
+      this.big = big;
+    }
+  }
+
+}

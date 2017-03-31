@@ -210,6 +210,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 
+import com.taobao.weex.common.WXThread;
 import com.taobao.weex.ui.view.gesture.WXGesture;
 import com.taobao.weex.ui.view.gesture.WXGestureObservable;
 
@@ -217,6 +218,12 @@ public class WXHorizontalScrollView extends HorizontalScrollView implements IWXS
 
   private WXGesture wxGesture;
   private ScrollViewListener mScrollViewListener;
+  private boolean scrollable = true;
+
+  @Override
+  public boolean postDelayed(Runnable action, long delayMillis) {
+    return super.postDelayed(WXThread.secure(action), delayMillis);
+  }
 
   public WXHorizontalScrollView(Context context) {
     super(context);
@@ -257,6 +264,9 @@ public class WXHorizontalScrollView extends HorizontalScrollView implements IWXS
 
   @Override
   public boolean onTouchEvent(MotionEvent ev) {
+    if(!scrollable) {
+      return true; // when scrollable is set to false, then eat the touch event
+    }
     boolean result = super.onTouchEvent(ev);
     if (wxGesture != null) {
       result |= wxGesture.onTouch(this, ev);
@@ -267,5 +277,13 @@ public class WXHorizontalScrollView extends HorizontalScrollView implements IWXS
   public interface ScrollViewListener {
 
     void onScrollChanged(WXHorizontalScrollView scrollView, int x, int y, int oldx, int oldy);
+  }
+
+  public boolean isScrollable() {
+    return scrollable;
+  }
+
+  public void setScrollable(boolean scrollable) {
+    this.scrollable = scrollable;
   }
 }

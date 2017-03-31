@@ -204,8 +204,6 @@
  */
 package com.taobao.weex.common;
 
-import android.text.TextUtils;
-
 public enum WXErrorCode {
     /*
      * environment
@@ -223,7 +221,7 @@ public enum WXErrorCode {
   /**
    * So library corrupted
    */
-  WX_ERR_BAD_SO("-2003", "so error"),
+  WX_ERR_BAD_SO("-2003", "so size error, to reload apk so"),
 
   /**
    * Failure for extract and copy so from apk
@@ -251,16 +249,16 @@ public enum WXErrorCode {
   /**
    * Failure for executing JavaScript function.
    */
-  WX_ERR_JS_EXECUTE("-2013", "JS execute error!"),
+  WX_ERR_JS_EXECUTE("-2013", "JavaScript execute error!"),
 
   /*
    * domModule
    **/
-  WX_SUCCESS(null, null),
+  WX_SUCCESS("0", "successful"),
   /**
    * Failure for createBody
    */
-  WX_ERR_DOM_CREATEBODY("-2101", "createBody error"),
+  WX_ERR_DOM_CREATEBODY("-2100", "createBody error"),
   /**
    * Failure for updateAttrs
    */
@@ -300,10 +298,29 @@ public enum WXErrorCode {
   /**
    * Failure for scrollToElement
    */
-  WX_ERR_DOM_SCROLLTO("-2110", "scrollToElement");
+  WX_ERR_DOM_SCROLLTO("-2110", "scrollToElement"),
+
+  /**
+   * JS Bundle download error
+   */
+
+  WX_ERR_JSDOWNLOAD_START("-2201", "js bundle download start"),
+
+  WX_ERR_JSBUNDLE_DOWNLOAD("-2299", "js bundle download err"),
+
+  WX_ERR_JSBUNDLE_EMPTY("-2203", "js bundle empty"),
+
+  WX_ERR_JSDOWNLOAD_END("-2299", "js bundle download end"),
+
+  /**
+   * JS Framework run error
+   */
+  WX_ERR_JS_FRAMEWORK("-1002", "js framework error");
 
   private String errorCode;
   private String errorMsg;
+  private String appendMsg="";
+  private String args;
 
   WXErrorCode(String errorCode, String errorMsg) {
     this.errorCode = errorCode;
@@ -311,10 +328,7 @@ public enum WXErrorCode {
   }
 
   public void appendErrMsg(String err) {
-    if (!TextUtils.isEmpty(err)) {
-      StringBuilder builder = new StringBuilder(errorCode);
-      errorCode = builder.append(err).substring(0);
-    }
+   appendMsg=err;
   }
 
   public String getErrorCode() {
@@ -322,7 +336,17 @@ public enum WXErrorCode {
   }
 
   public String getErrorMsg() {
-    return this.errorMsg;
+    StringBuilder builder=new StringBuilder(errorMsg);
+    builder.append(appendMsg);
+    return builder.toString();
+  }
+
+  public String getArgs() {
+    return args;
+  }
+
+  public void setArgs(String args) {
+    this.args = args;
   }
 
 }

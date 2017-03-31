@@ -205,5 +205,5 @@
 
 -->
 <resources>
-    <string name="app_name">Weex Library</string>
+    <!--<string name="app_name">Weex Library</string>-->
 </resources>

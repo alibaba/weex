@@ -204,13 +204,16 @@
  */
 package com.taobao.weex.common;
 
+import com.taobao.weex.annotation.JSMethod;
+
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/** TODO: 1.change to a better name; 2. remove unused moduleMethod property **/
+/** Use {@link JSMethod} instead. **/
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
+@Deprecated
 public @interface WXModuleAnno {
 
   @Deprecated

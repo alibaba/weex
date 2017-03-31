@@ -11,11 +11,14 @@
   },
 
   "globals": {
+    "weex": false,
     "document": false,
     "navigator": false,
     "window": false,
     "location": false,
     "callNative": false,
+    "callNativeModule": false,
+    "callAddElement":false,
     "callJS": false
   },
 

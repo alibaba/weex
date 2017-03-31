@@ -205,20 +205,41 @@
 package com.taobao.weex.ui.view.listview;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.MotionEvent;
 
-public class WXRecyclerView extends RecyclerView {
+import com.taobao.weex.common.WXThread;
+import com.taobao.weex.ui.view.gesture.WXGesture;
+import com.taobao.weex.ui.view.gesture.WXGestureObservable;
+
+public class WXRecyclerView extends RecyclerView implements WXGestureObservable {
 
   public static final int TYPE_LINEAR_LAYOUT = 1;
   public static final int TYPE_GRID_LAYOUT = 2;
   public static final int TYPE_STAGGERED_GRID_LAYOUT = 3;
+  private WXGesture mGesture;
+
+  private boolean scrollable = true;
 
   public WXRecyclerView(Context context) {
     super(context);
+  }
+
+  public boolean isScrollable() {
+    return scrollable;
+  }
+
+  public void setScrollable(boolean scrollable) {
+    this.scrollable = scrollable;
+  }
+
+  @Override
+  public boolean postDelayed(Runnable action, long delayMillis) {
+    return super.postDelayed(WXThread.secure(action), delayMillis);
   }
 
   /**
@@ -233,8 +254,50 @@ public class WXRecyclerView extends RecyclerView {
     } else if (type == TYPE_STAGGERED_GRID_LAYOUT) {
       setLayoutManager(new StaggeredGridLayoutManager(2, orientation));
     } else if (type == TYPE_LINEAR_LAYOUT) {
-      setLayoutManager(new LinearLayoutManager(context,orientation,false));
+      setLayoutManager(new ExtendedLinearLayoutManager(context,orientation,false){
+
+        @Override
+        public boolean supportsPredictiveItemAnimations() {
+          return false;
+        }
+
+        public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+          try {
+            super.onLayoutChildren(recycler, state);
+          } catch (IndexOutOfBoundsException e) {
+             e.printStackTrace();
+
+          }
+        }
+
+        @Override
+        public int scrollVerticallyBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
+          try {
+            return super.scrollVerticallyBy(dy, recycler, state);
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+          return 0;
+        }
+
+      });
     }
   }
 
+  @Override
+  public void registerGestureListener(@Nullable WXGesture wxGesture) {
+    mGesture = wxGesture;
+  }
+
+  @Override
+  public boolean onTouchEvent(MotionEvent event) {
+    if(!scrollable) {
+      return true;
+    }
+    boolean result = super.onTouchEvent(event);
+    if (mGesture != null) {
+      result |= mGesture.onTouch(this, event);
+    }
+    return result;
+  }
 }

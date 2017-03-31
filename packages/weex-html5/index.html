@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Weex HTML5</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-touch-fullscreen" content="yes" />
+  <meta name="format-detection" content="telephone=no, email=no" />
+  <style>
+    html, body, #weex {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+  <!--flexible-->
+  <script>
+  !function(a,b){function c(){var b=f.getBoundingClientRect().width;b/i>540&&(b=540*i);var c=b/10;f.style.fontSize=c+"px",k.rem=a.rem=c}var d,e=a.document,f=e.documentElement,g=e.querySelector('meta[name="viewport"]'),h=e.querySelector('meta[name="flexible"]'),i=0,j=0,k=b.flexible||(b.flexible={});if(g){console.warn("The page size will be adapted by the <meta> info.");var l=g.getAttribute("content").match(/initial\-scale=([\d\.]+)/);l&&(j=parseFloat(l[1]),i=parseInt(1/j))}else if(h){var m=h.getAttribute("content");if(m){var n=m.match(/initial\-dpr=([\d\.]+)/),o=m.match(/maximum\-dpr=([\d\.]+)/);n&&(i=parseFloat(n[1]),j=parseFloat((1/i).toFixed(2))),o&&(i=parseFloat(o[1]),j=parseFloat((1/i).toFixed(2)))}}if(!i&&!j){var p=(a.navigator.appVersion.match(/android/gi),a.navigator.appVersion.match(/iphone/gi)),q=a.devicePixelRatio;i=p?q>=3&&(!i||i>=3)?3:q>=2&&(!i||i>=2)?2:1:1,j=1/i}if(f.setAttribute("data-dpr",i),!g)if(g=e.createElement("meta"),g.setAttribute("name","viewport"),g.setAttribute("content","initial-scale="+j+", maximum-scale="+j+", minimum-scale="+j+", user-scalable=no"),f.firstElementChild)f.firstElementChild.appendChild(g);else{var r=e.createElement("div");r.appendChild(g),e.write(r.innerHTML)}a.addEventListener("resize",function(){clearTimeout(d),d=setTimeout(c,300)},!1),a.addEventListener("pageshow",function(a){a.persisted&&(clearTimeout(d),d=setTimeout(c,300))},!1),"complete"===e.readyState?e.body.style.fontSize=12*i+"px":e.addEventListener("DOMContentLoaded",function(){e.body.style.fontSize=12*i+"px"},!1),c(),k.dpr=a.dpr=i,k.refreshRem=c,k.rem2px=function(a){var b=parseFloat(a)*this.rem;return"string"==typeof a&&a.match(/rem$/)&&(b+="px"),b},k.px2rem=function(a){var b=parseFloat(a)/this.rem;return"string"==typeof a&&a.match(/px$/)&&(b+="rem"),b}}(window,window.lib||(window.lib={}));
+  </script>
+  <script src="./dist/weex.js"></script>
+</head>
+<body>
+  <div id="weex"></div>
+  <script>
+  /**
+   * Init weex instance depending on the url params.
+   * There are three ways to load weex bundles, depends on the
+   * parameter 'loader' in the url:
+   *
+   *   + xhr: use XMLHttpRequest. Parameter 'page' should be
+   *   the bundle's url.
+   *   + source: use the transformed code itself. 'page' should
+   *   be the transformed weex bundle.
+   *
+   * @param {String} bundle - It has different meaning depends on
+   *   the type of loader.
+   */
+  (function () {
+    function getUrlParam (key) {
+      var reg = new RegExp('[?|&]' + key + '=([^&]+)')
+      var match = location.search.match(reg)
+      return match && match[1]
+    }
+
+    var loader = getUrlParam('loader') || 'xhr'
+    var page = getUrlParam('page') || 'demo/build/index.js'
+
+    window.weex.init({
+      appId: location.href,
+      loader: loader,
+      source: page,
+      rootId: 'weex'
+    })
+  })();
+  </script>
+</body>
+</html>

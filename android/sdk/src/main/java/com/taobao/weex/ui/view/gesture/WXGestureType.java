@@ -228,7 +228,9 @@ public interface WXGestureType {
     LONG_PRESS("longpress"),
     PAN_START("panstart"),
     PAN_MOVE("panmove"),
-    PAN_END("panend");
+    PAN_END("panend"),
+    HORIZONTALPAN("horizontalpan"),
+    VERTICALPAN("verticalpan");
     private String description;
 
     HighLevelGesture(String description) {
@@ -250,5 +252,6 @@ public interface WXGestureType {
     public static final String SCREEN_Y = "screenY";
     public static final String POINTER_ID = "identifier";
     public static final String DIRECTION = "direction";
+    public static final String STATE = "state";
   }
 }

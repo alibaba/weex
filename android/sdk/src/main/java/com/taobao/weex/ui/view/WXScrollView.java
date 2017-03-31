@@ -219,6 +219,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ScrollView;
 
+import com.taobao.weex.common.WXThread;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXScroller;
 import com.taobao.weex.ui.view.gesture.WXGesture;
@@ -270,6 +271,7 @@ public class WXScrollView extends ScrollView implements Callback, IWXScroller,
   private Rect mScrollRect;
   private int[] stickyScrollerP = new int[2];
   private int[] stickyViewP = new int[2];
+  private boolean scrollable = true;
 
   public WXScrollView(Context context) {
     super(context);
@@ -278,7 +280,7 @@ public class WXScrollView extends ScrollView implements Callback, IWXScroller,
     try {
       WXReflectionUtils.setValue(this, "mMinimumVelocity", 5);
     } catch (Exception e) {
-      WXLogUtils.e("[WXScrollView] WXScrollView: " + WXLogUtils.getStackTrace(e));
+      WXLogUtils.e("[WXScrollView] WXScrollView: ", e);
     }
   }
 
@@ -292,7 +294,7 @@ public class WXScrollView extends ScrollView implements Callback, IWXScroller,
 
   public void startScrollerTask() {
     if (mScrollerTask == null) {
-      mScrollerTask = new Handler(this);
+      mScrollerTask = new Handler(WXThread.secure(this));
     }
     mInitialPosition = getScrollY();
     mScrollerTask.sendEmptyMessageDelayed(0, mCheckTime);
@@ -365,6 +367,9 @@ public class WXScrollView extends ScrollView implements Callback, IWXScroller,
 
   @Override
   public boolean onTouchEvent(MotionEvent ev) {
+    if(!scrollable) {
+      return true; // when scrollable is set to false, then eat the touch event
+    }
     if (mRedirectTouchToStickyView) {
 
       if (mScrollRect == null) {
@@ -383,6 +388,7 @@ public class WXScrollView extends ScrollView implements Callback, IWXScroller,
       MotionEvent down = MotionEvent.obtain(ev);
       down.setAction(MotionEvent.ACTION_DOWN);
       mHasNotDoneActionDown = false;
+      down.recycle();
     }
 
     if (ev.getAction() == MotionEvent.ACTION_DOWN) {
@@ -442,6 +448,14 @@ public class WXScrollView extends ScrollView implements Callback, IWXScroller,
   @Override
   public boolean hasNestedScrollingParent() {
     return childHelper.hasNestedScrollingParent();
+  }
+
+  public boolean isScrollable() {
+    return scrollable;
+  }
+
+  public void setScrollable(boolean scrollable) {
+    this.scrollable = scrollable;
   }
 
   @Override
@@ -522,6 +536,9 @@ public class WXScrollView extends ScrollView implements Callback, IWXScroller,
   }
 
   private void showStickyView() {
+    if(mWAScroller == null){
+      return;
+    }
     View curStickyView = procSticky(mWAScroller.getStickMap());
 
     if (curStickyView != null) {
@@ -548,17 +565,20 @@ public class WXScrollView extends ScrollView implements Callback, IWXScroller,
       stickyData = entry.getValue();
 
       getLocationOnScreen(stickyScrollerP);
-      stickyData.getView().getLocationOnScreen(stickyViewP);
+      stickyData.getHostView().getLocationOnScreen(stickyViewP);
       int parentH = 0;
       if(stickyData.getParent()!=null && stickyData.getParent().getRealView()!=null){
         parentH=stickyData.getParent().getRealView().getHeight();
       }
-      int stickyViewH = stickyData.getView().getHeight();
+      int stickyViewH = stickyData.getHostView().getHeight();
       int stickyShowPos = stickyScrollerP[1];
       int stickyStartHidePos = -parentH + stickyScrollerP[1] + stickyViewH;
       if (stickyViewP[1] <= stickyShowPos && stickyViewP[1] >= (stickyStartHidePos - stickyViewH)) {
         mStickyOffset = stickyViewP[1] - stickyStartHidePos;
-        return stickyData.getView();
+        stickyData.setStickyOffset(stickyViewP[1]-stickyScrollerP[1]);
+        return stickyData.getHostView();
+      }else{
+        stickyData.setStickyOffset(0);
       }
     }
     return null;
@@ -605,6 +625,10 @@ public class WXScrollView extends ScrollView implements Callback, IWXScroller,
   @Override
   public void registerGestureListener(WXGesture wxGesture) {
     this.wxGesture = wxGesture;
+  }
+
+  public Rect getContentFrame() {
+    return new Rect(0, 0, computeHorizontalScrollRange(), computeVerticalScrollRange());
   }
 
   public interface WXScrollViewListener {

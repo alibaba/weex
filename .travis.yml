@@ -1,0 +1,22 @@
+language: objective-c
+rvm: 2.0.0
+osx_image: xcode8.2
+jdk: oraclejdk8
+env:
+    matrix:
+        - TEST_SUITE=android
+        - TEST_SUITE=ios
+        - TEST_SUITE=danger
+        - TEST_SUITE=jsfm
+matrix:
+    fast_finish: true
+cache:
+  directories:
+  - node_modules
+  - $HOME/.m2
+  - $HOME/.gradle
+before_install:
+  - source test/ci-funcs.sh && setup_cpt $TEST_SUITE
+script:
+  - test_cpt $TEST_SUITE
+  

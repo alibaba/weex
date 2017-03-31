@@ -1,0 +1,66 @@
+<template>
+	<div style="flex-direction: column; background-color: #ffffff;width:750;height:600;border-width: 0;">
+		<div style="width:700;height:400; border-width:1; border-style:solid; border-color:#000000;margin:0;">
+		<slider-neighbor style="width:700;height:400;" neighbor-scale="0.8" neighbor-space="30" current-item-scale="0.90" interval="3000" neighbor-alpha="0.8" auto-play="{{attr_auto_play}}">
+				<image style="width:600;background-color:#FFFFDF;height:400;" src="https://gw.alicdn.com/tps/TB1dzanMVXXXXXQXVXXXXXXXXXX-573-412.png"></image>
+				<image style="width:600;background-color:#FFFFDF;height:400;" src="https://gw.alicdn.com/tps/TB1p9CCMVXXXXa_XFXXXXXXXXXX-450-340.png"></image>
+				<image style="width:600;background-color:#FFFFDF;height:400;" src="https://gw.alicdn.com/tps/TB1zpSiMVXXXXchXFXXXXXXXXXX-448-338.png"></image>
+				<image style="width:600;background-color:#FFFFDF;height:400;" src="https://gw.alicdn.com/tps/TB1EuGIMVXXXXcoXpXXXXXXXXXX-452-337.png"></image>
+			<indicator style="height:60;position:absolute;bottom:15;width:700;left:0;itemSelectedColor:#0000FF;itemSize:20;itemColor:#FF0000;"></indicator>
+		</slider-neighbor>
+		</div>
+		<div style="height:100; border-width:0; margin:10;">
+			<TC_Support_SubTitle title="auto-play"></TC_Support_SubTitle>
+			<div repeat="btnList2100" style="flex-direction:row">
+				<text onclick="update2100" flagid="{{index}}" repeat="row" style="width:310; height:50;text-align: center; border-width: 1;border-color: #696969;border-style:solid;border-radius:5; margin:10; background-color: {{bgc}}">auto play: {{value}}</text>
+			</div>
+		</div>
+	</div>
+</template>
+
+
+<script>
+	module.exports = {
+		data : {
+			log_detail:[],
+			attr_auto_play:false,
+			btnList2100: [
+				{row:
+					[
+						{value: "false",bgc:'#EEEEEE',index:0},
+						{value: "true",bgc:'#EEEEEE',index:1},
+					],
+				},
+			],
+		},
+		methods : {
+			update2100: function (e) {
+				var self = this
+				var index = e.target.attr.flagid
+				for (var i = 0; i < self.btnList2100.length; i++) {
+					var row = self.btnList2100[i];
+					var columnlist = row.row;
+					for (var j = 0; j < columnlist.length; j++) {
+						var column = columnlist[j];
+						if (column.index === index) {
+							column.bgc = '#B2DFEE'
+							switch (index) {
+								case 0:
+									self.attr_auto_play=false;
+									break;
+								case 1:
+									self.attr_auto_play=true;
+									break;
+								default:
+									break;
+							}
+						}
+						else {
+							column.bgc = '#EEEEEE'
+						}
+					}
+				}
+			},
+		},
+	}
+</script>

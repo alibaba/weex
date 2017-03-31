@@ -208,6 +208,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.os.Build;
 
+import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.adapter.IWXUserTrackAdapter;
 import com.taobao.weex.common.WXErrorCode;
 import com.taobao.weex.common.WXPerformance;
@@ -223,6 +224,8 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
+
+import dalvik.system.PathClassLoader;
 
 
 /**
@@ -247,6 +250,9 @@ public class WXSoInstallMgrSdk {
   private final static String ARMEABI = "armeabi"; //default
   private final static String X86 = "x86";
   private final static String MIPS = "mips";
+  private final static int ARMEABI_Size = 3542844;
+  private final static int X86_Size = 4451068;
+
   static Context mContext = null;
 
   public static void init(Context c) {
@@ -260,10 +266,7 @@ public class WXSoInstallMgrSdk {
 
   public static boolean isCPUSupport(){
     String cpuType = _cpuType();
-    if (cpuType.equalsIgnoreCase(MIPS) ) {
-      return false;
-    }
-    return true;
+    return !cpuType.equalsIgnoreCase(MIPS);
   }
 
   /**
@@ -282,82 +285,53 @@ public class WXSoInstallMgrSdk {
 
     boolean InitSuc = false;
 
-    //        if (checkSoIsInValid(libName, weexSoSize)) {
+      /**
+       * Load library with {@link System#loadLibrary(String)}
+       */
+      try {
+        System.loadLibrary(libName);
+        commit(utAdapter, null, null);
 
-    /**
-     * Load library with {@link System#loadLibrary(String)}
-     */
-    try {
-      System.loadLibrary(libName);
-      commit(utAdapter, null, null);
-
-      InitSuc = true;
-    } catch (Exception e) {
-      if (cpuType.contains(ARMEABI)||cpuType.contains(X86)) {
-        commit(utAdapter, WXErrorCode.WX_ERR_LOAD_SO.getErrorCode(), WXErrorCode.WX_ERR_LOAD_SO.getErrorMsg() + ":" + e.getMessage());
+        InitSuc = true;
+      } catch (Exception | Error e2) {
+        if (cpuType.contains(ARMEABI) || cpuType.contains(X86)) {
+          commit(utAdapter, WXErrorCode.WX_ERR_LOAD_SO.getErrorCode(), WXErrorCode.WX_ERR_LOAD_SO.getErrorMsg() + ":" + e2.getMessage());
+        }
+        InitSuc = false;
       }
-      InitSuc = false;
-    } catch (java.lang.UnsatisfiedLinkError e2) {
-      if (cpuType.contains(ARMEABI)||cpuType.contains(X86)) {
-        commit(utAdapter, WXErrorCode.WX_ERR_LOAD_SO.getErrorCode(), WXErrorCode.WX_ERR_LOAD_SO.getErrorMsg() + ":" + e2.getMessage());
-      }
-      InitSuc = false;
-    } catch (java.lang.Error e3) {
-      if (cpuType.contains(ARMEABI)||cpuType.contains(X86)) {
-        commit(utAdapter, WXErrorCode.WX_ERR_LOAD_SO.getErrorCode(), WXErrorCode.WX_ERR_LOAD_SO.getErrorMsg() + ":" + e3.getMessage());
-      }
-      InitSuc = false;
-    }
 
-    //        }else{
-    //            if (cpuType.contains(ARMEABI)) {
-    //                commit(utAdapter, WXErrorCode.WX_ERR_BAD_SO.getErrorCode(), WXErrorCode.WX_ERR_BAD_SO.getErrorMsg());
-    //            }
-    //            InitSuc = false;
-    //        }
+      try {
 
-    try {
+        if (!InitSuc) {
 
-      if (!InitSuc) {
+          //File extracted from apk already exists.
+          if (isExist(libName, version)) {
+            boolean res = _loadUnzipSo(libName, version, utAdapter);
+            if (res) {
+              return res;
+            } else {
+              //Delete the corrupt so library, and extract it again.
+              removeSoIfExit(libName, version);
+            }
+          }
 
-        //File extracted from apk already exists.
-        if (isExist(libName, version)) {
-          boolean res = _loadUnzipSo(libName, version, utAdapter);
-          if (res) {
-            return res;
+          //Fail for loading file from libs, extract so library from so and load it.
+          if (cpuType.equalsIgnoreCase(MIPS)) {
+            return false;
           } else {
-            //Delete the corrupt so library, and extract it again.
-            removeSoIfExit(libName, version);
+            try {
+              InitSuc = unZipSelectedFiles(libName, version, utAdapter);
+            } catch (IOException e2) {
+              e2.printStackTrace();
+            }
           }
-        }
 
-        //Fail for loading file from libs, extract so library from so and load it.
-        if (cpuType.equalsIgnoreCase(MIPS)) {
-          return false;
-        } else {
-          try {
-            InitSuc = unZipSelectedFiles(libName, version, utAdapter);
-          } catch (ZipException e) {
-            e.printStackTrace();
-          } catch (IOException e2) {
-            e2.printStackTrace();
-          }
         }
-
+      } catch (Exception | Error e) {
+        InitSuc = false;
+        e.printStackTrace();
       }
-    } catch (Exception e) {
-      InitSuc = false;
-      e.printStackTrace();
-    } catch (java.lang.UnsatisfiedLinkError e2) {
-      InitSuc = false;
-      e2.printStackTrace();
-
-    } catch (java.lang.Error e3) {
-      InitSuc = false;
-      e3.printStackTrace();
-    }
     return InitSuc;
-
   }
 
   private static String _getFieldReflectively(Build build, String fieldName) {
@@ -379,21 +353,36 @@ public class WXSoInstallMgrSdk {
     return abi;
   }
 
-  static boolean checkSoIsInValid(String libName, int size) {
+  /**
+   *
+   * @param libName lib name
+   * @param size  the right size of lib
+   * @return true for valid  ; false for InValid
+   */
+  static boolean checkSoIsValid(String libName, int size) {
     Context context = mContext;
     if (null == context) {
       return false;
     }
+    try{
+      long start=System.currentTimeMillis();
+      if(WXSoInstallMgrSdk.class.getClassLoader() instanceof PathClassLoader ) {
 
-    String path = "/data/data/" + context.getPackageName() + "/lib" + "/lib" + libName + ".so";
+        String path = ((PathClassLoader) (WXSoInstallMgrSdk.class.getClassLoader())).findLibrary(libName);
+        File file = new File(path);
 
-    File file = new File(path);
-
-    if (size == file.length()) {
-      return true;
+        if (!file.exists() || size == file.length()) {
+          WXLogUtils.w("weex so size check path :" + path+"   "+(System.currentTimeMillis() - start));
+          return true;
+        } else {
+          return false;
+        }
+      }
+    }catch(Throwable e ){
+      WXLogUtils.e("weex so size check fail exception :"+e.getMessage());
     }
 
-    return false;
+    return true;
   }
 
   /**
@@ -456,19 +445,10 @@ public class WXSoInstallMgrSdk {
         commit(utAdapter, "2000", "Load file extract from apk successfully.");
       }
       initSuc = true;
-    } catch (Exception e) {
+    } catch (Throwable e) {
       commit(utAdapter, WXErrorCode.WX_ERR_COPY_FROM_APK.getErrorCode(), WXErrorCode.WX_ERR_COPY_FROM_APK.getErrorMsg() + ":" + e.getMessage());
       initSuc = false;
-      e.printStackTrace();
-    } catch (java.lang.UnsatisfiedLinkError e2) {
-      commit(utAdapter, WXErrorCode.WX_ERR_COPY_FROM_APK.getErrorCode(), WXErrorCode.WX_ERR_COPY_FROM_APK.getErrorMsg() + ":" + e2.getMessage());
-      initSuc = false;
-      e2.printStackTrace();
-
-    } catch (java.lang.Error e3) {
-      commit(utAdapter, WXErrorCode.WX_ERR_COPY_FROM_APK.getErrorCode(), WXErrorCode.WX_ERR_COPY_FROM_APK.getErrorMsg() + ":" + e3.getMessage());
-      initSuc = false;
-      e3.printStackTrace();
+      WXLogUtils.e("", e);
     }
     return initSuc;
   }
@@ -579,9 +559,9 @@ public class WXSoInstallMgrSdk {
       WXPerformance p = new WXPerformance();
       p.errCode = errCode;
       p.errMsg = errMsg;
-      utAdapter.commit(null, null, WXConst.ENVIRONMENT, p, null);
+      utAdapter.commit(null, null, WXEnvironment.ENVIRONMENT, p, null);
     } else {
-      utAdapter.commit(null, null, WXConst.ENVIRONMENT, null, null);
+      utAdapter.commit(null, null, WXEnvironment.ENVIRONMENT, null, null);
 
     }
   }

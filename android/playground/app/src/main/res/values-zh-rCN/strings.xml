@@ -65,7 +65,7 @@
   <string name="msg_default_format">格式</string>
   <string name="msg_default_meta">元数据</string>
   <string name="msg_default_mms_subject">Hi</string>
-  <string name="msg_default_status">请将条码置于取景框内扫描。  </string>
+  <string name="msg_default_status">请将条码置于取景框内扫描。</string>
   <string name="msg_default_time">时间</string>
   <string name="msg_default_type">类型</string>
   <string name="msg_encode_contents_failed">无法生成条码。</string>

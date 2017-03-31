@@ -15,6 +15,13 @@
           <slider-page repeat="{{sliders[0].sliderPages}}"></slider-page>
         </slider>
       </wxc-panel>
+
+      <wxc-panel title="auto-play = true & scrollable = false" padding-body="0">
+        <slider class="slider" append="tree" interval="{{sliders[0].interval}}" auto-play="{{sliders[0].autoPlay}}"  scrollable="false">
+          <indicator class="indicator"></indicator>
+          <slider-page repeat="{{sliders[0].sliderPages}}"></slider-page>
+        </slider>
+      </wxc-panel>
     </wxc-panel>
 
     <wxc-panel title="Event, {{eventCnt}} change" type="primary">

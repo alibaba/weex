@@ -204,15 +204,24 @@
  */
 package com.taobao.weex.dom;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXEnvironment;
+import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.common.Constants;
 import com.taobao.weex.dom.flex.CSSLayoutContext;
 import com.taobao.weex.dom.flex.CSSNode;
+import com.taobao.weex.dom.flex.Spacing;
 import com.taobao.weex.ui.component.WXBasicComponentType;
 import com.taobao.weex.utils.WXLogUtils;
+import com.taobao.weex.utils.WXViewUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -224,22 +233,170 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Actually, {@link com.taobao.weex.ui.component.WXComponent} hold references to
  * {@link android.view.View} and {@link WXDomObject}.
  */
-public class WXDomObject extends CSSNode implements Cloneable {
-
+public class WXDomObject extends CSSNode implements Cloneable,ImmutableDomObject {
+  public static final String CHILDREN = "children";
+  public static final String TYPE = "type";
   public static final String TAG = WXDomObject.class.getSimpleName();
   public static final String ROOT = "_root";
-  public AtomicBoolean sDestroy = new AtomicBoolean();
-  public String ref = ROOT;
-  public String type = WXBasicComponentType.SCROLLER;
-  public WXStyle style;
-  public WXAttr attr;
-  public WXEvent event;
-  public List<WXDomObject> children;
+  public static final String TRANSFORM = "transform";
+  public static final String TRANSFORM_ORIGIN = "transformOrigin";
+  private AtomicBoolean sDestroy = new AtomicBoolean();
+
+  private int mViewPortWidth =750;
+
+  private DomContext mDomContext;
+
+  /** package **/ String mRef = ROOT;
+
+  /** package **/ String mType = WXBasicComponentType.DIV;
+
+  /** package **/ WXStyle mStyles;
+
+  /** package **/ WXAttr mAttributes;
+
+  /** package **/ WXEvent mEvents;
+
+  private List<WXDomObject> mDomChildren;
+
+  /** Do not access this field directly. This field will be removed soon. **/
+  @Deprecated
   public WXDomObject parent;
 
   private ArrayList<String> fixedStyleRefs;
 
   private boolean mYoung = false;
+
+  /** package **/ void traverseTree(Consumer...consumers){
+    if (consumers == null) {
+      return;
+    }
+
+    for (Consumer consumer:consumers){
+      consumer.accept(this);
+    }
+
+    int count = childCount();
+    WXDomObject child;
+    for (int i = 0; i < count; ++i) {
+      child = getChild(i);
+      child.traverseTree(consumers);
+    }
+  }
+
+
+  public int getViewPortWidth() {
+    return mViewPortWidth;
+  }
+
+  public void setViewPortWidth(int mViewPortWidth) {
+    this.mViewPortWidth = mViewPortWidth;
+  }
+
+  public String getRef(){
+    return mRef;
+  }
+
+  public String getType(){
+    return mType;
+  }
+
+  public @NonNull WXStyle getStyles(){
+    if(mStyles == null ){
+      mStyles = new WXStyle();
+    }
+    return mStyles;
+  }
+
+  public @NonNull WXAttr getAttrs(){
+    if(mAttributes == null){
+      mAttributes = new WXAttr();
+    }
+    return mAttributes;
+  }
+
+  public @NonNull WXEvent getEvents(){
+    if(mEvents == null){
+      mEvents = new WXEvent();
+    }
+
+    return mEvents;
+  }
+
+  public @NonNull DomContext getDomContext() {
+    return mDomContext;
+  }
+
+  public void clearEvents(){
+    if(mEvents != null){
+      mEvents.clear();
+    }
+  }
+
+  public static void prepareRoot(WXDomObject domObj,float defaultHeight,float defaultWidth) {
+    domObj.mRef = WXDomObject.ROOT;
+
+    WXStyle domStyles = domObj.getStyles();
+    Map<String, Object> style = new HashMap<>(5);
+    if (!domStyles.containsKey(Constants.Name.FLEX_DIRECTION)) {
+      style.put(Constants.Name.FLEX_DIRECTION, "column");
+    }
+    if (!domStyles.containsKey(Constants.Name.BACKGROUND_COLOR)) {
+      style.put(Constants.Name.BACKGROUND_COLOR, "#ffffff");
+    }
+
+    style.put(Constants.Name.DEFAULT_WIDTH, defaultWidth);
+    style.put(Constants.Name.DEFAULT_HEIGHT, defaultHeight);
+
+    domObj.updateStyle(style);
+  }
+
+  protected final void copyFields(WXDomObject dest) {
+    dest.cssstyle.copy(this.cssstyle);
+    dest.mRef = mRef;
+    dest.mType = mType;
+    dest.mStyles = mStyles == null ? null : mStyles.clone();//mStyles == null ? null : mStyles.clone();
+    dest.mAttributes = mAttributes == null ? null : mAttributes.clone();//mAttrs == null ? null : mAttrs.clone();
+    dest.mEvents = mEvents == null ? null : mEvents.clone();
+    dest.csslayout.copy(this.csslayout);
+  }
+
+  /**
+   * Parse the jsonObject to {@link WXDomObject} recursively
+   * @param map the original JSONObject
+   */
+  public void parseFromJson(JSONObject map){
+    if (map == null || map.size() <= 0) {
+      return;
+    }
+
+    String type = (String) map.get("type");
+    this.mType = type;
+    this.mRef = (String) map.get("ref");
+    Object style = map.get("style");
+    if (style != null && style instanceof JSONObject) {
+      WXStyle styles = new WXStyle();
+      styles.putAll((JSONObject) style,false);
+      this.mStyles = styles;
+    }
+    Object attr = map.get("attr");
+    if (attr != null && attr instanceof JSONObject) {
+      WXAttr attrs = new WXAttr((JSONObject) attr);
+      //WXJsonUtils.putAll(attrs, (JSONObject) attr);
+      this.mAttributes = attrs;
+    }
+    Object event = map.get("event");
+    if (event != null && event instanceof JSONArray) {
+      WXEvent events = new WXEvent();
+      JSONArray eventArray = (JSONArray) event;
+      int count = eventArray.size();
+      for (int i = 0; i < count; ++i) {
+        events.add(eventArray.getString(i));
+      }
+      this.mEvents = events;
+    }
+
+  }
+
 
   /**
    * Do pre-staff before layout. Subclass may provide different implementation.
@@ -298,13 +455,12 @@ public class WXDomObject extends CSSNode implements Cloneable {
     }
   }
 
-
-  public boolean isSticky() {
-    return style == null ? false : style.isSticky();
+  public boolean isFixed() {
+    return mStyles == null ? false : mStyles.isFixed();
   }
 
-  public boolean isFixed() {
-    return style == null ? false : style.isFixed();
+  public boolean canRecycled() {
+    return mAttributes == null ? false : mAttributes.canRecycled();
   }
 
   public Object getExtra() {
@@ -312,11 +468,11 @@ public class WXDomObject extends CSSNode implements Cloneable {
   }
 
   public void remove(WXDomObject child) {
-    if (child == null || children == null || sDestroy.get()) {
+    if (child == null || mDomChildren == null || sDestroy.get()) {
       return;
     }
 
-    int index = children.indexOf(child);
+    int index = mDomChildren.indexOf(child);
     removeFromDom(child);
     if (index != -1) {
       super.removeChildAt(index);
@@ -324,25 +480,25 @@ public class WXDomObject extends CSSNode implements Cloneable {
   }
 
   public void removeFromDom(WXDomObject child) {
-    if (child == null || children == null || sDestroy.get()) {
+    if (child == null || mDomChildren == null || sDestroy.get()) {
       return;
     }
 
-    int index = children.indexOf(child);
+    int index = mDomChildren.indexOf(child);
     if (index == -1) {
       if (WXEnvironment.isApkDebugable()) {
-        WXLogUtils.e("[WXDomObject]" + "remove function error");
+        WXLogUtils.e("[WXDomObject] remove function error");
       }
       return;
     }
-    children.remove(index).parent = null;
+    mDomChildren.remove(index).parent = null;
   }
 
   public int index(WXDomObject child) {
-    if (child == null || children == null || sDestroy.get()) {
+    if (child == null || mDomChildren == null || sDestroy.get()) {
       return -1;
     }
-    return children.indexOf(child);
+    return mDomChildren.indexOf(child);
   }
 
   /**
@@ -355,22 +511,23 @@ public class WXDomObject extends CSSNode implements Cloneable {
     if (child == null || index < -1 || sDestroy.get()) {
       return;
     }
-    if (children == null) {
-      children = new ArrayList<>();
+    if (mDomChildren == null) {
+      mDomChildren = new ArrayList<>();
     }
 
-    int count = children.size();
+    int count = mDomChildren.size();
     index = index >= count ? -1 : index;
     if (index == -1) {
-      children.add(child);
+      mDomChildren.add(child);
       super.addChildAt(child, super.getChildCount());
     } else {
-      children.add(index, child);
+      mDomChildren.add(index, child);
       super.addChildAt(child, index);
     }
     child.parent = this;
   }
 
+  @Deprecated
   public void add2Dom(WXDomObject child, int index) {
     if (child == null || index < -1 || sDestroy.get()) {
       return;
@@ -387,10 +544,10 @@ public class WXDomObject extends CSSNode implements Cloneable {
   }
 
   public WXDomObject getChild(int index) {
-    if (children == null || sDestroy.get()) {
+    if (mDomChildren == null || sDestroy.get()) {
       return null;
     }
-    return children.get(index);
+    return mDomChildren.get(index);
   }
 
   /**
@@ -401,56 +558,168 @@ public class WXDomObject extends CSSNode implements Cloneable {
     if (TextUtils.isEmpty(e)) {
       return;
     }
-    if (event == null) {
-      event = new WXEvent();
+    if (mEvents == null) {
+      mEvents = new WXEvent();
     }
     if (containsEvent(e)) {
       return;
     }
-    event.add(e);
+    mEvents.add(e);
   }
 
   public boolean containsEvent(String e) {
-    if (event == null) {
+    if (mEvents == null) {
       return false;
     }
-    return event.contains(e);
+    return mEvents.contains(e);
   }
 
   public void removeEvent(String e) {
     if (TextUtils.isEmpty(e)) {
       return;
     }
-    if (event == null) {
+    if (mEvents == null) {
       return;
     }
-    event.remove(e);
+    mEvents.remove(e);
   }
 
   public void updateAttr(Map<String, Object> attrs) {
     if (attrs == null || attrs.isEmpty()) {
       return;
     }
-    if (attr == null) {
-      attr = new WXAttr();
+    if (mAttributes == null) {
+      mAttributes = new WXAttr();
     }
-    attr.putAll(attrs);
+    mAttributes.putAll(attrs);
     super.dirty();
   }
 
-  public void updateStyle(Map<String, Object> styles) {
+  public void updateStyle(Map<String, Object> styles){
+    updateStyle(styles,false);
+  }
+
+  public void updateStyle(Map<String, Object> styles, boolean byPesudo) {
     if (styles == null || styles.isEmpty()) {
       return;
     }
-    if (style == null) {
-      style = new WXStyle();
+    if (mStyles == null) {
+      mStyles = new WXStyle();
     }
-    style.putAll(styles);
+    mStyles.putAll(styles,byPesudo);
     super.dirty();
   }
 
+  /** package **/ void applyStyleToNode() {
+    WXStyle stylesMap = getStyles();
+    if (!stylesMap.isEmpty()) {
+      for(Map.Entry<String,Object> item:stylesMap.entrySet()) {
+        switch (item.getKey()) {
+          case Constants.Name.ALIGN_ITEMS:
+            setAlignItems(stylesMap.getAlignItems());
+            break;
+          case Constants.Name.ALIGN_SELF:
+            setAlignSelf(stylesMap.getAlignSelf());
+            break;
+          case Constants.Name.FLEX:
+            setFlex(stylesMap.getFlex());
+            break;
+          case Constants.Name.FLEX_DIRECTION:
+            setFlexDirection(stylesMap.getFlexDirection());
+            break;
+          case Constants.Name.JUSTIFY_CONTENT:
+            setJustifyContent(stylesMap.getJustifyContent());
+            break;
+          case Constants.Name.FLEX_WRAP:
+            setWrap(stylesMap.getCSSWrap());
+            break;
+          case Constants.Name.MIN_WIDTH:
+            setMinWidth(WXViewUtils.getRealPxByWidth(stylesMap.getMinWidth(),getViewPortWidth()));
+            break;
+          case Constants.Name.MIN_HEIGHT:
+            setMinHeight(WXViewUtils.getRealPxByWidth(stylesMap.getMinHeight(),getViewPortWidth()));
+            break;
+          case Constants.Name.MAX_WIDTH:
+            setMaxWidth(WXViewUtils.getRealPxByWidth(stylesMap.getMaxWidth(),getViewPortWidth()));
+            break;
+          case Constants.Name.MAX_HEIGHT:
+            setMaxHeight(WXViewUtils.getRealPxByWidth(stylesMap.getMaxHeight(),getViewPortWidth()));
+            break;
+          case Constants.Name.DEFAULT_HEIGHT:
+          case Constants.Name.HEIGHT:
+            setStyleHeight(WXViewUtils.getRealPxByWidth(stylesMap.containsKey(Constants.Name.HEIGHT)?stylesMap.getHeight():stylesMap.getDefaultHeight(),getViewPortWidth()));
+            break;
+          case Constants.Name.WIDTH:
+          case Constants.Name.DEFAULT_WIDTH:
+            setStyleWidth(WXViewUtils.getRealPxByWidth(stylesMap.containsKey(Constants.Name.WIDTH)?stylesMap.getWidth():stylesMap.getDefaultWidth(),getViewPortWidth()));
+            break;
+          case Constants.Name.POSITION:
+            setPositionType(stylesMap.getPosition());
+            break;
+          case Constants.Name.LEFT:
+            setPositionLeft(WXViewUtils.getRealPxByWidth(stylesMap.getLeft(),getViewPortWidth()));
+            break;
+          case Constants.Name.TOP:
+            setPositionTop(WXViewUtils.getRealPxByWidth(stylesMap.getTop(),getViewPortWidth()));
+            break;
+          case Constants.Name.RIGHT:
+            setPositionRight(WXViewUtils.getRealPxByWidth(stylesMap.getRight(),getViewPortWidth()));
+            break;
+          case Constants.Name.BOTTOM:
+            setPositionBottom(WXViewUtils.getRealPxByWidth(stylesMap.getBottom(),getViewPortWidth()));
+            break;
+          case Constants.Name.MARGIN:
+            setMargin(Spacing.ALL, WXViewUtils.getRealPxByWidth(stylesMap.getMargin(),getViewPortWidth()));
+            break;
+          case Constants.Name.MARGIN_LEFT:
+            setMargin(Spacing.LEFT, WXViewUtils.getRealPxByWidth(stylesMap.getMarginLeft(),getViewPortWidth()));
+            break;
+          case Constants.Name.MARGIN_TOP:
+            setMargin(Spacing.TOP, WXViewUtils.getRealPxByWidth(stylesMap.getMarginTop(),getViewPortWidth()));
+            break;
+          case Constants.Name.MARGIN_RIGHT:
+            setMargin(Spacing.RIGHT, WXViewUtils.getRealPxByWidth(stylesMap.getMarginRight(),getViewPortWidth()));
+            break;
+          case Constants.Name.MARGIN_BOTTOM:
+            setMargin(Spacing.BOTTOM, WXViewUtils.getRealPxByWidth(stylesMap.getMarginBottom(),getViewPortWidth()));
+            break;
+          case Constants.Name.BORDER_WIDTH:
+            setBorder(Spacing.ALL, WXViewUtils.getRealPxByWidth(stylesMap.getBorderWidth(),getViewPortWidth()));
+            break;
+          case Constants.Name.BORDER_TOP_WIDTH:
+            setBorder(Spacing.TOP, WXViewUtils.getRealPxByWidth(stylesMap.getBorderTopWidth(),getViewPortWidth()));
+            break;
+          case Constants.Name.BORDER_RIGHT_WIDTH:
+            setBorder(Spacing.RIGHT, WXViewUtils.getRealPxByWidth(stylesMap.getBorderRightWidth(),getViewPortWidth()));
+            break;
+          case Constants.Name.BORDER_BOTTOM_WIDTH:
+            setBorder(Spacing.BOTTOM, WXViewUtils.getRealPxByWidth(stylesMap.getBorderBottomWidth(),getViewPortWidth()));
+            break;
+          case Constants.Name.BORDER_LEFT_WIDTH:
+            setBorder(Spacing.LEFT, WXViewUtils.getRealPxByWidth(stylesMap.getBorderLeftWidth(),getViewPortWidth()));
+            break;
+          case Constants.Name.PADDING:
+            setPadding(Spacing.ALL, WXViewUtils.getRealPxByWidth(stylesMap.getPadding(),getViewPortWidth()));
+            break;
+          case Constants.Name.PADDING_LEFT:
+            setPadding(Spacing.LEFT, WXViewUtils.getRealPxByWidth(stylesMap.getPaddingLeft(),getViewPortWidth()));
+            break;
+          case Constants.Name.PADDING_TOP:
+            setPadding(Spacing.TOP, WXViewUtils.getRealPxByWidth(stylesMap.getPaddingTop(),getViewPortWidth()));
+            break;
+          case Constants.Name.PADDING_RIGHT:
+            setPadding(Spacing.RIGHT, WXViewUtils.getRealPxByWidth(stylesMap.getPaddingRight(),getViewPortWidth()));
+            break;
+          case Constants.Name.PADDING_BOTTOM:
+            setPadding(Spacing.BOTTOM, WXViewUtils.getRealPxByWidth(stylesMap.getPaddingBottom(),getViewPortWidth()));
+            break;
+        }
+      }
+    }
+  }
+
   public int childCount() {
-    return children == null ? 0 : children.size();
+    return mDomChildren == null ? 0 : mDomChildren.size();
   }
 
   public void hide() {
@@ -476,24 +745,11 @@ public class WXDomObject extends CSSNode implements Cloneable {
     }
     WXDomObject dom = null;
     try {
-      dom = new WXDomObject();
-      if (this.cssstyle != null) {
-        dom.cssstyle.copy(this.cssstyle);
-      }
-
-      dom.ref = ref;
-      dom.type = type;
-      dom.style = style;//style == null ? null : style.clone();
-      dom.attr = attr;//attr == null ? null : attr.clone();
-      dom.event = event == null ? null : event.clone();
-      if (this.csslayout != null) {
-        dom.csslayout.copy(this.csslayout);
-      }
-
-
+      dom = WXDomObjectFactory.newInstance(mType);
+      copyFields(dom);
     } catch (Exception e) {
       if (WXEnvironment.isApkDebugable()) {
-        WXLogUtils.e("WXDomObject clone error: " + WXLogUtils.getStackTrace(e));
+        WXLogUtils.e("WXDomObject clone error: ", e);
       }
     }
 
@@ -502,22 +758,32 @@ public class WXDomObject extends CSSNode implements Cloneable {
 
   public void destroy() {
     sDestroy.set(true);
-    if (style != null) {
-      style.clear();
+    if (mStyles != null) {
+      mStyles.clear();
     }
-    if (attr != null) {
-      attr.clear();
+    if (mAttributes != null) {
+      mAttributes.clear();
     }
-    if (event != null) {
-      event.clear();
+    if (mEvents != null) {
+      mEvents.clear();
     }
-    if (children != null) {
-      int count = children.size();
+    if (mDomChildren != null) {
+      int count = mDomChildren.size();
       for (int i = 0; i < count; ++i) {
-        children.get(i).destroy();
+        mDomChildren.get(i).destroy();
       }
-      children.clear();
+      mDomChildren.clear();
     }
+    mDomContext = null;
+  }
+
+  /** package **/
+  /**
+   * Get default style map for component.
+   * @return
+   */
+  protected Map<String,String> getDefaultStyle(){
+    return null;
   }
 
   public ArrayList<String> getFixedStyleRefs() {
@@ -532,6 +798,43 @@ public class WXDomObject extends CSSNode implements Cloneable {
   }
 
   public String dumpDomTree() {
-    return ref + ": " + toString();
+    return mRef + ": " + toString();
+  }
+
+  /**
+   * Parse the jsonObject to {@link WXDomObject} recursively
+   * @param json the original JSONObject
+   * @return Dom Object corresponding to the JSONObject.
+   */
+  public static  @Nullable WXDomObject parse(JSONObject json, WXSDKInstance wxsdkInstance){
+      if (json == null || json.size() <= 0) {
+        return null;
+      }
+
+      String type = (String) json.get(TYPE);
+      WXDomObject domObject = WXDomObjectFactory.newInstance(type);
+
+      domObject.setViewPortWidth(wxsdkInstance.getViewPortWidth());
+
+      if(domObject == null){
+        return null;
+      }
+      domObject.parseFromJson(json);
+      domObject.mDomContext = wxsdkInstance;
+
+      Object children = json.get(CHILDREN);
+      if (children != null && children instanceof JSONArray) {
+        JSONArray childrenArray = (JSONArray) children;
+        int count = childrenArray.size();
+        for (int i = 0; i < count; ++i) {
+          domObject.add(parse(childrenArray.getJSONObject(i),wxsdkInstance),-1);
+        }
+      }
+
+      return domObject;
+  }
+
+  interface Consumer{
+    void accept(WXDomObject dom);
   }
 }

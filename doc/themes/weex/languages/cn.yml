@@ -1,0 +1,103 @@
+index:
+  page_title: 一套构建高性能、可扩展的原生应用跨平台开发方案
+  get_started: 上手教程
+  edge:
+    title: 优势
+    edge1: 
+      title: 轻量
+      content: 体积小、语法简单、易于掌握
+    edge2: 
+      title: 可扩展
+      content: 可以横向扩展和定制原生组件和功能
+    edge3: 
+      title: 高性能
+      content: 对加载时间和资源占用深度优化，给你更好的体验
+  feature: 
+    title: 帮助你构建原生应用
+    content: 与 Web App、HTML5 App 或 hybrid App 不同，您可以使用 Weex 构建一个真正的原生应用。更贴心的是你的代码只需使用 HTML、CSS、JavaScript 可以构建原生应用，上手非常简单。但实际上，应用的底层是 Objective-C 或 Java， 同时，Weex 提供很多 native 组件或模块供开发人员使用。
+  cross_platform:
+    title: 一次编写，多端运行
+    content: Weex 提供强大的跨平台能力，可以使用相同的 API 开发 Web，Android 和 iOS 应用。 同时，我们对接口了丰富的扩展能力。 这样，当您需要扩展原生组件或模块时，这将非常方便。
+  vue:
+    title: 支持 Vue 语法
+    content: Weex 遵循 Web 标准，同时支持 vue.js 的语法。因此，您可以使用 vue.js 语法来开发应用程序。
+  schematic:
+    title: 工作原理
+    content: Weex 是一个动态化的高扩展跨平台解决方案。 在 Weex 代码中，您可以使用 <template>，<style> 和 <script> 标签编写页面或组件，然后将它们转换为 JS bundle 以进行部署。当服务器返回给客户端 JS bundle 时，JS bundle 会被客户端的 JavaScript 引擎处理，并管理渲染 native 视图，调用原生 API 和用户交互。
+  users: 
+    title: 谁在使用 Weex
+    tmall:
+      title: 天猫
+      content: 中国最大的 B2C 购物平台.
+    aliyun:
+      title: 阿里云
+      content: 阿里巴巴集团旗下云计算业务，阿里云提供全面的全球云计算服务，为国际客户的在线业务和阿里巴巴自己的电子商务生态系统提供支持。
+    taobao:
+      title: 淘宝
+      content: 中国最大的移动电子购物平台，展示数以亿计的产品与服务信息，为消费者提供多个种类的产品和服务。
+    dingtalk:
+      title: 钉钉
+      content: 阿里巴巴集团专为中小企业打造的沟通和协同平台。钉钉因中小企业而生，帮助中小企业通过系统化的解决方案（微应用），全方位提升中小企业沟通和协同效率。
+    alibaba:
+      title: '1688'
+      content: 中国领先的网上批发平台，覆盖普通商品、服装、电子产品、原材料、工业部件、农产品和化工产品等多个行业的买家和卖家。1688 为在阿里巴巴集团旗下零售市场经营业务的商家，提供了从本地批发商采购产品的渠道。
+    cainiao:
+      title: 菜鸟裹裹
+      content: 菜鸟裹裹是阿里巴巴旗下菜鸟网络推出的一款快递服务 APP，主要功能有：快递运单查询、预约寄快递、包裹自动跟踪、菜鸟驿站网点代收代寄。
+    xiami:
+      title: 虾米
+      content: 提供高品质音乐的个性化推荐服务，以及线下音乐活动等互动内容。
+    youku:
+      title: 优酷
+      content: 中国领先的视频服务平台，提供视频播放，视频发布，视频分享等服务。
+  feedback:
+    title: 他们说
+    user1:
+      name: 陈天予
+      title: 众安保险技术总监
+      content: “ Weex 不仅应用灵活、性能强大，而且能让前端开发者最大程度复用现有技术积累，帮助我们用最少成本设计全新的跨平台架构体系，并尽快进入实施阶段。”
+    user2: 
+      name: 林建锋
+      title: 饿了么大前端部负责人
+      content: “ Weex 提供了媲美 HTML5 开发效率和 Native 的性能，对于类似我们这种迭代速度要求比较高的团队，几乎是目前最好的方案。”
+    user3: 
+      name: 黄泰成
+      title: 天猫技术专家
+      content: “ Weex 作为轻量渲染引擎又提供了很方便的插件机制，让各个端可以把自己的能力发挥出来，充分发挥在天猫的业务上，并良好的支持双11。”
+
+menu: 
+  guide: 教程
+  references: 手册
+  doc: 文档
+  faq: FAQ
+  index: 首页
+  blog: 博客
+  showcase: 示例
+  download: 下载
+  resources: 下载
+  tools: 工具和服务
+  advanced: 高阶知识
+  baichuan: 阿里百川
+  github: GitHub
+  legacy: 旧文档
+playground:
+  content: Weex Native 运行时实例 & Weex 文件预览工具。
+categories: Categories
+search: Search
+tags: Tags
+tagcloud: Tag Cloud
+tweets: Tweets
+prev: Prev
+next: Next
+comment: Comments
+archive_a: Archives
+archive_b: "Archives: %s"
+page: Page %d
+recent_posts: Recent Posts
+newer: Newer
+older: Older
+share: Share
+powered_by: Powered by
+rss_feed: RSS Feed
+category: Category
+tag: Tag

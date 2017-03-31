@@ -1,0 +1,49 @@
+<template>
+    <scroller>
+        <div style="align-items: center;">
+            <text style="font-size: 30px;color: black">{{location}}</text>
+            <text style="font-size: 35px;color: lightsalmon;">{{watchlocation}}</text>
+        </div>
+    </scroller>
+</template>
+
+<script>
+    module.exports = {
+        data: {
+            location: "等待定位数据",
+            watchlocation: "watch location",
+            i: 0
+        },
+        created: function () {
+            var geolocation = require('@weex-module/geolocation');
+            geolocation.getCurrentPosition(function (result) {
+                console.log("into--[getCurrentPosition success] result:" + JSON.stringify(result));
+                this.location = JSON.stringify(result);
+            }.bind(this), function (result) {
+                console.log("into--[getCurrentPosition error] result:" + JSON.stringify(result));
+                this.location = JSON.stringify(result);
+            }.bind(this), {enableHighAcuracy: false, address: true})
+
+            geolocation.watchPosition(function (result) {
+                console.log("into--[watchPosition success] result:" + JSON.stringify(result));
+                var str = this.watchlocation + '\n' + JSON.stringify(result);
+                this.watchlocation = str;
+                this.i += 1;
+
+                if (this.i == 2) {
+                    geolocation.clearWatch(result.registerId);
+                    require('@weex-module/modal').toast({
+                        'message': "[clear watch] id:"+result.registerId,
+                        'duration': 1
+                    });
+                }
+
+
+            }.bind(this), function (result) {
+                console.log("into--[watchPosition success] result:" + JSON.stringify(result));
+                this.watchlocation = JSON.stringify(result);
+            }.bind(this), {enableHighAcuracy: false, address: true})
+        },
+        methods: {}
+    }
+</script>

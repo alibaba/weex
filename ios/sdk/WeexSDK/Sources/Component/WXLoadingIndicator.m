@@ -9,70 +9,68 @@
 #import "WXLoadingIndicator.h"
 #import "WXConvert.h"
 
-@interface WXLoadingIndicator()
-
-@property (nonatomic, strong) UIActivityIndicatorView* indicator;
-
-@end
-
-@implementation WXLoadingIndicator
+@implementation WXLoadingIndicator {
+    UIActivityIndicatorView *_indicator;
+    UIColor *_indicatorColor;
+}
 
 - (instancetype)initWithRef:(NSString *)ref type:(NSString *)type styles:(NSDictionary *)styles attributes:(NSDictionary *)attributes events:(NSArray *)events weexInstance:(WXSDKInstance *)weexInstance {
     self = [super initWithRef:ref type:type styles:styles attributes:attributes events:events weexInstance:weexInstance];
     if (self) {
-        _indicator = [[UIActivityIndicatorView alloc] init];
         if (styles[@"color"]) {
-            [self setColor:[WXConvert UIColor:styles[@"color"]]];
+            _indicatorColor = [WXConvert UIColor:styles[@"color"]];
         }
     }
-    
     return self;
 }
 
-- (void)updateStyles:(NSDictionary *)styles
-{
-    if (styles[@"color"]) {
-        [self setColor:[WXConvert UIColor:styles[@"color"]]];
+- (UIView *)loadView {
+    return [[UIActivityIndicatorView alloc] init];
+}
+
+- (void)viewDidLoad {
+    _indicator = (UIActivityIndicatorView *)self.view;
+    
+    if (_indicatorColor) {
+        _indicator.color = _indicatorColor;
     }
 }
 
-- (UIView *)loadView
-{
-    return _indicator;
+- (void)updateStyles:(NSDictionary *)styles {
+    if (styles[@"color"]) {
+        _indicatorColor = [WXConvert UIColor:styles[@"color"]];
+        _indicator.color = _indicatorColor;
+    }
 }
 
 #pragma mark - lifeCircle
-- (void)viewWillUnload
-{
-    [_indicator stopAnimating];
-    _indicator = nil;
 
+- (void)viewWillUnload {
+    if (_indicator) {
+        [_indicator stopAnimating];
+        _indicator = nil;
+    }
 }
 
-- (void)viewDidLoad
-{
-    [self setFrame:self.calculatedFrame];
+- (void)start {
+    if (_indicator) {
+        [_indicator startAnimating];
+    }
 }
 
-- (void)setColor:(UIColor *)color
-{
-    _indicator.color = color;
+- (void)stop {
+    if (_indicator) {
+        [_indicator stopAnimating];
+    }
 }
 
-- (void)start
-{
-    [_indicator startAnimating];
-}
+#pragma mark -reset color
 
-- (void)stop
-{
-    [_indicator stopAnimating];
-}
-
-- (void)setFrame:(CGRect)frame
-{
-    [_indicator setFrame:frame];
+- (void)resetStyles:(NSArray *)styles {
+    if ([styles containsObject:@"color"]) {
+        _indicatorColor = [UIColor blackColor];
+        _indicator.color = _indicatorColor;
+    }
 }
 
 @end
-

@@ -1,7 +1,9 @@
 var path = require('path');
 var fs = require('fs');
+var webpack = require('webpack');
 
 var entry = {};
+var bannerExcludeFiles = [];
 
 function walk(dir) {
   dir = dir || '.'
@@ -11,9 +13,12 @@ function walk(dir) {
       var fullpath = path.join(directory, file);
       var stat = fs.statSync(fullpath);
       var extname = path.extname(fullpath);
-      if (stat.isFile() && extname === '.we') {
+      if (stat.isFile() && (extname === '.we' || extname === '.vue')) {
         var name = path.join('examples', 'build', dir, path.basename(file, extname));
         entry[name] = fullpath + '?entry=true';
+        if (extname === '.we') {
+          bannerExcludeFiles.push(name + '.js')
+        }
       } else if (stat.isDirectory() && file !== 'build' && file !== 'include') {
         var subdir = path.join(dir, file);
         walk(subdir);
@@ -22,6 +27,13 @@ function walk(dir) {
 }
 
 walk();
+
+var banner = '// { "framework": "Vue" }\n'
+
+var bannerPlugin = new webpack.BannerPlugin(banner, {
+  raw: true,
+  exclude: bannerExcludeFiles
+})
 
 module.exports = {
   entry: entry,
@@ -32,21 +44,10 @@ module.exports = {
   module: {
     loaders: [
       {
-        test: /\.we(\?[^?]+)?$/,
+        test: /\.(we|vue)(\?[^?]+)?$/,
         loader: 'weex'
-      },
-      {
-        test: /\.js(\?[^?]+)?$/,
-        loader: 'weex?type=script'
-      },
-      {
-        test: /\.css(\?[^?]+)?$/,
-        loader: 'weex?type=style'
-      }, 
-      {
-        test: /\.html(\?[^?]+)?$/,
-        loader: 'weex?type=tpl'
       }
     ]
-  }
+  },
+  plugins: [bannerPlugin]
 }

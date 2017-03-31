@@ -9,6 +9,9 @@
 #import "WXWebComponent.h"
 #import "WXComponent_internal.h"
 #import "WXUtility.h"
+#import "WXHandlerFactory.h"
+#import "WXURLRewriteProtocol.h"
+
 #import <JavaScriptCore/JavaScriptCore.h>
 
 @interface WXWebView : UIWebView
@@ -16,6 +19,13 @@
 @end
 
 @implementation WXWebView
+
+- (void)dealloc
+{
+    if (self) {
+        self.delegate = nil;
+    }
+}
 
 @end
 
@@ -38,6 +48,10 @@
 @end
 
 @implementation WXWebComponent
+
+WX_EXPORT_METHOD(@selector(goBack))
+WX_EXPORT_METHOD(@selector(reload))
+WX_EXPORT_METHOD(@selector(goForward))
 
 - (instancetype)initWithRef:(NSString *)ref type:(NSString *)type styles:(NSDictionary *)styles attributes:(NSDictionary *)attributes events:(NSArray *)events weexInstance:(WXSDKInstance *)weexInstance
 {
@@ -92,9 +106,14 @@
 
 - (void)setUrl:(NSString *)url
 {
-    if (![url isEqualToString:_url]) {
-        _url = url;
-        
+    NSMutableString* newUrl = [url mutableCopy];
+    WX_REWRITE_URL(url, WXResourceTypeLink, self.weexInstance, &newUrl)
+    if (!newUrl) {
+        return;
+    }
+    
+    if (![newUrl isEqualToString:_url]) {
+        _url = newUrl;
         if (_url) {
             [self loadURL:_url];
         }
@@ -156,7 +175,7 @@
 {
     if (_finishLoadEvent) {
         NSDictionary *data = [self baseInfo];
-        [self fireEvent:@"pagefinish" params:data];
+        [self fireEvent:@"pagefinish" params:data domChanges:@{@"attrs": @{@"src":self.webview.request.URL.absoluteString}}];
     }
 }
 

@@ -1,0 +1,74 @@
+@import "../variable.scss";
+
+.search {
+  position: relative;
+  
+  .search-form {
+    width: 100%;
+    position: relative;
+  }
+
+  .search-input {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    font-size: 1em;
+    padding: 6px 35px 6px 10px;
+    border: 1px solid $border-light;
+    border-radius: 20px;
+    margin: 10px 0;
+    -webkit-appearance: none;
+
+    &:focus {
+      border: 1px solid $border-blue;
+      outline: none;
+    }
+  }
+
+  /*.search-label {
+    display: block;
+  }*/
+  .icon-search {
+    position: absolute;
+    font-size: 14px;
+    line-height: 30px;
+    top: 50%;
+    margin-top: -14px;
+    right: 15px;
+    color: $text-gray;
+  }
+}
+
+.results-panel {
+  display: none;
+  position: absolute;
+  width: 400px;
+  height: 300px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: #fff;
+  right: -66px;
+  top: 100%;
+  padding: 20px;
+  line-height: 1.5;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+
+  .matching-post {
+    border-bottom: 1px solid #ddd;
+    h2 {
+      font-size: 17px;
+      margin: 10px 0;
+    }
+
+    p {
+      font-size: 14px;
+      @include lines(2);
+    }
+  }
+
+  .search-keyword {
+    font-style: normal;
+    color: $text-blue;
+  }
+
+}

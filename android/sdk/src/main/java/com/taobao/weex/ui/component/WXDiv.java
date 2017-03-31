@@ -204,31 +204,41 @@
  */
 package com.taobao.weex.ui.component;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+
 import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.common.Component;
+import com.taobao.weex.annotation.Component;
 import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.ComponentCreator;
 import com.taobao.weex.ui.view.WXFrameLayout;
+
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * div component
  */
 @Component(lazyload = false)
-public class WXDiv extends WXVContainer {
+public class WXDiv extends WXVContainer<WXFrameLayout> {
 
-  public WXDiv(WXSDKInstance instance, WXDomObject node, WXVContainer parent, boolean lazy) {
-    super(instance, node, parent, lazy);
-  }
-
-  @Override
-  protected void initView() {
-    if(mContext!=null) {
-      mHost = new WXFrameLayout(mContext);
+  public static class Ceator implements ComponentCreator {
+    public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+      return new WXDiv(instance,node,parent);
     }
   }
 
+  @Deprecated
+  public WXDiv(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
+    this(instance,dom,parent);
+  }
+
+  public WXDiv(WXSDKInstance instance, WXDomObject node, WXVContainer parent) {
+    super(instance, node, parent);
+  }
+
   @Override
-  public WXFrameLayout getView() {
-    return (WXFrameLayout) super.getView();
+  protected WXFrameLayout initComponentHostView(@NonNull Context context) {
+    return new WXFrameLayout(context);
   }
 
 }

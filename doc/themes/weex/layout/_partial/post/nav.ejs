@@ -1,0 +1,8 @@
+<nav id="article-nav" class="article-nav">
+  <a href="<%- post.prev ? url_for(post.prev.path) : ''%>" id="article-nav-newer" class="article-nav-link <%- post.prev ? 'enable' : 'disable' %>">
+    Prev
+  </a>
+  <a href="<%- post.next ? url_for(post.next.path) : '' %>" id="article-nav-older" class="article-nav-link <%- post.next ? 'enable' : 'disable' %>">
+    Next
+  </a>
+</nav>

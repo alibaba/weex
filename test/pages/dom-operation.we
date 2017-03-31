@@ -1,0 +1,32 @@
+<template>
+    <div>
+        <div style="height:100;background-color:blue">
+            <text if="display">item</text>
+        </div>
+        <div>
+            <div repeat="repeat_items">
+                <text>repeat</text>
+            </div>
+        </div>
+        <text onclick="onclick">display</text>
+        <text onclick="onclick2">display</text>
+    </div>
+</template>
+<script>
+    module.exports = {
+        data:{
+            display:false,
+            repeat_items:[1,2,3,4,5]
+        },
+        methods:{
+          onclick:function(){
+            this.display=true;
+            this.repeat_items.push(6);
+          },
+          onclick2:function(){
+            this.display = false;
+            this.repeat_items.pop();
+          }
+        }
+    }
+</script>

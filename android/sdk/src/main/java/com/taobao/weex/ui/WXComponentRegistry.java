@@ -209,10 +209,12 @@ import android.text.TextUtils;
 import com.taobao.weex.WXSDKManager;
 import com.taobao.weex.bridge.WXBridgeManager;
 import com.taobao.weex.common.WXException;
+import com.taobao.weex.utils.WXLogUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * All components must be registered within this class before used.
@@ -220,24 +222,31 @@ import java.util.Map;
 public class WXComponentRegistry {
 
   private static Map<String, IFComponentHolder> sTypeComponentMap = new HashMap<>();
-  private static ArrayList<Map<String, String>> sComponentInfos=new ArrayList<>();
+  private static ArrayList<Map<String, Object>> sComponentInfos=new ArrayList<>();
 
-  public static boolean registerComponent(final String type, final IFComponentHolder holder, final Map<String, String> componentInfo) throws WXException {
+  public static boolean registerComponent(final String type, final IFComponentHolder holder, final Map<String, Object> componentInfo) throws WXException {
     if (holder == null || TextUtils.isEmpty(type)) {
       return false;
     }
 
     //execute task in js thread to make sure register order is same as the order invoke register method.
-    WXBridgeManager.getInstance().getJSHandler()
-    .post(new Runnable() {
+    WXBridgeManager.getInstance()
+        .post(new Runnable() {
       @Override
       public void run() {
         try {
+          Map<String, Object> registerInfo = componentInfo;
+          if (registerInfo == null){
+            registerInfo = new HashMap<>();
+          }
+
+          registerInfo.put("type",type);
+          registerInfo.put("methods",holder.getMethods());
           registerNativeComponent(type, holder);
-          registerJSComponent(componentInfo);
-          sComponentInfos.add(componentInfo);
+          registerJSComponent(registerInfo);
+          sComponentInfos.add(registerInfo);
         } catch (WXException e) {
-          e.printStackTrace();
+          WXLogUtils.e("register component error:", e);
         }
 
       }
@@ -246,12 +255,18 @@ public class WXComponentRegistry {
   }
 
   private static boolean registerNativeComponent(String type, IFComponentHolder holder) throws WXException {
-    sTypeComponentMap.put(type, holder);
+    try {
+      holder.loadIfNonLazy();
+      sTypeComponentMap.put(type, holder);
+    }catch (ArrayStoreException e){
+      e.printStackTrace();
+      //ignore: ArrayStoreException: java.lang.String cannot be stored in an array of type java.util.HashMap$HashMapEntry[]
+    }
     return true;
   }
 
-  private static boolean registerJSComponent(Map<String, String> componentInfo) throws WXException {
-    ArrayList<Map<String, String>> coms = new ArrayList<>();
+  private static boolean registerJSComponent(Map<String, Object> componentInfo) throws WXException {
+    ArrayList<Map<String, Object>> coms = new ArrayList<>();
     coms.add(componentInfo);
     WXSDKManager.getInstance().registerComponents(coms);
     return true;
@@ -262,15 +277,15 @@ public class WXComponentRegistry {
   }
 
   public static void reload(){
-    WXBridgeManager.getInstance().getJSHandler().post(new Runnable() {
+    WXBridgeManager.getInstance().post(new Runnable() {
       @Override
       public void run() {
         try {
-          for(Map<String,String> com:sComponentInfos){
+          for(Map<String,Object> com:sComponentInfos){
             registerJSComponent(com);
           }
         } catch (WXException e) {
-          e.printStackTrace();
+          WXLogUtils.e("", e);
         }
       }
     });

@@ -8,13 +8,6 @@
 
 #import "WXModuleProtocol.h"
 
-#define MSG_SUCCESS     @"WX_SUCCESS"
-#define MSG_NO_HANDLER  @"WX_NO_HANDLER"
-#define MSG_NO_PERMIT   @"WX_NO_PERMISSION"
-#define MSG_FAILED      @"WX_FAILED"
-#define MSG_PARAM_ERR   @"WX_PARAM_ERR"
-#define MSG_EXP         @"WX_EXCEPTION"
-
 /**
  * This enum is used to define the position of navbar item.
  */
@@ -126,18 +119,39 @@ typedef void (^WXNavigationResultBlock)(NSString *code, NSDictionary * responseD
                         completion:(WXNavigationResultBlock)block
                      withContainer:(UIViewController *)container;
 
+    
+@optional
+    
 /**
- * @abstract Pops all the view controllers on the stack except the root view controller.
+ * @abstract open the resource at the specified URL which supports many common schemes, including the http, https, tel and mailto schemes.
  *
  * @param param The data which is passed to the implementation of the protocol.
  *
- * @param block A block called once the action is completed.
+ * @param success A block called once the action is completed successfully.
+ *
+ * @param failure A block called once the action failed to be completed.
  *
  * @param container The target controller.
  *
  */
-- (void)popToRootViewControllerWithParam:(NSDictionary *)param
-                              completion:(WXNavigationResultBlock)block
-                           withContainer:(UIViewController *)container;
+- (void)open:(NSDictionary *)param success:(WXModuleCallback)success
+                                   failure:(WXModuleCallback)failure
+                             withContainer:(UIViewController *)container;
 
+
+/**
+  * @abstract close the current weex page
+  *
+  * @param param The data which is passed to the implementation of the protocol.
+  *
+  * @param success A block called once the action is completed successfully.
+  *
+  * @param failure A block called once the action failed to be completed.
+  *
+  * @param container The target controller.
+  *
+  */
+- (void)close:(NSDictionary *)param success:(WXModuleCallback)success
+                                   failure:(WXModuleCallback)failure
+                             withContainer:(UIViewController *)container;
 @end

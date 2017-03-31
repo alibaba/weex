@@ -214,12 +214,13 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.ViewParent;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.common.Constants;
+import com.taobao.weex.ui.component.Scrollable;
 import com.taobao.weex.ui.component.WXComponent;
-import com.taobao.weex.ui.component.WXEventType;
 import com.taobao.weex.ui.view.gesture.WXGestureType.GestureInfo;
 import com.taobao.weex.ui.view.gesture.WXGestureType.HighLevelGesture;
 import com.taobao.weex.ui.view.gesture.WXGestureType.LowLevelGesture;
@@ -231,10 +232,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class WXGesture implements OnTouchListener {
+public class WXGesture extends GestureDetector.SimpleOnGestureListener implements OnTouchListener {
 
   private final static String TAG = "Gesture";
   private static final int CUR_EVENT = -1;
+  public static final String START = "start";
+  public static final String MOVE = "move";
+  public static final String END = "end";
+  public static final String UNKNOWN = "unknown";
+  public static final String LEFT = "left";
+  public static final String RIGHT = "right";
+  public static final String UP = "up";
+  public static final String DOWN = "down";
   private WXComponent component;
   private GestureDetector mGestureDetector;
   private Rect globalRect;
@@ -242,7 +251,12 @@ public class WXGesture implements OnTouchListener {
   private Point globalEventOffset;
   private PointF locEventOffset;
   private PointF locLeftTop;
-  private boolean scrolling;
+  private long swipeDownTime = -1;
+  private long panDownTime = -1;
+  private WXGestureType mPendingPan = null;//event type to notify when action_up or action_cancel
+  private int mParentOrientation =-1;
+  private boolean mIsPreventMoveEvent = false;
+
   public WXGesture(WXComponent wxComponent, Context context) {
     this.component = wxComponent;
     globalRect = new Rect();
@@ -250,7 +264,28 @@ public class WXGesture implements OnTouchListener {
     globalEventOffset = new Point();
     locEventOffset = new PointF();
     locLeftTop = new PointF();
-    mGestureDetector = new GestureDetector(context, new GestureListener(), new GestureHandler());
+    mGestureDetector = new GestureDetector(context, this, new GestureHandler());
+    Scrollable parentScrollable = wxComponent.getParentScroller();
+    if(parentScrollable != null) {
+      mParentOrientation = parentScrollable.getOrientation();
+    }
+  }
+
+  private boolean isParentScrollable() {
+    if(component == null) {
+      return true;
+    }
+    Scrollable parentScrollable = component.getParentScroller();
+    return parentScrollable == null || parentScrollable.isScrollable();
+  }
+
+  private boolean hasSameOrientationWithParent(){
+    return (mParentOrientation == Constants.Orientation.HORIZONTAL && component.containsGesture(HighLevelGesture.HORIZONTALPAN))
+        || (mParentOrientation == Constants.Orientation.VERTICAL && component.containsGesture(HighLevelGesture.VERTICALPAN));
+  }
+
+  public void setPreventMoveEvent(boolean preventMoveEvent) {
+    mIsPreventMoveEvent = preventMoveEvent;
   }
 
   @Override
@@ -260,44 +295,82 @@ public class WXGesture implements OnTouchListener {
       switch (event.getActionMasked()) {
         case MotionEvent.ACTION_POINTER_DOWN:
         case MotionEvent.ACTION_DOWN:
+          /**
+           * If component has same scroll orientation with it's parent and it's parent not scrollable
+           * , we should disallow parent in DOWN.
+           */
+          if(hasSameOrientationWithParent() && !isParentScrollable()){
+            ViewParent p;
+            if ((p = component.getRealView().getParent()) != null) {
+              p.requestDisallowInterceptTouchEvent(true);
+            }
+          }
           result |= handleMotionEvent(LowLevelGesture.ACTION_DOWN, event);
           break;
         case MotionEvent.ACTION_MOVE:
           result |= handleMotionEvent(LowLevelGesture.ACTION_MOVE, event);
           break;
         case MotionEvent.ACTION_UP:
-          if (scrolling) {
-            result |= handleMotionEvent(HighLevelGesture.PAN_END, event);
-            scrolling = false;
-          }
-          result |= handleMotionEvent(LowLevelGesture.ACTION_UP, event);
-          break;
         case MotionEvent.ACTION_POINTER_UP:
+          finishDisallowInterceptTouchEvent(v);
           result |= handleMotionEvent(LowLevelGesture.ACTION_UP, event);
+          result |= handlePanMotionEvent(event);
           break;
         case MotionEvent.ACTION_CANCEL:
+          finishDisallowInterceptTouchEvent(v);
           result |= handleMotionEvent(LowLevelGesture.ACTION_CANCEL, event);
+          result |= handlePanMotionEvent(event);
           break;
       }
       return result;
     } catch (Exception e) {
-      WXLogUtils.e("Gesture RunTime Error " + WXLogUtils.getStackTrace(e));
+      WXLogUtils.e("Gesture RunTime Error ", e);
       return false;
     }
   }
 
-  /**
-   * Handle low-level gesture
-   * @param WXGestureType possible low-level gesture, defined in {@link WXEventType}
-   * @param motionEvent motionEvent, which contains all pointers event in a period of time
-   * @return true if this event is handled, otherwise false.
-   */
-  private boolean handleMotionEvent(WXGestureType WXGestureType, MotionEvent motionEvent) {
-    if (component.containsGesture(WXGestureType)) {
-      List<Map<String, Object>> list = createFireEventParam(motionEvent);
+  private String getPanEventAction(MotionEvent event) {
+    switch (event.getAction()) {
+      case MotionEvent.ACTION_DOWN:
+        return START;
+      case MotionEvent.ACTION_MOVE:
+        return MOVE;
+      case MotionEvent.ACTION_UP:
+        return END;
+      case MotionEvent.ACTION_CANCEL:
+        return END;
+      default:
+        return UNKNOWN;
+    }
+  }
+
+  private void finishDisallowInterceptTouchEvent(View v){
+    if(v.getParent() != null){
+      v.getParent().requestDisallowInterceptTouchEvent(false);
+    }
+  }
+
+  private boolean handlePanMotionEvent(MotionEvent motionEvent) {
+    if (mPendingPan == null) {
+      return false;
+    }
+    String state = null;
+    if (mPendingPan == HighLevelGesture.HORIZONTALPAN || mPendingPan == HighLevelGesture.VERTICALPAN) {
+      state = getPanEventAction(motionEvent);
+
+    }
+
+    if (component.containsGesture(mPendingPan)) {
+      if(mIsPreventMoveEvent && MOVE.equals(state)){
+        return true;
+      }
+      List<Map<String, Object>> list = createMultipleFireEventParam(motionEvent, state);
       for (Map<String, Object> map : list) {
-        WXSDKManager.getInstance().fireEvent(component.mInstanceId, component.mDomObj.ref,
-                                             WXGestureType.toString(), map);
+        component.fireEvent(mPendingPan.toString(), map);
+      }
+      //action is finish, clean pending pan
+      if (motionEvent.getAction() == MotionEvent.ACTION_UP || motionEvent.getAction() == MotionEvent.ACTION_CANCEL) {
+        mPendingPan = null;
       }
       return true;
     } else {
@@ -306,15 +379,33 @@ public class WXGesture implements OnTouchListener {
   }
 
   /**
-   * Create a list of event for {@link WXSDKManager#fireEvent(String, String, String, Map)}.
+   *
+   * @param WXGestureType possible low-level gesture, defined in {@link com.taobao.weex.common.Constants.Event}
+   * @param motionEvent motionEvent, which contains all pointers event in a period of time
+   * @return true if this event is handled, otherwise false.
+   */
+  private boolean handleMotionEvent(WXGestureType WXGestureType, MotionEvent motionEvent) {
+    if (component.containsGesture(WXGestureType)) {
+      List<Map<String, Object>> list = createMultipleFireEventParam(motionEvent, null);
+      for (Map<String, Object> map : list) {
+        component.fireEvent(WXGestureType.toString(), map);
+      }
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Create a list of event for {@link com.taobao.weex.WXSDKInstance#fireEvent(String, String, Map, Map)}.
    * As there is a batch mechanism in MotionEvent, so this method returns a list.
    * @param motionEvent motionEvent, which contains all pointers event in a period of time
    * @return List of Map, which contains touch object.
    */
-  private List<Map<String, Object>> createFireEventParam(MotionEvent motionEvent) {
+  private List<Map<String, Object>> createMultipleFireEventParam(MotionEvent motionEvent,String state) {
     List<Map<String, Object>> list = new ArrayList<>(motionEvent.getHistorySize() + 1);
     list.addAll(getHistoricalEvents(motionEvent));
-    list.add(createFireEventParam(motionEvent, CUR_EVENT));
+    list.add(createFireEventParam(motionEvent, CUR_EVENT, state));
     return list;
   }
 
@@ -331,7 +422,7 @@ public class WXGesture implements OnTouchListener {
     if (motionEvent.getActionMasked() == MotionEvent.ACTION_MOVE) {
       Map<String, Object> param;
       for (int i = 0; i < motionEvent.getHistorySize(); i++) {
-        param = createFireEventParam(motionEvent, i);
+        param = createFireEventParam(motionEvent, i,null);
         list.add(param);
       }
     }
@@ -345,7 +436,7 @@ public class WXGesture implements OnTouchListener {
    * @return touchEvent
    * @see <a href="https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent">touchEvent</a>
    */
-  private Map<String, Object> createFireEventParam(MotionEvent motionEvent, int pos) {
+  private Map<String, Object> createFireEventParam(MotionEvent motionEvent, int pos, String state) {
     JSONArray jsonArray = new JSONArray(motionEvent.getPointerCount());
     if (motionEvent.getActionMasked() == MotionEvent.ACTION_MOVE) {
       for (int i = 0; i < motionEvent.getPointerCount(); i++) {
@@ -357,6 +448,9 @@ public class WXGesture implements OnTouchListener {
     }
     Map<String, Object> map = new HashMap<>();
     map.put(GestureInfo.HISTORICAL_XY, jsonArray);
+    if (state != null) {
+      map.put(GestureInfo.STATE, state);
+    }
     return map;
   }
 
@@ -377,7 +471,7 @@ public class WXGesture implements OnTouchListener {
    * Tell whether component contains pan gesture
    * @return true for contains pan gesture, otherwise false.
    */
-  private boolean containsPan() {
+  private boolean containsSimplePan() {
     return component.containsGesture(HighLevelGesture.PAN_START) ||
            component.containsGesture(HighLevelGesture.PAN_MOVE) ||
            component.containsGesture(HighLevelGesture.PAN_END);
@@ -465,8 +559,8 @@ public class WXGesture implements OnTouchListener {
     globalEventOffset.set((int) eventX, (int) eventY);
     component.getRealView().getGlobalVisibleRect(globalRect, globalOffset);
     globalEventOffset.offset(globalOffset.x, globalOffset.y);
-    return new PointF(WXViewUtils.getWebPxByWidth(globalEventOffset.x),
-                      WXViewUtils.getWebPxByWidth(globalEventOffset.y));
+    return new PointF(WXViewUtils.getWebPxByWidth(globalEventOffset.x,component.getInstance().getViewPortWidth()),
+                      WXViewUtils.getWebPxByWidth(globalEventOffset.y,component.getInstance().getViewPortWidth()));
   }
 
   /**
@@ -511,8 +605,8 @@ public class WXGesture implements OnTouchListener {
     locLeftTop.set(0, 0);
     component.computeVisiblePointInViewCoordinate(locLeftTop);
     locEventOffset.offset(locLeftTop.x, locLeftTop.y);
-    return new PointF(WXViewUtils.getWebPxByWidth(locEventOffset.x),
-                      WXViewUtils.getWebPxByWidth(locEventOffset.y));
+    return new PointF(WXViewUtils.getWebPxByWidth(locEventOffset.x,component.getInstance().getViewPortWidth()),
+                      WXViewUtils.getWebPxByWidth(locEventOffset.y,component.getInstance().getViewPortWidth()));
   }
 
   private static class GestureHandler extends android.os.Handler {
@@ -522,63 +616,86 @@ public class WXGesture implements OnTouchListener {
     }
   }
 
-  private class GestureListener extends GestureDetector.SimpleOnGestureListener {
 
-    private long swipeDownTime = -1;
-    private long panDownTime = -1;
+  /***************** OnGestureListener ****************/
 
-    @Override
-    public void onLongPress(MotionEvent e) {
-      if (component.containsGesture(HighLevelGesture.LONG_PRESS)) {
-        List<Map<String, Object>> list = createFireEventParam(e);
-        WXSDKManager.getInstance().fireEvent(component.mInstanceId,
-                                             component.mDomObj.ref,
-                                             HighLevelGesture.LONG_PRESS.toString(),
-                                             list.get(list.size() - 1));
-      }
+  @Override
+  public void onLongPress(MotionEvent e) {
+    if (component.containsGesture(HighLevelGesture.LONG_PRESS)) {
+      List<Map<String, Object>> list = createMultipleFireEventParam(e,null);
+      component.getInstance().fireEvent(
+          component.getDomObject().getRef(),
+          HighLevelGesture.LONG_PRESS.toString(),
+          list.get(list.size() - 1));
     }
+  }
 
-    @Override
-    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-      boolean result = false;
-      if (containsPan() &&
-          (e2.getPointerId(e1.getActionIndex()) == e1.getPointerId(e1.getActionIndex()))) {
-        if (panDownTime != e1.getEventTime()) {
-          panDownTime = e1.getEventTime();
-          scrolling = true;
-          WXSDKManager.getInstance().fireEvent(component.mInstanceId,
-                                               component.mDomObj.ref, HighLevelGesture.PAN_START.toString(),
-                                               createFireEventParam(e1, CUR_EVENT));
+  /**
+   * Gesture priority：horizontalPan & verticalPan > pan > swipe
+   */
+  @Override
+  public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+    boolean result = false;
+    if (e1 == null || e2 == null) {
+      return false;
+    }
+    float dx = Math.abs(e2.getX() - e1.getX());
+    float dy = Math.abs(e2.getY() - e1.getY());
+    WXGestureType possiblePan;
+    if (dx > dy) {
+      possiblePan = HighLevelGesture.HORIZONTALPAN;
+    } else {
+      possiblePan = HighLevelGesture.VERTICALPAN;
+    }
+    if (mPendingPan == HighLevelGesture.HORIZONTALPAN || mPendingPan == HighLevelGesture.VERTICALPAN) {
+      //already during directional-pan
+      handlePanMotionEvent(e2);
+      result = true;
+    } else if (component.containsGesture(possiblePan)) {
+      ViewParent p;
+      if ((p = component.getRealView().getParent()) != null) {
+        p.requestDisallowInterceptTouchEvent(true);
+      }
+      if (mPendingPan != null) {
+        handleMotionEvent(mPendingPan, e2);//finish pan if exist
+      }
+      mPendingPan = possiblePan;
+      component.fireEvent(possiblePan.toString(), createFireEventParam(e2, CUR_EVENT, START));
+
+      result = true;
+    } else if (containsSimplePan()) {
+      if (panDownTime != e1.getEventTime()) {
+        panDownTime = e1.getEventTime();
+        mPendingPan = HighLevelGesture.PAN_END;
+        component.fireEvent(HighLevelGesture.PAN_START.toString(),
+            createFireEventParam(e1, CUR_EVENT, null));
+      } else {
+        component.fireEvent(HighLevelGesture.PAN_MOVE.toString(),
+            createFireEventParam(e2, CUR_EVENT, null));
+      }
+      result = true;
+    } else if (component.containsGesture(HighLevelGesture.SWIPE)) {
+      if (swipeDownTime != e1.getEventTime()) {
+        swipeDownTime = e1.getEventTime();
+        List<Map<String, Object>> list = createMultipleFireEventParam(e2, null);
+        Map<String, Object> param = list.get(list.size() - 1);
+        if (Math.abs(distanceX) > Math.abs(distanceY)) {
+          param.put(GestureInfo.DIRECTION, distanceX > 0 ? LEFT : RIGHT);
         } else {
-          WXSDKManager.getInstance().fireEvent(component.mInstanceId,
-                                               component.mDomObj.ref, HighLevelGesture.PAN_MOVE.toString(),
-                                               createFireEventParam(e2, CUR_EVENT));
+          param.put(GestureInfo.DIRECTION, distanceY > 0 ? UP : DOWN);
         }
+        component.getInstance().fireEvent(component.getDomObject().getRef(),
+            HighLevelGesture.SWIPE.toString(), param);
         result = true;
       }
-      if (component.containsGesture(HighLevelGesture.SWIPE)) {
-        if (swipeDownTime != e1.getEventTime()) {
-          swipeDownTime = e1.getEventTime();
-          List<Map<String, Object>> list = createFireEventParam(e2);
-          Map<String, Object> param = list.get(list.size() - 1);
-          if (Math.abs(distanceX) > Math.abs(distanceY)) {
-            param.put(GestureInfo.DIRECTION, distanceX > 0 ? "left" : "right");
-          } else {
-            param.put(GestureInfo.DIRECTION, distanceY > 0 ? "up" : "down");
-          }
-          WXSDKManager.getInstance().fireEvent(component.mInstanceId, component.mDomObj.ref,
-                                               HighLevelGesture.SWIPE.toString(), param);
-          result = true;
-        }
-      }
-      return result;
     }
-
-    @Override
-    public boolean onDown(MotionEvent e) {
-      return true;
-    }
-
+    return result;
   }
+
+  @Override
+  public boolean onDown(MotionEvent e) {
+    return true;
+  }
+
 
 }

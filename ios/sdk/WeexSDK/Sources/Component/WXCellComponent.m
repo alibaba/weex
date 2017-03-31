@@ -22,7 +22,10 @@
     self = [super initWithRef:ref type:type styles:styles attributes:attributes events:events weexInstance:weexInstance];
     
     if (self) {
-        _async = YES;
+        _async = attributes[@"async"] ? [WXConvert BOOL:attributes[@"async"]] : YES;
+        _isRecycle = attributes[@"recycle"] ? [WXConvert BOOL:attributes[@"recycle"]] : YES;
+        _insertAnimation = [WXConvert UITableViewRowAnimation:attributes[@"insertAnimation"]];
+        _deleteAnimation = [WXConvert UITableViewRowAnimation:attributes[@"deleteAnimation"]];
         _lazyCreateView = YES;
         _isNeedJoinLayoutSystem = NO;
     }
@@ -35,34 +38,66 @@
     
 }
 
-- (void)layoutDidFinish
+- (void)_frameDidCalculated:(BOOL)isChanged
 {
-    [self.list cellDidLayout:self];
+    [super _frameDidCalculated:isChanged];
+    
+    if (isChanged) {
+        [self.list cellDidLayout:self];
+    }
 }
 
-- (WXDisplayCompeletionBlock)displayCompeletionBlock
+- (WXDisplayCompletionBlock)displayCompletionBlock
 {
     return ^(CALayer *layer, BOOL finished) {
-        if ([super displayCompeletionBlock]) {
-            [super displayCompeletionBlock](layer, finished);
+        if ([super displayCompletionBlock]) {
+            [super displayCompletionBlock](layer, finished);
         }
         
         [self.list cellDidRendered:self];
     };
 }
 
-- (void)moveToSuperview:(WXComponent *)newSupercomponent atIndex:(NSUInteger)index
+- (void)updateAttributes:(NSDictionary *)attributes
 {
-    if (newSupercomponent == self.list) {
-        [self.list cell:self didMoveToIndex:index];
-    } else {
-        [super moveToSuperview:newSupercomponent atIndex:index];
+    if (attributes[@"async"]) {
+        _async = [WXConvert BOOL:attributes[@"async"]];
     }
+    
+    if (attributes[@"recycle"]) {
+        _isRecycle = [WXConvert BOOL:attributes[@"recycle"]];
+    }
+    
+    if (attributes[@"insertAnimation"]) {
+        _insertAnimation = [WXConvert UITableViewRowAnimation:attributes[@"insertAnimation"]];
+    }
+    
+    if (attributes[@"deleteAnimation"]) {
+        _deleteAnimation = [WXConvert UITableViewRowAnimation:attributes[@"deleteAnimation"]];
+    }
+}
+
+- (void)_moveToSupercomponent:(WXComponent *)newSupercomponent atIndex:(NSUInteger)index
+{
+    if (self.list == newSupercomponent) {
+        [self.list cell:self didMoveToIndex:index];
+        [super _removeFromSupercomponent];
+        [newSupercomponent _insertSubcomponent:self atIndex:index];
+    } else {
+        [super _moveToSupercomponent:newSupercomponent atIndex:index];
+    }
+}
+
+- (void)_removeFromSupercomponent
+{
+    [super _removeFromSupercomponent];
+    
+    [self.list cellDidRemove:self];
 }
 
 - (void)removeFromSuperview
 {
-    [self.list cellDidRemove:self];
+    // do nothing
 }
 
 - (void)_calculateFrameWithSuperAbsolutePosition:(CGPoint)superAbsolutePosition gatherDirtyComponents:(NSMutableSet<WXComponent *> *)dirtyComponents
@@ -73,7 +108,9 @@
     
     if ([self needsLayout]) {
         layoutNode(self.cssNode, CSS_UNDEFINED, CSS_UNDEFINED, CSS_DIRECTION_INHERIT);
-//        print_css_node(self.cssNode, CSS_PRINT_LAYOUT | CSS_PRINT_STYLE | CSS_PRINT_CHILDREN);
+        if ([WXLog logLevel] >= WXLogLevelDebug) {
+            print_css_node(self.cssNode, CSS_PRINT_LAYOUT | CSS_PRINT_STYLE | CSS_PRINT_CHILDREN);
+        }
     }
     
     [super _calculateFrameWithSuperAbsolutePosition:superAbsolutePosition gatherDirtyComponents:dirtyComponents];

@@ -14,7 +14,8 @@
 @property (nonatomic, strong) NSString * appName;
 @property (nonatomic, strong) NSString * appVersion;
 @property (nonatomic, strong) NSString * externalUA;
-
+@property (nonatomic, strong) NSString * JSFrameworkVersion;
+@property (nonatomic, strong) NSArray  * customizeProtocolClasses;
 @end
 
 @implementation WXAppConfiguration
@@ -68,5 +69,24 @@
 {
     [WXAppConfiguration sharedConfiguration].externalUA = userAgent;
 }
+
++ (NSString *)JSFrameworkVersion
+{
+    return [WXAppConfiguration sharedConfiguration].JSFrameworkVersion ?: @"";
+}
+
++ (void)setJSFrameworkVersion:(NSString *)JSFrameworkVersion
+{
+    [WXAppConfiguration sharedConfiguration].JSFrameworkVersion = JSFrameworkVersion;
+}
+
++ (NSArray*)customizeProtocolClasses{
+    return [WXAppConfiguration sharedConfiguration].customizeProtocolClasses;
+}
+
++ (void)setCustomizeProtocolClasses:(NSArray *)customizeProtocolClasses{
+    [WXAppConfiguration sharedConfiguration].customizeProtocolClasses = customizeProtocolClasses;
+}
+
 
 @end

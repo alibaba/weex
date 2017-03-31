@@ -1,0 +1,66 @@
+<template>
+  <scroller>
+    <wxc-panel title="Clipboard" type="primary">
+      <wxc-panel title="Copy to clipboard5">
+        <text style="line-height:40px;font-size:28px">{{textToCopy}}</text>
+        <wxc-button type="info" size="middle" value="Copy" onclick="{{doCopy}}"></wxc-button>
+      </wxc-panel>
+
+      <wxc-panel title="Paste from clipboard">
+        <text style="line-height:40px;font-size:28px">{{textFromPaste}}</text>
+        <wxc-button type="info" size="middle" value="Paste" onclick="{{doPaste}}"></wxc-button>
+      </wxc-panel>
+
+      <wxc-panel title="Result">
+        <wxc-tip style="margin-bottom: 20px;" value="{{tips}}"></wxc-tip>
+      </wxc-panel>
+
+    </wxc-panel>
+  </scroller>
+</template>
+
+<script>
+  require('weex-components');
+
+  module.exports = {
+    data: {
+      textToCopy : '',
+      textFromPaste: '',
+      tips : '',
+    },
+    ready : function() {
+      this.tips = "1. Just click COPY button. It will auto generate a string with random text, and copy to system clipboard. \n 2. do copy in another app, then come back and click PASTE button."
+    },
+    methods: {
+      clicked: function() {
+        var $modal = require('@weex-module/modal');
+        $modal.toast({'message': 'clicked!', duration: 0.5});
+      },
+
+      doCopy: function() {
+        var self = this
+        var textToCopy = "autoGenerateTextToCopy" + Math.random();
+
+        var clipboard = require('@weex-module/clipboard');
+        clipboard.setString(textToCopy);
+
+        self.textToCopy = textToCopy;
+        self.tips = "copy done. Now system clipboard has string of '" + textToCopy + "', try PASTE button, or paste in another app." 
+      },
+
+      doPaste: function() {
+        var clipboard = require('@weex-module/clipboard');
+        var me = this;
+        clipboard.getString(function(ret) {
+          console.log("paste result is " + JSON.stringify(ret));
+
+          me.textFromPaste = JSON.stringify(ret);
+          me.tips = "Paste done. Only support native(Android/iOS) NOW. according to security reason, paste in html5 is not supported.";
+        });
+      }
+
+    }
+
+    
+  };
+</script>

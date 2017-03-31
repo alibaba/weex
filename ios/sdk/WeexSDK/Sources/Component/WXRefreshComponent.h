@@ -8,10 +8,16 @@
 
 #import "WXComponent.h"
 
+#define  DISTANCE_Y             @"dy"
+#define  PULLING_DISTANCE       @"pullingDistance"
+#define  VIEW_HEIGHT            @"viewHeight"
+
 @interface WXRefreshComponent : WXComponent
 
 - (void)refresh;
 
 - (BOOL)displayState;
+
+- (void)pullingdown:(NSDictionary*)param;
 
 @end

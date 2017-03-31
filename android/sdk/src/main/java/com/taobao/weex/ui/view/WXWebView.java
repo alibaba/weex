@@ -208,6 +208,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.http.SslError;
+import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.View;
 import android.webkit.SslErrorHandler;
@@ -274,21 +275,29 @@ public class WXWebView implements IWebView {
 
     @Override
     public void loadUrl(String url) {
+        if(getWebView() == null)
+            return;
         getWebView().loadUrl(url);
     }
 
     @Override
     public void reload() {
+        if(getWebView() == null)
+            return;
         getWebView().reload();
     }
 
     @Override
     public void goBack() {
+        if(getWebView() == null)
+            return;
         getWebView().goBack();
     }
 
     @Override
     public void goForward() {
+        if(getWebView() == null)
+            return;
         getWebView().goForward();
     }
 
@@ -324,7 +333,8 @@ public class WXWebView implements IWebView {
         mWebView.setVisibility(shown ? View.VISIBLE : View.INVISIBLE);
     }
 
-    private WebView getWebView() {
+    private @Nullable WebView getWebView() {
+        //TODO: remove this, duplicate with getView semantically.
         return mWebView;
     }
 

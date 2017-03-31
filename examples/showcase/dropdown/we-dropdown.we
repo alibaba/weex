@@ -1,0 +1,211 @@
+<template>
+    <div class="select-container" >
+        <div class="content">
+            <content></content>
+        </div>
+        <div class="mask" id="mask" onclick="switchView"></div>
+        <div class="options" id="options">
+            <div repeat="{{status}}" class="cell" vid="{{id}}" onclick="onItemClick">
+                <text class="name {{id==statusId?'current': ''}}">{{name}}</text>
+                <image class="icon-curr-flag" src="{{flagSrc}}" if="{{id==statusId}}"></image>
+            </div>
+        </div>
+        <div class="select" onclick="switchView">
+            <text class="current-text">{{statusName}}</text>
+            <image class="icon-arrow" id="arrow" src="{{arrowSrc}}"></image>
+        </div>
+    </div>
+    <!-- weex not support  z-index -->
+</template>
+
+<style>
+    /* item height: 90 ; */
+    .select-container{
+        flex-direction: column;
+        position: relative;
+        z-index: 1000;
+    }
+
+    .content{
+        width: 750;
+        margin-top: 90;
+    }
+
+    .mask{
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        flex: 1;
+        width: 750;
+        background-color: rgba(0,0,0, .5);
+        visibility: hidden;
+    }
+
+    .select {
+        width: 750;
+        height: 90;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+
+        padding-left:30;
+        padding-right:30;
+
+        border-bottom-width: 1;
+        border-style: solid;
+        border-color: #ddd;
+        background-color: #eee;
+        z-index: 1001;
+        position: absolute;
+        top: 0;
+    }
+
+    .current-text {
+        color: #333;
+        font-size: 33;
+        flex: 1;
+    }
+
+    .icon-arrow {
+        width: 27;
+        height: 23;
+    }
+
+
+
+    .options {
+        position: absolute;
+        top: -181;
+        width: 750;
+        background-color: #fff;
+        transform-origin: center center;
+
+    }
+    .cell {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        width: 750;
+        height: 90;
+        padding-left:30;
+        padding-right:30;
+
+        border-bottom-width: 1;
+        border-style: solid;
+        border-color: #ddd;
+    }
+
+    .name {
+        color: #333;
+        font-size: 33;
+        flex: 1;
+    }
+
+    .icon-curr-flag{
+        width: 32;
+        height: 32;
+    }
+
+    .current {
+        color: #0088FB;
+    }
+</style>
+
+
+<script>
+    var animation = require('@weex-module/animation');
+
+    module.exports = {
+        data: {
+            statusId: '0', 
+            status: [
+                {id: '0', name: 'All'},
+                {id: '1', name: 'Doing'},
+                {id: '2', name: 'Done'}
+            ],
+            flagSrc: 'https://gw.alicdn.com/tps/TB11a2lKFXXXXbVXpXXXXXXXXXX-32-32.png',
+            arrowSrc: 'https://gw.alicdn.com/tps/TB1O3_aKFXXXXXdXVXXXXXXXXXX-27-23.png'
+        },
+        computed: {
+            statusName: {
+                get: function(){
+                    var id = this.statusId;
+                    return this.status.filter(function(s){
+                        return s.id == id
+                    })[0].name;
+                }
+            }
+        },
+        methods: {
+            switchView: function() { 
+                this.toggleMaskVisible();
+
+                this.opacity(this._ids.mask.el.ref);
+                this.collapse(this._ids.options.el.ref);
+                this.rotate(this._ids.arrow.el.ref);
+
+            },
+
+            onItemClick: function(e) {
+                var vid = e.target.attr.vid;
+                this.updateStatus(vid);
+                this.switchView();
+                this.$dispatch('statuschange', {
+                    id: this.statusId,
+                    name: this.statusName
+                })
+            },
+
+            updateStatus: function(id) { 
+                this.statusId = id; 
+            },
+
+            toggleMaskVisible: function(){
+                this.current_showMask = !this.current_showMask;
+                var visibility = this.current_showMask? 'visible': 'hidden';
+                this._ids.mask.el.setClassStyle({visibility:visibility});
+            },
+
+            collapse: function(ref, callback) {
+                var platform = this.$getConfig().env.platform;
+                var translate = 'translate(0, 100%)'; // Web need % ;
+                if(platform == 'iOS') {
+                    translate = 'translate(0, 270)'; // ios bug && fixing
+                }
+                this.current_translate = this.current_translate ? '' : translate;
+                this.anim(ref, {
+                  transform: this.current_translate
+                }, 'ease', 100, callback);
+            },
+
+            opacity: function(ref, callback) {
+                var self = this;
+                self.current_opacity = self.current_opacity === 1 ? 0.1 : 1;
+                self.anim(ref, {
+                    opacity: self.current_opacity
+                }, 'ease', 100, callback);
+            },
+
+            rotate: function(ref, callback) {
+                var self = this;
+                if(!self.current_rotate) {
+                    self.current_rotate = 0;
+                }
+                self.current_rotate = self.current_rotate + 180;
+                self.anim(ref, {
+                    transform: 'rotate(' + self.current_rotate + 'deg)'
+                }, 'linear', 100, callback);
+            },
+
+            anim: function(ref, styles, timingFunction, duration, callback) {
+                animation.transition(ref, {
+                  styles: styles,
+                  timingFunction: timingFunction,
+                  duration: duration
+                }, callback || function(){});
+            }
+        }
+    }
+</script>

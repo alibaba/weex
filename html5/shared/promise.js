@@ -1,18 +1,8 @@
-const OriginPromise = global.Promise ||
-                        function () {}
-const MSG = 'Using "Promise" is unexpected'
+// fix Promise Problem on JSContext of iOS7~8
+// @see https://bugs.webkit.org/show_bug.cgi?id=135866
+const { WXEnvironment } = global
 
-const UnexpectedPromise = function (...args) {
-  console.warn(MSG)
-  return new OriginPromise(...args)
+/* istanbul ignore next */
+if (WXEnvironment && WXEnvironment.platform === 'iOS') {
+  global.Promise = undefined
 }
-
-const fn = ['all', 'race', 'resolve', 'reject']
-fn.forEach(n => {
-  UnexpectedPromise[n] = function (...args) {
-    console.warn(MSG)
-    return OriginPromise[n] && OriginPromise[n](...args)
-  }
-})
-
-global.Promise = UnexpectedPromise

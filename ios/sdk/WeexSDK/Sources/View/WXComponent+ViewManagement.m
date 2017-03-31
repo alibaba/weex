@@ -8,6 +8,7 @@
 
 #import "WXComponent+ViewManagement.h"
 #import "WXComponent_internal.h"
+#import "WXComponent+GradientColor.h"
 #import "WXAssert.h"
 #import "WXView.h"
 #import "WXSDKInstance_private.h"
@@ -46,6 +47,11 @@
     if (!subcomponent->_lazyCreateView || (self->_lazyCreateView && [self isViewLoaded])) {
         [self.view insertSubview:subcomponent.view atIndex:index];
     }
+}
+
+- (void)willRemoveSubview:(WXComponent *)component
+{
+    WXAssertMainThread();
 }
 
 - (void)removeFromSuperview
@@ -88,12 +94,14 @@
 - (void)_initViewPropertyWithStyles:(NSDictionary *)styles
 {
     _backgroundColor = styles[@"backgroundColor"] ? [WXConvert UIColor:styles[@"backgroundColor"]] : [UIColor clearColor];
+    _backgroundImage = styles[@"backgroundImage"] ? [[WXConvert NSString:styles[@"backgroundImage"]]stringByReplacingOccurrencesOfString:@" " withString:@""]: nil;
     _opacity = styles[@"opacity"] ? [WXConvert CGFloat:styles[@"opacity"]] : 1.0;
     _clipToBounds = styles[@"overflow"] ? [WXConvert WXClipType:styles[@"overflow"]] : NO;
     _visibility = styles[@"visibility"] ? [WXConvert WXVisibility:styles[@"visibility"]] : WXVisibilityShow;
     _positionType = styles[@"position"] ? [WXConvert WXPositionType:styles[@"position"]] : WXPositionTypeRelative;
-    _transform = styles[@"transform"] ? [WXConvert NSString:styles[@"transform"]] : nil;
-    _transformOrigin = styles[@"transformOrigin"] ? [WXConvert NSString:styles[@"transformOrigin"]] : nil;
+    _transform = styles[@"transform"] || styles[@"transformOrigin"] ?
+    [[WXTransform alloc] initWithCSSValue:[WXConvert NSString:styles[@"transform"]] origin:styles[@"transformOrigin"] instance:self.weexInstance] :
+    [[WXTransform alloc] initWithCSSValue:nil origin:nil instance:self.weexInstance];
 }
 
 - (void)_updateViewStyles:(NSDictionary *)styles
@@ -102,6 +110,14 @@
         _backgroundColor = [WXConvert UIColor:styles[@"backgroundColor"]];
         _layer.backgroundColor = _backgroundColor.CGColor;
         [self setNeedsDisplay];
+    }
+    
+    if (styles[@"backgroundImage"]) {
+        _backgroundImage = styles[@"backgroundImage"] ? [[WXConvert NSString:styles[@"backgroundImage"]]stringByReplacingOccurrencesOfString:@" " withString:@""]: nil;
+        
+        if (_backgroundImage) {
+            [self setGradientLayer];
+        }
     }
     
     if (styles[@"opacity"]) {
@@ -125,9 +141,11 @@
         if (positionType == WXPositionTypeFixed) {
             [self.weexInstance.componentManager addFixedComponent:self];
             _isNeedJoinLayoutSystem = NO;
+            [self.supercomponent _recomputeCSSNodeChildren];
         } else if (_positionType == WXPositionTypeFixed) {
             [self.weexInstance.componentManager removeFixedComponent:self];
             _isNeedJoinLayoutSystem = YES;
+            [self.supercomponent _recomputeCSSNodeChildren];
         }
         
         _positionType = positionType;
@@ -143,22 +161,33 @@
         }
     }
     
-    if (styles[@"transformOrigin"]) {
-        _transformOrigin = [WXConvert NSString:styles[@"transformOrigin"]];
-    }
-    
-    if (styles[@"transform"]) {
+    if (styles[@"transformOrigin"] || styles[@"transform"]) {
+        id transform = styles[@"transform"] ? : self.styles[@"transform"];
+        id transformOrigin = styles[@"transformOrigin"] ? : self.styles[@"transformOrigin"];
+        _transform = [[WXTransform alloc] initWithCSSValue:[WXConvert NSString:transform] origin:transformOrigin instance:self.weexInstance];
         if (!CGRectEqualToRect(self.calculatedFrame, CGRectZero)) {
-            _transform = [WXConvert NSString:styles[@"transform"]];
-            _layer.transform = [[WXTransform new] getTransform:_transform withView:_view withOrigin:_transformOrigin];
+            [_transform applyTransformForView:_view];
             [_layer setNeedsDisplay];
         }
     }
 }
 
-- (void)_unloadView
+-(void)_resetStyles:(NSArray *)styles
+{
+    if (styles && [styles containsObject:@"backgroundColor"]) {
+        _backgroundColor = [UIColor clearColor];
+        _layer.backgroundColor = _backgroundColor.CGColor;
+        [self setNeedsDisplay];
+    }
+}
+
+- (void)_unloadViewWithReusing:(BOOL)isReusing
 {
     WXAssertMainThread();
+    
+    if (isReusing && self->_positionType == WXPositionTypeFixed) {
+        return;
+    }
     
     [self viewWillUnload];
     
@@ -172,10 +201,12 @@
     }
     
     for (WXComponent *subcomponents in [self.subcomponents reverseObjectEnumerator]) {
-        [subcomponents _unloadView];
+        [subcomponents _unloadViewWithReusing:isReusing];
     }
     
+    [_view removeFromSuperview];
     _view = nil;
+    [_layer removeFromSuperlayer];
     _layer = nil;
     
     [self viewDidUnload];

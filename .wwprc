@@ -1,0 +1,43 @@
+{
+  "componentsPath": "./html5/render/browser/extend/components",
+  "apisPath": "./html5/render/browser/extend/api",
+  "loadersPath": "./html5/render/browser/extend/loader",
+  "packer": "./html5/render/browser/extend/packer.js",
+  "components": [
+    "image",
+    "text",
+    "scrollable",
+    "slider",
+    "indicator",
+    "tabheader",
+    "input",
+    "textarea",
+    "video",
+    "switch",
+    "a",
+    "embed",
+    "spinner",
+    "web",
+    "neighbor",
+    "richtext"
+  ],
+  "apis": [
+    "animation",
+    "clipboard",
+    "dom",
+    "event",
+    "geolocation",
+    "globalEvent",
+    "meta",
+    "modal",
+    "navigator",
+    "pageInfo",
+    "storage",
+    "stream",
+    "webview",
+    "webSocket"
+  ],
+  "npm": [
+    "weex-picker"
+  ]
+}

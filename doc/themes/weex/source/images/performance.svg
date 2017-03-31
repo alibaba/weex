@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80px" height="69px" viewBox="0 0 80 69" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 41.2 (35397) - http://www.bohemiancoding.com/sketch -->
+    <title>Page 1</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Welcome" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="Desktop-blue" transform="translate(-747.000000, -966.000000)" stroke="#404040">
+            <g id="优势" transform="translate(0.000000, 654.761905)">
+                <g id="Page-1" transform="translate(748.392857, 312.160850)">
+                    <g id="Group-2">
+                        <g id="Group-7" stroke-width="1.30952381">
+                            <polygon id="Stroke-1" points="38.2485303 0 15.9666762 22.0435455 15.9666762 66.7264079 60.2920757 66.7264079 60.2920757 22.4010084"></polygon>
+                            <polyline id="Stroke-3" points="60.3516529 49.6277659 77.2119863 66.7264079 60.2920757 66.7264079"></polyline>
+                            <polyline id="Stroke-5" points="15.907099 50.5810003 0 66.7264079 15.9666762 66.7264079"></polyline>
+                        </g>
+                        <path id="Stroke-8" stroke-width="1.30952381"></path>
+                        <path d="M69.1094939,58.3856069 L60.7686929,66.7264079" id="Stroke-24" stroke-width="0.654761905"></path>
+                        <path d="M8.34080099,58.6239155 L16.681602,66.9647165" id="Stroke-25" stroke-width="0.654761905"></path>
+                        <path id="Stroke-20" stroke-width="1.30952381"></path>
+                        <path d="M49.0915716,30.2581512 L49.0915716,66.7283898" id="Stroke-21" stroke-width="0.654761905"></path>
+                        <path d="M27.1671804,30.2581512 L27.1671804,66.7283898" id="Stroke-22" stroke-width="0.654761905"></path>
+                        <polygon id="Stroke-23" stroke-width="0.654761905" points="26.4522546 19.057647 48.853263 19.057647 37.6527588 30.2581512"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

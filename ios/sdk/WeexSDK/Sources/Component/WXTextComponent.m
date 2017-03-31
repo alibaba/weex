@@ -7,10 +7,14 @@
  */
 
 #import "WXTextComponent.h"
+#import "WXSDKInstance_private.h"
 #import "WXComponent_internal.h"
 #import "WXLayer.h"
 #import "WXUtility.h"
 #import "WXConvert.h"
+#import "WXRuleManager.h"
+#import "WXDefine.h"
+#import <pthread/pthread.h>
 
 @interface WXText : UIView
 
@@ -28,6 +32,7 @@
         
         self.opaque = NO;
         self.contentMode = UIViewContentModeRedraw;
+        self.textStorage = [NSTextStorage new];
     }
     return self;
 }
@@ -47,8 +52,11 @@
     
     if ([self.wx_component _needsDrawBorder]) {
         [self.wx_component _drawBorderWithContext:context size:bounds.size];
+    } else {
+        WXPerformBlockOnMainThread(^{
+            [self.wx_component _resetNativeBorderRadius];
+        });
     }
-    
     NSLayoutManager *layoutManager = _textStorage.layoutManagers.firstObject;
     NSTextContainer *textContainer = layoutManager.textContainers.firstObject;
     
@@ -63,6 +71,14 @@
     UIGraphicsEndImageContext();
     
     return image;
+}
+
+- (void)setTextStorage:(NSTextStorage *)textStorage
+{
+    if (_textStorage != textStorage) {
+        _textStorage = textStorage;
+        [self.wx_component setNeedsDisplay];
+    }
 }
 
 - (NSString *)description
@@ -91,12 +107,23 @@
     UIColor *_color;
     NSString *_fontFamily;
     CGFloat _fontSize;
-    WXTextWeight _fontWeight;
+    CGFloat _fontWeight;
     WXTextStyle _fontStyle;
     NSUInteger _lines;
     NSTextAlignment _textAlign;
     WXTextDecoration _textDecoration;
     NSString *_textOverflow;
+    CGFloat _lineHeight;
+    
+   
+    pthread_mutex_t _textStorageMutex;
+    pthread_mutexattr_t _textStorageMutexAttr;
+}
+
+static BOOL _isUsingTextStorageLock = NO;
++ (void)useTextStorageLock:(BOOL)isUsingTextStorageLock
+{
+    _isUsingTextStorageLock = isUsingTextStorageLock;
 }
 
 - (instancetype)initWithRef:(NSString *)ref
@@ -108,12 +135,29 @@
 {
     self = [super initWithRef:ref type:type styles:styles attributes:attributes events:events weexInstance:weexInstance];
     if (self) {
+        if (_isUsingTextStorageLock) {
+            pthread_mutexattr_init(&_textStorageMutexAttr);
+            pthread_mutexattr_settype(&_textStorageMutexAttr, PTHREAD_MUTEX_RECURSIVE);
+            pthread_mutex_init(&_textStorageMutex, &_textStorageMutexAttr);
+        }
+        
         [self fillCSSStyles:styles];
         [self fillAttributes:attributes];
     }
     
     return self;
 }
+
+- (void)dealloc
+{
+    if (_isUsingTextStorageLock) {
+        pthread_mutex_destroy(&_textStorageMutex);
+        pthread_mutexattr_destroy(&_textStorageMutexAttr);
+    }
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+
 
 #define WX_STYLE_FILL_TEXT(key, prop, type, needLayout)\
 do {\
@@ -127,17 +171,30 @@ do {\
     }\
 } while(0);
 
+#define WX_STYLE_FILL_TEXT_PIXEL(key, prop, needLayout)\
+do {\
+    id value = styles[@#key];\
+    if (value) {\
+        _##prop = [WXConvert WXPixelType:value scaleFactor:self.weexInstance.pixelScaleFactor];\
+        [self setNeedsRepaint];\
+    if (needLayout) {\
+        [self setNeedsLayout];\
+    }\
+}\
+} while(0);
+
 - (void)fillCSSStyles:(NSDictionary *)styles
 {
     WX_STYLE_FILL_TEXT(color, color, UIColor, NO)
     WX_STYLE_FILL_TEXT(fontFamily, fontFamily, NSString, YES)
-    WX_STYLE_FILL_TEXT(fontSize, fontSize, WXPixelType, YES)
+    WX_STYLE_FILL_TEXT_PIXEL(fontSize, fontSize, YES)
     WX_STYLE_FILL_TEXT(fontWeight, fontWeight, WXTextWeight, YES)
     WX_STYLE_FILL_TEXT(fontStyle, fontStyle, WXTextStyle, YES)
     WX_STYLE_FILL_TEXT(lines, lines, NSUInteger, YES)
     WX_STYLE_FILL_TEXT(textAlign, textAlign, NSTextAlignment, NO)
     WX_STYLE_FILL_TEXT(textDecoration, textDecoration, WXTextDecoration, YES)
     WX_STYLE_FILL_TEXT(textOverflow, textOverflow, NSString, NO)
+    WX_STYLE_FILL_TEXT_PIXEL(lineHeight, lineHeight, YES)
     
     UIEdgeInsets padding = {
         WXFloorPixelValue(self.cssNode->style.padding[CSS_TOP] + self.cssNode->style.border[CSS_TOP]),
@@ -164,7 +221,13 @@ do {\
 
 - (void)setNeedsRepaint
 {
+    if (_isUsingTextStorageLock) {
+        pthread_mutex_lock(&_textStorageMutex);
+    }
     _textStorage = nil;
+    if (_isUsingTextStorageLock) {
+        pthread_mutex_unlock(&_textStorageMutex);
+    }
 }
 
 #pragma mark - Subclass
@@ -174,17 +237,15 @@ do {\
     [super setNeedsLayout];
 }
 
-- (void)layoutDidFinish
-{
-    if ([self isViewLoaded]) {
-        ((WXText *)self.view).textStorage = _textStorage;
-        [self setNeedsDisplay];
-    }
-}
-
 - (void)viewDidLoad
 {
+    if (_isUsingTextStorageLock) {
+        pthread_mutex_lock(&_textStorageMutex);
+    }
     ((WXText *)self.view).textStorage = _textStorage;
+    if (_isUsingTextStorageLock) {
+        pthread_mutex_unlock(&_textStorageMutex);
+    }
     [self setNeedsDisplay];
 }
 
@@ -200,7 +261,17 @@ do {\
         if (isCancelled()) {
             return nil;
         }
-        return [textView drawTextWithBounds:bounds padding:_padding];
+        if (_isUsingTextStorageLock) {
+            pthread_mutex_lock(&_textStorageMutex);
+        }
+        
+        UIImage *image = [textView drawTextWithBounds:bounds padding:_padding];
+        
+        if (_isUsingTextStorageLock) {
+            pthread_mutex_unlock(&_textStorageMutex);
+        }
+        
+        return image;
     };
 }
 
@@ -224,11 +295,15 @@ do {\
         }
         
         if (!isnan(weakSelf.cssNode->style.minDimensions[CSS_HEIGHT])) {
-            computedSize.width = MAX(computedSize.height, weakSelf.cssNode->style.minDimensions[CSS_HEIGHT]);
+            computedSize.height = MAX(computedSize.height, weakSelf.cssNode->style.minDimensions[CSS_HEIGHT]);
         }
         
         if (!isnan(weakSelf.cssNode->style.maxDimensions[CSS_HEIGHT])) {
-            computedSize.width = MIN(computedSize.height, weakSelf.cssNode->style.maxDimensions[CSS_HEIGHT]);
+            computedSize.height = MIN(computedSize.height, weakSelf.cssNode->style.maxDimensions[CSS_HEIGHT]);
+        }
+        if ([WXUtility isBlankString:textStorage.string]) {
+            //  if the text value is empty or nil, then set the height is 0.
+            computedSize.height = 0;
         }
         
         return (CGSize) {
@@ -238,26 +313,25 @@ do {\
     };
 }
 
-- (void)updateStyles:(NSDictionary *)styles
-{
-    if (((WXText *)(self.view)).textStorage != _textStorage) {
-        ((WXText *)(self.view)).textStorage = _textStorage;
-        [self setNeedsDisplay];
-    }
-}
-
-- (void)updateAttributes:(NSDictionary *)attributes
-{
-    if (((WXText *)(self.view)).textStorage != _textStorage) {
-        ((WXText *)(self.view)).textStorage = _textStorage;
-        [self setNeedsDisplay];
-    }
-}
-
 #pragma mark Text Building
 - (NSString *)text
 {
     return _text;
+}
+
+- (void)repaintText:(NSNotification *)notification
+{
+    if (![_fontFamily isEqualToString:notification.userInfo[@"fontFamily"]]) {
+        return;
+    }
+    [self setNeedsRepaint];
+    WXPerformBlockOnComponentThread(^{
+        [self.weexInstance.componentManager startComponentTasks];
+        WXPerformBlockOnMainThread(^{
+            [self setNeedsLayout];
+            [self setNeedsDisplay];
+        });
+    });
 }
 
 - (NSAttributedString *)buildAttributeString
@@ -267,12 +341,24 @@ do {\
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
     
     // set textColor
-    if(_color){
+    if(_color) {
         [attributedString addAttribute:NSForegroundColorAttributeName value:_color range:NSMakeRange(0, string.length)];
     }
     
+    if (_fontFamily) {
+        NSString * keyPath = [NSString stringWithFormat:@"%@.tempSrc", _fontFamily];
+        NSString * fontSrc = [[[WXRuleManager sharedInstance] getRule:@"fontFace"] valueForKeyPath:keyPath];
+        keyPath = [NSString stringWithFormat:@"%@.localSrc", _fontFamily];
+        NSString * fontLocalSrc = [[[WXRuleManager sharedInstance] getRule:@"fontFace"] valueForKeyPath:keyPath];
+        //custom localSrc is cached
+        if (!fontLocalSrc && fontSrc) {
+            // if use custom font, when the custom font download finish, refresh text.
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(repaintText:) name:WX_ICONFONT_DOWNLOAD_NOTIFICATION object:nil];
+        }
+    }
+    
     // set font
-    UIFont *font = [WXUtility fontWithSize:_fontSize textWeight:_fontWeight textStyle:_fontStyle fontFamily:_fontFamily];
+    UIFont *font = [WXUtility fontWithSize:_fontSize textWeight:_fontWeight textStyle:_fontStyle fontFamily:_fontFamily scaleFactor:self.weexInstance.pixelScaleFactor];
     if (font) {
         [attributedString addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, string.length)];
     }
@@ -282,17 +368,37 @@ do {\
     } else if(_textDecoration == WXTextDecorationLineThrough){
         [attributedString addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlinePatternSolid | NSUnderlineStyleSingle) range:NSMakeRange(0, string.length)];
     }
+    
+    NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+
     if (_textAlign) {
-        
-        NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
         paragraphStyle.alignment = _textAlign;
+    }
+    
+    if (_lineHeight) {
+        paragraphStyle.maximumLineHeight = _lineHeight;
+        paragraphStyle.minimumLineHeight = _lineHeight;
+    }
+    
+    if (_lineHeight || _textAlign) {
         [attributedString addAttribute:NSParagraphStyleAttributeName
                                  value:paragraphStyle
                                  range:(NSRange){0, attributedString.length}];
-        
     }
-    
+    if ([self adjustLineHeight]) {
+        if (_lineHeight > font.lineHeight) {
+            [attributedString addAttribute:NSBaselineOffsetAttributeName
+                                     value:@((_lineHeight - font.lineHeight)/ 2)
+                                     range:(NSRange){0, attributedString.length}];
+        }
+    }
+
     return attributedString;
+}
+
+- (BOOL)adjustLineHeight
+{
+    return YES;
 }
 
 - (NSTextStorage *)textStorageWithWidth:(CGFloat)width
@@ -317,7 +423,6 @@ do {\
         if ([_textOverflow isEqualToString:@"ellipsis"])
             textContainer.lineBreakMode = NSLineBreakByTruncatingTail;
     }
-    
     textContainer.maximumNumberOfLines = _lines > 0 ? _lines : 0;
     textContainer.size = (CGSize){isnan(width) ? CGFLOAT_MAX : width, CGFLOAT_MAX};
 
@@ -325,27 +430,51 @@ do {\
     [layoutManager ensureLayoutForTextContainer:textContainer];
     
     _textStorageWidth = width;
+    
+    if (_isUsingTextStorageLock) {
+        pthread_mutex_lock(&_textStorageMutex);
+    }
     _textStorage = textStorage;
+    if (_isUsingTextStorageLock) {
+        pthread_mutex_unlock(&_textStorageMutex);
+    }
     
     return textStorage;
 }
 
-- (void)_frameDidCalculated
+- (void)syncTextStorageForView
 {
     CGFloat width = self.calculatedFrame.size.width - (_padding.left + _padding.right);
-    _textStorage = [self textStorageWithWidth:width];
+    NSTextStorage *textStorage = [self textStorageWithWidth:width];
+    
+    [self.weexInstance.componentManager  _addUITask:^{
+        if ([self isViewLoaded]) {
+            if (_isUsingTextStorageLock) {
+                pthread_mutex_lock(&_textStorageMutex);
+            }
+            ((WXText *)self.view).textStorage = textStorage;
+            if (_isUsingTextStorageLock) {
+                pthread_mutex_unlock(&_textStorageMutex);
+            }
+            [self readyToRender]; // notify super component
+            [self setNeedsDisplay];
+        }
+    }];
 }
 
-- (void)_updateStylesOnComponentThread:(NSDictionary *)styles
+- (void)_frameDidCalculated:(BOOL)isChanged
 {
-    [super _updateStylesOnComponentThread:styles];
+    [super _frameDidCalculated:isChanged];
+    [self syncTextStorageForView];
+}
+
+- (void)_updateStylesOnComponentThread:(NSDictionary *)styles resetStyles:(NSMutableArray *)resetStyles isUpdateStyles:(BOOL)isUpdateStyles
+{
+    [super _updateStylesOnComponentThread:styles resetStyles:(NSMutableArray *)resetStyles isUpdateStyles:isUpdateStyles];
     
     [self fillCSSStyles:styles];
     
-    if (!_textStorage) {
-        CGFloat width = self.calculatedFrame.size.width - (_padding.left + _padding.right);
-        _textStorage = [self textStorageWithWidth:width];
-    }
+    [self syncTextStorageForView];
 }
 
 - (void)_updateAttributesOnComponentThread:(NSDictionary *)attributes
@@ -354,10 +483,7 @@ do {\
     
     [self fillAttributes:attributes];
     
-    if (!_textStorage) {
-        CGFloat width = self.calculatedFrame.size.width - (_padding.left + _padding.right);
-        _textStorage = [self textStorageWithWidth:width];
-    }
+    [self syncTextStorageForView];
 }
 
 #ifdef UITEST
@@ -366,6 +492,20 @@ do {\
     return super.description;
 }
 #endif
+ 
+- (void)_resetCSSNodeStyles:(NSArray *)styles
+{
+    [super _resetCSSNodeStyles:styles];
+    if ([styles containsObject:@"color"]) {
+        _color = [UIColor blackColor];
+        [self setNeedsRepaint];
+    }
+    if ([styles containsObject:@"fontSize"]) {
+        _fontSize = WX_TEXT_FONT_SIZE;
+        [self setNeedsRepaint];
+        [self setNeedsLayout];
+    }
+}
 
 @end
 

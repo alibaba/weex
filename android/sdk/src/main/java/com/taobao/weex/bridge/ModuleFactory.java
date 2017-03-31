@@ -212,8 +212,7 @@ import java.util.Map;
 /**
  * Created by sospartan on 6/17/16.
  */
-public interface ModuleFactory<T extends WXModule> {
-  ArrayList<String> getMethodNames();
-  Map<String, Invoker> getMethodMap();
+public interface ModuleFactory<T extends WXModule> extends JavascriptInvokable {
+
   T buildInstance() throws IllegalAccessException, InstantiationException;
 }

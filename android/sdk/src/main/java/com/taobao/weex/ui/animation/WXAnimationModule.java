@@ -214,9 +214,11 @@ import android.os.Build;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -225,14 +227,17 @@ import android.view.animation.LinearInterpolator;
 
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.annotation.JSMethod;
 import com.taobao.weex.common.WXModule;
-import com.taobao.weex.common.WXModuleAnno;
 import com.taobao.weex.dom.WXDomHandler;
 import com.taobao.weex.dom.WXDomTask;
 import com.taobao.weex.ui.component.WXComponent;
-import com.taobao.weex.ui.view.WXBackgroundDrawable;
+import com.taobao.weex.ui.view.border.BorderDrawable;
+import com.taobao.weex.utils.SingleFunctionParser;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXResourceUtils;
+import com.taobao.weex.utils.WXUtils;
+import com.taobao.weex.utils.WXViewUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -240,7 +245,7 @@ import java.util.List;
 
 public class WXAnimationModule extends WXModule {
 
-  @WXModuleAnno
+  @JSMethod
   public void transition(@Nullable String ref, @Nullable String animation, @Nullable String callBack) {
     if(!TextUtils.isEmpty(ref)&&!TextUtils.isEmpty(animation)) {
       Message msg = Message.obtain();
@@ -252,18 +257,29 @@ public class WXAnimationModule extends WXModule {
       task.args.add(callBack);
       msg.what = WXDomHandler.MsgType.WX_ANIMATION;
       msg.obj = task;
-      WXSDKManager.getInstance().getWXDomManager().sendMessage(msg);
+      //Due to animation module rely on the result of the css-layout and the batch mechanism of
+      //css-layout, the animation.transition must be delayed the batch time.
+      WXSDKManager.getInstance().getWXDomManager().sendMessageDelayed(msg, WXDomHandler.DELAY_TIME);
     }
   }
 
-  public static void startAnimation(WXSDKInstance mWXSDKInstance,WXComponent component,
-                                    @Nullable String callback) {
+  public static void startAnimation(WXSDKInstance mWXSDKInstance, WXComponent component,
+                                    @NonNull WXAnimationBean animationBean, @Nullable String callback) {
+    if(component == null){
+      return;
+    }
+    if (component.getHostView() == null) {
+      AnimationHolder holder = new AnimationHolder(animationBean, callback);
+      component.postAnimation(holder);
+      return;
+    }
     try {
-      WXAnimationBean animationBean = component.getDomObject().style.getAnimationBean();
-      Animator animator = createAnimator(animationBean, component.getRealView());
+      Animator animator = createAnimator(animationBean, component.getHostView(),mWXSDKInstance.getViewPortWidth());
       if (animator != null) {
         Animator.AnimatorListener animatorCallback = createAnimatorListener(mWXSDKInstance, callback);
-        component.getRealView().setLayerType(View.LAYER_TYPE_HARDWARE,null);
+        if(Build.VERSION.SDK_INT<Build.VERSION_CODES.JELLY_BEAN_MR2) {
+          component.getHostView().setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        }
         Interpolator interpolator = createTimeInterpolator(animationBean);
         if (animatorCallback != null) {
           animator.addListener(animatorCallback);
@@ -275,21 +291,26 @@ public class WXAnimationModule extends WXModule {
         animator.start();
       }
     } catch (RuntimeException e) {
-      WXLogUtils.e(WXLogUtils.getStackTrace(e));
+      e.printStackTrace();
+      WXLogUtils.e("", e);
     }
   }
 
   private static @Nullable
-  ObjectAnimator createAnimator(@NonNull WXAnimationBean animation, @NonNull View target) {
+  ObjectAnimator createAnimator(@NonNull WXAnimationBean animation, final View target,final int viewPortWidth) {
+    if(target == null){
+      return null;
+    }
     WXAnimationBean.Style style = animation.styles;
     if (style != null) {
       ObjectAnimator animator;
       List<PropertyValuesHolder> holders =style.getHolders();
       if (!TextUtils.isEmpty(style.backgroundColor)) {
-        if (target.getBackground() instanceof WXBackgroundDrawable) {
+        BorderDrawable borderDrawable;
+        if ((borderDrawable=WXViewUtils.getBorderDrawable(target))!=null) {
           holders.add(PropertyValuesHolder.ofObject(
               WXAnimationBean.Style.BACKGROUND_COLOR, new ArgbEvaluator(),
-              ((WXBackgroundDrawable) target.getBackground()).getColor(),
+              borderDrawable.getColor(),
               WXResourceUtils.getColor(style.backgroundColor)));
         } else if (target.getBackground() instanceof ColorDrawable) {
           holders.add(PropertyValuesHolder.ofObject(
@@ -306,6 +327,20 @@ public class WXAnimationModule extends WXModule {
       animator = ObjectAnimator.ofPropertyValuesHolder(
           target, holders.toArray(new PropertyValuesHolder[holders.size()]));
       animator.setStartDelay(animation.delay);
+      if (target.getLayoutParams() != null &&
+          (!TextUtils.isEmpty(style.width) || !TextUtils.isEmpty(style.height))) {
+        DimensionUpdateListener listener = new DimensionUpdateListener(target);
+        ViewGroup.LayoutParams layoutParams = target.getLayoutParams();
+        if (!TextUtils.isEmpty(style.width)) {
+          listener.setWidth(layoutParams.width,
+                            (int) WXViewUtils.getRealPxByWidth(WXUtils.getFloat(style.width),viewPortWidth));
+        }
+        if (!TextUtils.isEmpty(style.height)) {
+          listener.setHeight(layoutParams.height,
+                             (int) WXViewUtils.getRealPxByWidth(WXUtils.getFloat(style.height),viewPortWidth));
+        }
+        animator.addUpdateListener(listener);
+      }
       return animator;
     } else {
       return null;
@@ -333,22 +368,6 @@ public class WXAnimationModule extends WXModule {
     }
   }
 
-  private static Animator.AnimatorListener prepareLayerType(final View target){
-    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
-      final int originalLayerType=target.getLayerType();
-      target.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-      return new AnimatorListenerAdapter() {
-        @Override
-        public void onAnimationEnd(Animator animation) {
-          target.setLayerType(originalLayerType, null);
-        }
-      };
-    }
-    else{
-      return null;
-    }
-  }
-
   private static @Nullable
   Interpolator createTimeInterpolator(@NonNull WXAnimationBean animation) {
     String interpolator = animation.timingFunction;
@@ -362,9 +381,46 @@ public class WXAnimationModule extends WXModule {
           return new AccelerateDecelerateInterpolator();
         case WXAnimationBean.LINEAR:
           return new LinearInterpolator();
+        default:
+          //Parse cubic-bezier
+          try {
+            SingleFunctionParser<Float> parser = new SingleFunctionParser<>(
+                animation.timingFunction,
+                new SingleFunctionParser.FlatMapper<Float>() {
+                  @Override
+                  public Float map(String raw) {
+                    return Float.parseFloat(raw);
+                  }
+                });
+            List<Float> params = parser.parse(WXAnimationBean.CUBIC_BEZIER);
+            if (params != null && params.size() == WXAnimationBean.NUM_CUBIC_PARAM) {
+              return PathInterpolatorCompat.create(
+                  params.get(0), params.get(1), params.get(2), params.get(3));
+            }
+            else {
+              return null;
+            }
+          }catch (RuntimeException e){
+            return null;
+          }
       }
     }
     return null;
+  }
+
+  //add by moxun on 12/26/2016
+  public static class AnimationHolder {
+    private WXAnimationBean wxAnimationBean;
+    private String callback;
+
+    public void execute(WXSDKInstance mInstance, WXComponent component) {
+      WXAnimationModule.startAnimation(mInstance, component, wxAnimationBean, callback);
+    }
+
+    private AnimationHolder(WXAnimationBean wxAnimationBean, String callback) {
+      this.wxAnimationBean = wxAnimationBean;
+      this.callback = callback;
+    }
   }
 
 }

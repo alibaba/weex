@@ -204,126 +204,243 @@
  */
 package com.taobao.weex.ui.component;
 
+import android.content.Context;
+import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.adapter.IWXImgLoaderAdapter;
-import com.taobao.weex.common.Component;
-import com.taobao.weex.common.WXDomPropConstant;
+import com.taobao.weex.adapter.URIAdapter;
+import com.taobao.weex.annotation.Component;
+import com.taobao.weex.common.Constants;
 import com.taobao.weex.common.WXImageSharpen;
 import com.taobao.weex.common.WXImageStrategy;
+import com.taobao.weex.dom.ImmutableDomObject;
 import com.taobao.weex.dom.WXDomObject;
+import com.taobao.weex.ui.ComponentCreator;
 import com.taobao.weex.ui.view.WXImageView;
-import com.taobao.weex.utils.WXResourceUtils;
+import com.taobao.weex.ui.view.border.BorderDrawable;
+import com.taobao.weex.utils.ImageDrawable;
+import com.taobao.weex.utils.ImgURIUtil;
+import com.taobao.weex.utils.WXDomUtils;
+import com.taobao.weex.utils.WXUtils;
+import com.taobao.weex.utils.WXViewUtils;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Image component
  */
 @Component(lazyload = false)
-public class WXImage extends WXComponent {
+public class WXImage extends WXComponent<ImageView> {
 
-    public WXImage(WXSDKInstance instance, WXDomObject node,
-                   WXVContainer parent, boolean lazy) {
-        super(instance, node, parent, lazy);
+  public static class Ceator implements ComponentCreator {
+    public WXComponent createInstance(WXSDKInstance instance, WXDomObject node, WXVContainer parent) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+        return new WXImage(instance,node,parent);
     }
+  }
+
+
+  @Deprecated
+  public WXImage(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
+      this(instance,dom,parent);
+  }
+
+  public WXImage(WXSDKInstance instance, WXDomObject node,
+                  WXVContainer parent) {
+      super(instance, node, parent);
+  }
+
+  @Override
+  protected ImageView initComponentHostView(@NonNull Context context) {
+    WXImageView view = new WXImageView(context);
+    view.setScaleType(ScaleType.FIT_XY);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+      view.setCropToPadding(true);
+    }
+    view.holdComponent(this);
+    return view;
+  }
 
     @Override
-    protected void initView() {
-        mHost = new WXImageView(mContext, mDomObj);
-        ((ImageView) getView()).setScaleType(ScaleType.FIT_XY);
+    protected boolean setProperty(String key, Object param) {
+      switch (key) {
+        case Constants.Name.RESIZE_MODE:
+          String resize_mode = WXUtils.getString(param, null);
+          if (resize_mode != null)
+            setResizeMode(resize_mode);
+          return true;
+        case Constants.Name.RESIZE:
+          String resize = WXUtils.getString(param, null);
+          if (resize != null)
+            setResize(resize);
+          return true;
+        case Constants.Name.SRC:
+          String src = WXUtils.getString(param, null);
+          if (src != null)
+            setSrc(src);
+          return true;
+        case Constants.Name.IMAGE_QUALITY:
+          return true;
+        case Constants.Name.FILTER:
+          return true;
+      }
+    return super.setProperty(key, param);
+  }
+
+  @Override
+  public void refreshData(WXComponent component) {
+    super.refreshData(component);
+    if (component instanceof WXImage) {
+      setSrc(component.getDomObject().getAttrs().getImageSrc());
+    }
+  }
+
+  @WXComponentProp(name = Constants.Name.RESIZE_MODE)
+  public void setResizeMode(String resizeMode) {
+    (getHostView()).setScaleType(getResizeMode(resizeMode));
+  }
+
+  private ScaleType getResizeMode(String resizeMode) {
+    ScaleType scaleType = ScaleType.FIT_XY;
+    if (TextUtils.isEmpty(resizeMode)) {
+      return scaleType;
     }
 
-    @Override
-    public View getView() {
-        return super.getView();
+    switch (resizeMode) {
+      case "cover":
+        scaleType = ScaleType.CENTER_CROP;
+        break;
+      case "contain":
+        scaleType = ScaleType.FIT_CENTER;
+        break;
+      case "stretch":
+        scaleType = ScaleType.FIT_XY;
+        break;
+    }
+    return scaleType;
+  }
+
+  @WXComponentProp(name = Constants.Name.RESIZE)
+  public void setResize(String resize) {
+    (getHostView()).setScaleType(getResizeMode(resize));
+  }
+
+  /**
+   * Process local scheme, load drawable.
+   * @param rewrited
+   */
+  private void setLocalSrc(Uri rewrited) {
+    ImageView imageView;
+    Drawable localDrawable = ImgURIUtil.getDrawableFromLoaclSrc(getContext(), rewrited);
+    if (localDrawable != null && (imageView = getHostView()) != null) {
+      imageView.setImageDrawable(localDrawable);
+    }
+  }
+
+  @WXComponentProp(name = Constants.Name.SRC)
+  public void setSrc(String src) {
+    if (src == null) {
+      return;
     }
 
+    WXSDKInstance instance = getInstance();
+    Uri rewrited = instance.rewriteUri(Uri.parse(src), URIAdapter.IMAGE);
 
-    @Override
-    @WXComponentProp(name = WXDomPropConstant.WX_BACKGROUNDCOLOR)
-    public void setBackgroundColor(String color) {
-        if (!TextUtils.isEmpty(color)) {
-            int colorInt = WXResourceUtils.getColor(color);
-            if (colorInt != Integer.MIN_VALUE) {
-                mHost.setBackgroundColor(colorInt);
+    if (Constants.Scheme.LOCAL.equals(rewrited.getScheme())) {
+      setLocalSrc(rewrited);
+    } else {
+      setRemoteSrc(rewrited);
+    }
+  }
+
+  private void setRemoteSrc(Uri rewrited) {
+
+      WXImageStrategy imageStrategy = new WXImageStrategy();
+      imageStrategy.isClipping = true;
+
+      WXImageSharpen imageSharpen = getDomObject().getAttrs().getImageSharpen();
+      imageStrategy.isSharpen = imageSharpen == WXImageSharpen.SHARPEN;
+
+      int radius = getDomObject().getStyles().getBlur();
+      radius = Math.max(0, radius);
+      imageStrategy.blurRadius = Math.min(10, radius);
+
+      imageStrategy.setImageListener(new WXImageStrategy.ImageListener() {
+        @Override
+        public void onImageFinish(String url, ImageView imageView, boolean result, Map extra) {
+          if (getDomObject() != null && getDomObject().getEvents().contains(Constants.Event.ONLOAD)) {
+            Map<String, Object> params = new HashMap<String, Object>();
+            Map<String, Object> size = new HashMap<>(2);
+            if (imageView != null && imageView.getDrawable() != null && imageView.getDrawable() instanceof ImageDrawable) {
+              size.put("naturalWidth", ((ImageDrawable) imageView.getDrawable()).getBitmapWidth());
+              size.put("naturalHeight", ((ImageDrawable) imageView.getDrawable()).getBitmapHeight());
+            } else {
+              size.put("naturalWidth", 0);
+              size.put("naturalHeight", 0);
             }
+
+            if (getDomObject() != null && containsEvent(Constants.Event.ONLOAD)) {
+              params.put("success", result);
+              params.put("size", size);
+              fireEvent(Constants.Event.ONLOAD, params);
+            }
+          }
         }
-    }
+      });
 
-    @Override
-    @WXComponentProp(name = WXDomPropConstant.WX_BORDERRADIUS)
-    public void setBorderRadius(float borderRadius) {
-
-    }
-
-    @Override
-    @WXComponentProp(name = WXDomPropConstant.WX_BORDERWIDTH)
-    public void setBorderWidth(float borderWidth) {
-
-    }
-
-    @Override
-    @WXComponentProp(name = WXDomPropConstant.WX_BORDERSTYLE)
-    public void setBorderStyle(String borderStyle) {
-
-    }
-
-    @Override
-    @WXComponentProp(name = WXDomPropConstant.WX_BORDERCOLOR)
-    public void setBorderColor(String borderColor) {
-
-    }
-
-
-    @WXComponentProp(name = WXDomPropConstant.WX_RESIZE_MODE)
-    public void setResizeMode(String resizeMode) {
-        ((ImageView) getView()).setScaleType(getResizeMode(resizeMode));
-    }
-
-    private ScaleType getResizeMode(String resizeMode) {
-        ScaleType scaleType = ScaleType.FIT_XY;
-        if (TextUtils.isEmpty(resizeMode)) {
-            return scaleType;
+        String placeholder=null;
+        if(getDomObject().getAttrs().containsKey(Constants.Name.PLACEHOLDER)){
+            placeholder= (String) getDomObject().getAttrs().get(Constants.Name.PLACEHOLDER);
+        }else if(getDomObject().getAttrs().containsKey(Constants.Name.PLACE_HOLDER)){
+            placeholder=(String)getDomObject().getAttrs().get(Constants.Name.PLACE_HOLDER);
+        }
+        if(placeholder!=null){
+            imageStrategy.placeHolder = getInstance().rewriteUri(Uri.parse(placeholder),URIAdapter.IMAGE).toString();
         }
 
-        if (resizeMode.equals("cover")) {
-            scaleType = ScaleType.CENTER_CROP;
-        } else if (resizeMode.equals("contain")) {
-            scaleType = ScaleType.FIT_CENTER;
-        } else if (resizeMode.equals("stretch")) {
-            scaleType = ScaleType.FIT_XY;
-        } else if (resizeMode.equals("center")) {
-            scaleType = ScaleType.CENTER;
-        } else if (resizeMode.equals("start")) {
-            scaleType = ScaleType.MATRIX;
-        } else if (resizeMode.equals("end")) {
-            scaleType = ScaleType.FIT_END;
+      IWXImgLoaderAdapter imgLoaderAdapter = getInstance().getImgLoaderAdapter();
+      if (imgLoaderAdapter != null) {
+        imgLoaderAdapter.setImage(rewrited.toString(), getHostView(),
+            getDomObject().getAttrs().getImageQuality(), imageStrategy);
+      }
+  }
+
+  @Override
+  public void updateProperties(Map<String, Object> props) {
+    super.updateProperties(props);
+    WXImageView imageView;
+    ImmutableDomObject imageDom;
+    if ((imageDom = getDomObject()) != null &&
+        getHostView() instanceof WXImageView) {
+      imageView = (WXImageView) getHostView();
+      BorderDrawable borderDrawable = WXViewUtils.getBorderDrawable(getHostView());
+      float[] borderRadius;
+      if (borderDrawable != null) {
+        RectF borderBox = new RectF(0, 0, WXDomUtils.getContentWidth(imageDom), WXDomUtils.getContentHeight(imageDom));
+        borderRadius = borderDrawable.getBorderRadius(borderBox);
+      } else {
+        borderRadius = new float[]{0, 0, 0, 0, 0, 0, 0, 0};
+      }
+      imageView.setBorderRadius(borderRadius);
+
+      if (imageView.getDrawable() instanceof ImageDrawable) {
+        ImageDrawable imageDrawable = (ImageDrawable) imageView.getDrawable();
+        float[] previousRadius = imageDrawable.getCornerRadii();
+        if (!Arrays.equals(previousRadius, borderRadius)) {
+          imageDrawable.setCornerRadii(borderRadius);
         }
-        return scaleType;
+      }
+      readyToRender();
     }
-
-    @WXComponentProp(name = WXDomPropConstant.WX_RESIZE)
-    public void setResize(String resize) {
-        ((ImageView) getView()).setScaleType(getResizeMode(resize));
-    }
-
-    @WXComponentProp(name = WXDomPropConstant.WX_ATTR_SRC)
-    public void setSrc(String src) {
-
-        WXImageStrategy imageStrategy = new WXImageStrategy();
-        imageStrategy.isClipping = true;
-
-        WXImageSharpen imageSharpen = mDomObj.attr.getImageSharpen();
-        imageStrategy.isSharpen = imageSharpen == WXImageSharpen.SHARPEN;
-
-        IWXImgLoaderAdapter imgLoaderAdapter = mInstance.getImgLoaderAdapter();
-        if (imgLoaderAdapter != null) {
-            imgLoaderAdapter.setImage(src, ((ImageView) getView()),
-                    mDomObj.attr.getImageQuality(), imageStrategy);
-        }
-    }
+  }
 }

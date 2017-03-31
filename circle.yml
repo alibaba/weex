@@ -1,20 +1,37 @@
 machine:
+  pre:
+    - sudo service mongodb stop
+    - sudo service mysql stop
+    - sudo service postgresql stop
+    - sudo service rabbitmq-server stop
+    - sudo service couchdb stop
   node:
-    version: 4.2.1
+   version: 7
+  java:
+    version: 'oraclejdk8'
 test:
   override:
+    - npm run build
     - npm run test
-    - cd android/playground && ./gradlew assembleDebug
-    - cp -r android/playground/app/build/outputs $CIRCLE_ARTIFACTS # playground artifacts
-    - cp -r android/sdk/build/outputs/ $CIRCLE_ARTIFACTS # sdk artifacts
-    - cd android/playground && ./gradlew testDebugUnitTest 
-    - cp -r android/sdk/build/reports/tests/debug/ $CIRCLE_ARTIFACTS/unit_test_report 
+    - cd android && ./run-ci.sh
+  post:
+    - cp -r android/playground/app/build/outputs $CIRCLE_ARTIFACTS/playground # playground artifacts
+    - cp -r android/sdk/build/reports $CIRCLE_ARTIFACTS/sdk_reports
 
-dependencies: 
+dependencies:
   cache_directories:
     - "node_modules"
+    - ~/.gradle
+    - ~/.m2
 
 notify:
   webhooks:
     # gitter
     - url: https://webhooks.gitter.im/e/f1030e2836f6c2beb41c
+
+general:
+  branches:
+    ignore:
+      - gh-pages # ignore weex website
+      - doc      # ignore doc
+      - /doc-.*/ # ignore doc

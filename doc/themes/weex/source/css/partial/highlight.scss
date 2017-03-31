@@ -1,0 +1,108 @@
+code, pre {
+  font-family: Source Code Pro,Monaco,Menlo,Consolas,monospace;
+  color: #abb2bf;
+  font-size: 14px;
+}
+
+code {
+  color: #e06c75;
+  background: #eaeaea;
+  padding: 0 5px;
+}
+
+pre {
+  padding: 10px 15px;
+  overflow-x: auto;
+  line-height: 22px;
+}
+
+pre code {
+  border: none;
+  background: #353639;
+  display: block;
+  padding: 0;
+  -moz-tab-size: 2;
+  tab-size: 2;
+}
+
+.highlight, pre {
+  background: #353639;
+  padding: 10px 15px;
+  color: #abb2bf;
+  overflow: auto;
+  margin: 20px 0;
+  border-radius: 5px;
+}
+
+.highlight table {
+  margin: 0!important;
+  border: 0;
+}
+
+.highlight table td,.highlight table th, .highlight tr {
+  background: #353639;
+  border: 0;
+  padding: 0;
+}
+
+.highlight figcaption {
+  margin: -5px 0 5px;
+  font-size: .9em;
+  color: #abb2bf;
+}
+
+.highlight figcaption:after,.highlight figcaption:before {
+  content: "";
+  display: table;
+}
+
+.highlight figcaption:after {
+  clear: both;
+}
+
+.highlight figcaption a {
+  float: right;
+}
+
+.highlight pre {
+  padding: 0;
+  border: none;
+  background: none;
+  margin: 0;
+}
+
+.highlight .line {
+  height: 22px;
+}
+
+pre .comment,pre .title {
+  color: #5c6370;
+}
+
+pre .attribute,pre .css .class,pre .css .id,pre .css .pseudo,pre .html .doctype,pre .regexp,pre .ruby .constant,pre .tag,pre .variable,pre .xml .doctype,pre .xml .pi,pre .xml .tag .title {
+  color: #e06c75;
+}
+
+pre .built_in,pre .constant,pre .literal,pre .number,pre .params,pre .preprocessor {
+  color: #d19a66;
+}
+
+pre .class,pre .css .rules .attribute,pre .header,pre .inheritance,pre .ruby .class .title,pre .ruby .symbol,pre .string,pre .value,pre .xml .cdata {
+  color: #98c379;
+}
+
+pre .css .hexcolor {
+  color: #3e999f;
+}
+
+pre .coffeescript .title,pre .function,pre .javascript .title,pre .perl .sub,pre .python .decorator,pre .python .title,pre .ruby .function .title,pre .ruby .title .keyword {
+  color: #c678dd;
+}
+
+pre .javascript .function,pre .keyword {
+  color: #c678dd;
+}
+
+pre .attr {
+  color: #61afef;
+}

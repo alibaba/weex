@@ -4,11 +4,9 @@ import sinonChai from 'sinon-chai'
 const { expect } = chai
 chai.use(sinonChai)
 
-global.callNative = function () {}
-
-import * as ctrl from '../../../../default/app/ctrl'
-import Differ from '../../../../default/app/differ'
-import { Document } from '../../../../vdom'
+import * as ctrl from '../../../../frameworks/legacy/app/ctrl'
+import Differ from '../../../../frameworks/legacy/app/differ'
+import { Document } from '../../../../runtime/vdom'
 
 describe('the api of app', () => {
   let app
@@ -21,20 +19,18 @@ describe('the api of app', () => {
     const app = {
       id: id,
       customComponentMap: {},
-      define: sinon.spy(),
-      bootstrap: sinon.stub(),
-      callbacks: {
-        1: spy2
-      },
+      registerComponent: function () {},
+      // define: sinon.spy(),
+      // bootstrap: sinon.stub(),
       vm: {},
       differ: new Differ(id)
     }
 
     app.doc = new Document(id, '', spy1)
     app.doc.createBody('div')
-    app.bootstrap.returns()
 
-    Object.assign(app, ctrl)
+    app.doc.taskCenter.callbackManager.add(spy2)
+    // app.bootstrap.returns()
 
     return app
   }
@@ -43,6 +39,7 @@ describe('the api of app', () => {
     spy1 = sinon.spy()
     spy2 = sinon.spy()
     app = createApp()
+    !console.debug && (console.debug = function () {})
   })
 
   afterEach(() => {
@@ -52,33 +49,35 @@ describe('the api of app', () => {
 
   describe('init', () => {
     before(() => {
-      global.needTransformerVersion = '0.1.3'
+      global.transformerVersion = '0.1.3'
     })
 
     after(() => {
-      global.needTransformerVersion = undefined
+      global.transformerVersion = undefined
     })
 
     it('a simple bundle', () => {
-      app.init(`
-        define('main', {
-          "type": "container",
-          "children": [{
-            "type": "text",
-            "attr": {
-              "value": "Hello World"
-            }
-          }]
+      app.requireModule = () => {}
+      ctrl.init(app, `
+        define('main', function (r, e, m) {
+          e.template = {
+            "type": "container",
+            "children": [{
+              "type": "text",
+              "attr": {
+                "value": "Hello World"
+              }
+            }]
+          }
         })
 
         bootstrap('main')
       `)
 
-      expect(app.doc.listener.batched).to.be.true
-      expect(app.define.calledOnce).to.be.true
-      expect(app.bootstrap.calledOnce).to.be.true
+      // expect(app.define.calledOnce).to.be.true
+      // expect(app.bootstrap.calledOnce).to.be.true
 
-      const task = spy1.firstCall.args[0][0]
+      const task = spy1.lastCall.args[0][0]
       expect(task.module).to.be.equal('dom')
       expect(task.method).to.be.equal('createFinish')
       expect(task.args.length).to.be.equal(0)
@@ -87,38 +86,44 @@ describe('the api of app', () => {
 
   describe('getRootElement', () => {
     it('from a simple', () => {
-      const json = app.getRootElement()
-      expect(json).to.deep.equal({
-        ref: '_root',
-        type: 'div',
-        attr: {},
-        style: {}
-      })
+      const json = ctrl.getRootElement(app)
+      expect(json.ref).eql('_root')
+      expect(json.type).eql('div')
+      expect(json.children.length).eql(1)
+    })
+    it('from empty object', () => {
+      expect(ctrl.getRootElement({})).to.deep.equal({})
     })
   })
 
   describe('fireEvent', () => {
     it('click on root', () => {
-      app.fireEvent('_root', 'click')
-      const task = spy1.firstCall.args[0][0]
+      ctrl.fireEvent(app, '_root', 'click')
+      const task = spy1.lastCall.args[0][0]
       expect(task.module).to.be.equal('dom')
       expect(task.method).to.be.equal('updateFinish')
       expect(task.args.length).to.be.equal(0)
     })
 
     it('error', () => {
-      const result = app.fireEvent('_rootTest', 'click')
+      const result = ctrl.fireEvent(app, '_rootTest', 'click')
       expect(result).to.be.an.instanceof(Error)
+    })
+
+    it('click on both root & _rootTest', () => {
+      ctrl.fireEvent(app, ['_root', '_rootTest'], 'click')
+      const task = spy1.lastCall.args[0][0]
+      expect(task.module).to.be.equal('dom')
+      expect(task.method).to.be.equal('updateFinish')
+      expect(task.args.length).to.be.equal(0)
     })
   })
 
   describe('callback', () => {
     it('with a simple data', () => {
       const data = { a: 'b' }
-      app.callback('1', data, true)
+      ctrl.callback(app, '1', data, true)
       expect(spy2.calledOnce).to.be.true
-      expect(spy2.args[0][0]).to.deep.equal(data)
-      expect(app.callbacks[1]).to.be.a('function')
 
       const task = spy1.firstCall.args[0][0]
       expect(task.module).to.be.equal('dom')
@@ -128,20 +133,16 @@ describe('the api of app', () => {
 
     it('multiple called', () => {
       const data = { a: 'b' }
-      app.callback('1', data, true)
+      ctrl.callback(app, '1', data, true)
       expect(spy2.calledTwice).to.be.true
-      expect(spy2.args[0][0]).to.deep.equal(data)
-      expect(app.callbacks[1]).to.be.a('function')
 
-      app.callback('1', data, false)
+      ctrl.callback(app, '1', data, false)
       expect(spy2.calledThrice).to.be.true
-      expect(spy2.args[0][0]).to.deep.equal(data)
-      expect(app.callbacks[1]).to.be.undefined
     })
 
     it('error', () => {
       const data = null
-      const result = app.callback('1', data, true)
+      const result = ctrl.callback(app, '1', data, true)
       expect(result).to.be.an.instanceof(Error)
     })
   })
@@ -149,31 +150,63 @@ describe('the api of app', () => {
   describe('refreshData', () => {
     it('a simple data', () => {
       const data = { b: 'c' }
-      app.refreshData(data)
-      expect(app.vm).to.deep.equal(data)
+      ctrl.refresh(app, data)
+      expect(app.vm.b).to.deep.equal(data.b)
 
-      const task = spy1.firstCall.args[0][0]
+      const task = spy1.lastCall.args[0][0]
       expect(task.module).to.be.equal('dom')
       expect(task.method).to.be.equal('refreshFinish')
       expect(task.args.length).to.be.equal(0)
     })
 
+    it('call refresh with refreshData function', () => {
+      app.vm.refreshData = function () {
+        app.vm.data = 'hello'
+      }
+      const data = { b: 'c' }
+      ctrl.refresh(app, data)
+      expect(app.vm.data).to.equal('hello')
+    })
+
     it('error', () => {
       const data = null
-      const result = app.refreshData(data)
+      const result = ctrl.refresh(app, data)
       expect(result).to.be.an.instanceof(Error)
     })
   })
 
   describe('destory', () => {
     it('the simple data', () => {
-      app.destroy()
+      ctrl.destroy(app)
       expect(app.id).to.be.empty
       expect(app.blocks).to.be.null
       expect(app.vm).to.be.null
       expect(app.doc).to.be.null
       expect(app.customComponentMap).to.be.null
-      expect(app.callbacks).to.be.null
+    })
+    it('the incomplete data', () => {
+      const appx = createApp()
+      delete appx.vm
+      ctrl.destroy(appx)
+      expect(appx.id).to.be.empty
+      expect(appx.blocks).to.be.null
+      expect(appx.vm).to.be.null
+      expect(appx.doc).to.be.null
+      expect(appx.customComponentMap).to.be.null
+    })
+    it('clear vms', () => {
+      const appy = createApp()
+      appy.vm = {
+        $emit () {},
+        _watchers: [{ teardown () {} }],
+        _childrenVms: [{ $emit () {} }]
+      }
+      ctrl.destroy(appy)
+      expect(appy.id).to.be.empty
+      expect(appy.blocks).to.be.null
+      expect(appy.vm).to.be.null
+      expect(appy.doc).to.be.null
+      expect(appy.customComponentMap).to.be.null
     })
   })
 })

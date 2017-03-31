@@ -1,0 +1,11 @@
+<% var page_type = page.type ? page.type : page.path.slice(0, -5) %>
+
+<article class="article article-type-<%= page_type %>">
+  <div class="article-entry" itemprop="articleBody">
+    <%- partial('post/title', {post: post}) %>
+    <%- post.content %>
+  </div>
+  <% if (page_type === 'article') { %>
+     <%- partial('_partial/post/nav') %>
+  <% } %>
+</article>

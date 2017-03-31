@@ -20,7 +20,7 @@
 /**
  * @abstract Creates a image download handler with a given URL
  *
- * @param imageUrl The URL of the image to download
+ * @param url The URL of the image to download
  *
  * @param imageFrame  The frame of the image you want to set
  *

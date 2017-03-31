@@ -204,28 +204,28 @@
  */
 package com.taobao.weex.ui;
 
-import android.graphics.Color;
+import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.common.WXRenderStrategy;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.flex.Spacing;
+import com.taobao.weex.ui.animation.WXAnimationBean;
 import com.taobao.weex.ui.animation.WXAnimationModule;
 import com.taobao.weex.ui.component.Scrollable;
-import com.taobao.weex.ui.component.WXBasicComponentType;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.ui.component.WXComponentFactory;
 import com.taobao.weex.ui.component.WXScroller;
 import com.taobao.weex.ui.component.WXVContainer;
 import com.taobao.weex.utils.WXLogUtils;
+import com.taobao.weex.utils.WXViewUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -238,17 +238,14 @@ import java.util.Map;
  */
 class WXRenderStatement {
 
-  private String mInstanceId;
   private Map<String, WXComponent> mRegistry;
   private WXSDKInstance mWXSDKInstance;
   /**
    * The container for weex root view.
    */
-  private WXVContainer mGodComponent;
 
-  public WXRenderStatement(WXSDKInstance instance, String instaceId) {
+  public WXRenderStatement(WXSDKInstance instance) {
     mWXSDKInstance = instance;
-    mInstanceId = instaceId;
     mRegistry = new HashMap<>();
   }
 
@@ -257,9 +254,6 @@ class WXRenderStatement {
    */
   public void destroy() {
     mWXSDKInstance = null;
-    if (mGodComponent != null) {
-      mGodComponent.destroy();
-    }
     mRegistry.clear();
   }
 
@@ -273,7 +267,7 @@ class WXRenderStatement {
    */
   void createBody(WXComponent component) {
     long start = System.currentTimeMillis();
-    component.createView(mGodComponent, -1);
+    component.createView();
     if (WXEnvironment.isApkDebugable()) {
       WXLogUtils.renderPerformanceLog("createView", (System.currentTimeMillis() - start));
     }
@@ -291,9 +285,9 @@ class WXRenderStatement {
         mWXSDKInstance.setRootScrollView((ScrollView) scroller.getInnerView());
       }
     }
-    mWXSDKInstance.setRootView(mGodComponent.getRealView());
+    mWXSDKInstance.onRootCreated(component);
     if (mWXSDKInstance.getRenderStrategy() != WXRenderStrategy.APPEND_ONCE) {
-      mWXSDKInstance.onViewCreated(mGodComponent);
+      mWXSDKInstance.onCreateFinish();
     }
   }
 
@@ -301,27 +295,9 @@ class WXRenderStatement {
     if (mWXSDKInstance == null) {
       return null;
     }
-    WXDomObject domObject = new WXDomObject();
-    domObject.type = WXBasicComponentType.DIV;
-    domObject.ref = "god";
-    mGodComponent = (WXVContainer) WXComponentFactory.newInstance(mWXSDKInstance, domObject, null);
-    mGodComponent.createView(null, -1);
-    if (mGodComponent == null) {
-      if (WXEnvironment.isApkDebugable()) {
-        WXLogUtils.e("rootView failed!");
-      }
-      //TODO error callback
-      return null;
-    }
-    FrameLayout frameLayout = (FrameLayout) mGodComponent.getView();
-    ViewGroup.LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-    frameLayout.setLayoutParams(layoutParams);
-    frameLayout.setBackgroundColor(Color.TRANSPARENT);
 
-    WXComponent component = generateComponentTree(dom, mGodComponent);
-    mGodComponent.addChild(component);
-    mRegistry.put(component.getRef(), component);
-    return component;
+    WXComponent rootComp = generateComponentTree(dom, null);
+    return rootComp;
   }
 
   /**
@@ -366,8 +342,12 @@ class WXRenderStatement {
     parent.addChild(component, index);
   }
 
-  WXComponent createComponentOnDomThread(WXDomObject dom, String parentRef, int index) {
-    return generateComponentTree(dom, (WXVContainer) mRegistry.get(parentRef));
+  @Nullable WXComponent createComponentOnDomThread(WXDomObject dom, String parentRef, int index) {
+    WXComponent comp = mRegistry.get(parentRef);
+    if(comp == null || !(comp instanceof WXVContainer)){
+      return null;
+    }
+    return generateComponentTree(dom, (WXVContainer) comp);
   }
 
   /**
@@ -378,10 +358,11 @@ class WXRenderStatement {
     if (parent == null || component == null) {
       return;
     }
-    component.createView(parent, index);
+
+    parent.addChild(component, index);
+    parent.createChildViewAt(index);
     component.applyLayoutAndEvent(component);
     component.bindData(component);
-    parent.addChild(component, index);
   }
 
   /**
@@ -394,8 +375,8 @@ class WXRenderStatement {
     }
     WXVContainer parent = component.getParent();
     clearRegistryForComponent(component);
-    parent.remove(component);
-    component.destroy();
+    parent.remove(component,true);
+    mRegistry.remove(ref);
     return component;
   }
 
@@ -407,7 +388,7 @@ class WXRenderStatement {
    * Clear registry information that current instance contains.
    */
   private void clearRegistryForComponent(WXComponent component) {
-    WXComponent removedComponent = mRegistry.remove(component.getDomObject().ref);
+    WXComponent removedComponent = mRegistry.remove(component.getDomObject().getRef());
     if (removedComponent != null) {
       removedComponent.removeAllEvent();
       removedComponent.removeStickyStyle();
@@ -443,7 +424,7 @@ class WXRenderStatement {
   void addEvent(String ref, String type) {
     WXComponent component = mRegistry.get(ref);
     if (component == null) {
-      return;
+      return ;
     }
     component.addEvent(type);
   }
@@ -454,7 +435,7 @@ class WXRenderStatement {
   void removeEvent(String ref, String type) {
     WXComponent component = mRegistry.get(ref);
     if (component == null) {
-      return;
+      return ;
     }
     component.removeEvent(type);
   }
@@ -492,19 +473,11 @@ class WXRenderStatement {
       return;
     }
 
-    int offsetInt = 0;
-    if (options != null) {
-      String offset = options.get("offset") == null ? "0" : options.get("offset").toString();
-      if (offset != null) {
-        offsetInt = Integer.parseInt(offset);
-      }
-    }
-
     Scrollable scroller = component.getParentScroller();
     if (scroller == null) {
       return;
     }
-    scroller.scrollTo(component,offsetInt);
+    scroller.scrollTo(component,options);
   }
 
   /**
@@ -513,7 +486,7 @@ class WXRenderStatement {
    */
   void createFinish(int width, int height) {
     if (mWXSDKInstance.getRenderStrategy() == WXRenderStrategy.APPEND_ONCE) {
-      mWXSDKInstance.onViewCreated(mGodComponent);
+      mWXSDKInstance.onCreateFinish();
     }
     mWXSDKInstance.onRenderSuccess(width, height);
   }
@@ -536,13 +509,12 @@ class WXRenderStatement {
 
 
   private WXComponent generateComponentTree(WXDomObject dom, WXVContainer parent) {
-    if (dom == null || parent == null) {
+    if (dom == null ) {
       return null;
     }
-    WXComponent component = WXComponentFactory.newInstance(mWXSDKInstance, dom,
-                                                           parent, parent.isLazy());
+    WXComponent component = WXComponentFactory.newInstance(mWXSDKInstance, dom,parent);
 
-    mRegistry.put(dom.ref, component);
+    mRegistry.put(dom.getRef(), component);
     if (component instanceof WXVContainer) {
       WXVContainer parentC = (WXVContainer) component;
       int count = dom.childCount();
@@ -558,7 +530,27 @@ class WXRenderStatement {
     return component;
   }
 
-  void startAnimation(@NonNull String ref, @Nullable String callBack) {
-    WXAnimationModule.startAnimation(mWXSDKInstance,mRegistry.get(ref),callBack);
+  void startAnimation(@NonNull String ref, @NonNull WXAnimationBean animationBean, @Nullable String callBack) {
+    WXAnimationModule.startAnimation(mWXSDKInstance, mRegistry.get(ref), animationBean, callBack);
+  }
+
+  public void getComponentSize(String ref, JSCallback callback) {
+    WXComponent component = mRegistry.get(ref);
+    Map<String, Object> options = new HashMap<>();
+    if (component != null) {
+      Map<String, String> size = new HashMap<>();
+      Rect sizes = component.getComponentSize();
+      size.put("width", String.valueOf(WXViewUtils.getWebPxByWidth(sizes.width(),mWXSDKInstance.getViewPortWidth())));
+      size.put("height", String.valueOf(WXViewUtils.getWebPxByWidth(sizes.height(),mWXSDKInstance.getViewPortWidth())));
+      size.put("bottom",String.valueOf(WXViewUtils.getWebPxByWidth(sizes.bottom,mWXSDKInstance.getViewPortWidth())));
+      size.put("left",String.valueOf(WXViewUtils.getWebPxByWidth(sizes.left,mWXSDKInstance.getViewPortWidth())));
+      size.put("right",String.valueOf(WXViewUtils.getWebPxByWidth(sizes.right,mWXSDKInstance.getViewPortWidth())));
+      size.put("top",String.valueOf(WXViewUtils.getWebPxByWidth(sizes.top,mWXSDKInstance.getViewPortWidth())));
+      options.put("size", size);
+      options.put("result", true);
+    } else {
+      options.put("errMsg", "Component does not exist");
+    }
+    callback.invoke(options);
   }
 }

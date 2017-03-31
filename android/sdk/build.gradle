@@ -4,45 +4,76 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.2'
+        classpath 'com.android.tools.build:gradle:2.1.3'
         classpath files('license/license-gradle-plugin-0.12.1.jar')
         classpath files('license/maven-license-plugin-1.10.b1.jar')
         classpath files('license/plexus-utils-3.0.24.jar')
+        classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.5.0'
     }
 }
 
-//plugins {
-//    id "com.github.hierynomus.license" version "0.12.1"
-//}
 
-allprojects {
-    repositories {
-        mavenCentral()
-        jcenter()
-    }
+plugins {
+    id "com.github.hierynomus.license" version "0.13.1"
 }
 
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.hierynomus.license'
+apply plugin: 'checkstyle'
 
+ext.disableCov = project.hasProperty('disableCov') ? project.getProperty('disableCov') : 'false'
+if(!disableCov.toBoolean()){
+    apply plugin: 'com.vanniktech.android.junit.jacoco'
+    junitJacoco {
+        excludes = ['com/taobao/weex/dom/flex/**','com/taobao/weex/ui/view/refresh/circlebar/**']
+    }
+}
 
-version = "1.5.2.4"
+project.ext.set("androidTargetSDK",project.hasProperty('targetSDK') ? project.getProperty('targetSDK') as int : 21 )
+
+task checkstyle(type: Checkstyle) {
+    configFile file("${project.rootDir}/config/quality/checkstyle.xml") // Where my checkstyle config is...
+    // configProperties.checkstyleSuppressionsPath = file("${project.rootDir}/config/quality/checkstyle/suppressions.xml").absolutePath // Where is my suppressions file for checkstyle is...
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+    exclude '**/test/**'
+    exclude '**/com/taobao/weex/dom/flex/**'
+    classpath = files()
+}
+
+checkstyle {
+    toolVersion = '6.9'
+}
+
+version = "0.9.4"
 
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
     resourcePrefix "weex"
 
-//    def libsDir = projectDir.path + "/src/main/jni/"
+    useLibrary 'org.apache.http.legacy'
+
+    def jsfmVersion = "0.15.2"
+    try{
+        def line
+        new File("assets/main.js").withReader { line = it.readLine() }
+        def m = line =~ /[A-Z\s]+\:\s+([0-9\.]+)\s+Build\s+[0-9]+/;
+        jsfmVersion = m[0][1]
+        println jsfmVersion
+    } catch (java.lang.Exception e) {
+
+    }
+
     defaultConfig {
+        buildConfigField "String", "buildJavascriptFrameworkVersion", "\"${jsfmVersion}\""
+        buildConfigField "String", "buildVersion", "\"${version}\""
         minSdkVersion 14
-        targetSdkVersion 19
+        targetSdkVersion project.androidTargetSDK
         versionCode 1
         versionName "1.0"
         ndk {
-//            moduleName "weexcore"
-//            cFlags "-I" + file(libsDir+"v8core").absolutePath
-//            ldLibs "log",libsDir + "libv8_base_arm.a",libsDir + "libv8_snapshot_arm.a"
             abiFilters "armeabi","x86"
         }
     }
@@ -77,6 +108,12 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
+    testOptions {
+        unitTests.all {
+            maxHeapSize = "1024m"
+            jvmArgs += ['-XX:-UseSplitVerifier', '-noverify','-Xverify:none']/* fix VerifyError  */
+        }
+    }
 }
 
 dependencies {
@@ -86,6 +123,7 @@ dependencies {
     provided 'com.android.support:appcompat-v7:23.1.1'
     provided 'com.alibaba:fastjson:1.1.46.android'
 
+    testCompile 'com.alibaba:fastjson:1.1.46.android'
     testCompile 'junit:junit:4.12'
     testCompile 'org.hamcrest:hamcrest-core:1.3'
     testCompile 'org.javassist:javassist:3.20.0-GA'
@@ -97,40 +135,29 @@ dependencies {
     testCompile 'org.powermock:powermock-module-junit4:1.6.4'
     testCompile 'org.powermock:powermock-module-junit4-legacy:1.6.4'
     testCompile 'org.powermock:powermock-module-testng:1.6.4'
-    testCompile 'org.robolectric:robolectric:3.0-rc3'
+    testCompile 'org.powermock:powermock-classloading-xstream:1.6.4'
+    testCompile "org.powermock:powermock-module-junit4-rule:1.6.4"
+    testCompile 'org.robolectric:robolectric:3.0'
+    testCompile "org.robolectric:shadows-httpclient:3.0"
+    testCompile 'org.json:json:20160212'
+}
+
+task licenseFormatWeex (type:nl.javadude.gradle.plugins.license.License) {
+    source = fileTree(dir: "../",
+            includes: [
+                    "sdk/src/main/java/**/*.java",
+                    "common/src/main/java/**/*.java",
+                    "playground/app/src/main/java/**/*.java"
+            ],
+            excludes: [
+            "**/dom/flex/*.java"
+            ])
 }
 
 license{
-    header=file('license/LICENSE')
-    excludes (["**/WXDataStructureUtil.java",
-               "**/WXBackgroundDrawable.java",
-               "**/Spacing.java",
-               "**/MeasureOutput.java",
-               "**/LayoutEngine.java",
-               "**/FloatUtil.java",
-               "**/CSSWrap.java",
-               "**/CSSStyle.java",
-               "**/CSSPositionType.java",
-               "**/CSSNode.java",
-               "**/CSSLayoutContext.java",
-               "**/CSSLayout.java",
-               "**/CSSJustify.java",
-               "**/CSSFlexDirection.java",
-               "**/CSSDirection.java",
-               "**/CSSConstants.java",
-               "**/CSSAlign.java",
-               "**/CachedCSSLayout.java",
-               "**/CSSAlignConvert.java",
-               "**/CSSFlexDirectionConvert.java",
-               "**/CSSJustifyConvert.java",
-               "**/CSSPositionTypeConvert.java",
-               "**/CSSTransformFromStyle.java",
-               "**/CSSWrapConvert.java",
-               "**/WXTextDomObject.java",
-               "**/WXCustomStyleSpan.java"])
-//    includes(['src/main/java/**/*.java'])
+    header=file("license/LICENSE")
 }
-preBuild.dependsOn licenseFormat
+preBuild.dependsOn licenseFormatWeex
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.10'

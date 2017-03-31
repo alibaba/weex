@@ -204,6 +204,7 @@
  */
 package com.taobao.weex.dom;
 
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.taobao.weex.WXEnvironment;
@@ -214,7 +215,7 @@ import com.taobao.weex.utils.WXLogUtils;
  */
 public class WXDomObjectFactory {
 
-  public static WXDomObject newInstance(String type) {
+  public static @Nullable WXDomObject newInstance(String type) {
     if (TextUtils.isEmpty(type)) {
       return null;
     }
@@ -222,10 +223,9 @@ public class WXDomObjectFactory {
     Class<? extends WXDomObject> clazz = WXDomRegistry.getDomObjectClass(type);
     if (clazz == null) {
       if (WXEnvironment.isApkDebugable()) {
-        StringBuilder tag = new StringBuilder();
-        tag.append("WXDomObjectFactory error type:[");
-        tag.append(type).append("]").append(" class not found");
-        WXLogUtils.e(tag.toString());
+        String tag = "WXDomObjectFactory error type:[" +
+                type + "]" + " class not found";
+        WXLogUtils.e(tag);
       }
     }
 
@@ -236,12 +236,7 @@ public class WXDomObjectFactory {
         return domObject;
       }
     } catch (Exception e) {
-      if (WXEnvironment.isApkDebugable()) {
-        StringBuilder builder = new StringBuilder("WXDomObjectFactory Exception type:[");
-        builder.append(type).append("] ");
-        builder.append(WXLogUtils.getStackTrace(e));
-        WXLogUtils.e(builder.toString());
-      }
+      WXLogUtils.e("WXDomObjectFactory Exception type:[" + type + "] ", e);
     }
 
     return null;

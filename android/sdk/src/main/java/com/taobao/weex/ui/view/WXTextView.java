@@ -210,14 +210,19 @@ import android.text.Layout;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.taobao.weex.ui.component.WXText;
 import com.taobao.weex.ui.view.gesture.WXGesture;
 import com.taobao.weex.ui.view.gesture.WXGestureObservable;
+
+import java.lang.ref.WeakReference;
 
 /**
  * TextView wrapper
  */
-public class WXTextView extends View implements WXGestureObservable, IWXTextView {
+public class WXTextView extends View implements WXGestureObservable, IWXTextView,
+                                                IRenderStatus<WXText> {
 
+  private WeakReference<WXText> mWeakReference;
   private WXGesture wxGesture;
   private Layout textLayout;
   public WXTextView(Context context) {
@@ -261,5 +266,19 @@ public class WXTextView extends View implements WXGestureObservable, IWXTextView
 
   public void setTextLayout(Layout layout) {
     this.textLayout = layout;
+    if(layout!=null){
+      setContentDescription(layout.getText());
+    }
+    if (mWeakReference != null) {
+      WXText wxText = mWeakReference.get();
+      if (wxText != null) {
+        wxText.readyToRender();
+      }
+    }
+  }
+
+  @Override
+  public void holdComponent(WXText component) {
+    mWeakReference = new WeakReference<>(component);
   }
 }

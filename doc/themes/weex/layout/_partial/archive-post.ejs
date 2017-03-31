@@ -1,0 +1,11 @@
+<article class="blog-article blog-type-<%= post.layout %>">
+  <div class="blog-article-inner">
+    <%- partial('post/title') %>
+    <% if (post.excerpt) { %>
+      <div class="article-excerpt article">
+        <%- post.excerpt %>
+      </div>
+      <a href="<%- url_for(post.path) %>" class="more-link">Read more...</a>
+    <% } %>
+  </div>
+</article>

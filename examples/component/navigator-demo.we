@@ -1,16 +1,19 @@
 <template>
   <wxc-navpage data-role="none" height={{navBarHeight}} background-color="#ff5898" title={{title}} title-color="white" left-item-title="More" left-item-color="white" right-item-src="http://gtms02.alicdn.com/tps/i2/TB1ED7iMpXXXXXEXXXXWA_BHXXX-48-48.png">
-      <wxc-panel title="push a new page">
-        <wxc-button type="primary" size="small" value="push" onclick="push"></wxc-button>
-      </wxc-panel>
-      <wxc-panel title="pop to the last page">
-        <wxc-button type="success" size="small" value="pop" onclick="pop"></wxc-button>
-      </wxc-panel>
+    <wxc-panel title="push a new page">
+      <wxc-button type="primary" size="small" value="push" onclick="push"></wxc-button>
+    </wxc-panel>
+    <wxc-panel title="pop to the last page">
+      <wxc-button type="success" size="small" value="pop" onclick="pop"></wxc-button>
+    </wxc-panel>
   </wxc-navpage>
 </template>
 
 <script>
   require('weex-components');
+  var navigator = require('@weex-module/navigator');
+  var modal = require('@weex-module/modal');
+
   module.exports = {
     data: {
       navBarHeight: 88,
@@ -19,71 +22,75 @@
       baseURL: '',
     },
     created: function() {
-        this.$getConfig(function (config) {
-            var env = config.env;
-            if(env.platform == 'iOS'){
-              var scale = env.scale;
-              var deviceWidth = env.deviceWidth / scale;
-              this.navBarHeight = 64.0 * 750.0 / deviceWidth;
-            }   
-        }.bind(this));
+      this.$getConfig(function (config) {
+        var env = config.env;
+        if(env.platform == 'iOS'){
+          var scale = env.scale;
+          var deviceWidth = env.deviceWidth / scale;
+          this.navBarHeight = 64.0 * 750.0 / deviceWidth;
+        }
+      }.bind(this));
 
-        this.$on('naviBar.rightItem.click',function(e){
-          duration = 2;
-          this.$call('modal', 'toast', {
-            'message': 'naviBar.rightItem.click',
-            'duration': duration
-           });
+      this.$on('naviBar.rightItem.click',function(e){
+        duration = 2;
+        modal.toast({
+          'message': 'naviBar.rightItem.click',
+          'duration': duration
         });
+      });
 
-        this.$on('naviBar.leftItem.click',function(e){
-          duration = 2;
-          this.$call('modal', 'toast', {
-            'message': 'naviBar.leftItem.click',
-            'duration': duration
-           });  
+      this.$on('naviBar.leftItem.click',function(e){
+        duration = 2;
+        modal.toast({
+          'message': 'naviBar.leftItem.click',
+          'duration': duration
         });
+      });
 
-        var bundleUrl = this.$getConfig().bundleUrl;
-        bundleUrl = new String(bundleUrl);
-        console.log('hit', bundleUrl);
-        var nativeBase;
-        var isAndroidAssets = bundleUrl.indexOf('file://assets/') >= 0;
+      var bundleUrl = this.$getConfig().bundleUrl;
+      bundleUrl = new String(bundleUrl);
+      console.log('hit', bundleUrl);
+      var nativeBase;
+      var isAndroidAssets = bundleUrl.indexOf('file://assets/') >= 0;
 
-        var isiOSAssets = bundleUrl.indexOf('file:///') >= 0 && bundleUrl.indexOf('WeexDemo.app') > 0;
-        if (isAndroidAssets) {
-          nativeBase = 'file://assets/';
+      var isiOSAssets = bundleUrl.indexOf('file:///') >= 0 && bundleUrl.indexOf('WeexDemo.app') > 0;
+      if (isAndroidAssets) {
+        nativeBase = 'file://assets/';
+      }
+      else if (isiOSAssets) {
+        // file:///var/mobile/Containers/Bundle/Application/{id}/WeexDemo.app/
+        // file:///Users/{user}/Library/Developer/CoreSimulator/Devices/{id}/data/Containers/Bundle/Application/{id}/WeexDemo.app/
+        nativeBase = bundleUrl.substring(0, bundleUrl.lastIndexOf('/') + 1);
+      }
+      else {
+        var host = 'localhost:12580';
+        var matches = /\/\/([^\/]+?)\//.exec(this.$getConfig().bundleUrl);
+        if (matches && matches.length >= 2) {
+          host = matches[1];
         }
-        else if (isiOSAssets) {
-          // file:///var/mobile/Containers/Bundle/Application/{id}/WeexDemo.app/
-          // file:///Users/{user}/Library/Developer/CoreSimulator/Devices/{id}/data/Containers/Bundle/Application/{id}/WeexDemo.app/
-          nativeBase = bundleUrl.substring(0, bundleUrl.lastIndexOf('/') + 1);
-        }
-        else {
-          var host = 'localhost:12580';
-          var matches = /\/\/([^\/]+?)\//.exec(this.$getConfig().bundleUrl);
-          if (matches && matches.length >= 2) {
-            host = matches[1];
-          }
-          nativeBase = 'http://' + host + '/' + this.dir + '/build/';
-        }
-        var h5Base = './index.html?page=./' + this.dir + '/build/';
-        // in Native
-        var base = nativeBase;
-        if (typeof window === 'object') {
-          // in Browser or WebView
-          base = h5Base;
-        }
-        this.baseURL = base;     
+        nativeBase = 'http://' + host + '/' + this.dir + '/build/';
+      }
+      var h5Base = bundleUrl;
+      // in Native
+      var base = nativeBase;
+      if (typeof window == 'object') {
+        // in Browser or WebView
+        base = h5Base;
+      }
+      this.baseURL = base;
     },
     methods: {
       push: function() {
         var vm = this;
+        if (typeof window !== 'object') {
+          this.baseURL = this.baseURL + 'component/navigator-demo.js?test=1';
+        }
         var params = {
-          'url':  this.baseURL + 'component/navigator-demo.js?test=1',
+          'url':  this.baseURL,
           'animated' : 'true',
         }
-        vm.$call('navigator','push',params, function () {});
+        navigator.push(params,function(){
+        });
       },
 
       pop: function() {
@@ -91,7 +98,9 @@
         var params = {
           'animated' : 'true',
         }
-        vm.$call('navigator','pop',params, function () {});
+        navigator.pop(params,function () {
+
+        });
       },
     }
   }

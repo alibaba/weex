@@ -253,10 +253,10 @@ public class WXInterception {
       try {
         return method.invoke(delegate(), args);
       } catch (IllegalArgumentException e) {/* Should never happen */
-        e.printStackTrace();
+        WXLogUtils.e("", e);
         return null;
       } catch (IllegalAccessException e) {/* Should never happen */
-        e.printStackTrace();
+        WXLogUtils.e("", e);
         return null;
       } catch (InvocationTargetException e) {
         throw e.getTargetException();

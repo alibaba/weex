@@ -209,6 +209,8 @@ import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Looper;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
@@ -218,31 +220,37 @@ import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXRenderErrorCode;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.WXSDKManager;
+import com.taobao.weex.adapter.IWXJSExceptionAdapter;
+import com.taobao.weex.adapter.IWXUserTrackAdapter;
 import com.taobao.weex.common.IWXBridge;
 import com.taobao.weex.common.IWXDebugProxy;
 import com.taobao.weex.common.WXConfig;
 import com.taobao.weex.common.WXErrorCode;
+import com.taobao.weex.common.WXException;
 import com.taobao.weex.common.WXJSBridgeMsgType;
+import com.taobao.weex.common.WXJSExceptionInfo;
+import com.taobao.weex.common.WXPerformance;
 import com.taobao.weex.common.WXRefreshData;
 import com.taobao.weex.common.WXRuntimeException;
 import com.taobao.weex.common.WXThread;
-import com.taobao.weex.ui.module.WXTimerModule;
-import com.taobao.weex.utils.WXConst;
+import com.taobao.weex.dom.WXDomModule;
 import com.taobao.weex.utils.WXFileUtils;
-import com.taobao.weex.utils.WXHack;
-import com.taobao.weex.utils.WXHack.HackDeclaration.HackAssertionException;
-import com.taobao.weex.utils.WXHack.HackedClass;
 import com.taobao.weex.utils.WXJsonUtils;
 import com.taobao.weex.utils.WXLogUtils;
+import com.taobao.weex.utils.WXUtils;
 import com.taobao.weex.utils.WXViewUtils;
+import com.taobao.weex.utils.batch.BactchExecutor;
+import com.taobao.weex.utils.batch.Interceptor;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Stack;
-import java.util.concurrent.LinkedBlockingQueue;
+
+import static com.taobao.weex.bridge.WXModuleManager.getDomModule;
 
 /**
  * Manager class for communication between JavaScript and Android.
@@ -254,7 +262,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  *       <li>{@link #destroyInstance(String)}</li>
  *       <li>{@link #refreshInstance(String, WXRefreshData)}</li>
  *       <li>{@link #registerModules(Map)}</li>
- *       <li>{@link #registerComponents(ArrayList)}</li>
+ *       <li>{@link #registerComponents(List)}</li>
  *       <li>{@link #invokeCallJSBatch(Message)}</li>
  *     </ul>
  *   </li>
@@ -266,7 +274,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  *   </li>
  * </ol>
  */
-public class WXBridgeManager implements Callback {
+public class WXBridgeManager implements Callback,BactchExecutor {
 
   public static final String METHOD_CREATE_INSTANCE = "createInstance";
   public static final String METHOD_DESTROY_INSTANCE = "destroyInstance";
@@ -277,14 +285,26 @@ public class WXBridgeManager implements Callback {
   public static final String METHOD_FIRE_EVENT = "fireEvent";
   public static final String METHOD_CALLBACK = "callback";
   public static final String METHOD_REFRESH_INSTANCE = "refreshInstance";
-  private static final String UNDEFINED = "-1";
+  public static final String METHOD_NOTIFY_TRIM_MEMORY = "notifyTrimMemory";
+
+  public static final String KEY_METHOD = "method";
+  public static final String KEY_ARGS = "args";
+
+  // args
+  public static final String COMPONENT = "component";
+  public static final String REF = "ref";
+  public static final String MODULE = "module";
+  public static final String METHOD = "method";
+  public static final String ARGS = "args";
+  private static final String NON_CALLBACK = "-1";
+  private static final String UNDEFINED = "undefined";
+
   private static final int INIT_FRAMEWORK_OK = 1;
 
-  public static final int DESTROY_INSTANCE = -1;
-  public static final int INSTANCE_RENDERING = 1;
-  public static final int INSTANCE_RENDERING_ERROR = 0;
+  private static long LOW_MEM_VALUE = 80;
 
-  private static WXBridgeManager mBridgeManager;
+  static volatile WXBridgeManager mBridgeManager;
+
 
   /**
    * next tick tasks, can set priority
@@ -292,14 +312,10 @@ public class WXBridgeManager implements Callback {
   private WXHashMap<String, ArrayList<WXHashMap<String, Object>>> mNextTickTasks = new WXHashMap<>();
 
   /**
-   * UI task (callback&&fire event)
-   */
-  private Queue<WXHashMap<String, Object>> mUITasks = new LinkedBlockingQueue<>();
-  /**
    * JSThread
    */
   private WXThread mJSThread;
-  private Handler mJSHandler;
+  /** package **/ Handler mJSHandler;
   private IWXBridge mWXBridge;
   private IWXDebugProxy mWxDebugProxy;
 
@@ -307,20 +323,24 @@ public class WXBridgeManager implements Callback {
   /**
    * Whether JS Framework(main.js) has been initialized.
    */
-  private boolean mInit;
+  private boolean mInit =false;
 
-  private List<ArrayList<Map<String, String>>> mRegisterComponentFailList = new ArrayList<>(8);
+  private boolean isJSFrameworkInit(){
+    return mInit;
+  }
+
+  private List<Map<String, Object>> mRegisterComponentFailList = new ArrayList<>(8);
   private List<Map<String, Object>> mRegisterModuleFailList = new ArrayList<>(8);
+  private List<String> mRegisterServiceFailList = new ArrayList<>(8);
 
-  private String mDestroyedInstanceId = "-1";
+  private List<String> mDestroyedInstanceId = new ArrayList<>();
 
-  private StringBuilder mLodBuilder = new StringBuilder(500);
+  private StringBuilder mLodBuilder = new StringBuilder(50);
+
+  private Interceptor mInterceptor;
 
   private WXBridgeManager() {
-    launchInspector(WXEnvironment.sRemoteDebugMode);
-    if (mWXBridge == null) {
-      mWXBridge = new WXBridge();
-    }
+    initWXBridge(WXEnvironment.sRemoteDebugMode);
     mJSThread = new WXThread("WeexJSBridgeThread", this);
     mJSHandler = mJSThread.getHandler();
   }
@@ -336,39 +356,54 @@ public class WXBridgeManager implements Callback {
     return mBridgeManager;
   }
 
-  private void launchInspector(boolean remoteDebug) {
-    if (WXEnvironment.isApkDebugable()) {
+  private void initWXBridge(boolean remoteDebug) {
+    if (remoteDebug) {
+      WXEnvironment.sDebugServerConnectable = true;
+    }
+
+    if (mWxDebugProxy != null) {
+      mWxDebugProxy.stop(false);
+    }
+    if (WXEnvironment.sDebugServerConnectable) {
       try {
-        if (mWxDebugProxy != null) {
-          mWxDebugProxy.stop();
-        }
-        HackedClass<Object> debugProxyClass = WXHack.into("com.taobao.weex.devtools.debug.DebugServerProxy");
-        mWxDebugProxy = (IWXDebugProxy) debugProxyClass.constructor(Context.class, WXBridgeManager.class)
-                .getInstance(WXEnvironment.getApplication(), WXBridgeManager.this);
-        if (mWxDebugProxy != null) {
-          mWxDebugProxy.start();
-          if (remoteDebug) {
-            mWXBridge = mWxDebugProxy.getWXBridge();
+        Class clazz =  Class.forName("com.taobao.weex.devtools.debug.DebugServerProxy");
+        if (clazz != null) {
+          Constructor constructor = clazz.getConstructor(Context.class, WXBridgeManager.class);
+          if (constructor != null) {
+            mWxDebugProxy = (IWXDebugProxy) constructor.newInstance(
+                WXEnvironment.getApplication(), WXBridgeManager.this);
+            if (mWxDebugProxy != null) {
+              mWxDebugProxy.start();
+            }
           }
         }
-      } catch (HackAssertionException e) {
-        WXLogUtils.e("launchInspector HackAssertionException " + e);
+      } catch (ClassNotFoundException e) {
+        // ignore
+      } catch (NoSuchMethodException e) {
+        // ignore
+      } catch (InstantiationException e) {
+        // ignore
+      } catch (IllegalAccessException e) {
+        // ignore
+      } catch (InvocationTargetException e) {
+        // ignore
       }
+    }
+    if (remoteDebug && mWxDebugProxy != null) {
+      mWXBridge = mWxDebugProxy.getWXBridge();
+    } else {
+      mWXBridge = new WXBridge();
     }
   }
 
-  public boolean callModuleMethod(String instanceId, String moduleStr, String methodStr, JSONArray args) {
-    return WXModuleManager.callModuleMethod(instanceId, moduleStr, methodStr, args);
+  public void stopRemoteDebug() {
+    if (mWxDebugProxy != null) {
+      mWxDebugProxy.stop(true);
+    }
   }
 
-  /**
-   * Get Handler for JS Thread.
-   * careful with this method, inappropriate using of JS handler may cause
-   * significant performance penalty.
-   * @return Handler the handler in JS thread.
-   */
-  public Handler getJSHandler() {
-    return mJSHandler;
+    public Object callModuleMethod(String instanceId, String moduleStr, String methodStr, JSONArray args) {
+    return WXModuleManager.callModuleMethod(instanceId, moduleStr, methodStr, args);
   }
 
   /**
@@ -376,10 +411,7 @@ public class WXBridgeManager implements Callback {
    */
   public void restart() {
     mInit = false;
-    launchInspector(WXEnvironment.sRemoteDebugMode);
-    if (mWXBridge == null) {
-      mWXBridge = new WXBridge();
-    }
+    initWXBridge(WXEnvironment.sRemoteDebugMode);
   }
 
   /**
@@ -396,12 +428,30 @@ public class WXBridgeManager implements Callback {
     }, instanceId);
   }
 
-  private void post(Runnable r, Object token) {
+  @Override
+  public void post(Runnable r){
+    if(mInterceptor != null && mInterceptor.take(r)){
+      //task is token by the interceptor
+      return;
+    }
+    if (mJSHandler == null){
+      return;
+    }
+
+    mJSHandler.post(WXThread.secure(r));
+  }
+
+  @Override
+  public void setInterceptor(Interceptor interceptor) {
+    mInterceptor = interceptor;
+  }
+
+  public void post(Runnable r, Object token) {
     if (mJSHandler == null) {
       return;
     }
 
-    Message m = Message.obtain(mJSHandler, r);
+    Message m = Message.obtain(mJSHandler, WXThread.secure(r));
     m.obj = token;
     m.sendToTarget();
   }
@@ -430,11 +480,56 @@ public class WXBridgeManager implements Callback {
         || !mJSThread.isWXThreadAlive() || mJSThread.getLooper() == null) {
       return;
     }
-    mJSHandler.removeMessages(what,obj);
+    mJSHandler.removeMessages(what, obj);
   }
+
+    public Object callNativeModule(String instanceId, String module, String method, JSONArray arguments, Object options) {
+
+        if (WXEnvironment.isApkDebugable()) {
+            mLodBuilder.append("[WXBridgeManager] callNativeModule >>>> instanceId:").append(instanceId)
+                    .append(", module:").append(module).append(", method:").append(method).append(", arguments:").append(arguments);
+            WXLogUtils.d(mLodBuilder.substring(0));
+            mLodBuilder.setLength(0);
+        }
+
+        try {
+            if(WXDomModule.WXDOM.equals(module)){
+              WXDomModule dom = getDomModule(instanceId);
+              return dom.callDomMethod(method,arguments);
+            }else {
+              return WXModuleManager.callModuleMethod(instanceId, module,
+                      method, arguments);
+            }
+        } catch (Exception e) {
+            WXLogUtils.e("[WXBridgeManager] callNative exception: ", e);
+            commitJSBridgeAlarmMonitor(instanceId, WXErrorCode.WX_ERR_INVOKE_NATIVE, "[WXBridgeManager] callNativeModule exception " + e.getCause());
+        }
+
+        return null;
+    }
+
+    public Object callNativeComponent(String instanceId, String componentRef, String method, JSONArray arguments, Object options) {
+        if (WXEnvironment.isApkDebugable()) {
+            mLodBuilder.append("[WXBridgeManager] callNativeComponent >>>> instanceId:").append(instanceId)
+                    .append(", componentRef:").append(componentRef).append(", method:").append(method).append(", arguments:").append(arguments);
+            WXLogUtils.d(mLodBuilder.substring(0));
+            mLodBuilder.setLength(0);
+        }
+        try {
+
+            WXDomModule dom = getDomModule(instanceId);
+            dom.invokeMethod(componentRef, method, arguments);
+
+        } catch (Exception e) {
+            WXLogUtils.e("[WXBridgeManager] callNative exception: ", e);
+            commitJSBridgeAlarmMonitor(instanceId, WXErrorCode.WX_ERR_INVOKE_NATIVE, "[WXBridgeManager] callNativeModule exception " + e.getCause());
+        }
+        return null;
+    }
 
   /**
    * Dispatch the native task to be executed.
+     *
    * @param instanceId {@link WXSDKInstance#mInstanceId}
    * @param tasks tasks to be executed
    * @param callback next tick id
@@ -444,11 +539,8 @@ public class WXBridgeManager implements Callback {
       if (WXEnvironment.isApkDebugable()) {
         WXLogUtils.e("[WXBridgeManager] callNative: call Native tasks is null");
       }
-      return INSTANCE_RENDERING_ERROR;
-    }
-
-    if(mDestroyedInstanceId.equals(instanceId)){
-      return DESTROY_INSTANCE;
+      commitJSBridgeAlarmMonitor(instanceId, WXErrorCode.WX_ERR_INVOKE_NATIVE,"[WXBridgeManager] callNative: call Native tasks is null");
+      return IWXBridge.INSTANCE_RENDERING_ERROR;
     }
 
     if (WXEnvironment.isApkDebugable()) {
@@ -457,6 +549,11 @@ public class WXBridgeManager implements Callback {
       WXLogUtils.d(mLodBuilder.substring(0));
       mLodBuilder.setLength(0);
     }
+
+    if(mDestroyedInstanceId!=null &&mDestroyedInstanceId.contains(instanceId)){
+      return IWXBridge.DESTROY_INSTANCE;
+    }
+
 
     long start = System.currentTimeMillis();
     JSONArray array = JSON.parseArray(tasks);
@@ -472,50 +569,104 @@ public class WXBridgeManager implements Callback {
         for (int i = 0; i < size; ++i) {
           task = (JSONObject) array.get(i);
           if (task != null && WXSDKManager.getInstance().getSDKInstance(instanceId) != null) {
-            WXModuleManager.callModuleMethod(instanceId, (String) task.get("module"), (String) task.get("method"), (JSONArray) task.get("args"));
+            Object target = task.get(MODULE);
+            if(target != null){
+              if(WXDomModule.WXDOM.equals(target)){
+                WXDomModule dom = getDomModule(instanceId);
+                dom.callDomMethod(task);
+              }else {
+                WXModuleManager.callModuleMethod(instanceId, (String) target,
+                    (String) task.get(METHOD), (JSONArray) task.get(ARGS));
+              }
+            }else if(task.get(COMPONENT) != null){
+              //call component
+              WXDomModule dom = getDomModule(instanceId);
+              dom.invokeMethod((String) task.get(REF),(String) task.get(METHOD),(JSONArray) task.get(ARGS));
+            }else{
+              throw new IllegalArgumentException("unknown callNative");
+            }
           }
         }
       } catch (Exception e) {
-        WXLogUtils.e("[WXBridgeManager] callNative exception: " + WXLogUtils.getStackTrace(e));
+        WXLogUtils.e("[WXBridgeManager] callNative exception: ", e);
+        commitJSBridgeAlarmMonitor(instanceId, WXErrorCode.WX_ERR_INVOKE_NATIVE,"[WXBridgeManager] callNative exception "+e.getCause());
       }
     }
 
-    if (UNDEFINED.equals(callback)) {
-      return INSTANCE_RENDERING_ERROR;
+    if (UNDEFINED.equals(callback) || NON_CALLBACK.equals(callback)) {
+      return IWXBridge.INSTANCE_RENDERING_ERROR;
     }
     // get next tick
     getNextTick(instanceId, callback);
-    return INSTANCE_RENDERING;
+    return IWXBridge.INSTANCE_RENDERING;
+  }
+
+  public int callAddElement(String instanceId, String ref,String dom,String index, String callback){
+
+    if (WXEnvironment.isApkDebugable()) {
+      mLodBuilder.append("[WXBridgeManager] callNative::callAddElement >>>> instanceId:").append(instanceId)
+              .append(", ref:").append(ref).append(", dom:").append(dom).append(", callback:").append(callback);
+      WXLogUtils.d(mLodBuilder.substring(0));
+      mLodBuilder.setLength(0);
+    }
+
+    if(mDestroyedInstanceId!=null && mDestroyedInstanceId.contains(instanceId)){
+      return IWXBridge.DESTROY_INSTANCE;
+    }
+
+
+    if (WXSDKManager.getInstance().getSDKInstance(instanceId) != null) {
+      long start = System.currentTimeMillis();
+      JSONObject domObject = JSON.parseObject(dom);
+
+      if (WXSDKManager.getInstance().getSDKInstance(instanceId) != null) {
+        WXSDKManager.getInstance().getSDKInstance(instanceId).jsonParseTime(System.currentTimeMillis() - start);
+      }
+      WXDomModule domModule = getDomModule(instanceId);
+      domModule.addElement(ref, domObject, Integer.parseInt(index));
+    }
+
+    if (UNDEFINED.equals(callback) || NON_CALLBACK.equals(callback)) {
+      return IWXBridge.INSTANCE_RENDERING_ERROR;
+    }
+    // get next tick
+    getNextTick(instanceId, callback);
+    return IWXBridge.INSTANCE_RENDERING;
+
   }
 
   private void getNextTick(final String instanceId, final String callback) {
-    addNextTickTask(instanceId, callback, "{}");
+    addJSTask(METHOD_CALLBACK,instanceId, callback, "{}");
     sendMessage(instanceId, WXJSBridgeMsgType.CALL_JS_BATCH);
   }
 
-  private void addNextTickTask(String instanceId, Object... args) {
-    if (args == null || args.length == 0) {
-      return;
-    }
 
-    ArrayList<Object> argsList = new ArrayList<>();
-    for (Object arg : args) {
-      argsList.add(arg);
-    }
+  private void addJSTask(final String method, final String instanceId, final Object... args) {
+    post(new Runnable() {
+      @Override
+      public void run() {
+        if (args == null || args.length == 0) {
+          return;
+        }
 
-    WXHashMap<String, Object> task = new WXHashMap<>();
-    task.put(WXConst.KEY_METHOD, METHOD_CALLBACK);
-    task.put(WXConst.KEY_ARGS, args);
+        ArrayList<Object> argsList = new ArrayList<>();
+        for (Object arg : args) {
+          argsList.add(arg);
+        }
 
-    if (mNextTickTasks.get(instanceId) == null) {
-      ArrayList<WXHashMap<String, Object>> list = new ArrayList<WXHashMap<String, Object>>();
-      list.add(task);
-      mNextTickTasks.put(instanceId, list);
-    } else {
-      mNextTickTasks.get(instanceId).add(task);
-    }
+        WXHashMap<String, Object> task = new WXHashMap<>();
+        task.put(KEY_METHOD, method);
+        task.put(KEY_ARGS, argsList);
 
-    //        mNextTickTasks.put(instanceId, task);
+        if (mNextTickTasks.get(instanceId) == null) {
+          ArrayList<WXHashMap<String, Object>> list = new ArrayList<>();
+          list.add(task);
+          mNextTickTasks.put(instanceId, list);
+        } else {
+          mNextTickTasks.get(instanceId).add(task);
+        }
+      }
+    });
   }
 
   private void sendMessage(String instanceId, int what) {
@@ -537,10 +688,30 @@ public class WXBridgeManager implements Callback {
     msg.sendToTarget();
   }
 
+  @Deprecated
+  public void fireEvent(final String instanceId, final String ref,
+                        final String type, final Map<String, Object> data){
+    this.fireEvent(instanceId, ref, type, data, null);
+  }
+
+  /**
+   * Do not direct invoke this method in Components, use {@link WXSDKInstance#fireEvent(String, String, Map, Map)} instead.
+   * @param instanceId
+   * @param ref
+   * @param type
+   * @param data
+   * @param domChanges
+   */
+  @Deprecated
+  public void fireEvent(final String instanceId, final String ref,
+                        final String type, final Map<String, Object> data,final Map<String, Object> domChanges) {
+    fireEventOnNode(instanceId,ref,type,data,domChanges);
+  }
+
   /**
    * Notify the JavaScript about the event happened on Android
    */
-  public void fireEvent(final String instanceId, final String ref,
+  public void fireEventOnNode(final String instanceId, final String ref,
                         final String type, final Map<String, Object> data,final Map<String, Object> domChanges) {
     if (TextUtils.isEmpty(instanceId) || TextUtils.isEmpty(ref)
         || TextUtils.isEmpty(type) || mJSHandler == null) {
@@ -550,7 +721,7 @@ public class WXBridgeManager implements Callback {
       throw new WXRuntimeException(
           "fireEvent must be called by main thread");
     }
-    addUITask(METHOD_FIRE_EVENT, instanceId, ref, type, data,domChanges);
+    addJSTask(METHOD_FIRE_EVENT, instanceId, ref, type, data,domChanges);
     sendMessage(instanceId, WXJSBridgeMsgType.CALL_JS_BATCH);
   }
 
@@ -558,51 +729,53 @@ public class WXBridgeManager implements Callback {
     return Looper.myLooper() == Looper.getMainLooper();
   }
 
-  private void addUITask(String method, String instanceId, Object... args) {
-    ArrayList<Object> argsList = new ArrayList<>();
-    for (Object arg : args) {
-      argsList.add(arg);
-    }
-
-    WXHashMap<String, Object> task = new WXHashMap<>();
-    task.put(WXConst.KEY_METHOD, method);
-    task.put(WXConst.KEY_ARGS, argsList);
-    task.setTag(instanceId);
-    mUITasks.offer(task);
-  }
 
   /**
-   * Invoke JavaScript callback
+   * Invoke JavaScript callback. Use {@link JSCallback} instead.
    * @see #callback(String, String, String)
    */
+  @Deprecated
   public void callback(String instanceId, String callback,String data) {
     callback(instanceId, callback,data,false);
   }
 
   /**
-   * Invoke JavaScript callback
-   * @see #callback(String, String, Map<String, Object>)
+   * Invoke JavaScript callback. Use {@link JSCallback} instead.
    */
+  @Deprecated
   public void callback(final String instanceId, final String callback,
                        final Map<String, Object> data){
     callback(instanceId,callback,data,false);
   }
 
   /**
-   *
+   * Use {@link JSCallback} instead.
    * @param instanceId Weex Instance Id
    * @param callback  callback referenece handle
    * @param data callback data
    * @param keepAlive if keep callback instance alive for later use
      */
+  @Deprecated
   public void callback(final String instanceId, final String callback,
                        final Object data,boolean keepAlive) {
+    callbackJavascript(instanceId,callback,data,keepAlive);
+  }
+
+  /**
+   * Callback to Javascript function.
+   * @param instanceId Weex Instance Id
+   * @param callback  callback referenece handle
+   * @param data callback data
+   * @param keepAlive if keep callback instance alive for later use
+   */
+  void callbackJavascript(final String instanceId, final String callback,
+                          final Object data, boolean keepAlive) {
     if (TextUtils.isEmpty(instanceId) || TextUtils.isEmpty(callback)
         || mJSHandler == null) {
       return;
     }
 
-    addUITask(METHOD_CALLBACK, instanceId, callback, data,keepAlive);
+    addJSTask(METHOD_CALLBACK, instanceId, callback, data,keepAlive);
     sendMessage(instanceId, WXJSBridgeMsgType.CALL_JS_BATCH);
   }
 
@@ -613,7 +786,7 @@ public class WXBridgeManager implements Callback {
     if (TextUtils.isEmpty(instanceId) || jsonData == null) {
       return;
     }
-    mJSHandler.postDelayed((new Runnable() {
+    mJSHandler.postDelayed(WXThread.secure(new Runnable() {
       @Override
       public void run() {
         invokeRefreshInstance(instanceId, jsonData);
@@ -623,15 +796,14 @@ public class WXBridgeManager implements Callback {
 
   private void invokeRefreshInstance(String instanceId, WXRefreshData refreshData) {
     try {
-      if (!mInit) {
+      if (!isJSFrameworkInit()) {
         WXSDKInstance instance = WXSDKManager.getInstance().getSDKInstance(instanceId);
         if (instance != null) {
           instance.onRenderError(WXRenderErrorCode.WX_CREATE_INSTANCE_ERROR,
                                  "createInstance failed!");
         }
         String err = "[WXBridgeManager] invokeRefreshInstance: framework.js uninitialized.";
-        WXErrorCode.WX_ERR_INVOKE_NATIVE.appendErrMsg(err);
-        commitJSBridgeAlarmMonitor(instanceId, WXErrorCode.WX_ERR_INVOKE_NATIVE);
+        commitJSBridgeAlarmMonitor(instanceId, WXErrorCode.WX_ERR_INVOKE_NATIVE,err);
         WXLogUtils.e(err);
         return;
       }
@@ -649,105 +821,119 @@ public class WXBridgeManager implements Callback {
       WXJSObject dataObj = new WXJSObject(WXJSObject.JSON,
                                           refreshData.data == null ? "{}" : refreshData.data);
       WXJSObject[] args = {instanceIdObj, dataObj};
-      mWXBridge.execJS(instanceId, null, METHOD_REFRESH_INSTANCE, args);
+      invokeExecJS(instanceId, null, METHOD_REFRESH_INSTANCE, args);
       WXLogUtils.renderPerformanceLog("invokeRefreshInstance", System.currentTimeMillis() - start);
-      commitJSBridgeAlarmMonitor(instanceId, WXErrorCode.WX_SUCCESS);
     } catch (Throwable e) {
       String err = "[WXBridgeManager] invokeRefreshInstance " + e.getCause();
-      WXErrorCode.WX_ERR_INVOKE_NATIVE.appendErrMsg(err);
-      commitJSBridgeAlarmMonitor(instanceId, WXErrorCode.WX_ERR_INVOKE_NATIVE);
+      commitJSBridgeAlarmMonitor(instanceId, WXErrorCode.WX_ERR_INVOKE_NATIVE,err);
       WXLogUtils.e(err);
     }
   }
 
-  public void commitJSBridgeAlarmMonitor(String instanceId, WXErrorCode errCode) {
+  public void commitJSBridgeAlarmMonitor(String instanceId, WXErrorCode errCode, String errMsg) {
     WXSDKInstance instance = WXSDKManager.getInstance().getSDKInstance(instanceId);
-    if (instance == null) {
+    IWXUserTrackAdapter adapter = WXSDKManager.getInstance().getIWXUserTrackAdapter();
+    if (instance == null || adapter == null || errCode == null) {
       return;
     }
-    instance.commitUTStab(WXConst.JS_BRIDGE, errCode);
+    WXPerformance performance = new WXPerformance();
+    performance.args=instance.getBundleUrl();
+    performance.errCode=errCode.getErrorCode();
+    if (errCode != WXErrorCode.WX_SUCCESS) {
+      performance.appendErrMsg(TextUtils.isEmpty(errMsg)?errCode.getErrorMsg():errMsg);
+      WXLogUtils.e("wx_monitor",performance.toString());
+    }
+    adapter.commit(WXEnvironment.getApplication(), null, IWXUserTrackAdapter.JS_BRIDGE, performance, instance.getUserTrackParams());
   }
+
+  public void commitJSFrameworkAlarmMonitor(final String type, final WXErrorCode errorCode, String errMsg) {
+    final IWXUserTrackAdapter userTrackAdapter = WXSDKManager.getInstance().getIWXUserTrackAdapter();
+    if (userTrackAdapter == null || TextUtils.isEmpty(type) || errorCode == null) {
+      return;
+    }
+    WXPerformance performance = new WXPerformance();
+    performance.errCode = errorCode.getErrorCode();
+    if (errorCode != WXErrorCode.WX_SUCCESS) {
+      performance.appendErrMsg(TextUtils.isEmpty(errMsg)?errorCode.getErrorMsg():errMsg);
+      WXLogUtils.e("wx_monitor",performance.toString());
+    }
+    userTrackAdapter.commit(WXEnvironment.getApplication(), null, type, performance, null);
+  }
+
 
   /**
    * Create instance.
    */
   public void createInstance(final String instanceId, final String template,
                              final Map<String, Object> options, final String data) {
-    if ( TextUtils.isEmpty(instanceId)
-        || TextUtils.isEmpty(template) || mJSHandler == null) {
-      WXSDKInstance instance = WXSDKManager.getInstance().getSDKInstance(instanceId);
-      if (instance != null) {
-        instance.onRenderError(WXRenderErrorCode.WX_CREATE_INSTANCE_ERROR, "createInstance fail!");
-      }
+    final WXSDKInstance instance = WXSDKManager.getInstance().getSDKInstance(instanceId);
+    if(instance == null){
+      WXLogUtils.e("WXBridgeManager","createInstance failed, SDKInstance is not exist");
       return;
     }
-
+    if ( TextUtils.isEmpty(instanceId)
+        || TextUtils.isEmpty(template) || mJSHandler == null) {
+      instance.onRenderError(WXRenderErrorCode.WX_CREATE_INSTANCE_ERROR, "createInstance fail!");
+      return;
+    }
+    WXModuleManager.createDomModule(instance);
     post(new Runnable() {
       @Override
       public void run() {
         long start = System.currentTimeMillis();
-        invokeCreateInstance(instanceId, template, options, data);
+        invokeCreateInstance(instance, template, options, data);
         final long totalTime = System.currentTimeMillis() - start;
         WXSDKManager.getInstance().postOnUiThread(new Runnable() {
 
           @Override
           public void run() {
-            WXSDKInstance instance = WXSDKManager.getInstance().getSDKInstance(instanceId);
-            if (instance != null) {
               instance.createInstanceFinished(totalTime);
-            }
           }
         }, 0);
       }
     }, instanceId);
   }
 
-  private void invokeCreateInstance(String instanceId, String template,
+  private void invokeCreateInstance(@NonNull WXSDKInstance instance, String template,
                                     Map<String, Object> options, String data) {
+
+    initFramework("");
+
     if (mMock) {
-      mock(instanceId);
+      mock(instance.getInstanceId());
     } else {
-      if (!mInit) {
-        WXSDKInstance instance = WXSDKManager.getInstance().getSDKInstance(instanceId);
-        if (instance != null) {
-          instance.onRenderError(WXRenderErrorCode.WX_CREATE_INSTANCE_ERROR, "createInstance "
+      if (!isJSFrameworkInit()) {
+        instance.onRenderError(WXRenderErrorCode.WX_CREATE_INSTANCE_ERROR, "createInstance "
                                                                              + "fail!");
-        }
         String err = "[WXBridgeManager] invokeCreateInstance: framework.js uninitialized.";
-        WXErrorCode.WX_ERR_INVOKE_NATIVE.appendErrMsg(err);
-        commitJSBridgeAlarmMonitor(instanceId, WXErrorCode.WX_ERR_INVOKE_NATIVE);
+        commitJSBridgeAlarmMonitor(instance.getInstanceId(), WXErrorCode.WX_ERR_INVOKE_NATIVE,err);
         WXLogUtils.e(err);
         return;
       }
       try {
         if (WXEnvironment.isApkDebugable()) {
-          WXLogUtils.d("createInstance >>>> instanceId:" + instanceId
+          WXLogUtils.d("createInstance >>>> instanceId:" + instance.getInstanceId()
                        + ", options:"
                        + WXJsonUtils.fromObjectToJSONString(options)
                        + ", data:" + data);
         }
         WXJSObject instanceIdObj = new WXJSObject(WXJSObject.String,
-                                                  instanceId);
+                instance.getInstanceId());
         WXJSObject instanceObj = new WXJSObject(WXJSObject.String,
                                                 template);
         WXJSObject optionsObj = new WXJSObject(WXJSObject.JSON,
-                                               options == null ? "{}"
-                                                               : WXJsonUtils.fromObjectToJSONString(options));
+                options == null ? "{}"
+                        : WXJsonUtils.fromObjectToJSONString(options));
         WXJSObject dataObj = new WXJSObject(WXJSObject.JSON,
-                                            data == null ? "{}" : data);
+                data == null ? "{}" : data);
         WXJSObject[] args = {instanceIdObj, instanceObj, optionsObj,
-            dataObj};
-        mWXBridge.execJS(instanceId, null, METHOD_CREATE_INSTANCE, args);
-        commitJSBridgeAlarmMonitor(instanceId, WXErrorCode.WX_SUCCESS);
+                dataObj};
+        invokeExecJS(instance.getInstanceId(), null, METHOD_CREATE_INSTANCE, args,false);
       } catch (Throwable e) {
-        WXSDKInstance instance = WXSDKManager.getInstance().getSDKInstance(instanceId);
-        if (instance != null) {
-          instance.onRenderError(WXRenderErrorCode.WX_CREATE_INSTANCE_ERROR,
+        instance.onRenderError(WXRenderErrorCode.WX_CREATE_INSTANCE_ERROR,
                                  "createInstance failed!");
-        }
         String err = "[WXBridgeManager] invokeCreateInstance " + e.getCause();
-        WXErrorCode.WX_ERR_INVOKE_NATIVE.appendErrMsg(err);
-        commitJSBridgeAlarmMonitor(instanceId, WXErrorCode.WX_ERR_INVOKE_NATIVE);
+        commitJSBridgeAlarmMonitor(instance.getInstanceId(), WXErrorCode.WX_ERR_INVOKE_NATIVE,err);
         WXLogUtils.e(err);
       }
     }
@@ -762,13 +948,14 @@ public class WXBridgeManager implements Callback {
         || TextUtils.isEmpty(instanceId)) {
       return;
     }
-    mDestroyedInstanceId = instanceId;
+    if(mDestroyedInstanceId!=null) {
+      mDestroyedInstanceId.add(instanceId);
+    }
     // clear message with instanceId
     mJSHandler.removeCallbacksAndMessages(instanceId);
     post(new Runnable() {
       @Override
       public void run() {
-        mDestroyedInstanceId = "-1";
         removeTaskByInstance(instanceId);
         invokeDestroyInstance(instanceId);
       }
@@ -787,12 +974,10 @@ public class WXBridgeManager implements Callback {
       WXJSObject instanceIdObj = new WXJSObject(WXJSObject.String,
                                                 instanceId);
       WXJSObject[] args = {instanceIdObj};
-      mWXBridge.execJS(instanceId, null, METHOD_DESTROY_INSTANCE, args);
-      commitJSBridgeAlarmMonitor(instanceId, WXErrorCode.WX_SUCCESS);
+      invokeExecJS(instanceId, null, METHOD_DESTROY_INSTANCE, args);
     } catch (Throwable e) {
       String err = "[WXBridgeManager] invokeDestroyInstance " + e.getCause();
-      WXErrorCode.WX_ERR_INVOKE_NATIVE.appendErrMsg(err);
-      commitJSBridgeAlarmMonitor(instanceId, WXErrorCode.WX_ERR_INVOKE_NATIVE);
+      commitJSBridgeAlarmMonitor(instanceId, WXErrorCode.WX_ERR_INVOKE_NATIVE,err);
       WXLogUtils.e(err);
     }
   }
@@ -813,18 +998,12 @@ public class WXBridgeManager implements Callback {
         break;
       case WXJSBridgeMsgType.SET_TIMEOUT:
         TimerInfo timerInfo = (TimerInfo) msg.obj;
+        if(timerInfo == null){
+          break;
+        }
         WXJSObject obj = new WXJSObject(WXJSObject.String, timerInfo.callbackId);
         WXJSObject[] args = {obj};
-        mWXBridge.execJS("", null, METHOD_SET_TIMEOUT, args);
-        break;
-      case WXJSBridgeMsgType.MODULE_TIMEOUT:
-        args = createTimerArgs(msg.arg1, (Integer) msg.obj, false);
-        mWXBridge.execJS(String.valueOf(msg.arg1), null, METHOD_CALL_JS, args);
-        break;
-      case WXJSBridgeMsgType.MODULE_INTERVAL:
-        WXTimerModule.setInterval((Integer) msg.obj, msg.arg2, msg.arg1);
-        args = createTimerArgs(msg.arg1, (Integer) msg.obj, true);
-        mWXBridge.execJS(String.valueOf(msg.arg1), null, METHOD_CALL_JS, args);
+        invokeExecJS("", null, METHOD_SET_TIMEOUT, args);
         break;
       default:
         break;
@@ -832,116 +1011,112 @@ public class WXBridgeManager implements Callback {
     return false;
   }
 
-  private WXJSObject[] createTimerArgs(int instanceId, int funcId, boolean keepAlive) {
-    ArrayList<Object> argsList = new ArrayList<>();
-    argsList.add(funcId);
-    argsList.add(new HashMap<>());
-    argsList.add(keepAlive);
-    WXHashMap<String, Object> task = new WXHashMap<>();
-    task.put(WXConst.KEY_METHOD, METHOD_CALLBACK);
-    task.put(WXConst.KEY_ARGS, argsList);
-    Object[] tasks={task};
-    return new WXJSObject[]{
-        new WXJSObject(WXJSObject.String, String.valueOf(instanceId)),
-        new WXJSObject(WXJSObject.JSON,
-                       WXJsonUtils.fromObjectToJSONString(tasks))};
+  private void invokeExecJS(String instanceId, String namespace, String function, WXJSObject[] args) {
+    invokeExecJS(instanceId, namespace, function, args, true);
   }
 
-  private void invokeInitFramework(Message msg) {
+  public void invokeExecJS(String instanceId, String namespace, String function,
+                            WXJSObject[] args,boolean logTaskDetail){
+    if (WXEnvironment.isApkDebugable()) {
+      mLodBuilder.append("callJS >>>> instanceId:").append(instanceId)
+              .append("function:").append(function);
+      if(logTaskDetail)
+        mLodBuilder.append(" tasks:").append(WXJsonUtils.fromObjectToJSONString(args));
+      WXLogUtils.d(mLodBuilder.substring(0));
+      mLodBuilder.setLength(0);
+    }
+    mWXBridge.execJS(instanceId, namespace, function, args);
+  }
+
+  private void invokeInitFramework(Message msg) {   
     String framework = "";
     if (msg.obj != null) {
       framework = (String) msg.obj;
     }
 
-    if (!mInit) {
+    if(WXUtils.getAvailMemory(WXEnvironment.getApplication()) > LOW_MEM_VALUE) {
+      initFramework(framework);
+    }
+  }
+
+  private void initFramework(String framework){
+    if (!isJSFrameworkInit()) {
       if (TextUtils.isEmpty(framework)) {
         if (WXEnvironment.isApkDebugable()) {
-          WXLogUtils.d("framework from assets");
+          WXLogUtils.d("weex JS framework from assets");
         }
-        framework = WXFileUtils.loadFileContent("main.js", WXEnvironment.getApplication());
+        framework = WXFileUtils.loadAsset("main.js", WXEnvironment.getApplication());
       }
       if (TextUtils.isEmpty(framework)) {
         mInit = false;
+        commitJSFrameworkAlarmMonitor(IWXUserTrackAdapter.JS_FRAMEWORK, WXErrorCode.WX_ERR_JS_FRAMEWORK, "JS Framework is empty!");
         return;
       }
       try {
-          long start = System.currentTimeMillis();
-          if(mWXBridge.initFramework(framework, assembleDefaultOptions())==INIT_FRAMEWORK_OK){
-             WXEnvironment.sJSLibInitTime = System.currentTimeMillis() - start;
-             WXLogUtils.renderPerformanceLog("initFramework", WXEnvironment.sJSLibInitTime);
-             mInit = true;
-             execRegisterFailTask();
-             WXEnvironment.JsFrameworkInit = true;
-          }else{
-              WXLogUtils.e("[WXBridgeManager] invokeInitFramework  ExecuteJavaScript fail");
-          }
+        long start = System.currentTimeMillis();
+        if(mWXBridge.initFramework(framework, assembleDefaultOptions())==INIT_FRAMEWORK_OK){
+          WXEnvironment.sJSLibInitTime = System.currentTimeMillis() - start;
+          WXLogUtils.renderPerformanceLog("initFramework", WXEnvironment.sJSLibInitTime);
+          WXEnvironment.sSDKInitTime = System.currentTimeMillis() - WXEnvironment.sSDKInitStart;
+          WXLogUtils.renderPerformanceLog("SDKInitTime", WXEnvironment.sSDKInitTime);
+          mInit = true;
+          execRegisterFailTask();
+          WXEnvironment.JsFrameworkInit = true;
+          registerDomModule();
+          commitJSFrameworkAlarmMonitor(IWXUserTrackAdapter.JS_FRAMEWORK, WXErrorCode.WX_SUCCESS, "success");
+        }else{
+          WXLogUtils.e("[WXBridgeManager] invokeInitFramework  ExecuteJavaScript fail");
+          String err="[WXBridgeManager] invokeInitFramework  ExecuteJavaScript fail";
+          commitJSFrameworkAlarmMonitor(IWXUserTrackAdapter.JS_FRAMEWORK, WXErrorCode.WX_ERR_JS_FRAMEWORK, err);
+        }
       } catch (Throwable e) {
-        WXLogUtils.e("[WXBridgeManager] invokeInitFramework " + e.getCause());
+        WXLogUtils.e("[WXBridgeManager] invokeInitFramework ", e);
+        String err="[WXBridgeManager] invokeInitFramework exception!#"+e.toString();
+        commitJSFrameworkAlarmMonitor(IWXUserTrackAdapter.JS_FRAMEWORK, WXErrorCode.WX_ERR_JS_FRAMEWORK, err);
       }
     }
   }
 
   @SuppressWarnings("unchecked")
   private void invokeCallJSBatch(Message message) {
-    if ((mNextTickTasks.isEmpty() && mUITasks.isEmpty()) || !mInit) {
-      if (!mInit) {
+    if (mNextTickTasks.isEmpty() || !isJSFrameworkInit()) {
+      if (!isJSFrameworkInit()) {
         WXLogUtils.e("[WXBridgeManager] invokeCallJSBatch: framework.js uninitialized.");
       }
       return;
     }
+
     try {
-      Object task = null;
-
       Object instanceId = message.obj;
-      // Execute UI task first
-      task = mUITasks.poll();
-      if (task != null) {
-        instanceId = ((WXHashMap) task).getTag();
-      }
 
-      Object[] tasks = {task};
-
-      //If UI task is empty, then next tick is executed
-      if (task == null) {
-        Stack<String> instanceStack = mNextTickTasks.getInstanceStack();
-        int size = instanceStack.size();
-        for (int i = size - 1; i >= 0; i--) {
-          // Instance on the top of stack. The corresponding message of that instance will be
-          // handled first
-          instanceId = instanceStack.get(i);
-          task = mNextTickTasks.remove(instanceId);
-          if (task != null && !((ArrayList) task).isEmpty()) {
-            break;
-          }
+      Object task = null;
+      Stack<String> instanceStack = mNextTickTasks.getInstanceStack();
+      int size = instanceStack.size();
+      for (int i = size - 1; i >= 0; i--) {
+        instanceId = instanceStack.get(i);
+        task = mNextTickTasks.remove(instanceId);
+        if (task != null && !((ArrayList) task).isEmpty()) {
+          break;
         }
-        tasks = ((ArrayList) task).toArray();
       }
+      task = ((ArrayList) task).toArray();
 
-      task = tasks;
-
-      if (WXEnvironment.isApkDebugable()) {
-        mLodBuilder.append("callJS >>>> instanceId:").append(instanceId).append(" tasks:").append(WXJsonUtils.fromObjectToJSONString(task));
-        WXLogUtils.d(mLodBuilder.substring(0));
-        mLodBuilder.setLength(0);
-      }
       WXJSObject[] args = {
-          new WXJSObject(WXJSObject.String, instanceId),
-          new WXJSObject(WXJSObject.JSON,
-                         WXJsonUtils.fromObjectToJSONString(task))};
-      if (WXEnvironment.isApkDebugable()) {
-        String ins = String.valueOf(instanceId);
-        if (TextUtils.isEmpty(ins) || ins.equals("null") || args == null) {
-          WXLogUtils.e("WXBridgeManager (TextUtils.isEmpty(ins) || ins.equals(\"null\") || args == null)");
-        }
-      }
-      mWXBridge.execJS(String.valueOf(instanceId), null, METHOD_CALL_JS,
-                       args);
-      // If task is not empty, loop until it is empty
-      if (!mNextTickTasks.isEmpty() || !mUITasks.isEmpty()) {
-        mJSHandler.sendEmptyMessage(WXJSBridgeMsgType.CALL_JS_BATCH);
-      }
+              new WXJSObject(WXJSObject.String, instanceId),
+              new WXJSObject(WXJSObject.JSON,
+                      WXJsonUtils.fromObjectToJSONString(task))};
+
+      invokeExecJS(String.valueOf(instanceId), null, METHOD_CALL_JS, args);
+
     } catch (Throwable e) {
-      WXLogUtils.e("WXBridgeManager" + e.getMessage());
+      WXLogUtils.e("WXBridgeManager", e);
+      String err="invokeCallJSBatch#"+e.toString();
+      commitJSBridgeAlarmMonitor(message.obj.toString(), WXErrorCode.WX_ERR_JS_EXECUTE,err);
+    }
+
+    // If task is not empty, loop until it is empty
+    if (!mNextTickTasks.isEmpty()) {
+      mJSHandler.sendEmptyMessage(WXJSBridgeMsgType.CALL_JS_BATCH);
     }
   }
 
@@ -961,6 +1136,7 @@ public class WXBridgeManager implements Callback {
     }
     wxParams.setDeviceWidth(TextUtils.isEmpty(config.get("deviceWidth")) ? String.valueOf(WXViewUtils.getScreenWidth(WXEnvironment.sApplication)) : config.get("deviceWidth"));
     wxParams.setDeviceHeight(TextUtils.isEmpty(config.get("deviceHeight")) ? String.valueOf(WXViewUtils.getScreenHeight(WXEnvironment.sApplication)) : config.get("deviceHeight"));
+    wxParams.setOptions(WXEnvironment.getCustomOptions());
     return wxParams;
   }
 
@@ -968,18 +1144,16 @@ public class WXBridgeManager implements Callback {
     int moduleCount = mRegisterModuleFailList.size();
     if (moduleCount > 0) {
       for (int i = 0; i < moduleCount; ++i) {
-        registerModules(mRegisterModuleFailList.get(i));
+        invokeRegisterModules(mRegisterModuleFailList.get(i));
       }
-      mRegisterModuleFailList.clear();
-      WXLogUtils.e("[WXBridgeManager] execRegisterFailTask register module fail");
     }
-    int componentCount = mRegisterComponentFailList.size();
-    if (componentCount > 0) {
-      for (int i = 0; i < componentCount; ++i) {
-        registerComponents(mRegisterComponentFailList.get(i));
+    if (mRegisterComponentFailList.size() > 0) {
+      invokeRegisterComponents(mRegisterComponentFailList);
+    }
+    if (mRegisterServiceFailList.size() > 0) {
+      for (String service : mRegisterServiceFailList) {
+        invokeExecJSService(service);
       }
-      mRegisterComponentFailList.clear();
-      WXLogUtils.e("[WXBridgeManager] execRegisterFailTask register component fail");
     }
   }
 
@@ -990,22 +1164,25 @@ public class WXBridgeManager implements Callback {
    */
 
   public void registerModules(final Map<String, Object> modules) {
-    if ( mJSHandler == null || modules == null
-        || modules.size() == 0) {
-      return;
-    }
-    post(new Runnable() {
-      @Override
-      public void run() {
+    if (modules != null && modules.size() != 0) {
+      if(isJSThread()){
         invokeRegisterModules(modules);
       }
-    }, null);
+      else{
+        post(new Runnable() {
+          @Override
+          public void run() {
+            invokeRegisterModules(modules);
+          }
+        }, null);
+      }
+    }
   }
 
   /**
    * Registered component
    */
-  public void registerComponents(final ArrayList<Map<String, String>> components) {
+  public void registerComponents(final List<Map<String, Object>> components) {
     if ( mJSHandler == null || components == null
         || components.size() == 0) {
       return;
@@ -1018,9 +1195,36 @@ public class WXBridgeManager implements Callback {
     }, null);
   }
 
+  public void execJSService(final String service) {
+    post(new Runnable() {
+      @Override
+      public void run() {
+        invokeExecJSService(service);
+      }
+    });
+  }
+
+  private void invokeExecJSService(String service) {
+    try {
+      if (!isJSFrameworkInit()) {
+        WXLogUtils.e("[WXBridgeManager] invoke execJSService: framework.js uninitialized.");
+        mRegisterServiceFailList.add(service);
+        return;
+      }
+      mWXBridge.execJSService(service);
+    } catch (Throwable e) {
+      WXLogUtils.e("[WXBridgeManager] invokeRegisterService:", e);
+      commitJSFrameworkAlarmMonitor(IWXUserTrackAdapter.JS_FRAMEWORK,WXErrorCode.WX_ERR_JS_EXECUTE,"invokeRegisterService");
+    }
+  }
+
+  private boolean isJSThread() {
+    return mJSThread != null && mJSThread.getId() == Thread.currentThread().getId();
+  }
+
   private void invokeRegisterModules(Map<String, Object> modules) {
-    if (modules == null || !mInit) {
-      if (!mInit) {
+    if (modules == null || !isJSFrameworkInit()) {
+      if (!isJSFrameworkInit()) {
         WXLogUtils.e("[WXBridgeManager] invokeCallJSBatch: framework.js uninitialized.");
       }
       mRegisterModuleFailList.add(modules);
@@ -1032,16 +1236,20 @@ public class WXBridgeManager implements Callback {
     try {
       mWXBridge.execJS("", null, METHOD_REGISTER_MODULES, args);
     } catch (Throwable e) {
-      WXLogUtils.e("[WXBridgeManager] invokeRegisterModules:" + (e == null ? "" : e.getStackTrace()));
+      WXLogUtils.e("[WXBridgeManager] invokeRegisterModules:", e);
+      commitJSFrameworkAlarmMonitor(IWXUserTrackAdapter.JS_FRAMEWORK,WXErrorCode.WX_ERR_JS_EXECUTE,"invokeRegisterModules");
     }
   }
 
-  private void invokeRegisterComponents(ArrayList<Map<String, String>> components) {
-    if (components == null || !mInit) {
-      if (!mInit) {
-        WXLogUtils.e("[WXBridgeManager] invokeCallJSBatch: framework.js uninitialized.");
+  private void invokeRegisterComponents(List<Map<String, Object>> components) {
+    if (!isJSFrameworkInit()) {
+      WXLogUtils.e("[WXBridgeManager] invokeCallJSBatch: framework.js uninitialized.");
+      for (Map<String,Object> comp:components){
+        mRegisterComponentFailList.add(comp);
       }
-      mRegisterComponentFailList.add(components);
+      return;
+    }
+    if(components == null){
       return;
     }
 
@@ -1050,7 +1258,8 @@ public class WXBridgeManager implements Callback {
     try {
       mWXBridge.execJS("", null, METHOD_REGISTER_COMPONENTS, args);
     } catch (Throwable e) {
-      WXLogUtils.e("[WXBridgeManager] invokeRegisterComponents " + (e == null ? "" : e.getCause()));
+      WXLogUtils.e("[WXBridgeManager] invokeRegisterComponents ", e);
+      commitJSFrameworkAlarmMonitor(IWXUserTrackAdapter.JS_FRAMEWORK,WXErrorCode.WX_ERR_JS_EXECUTE,"invokeRegisterComponents");
     }
   }
 
@@ -1059,6 +1268,10 @@ public class WXBridgeManager implements Callback {
       mJSThread.quit();
     }
     mBridgeManager = null;
+    if(mDestroyedInstanceId!=null){
+      mDestroyedInstanceId.clear();
+    }
+
   }
 
   /**
@@ -1071,14 +1284,22 @@ public class WXBridgeManager implements Callback {
                    + ", exception function:" + function + ", exception:"
                    + exception);
     }
-    WXSDKInstance instance = WXSDKManager.getInstance().getSDKInstance(
-        instanceId);
-    if (instance != null) {
-      // TODO add errCode
-      instance.onJSException(null, function, exception);
+    WXSDKInstance instance;
+    if (instanceId != null && (instance = WXSDKManager.getInstance().getSDKInstance(instanceId)) != null) {
+      instance.onJSException(WXErrorCode.WX_ERR_JS_EXECUTE.getErrorCode(), function, exception);
+
+      String err = "function:" + function + "#exception:" + exception;
+      commitJSBridgeAlarmMonitor(instanceId, WXErrorCode.WX_ERR_JS_EXECUTE, err);
+
+      IWXJSExceptionAdapter adapter = WXSDKManager.getInstance().getIWXJSExceptionAdapter();
+      if (adapter != null) {
+        WXJSExceptionInfo jsException = new WXJSExceptionInfo(instanceId, instance.getBundleUrl(), WXErrorCode.WX_ERR_JS_EXECUTE.getErrorCode(), function, exception, null);
+        adapter.onJSException(jsException);
+        if (WXEnvironment.isApkDebugable()) {
+          WXLogUtils.d(jsException.toString());
+        }
+      }
     }
-    WXErrorCode.WX_ERR_JS_EXECUTE.appendErrMsg(exception);
-    commitJSBridgeAlarmMonitor(instanceId, WXErrorCode.WX_ERR_JS_EXECUTE);
   }
 
   public static class TimerInfo {
@@ -1086,6 +1307,35 @@ public class WXBridgeManager implements Callback {
     public String callbackId;
     public long time;
     public String instanceId;
+  }
+
+  private void registerDomModule() throws WXException {
+    /** Tell Javascript Framework what methods you have. This is Required.**/
+    Map<String,Object> domMap=new HashMap<>();
+    domMap.put(WXDomModule.WXDOM,WXDomModule.METHODS);
+    registerModules(domMap);
+  }
+
+  public void notifyTrimMemory() {
+    post(new Runnable() {
+      @Override
+      public void run() {
+        if (!isJSFrameworkInit())
+          return;
+
+        invokeExecJS("", null, METHOD_NOTIFY_TRIM_MEMORY, new WXJSObject[0]);
+      }
+    });
+  }
+
+  public
+  @Nullable
+  Looper getJSLooper() {
+    Looper ret = null;
+    if (mJSThread != null) {
+      ret = mJSThread.getLooper();
+    }
+    return ret;
   }
 
 }

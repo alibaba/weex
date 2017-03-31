@@ -9,35 +9,49 @@
 #import "WXBridgeContext.h"
 #import "WXBridgeProtocol.h"
 #import "WXJSCoreBridge.h"
-#import "WXWebSocketBridge.h"
-#import "WXDevToolBridge.h"
+#import "WXDebugLoggerBridge.h"
 #import "WXLog.h"
 #import "WXUtility.h"
-#import "WXBridgeMethod.h"
 #import "WXModuleFactory.h"
 #import "WXModuleProtocol.h"
 #import "WXUtility.h"
 #import "WXSDKError.h"
+#import "WXMonitor.h"
 #import "WXAssert.h"
 #import "WXSDKManager.h"
 #import "WXDebugTool.h"
-#import "WXModuleManager.h"
 #import "WXSDKInstance_private.h"
+#import "WXThreadSafeMutableArray.h"
+#import "WXAppConfiguration.h"
+#import "WXInvocationConfig.h"
+#import "WXComponentMethod.h"
+#import "WXModuleMethod.h"
+#import "WXCallJSMethod.h"
+#import "WXSDKInstance_private.h"
+
+#define SuppressPerformSelectorLeakWarning(Stuff) \
+do { \
+_Pragma("clang diagnostic push") \
+_Pragma("clang diagnostic ignored \"-Warc-performSelector-leaks\"") \
+Stuff; \
+_Pragma("clang diagnostic pop") \
+} while (0)
 
 @interface WXBridgeContext ()
 
 @property (nonatomic, strong) id<WXBridgeProtocol>  jsBridge;
-@property (nonatomic, strong) WXWebSocketBridge *socketBridge;
-@property (nonatomic, strong) WXDevToolBridge *devToolSocketBrideg;
+@property (nonatomic, strong) WXDebugLoggerBridge *devToolSocketBridge;
 @property (nonatomic, assign) BOOL  debugJS;
 //store the methods which will be executed from native to js
 @property (nonatomic, strong) NSMutableDictionary   *sendQueue;
 //the instance stack
-@property (nonatomic, strong) NSMutableArray    *insStack;
+@property (nonatomic, strong) WXThreadSafeMutableArray    *insStack;
 //identify if the JSFramework has been loaded
 @property (nonatomic) BOOL frameworkLoadFinished;
 //store some methods temporarily before JSFramework is loaded
 @property (nonatomic, strong) NSMutableArray *methodQueue;
+// store service
+@property (nonatomic, strong) NSMutableArray *jsServiceQueue;
 
 @end
 
@@ -49,30 +63,9 @@
     if (self) {
         _methodQueue = [NSMutableArray new];
         _frameworkLoadFinished = NO;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jsError:) name:WX_JS_ERROR_NOTIFICATION_NAME object:nil];
+        _jsServiceQueue = [NSMutableArray new];
     }
     return self;
-}
-
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:WX_JS_ERROR_NOTIFICATION_NAME object:nil];
-}
-
-- (void)jsError:(NSNotification *)note
-{
-    NSString *errorMessage = @"";
-    if (note.userInfo) {
-        errorMessage = note.userInfo[@"message"];
-    }
-    
-    NSURL *url;
-    if (self.insStack.count > 0) {
-        WXSDKInstance *topInstance = [WXSDKManager instanceForID:[self.insStack firstObject]];
-        url = topInstance.scriptURL;
-    }
-    
-    [WXSDKError monitorAlarm:NO errorCode:WX_ERR_JS_EXECUTE errorMessage:errorMessage withURL:url];
 }
 
 - (id<WXBridgeProtocol>)jsBridge
@@ -80,7 +73,7 @@
     WXAssertBridgeThread();
     _debugJS = [WXDebugTool isDevToolDebug];
     
-    Class bridgeClass = _debugJS ? [WXWebSocketBridge class] : [WXJSCoreBridge class];
+    Class bridgeClass = _debugJS ? NSClassFromString(@"WXDebugger") : [WXJSCoreBridge class];
     
     if (_jsBridge && [_jsBridge isKindOfClass:bridgeClass]) {
         return _jsBridge;
@@ -91,24 +84,78 @@
         _frameworkLoadFinished = NO;
     }
     
-    _jsBridge = _debugJS ? self.socketBridge : [[WXJSCoreBridge alloc] init];
-     __weak typeof(self) weakSelf = self;
-    [_jsBridge registerCallNative:^(NSString *instance, NSArray *tasks, NSString *callback) {
-        [weakSelf invokeNative:instance tasks:tasks callback:callback];
-    }];
+    _jsBridge = _debugJS ? [NSClassFromString(@"WXDebugger") alloc] : [[WXJSCoreBridge alloc] init];
+    
+    [self registerGlobalFunctions];
     
     return _jsBridge;
 }
 
+- (void)registerGlobalFunctions
+{
+    __weak typeof(self) weakSelf = self;
+    [_jsBridge registerCallNative:^NSInteger(NSString *instance, NSArray *tasks, NSString *callback) {
+        return [weakSelf invokeNative:instance tasks:tasks callback:callback];
+    }];
+    [_jsBridge registerCallAddElement:^NSInteger(NSString *instanceId, NSString *parentRef, NSDictionary *elementData, NSInteger index) {
+        
+        // Temporary here , in order to improve performance, will be refactored next version.
+        WXSDKInstance *instance = [WXSDKManager instanceForID:instanceId];
+        
+        if (!instance) {
+            WXLogInfo(@"instance not found, maybe already destroyed");
+            return -1;
+        }
+        
+        WXPerformBlockOnComponentThread(^{
+            WXComponentManager *manager = instance.componentManager;
+            if (!manager.isValid) {
+                return;
+            }
+            [manager startComponentTasks];
+            [manager addComponent:elementData toSupercomponent:parentRef atIndex:index appendingInTree:NO];
+        });
+        
+        return 0;
+    }];
+    
+    [_jsBridge registerCallNativeModule:^NSInvocation*(NSString *instanceId, NSString *moduleName, NSString *methodName, NSArray *arguments, NSDictionary *options) {
+        
+        WXSDKInstance *instance = [WXSDKManager instanceForID:instanceId];
+        
+        if (!instance) {
+            WXLogInfo(@"instance not found for callNativeModule:%@.%@, maybe already destroyed", moduleName, methodName);
+            return nil;
+        }
+        
+        WXModuleMethod *method = [[WXModuleMethod alloc] initWithModuleName:moduleName methodName:methodName arguments:arguments instance:instance];
+        return [method invoke];
+    }];
+    
+    [_jsBridge registerCallNativeComponent:^void(NSString *instanceId, NSString *componentRef, NSString *methodName, NSArray *args, NSDictionary *options) {
+        WXSDKInstance *instance = [WXSDKManager instanceForID:instanceId];
+        WXComponentMethod *method = [[WXComponentMethod alloc] initWithComponentRef:componentRef methodName:methodName arguments:args instance:instance];
+        [method invoke];
+    }];
+}
+
 - (NSMutableArray *)insStack
 {
-    WXAssertBridgeThread();
-
     if (_insStack) return _insStack;
 
-    _insStack = [NSMutableArray array];
+    _insStack = [WXThreadSafeMutableArray array];
     
     return _insStack;
+}
+
+- (WXSDKInstance *)topInstance
+{
+    if (self.insStack.count > 0) {
+        WXSDKInstance *topInstance = [WXSDKManager instanceForID:[self.insStack firstObject]];
+        return topInstance;
+    }
+    
+    return nil;
 }
 
 - (NSMutableDictionary *)sendQueue
@@ -124,35 +171,38 @@
 
 #pragma mark JS Bridge Management
 
-- (void)invokeNative:(NSString *)instance tasks:(NSArray *)tasks callback:(NSString *)callback
+- (NSInteger)invokeNative:(NSString *)instanceId tasks:(NSArray *)tasks callback:(NSString __unused*)callback
 {
     WXAssertBridgeThread();
     
-    if (!instance || !tasks) {
-        [WXSDKError monitorAlarm:NO errorCode:WX_ERR_JSFUNC_PARAM msg:@"JS call Native params error !"];
-        return;
+    if (!instanceId || !tasks) {
+        WX_MONITOR_FAIL(WXMTNativeRender, WX_ERR_JSFUNC_PARAM, @"JS call Native params error!");
+        return 0;
     }
-    [WXSDKError monitorAlarm:YES errorCode:WX_ERR_JSFUNC_PARAM msg:@""];
+
+    WXSDKInstance *instance = [WXSDKManager instanceForID:instanceId];
+    if (!instance) {
+        WXLogInfo(@"instance already destroyed, task ignored");
+        return -1;
+    }
     
     for (NSDictionary *task in tasks) {
-        WXBridgeMethod *method = [[WXBridgeMethod alloc] initWihData:task];
-        method.instance = instance;
-        [[WXSDKManager moduleMgr] dispatchMethod:method];
-    }
-    
-    NSMutableArray *sendQueue = [self.sendQueue valueForKey:instance];
-    if (!sendQueue) {
-        WXLogError(@"No send queue for instance:%@", instance);
-        return;
-    }
-    
-    if (callback && ![callback isEqualToString:@"-1"]) {
-        WXBridgeMethod *method = [self _methodWithCallback:callback];
-        method.instance = instance;
-        [sendQueue addObject:method];
+        NSString *methodName = task[@"method"];
+        NSArray *arguments = task[@"args"];
+        if (task[@"component"]) {
+            NSString *ref = task[@"ref"];
+            WXComponentMethod *method = [[WXComponentMethod alloc] initWithComponentRef:ref methodName:methodName arguments:arguments instance:instance];
+            [method invoke];
+        } else {
+            NSString *moduleName = task[@"module"];
+            WXModuleMethod *method = [[WXModuleMethod alloc] initWithModuleName:moduleName methodName:methodName arguments:arguments instance:instance];
+            [method invoke];
+        }
     }
     
     [self performSelector:@selector(_sendQueueLoop) withObject:nil];
+    
+    return 1;
 }
 
 - (void)createInstance:(NSString *)instance
@@ -181,16 +231,10 @@
     } else {
         args = @[instance, temp, options ?: @{}];
     }
-    
-    WXSDKInstance *sdkInstance = [WXSDKManager instanceForID:instance] ;
-    [WXBridgeContext _timeSince:^() {
-        [self callJSMethod:@"createInstance" args:args];
-        WXLogInfo(@"CreateInstance Finish...%f", -[sdkInstance.renderStartDate timeIntervalSinceNow]);
-    } endBlock:^(NSTimeInterval time) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            sdkInstance.communicateTime = time;
-        });
-    }];
+
+    WX_MONITOR_INSTANCE_PERF_START(WXPTJSCreateInstance, [WXSDKManager instanceForID:instance]);
+    [self callJSMethod:@"createInstance" args:args];
+    WX_MONITOR_INSTANCE_PERF_END(WXPTJSCreateInstance, [WXSDKManager instanceForID:instance]);
 }
 
 - (void)destroyInstance:(NSString *)instance
@@ -210,11 +254,20 @@
     [self callJSMethod:@"destroyInstance" args:@[instance]];
 }
 
+- (void)forceGarbageCollection
+{
+    if ([self.jsBridge respondsToSelector:@selector(garbageCollect)]) {
+        [self.jsBridge garbageCollect];
+    }
+}
+
 - (void)refreshInstance:(NSString *)instance
                    data:(id)data
 {
     WXAssertBridgeThread();
     WXAssertParam(instance);
+    
+    if (!data) return;
     
     [self callJSMethod:@"refreshInstance" args:@[instance, data]];
 }
@@ -232,34 +285,39 @@
     WXAssertBridgeThread();
     WXAssertParam(script);
     
-    __weak __typeof__(self) weakSelf = self;
-    [WXBridgeContext _timeSince:^() {
-        WXLogVerbose(@"JSFramework starts executing...");
-        [self.jsBridge executeJSFramework:script];
-        WXLogVerbose(@"JSFramework ends executing...");
-        if ([self.jsBridge exception]) {
-            [WXSDKError monitorAlarm:NO errorCode:WX_ERR_LOAD_JSLIB msg:@"JSFramework executes error !"];
+    WX_MONITOR_PERF_START(WXPTFrameworkExecute);
+    
+    [self.jsBridge executeJSFramework:script];
+    
+    WX_MONITOR_PERF_END(WXPTFrameworkExecute);
+    
+    if ([self.jsBridge exception]) {
+        NSString *message = [NSString stringWithFormat:@"JSFramework executes error: %@", [self.jsBridge exception]];
+        WX_MONITOR_FAIL(WXMTJSFramework, WX_ERR_JSFRAMEWORK_EXECUTE, message);
+    } else {
+        WX_MONITOR_SUCCESS(WXMTJSFramework);
+        //the JSFramework has been load successfully.
+        self.frameworkLoadFinished = YES;
+        
+        [self executeAllJsService];
+        
+        JSValue *frameworkVersion = [self.jsBridge callJSMethod:@"getJSFMVersion" args:nil];
+        if (frameworkVersion && [frameworkVersion isString]) {
+            [WXAppConfiguration setJSFrameworkVersion:[frameworkVersion toString]];
         }
-        else {
-            [WXSDKError monitorAlarm:YES errorCode:WX_ERR_LOAD_JSLIB msg:@""];
-            
-            //the JSFramework has been load successfully.
-            weakSelf.frameworkLoadFinished = YES;
-            
-            //execute methods which has been stored in methodQueue temporarily.
-            for (NSDictionary *method in _methodQueue) {
-                [self callJSMethod:method[@"method"] args:method[@"args"]];
-            }
-            [_methodQueue removeAllObjects];
+        
+        //execute methods which has been stored in methodQueue temporarily.
+        for (NSDictionary *method in _methodQueue) {
+            [self callJSMethod:method[@"method"] args:method[@"args"]];
         }
-    } endBlock:^(NSTimeInterval time) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            JSLibInitTime = time;
-        });
-    }];
+        
+        [_methodQueue removeAllObjects];
+        
+        WX_MONITOR_PERF_END(WXPTInitalize);
+    };
 }
 
-- (void)executeJsMethod:(WXBridgeMethod *)method
+- (void)executeJsMethod:(WXCallJSMethod *)method
 {
     WXAssertBridgeThread();
     
@@ -268,14 +326,45 @@
         return;
     }
     
-    NSMutableArray *sendQueue = self.sendQueue[method.instance];
+    NSMutableArray *sendQueue = self.sendQueue[method.instance.instanceId];
     if (!sendQueue) {
-        WXLogInfo(@"No send queue for instance:%@, may it has been destroyed so method:%@ is ignored", method.instance, method.method);
+        WXLogInfo(@"No send queue for instance:%@, may it has been destroyed so method:%@ is ignored", method.instance, method.methodName);
         return;
     }
     
     [sendQueue addObject:method];
     [self performSelector:@selector(_sendQueueLoop) withObject:nil];
+}
+
+- (void)executeAllJsService
+{
+    for(NSDictionary *service in _jsServiceQueue) {
+        NSString *script = [service valueForKey:@"script"];
+        NSString *name = [service valueForKey:@"name"];
+        [self executeJsService:script withName:name];
+    }
+    
+    [_jsServiceQueue removeAllObjects];
+}
+
+- (void)executeJsService:(NSString *)script withName:(NSString *)name
+{
+    if(self.frameworkLoadFinished) {
+        WXAssert(script, @"param script required!");
+        [self.jsBridge executeJavascript:script];
+        
+        if ([self.jsBridge exception]) {
+            NSString *message = [NSString stringWithFormat:@"JSService executes error: %@", [self.jsBridge exception]];
+            WX_MONITOR_FAIL(WXMTJSService, WX_ERR_JSFRAMEWORK_EXECUTE, message);
+        } else {
+            // success
+        }
+    }else {
+        [_jsServiceQueue addObject:@{
+                                     @"name": name,
+                                     @"script": script
+                                     }];
+    }
 }
 
 - (void)registerModules:(NSDictionary *)modules
@@ -300,8 +389,7 @@
 {
     if (self.frameworkLoadFinished) {
         [self.jsBridge callJSMethod:method args:args];
-    }
-    else {
+    } else {
         [_methodQueue addObject:@{@"method":method, @"args":args}];
     }
 }
@@ -313,69 +401,59 @@
 
 #pragma mark JS Debug Management
 
+- (void)connectToDevToolWithUrl:(NSURL *)url
+{
+    id webSocketBridge = [NSClassFromString(@"WXDebugger") alloc];
+    if(!webSocketBridge || ![webSocketBridge respondsToSelector:NSSelectorFromString(@"connectToURL:")]) {
+        return;
+    } else {
+        SuppressPerformSelectorLeakWarning(
+           [webSocketBridge performSelector:NSSelectorFromString(@"connectToURL:") withObject:url]
+        );
+    }
+}
+
 - (void)connectToWebSocket:(NSURL *)url
 {
-    if ([WXDebugTool isDevToolDebug]) {
-        _socketBridge = [[WXWebSocketBridge alloc] initWithURL:url];
-    }
-    _devToolSocketBrideg = [[WXDevToolBridge alloc] initWithURL:url];
+    _devToolSocketBridge = [[WXDebugLoggerBridge alloc] initWithURL:url];
 }
 
 - (void)logToWebSocket:(NSString *)flag message:(NSString *)message
 {
-    [_devToolSocketBrideg callJSMethod:@"__logger" args:@[flag, message]];
+    [_devToolSocketBridge callJSMethod:@"__logger" args:@[flag, message]];
 }
 
 #pragma mark Private Mehtods
-
-- (WXBridgeMethod *)_methodWithCallback:(NSString *)callback
-{
-    WXAssertBridgeThread();
-    
-    if (!callback) return nil;
-    
-    NSDictionary *method = @{@"module":@"jsBridge", @"method":@"callback", @"args":@[callback]};
-    
-    return [[WXBridgeMethod alloc] initWihData:method];
-}
 
 - (void)_sendQueueLoop
 {
     WXAssertBridgeThread();
     
     BOOL hasTask = NO;
-    NSMutableArray *methods = [NSMutableArray array];
+    NSMutableArray *tasks = [NSMutableArray array];
     NSString *execIns = nil;
     
     for (NSString *instance in self.insStack) {
         NSMutableArray *sendQueue = self.sendQueue[instance];
         if(sendQueue.count > 0){
             hasTask = YES;
-            for(WXBridgeMethod *method in sendQueue){
-                [methods addObject:[method dataDesc]];
+            for(WXCallJSMethod *method in sendQueue){
+                [tasks addObject:[method callJSTask]];
             }
+            
             [sendQueue removeAllObjects];
             execIns = instance;
             break;
         }
     }
     
-    if ([methods count] > 0 && execIns) {
-        [self callJSMethod:@"callJS" args:@[execIns, methods]];
+    if ([tasks count] > 0 && execIns) {
+        [self callJSMethod:@"callJS" args:@[execIns, tasks]];
     }
     
     if (hasTask) {
         [self performSelector:@selector(_sendQueueLoop) withObject:nil];
     }
-}
-
-+ (void)_timeSince:(void(^)())startBlock endBlock:(void(^)(NSTimeInterval))endBlock
-{
-    NSDate *startDate = [NSDate new];
-    startBlock();
-    NSDate *endDate = [NSDate new];
-    NSTimeInterval time = [endDate timeIntervalSinceDate:startDate];
-    endBlock(time);
 }
 
 @end

@@ -1,0 +1,68 @@
+<template>
+	<div>
+	  <text style="font-size:20px; background-color:#ff0000;margin-top:10; width:100">width:100</text>
+    <text style="font-size:20px; background-color:#ff0000;margin-top:10; width:200">width:200</text>
+    <text style="font-size:20px; background-color:#ff0000;margin-top:10; width:300">width:300</text>
+		<text style="font-size:20px; background-color:#ff0000;margin-top:10; width:400">width:400</text>
+		<text style="font-size:20px; background-color:#ff0000;margin-top:10; width:700">width:700</text>
+		<text style="font-size:20px; background-color:#ff0000;margin-top:10; width:750">width:750</text>
+
+
+    <text style="font-size:20px; background-color:#ff0000;margin-top:10; width:50wx">
+      width:50wx</text>
+    <text style="font-size:20px; background-color:#ff0000;margin-top:10; width:100wx">
+      width:100wx</text>
+    <text style="font-size:20px; background-color:#ff0000;margin-top:10; width:200wx">
+      width:200wx</text>
+    <text style="font-size:20px; background-color:#ff0000;margin-top:10; width:300wx">
+      width:300wx</text>
+    <text style="font-size:20px; background-color:#ff0000;margin-top:10; width:320wx">
+      width:320wx</text>
+    <text style="font-size:20px; background-color:#ff0000;margin-top:10; width:360wx">
+      width:360wx</text>
+    <text style="font-size:20px; background-color:#ff0000;margin-top:10; width:375wx">
+      width:375wx</text>
+
+    <text id="theText" class="unitwx"> hello world </text>
+  </div>
+</template>
+
+<style>
+.unitwx {
+  width: 200wx;
+  height: 130wx;
+  margin-top: 80px;
+  background-color : #00ff00;
+  color : white;
+}
+</style>
+
+
+<script>
+	module.exports = {
+		data : {
+			theWidth: 100,
+		},
+		methods : {
+  	  ready : function() {
+				console.log('in ready ' + JSON.stringify(WXEnvironment))
+
+    	   var me = this;
+    	   setTimeout(function() {
+    	     me.theWidth = 200;
+    	   }, 2000);
+    	   
+    	   setTimeout(function() {
+    	     me.theWidth = '200wx';
+    	   }, 4000);
+  	  },
+  	  
+  	  setTo200 : function() {
+  	    this.theWidth = '200'
+  	  },
+  	  setTo200wx : function() {
+  	    this.theWidth = '200wx'
+  	  }
+		}
+	}
+</script>

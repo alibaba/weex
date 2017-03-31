@@ -204,23 +204,31 @@
  */
 package com.taobao.weex.utils;
 
+import android.util.Log;
+
 /**
  * Created by lixinke on 16/5/11.
  */
 public enum LogLevel {
-  ERROR("error", 0), WARN("warn", 1), INFO("info", 2), DEBUG("debug", 3), VERBOSE("verbose", 4), ALL("all", 5);
+  ERROR("error", 0, Log.ERROR), WARN("warn", 1,Log.WARN), INFO("info", 2,Log.INFO),
+  DEBUG("debug", 3,Log.DEBUG), VERBOSE("verbose", 4, Log.VERBOSE), ALL("debug", 5,Log.DEBUG),OFF("off",6,Log.DEBUG);
   String name;
   int value;
+  int priority;
 
-  LogLevel(String name, int value) {
+  LogLevel(String name, int value,int priority) {
     this.name = name;
     this.value = value;
+    this.priority = priority;
   }
   public String getName(){
     return name;
   }
   public int getValue(){
     return value;
+  }
+  public int getPriority(){
+    return priority;
   }
   public int compare(LogLevel level){
     return value-level.value;

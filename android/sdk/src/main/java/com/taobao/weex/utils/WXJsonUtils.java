@@ -204,66 +204,76 @@
  */
 package com.taobao.weex.utils;
 
-import android.util.Log;
 
-import com.alibaba.fastjson.JSONArray;
+import android.support.annotation.NonNull;
+
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.common.WXRuntimeException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Tool for parse JSON
  */
 public class WXJsonUtils {
 
-  public static <T> T fromJson(String json, Class<T> responseClass) {
-    return JSONObject.parseObject(json, responseClass);
-  }
 
-  public static <T> T fromJsonProtocolStr(String json, Class<T> responseClass) {
-    return JSONObject.parseObject(json, responseClass);
-  }
-
-  public static <T> List<T> getList(String json, Class<T> clazz) {
+  public @NonNull static <T> List<T> getList(String json, Class<T> clazz) {
     List<T> result = null;
     try {
       result = JSONObject.parseArray(json, clazz);
     } catch (Exception e) {
+      e.printStackTrace();
+      result = new ArrayList<>();
     }
     return result;
   }
 
-
-  public static JSONArray parseArrayStr(String arrStr) {
-    return JSONObject.parseArray(arrStr);
-  }
-
-  public static String fromObjectToJSONString(Object obj) {
+  public @NonNull static String fromObjectToJSONString(Object obj, boolean WriteNonStringKeyAsString){
     try {
-      return JSONObject.toJSONString(obj);
+      if(WriteNonStringKeyAsString) {
+        return JSON.toJSONString(obj, SerializerFeature.WriteNonStringKeyAsString);
+      }else {
+        return JSON.toJSONString(obj);
+      }
     }catch(Exception e){
       if(WXEnvironment.isApkDebugable()){
         throw new WXRuntimeException("fromObjectToJSONString parse error!");
       }
-      WXLogUtils.e("fromObjectToJSONString error:"+e.getMessage());
+      WXLogUtils.e("fromObjectToJSONString error:", e);
       return "{}";
     }
+  }
+  public @NonNull static String fromObjectToJSONString(Object obj) {
 
+    return fromObjectToJSONString(obj,false);
   }
 
-  public static String fromObject2JSONArrayString(Object obj) {
-    if (obj == null) {
-      return "";
+  /**
+   * Put the map info in the JSONObject to the container.
+   * This method check for null value in the JSONObject
+   * and won't put the null value in the container.
+   * As {@link ConcurrentHashMap#putAll(Map)} will throws an exception if the key or value to
+   * be put is null, it is necessary to invoke this method as replacement of
+   * {@link Map#putAll(Map)}
+   * @param container container to contain the JSONObject.
+   * @param rawValue jsonObject, contains map info.
+   */
+  public static void putAll(Map<String, Object> container, JSONObject rawValue) {
+    String key;
+    Object value;
+    for (Map.Entry<String, Object> entry : rawValue.entrySet()) {
+      key = entry.getKey();
+      value = entry.getValue();
+      if (key != null && value != null) {
+        container.put(key, value);
+      }
     }
-    try {
-      return JSONArray.toJSON(obj).toString();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-
-    return "";
   }
 }

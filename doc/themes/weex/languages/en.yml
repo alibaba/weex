@@ -1,0 +1,104 @@
+index:
+  page_title: A framework for building Mobile cross-platform UI
+  get_started: Get Started
+  edge:
+    title: Competitive Edge
+    edge1: 
+      title: Lightweight
+      content: low footprint，simple syntax，and easy to use
+    edge2: 
+      title: Extendable
+      content: abundant build-in components，extendable apis，various events
+    edge3: 
+      title: High Performance
+      content: load fast，render fast，better Experience
+  feature: 
+    title: Help you build real Native App
+    content: Different from "web app" , "HTML5 app" and "hybrid app", you can use Weex to build a real mobile app. More intimate is that you write the code is relatively simple, just use HTML, CSS, Javascript can build native applications.But in fact, the bottom of the application is Objective-C or Java. At the same time, Weex will provide a lot of native components or modules for developers to use.
+  cross_platform:
+    title: Write Once Run Everywhere
+    content: Weex provides the ability to cross platform, such as the web, Android and IOS can use the same API development function. At the same time, we provide a rich extension of the interface. In this way, it will be very convenient when you need to extend native components or modules.
+  vue:
+    title: Supporting Vue syntax
+    content: Weex follows the web standard, while supporting the "vue.js" syntax. So, you can use the "vue.js" syntax to develop applications.
+  schematic:
+    title: How it works
+    content: Weex is a extendable cross-platform solution for dynamic programming and publishing projects. In the source code you can write pages or components with <template>, <style> and <script> tags, and then transform them into bundles for deploying. In server-side we can use these JS bundles for client request. When client get a bundle from server, it will be processed by client-side JavaScript engine and manages the native view rendering, the native API invoking and user interactions.
+  users: 
+    title: Who use it
+    tmall:
+      title: Tmall
+      content: Tmall is a business-to-consumer (B2C) platform and is the most visited B2C online retail website in China.
+    aliyun:
+      title: Alibaba Cloud
+      content: As the cloud computing arm and business unit of Alibaba Group (NYSE BABA), Alibaba Cloud provides a comprehensive suite of global cloud computing services to power both our international customers’ online businesses and Alibaba Group’s own e-commerce ecosystem.
+    taobao:
+      title: Taobao
+      content: Taobao is China's largest consumer-to-consumer online shopping platform.
+    dingtalk:
+      title: DingTalk
+      content: DingTalk, an App by Alibaba. Free communication and collaboration platform used by millions of enterprises or orgnization.
+    alibaba:
+      title: '1688'
+      content: Launched in 1999, 1688.com is the leading platform for global wholesale trade. We serve millions of buyers and suppliers around the world.
+    cainiao:
+      title: Cainiao
+      content: Cainiao is committed to provide you the best tracking service for all kinds of your cross-border packages.
+    xiami:
+      title: Xiami
+      content: Xiami is a music and audio platform. That is operated by Alibaba Group.
+    youku:
+      title: Youku
+      content: Youku is one of China's top online video and streaming service platforms.
+
+  feedback:
+    title: People says
+    user1:
+      name: Tianyu Chen
+      title: Zhong An Insurance, R&D Director
+      content: "Weex is not only flexible and powerful, but also allows front-end developers to maximize the reuse of existing technology to help us design a new cross-platform architecture, and as soon as possible into the implementation phase."
+    user2: 
+      name: Jianfeng Lin
+      title: Eleme, FE Leader
+      content: "Weex provides Web development efficiency and Native performance, comparable to our iterative speed requirements of the team is relatively high, is currently the best solution."
+    user3: 
+      name: Taicheng Huang
+      title: Tmall, Technical Expert
+      content: "Weex as a lightweight rendering engine also provides a very convenient plug-in mechanism, so that each side can put their ability to play out, give full play to the cat's business, and good support for Global Shopping Festival."
+
+menu: 
+  guide: Guide
+  references: References
+  doc: Docs
+  faq: FAQ
+  index: Index
+  blog: Blog
+  showcase: Showcase
+  download: Download
+  resources: Download
+  tools: Service & Tools
+  advanced: Advanced
+  baichuan: AliBaichuan
+  github: GitHub
+  legacy: Legacy
+playground:
+  content: Weex Native Runtime showcase & Weex we file preview.
+categories: Categories
+search: Search
+tags: Tags
+tagcloud: Tag Cloud
+tweets: Tweets
+prev: Prev
+next: Next
+comment: Comments
+archive_a: Archives
+archive_b: "Archives: %s"
+page: Page %d
+recent_posts: Recent Posts
+newer: Newer
+older: Older
+share: Share
+powered_by: Powered by
+rss_feed: RSS Feed
+category: Category
+tag: Tag

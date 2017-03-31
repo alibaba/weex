@@ -9,7 +9,7 @@
 #import "WXAssert.h"
 #import "WXLog.h"
 
-void WXAssertIntenal(NSString *func, NSString *file, int lineNum, NSString *format, ...)
+void WXAssertInternal(NSString *func, NSString *file, int lineNum, NSString *format, ...)
 {
     va_list args;
     va_start(args, format);

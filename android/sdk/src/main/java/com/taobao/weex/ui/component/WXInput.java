@@ -204,306 +204,35 @@
  */
 package com.taobao.weex.ui.component;
 
-import android.content.Context;
-import android.text.Editable;
-import android.text.InputFilter;
-import android.text.InputType;
-import android.text.Layout;
-import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.text.method.PasswordTransformationMethod;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-
-import android.widget.TextView;
 import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.WXSDKManager;
-import com.taobao.weex.common.WXDomPropConstant;
+import com.taobao.weex.annotation.Component;
 import com.taobao.weex.dom.WXDomObject;
-import com.taobao.weex.dom.WXStyle;
-import com.taobao.weex.dom.WXTextDomObject;
 import com.taobao.weex.ui.view.WXEditText;
-import com.taobao.weex.utils.WXResourceUtils;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  *
  * Input component
  */
-public class WXInput extends WXComponent {
+@Component(lazyload = false)
+public class WXInput extends AbstractEditComponent{
 
-  private final InputMethodManager mInputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-  private String mBeforeText = "";
-  private boolean mAutoFocus;
-  private String mType = "text";
-  private int mTextAlign = Gravity.LEFT;
+  @Deprecated
+  public WXInput(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, String instanceId, boolean isLazy) {
+    this(instance,dom,parent,isLazy);
+  }
 
   public WXInput(WXSDKInstance instance, WXDomObject dom, WXVContainer parent, boolean isLazy) {
     super(instance, dom, parent, isLazy);
   }
 
   @Override
-  protected void initView() {
-    super.initView();
-    WXEditText inputView = new WXEditText(mContext);
-    mTextAlign = Gravity.LEFT;
-    int colorInt = WXResourceUtils.getColor("#999999");
-    if (colorInt != Integer.MIN_VALUE) {
-      inputView.setHintTextColor(colorInt);
-    }
-
-    inputView.setTextSize(TypedValue.COMPLEX_UNIT_PX, WXStyle.getFontSize(mDomObj.style));
-    inputView.setSingleLine();//default use single line , same to ios
-    inputView.setMovementMethod(null);
-
-    inputView.setText((String) mDomObj.attr.get("value"));
-
-    mHost = inputView;
+  protected void appleStyleAfterCreated(WXEditText editText) {
+    super.appleStyleAfterCreated(editText);
+    editText.setSingleLine();//default use single line , same to ios
   }
 
   @Override
-  public WXEditText getView() {
-    return (WXEditText) super.getView();
-  }
-
-  @Override
-  public void addEvent(String type) {
-    super.addEvent(type);
-    if (mHost == null || TextUtils.isEmpty(type)) {
-      return;
-    }
-    final TextView text = (WXEditText) mHost;
-
-    if(type.equals(WXEventType.INPUT_CHANGE)) {
-      text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-        CharSequence mLastValue = text.getText();
-
-        @Override
-        public void onFocusChange(View v, boolean hasFocus) {
-          CharSequence newValue = text.getText();
-          newValue = newValue == null ? "" : newValue;
-          if (!hasFocus && !newValue.equals(mLastValue)) {
-            mLastValue = newValue;
-
-            String event = mDomObj.event.contains(WXEventType.INPUT_CHANGE) ? WXEventType.INPUT_CHANGE : null;
-            fireEvent(event, newValue.toString());
-          }
-        }
-      });
-    }else if(type.equals(WXEventType.INPUT)) {
-      text.addTextChangedListener(new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-          if (mBeforeText.equals(s.toString())) {
-            return;
-          }
-
-          String event = mDomObj.event.contains(WXEventType.INPUT) ? WXEventType.INPUT : null;
-          fireEvent(event, s.toString());
-
-          mBeforeText = s.toString();
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
-        }
-      });
-    }
-  }
-
-  private void fireEvent(String event,String value){
-    if(event != null){
-      Map<String, Object> params = new HashMap<>(2);
-      params.put("value", value);
-      params.put("timeStamp", System.currentTimeMillis());
-
-      Map<String, Object> domChanges = new HashMap<>();
-      Map<String, Object> attrsChanges = new HashMap<>();
-      attrsChanges.put("value",value);
-      domChanges.put("attrs",attrsChanges);
-
-      WXSDKManager.getInstance().fireEvent(mInstanceId, mDomObj.ref, event, params,domChanges);
-    }
-  }
-
-
-  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_PLACEHOLDER)
-  public void setPlaceholder(String placeholder) {
-    if (placeholder == null || mHost == null) {
-      return;
-    }
-    ((WXEditText) mHost).setHint(placeholder);
-  }
-
-  @WXComponentProp(name = WXDomPropConstant.WX_INPUT_PLACEHOLDER_COLOR)
-  public void setPlaceholderColor(String color) {
-    if (mHost != null && !TextUtils.isEmpty(color)) {
-      int colorInt = WXResourceUtils.getColor(color);
-      if (colorInt != Integer.MIN_VALUE) {
-        ((WXEditText) mHost).setHintTextColor(colorInt);
-      }
-    }
-  }
-
-  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_TYPE)
-  public void setType(String type) {
-    if (type == null || mHost == null) {
-      return;
-    }
-    mType = type;
-    ((EditText) mHost).setRawInputType(getInputType(mType));
-  }
-
-  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_AUTOFOCUS)
-  public void setAutofocus(boolean autofocus) {
-    if (mHost == null) {
-      return;
-    }
-    mAutoFocus = autofocus;
-    EditText inputView = (EditText) mHost;
-    if (mAutoFocus) {
-      inputView.setFocusable(true);
-      inputView.requestFocus();
-      inputView.setFocusableInTouchMode(true);
-      inputView.postDelayed(new Runnable() {
-        @Override
-        public void run() {
-          showSoftKeyboard();
-        }
-      }, 16);
-    } else {
-      inputView.postDelayed(new Runnable() {
-        @Override
-        public void run() {
-          hideSoftKeyboard();
-        }
-      }, 16);
-    }
-  }
-
-  @WXComponentProp(name = WXDomPropConstant.WX_COLOR)
-  public void setColor(String color) {
-    if (mHost != null && !TextUtils.isEmpty(color)) {
-      int colorInt = WXResourceUtils.getColor(color);
-      if (colorInt != Integer.MIN_VALUE) {
-        ((WXEditText) mHost).setTextColor(colorInt);
-      }
-    }
-  }
-
-  @WXComponentProp(name = WXDomPropConstant.WX_FONTSIZE)
-  public void setFontSize(String fontSize) {
-    if (mHost != null && fontSize != null && mDomObj.style != null) {
-      ((WXEditText) mHost).setTextSize(TypedValue.COMPLEX_UNIT_PX, WXStyle.getFontSize(mDomObj.style));
-    }
-  }
-
-  @WXComponentProp(name = WXDomPropConstant.WX_TEXTALIGN)
-  public void setTextAlign(String textAlign) {
-    mTextAlign = getTextAlign(textAlign);
-    if (mTextAlign > 0) {
-      ((EditText) mHost).setGravity(mTextAlign | Gravity.CENTER_VERTICAL);
-    }
-  }
-
-  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_SINGLELINE)
-  public void setSingleLine(boolean singleLine) {
-    if (mHost == null) {
-      return;
-    }
-    ((WXEditText) mHost).setSingleLine(singleLine);
-  }
-
-  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_LINES)
-  public void setLines(int lines) {
-    if (mHost == null) {
-      return;
-    }
-    ((WXEditText) mHost).setLines(lines);
-  }
-
-  @WXComponentProp(name = WXDomPropConstant.WX_ATTR_INPUT_MAXLENGTH)
-  public void setMaxLength(int maxLength) {
-    if (mHost == null) {
-    }
-    ((WXEditText) mHost).setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
-  }
-
-  @Override
-  public WXTextDomObject getDomObject() {
-    return (WXTextDomObject) super.getDomObject();
-  }
-
-  private int getInputType(String type) {
-    int inputType;
-    switch (type) {
-      case WXDomPropConstant.WX_ATTR_INPUT_TYPE_TEXT:
-        inputType = InputType.TYPE_CLASS_TEXT;
-        break;
-      case WXDomPropConstant.WX_ATTR_INPUT_TYPE_DATE:
-        inputType = InputType.TYPE_CLASS_DATETIME | InputType.TYPE_DATETIME_VARIATION_DATE;
-        break;
-      case WXDomPropConstant.WX_ATTR_INPUT_TYPE_DATETIME:
-        inputType = InputType.TYPE_CLASS_DATETIME;
-        break;
-      case WXDomPropConstant.WX_ATTR_INPUT_TYPE_EMAIL:
-        inputType = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS;
-        break;
-      case WXDomPropConstant.WX_ATTR_INPUT_TYPE_PASSWORD:
-        inputType = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD;
-        getView().setTransformationMethod(PasswordTransformationMethod.getInstance());
-        break;
-      case WXDomPropConstant.WX_ATTR_INPUT_TYPE_TEL:
-        inputType = InputType.TYPE_CLASS_PHONE;
-        break;
-      case WXDomPropConstant.WX_ATTR_INPUT_TYPE_TIME:
-        inputType = InputType.TYPE_CLASS_DATETIME | InputType.TYPE_DATETIME_VARIATION_TIME;
-        break;
-      case WXDomPropConstant.WX_ATTR_INPUT_TYPE_URL:
-        inputType = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI;
-        break;
-      default:
-        inputType = InputType.TYPE_CLASS_TEXT;
-    }
-    return inputType;
-  }
-
-  private boolean showSoftKeyboard() {
-    if (mHost == null) {
-      return false;
-    }
-    return mInputMethodManager.showSoftInput(mHost, InputMethodManager.SHOW_IMPLICIT);
-  }
-
-  private void hideSoftKeyboard() {
-    if (mHost != null) {
-      mInputMethodManager.hideSoftInputFromWindow(mHost.getWindowToken(), 0);
-    }
-  }
-
-  private int getTextAlign(String textAlign) {
-    int align = Gravity.LEFT;
-    if (TextUtils.isEmpty(textAlign)) {
-      return align;
-    }
-    if (textAlign.equals(WXDomPropConstant.WX_TEXTALIGN_LEFT)) {
-      align = Gravity.LEFT;
-    } else if (textAlign.equals(WXDomPropConstant.WX_TEXTALIGN_CENTER)) {
-      align = Gravity.CENTER;
-    } else if (textAlign.equals(WXDomPropConstant.WX_TEXTALIGN_RIGHT)) {
-      align = Gravity.RIGHT;
-    }
-    return align;
+  protected MeasureOutput measure(int width, int height) {
+    return super.measure(width, height);
   }
 }

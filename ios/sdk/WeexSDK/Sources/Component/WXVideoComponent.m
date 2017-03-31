@@ -7,6 +7,9 @@
  */
 
 #import "WXVideoComponent.h"
+#import "WXHandlerFactory.h"
+#import "WXURLRewriteProtocol.h"
+
 #import <AVFoundation/AVPlayer.h>
 #import <AVKit/AVPlayerViewController.h>
 #import <MediaPlayer/MPMoviePlayerViewController.h>
@@ -24,6 +27,8 @@
 @interface WXVideoView()
 
 @property (nonatomic, strong) UIViewController* playerViewController;
+@property (nonatomic, strong) AVPlayerItem* playerItem;
+@property (nonatomic, strong) WXSDKInstance* weexSDKInstance;
 
 @end
 
@@ -32,8 +37,9 @@
 - (id)init
 {
     if (self = [super init]) {
-        if ([self greater8SysVer]){
+        if ([self greater8SysVer]) {
             _playerViewController = [AVPlayerViewController new];
+            
         } else {
             _playerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:nil];
             MPMoviePlayerViewController *MPVC = (MPMoviePlayerViewController*)_playerViewController;
@@ -73,12 +79,13 @@
 
 - (void)dealloc
 {
-    if ([self greater8SysVer]){
+    _weexSDKInstance = nil;
+    if ([self greater8SysVer]) {
         AVPlayerViewController *AVVC = (AVPlayerViewController*)_playerViewController;
         [AVVC.player removeObserver:self forKeyPath:@"rate"];
-        [AVVC.player.currentItem removeObserver:self forKeyPath:@"status"];
+        [_playerItem removeObserver:self forKeyPath:@"status"];
         
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:AVVC.player.currentItem];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object: _playerItem];
     }
     else {
         MPMoviePlayerViewController *MPVC = (MPMoviePlayerViewController*)_playerViewController;
@@ -111,8 +118,7 @@
         } else if (rate == -1.0) {
             // Reverse playback
         }
-    }
-    else if ([keyPath isEqualToString:@"status"]) {
+    } else if ([keyPath isEqualToString:@"status"]) {
         NSInteger status = [change[NSKeyValueChangeNewKey] integerValue];
         if (status == AVPlayerStatusFailed) {
             if (_playbackStateChanged)
@@ -133,14 +139,23 @@
 
 - (void)setURL:(NSURL *)URL
 {
-    if ([self greater8SysVer]){
+    NSMutableString *urlStr = nil;
+    WX_REWRITE_URL(URL.absoluteString, WXResourceTypeVideo, self.weexSDKInstance, &urlStr)
+    
+    if (!urlStr) {
+        return;
+    }
+    NSURL *newURL = [NSURL URLWithString:urlStr];
+    if ([self greater8SysVer]) {
         
         AVPlayerViewController *AVVC = (AVPlayerViewController*)_playerViewController;
-        if (AVVC.player && AVVC.player.currentItem) {
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:AVVC.player.currentItem];
-            [AVVC.player.currentItem removeObserver:self forKeyPath:@"status"];
+        if (AVVC.player && _playerItem) {
+            [_playerItem removeObserver:self forKeyPath:@"status"];
+            [AVVC.player removeObserver:self forKeyPath:@"rate"];
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object: _playerItem];
         }
-        AVPlayer *player = [AVPlayer playerWithURL:URL];
+        _playerItem = [[AVPlayerItem alloc] initWithURL:newURL];
+        AVPlayer *player = [AVPlayer playerWithPlayerItem: _playerItem];
         AVVC.player = player;
         
         [player addObserver:self
@@ -148,16 +163,16 @@
                     options:NSKeyValueObservingOptionNew
                     context:NULL];
         
-        [player.currentItem addObserver:self
-                             forKeyPath:@"status"
-                                options:NSKeyValueObservingOptionNew
-                                context:NULL];
+        [_playerItem addObserver:self
+                     forKeyPath:@"status"
+                        options:NSKeyValueObservingOptionNew
+                        context:NULL];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playFinish) name:AVPlayerItemDidPlayToEndTimeNotification object:player.currentItem];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playFinish) name:AVPlayerItemDidPlayToEndTimeNotification object: _playerItem];
     }
     else {
         MPMoviePlayerViewController *MPVC = (MPMoviePlayerViewController*)_playerViewController;
-        [MPVC moviePlayer].contentURL = URL;
+        [MPVC moviePlayer].contentURL = newURL;
     }
 }
 
@@ -188,7 +203,7 @@
 
 - (void)pause
 {
-    if ([self greater8SysVer]){
+    if ([self greater8SysVer]) {
         AVPlayerViewController *AVVC = (AVPlayerViewController*)_playerViewController;
         [[AVVC player] pause];
     } else {
@@ -201,7 +216,7 @@
 
 @interface WXVideoComponent()
 
-@property (nonatomic, strong) WXVideoView *videoView;
+@property (nonatomic, weak) WXVideoView *videoView;
 @property (nonatomic, strong) NSURL *videoURL;
 @property (nonatomic) BOOL autoPlay;
 @property (nonatomic) BOOL playStatus;
@@ -231,7 +246,10 @@
 
 -(UIView *)loadView
 {
-    return [[WXVideoView alloc] init];
+    WXVideoView* videoView = [[WXVideoView alloc] init];
+    videoView.weexSDKInstance = self.weexInstance;
+    
+    return videoView;
 }
 
 -(void)viewDidLoad
@@ -275,6 +293,7 @@
 {
     if (attributes[@"src"]) {
         _videoURL = [NSURL URLWithString: attributes[@"src"]];
+        [_videoView setURL:_videoURL];
     }
     if (attributes[@"autoPlay"]) {
         _autoPlay = [attributes[@"autoPlay"] boolValue];

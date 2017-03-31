@@ -60,6 +60,9 @@ typedef enum : NSUInteger {
 @end
 
 @implementation WXModalUIModule
+{
+    NSMutableSet *_alertViews;
+}
 
 @synthesize weexInstance;
 
@@ -67,6 +70,26 @@ WX_EXPORT_METHOD(@selector(toast:))
 WX_EXPORT_METHOD(@selector(alert:callback:))
 WX_EXPORT_METHOD(@selector(confirm:callback:))
 WX_EXPORT_METHOD(@selector(prompt:callback:))
+
+- (instancetype)init
+{
+    if (self = [super init]) {
+        _alertViews = [NSMutableSet setWithCapacity:1];
+    }
+    
+    return self;
+}
+
+- (void)dealloc
+{
+    if (WX_SYS_VERSION_LESS_THAN(@"8.0")) {
+        for (UIAlertView *alerView in _alertViews) {
+            alerView.delegate = nil;
+        }
+    }
+    
+    [_alertViews removeAllObjects];
+}
 
 #pragma mark - Toast
 
@@ -78,7 +101,8 @@ static const CGFloat WXToastDefaultPadding = 30.0;
 
 - (void)toast:(NSDictionary *)param
 {
-    NSString *message = param[@"message"];
+    NSString *message = [self stringValue:param[@"message"]];
+    
     if (!message) return;
     
     double duration = [param[@"duration"] doubleValue];
@@ -206,8 +230,8 @@ static const CGFloat WXToastDefaultPadding = 30.0;
 
 - (void)alert:(NSDictionary *)param callback:(WXModuleCallback)callback
 {
-    NSString *message = param[@"message"];
-    NSString *okTitle = param[@"okTitle"];
+    NSString *message = [self stringValue:param[@"message"]];
+    NSString *okTitle = [self stringValue:param[@"okTitle"]];
     
     if ([WXUtility isBlankString:okTitle]) {
         okTitle = @"OK";
@@ -220,9 +244,9 @@ static const CGFloat WXToastDefaultPadding = 30.0;
 
 - (void)confirm:(NSDictionary *)param callback:(WXModuleCallback)callback
 {
-    NSString *message = param[@"message"];
-    NSString *okTitle = param[@"okTitle"];
-    NSString *cancelTitle = param[@"cancelTitle"];
+    NSString *message = [self stringValue:param[@"message"]];
+    NSString *okTitle = [self stringValue:param[@"okTitle"]];
+    NSString *cancelTitle = [self stringValue:param[@"cancelTitle"]];
     
     if ([WXUtility isBlankString:okTitle]) {
         okTitle = @"OK";
@@ -238,10 +262,10 @@ static const CGFloat WXToastDefaultPadding = 30.0;
 
 - (void)prompt:(NSDictionary *)param callback:(WXModuleCallback)callback
 {
-    NSString *message = param[@"message"];
-    NSString *defaultValue = param[@"default"];
-    NSString *okTitle = param[@"okTitle"];
-    NSString *cancelTitle = param[@"cancelTitle"];
+    NSString *message = [self stringValue:param[@"message"]];
+    NSString *defaultValue = [self stringValue:param[@"default"]];
+    NSString *okTitle = [self stringValue:param[@"okTitle"]];
+    NSString *cancelTitle = [self stringValue:param[@"cancelTitle"]];
     
     if ([WXUtility isBlankString:okTitle]) {
         okTitle = @"OK";
@@ -259,7 +283,9 @@ static const CGFloat WXToastDefaultPadding = 30.0;
 - (void)alert:(NSString *)message okTitle:(NSString *)okTitle cancelTitle:(NSString *)cancelTitle defaultText:(NSString *)defaultText type:(WXModalType)type callback:(WXModuleCallback)callback
 {
     if (!message) {
-        callback(@"Error: message should be passed.");
+        if (callback) {
+            callback(@"Error: message should be passed correctly.");
+        }
         return;
     }
     
@@ -271,6 +297,7 @@ static const CGFloat WXToastDefaultPadding = 30.0;
         textField.placeholder = defaultText;
     }
     objc_setAssociatedObject(alertView, &WXModalCallbackKey, [callback copy], OBJC_ASSOCIATION_COPY_NONATOMIC);
+    [_alertViews addObject:alertView];
     
     WXPerformBlockOnMainThread(^{
         [alertView show];
@@ -282,7 +309,7 @@ static const CGFloat WXToastDefaultPadding = 30.0;
     WXModuleCallback callback = objc_getAssociatedObject(alertView, &WXModalCallbackKey);
     if (!callback) return;
     
-    NSString *result = @"";
+    id result = @"";
     switch (alertView.tag) {
         case WXModalTypeAlert: {
             result = @"";
@@ -296,13 +323,26 @@ static const CGFloat WXToastDefaultPadding = 30.0;
         case WXModalTypePrompt: {
             NSString *clickTitle = [alertView buttonTitleAtIndex:buttonIndex];
             NSString *text= [[alertView textFieldAtIndex:0] text] ?: @"";
-            result = [WXUtility JSONString:@{ @"result": clickTitle, @"data": text }];
+            result = @{ @"result": clickTitle, @"data": text };
         }
         default:
             break;
     }
     
     callback(result);
+    
+    [_alertViews removeObject:alertView];
+}
+
+- (NSString*)stringValue:(id)value
+{
+    if ([value isKindOfClass:[NSString class]]) {
+        return value;
+    }
+    if ([value isKindOfClass:[NSNumber class]]) {
+        return [value stringValue];
+    }
+    return nil;
 }
 
 @end

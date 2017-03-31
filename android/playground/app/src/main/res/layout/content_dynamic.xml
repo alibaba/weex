@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/wx_brief_wv_container"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <TextView
+            android:text="Dynamically replaces the framework!"
+            android:layout_marginTop="100dp"
+            android:layout_marginBottom="60dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/dynamic_tip"
+            android:layout_centerHorizontal="true"/>
+    <TextView
+            android:text="The replacement will return to the home page!"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/dynamic_result"
+            android:layout_below="@+id/dynamic_tip"
+            android:layout_centerInParent="true"
+    />
+</RelativeLayout>

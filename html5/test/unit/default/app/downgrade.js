@@ -1,7 +1,7 @@
 import chai from 'chai'
 const { expect } = chai
 
-import * as Downgrade from '../../../../default/app/downgrade'
+import * as Downgrade from '../../../../frameworks/legacy/app/downgrade'
 
 describe('downgrade', () => {
   describe('normalizeVersion', () => {
@@ -22,6 +22,12 @@ describe('downgrade', () => {
 
         expect(test).to.be.equal(should)
       })
+    })
+
+    it('invalid version format', () => {
+      expect(Downgrade.normalizeVersion([])).to.be.equal('0.0.0')
+      expect(Downgrade.normalizeVersion({})).to.be.equal('0.0.0')
+      expect(Downgrade.normalizeVersion(2.0)).to.be.equal('0.0.0')
     })
   })
 

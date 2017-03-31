@@ -206,14 +206,21 @@ package com.taobao.weex.ui;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.taobao.weex.WXSDKInstance;
+import com.taobao.weex.bridge.JSCallback;
 import com.taobao.weex.common.WXRuntimeException;
+import com.taobao.weex.common.WXThread;
 import com.taobao.weex.dom.WXDomObject;
 import com.taobao.weex.dom.flex.Spacing;
+import com.taobao.weex.ui.animation.WXAnimationBean;
 import com.taobao.weex.ui.component.WXComponent;
 import com.taobao.weex.utils.WXUtils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -235,8 +242,12 @@ public class WXRenderManager {
     return mRegistries.get(instanceId);
   }
 
-  public WXComponent getWXComponent(String instanceId, String ref) {
-    return getWXRenderStatement(instanceId).getComponent(ref);
+  public @Nullable WXComponent getWXComponent(String instanceId, String ref) {
+    if(instanceId == null || TextUtils.isEmpty(ref)){
+      return null;
+    }
+    WXRenderStatement stmt = getWXRenderStatement(instanceId);
+    return stmt == null?null:stmt.getComponent(ref);
   }
 
   public WXSDKInstance getWXSDKInstance(String instanceId) {
@@ -248,7 +259,7 @@ public class WXRenderManager {
   }
 
   public void postOnUiThread(Runnable runnable, long delayMillis) {
-    mWXRenderHandler.postDelayed(runnable, delayMillis);
+    mWXRenderHandler.postDelayed(WXThread.secure(runnable), delayMillis);
   }
 
   /**
@@ -267,7 +278,7 @@ public class WXRenderManager {
 
   //TODO Use runnable temporarily
   public void runOnThread(final String instanceId, final IWXRenderTask task) {
-    mWXRenderHandler.post(new Runnable() {
+    mWXRenderHandler.post(WXThread.secure(new Runnable() {
 
       @Override
       public void run() {
@@ -276,11 +287,11 @@ public class WXRenderManager {
         }
         task.execute();
       }
-    });
+    }));
   }
 
-  public void createInstance(WXSDKInstance instance, String instanceId) {
-    mRegistries.put(instanceId, new WXRenderStatement(instance, instanceId));
+  public void registerInstance(WXSDKInstance instance) {
+    mRegistries.put(instance.getInstanceId(), new WXRenderStatement(instance));
   }
 
   public void createBody(String instanceId, WXComponent component) {
@@ -334,7 +345,7 @@ public class WXRenderManager {
     statement.addComponent(dom, parentRef, index);
   }
 
-  public WXComponent createComponentOnDomThread(String instanceId, WXDomObject dom, String parentRef, int index) {
+  public @Nullable WXComponent createComponentOnDomThread(String instanceId, WXDomObject dom, String parentRef, int index) {
     WXRenderStatement statement = mRegistries.get(instanceId);
     if (statement == null) {
       return null;
@@ -385,7 +396,7 @@ public class WXRenderManager {
   public void addEvent(String instanceId, String ref, String type) {
     WXRenderStatement statement = mRegistries.get(instanceId);
     if (statement == null) {
-      return;
+      return ;
     }
     statement.addEvent(ref, type);
   }
@@ -393,7 +404,7 @@ public class WXRenderManager {
   public void removeEvent(String instanceId, String ref, String type) {
     WXRenderStatement statement = mRegistries.get(instanceId);
     if (statement == null) {
-      return;
+      return ;
     }
     statement.removeEvent(ref, type);
   }
@@ -431,11 +442,39 @@ public class WXRenderManager {
   }
 
 
-  public void startAnimation(String instanceId, @NonNull String ref, @Nullable String callBack) {
+  public void startAnimation(String instanceId, @NonNull String ref,
+                             @NonNull WXAnimationBean animationBean, @Nullable String
+      callBack) {
     WXRenderStatement statement = mRegistries.get(instanceId);
     if (statement == null) {
       return;
     }
-    statement.startAnimation(ref, callBack);
+    statement.startAnimation(ref, animationBean, callBack);
+  }
+
+  public List<WXSDKInstance> getAllInstances() {
+    ArrayList<WXSDKInstance> instances = null;
+    if (mRegistries != null && !mRegistries.isEmpty()) {
+      instances = new ArrayList<WXSDKInstance>();
+      for (Map.Entry<String, WXRenderStatement> entry : mRegistries.entrySet()) {
+        WXRenderStatement renderStatement = entry.getValue();
+        if (renderStatement != null) {
+          instances.add(renderStatement.getWXSDKInstance());
+        }
+      }
+    }
+    return instances;
+  }
+
+  public void getComponentSize(String instanceId, String ref, JSCallback callback) {
+    WXRenderStatement statement = mRegistries.get(instanceId);
+    if (statement == null) {
+      Map<String, Object> options = new HashMap<>();
+      options.put("result", false);
+      options.put("errMsg", "Component does not exist");
+      callback.invoke(options);
+      return;
+    }
+    statement.getComponentSize(ref, callback);
   }
 }

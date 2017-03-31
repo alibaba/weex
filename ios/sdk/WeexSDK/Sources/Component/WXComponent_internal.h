@@ -9,9 +9,9 @@
 #import "WXScrollerProtocol.h"
 #import "WXComponent.h"
 #import "WXConvert.h"
+#import "WXTransform.h"
 @class WXTouchGestureRecognizer;
 @class WXThreadSafeCounter;
-
 
 /**
  * The following variables and methods are used in Weex INTERNAL logic.
@@ -21,6 +21,7 @@
 {
 @package
     NSString *_type;
+    NSMutableArray *_subcomponents;
     /**
      *  Layout
      */
@@ -34,10 +35,18 @@
      *  View
      */
     UIColor *_backgroundColor;
+    NSString *_backgroundImage;
     WXClipType _clipToBounds;
     UIView *_view;
     CGFloat _opacity;
     WXVisibility  _visibility;
+    
+    /**
+     *  PseudoClass
+     */
+    NSMutableDictionary *_pseudoClassStyles;
+    NSMutableDictionary *_updatedPseudoClassStyles;
+    BOOL _isListenPseudoTouch;
     
     /**
      *  Events
@@ -48,9 +57,14 @@
     NSMutableArray *_swipeGestures;
     UILongPressGestureRecognizer *_longPressGesture;
     UIPanGestureRecognizer *_panGesture;
+    
     BOOL _listenPanStart;
     BOOL _listenPanMove;
     BOOL _listenPanEnd;
+    
+    BOOL _listenHorizontalPan;
+    BOOL _listenVerticalPan;
+    
     WXTouchGestureRecognizer* _touchGesture;
     
     /**
@@ -87,8 +101,7 @@
     BOOL _isNeedJoinLayoutSystem;
     BOOL _lazyCreateView;
     
-    NSString *_transform;
-    NSString *_transformOrigin;
+    WXTransform *_transform;
 }
 
 ///--------------------------------------
@@ -102,7 +115,7 @@
 
 - (void)_willDisplayLayer:(CALayer *)layer;
 
-- (void)_unloadView;
+- (void)_unloadViewWithReusing:(BOOL)isReusing;
 
 - (id<WXScrollerProtocol>)ancestorScroller;
 
@@ -110,9 +123,9 @@
 - (void)_removeFromSupercomponent;
 - (void)_moveToSupercomponent:(WXComponent *)newSupercomponent atIndex:(NSUInteger)index;
 
-- (void)_updateStylesOnComponentThread:(NSDictionary *)styles;
+- (void)_updateStylesOnComponentThread:(NSDictionary *)styles resetStyles:(NSMutableArray *)resetStyles isUpdateStyles:(BOOL)isUpdateStyles;
 - (void)_updateAttributesOnComponentThread:(NSDictionary *)attributes;
-- (void)_updateStylesOnMainThread:(NSDictionary *)styles;
+- (void)_updateStylesOnMainThread:(NSDictionary *)styles resetStyles:(NSMutableArray *)resetStyles;
 - (void)_updateAttributesOnMainThread:(NSDictionary *)attributes;
 
 - (void)_addEventOnComponentThread:(NSString *)eventName;
@@ -128,7 +141,7 @@
 
 - (void)_drawBorderWithContext:(CGContextRef)context size:(CGSize)size;
 
-- (void)_frameDidCalculated;
+- (void)_frameDidCalculated:(BOOL)isChanged;
 
 - (NSUInteger)_childrenCountForLayout;
 
@@ -142,9 +155,9 @@
 
 - (void)_updateCSSNodeStyles:(NSDictionary *)styles;
 
-- (void)_recomputeCSSNodeChildren;
+- (void)_resetCSSNodeStyles:(NSArray *)styles;
 
-- (void)_recomputeBorderRadius;
+- (void)_recomputeCSSNodeChildren;
 
 - (void)_handleBorders:(NSDictionary *)styles isUpdating:(BOOL)updating;
 
@@ -152,7 +165,11 @@
 
 - (void)_updateViewStyles:(NSDictionary *)styles;
 
+- (void)_resetStyles:(NSArray *)styles;
+
 - (void)_initEvents:(NSArray *)events;
+
+- (void)_initPseudoEvents:(BOOL)isListenPseudoTouch;
 
 - (void)_removeAllEvents;
 
@@ -160,4 +177,11 @@
 
 - (void)_updateNavBarAttributes:(NSDictionary *)attributes;
 
+- (void)_handleFirstScreenTime;
+
+- (void)_resetNativeBorderRadius;
+
+- (void)_updatePseudoClassStyles:(NSString *)key;
+
+- (void)_restoreViewStyles;
 @end

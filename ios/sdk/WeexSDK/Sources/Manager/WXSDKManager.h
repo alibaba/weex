@@ -7,9 +7,10 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "WXBridgeManager.h"
-#import "WXModuleManager.h"
 #import "WXSDKInstance.h"
+#import "WXBridgeManager.h"
+
+@class WXModuleManager;
 
 @interface WXSDKManager : NSObject
 
@@ -17,11 +18,6 @@
  * @abstract Returns bridge manager
  **/
 + (WXBridgeManager *)bridgeMgr;
-
-/**
- * @abstract Returns module manager
- **/
-+ (WXModuleManager *)moduleMgr;
 
 /**
  * @abstract Returns weex instance for specific identifier
@@ -37,5 +33,15 @@
  * @abstract Returns weex instance for specific identifier
  **/
 + (void)removeInstanceforID:(NSString *)identifier;
+
+/**
+ * @abstract unload
+ **/
++ (void)unload;
+
+/**
+ * @abstract Returns module manager
+ **/
++ (WXModuleManager *)moduleMgr DEPRECATED_MSG_ATTRIBUTE();
 
 @end

@@ -20,17 +20,20 @@
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
     /**
-     *  Capturing touches on a subview outside the frame of its superview
+     *  Capturing touches on a subview outside the frame of its superview if it does not clips to bounds.
      */
-
-    // hidden view should not be passed event
-    if (self.hidden) {
+    if (self.hidden || !self.userInteractionEnabled) {
         return nil;
     }
     
     UIView* result = [super hitTest:point withEvent:event];
     if (result) {
         return result;
+    }
+    
+    // if clips to bounds, no need to detect outside views.
+    if (self.clipsToBounds) {
+        return nil;
     }
     
     for (UIView* subView in [self.subviews reverseObjectEnumerator]) {

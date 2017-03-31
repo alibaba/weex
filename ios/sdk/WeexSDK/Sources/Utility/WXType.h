@@ -20,11 +20,6 @@ typedef NS_ENUM(NSUInteger, WXTextStyle) {
     WXTextStyleItalic
 };
 
-typedef NS_ENUM(NSUInteger, WXTextWeight) {
-    WXTextWeightNormal = 0,
-    WXTextWeightBold,
-};
-
 typedef NS_ENUM(NSInteger, WXTextDecoration) {
     WXTextDecorationNone = 0,
     WXTextDecorationUnderline,
@@ -63,3 +58,11 @@ typedef NS_ENUM(NSInteger, WXPositionType) {
     WXPositionTypeFixed
 };
 
+typedef NS_ENUM(NSInteger, WXGradientType) {
+    WXGradientTypeToTop = 0,
+    WXGradientTypeToBottom,
+    WXGradientTypeToLeft,
+    WXGradientTypeToRight,
+    WXGradientTypeToTopleft,
+    WXGradientTypeToBottomright,
+};

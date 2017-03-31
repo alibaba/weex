@@ -4,60 +4,44 @@ import sinonChai from 'sinon-chai'
 const { expect } = chai
 chai.use(sinonChai)
 
-global.callNative = function () {}
-
-import AppInstance from '../../../../default/app'
-import * as bundle from '../../../../default/app/bundle'
-import * as ctrl from '../../../../default/app/ctrl'
-import { Element } from '../../../../vdom'
-import {
-  registerComponent,
-  requireComponent,
-  requireModule
-} from '../../../../default/app/register'
+import App from '../../../../frameworks/legacy/app'
+import { Element, Document } from '../../../../runtime/vdom'
 
 describe('App Instance', () => {
-  const oriCallNative = global.callNative
-  const callNativeSpy = sinon.spy()
+  const oriDocumentHandler = Document.handler
+  const sendTasksSpy = sinon.spy()
   let app
 
-  before(() => {
-    global.callNative = (id, tasks, callbackId) => {
-      callNativeSpy(id, tasks, callbackId)
-      /* istanbul ignore if */
-      if (callbackId !== '-1') {
-        app.callbacks[callbackId] && app.callbacks[callbackId]()
-      }
-    }
-  })
-
   beforeEach(() => {
-    app = new AppInstance(Date.now() + '')
+    Document.handler = sendTasksSpy
+    const id = Date.now() + ''
+    app = new App(id, {})
   })
 
-  after(() => {
-    global.callNative = oriCallNative
+  afterEach(() => {
+    Document.handler = oriDocumentHandler
   })
 
   describe('normal check', () => {
     it('is a class', () => {
-      expect(AppInstance).to.be.an('function')
+      expect(App).to.be.an('function')
     })
 
     it('being created', () => {
       expect(app).to.be.an('object')
-      expect(app).to.be.instanceof(AppInstance)
+      expect(app).to.be.instanceof(App)
     })
 
     it('with some apis', () => {
-      const proto = Object.getPrototypeOf(app)
-      expect(proto).to.contain.all.keys(bundle)
-      expect(proto).to.contain.all.keys(ctrl)
-      expect(proto).to.contain.all.keys({
-        registerComponent,
-        requireComponent,
-        requireModule
-      })
+      expect(app.requireModule).a.function
+      expect(app.updateActions).a.function
+      expect(app.callTasks).a.function
+    })
+
+    it('run apis', () => {
+      expect(app.requireModule('stream')).to.deep.equal({})
+      expect(app.updateActions()).to.be.undefined
+      expect(app.callTasks([])).to.be.undefined
     })
   })
 
@@ -70,7 +54,7 @@ describe('App Instance', () => {
       }]
 
       app.callTasks(tasks)
-      expect(callNativeSpy.lastCall.args[1]).to.deep.equal(tasks)
+      expect(sendTasksSpy.lastCall.args[1]).to.deep.equal(tasks)
     })
 
     it('with callback', (done) => {
@@ -81,11 +65,13 @@ describe('App Instance', () => {
       }]
 
       app.callTasks(tasks)
-      expect(callNativeSpy.lastCall.args[1]).to.deep.equal(tasks)
+      expect(sendTasksSpy.lastCall.args[1]).to.deep.equal(tasks)
       done()
     })
 
     it('with function arg', (done) => {
+      const callbackId = '1'
+
       const tasks = [{
         module: 'dom',
         method: 'createBody',
@@ -93,8 +79,11 @@ describe('App Instance', () => {
       }]
 
       app.callTasks(tasks)
-      expect(callNativeSpy.lastCall.args[1]).to.deep.equal(tasks)
-      expect(callNativeSpy.lastCall.args[1][0].args[0]).to.be.a('string')
+      expect(sendTasksSpy.lastCall.args[1]).to.deep.equal([{
+        module: 'dom',
+        method: 'createBody',
+        args: [callbackId]
+      }])
       done()
     })
 
@@ -109,12 +98,17 @@ describe('App Instance', () => {
       }]
 
       app.callTasks(tasks)
-      expect(callNativeSpy.lastCall.args[1]).to.deep.equal(tasks)
-      expect(callNativeSpy.lastCall.args[1][0].args[0]).to.be.equal('1')
+      expect(sendTasksSpy.lastCall.args[1]).to.deep.equal([{
+        module: 'dom',
+        method: 'createBody',
+        args: [node.ref]
+      }])
       done()
     })
 
     it('with callback after close', (done) => {
+      const callbackId = '1'
+
       const tasks = [{
         module: 'dom',
         method: 'createBody',
@@ -124,10 +118,12 @@ describe('App Instance', () => {
       app.doc.close()
 
       app.callTasks(tasks)
-      expect(callNativeSpy.lastCall.args[1]).to.deep.equal(tasks)
-      expect(callNativeSpy.lastCall.args[1][0].args[0]).to.be.a('string')
+      expect(sendTasksSpy.lastCall.args[1]).to.deep.equal([{
+        module: 'dom',
+        method: 'createBody',
+        args: [callbackId]
+      }])
       done()
     })
   })
 })
-

@@ -8,7 +8,6 @@
 
 #import "WXHandlerFactory.h"
 #import "WXThreadSafeMutableDictionary.h"
-#import "WXNetworkDefaultImpl.h"
 #import "WXNavigationDefaultImpl.h"
 #import "WXAssert.h"
 
@@ -44,6 +43,10 @@
     
     id handler = [[WXHandlerFactory sharedInstance].handlers objectForKey:NSStringFromProtocol(protocol)];
     return handler;
+}
+
++ (NSDictionary *)handlerConfigs {
+    return [WXHandlerFactory sharedInstance].handlers;
 }
 
 @end

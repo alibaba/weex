@@ -11,27 +11,29 @@
 #import "WXSDKInstance_private.h"
 #import "WXComponent+Navigation.h"
 #import "WXSDKInstance.h"
+#import "WXSDKManager.h"
 #import "WXConvert.h"
+#import "WXUtility.h"
 
 @interface WXEmbedComponent ()
 
 @property (nonatomic, strong) WXSDKInstance *embedInstance;
 @property (nonatomic, strong) UIView *embedView;
+@property (nonatomic, assign) BOOL createFinished;
 @property (nonatomic, assign) BOOL renderFinished;
 @property (nonatomic, assign) WXVisibility visible;
 @property (nonatomic, strong) NSURL *sourceURL;
+@property (nonatomic, strong) WXErrorView *errorView;
 
 @end
 
-@implementation WXEmbedComponent
+@implementation WXEmbedComponent 
 
 #pragma mark Life Cycle
 
 - (void)dealloc
 {
-//    if (self.weexInstance) {
-//        [self.weexInstance removeObserver:self forKeyPath:@"state"];
-//    }
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     if (self.embedInstance) {
         [self.embedInstance destroyInstance];
@@ -41,9 +43,14 @@
 - (instancetype)initWithRef:(NSString *)ref type:(NSString *)type styles:(NSDictionary *)styles attributes:(NSDictionary *)attributes events:(NSArray *)events weexInstance:(WXSDKInstance *)weexInstance
 {
     if (self = [super initWithRef:ref type:type styles:styles attributes:attributes events:events weexInstance:weexInstance]) {
+        
+        _createFinished = NO;
+        _renderFinished = NO;
+        
         _sourceURL = [NSURL URLWithString: attributes[@"src"]];
         _visible =  [WXConvert WXVisibility:styles[@"visibility"]];
-//        [self.weexInstance addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew context:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(observeInstanceState:) name:WX_INSTANCE_NOTIFICATION_UPDATE_STATE object:nil];
     }
     
     return self;
@@ -77,6 +84,7 @@
         NSURL *sourceURL = [NSURL URLWithString:attributes[@"src"]];
         if (!sourceURL|| ![[sourceURL absoluteString] isEqualToString:[_sourceURL absoluteString]]) {
             _sourceURL = sourceURL;
+            _createFinished = NO;
             [self _layoutEmbedView];
         }
     }
@@ -90,10 +98,10 @@
 - (void)_layoutEmbedView
 {
     if (_visible == WXVisibilityShow) {
-        if (!_renderFinished && !CGRectEqualToRect(CGRectZero, self.calculatedFrame)) {
+        [self _updateState:WeexInstanceAppear];
+        if (!_createFinished && !CGRectEqualToRect(CGRectZero, self.calculatedFrame)) {
             [self _renderWithURL:_sourceURL];
         }
-        [self _updateState:WeexInstanceAppear];
     }
     else {
         [self _updateState:WeexInstanceDisappear];
@@ -111,7 +119,7 @@
     _embedInstance.parentInstance = self.weexInstance;
     _embedInstance.parentNodeRef = self.ref;
     _embedInstance.frame = CGRectMake(0.0f, 0.0f, self.view.frame.size.width, self.view.frame.size.height);
-    _embedInstance.pageName = [sourceURL absoluteString];
+    _embedInstance.pageName = [[WXUtility urlByDeletingParameters:sourceURL]  absoluteString];
     _embedInstance.pageObject = self.weexInstance.viewController;
     _embedInstance.viewController = self.weexInstance.viewController;
     
@@ -129,33 +137,73 @@
     __weak typeof(self) weakSelf = self;
     _embedInstance.onCreate = ^(UIView *view) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            if (weakSelf.errorView) {
+                [weakSelf.errorView removeFromSuperview];
+                weakSelf.errorView = nil;
+            }
+        
             [weakSelf.embedView removeFromSuperview];
             weakSelf.embedView = view;
-            weakSelf.renderFinished = YES;
             [weakSelf.view addSubview:weakSelf.embedView];
+            
+            weakSelf.createFinished = YES;
         });
+    };
+    
+    _embedInstance.onFailed = ^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (weakSelf.errorView) {
+                return ;
+            }
+            
+            WXErrorView *errorView = [[WXErrorView alloc]initWithFrame:CGRectMake(0.0f, 0.0f, 135.0f, 130.0f)];
+            errorView.center = CGPointMake(weakSelf.view.bounds.size.width / 2.0f, weakSelf.view.bounds.size.height / 2.0f);
+            errorView.delegate = weakSelf;
+            [weakSelf.view addSubview:errorView];
+            
+            weakSelf.errorView = errorView;
+        });
+    };
+    
+    _embedInstance.renderFinish = ^(UIView *view) {
+         weakSelf.renderFinished = YES;
+        [weakSelf _updateState:WeexInstanceAppear];
     };
 }
 
 - (void)_updateState:(WXState)state
 {
-    if (!_embedInstance) {
-        return;
-    }
-    
-    _embedInstance.state = state;
-    
-    if (state == WeexInstanceAppear || state == WeexInstanceForeground )
-    {
-        [self setNavigationWithStyles:self.embedInstance.naviBarStyles];
+    if (_renderFinished && _embedInstance && _embedInstance.state != state) {
+        _embedInstance.state = state;
+        
+        if (state == WeexInstanceAppear) {
+            [self setNavigationWithStyles:self.embedInstance.naviBarStyles];
+            [[WXSDKManager bridgeMgr] fireEvent:self.embedInstance.instanceId ref:WX_SDK_ROOT_REF type:@"viewappear" params:nil domChanges:nil];
+        }
+        else if (state == WeexInstanceDisappear) {
+            [[WXSDKManager bridgeMgr] fireEvent:self.embedInstance.instanceId ref:WX_SDK_ROOT_REF type:@"viewdisappear" params:nil domChanges:nil];
+        }
     }
 }
 
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+- (void)onclickErrorView
 {
-    if ([keyPath isEqualToString:@"state"]) {
-        WXState state = [change[@"new"] longValue];
-        if (_visible == WXVisibilityHidden) {  
+    if (self.errorView) {
+        [self.errorView removeFromSuperview];
+        self.errorView = nil;
+    }
+    
+    [self _renderWithURL:self.sourceURL];
+}
+
+- (void)observeInstanceState:(NSNotification *)notification
+{
+    WXSDKInstance *instance = notification.object;
+    
+    if (instance == self.weexInstance) {
+        NSDictionary *userInfo = notification.userInfo;
+        WXState state = [userInfo[@"state"] integerValue];
+        if (_visible == WXVisibilityHidden) {
             switch (state) {
                 case WeexInstanceBackground:
                     [self _updateState:WeexInstanceBackground];

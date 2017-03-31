@@ -1,0 +1,24 @@
+<template>
+    <div style="flex-direction: column;align-items: center; justify-content: center;">
+        <image src="http://gw.alicdn.com/mt/TB1GJDuMVXXXXbMaXXXXXXXXXXX-200-200.png"
+               style="width: 200px;height: 200px;margin: 30px"></image>
+        <text style="font-size: 40px">你访问的资源不存在</text>
+        <text style="font-size: 30px;margin: 30px;color: #999">去看看其他页面吧</text>
+        <div style="border-width: 3px;border-radius: 8px;border-color:darkgray;" onclick="go_home">
+            <text style="font-size: 45px;font-style: oblique;margin-top: 16px;margin-bottom: 16px;margin-left: 45px;margin-right: 45px">
+                去首页
+            </text>
+        </div>
+    </div>
+</template>
+<script>
+    require('weex-components');
+    module.exports = {
+        data: {},
+        methods: {
+            go_home: function (event) {
+                this.$openURL("https://www.taobao.com");
+            }
+        }
+    }
+</script>

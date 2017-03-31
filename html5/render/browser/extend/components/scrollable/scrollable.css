@@ -1,0 +1,15 @@
+.scrollable-wrap {
+  display: block;
+  overflow: hidden;
+}
+
+.scrollable-element.horizontal {
+  -webkit-box-orient: horizontal;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+}
+.scrollable-element.vertical {
+  -webkit-box-orient: vertical;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+}

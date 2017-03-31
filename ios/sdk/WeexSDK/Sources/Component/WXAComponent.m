@@ -11,6 +11,7 @@
 #import "WXHandlerFactory.h"
 #import "WXLog.h"
 #import "WXComponent+Events.h"
+#import "WXURLRewriteProtocol.h"
 
 @interface WXAComponent()
 
@@ -34,6 +35,13 @@
     return self;
 }
 
+- (void)dealloc
+{
+    if (_tap.delegate) {
+        _tap.delegate = nil;
+    }
+}
+
 - (void)viewDidLoad
 {
     [self.view addGestureRecognizer:_tap];
@@ -42,13 +50,18 @@
 - (void)openURL
 {
     if (_href && [_href length] > 0) {
+        NSMutableString *newHref = [_href mutableCopy];
+        WX_REWRITE_URL(_href, WXResourceTypeLink, self.weexInstance, &newHref)
+        if (!newHref) {
+            return;
+        }
         id<WXNavigationProtocol> navigationHandler = [WXHandlerFactory handlerForProtocol:@protocol(WXNavigationProtocol)];
         if ([navigationHandler respondsToSelector:@selector(pushViewControllerWithParam:
                                                             completion:
                                                             withContainer:)]) {
             __weak typeof(self) weexSelf = self;
-            [navigationHandler pushViewControllerWithParam:@{@"url":_href} completion:^(NSString *code, NSDictionary *responseData) {
-                WXLogVerbose(@"Push success -> %@", weexSelf.href);
+            [navigationHandler pushViewControllerWithParam:@{@"url":newHref} completion:^(NSString *code, NSDictionary *responseData) {
+                WXLogDebug(@"Push success -> %@", weexSelf.href);
             } withContainer:self.weexInstance.viewController];
         } else {
             WXLogError(@"Event handler of class %@ does not respond to pushViewControllerWithParam", NSStringFromClass([navigationHandler class]));
@@ -58,9 +71,21 @@
 
 - (void)updateAttributes:(NSDictionary *)attributes
 {
-    if (attributes[@""]) {
+    if (attributes[@"href"]) {
         _href = attributes[@"href"];
     }
+}
+
+#pragma mark
+#pragma gesture delegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    if ([gestureRecognizer isKindOfClass:[UITapGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UITapGestureRecognizer class]]) {
+        return YES;
+    }
+    
+    return NO;
 }
 
 @end

@@ -34,18 +34,6 @@ module.exports = {
       {
         test: /\.we(\?[^?]+)?$/,
         loader: 'weex'
-      },
-      {
-        test: /\.js(\?[^?]+)?$/,
-        loader: 'weex?type=script'
-      },
-      {
-        test: /\.css(\?[^?]+)?$/,
-        loader: 'weex?type=style'
-      }, 
-      {
-        test: /\.html(\?[^?]+)?$/,
-        loader: 'weex?type=tpl'
       }
     ]
   }

@@ -1,13 +1,18 @@
 # Created by IDE
 .idea/
 *.iml
+.DS_Store
+.vscode
+*.sw*
 
 # Created by Builder
 examples/build
+examples/web-entry
 test/build
 weex_tmp
 coverage
 dist
+packages
 
 # Node
 logs
@@ -25,3 +30,20 @@ pids
 html5/test/e2e/reports
 html5/test/e2e/screenshots
 html5/test/e2e/logs
+
+# Created by Weex Web Packer
+html5/browser/extend/packer.js
+html5/render/browser/extend/packer.js
+
+android/playground/app/gradlew
+android/playground/app/gradlew.bat
+android/playground/app/gradle/wrapper/gradle-wrapper.jar
+android/playground/app/gradle/wrapper/gradle-wrapper.properties
+android/sdk/.externalNativeBuild/ndkBuild/
+
+# doc
+doc/Thumbs.db
+doc/db.json
+doc/node_modules/
+doc/public/
+doc/.deploy*/

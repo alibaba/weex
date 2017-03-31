@@ -1,0 +1,68 @@
+@import "../variable.scss";
+
+.article {
+  max-width: 900px;
+  margin: 0 0 0 300px;
+  position: relative;
+  line-height: 1.6;
+  overflow-y: auto;
+  
+  &.article-type-article {
+    margin-left: 0;
+  }
+
+  .article-entry {
+    margin-bottom: 90px;
+  }
+
+  h2 {
+    font-size: 1.75em;
+    margin: 1.7em 0 .5em;
+  }
+
+  h3 {
+    font-size: 1.5em;
+    margin: 1.5em 0 .5em;
+  }
+
+  h4 {
+    font-size: 1.25em;
+    margin: 1.2em 0 .5em;
+  }
+
+  h5 {
+    font-size: 1.1em;
+    margin: 1.1em 0 .5em;
+  }
+
+  img[alt="mobile_preview"] {
+    width: 200px;
+  }
+
+  a {
+    color: #4078c0;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .weex-version {
+    display: inline-block;
+    padding: .3em .8em;
+    color: #fff;
+    background: $bg-light-blue;
+    border-radius: 2em;
+    line-height: 1.2;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+  }   
+}
+
+#blog .article {
+  margin-left: 0;
+}
+
+#faq .article {
+  margin-left: 0;
+}

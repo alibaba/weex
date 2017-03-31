@@ -11,6 +11,6 @@
 /**
  *  @abstract Thread safe NSMutableDictionary
  */
-@interface WXThreadSafeMutableDictionary : NSMutableDictionary
+@interface WXThreadSafeMutableDictionary<KeyType, ObjectType> : NSMutableDictionary
 
 @end

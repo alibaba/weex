@@ -40,14 +40,30 @@
 /******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ 0:
+/***/ function(module, exports, __webpack_require__) {
+
+	var __weex_template__ = __webpack_require__(308)
+	var __weex_style__ = __webpack_require__(309)
+
+	__weex_define__('@weex-component/695862caffb746fa67bb70cbd1bb819e', [], function(__weex_require__, __weex_exports__, __weex_module__) {
+
+	    __weex_module__.exports.template = __weex_template__
+
+	    __weex_module__.exports.style = __weex_style__
+
+	})
+
+	__weex_bootstrap__('@weex-component/695862caffb746fa67bb70cbd1bb819e',undefined,undefined)
+
+/***/ },
+
+/***/ 308:
 /***/ function(module, exports) {
 
-	;__weex_define__("@weex-component/55013df56e61e8caf4e3743c2a464d24", [], function(__weex_require__, __weex_exports__, __weex_module__){
-
-	;__weex_module__.exports.template = __weex_module__.exports.template || {}
-	;Object.assign(__weex_module__.exports.template, {
+	module.exports = {
 	  "type": "div",
 	  "classList": [
 	    "wrapper"
@@ -72,9 +88,14 @@
 	      }
 	    }
 	  ]
-	})
-	;__weex_module__.exports.style = __weex_module__.exports.style || {}
-	;Object.assign(__weex_module__.exports.style, {
+	}
+
+/***/ },
+
+/***/ 309:
+/***/ function(module, exports) {
+
+	module.exports = {
 	  "wrapper": {
 	    "alignItems": "center",
 	    "marginTop": 120
@@ -86,11 +107,8 @@
 	    "width": 360,
 	    "height": 82
 	  }
-	})
-	})
-	;__weex_bootstrap__("@weex-component/55013df56e61e8caf4e3743c2a464d24", {
-	  "transformerVersion": "0.3.1"
-	},undefined)
+	}
 
 /***/ }
-/******/ ]);
+
+/******/ });
