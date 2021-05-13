@@ -124,6 +124,6 @@
     "weex-vdom-tester": "^0.2.0",
     "weex-vue-render": "^1.0.24",
     "weex-wd": "^1.0.23",
-    "xmldom": "^0.1.27"
+    "xmldom": "^0.5.0"
   }
 }
