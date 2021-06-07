@@ -1,0 +1,10 @@
+.gradle
+.idea
+local.properties
+.classpath
+*iml
+playground/src/main/jniLibs
+build
+captures
+.settings
+.project

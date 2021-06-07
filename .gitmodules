@@ -1,4 +1,0 @@
-[submodule "weex-playground"]
-	path = weex-playground
-	url = https://github.com/apache/incubator-weex-playground.git
-	branch = master

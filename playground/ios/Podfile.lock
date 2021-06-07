@@ -1,0 +1,80 @@
+PODS:
+  - ATSDK-Weex (0.0.1)
+  - BindingX (1.0.3):
+    - WeexPluginLoader
+    - WeexSDK
+  - libwebp (1.0.2):
+    - libwebp/core (= 1.0.2)
+    - libwebp/dec (= 1.0.2)
+    - libwebp/demux (= 1.0.2)
+    - libwebp/dsp (= 1.0.2)
+    - libwebp/enc (= 1.0.2)
+    - libwebp/mux (= 1.0.2)
+    - libwebp/utils (= 1.0.2)
+    - libwebp/webp (= 1.0.2)
+  - libwebp/core (1.0.2):
+    - libwebp/webp
+  - libwebp/dec (1.0.2):
+    - libwebp/core
+  - libwebp/demux (1.0.2):
+    - libwebp/core
+  - libwebp/dsp (1.0.2):
+    - libwebp/core
+  - libwebp/enc (1.0.2):
+    - libwebp/core
+  - libwebp/mux (1.0.2):
+    - libwebp/core
+  - libwebp/utils (1.0.2):
+    - libwebp/core
+  - libwebp/webp (1.0.2)
+  - SDWebImage (3.7.5):
+    - SDWebImage/Core (= 3.7.5)
+  - SDWebImage/Core (3.7.5)
+  - SDWebImage/WebP (3.7.5):
+    - libwebp
+    - SDWebImage/Core
+  - SocketRocket (0.4.2)
+  - WeexPluginLoader (0.0.1.9.1):
+    - WeexSDK
+  - WeexSDK (0.28.0)
+  - WXDevtool (0.20.0):
+    - SocketRocket
+    - WeexSDK
+
+DEPENDENCIES:
+  - ATSDK-Weex (= 0.0.1)
+  - BindingX (= 1.0.3)
+  - libwebp (= 1.0.2)
+  - SDWebImage (= 3.7.5)
+  - SDWebImage/WebP
+  - SocketRocket (= 0.4.2)
+  - WeexSDK (from `../../`)
+  - WXDevtool (= 0.20.0)
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - ATSDK-Weex
+    - BindingX
+    - libwebp
+    - SDWebImage
+    - SocketRocket
+    - WeexPluginLoader
+    - WXDevtool
+
+EXTERNAL SOURCES:
+  WeexSDK:
+    :path: "../../"
+
+SPEC CHECKSUMS:
+  ATSDK-Weex: 1b27558f4336d77fb97704d34fc6ad1fd468592c
+  BindingX: b3c6c1c5dcd8e50277cfc5daad09d7010c227524
+  libwebp: b068a3bd7c45f7460f6715be7bed1a18fd5d6b48
+  SDWebImage: 69c6303e3348fba97e03f65d65d4fbc26740f461
+  SocketRocket: ffe08119b00ef982f6c37052a4705a057c8494ad
+  WeexPluginLoader: 85c1304f8ba29864e58531614a0acfeceef1b85c
+  WeexSDK: 9d395ea6115e6a2277fe46844152ce134f1aefee
+  WXDevtool: 833dd3e835df1f5f278fc8865c865d48196bfdab
+
+PODFILE CHECKSUM: d6daad58384f8679dda5e81c6554165c8406b35c
+
+COCOAPODS: 1.10.1

@@ -1,0 +1,24 @@
+{
+  "name": "weex-playground",
+  "version": "0.0.1",
+  "description": "Playground for Apache Weex, demo purpose only",
+  "scripts": {
+    "danger": "danger"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apache/incubator-weex-playground.git"
+  },
+  "keywords": [
+    "weex",
+    "playground"
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/apache/incubator-weex-playground/issues"
+  },
+  "homepage": "https://github.com/apache/incubator-weex-playground#readme",
+  "dependencies": {
+    "danger": "^0.18.0"
+  }
+}
