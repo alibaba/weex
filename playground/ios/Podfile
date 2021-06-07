@@ -1,0 +1,28 @@
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '9.0'
+#inhibit_all_warnings!
+
+
+def common   
+    # check if weex-playground is a submodule
+    pod 'WeexSDK', :path => '../../'
+
+    pod 'WXDevtool','0.20.0'
+    pod 'SDWebImage', '3.7.5'
+    pod 'SDWebImage/WebP'
+    pod 'SocketRocket', '0.4.2'
+    pod 'ATSDK-Weex', '0.0.1',:configurations => ['Debug']
+    pod 'BindingX', '1.0.3'
+    pod 'libwebp', '1.0.2'
+    # WeexGcanvas is added by Weex Plugin, more info at https://market.dotwe.org/ext/list.htm
+    #pod 'WeexGcanvas'
+end
+
+target 'WeexDemo' do
+    common
+end
+
+target 'WeexUITestDemo' do
+    common
+end
+

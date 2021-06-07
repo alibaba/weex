@@ -1,0 +1,51 @@
+<!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<resources>
+    <string name="app_name">WEEX</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_wx_main">WXMainActivity</string>
+
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">WEEX\nPLAYGROUND</string>
+
+    <string name="cpu_not_support_tip">Sorry, your current device is x86 architecture.\n We only
+        support arm architecture devices!
+    </string>
+
+    <string name="index_tip">Network Error!\n1.Make sure you use the command "npm run serve"
+        launched local service\n2.Make sure you modify "your_current_ip" to your local IP in
+        "WXMainActivity"
+    </string>
+    <string name="title_activity_dynamic">DynamicActivity</string>
+    <string name="update_found_new_version">New version is available</string>
+    <string name="update_downloading">Downloading updates</string>
+    <string name="update_progress">Progress: </string>
+    <string name="update_now">Update Now</string>
+    <string name="update_remind_later">Remind Later</string>
+    <string name="update_version">Version: </string>
+    <string name="update_date">Date: </string>
+    <string name="update_desc">Updates: </string>
+</resources>

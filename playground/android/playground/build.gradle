@@ -1,0 +1,133 @@
+plugins {
+    id "com.github.hierynomus.license" version "0.14.0"
+}
+
+apply plugin: 'com.android.application'
+if(!project.implementFromWeex){
+    apply from: 'https://raw.githubusercontent.com/apache/incubator-weex/a675c3e151f3fa9339157882c4f44d7452206952/android/sdk/buildSrc/download_jsc.gradle'
+}
+
+android {
+    compileSdkVersion project.compileSdkVersion
+    defaultConfig {
+        applicationId "org.apache.weex"
+        minSdkVersion project.minSdkVersion
+        targetSdkVersion project.targetSdkVersion
+        versionCode 21
+        versionName "0.21.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+        ndk{
+            abiFilters "arm64-v8a", "armeabi-v7a", "x86", "x86_64"
+        }
+        if(!getBuildConfigFields()?.containsKey('externalLibraryName')) {
+            buildConfigField "String", "externalLibraryName", "\"\""
+        }
+    }
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            output.outputFileName = "playground.apk"
+        }
+    }
+    signingConfigs {
+        debug {
+            storeFile file("tools/weex.jks")
+            storePassword "123456"
+            keyAlias "weex"
+            keyPassword "123456"
+        }
+    }
+    buildTypes {
+        debug {
+            jniDebuggable true
+            debuggable true
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+
+    packagingOptions {
+        exclude 'LICENSE.txt'
+    }
+    testOptions {
+        reportDir = "$project.buildDir/test/report"
+    }
+    dexOptions {
+        preDexLibraries false
+    }
+    aaptOptions {
+        noCompress 'wasm'
+    }
+}
+
+
+dependencies {
+    androidTestImplementation "com.android.support:support-annotations:${project.supportLibVersion}"
+    androidTestImplementation 'junit:junit:4.12'
+    androidTestImplementation 'org.awaitility:awaitility:3.0.0'
+    androidTestImplementation 'org.awaitility:awaitility-proxy:3.0.0'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestImplementation('com.android.support.test.espresso:espresso-contrib:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude group: 'com.android.support', module: 'design'
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+        exclude group: 'com.android.support', module: 'recyclerview-v7'
+    })
+    androidTestImplementation 'com.android.support.test:runner:0.5'
+    androidTestImplementation 'com.squareup.picasso:picasso:2.5.2'
+    androidTestImplementation 'org.hamcrest:hamcrest-library:1.3'
+    androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
+    /*source dependency*/
+
+    implementation project(':commons')
+ //   implementation project(':HeronAndroid')
+    //https://github.com/weexteam/weex-analyzer-android
+    //Weex-Analyzer provides several convenient tools such as Memory Monitor
+    // to optimize your application. It's not available by default,you can
+    // set WXAnalyzerDelegate#DEBUG==true to enable it
+    debugImplementation 'com.taobao.android:weex_analyzer:0.1.0.5'
+
+
+    implementation 'com.loopj.android:android-async-http:1.4.9@aar'
+    implementation 'com.facebook.fresco:fresco:0.12.0+'
+    implementation 'com.facebook.fresco:animated-gif:0.12.0'
+
+    implementation 'com.google.zxing:core:3.3.3'
+
+    implementation 'com.squareup.okhttp:okhttp:2.3.0'
+    implementation 'com.squareup.okhttp:okhttp-ws:2.3.0'
+    implementation 'com.squareup.okio:okio:1.0.1'
+    implementation "com.alibaba:fastjson:${project.fastjsonLibVersion}"
+    implementation "com.android.support:support-v4:${project.supportLibVersion}"
+    implementation "com.android.support:appcompat-v7:${project.supportLibVersion}"
+    implementation "com.android.support:design:${project.supportLibVersion}"
+    implementation "com.android.support:support-annotations:${project.supportLibVersion}"
+    implementation 'com.jakewharton.scalpel:scalpel:1.1.2'
+    implementation 'com.taobao.android.weex_inspection:urlconnection_interceptor:1.0.0'
+    implementation 'com.taobao.android.weex_inspection:protocol:1.1.4.1'
+    implementation 'com.android.support.test.espresso:espresso-idling-resource:2.2.2'
+    implementation 'com.taobao.android:weex_inspector:0.24.2.4'
+//    implementation project(":inspector")
+
+    // Bind actions to effects. See https://alibaba.github.io/bindingx/
+    implementation 'com.alibaba.android:bindingx-core:1.1.1.2@aar'
+    implementation 'com.alibaba.android:bindingx_weex_plugin:1.1.1@aar'
+
+    implementation('com.journeyapps:zxing-android-embedded:3.6.0') { transitive = false }
+    if(project.implementFromWeex){
+        implementation project(':weex_sdk')
+    }
+    else {
+        implementation "org.apache.weex:sdk_legacy:${project.weexSdkVersion}"
+    }
+}
+
+if(file('../license/LICENSE').exists()){
+    license {
+        header = file('../license/LICENSE')
+        excludes(["**/*.xml","org/apache/weex/thirdParty/zxing/*.java"])
+    }
+    preBuild.dependsOn licenseFormat
+}

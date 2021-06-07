@@ -1,0 +1,34 @@
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.6.1'
+    }
+}
+subprojects {
+    repositories {
+        google()
+        maven() {
+            url 'http://oss.jfrog.org/oss-snapshot-local/'
+        }
+        jcenter()
+    }
+    buildscript {
+        repositories {
+            google()
+            jcenter()
+        }
+    }
+}
+ext {
+    compileSdkVersion=28
+    minSdkVersion=14
+    targetSdkVersion=28
+    supportLibVersion="28.0.0"
+    fastjsonLibVersion="1.1.46.android"
+    weexSdkVersion="0.29.0.1-SNAPSHOT"
+    implementFromWeex = false
+}

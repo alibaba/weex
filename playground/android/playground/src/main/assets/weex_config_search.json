@@ -1,0 +1,36 @@
+{
+  "modules":[
+    {
+      "name" : "tool",
+      "className":"com.taobao.weex.ui.module.WXModalUIModule",
+       "methods":[
+         "toast",
+         "alert",
+         "confirm",
+         "prompt"
+       ]
+    },
+    {
+      "name" : "toolError",
+      "className":"com.taobao.weex.ui.module.WXModalUIModuleError",
+      "methods":[
+        "toast",
+        "alert"
+      ]
+    }
+  ],
+  "components":[
+    {
+      "name":"diva",
+      "className":"com.taobao.weex.ui.component.WXDiv",
+      "appendTree":false,
+       "methods":[]
+    },
+    {
+      "name":"divnot",
+      "className":"com.taobao.weex.ui.component.WXDivNot",
+      "appendTree":false,
+      "methods":[]
+    }
+  ]
+}
