@@ -9,11 +9,11 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git@github.com:apache/incubator-weex.git"
+    "url": "git@github.com:alibaba/weex.git"
   },
-  "homepage": "https://weex.apache.org/",
+  "homepage": "http://weex.io/",
   "bugs": {
-    "url": "https://github.com/apache/incubator-weex/issues"
+    "url": "https://github.com/alibaba/weex/issues"
   },
   "private": true,
   "keywords": [

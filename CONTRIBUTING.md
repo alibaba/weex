@@ -1,5 +1,9 @@
+> **NOTICE: This document is outdated and will be rewritten. (WIP)**
+
 # Contributing to Weex
+
 Weex community respects all kinds of contributing, including but not limited to code, documentation, mailing list.
+
 ## Table of Content
 * [Code of Conduct](#code-of-conduct)
 * [Mailing List](#mailing-list)
@@ -74,11 +78,11 @@ Weex adopts [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/
     1. Write the corresponding [document](#contribute-documentation)
 
 ### Coding
-1. [Fork](https://help.github.com/articles/fork-a-repo/) the Github repository at [https://github.com/apache/incubator-weex](https://github.com/apache/incubator-weex). 
+1. [Fork](https://help.github.com/articles/fork-a-repo/) the Github repository at [https://github.com/apache/incubator-weex](https://github.com/apache/incubator-weex).
 1. Clone the forked repository and create a new branch from `master` to push your commits to.
 1. Develop your feature or bug fix in your new branch. Make sure your code meets the [style guidelines](#code-style-guidelines).
 1. Add the **License** below to the top of any new file(s) you've added.
-   
+
         /*
         * Licensed to the Apache Software Foundation (ASF) under one
         * or more contributor license agreements.  See the NOTICE file
@@ -97,13 +101,13 @@ Weex adopts [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/
         * specific language governing permissions and limitations
         * under the License.
         */
-   
+
 1. Commit all the changes to your branch.
 
 *Tip*:
 > If you are writing Java or C++ with Android Studio, **License** will be added to the head of the file automatically.
 
-#### Code Style Guidelines 
+#### Code Style Guidelines
 
 ##### Objective-C
 
@@ -127,7 +131,7 @@ Weex adopts [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/
 
 1. One PR should solve only one problem.
 1. The PR title should be the form of `[COMPONENT] Summary`:
-    * `COMPONENT` is one of the mentioned PR categories (android, iOS, JsFm, web, test, etc..). 
+    * `COMPONENT` is one of the mentioned PR categories (android, iOS, JsFm, web, test, etc..).
     * `Summary` should be a brief description of your change within one sentence.
 1. Content description of PR
     * If the PR is about fixing a bug *excluding crash*, a [demo](http://editor.weex.io/) is necessary in code's description.

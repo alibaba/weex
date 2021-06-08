@@ -1,7 +1,7 @@
 # Build from source
-## Install gradlew   
+## Install gradlew
   See https://gradle.org/install#with-a-package-manager
-## Build Weex   
+## Build Weex
 run `./gradlew clean assembleRelease` to build `weex_sdk`
 
 ### Build Types
@@ -25,7 +25,7 @@ Double type `SHIFT` and enter `Build Variants`, will give you build variants win
 * Select `legacyRelease` or `release` in the dropdown window of Active Build Variants to enable Android-Studio integrated for files under `com.taobao.weex`
 
 ## The submodule weex-playground
-[Weex Playground](https://github.com/apache/incubator-weex-playground) can be used to test and preview weex pages on Android and it has been added as a submodule.
+Weex Playground can be used to test and preview weex pages on Android and it has been added as a submodule.
 ### Relationship between weex and playground
 * The playground submodule will be cloned and updated automatically when developers clone the ‘incubator-weex’ repo and build it.In this case, playground project will implement the source code of weex-sdk.
 * When developer directly clone the 'weex-playground' repo and run it separately, the playground project will implement a corresponding aar version of weex-sdk.
@@ -39,6 +39,6 @@ cd android
 -PapachePackageName="false" -PunbundlingJSC="true" -PbuildRuntimeApi=true -PweexVersion=$PUBLISH_VERSION -PbintrayUser=weex -PbintrayApiKey=$JCENTER_TOKEN
 ```
 
-* Explanation for variable:  
-$PUBLISH_VERSION The version of snapshot, like 0.26.1.3-SNAPSHOT  
+* Explanation for variable:
+$PUBLISH_VERSION The version of snapshot, like 0.26.1.3-SNAPSHOT
 $JCENTER_TOKEN The private key for JCenter (https://bintray.com/weex/Android/sdk), which is the distribution channel for Android

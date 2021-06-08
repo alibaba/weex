@@ -6,7 +6,7 @@
   "engines": {
     "node": ">=4"
   },
-  "homepage": "https://github.com/apache/incubator-weex/",
+  "homepage": "https://github.com/alibaba/weex/",
   "keywords": [
     "weex",
     "hybrid",
@@ -16,7 +16,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/apache/incubator-weex.git"
+    "url": "git+ssh://git@github.com/alibaba/weex.git"
   },
   "license": "Apache-2.0"
 }

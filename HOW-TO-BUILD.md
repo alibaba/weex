@@ -7,12 +7,14 @@ Weex SDK includes 3 different SDKs to use in corresponding system/browser:
 * iOS SDK
 * [Mobile Web SDK](https://github.com/weexteam/weex-vue-render)
 
-See our [guide in our website](http://weex.apache.org/guide/integrate-to-your-app.html) to learn more about how to integrate Weex SDK into your app.
+See our [guide in our website](http://weex.io/guide/integrate-to-your-app.html) to learn more about how to integrate Weex SDK into your app.
 
 # Build Environment
+
 The environment required to build weex is categorized by platforms.
 
 ## Android
+
 * JDK `1.8+`
 * Android SDK Platform 28
   * `ANDROID_HOME` must be configured by using `export ANDROID_HOME=/path_to_sdk`
@@ -24,6 +26,7 @@ The environment required to build weex is categorized by platforms.
 * CMake 3.4.1+
 
 ## iOS
+
 * Install [iOS Environment](https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/AppStoreDistributionTutorial/Setup/Setup.html)
 * Install [CocoaPods](https://guides.cocoapods.org/using/getting-started.html)
 * XCode Command Tools 8.0+
@@ -44,16 +47,27 @@ This may take a while. After that, you can look in `dist/`, `android/sdk/build/o
 
 You can build all SDKs with one script as described above, or just build for a single platform step by step.
 
-## Build Javascript Framework
-Javascript Framework is required by native SDKs. **So this must be built first.**
-Install npm dependencies(You must have node&npm installed):
-> `$ npm install --production`
+## Build JavaScript Framework
 
-Install build tools:
-> `$ npm run install:buildtools`
+Install npm dependencies (Please install [Node.js](https://nodejs.org/) v8.0.0+ at first):
 
-Build the javascript libraries:
-> `$ npm run build:source`
+```bash
+npm install
+```
+
+Build bundled js framework (include both vue and rax):
+```bash
+npm run build:jsfm
+```
+
+Build specific js framework:
+```bash
+npm run build:vue
+```
+
+```bash
+npm run build:rax
+```
 
 ### Before build Native SDK
 Move `min` version to Native SDK folder, which will be used by native SDK build.
@@ -64,17 +78,19 @@ cp packages/weex-js-framework/index.min.js android/sdk/assets/main.js
 ```
 
 ## Build Android SDK
+
 1. Install the [Android environment](#android).
 2. Execute the following command
 
-    ```
-    cd android
-    ./gradlew :weex_sdk:clean :weex_sdk:assembleRelease
-    ```
+```
+cd android
+./gradlew :weex_sdk:clean :weex_sdk:assembleRelease
+```
 
 3. Output can be found at `android/sdk/build/outputs/aar`
 
 ## Build iOS SDK
+
 Execute command below to compile iOS SDK:
 > `$ xcodebuild -project ios/sdk/WeexSDK.xcodeproj -target WeexSDK_MTL`
 

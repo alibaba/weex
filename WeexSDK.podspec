@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
                    A framework for building Mobile cross-platform UI
                    DESC
 
-  s.homepage     = "https://github.com/apache/incubator-weex"
+  s.homepage     = "https://github.com/alibaba/weex"
   s.license = {
     :type => 'Apache-2.0'
   }
@@ -21,12 +21,6 @@ Pod::Spec.new do |s|
                    }
   s.platform     = :ios
   s.ios.deployment_target = '9.0'
-
-  # use for public
-  # s.source =  {
-  #  :git => 'https://github.com/apache/incubator-weex.git',
-  #  :tag => #{s.version}
-  # }
 
   # use for playground
   s.source =  { :path => '.' }
@@ -125,7 +119,7 @@ Pod::Spec.new do |s|
     'GCC_PREPROCESSOR_DEFINITIONS' => 'OS_IOS=1' }
 
   s.frameworks = 'CoreMedia','MediaPlayer','AVFoundation','AVKit','JavaScriptCore','GLKit','OpenGLES','CoreText','QuartzCore','CoreGraphics'
-  
+
   s.libraries = 'c++'
 
 end
