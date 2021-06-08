@@ -16,7 +16,7 @@ A framework for building Mobile cross-platform UI.
 
 ## Build from Source
 
-[How To Build](./HOW_TO_BUILD.md)
+[How To Build](./HOW-TO-BUILD.md)
 
 ## Contribution
 
