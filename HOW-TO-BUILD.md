@@ -1,13 +1,4 @@
-# Weex Apache Source Release
-Weex produce SDKs to integrate with iOS/Android/Mobile web applications. This file will cover how to build Weex from command line. You can either use the script we provided or manually build from source step by step.
-See `README.md` for further information about the Weex Framework.
-
-Weex SDK includes 3 different SDKs to use in corresponding system/browser:
-* Android SDK
-* iOS SDK
-* [Mobile Web SDK](https://github.com/weexteam/weex-vue-render)
-
-See our [guide in our website](http://weex.io/guide/integrate-to-your-app.html) to learn more about how to integrate Weex SDK into your app.
+> **NOTICE: This document is outdated and will be rewritten. (WIP)**
 
 # Build Environment
 
@@ -38,10 +29,7 @@ This article was tested in MacOSX system.
 
 # Build All by Script
 
-This script will build Android and iOS SDKs:
-> `$ bash scripts/build_from_source.sh `
-
-This may take a while. After that, you can look in `dist/`, `android/sdk/build/outputs/aar` and `ios/sdk/Products` for Web / Android / iOS SDK artifacts.
+// TODO: update this document
 
 # Build for Platforms
 
@@ -67,14 +55,6 @@ npm run build:vue
 
 ```bash
 npm run build:rax
-```
-
-### Before build Native SDK
-Move `min` version to Native SDK folder, which will be used by native SDK build.
-
-```
-cp packages/weex-js-framework/index.min.js ios/sdk/WeexSDK/Resources/main.js
-cp packages/weex-js-framework/index.min.js android/sdk/assets/main.js
 ```
 
 ## Build Android SDK

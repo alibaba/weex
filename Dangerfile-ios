@@ -1,5 +1,0 @@
-
-# Shows all build errors, warnings and unit tests results generated from `xcodebuild`
-xcode_summary.ignored_files = '**/Pods/**'
-xcode_summary.inline_mode = true
-xcode_summary.report 'ios/sdk/xcodebuild.json'
