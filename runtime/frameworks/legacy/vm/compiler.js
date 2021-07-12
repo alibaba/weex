@@ -51,7 +51,7 @@ import {
  * build()
  *   compile(template, parentNode)
  *     if (type is content) create contentNode
- *     else if (dirs have v-for) foreach -> create context
+ *     else if (dirs have v-for) for each -> create context
  *       -> compile(templateWithoutFor, parentNode): diff(list) onchange
  *     else if (dirs have v-if) assert
  *       -> compile(templateWithoutIf, parentNode): toggle(shown) onchange
@@ -60,11 +60,11 @@ import {
  *     else if (type is custom)
  *       addChildVm(vm, parentVm)
  *       build(externalDirs)
- *       foreach childNodes -> compile(childNode, template)
+ *       for each childNodes -> compile(childNode, template)
  *     else if (type is native)
  *       set(dirs): update(id/attr/style/class) onchange
  *       append(template, parentNode)
- *       foreach childNodes -> compile(childNode, template)
+ *       for each childNodes -> compile(childNode, template)
  */
 export function build (vm) {
   const opt = vm._options || {}
@@ -497,7 +497,7 @@ function bindRepeat (vm, target, fragBlock, info) {
         trackMap[key] = item
       })
 
-      // 2. remove unused element foreach old item
+      // 2. remove unused element for each old item
       const reusedList = []
       oldData.forEach((item, index) => {
         const key = trackBy ? item[trackBy] : (oldStyle ? item[keyName] : index)
@@ -514,7 +514,7 @@ function bindRepeat (vm, target, fragBlock, info) {
         }
       })
 
-      // 3. create new element foreach new item
+      // 3. create new element for each new item
       children.length = 0
       vms.length = 0
       fragBlock.data = data.slice()
