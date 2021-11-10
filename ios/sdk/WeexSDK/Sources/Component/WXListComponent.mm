@@ -218,6 +218,14 @@
     _tableView.estimatedRowHeight = 0;
     _tableView.estimatedSectionFooterHeight = 0;
     _tableView.estimatedSectionHeaderHeight = 0;
+    
+#if (defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && __IPHONE_OS_VERSION_MAX_ALLOWED >= 150000)
+    /// __IPHONE_15_0 Adaptation
+    if (@available(iOS 15.0, *)) {
+        _tableView.prefetchingEnabled = false;
+        _tableView.sectionHeaderTopPadding = 0;
+    }
+#endif
 }
 
 - (void)viewWillUnload
