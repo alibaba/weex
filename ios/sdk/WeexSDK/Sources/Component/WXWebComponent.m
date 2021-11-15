@@ -25,6 +25,7 @@
 #import "WXSDKEngine.h"
 
 #import <JavaScriptCore/JavaScriptCore.h>
+#import <WebKit/WKScriptMessageHandler.h>
 
 @interface WXWebView : WKWebView
 
@@ -41,7 +42,34 @@
 
 @end
 
-@interface WXWebComponent ()
+/// -[WKUserContentController addScriptMessageHandler: name:] will retain the handler.
+/// If hanler also retain the webview, it will lead to retain cycle.
+/// Use delegate and weak reference to break retain cycle.
+@interface WeakScriptMessageDelegate : NSObject <WKScriptMessageHandler>
+
+@property (nonatomic, weak) id<WKScriptMessageHandler> scriptDelegate;
+
+- (instancetype)initWithDelegate:(id<WKScriptMessageHandler>)scriptDelegate;
+
+@end
+
+@implementation WeakScriptMessageDelegate
+
+- (instancetype)initWithDelegate:(id<WKScriptMessageHandler>)scriptDelegate {
+    self = [super init];
+    if (self) {
+        _scriptDelegate = scriptDelegate;
+    }
+    return self;
+}
+
+- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
+    [self.scriptDelegate userContentController:userContentController didReceiveScriptMessage:message];
+}
+
+@end
+
+@interface WXWebComponent () <WKScriptMessageHandler>
 
 @property (nonatomic, strong) WXWebView *webview;
 
@@ -84,13 +112,22 @@ WX_EXPORT_METHOD(@selector(goForward))
 
 - (WKWebViewConfiguration *)baseConfiguration {
     WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
+    /// script-scale
     NSString *scalesPageToFitScript = @"var meta = document.createElement('meta'); meta.setAttribute('name', 'viewport'); meta.setAttribute('content', 'width=device-width'); document.getElementsByTagName('head')[0].appendChild(meta);";
-    WKUserScript *userScript = [[WKUserScript alloc] initWithSource:scalesPageToFitScript injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
+    /// script-message
+    NSString *postMessageScript = @"var postMessage = function(e){window.webkit.messageHandlers.weex.postMessage(e)}";
+    /// inject-scale
+    WKUserScript *scalePageScript = [[WKUserScript alloc] initWithSource:scalesPageToFitScript injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
     WKUserContentController *userContentController = [[WKUserContentController alloc] init];
-    [userContentController addUserScript:userScript];
+    [userContentController addUserScript:scalePageScript];
+    /// inject-message
+    WKUserScript *messageScript = [[WKUserScript alloc] initWithSource:postMessageScript injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
+    [userContentController addUserScript:messageScript];
+    /// scriptMessageHandler
+    WeakScriptMessageDelegate *weakScriptMessageDelegate = [[WeakScriptMessageDelegate alloc] initWithDelegate:self];
+    [userContentController addScriptMessageHandler:weakScriptMessageDelegate name:@"weex"];
     configuration.userContentController = userContentController;
     configuration.allowsInlineMediaPlayback = YES;
-    
     return configuration;
 }
 
@@ -105,39 +142,6 @@ WX_EXPORT_METHOD(@selector(goForward))
     _webview.navigationDelegate = self;
     [_webview setBackgroundColor:[UIColor clearColor]];
     _webview.opaque = NO;
-//    _jsContext = [_webview valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
-//    __weak typeof(self) weakSelf = self;
-
-    // This method will be abandoned slowly.
-//    _jsContext[@"$notifyWeex"] = ^(JSValue *data) {
-//        if (weakSelf.notifyEvent) {
-//            [weakSelf fireEvent:@"notify" params:[data toDictionary]];
-//        }
-//    };
-//
-//    //Weex catch postMessage event from web
-//    _jsContext[@"postMessage"] = ^() {
-//
-//        NSArray *args = [JSContext currentArguments];
-//
-//        if (args && args.count < 2) {
-//            return;
-//        }
-//
-//        NSDictionary *data = [args[0] toDictionary];
-//        NSString *origin = [args[1] toString];
-//
-//        if (data == nil) {
-//            return;
-//        }
-//
-//        NSDictionary *initDic = @{ @"type" : @"message",
-//                                   @"data" : data,
-//                                   @"origin" : origin
-//        };
-//
-//        [weakSelf fireEvent:@"message" params:initDic];
-//    };
 
     self.source = _inInitsource;
     if (_url) {
@@ -258,6 +262,38 @@ WX_EXPORT_METHOD(@selector(goForward))
 
     NSString *code = [NSString stringWithFormat:@"(function (){window.dispatchEvent(new MessageEvent('message', %@));}())", json];
     [_webview evaluateJavaScript:code completionHandler:nil];
+}
+
+#pragma mark - WKScriptMessageHandler -
+- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
+    /// demo: http://dotwe.org/vue/b7d6c6875ff7ae5ad90a5d84d0d46dbb
+    if ([message.name isEqualToString:@"weex"]) {
+        if (![message.body isKindOfClass:NSArray.class]) {
+            return;
+        }
+        NSArray *params = message.body;
+        if (params.count < 2) {
+            return;
+        }
+        NSDictionary *data;
+        NSString *origin;
+        if ([params[0] isKindOfClass:NSDictionary.class]) {
+            data = params[0];
+        } else {
+            data = @{};
+        }
+        if ([params[1] isKindOfClass:NSString.class]) {
+            origin = params[1];
+        } else {
+            origin = @"default";
+        }
+        NSDictionary *initDic = @{
+            @"type" : @"message",
+            @"data" : data,
+            @"origin" : origin
+        };
+        [self fireEvent:@"message" params:initDic];
+    }
 }
 
 #pragma mark Webview Delegate
