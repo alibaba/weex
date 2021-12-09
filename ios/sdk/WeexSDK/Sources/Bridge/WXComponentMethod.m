@@ -48,6 +48,7 @@
         WXComponent *component = [self.instance componentForRef:_componentRef];
         if (!component) {
             WXLogError(@"component not found for ref:%@, type:%@", _componentRef, _componentName);
+            return;
         }
         BOOL synchronous = NO;
         SEL selector = [WXComponentFactory methodWithComponentName:component.type withMethod:self.methodName isSync:&synchronous];
