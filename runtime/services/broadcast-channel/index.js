@@ -69,6 +69,7 @@ BroadcastChannel.prototype.close = function () {
   }
 
   this._closed = true
+  this.onmessage = null
 
   // remove itself from channels.
   if (channels[this.name]) {
