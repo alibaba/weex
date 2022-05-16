@@ -633,6 +633,14 @@ WX_EXPORT_METHOD(@selector(setTextFormatter:))
     }
 }
 
+- (void)datePickerValueDidChange:(NSString *)value
+{
+    self.text = value;
+    if (_inputEvent) {
+        [self fireEvent:@"input" params:@{@"value":[self text]} domChanges:@{@"attrs":@{@"value":[self text]}}];
+    }
+}
+
 #pragma mark UITextFieldDelegate
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{

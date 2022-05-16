@@ -22,6 +22,7 @@
 @protocol WXDatePickerManagerDelegate <NSObject>
 @optional
 - (void)fetchDatePickerValue:(NSString *)value;
+- (void)datePickerValueDidChange:(NSString *)value;
 @end
 
 @interface WXDatePickerManager : NSObject
