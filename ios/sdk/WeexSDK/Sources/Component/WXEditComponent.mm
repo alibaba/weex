@@ -777,6 +777,35 @@ WX_EXPORT_METHOD(@selector(setTextFormatter:))
     self.weexInstance.rootView.frame = rect;
 }
 
+- (void)setTextViewMovedUp
+{
+    UIView *rootView = self.weexInstance.rootView;
+    CGRect rect = self.weexInstance.frame;
+    CGRect rootViewFrame = rootView.frame;
+    CGRect inputFrame = [self.view.superview convertRect:self.view.frame toView:rootView];
+    
+    CGFloat inputOffset = inputFrame.size.height - (rootViewFrame.size.height - inputFrame.origin.y);
+    
+    UITextView *textView = (UITextView *)self.view;
+    CGRect cursorRect = [textView caretRectForPosition:textView.selectedTextRange.end];
+    CGRect cursorRectInWindow = [textView convertRect:cursorRect toView:rootView];
+    CGFloat textViewOffsetY = cursorRectInWindow.origin.y + cursorRectInWindow.size.height;
+    CGFloat keyboardOffsetY = rootView.frame.size.height - self.keyboardSize.height;
+    if (textViewOffsetY >= keyboardOffsetY) {
+        CGFloat offset = textViewOffsetY - keyboardOffsetY + _upriseOffset;
+        
+        if (offset > 0) {
+            rect = (CGRect){
+                .origin.x = 0.f,
+                .origin.y = rect.origin.y - offset,
+                .size = rootViewFrame.size
+            };
+        }
+        
+        self.weexInstance.rootView.frame = rect;
+    }
+}
+
 #pragma mark textview Delegate
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
@@ -792,6 +821,10 @@ WX_EXPORT_METHOD(@selector(setTextFormatter:))
 
 - (void)textViewDidBeginEditing:(UITextView *)textView
 {
+    // 此处获取光标位置时需延迟0.1s，否则获取的位置是上一次的光标位置
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self setTextViewMovedUp];
+    });
     _changeEventString = [textView text];
     if (_focusEvent) {
         [self fireEvent:@"focus" params:nil];
@@ -817,6 +850,7 @@ WX_EXPORT_METHOD(@selector(setTextFormatter:))
 
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
+    [self setTextViewMovedUp];
     if (![textView.text length]) {
         [self setPlaceholderAttributedString];
     }
@@ -997,7 +1031,10 @@ WX_EXPORT_METHOD(@selector(setTextFormatter:))
         };
         CGRect inputFrame = [self.view.superview convertRect:self.view.frame toView:rootView];
         if (keyboardRect.origin.y - inputFrame.size.height <= inputFrame.origin.y) {
-            [self setViewMovedUp:YES];
+            // textview在delegate中处理
+            if (![self.view isKindOfClass:UITextView.class]) {
+                [self setViewMovedUp:YES];
+            }
             self.weexInstance.isRootViewFrozen = YES;
         }
     }
