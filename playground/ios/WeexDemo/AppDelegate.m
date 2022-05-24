@@ -103,8 +103,8 @@
     setenv("GCOV_PREFIX", [documentsDirectory cStringUsingEncoding:NSUTF8StringEncoding], 1);
     setenv("GCOV_PREFIX_STRIP", "6", 1);
 #endif
-    extern void __gcov_flush(void);
-    __gcov_flush();
+    extern void __gcov_reset(void);
+    __gcov_reset();
 #endif
 }
 

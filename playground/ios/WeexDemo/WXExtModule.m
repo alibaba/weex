@@ -36,8 +36,8 @@ WX_EXPORT_METHOD(@selector(generateCover:))
 #if defined __cplusplus
     extern "C" {
 #endif
-    extern void __gcov_flush(void);
-    __gcov_flush();
+    extern void __gcov_reset(void);
+        __gcov_reset();
 #if defined __cplusplus
     };
 #endif
