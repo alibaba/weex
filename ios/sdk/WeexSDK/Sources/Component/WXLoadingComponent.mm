@@ -122,9 +122,13 @@
     }
     if (contentOffset.y > 0) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [UIView animateWithDuration:0.25 animations:^{
-                [scrollerProtocol setContentOffset:contentOffset animated:NO];
-            } completion:nil];
+            if (_displayState) {
+                [scrollerProtocol setContentOffset:contentOffset animated:YES];
+            } else {
+                [UIView animateWithDuration:0.25 animations:^{
+                    [scrollerProtocol setContentOffset:contentOffset];
+                } completion:nil];
+            }
         });
     }
 }
