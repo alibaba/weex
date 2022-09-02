@@ -640,6 +640,8 @@ WX_EXPORT_METHOD(@selector(setTextFormatter:))
     {
         [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
         _changeEventString = [textField text];
+        //Fix the problem that the date display time is incorrect after the initial value of the date is reset when the input tag type is date|time
+        [_datePickerManager updateDatePicker:@{@"value":_changeEventString,@"type":_inputType}];
         [_datePickerManager show];
         return NO;
     }
