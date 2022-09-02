@@ -125,7 +125,8 @@
         if (!strcmp(parameterType, blockType)) {
             // callback
             argument = [^void(id result, BOOL keepAlive) {
-                [[WXSDKManager bridgeMgr] callBack:instanceId funcId:(NSString *)obj params:[WXUtility convertContainerToImmutable:result] keepAlive:keepAlive];
+                // When we execute the callback processing, we perform a one-step convertContainerToImmutable operation (convert the object into an object). For NSArray objects with different empty elements, they are converted to NSMutableArray, and then converted to multiple objects, so the front of json points to the same an object.
+                [[WXSDKManager bridgeMgr] callBack:instanceId funcId:(NSString *)obj params:result keepAlive:keepAlive];
             } copy];
             
             // retain block
