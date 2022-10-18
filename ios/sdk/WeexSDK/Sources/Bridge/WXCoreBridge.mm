@@ -1550,6 +1550,23 @@ static UnicornRenderFunc unicornRenderFunction = nullptr;
         CGFloat h = MAX(screenSize.width, screenSize.height);
         env->SetDeviceWidth(std::to_string(w));
         env->SetDeviceHeight(std::to_string(h));
+        
+        __block UIEdgeInsets safeAreaInsets = UIEdgeInsetsZero;
+    #if __IPHONE_11_0
+        if (@available(iOS 11.0, *)) {
+            WXPerformBlockSyncOnMainThread(^{
+                safeAreaInsets = [UIApplication sharedApplication].windows[0].safeAreaInsets;
+            });
+        }
+    #endif
+        env->SetSafeAreaInsets(WXSafeAreaInsets{
+            .top = safeAreaInsets.top,
+            .bottom = safeAreaInsets.bottom,
+            .left = safeAreaInsets.left,
+            .right = safeAreaInsets.right
+        });
+        
+        
         env->AddOption("screen_width_pixels", std::to_string(w));
         env->AddOption("screen_height_pixels", std::to_string(h));
         
