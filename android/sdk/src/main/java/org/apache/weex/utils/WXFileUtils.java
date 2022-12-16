@@ -253,7 +253,11 @@ public class WXFileUtils {
       inputStream.close();
       outputStream.close();
     } catch (Exception e) {
-      WXLogUtils.e("copyFile " + e.getMessage() + ": " + oldFile.getAbsolutePath() + ": " + newFile.getAbsolutePath());
+      try {
+        WXLogUtils.e("copyFile " + e.getMessage() + ": " + oldFile.getCanonicalPath() + ": " + newFile.getCanonicalPath());
+      } catch (IOException ioException) {
+        ioException.printStackTrace();
+      }
       if (inputStream != null) {
         try {
           inputStream.close();
