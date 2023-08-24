@@ -71,6 +71,7 @@
         CGRect pickerFrame = CGRectMake(0, 44, [UIScreen mainScreen].bounds.size.width, WXPickerHeight-44);
         datePicker.backgroundColor = [UIColor whiteColor];
         datePicker.frame = pickerFrame;
+        [datePicker addTarget:self action:@selector(valueChanged:) forControlEvents:UIControlEventValueChanged];
         UIToolbar *toolBar=[[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 44)];
         [toolBar setBackgroundColor:[UIColor whiteColor]];
         UIBarButtonItem* noSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
@@ -217,6 +218,19 @@
         [self.delegate fetchDatePickerValue:value];
     }
     
+}
+
+- (void)valueChanged:(id)sender
+{
+    if ([self.delegate respondsToSelector:@selector(datePickerValueDidChange:)]) {
+        NSString *value = @"";
+        if ([_type isEqualToString:@"time"]) {
+            value = [WXUtility timeToString:self.datePicker.date];
+        } else if ([_type isEqualToString:@"date"]) {
+            value = [WXUtility dateToString:self.datePicker.date];
+        }
+        [self.delegate datePickerValueDidChange:value];
+    };
 }
 
 #pragma mark - UIGestureRecognizerDelegate
