@@ -24,6 +24,13 @@
 
 namespace WeexCore {
 
+struct WXSafeAreaInsets {
+    double top;
+    double bottom;
+    double left;
+    double right;
+};
+
   class WX_EXPORT WXCoreEnvironment {
 
   private:
@@ -51,6 +58,8 @@ namespace WeexCore {
     float mDeviceWidth;
 
     float mDeviceHeight;
+      
+    WXSafeAreaInsets mSafeAreaInsets;
 
     std::map<std::string, std::string> mOptions;
 
@@ -73,6 +82,8 @@ namespace WeexCore {
     bool SetDeviceWidth(const std::string &width);
 
     bool SetDeviceHeight(const std::string &height);
+      
+    bool SetSafeAreaInsets(WXSafeAreaInsets insets);
 
     inline void set_device_height(float height) {
         mDeviceHeight = height;
@@ -89,6 +100,8 @@ namespace WeexCore {
     const float DeviceWidth();
 
     const float DeviceHeight();
+      
+    const WXSafeAreaInsets SafeAreaInsets();
 
     const std::string GetOption(const std::string &key);
 

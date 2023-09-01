@@ -207,6 +207,16 @@ CGFloat WXFloorPixelValue(CGFloat value)
     CGFloat deviceHeight = [self portraitScreenSize].height;
     CGFloat scale = [[UIScreen mainScreen] scale];
     
+    __block UIEdgeInsets safeAreaInsets = UIEdgeInsetsZero;
+    
+#if __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
+        WXPerformBlockSyncOnMainThread(^{
+            safeAreaInsets = [UIApplication sharedApplication].windows[0].safeAreaInsets;
+        });
+    }
+#endif
+    
     NSMutableDictionary *data = [NSMutableDictionary dictionaryWithDictionary:@{
                                     @"platform":platform,
                                     @"osName":platform, //osName is eaqual to platorm name in native
@@ -219,7 +229,8 @@ CGFloat WXFloorPixelValue(CGFloat value)
                                     @"deviceHeight":@(deviceHeight * scale),
                                     @"scale":@(scale),
                                     @"layoutDirection": [self getEnvLayoutDirection] == WXLayoutDirectionRTL ? @"rtl" : @"ltr",
-                                    @"scheme": currentScheme
+                                    @"scheme": currentScheme,
+                                    @"safeArea": @{@"top":@(safeAreaInsets.top), @"bottom":@(safeAreaInsets.bottom), @"left":@(safeAreaInsets.left), @"right":@(safeAreaInsets.right)}
                                 }];
     
     if ([[[UIDevice currentDevice] systemVersion] integerValue] >= 11) {

@@ -35,6 +35,9 @@ namespace WeexCore {
   constexpr char NONE[] = "none";
 
   constexpr char STATUS_BAR_HEIGHT[] = "status_bar_height";
+  constexpr char SAFE_AREA_PREFIX[] = "env(safe-area-inset-";
+  constexpr char SAFE_AREA_SURFIX[] = ")";
+
 
   template<typename T>
   inline std::string to_string(const T &n) {
@@ -108,6 +111,11 @@ namespace WeexCore {
            src.compare(src.size() - suffix.size(), suffix.size(), suffix) == 0;
   }
 
+  inline bool startWidth(const std::string &src, const std::string &suffix) {
+    return src.size() > suffix.size() &&
+           src.compare(0, suffix.size(), suffix) == 0;
+  }
+
   inline float transferWx(const std::string &stringWithWXPostfix, const float &viewport,
                           const float &device_width) {
     std::string temp = stringWithWXPostfix;
@@ -118,6 +126,25 @@ namespace WeexCore {
     float density = getFloat(WXCoreEnvironment::getInstance()->GetOption(SCALE).c_str());
     return density * f * viewport / device_width;
   }
+
+  inline float transferSafeArea(const std::string &stringWithSafeArea, const float &viewport,
+                        const float &device_width) {
+      std::string flag = stringWithSafeArea.substr(strlen(SAFE_AREA_PREFIX), stringWithSafeArea.size() - strlen(SAFE_AREA_PREFIX) - strlen(SAFE_AREA_SURFIX));
+      float f = 0;
+      
+      if (flag.compare("top") == 0) {
+          f = WXCoreEnvironment::getInstance()->SafeAreaInsets().top;
+      } else if (flag.compare("bottom") == 0) {
+          f = WXCoreEnvironment::getInstance()->SafeAreaInsets().bottom;
+      } else if (flag.compare("left") == 0) {
+          f = WXCoreEnvironment::getInstance()->SafeAreaInsets().left;
+      } else if (flag.compare("right") == 0) {
+          f = WXCoreEnvironment::getInstance()->SafeAreaInsets().right;
+      }
+      
+      float density = getFloat(WXCoreEnvironment::getInstance()->GetOption(SCALE).c_str());
+      return density * f * viewport / device_width;
+}
 
   inline static float getFloatByViewport(std::string src, const float &viewport,
           const float &device_width, const bool &round_off_deviation) {
@@ -133,7 +160,12 @@ namespace WeexCore {
       ret = getFloat(transferWx(src, viewport, device_width), viewport,  device_width, round_off_deviation);
     } else if (endWidth(src, PX)) {
       ret = getFloat(src.substr(0, src.size() - strlen(PX)), viewport, device_width, round_off_deviation);
-    } else {
+    }
+    else if (startWidth(src, SAFE_AREA_PREFIX) && endWidth(src, SAFE_AREA_SURFIX)) {
+        ret = getFloat(transferSafeArea(src, viewport, device_width), viewport,  device_width, round_off_deviation);
+    }
+    
+    else {
       ret = getFloat(src, viewport, device_width, round_off_deviation);
     }
     return ret;
