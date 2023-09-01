@@ -703,7 +703,7 @@ static BOOL gIsEnvironmentUsingDarkScheme = NO;
         NSURL * downloadPath = nil;
         NSError * error = nil;
         NSHTTPURLResponse * httpResponse = (NSHTTPURLResponse*)response;
-        if (200 == httpResponse.statusCode) {
+        if (([httpResponse isKindOfClass:NSHTTPURLResponse.class] && 200 == httpResponse.statusCode) || (![httpResponse isKindOfClass:NSHTTPURLResponse.class] && data)) {
             NSString *file = [NSString stringWithFormat:@"%@/%@",WX_FONT_DOWNLOAD_DIR,[WXUtility md5:[url absoluteString]]];
             downloadPath = [NSURL fileURLWithPath:file];
             NSFileManager *mgr = [NSFileManager defaultManager];
@@ -718,9 +718,7 @@ static BOOL gIsEnvironmentUsingDarkScheme = NO;
                 downloadPath = nil;
             }
         } else {
-            if (200 != httpResponse.statusCode) {
-                error = [NSError errorWithDomain:WX_ERROR_DOMAIN code:-1 userInfo:@{@"ErrorMsg": [NSString stringWithFormat:@"can not load the font url %@ ", url.absoluteString]}];
-            }
+            error = [NSError errorWithDomain:WX_ERROR_DOMAIN code:-1 userInfo:@{@"ErrorMsg": [NSString stringWithFormat:@"can not load the font url %@ ", url.absoluteString]}];
         }
         completionBlock(downloadPath, error);
 
