@@ -241,7 +241,7 @@ public class WXSoInstallMgrSdk {
         copyPath.mkdirs();
       }
       newfile = new File(copyPath, startSoPath);
-      WXEnvironment.CORE_JSB_SO_PATH = newfile.getAbsolutePath();
+      WXEnvironment.CORE_JSB_SO_PATH = newfile.getCanonicalPath();
       String jsb = WXEnvironment.getDefaultSettingValue(startSoName, "-1");
       if(newfile.exists() && TextUtils.equals(WXEnvironment.getAppVersionName(), jsb)) {
         // no update so skip copy
@@ -307,7 +307,7 @@ public class WXSoInstallMgrSdk {
         if (!TextUtils.equals(WXEnvironment.getAppVersionName(),defaultSettingValue)){
           targetFile.delete();
         }else {
-          WXEnvironment.CORE_JSS_SO_PATH= targetFile.getAbsolutePath();
+          WXEnvironment.CORE_JSS_SO_PATH= targetFile.getCanonicalPath();
           WXEnvironment.sUseRunTimeApi = true;
           WXLogUtils.e("weex", "copyJssRuntimeSo exist:  return");
           return;
@@ -321,7 +321,7 @@ public class WXSoInstallMgrSdk {
       targetFile.createNewFile();
       WXFileUtils.copyFileWithException(new File(fromPath),targetFile);
       /**3. update flag **/
-      WXEnvironment.CORE_JSS_SO_PATH= targetFile.getAbsolutePath();
+      WXEnvironment.CORE_JSS_SO_PATH= targetFile.getCanonicalPath();
       WXEnvironment.writeDefaultSettingsValue(keyVersionCode,WXEnvironment.getAppVersionName());
       WXEnvironment.sUseRunTimeApi = true;
       WXLogUtils.e("weex", "copyJssRuntimeSo: cp end and return ");
