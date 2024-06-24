@@ -62,12 +62,21 @@ namespace WeexCore {
     return true;
   }
 
+  bool WXCoreEnvironment::SetSafeAreaInsets(WXSafeAreaInsets insets) {
+      mSafeAreaInsets = insets;
+      return true;
+  }
+
   const float WXCoreEnvironment::DeviceWidth() {
     return mDeviceWidth;
   }
 
   const float WXCoreEnvironment::DeviceHeight() {
     return mDeviceHeight;
+  }
+
+  const WXSafeAreaInsets WXCoreEnvironment::SafeAreaInsets() {
+    return mSafeAreaInsets;
   }
 
   const std::string WXCoreEnvironment::GetOption(const std::string &key) {
