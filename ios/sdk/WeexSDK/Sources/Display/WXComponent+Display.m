@@ -145,6 +145,9 @@ typedef NS_ENUM(NSInteger, WXComponentBorderRecord) {
         
         __strong WXComponent* sself = wself;
         if (sself) {
+            CGFloat width = bounds.size.width ?: 1;
+            CGFloat height = bounds.size.height ?: 1;
+            CGSize size = CGSizeMake(width, height);
             UIGraphicsBeginImageContextWithOptions(bounds.size, [sself _bitmapOpaqueWithSize:bounds.size] , 0.0);
             UIImage *image = [sself drawRect:bounds];
             if (!image) {
@@ -259,7 +262,10 @@ typedef NS_ENUM(NSInteger, WXComponentBorderRecord) {
 
 - (CGContextRef)beginDrawContext:(CGRect)bounds
 {
-    UIGraphicsBeginImageContextWithOptions(bounds.size, [self _bitmapOpaqueWithSize:bounds.size], 0.0);
+    CGFloat width = bounds.size.width ?: 1;
+    CGFloat height = bounds.size.height ?: 1;
+    CGSize size = CGSizeMake(width, height);
+    UIGraphicsBeginImageContextWithOptions(size, [self _bitmapOpaqueWithSize:size], 0.0);
     CGContextRef context = UIGraphicsGetCurrentContext();
     
 //    float scaleFactor = [[UIScreen mainScreen] scale];
