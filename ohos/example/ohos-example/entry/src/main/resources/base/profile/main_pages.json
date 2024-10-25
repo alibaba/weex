@@ -1,0 +1,9 @@
+{
+  "src": [
+    "pages/Index",
+    "pages/ApiAndComponent",
+    "pages/Second",
+    "pages/Third",
+    "pages/ExtWebPage"
+  ]
+}

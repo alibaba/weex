@@ -1,0 +1,37 @@
+{
+  "name": "qafapi",
+  "version": "1.0.0",
+  "description": "QAF API",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:advanced": "node build/build.js advanced",
+    "dev:advanced": "node build/build.js advanced  --watch",
+    "build:web": "node build/build.js web",
+    "dev": "node build/build.js native --watch",
+    "lint": "eslint src",
+    "format": "eslint src --ext .js --fix"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.14.6",
+    "@babel/plugin-proposal-decorators": "^7.10.5",
+    "@babel/preset-env": "^7.0.0",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.6.0",
+    "eslint-plugin-flowtype": "^2.30.4",
+    "rollup": "^1.32.1",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-buble": "^0.14.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-typescript2": "^0.34.1",
+    "rollup-plugin-uglify": "^6.0.3",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "js-base64": "^3.7.2",
+    "js-sha256": "^0.9.0",
+    "moment": "^2.29.3"
+  }
+}

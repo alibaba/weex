@@ -1,0 +1,27 @@
+{
+  "carPriceDetailComList":[
+      {
+          "priceDetailTitle":"预估价车费明细",
+          "isHaveTitle":true,
+          "priceList":[
+              {
+                  "title":"一口价",
+                  "value":"35.0元",
+                  "color":"#999999"
+              }
+          ]
+      },
+      {
+          "priceDetailTitle":"支付明细",
+          "isHaveTitle":true,
+          "priceList":[
+              {
+                  "title":"预付款",
+                  "value":"35元",
+                  "color":"#999999"
+              }
+          ]
+      }
+  ],
+  "newdetailPageTip":""
+}

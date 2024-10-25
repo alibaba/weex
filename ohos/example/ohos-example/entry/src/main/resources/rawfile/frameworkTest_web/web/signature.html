@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>签名</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=no"
+    />
+    <script src="./assets/jquery.min.js"></script>
+    <script src="./assets/jSignature.min.js"></script>
+    <!-- <script src="//cdn.jsdelivr.net/npm/eruda"></script>
+    <script>
+      eruda.init();
+    </script> -->
+    <style>
+      html,
+      body {
+        height: 100%;
+      }
+      #signature {
+        height: 100%;
+        background: #f8f9fa;
+        border: none;
+      }
+      .placeholder {
+        font-size: 0.48rem;
+        color: #999999;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="signature"></div>
+    <div class="placeholder">请签字</div>
+    <script>
+      function setFontSize() {
+        var deviceWidth = document.documentElement.clientWidth;
+        if (deviceWidth === 0) {
+          setTimeout(function () {
+            setFontSize();
+          }, 100);
+        }
+        if (deviceWidth > 750) deviceWidth = 750;
+        document.documentElement.style.fontSize = deviceWidth / 7.5 + 'px';
+      }
+      setFontSize();
+
+      function getWeexData() {
+        window.addEventListener('message', (e) => {
+          if (e.data && e.data.message === 'getSignature') {
+            // 获取签名数据
+            var datapair = $('#signature').jSignature('getData', 'image');
+            // 传给weex
+            var agent = navigator.userAgent.toLowerCase();
+            if (/(iphone|ipad)/.test(agent)) {
+              window.webkit.messageHandlers.callNative.postMessage({
+                img: datapair,
+              });
+            } else {
+              postMessage(
+                {
+                  img: datapair,
+                },
+                '*',
+              );
+            }
+          } else if (e.data && e.data.message === 'clearSignature') {
+            // 清除签名数据
+            $('#signature').jSignature('reset');
+            // 显示提示文字
+            $('.placeholder').show();
+          }
+        });
+      }
+      getWeexData();
+
+      $(document).ready(function () {
+        $('#signature').jSignature({
+          width: '100%',
+          height: '100%',
+          'background-color': 'transparent',
+        });
+        $('#signature').on('touchstart', function () {
+          console.log('start');
+          $('.placeholder').hide();
+        });
+      });
+    </script>
+  </body>
+</html>

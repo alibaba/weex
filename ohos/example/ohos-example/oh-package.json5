@@ -1,0 +1,14 @@
+{
+  "modelVersion": "5.0.0",
+  "license": "ISC",
+  "devDependencies": {
+    "@ohos/hypium": "1.0.6"
+  },
+  "name": "advancedtemplete",
+  "description": "example description",
+  "repository": {},
+  "version": "1.0.0",
+  "dynamicDependencies": {},
+  "dependencies": {
+  }
+}

@@ -1,0 +1,287 @@
+console.log('5. building webpack.prod.conf.js, depend webpack.common.conf.js, config.js, helper.js, utils.js');
+
+const commonConfig = require('./webpack.common.conf');
+const webpackMerge = require('webpack-merge'); // used to merge webpack configs
+const os = require('os');
+const webpack = require('webpack');
+
+const config = require('./config');
+const helper = require('./helper');
+// const HtmlWebpackPlugin = require('html-webpack-plugin-for-multihtml');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const FileManagerPlugin = require('filemanager-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const utils = require('./utils');
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
+
+/**
+ * Generate multiple entrys
+ * @param {Array} entry 
+ */
+const generateHtmlWebpackPlugin = (entry) => {
+  console.log('building generateHtmlWebpackPlugin');
+
+  let entrys = Object.keys(entry);
+  // exclude vendor entry.
+  entrys = entrys.filter(entry => entry !== 'vendor' );
+  const htmlPlugin = entrys.map(name => {
+    return new HtmlWebpackPlugin({
+      title: ' ',
+      multihtmlCache: true,
+      filename: name + '.html',
+      template: helper.rootNode(`web/index.html`),
+      isDevServer: true,
+      chunksSortMode: 'dependency',
+      inject: true,
+      devScripts: config.dev.htmlOptions.devScripts,
+      chunks: ['commons', name]
+    })
+  })
+  return htmlPlugin;
+}
+
+/**
+ * Webpack Plugins
+ */
+// const UglifyJsparallelPlugin = require('webpack-uglify-parallel');
+
+/**
+ * Webpack configuration for weex.
+ */
+const weexConfig = webpackMerge(commonConfig[1], {
+    mode: 'production',
+    /*
+     * Add additional plugins to the compiler.
+     *
+     * See: http://webpack.github.io/docs/configuration.html#plugins
+     */
+    plugins: [
+      // new BundleAnalyzerPlugin(),
+      /*
+       * Plugin: UglifyJsparallelPlugin
+       * Description: Identical to standard uglify webpack plugin
+       * with an option to build multiple files in parallel
+       *
+       * See: https://www.npmjs.com/package/webpack-uglify-parallel
+       */
+      // new UglifyJsparallelPlugin({
+      //   workers: os.cpus().length,
+      //   mangle: true,
+      //   compressor: {
+      //     warnings: false,
+      //     // drop_console: true,
+      //     drop_debugger: true
+      //   }
+      // }),
+      new FileManagerPlugin({
+        onStart: {
+          delete: [
+            `./${config.projectName}.wume`,  // 删除之前已经存在的压缩包
+            `./dist/pages/` // 删除pages里的文件
+          ]
+        },
+        onEnd: {
+          mkdir: [`./tempwume/${config.projectName}`],
+          copy: [
+            {
+              source: './src/images', // image-loader不识别image标签里的图片，得把图片拷贝过去
+              destination: `./tempwume/${config.projectName}/images`
+            },
+            {
+              source: './src/assets/fonts',
+              destination: `./tempwume/${config.projectName}/assets/fonts`
+            },
+            {
+              source: './src/web',
+              destination: `./tempwume/${config.projectName}/web`
+            },
+            {
+              source: './dist/pages',
+              destination: `./tempwume/${config.projectName}/pages`
+            }
+          ],
+          archive: [
+            {
+              source: './tempwume/',
+              destination: `./${config.projectName}.wume`
+            }
+          ],
+          delete: ['./tempwume']
+        }
+      })
+    ],
+    externals: {
+      // '@/utils/jsapi.js': '@/utils/jsapi.js'
+      'eruda/eruda.js':'eruda/eruda.js',
+      'mySensors':'mySensors',
+      'weixin-js-sdk':'weixin-js-sdk'
+
+    },
+    optimization: {
+      // splitChunks: {
+      //   cacheGroups: {
+      //     commons: {
+      //       name: 'commons',
+      //       minChunks: 2,
+      //       chunks: 'initial'
+      //     }
+      //   }
+      // },
+      minimizer: [
+        new UglifyJsPlugin({
+          cache: true,
+          parallel: true,
+          uglifyOptions: {
+            warnings: false,
+            compress: {
+              // drop_console: false,
+              drop_debugger: true
+            }
+          }
+        }),
+        // uglify会把前面的webpack.BannerPlugin当作注释给干掉，这里需要重写一下
+        new webpack.BannerPlugin({
+          banner: '// { "framework": "Vue"} \n',
+          raw: true,
+          exclude: 'Vue'
+        })
+      ]
+    }
+})
+
+/**
+* Webpack configuration for web.
+*/
+const webConfig = webpackMerge(commonConfig[0], {
+  mode: 'production',
+  /**
+   * Developer tool to enhance debugging
+   *
+   * See: http://webpack.github.io/docs/configuration.html#devtool
+   * See: https://github.com/webpack/docs/wiki/build-performance#sourcemaps
+   */
+  devtool: config.prod.roductionSourceMap ? config.prod.devtool : false,
+  /**
+   * Options affecting the output of the compilation.
+   *
+   * See: http://webpack.github.io/docs/configuration.html#output
+   */
+  output: {
+    /**
+     * The output directory as absolute path (required).
+     *
+     * See: http://webpack.github.io/docs/configuration.html#output-path
+     */
+    path: helper.rootNode('./dist_web'),
+    /**
+     * Specifies the name of each output file on disk.
+     * IMPORTANT: You must not specify an absolute path here!
+     *
+     * See: http://webpack.github.io/docs/configuration.html#output-filename
+     */
+    filename: '[name].[hash].web.js',
+    /**
+     * The filename of the SourceMaps for the JavaScript files.
+     * They are inside the output.path directory.
+     *
+     * See: http://webpack.github.io/docs/configuration.html#output-sourcemapfilename
+     */
+    // sourceMapFilename: '[name].web.map'
+  },
+  module: {
+    rules: [...utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true, useVue: true }),
+      {
+        test: /\.(png|jpe?g|gif|svg)$/,
+        use: [{
+          loader: 'url-loader',
+          options: {
+            limit: 100,
+            publicPath: '../../',
+            name: 'images/[name].[ext]'
+          }
+        }]
+      }
+    ]
+  },
+  /*
+   * Add additional plugins to the compiler.
+   *
+   * See: http://webpack.github.io/docs/configuration.html#plugins
+   */
+  plugins: [
+    // 清除output.path文件夹
+    new CleanWebpackPlugin(),
+    /**
+     * Plugin: webpack.DefinePlugin
+     * Description: The DefinePlugin allows you to create global constants which can be configured at compile time. 
+     *
+     * See: https://webpack.js.org/plugins/define-plugin/
+     */
+    // new webpack.DefinePlugin({
+    //   'process.env': {
+    //     'NODE_ENV': config.prod.env
+    //   },
+    //   GLOBAL_VAR: JSON.stringify({
+    //     'RSID': config.prod.rsid,
+    //     'RCUUID': config.prod.rcuuid
+    //   })
+    // }),
+    ...generateHtmlWebpackPlugin(commonConfig[0].entry),
+    /*
+     * Plugin: UglifyJsparallelPlugin
+     * Description: Identical to standard uglify webpack plugin
+     * with an option to build multiple files in parallel
+     *
+     * See: https://www.npmjs.com/package/webpack-uglify-parallel
+     */
+    // new UglifyJsparallelPlugin({
+    //   workers: os.cpus().length,
+    //   mangle: true,
+    //   compressor: {
+    //     warnings: false,
+    //     // drop_console: true,
+    //     drop_debugger: true
+    //   }
+    // }),
+    new FileManagerPlugin({
+      onStart: {
+        delete: [
+          `./${config.projectName}_web.zip`, // 删除之前已经存在的压缩包
+        ]
+      },
+      onEnd: {
+        mkdir: [`./tempzip/${config.projectName}_web`],
+        copy: [
+          {
+            source: './src/images', // image-loader不识别image标签里的图片，得把图片拷贝过去
+            destination: `./tempzip/${config.projectName}_web/images`
+          },
+          {
+            source: './src/assets/fonts',
+            destination: `./tempzip/${config.projectName}/assets/fonts`
+          },
+          {
+            source: './src/web',
+            destination: `./tempzip/${config.projectName}_web/web`
+          },
+          {
+            source: './dist_web',
+            destination: `./tempzip/${config.projectName}_web`
+          }
+        ],
+        archive: [
+          {
+            source: './tempzip/',
+            destination: `${config.projectName}_web.zip`
+          }
+        ],
+        delete: ['./tempzip']
+      }
+    })
+  ]
+});
+
+console.log('building webpack.prod.conf.js export two config, webConfig and weexConfig');
+module.exports = [weexConfig, webConfig]

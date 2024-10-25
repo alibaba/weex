@@ -1,0 +1,173 @@
+{
+  "weexProjects": [
+    {
+      "projectName": "commonTest",
+      "urls": [
+        {
+          "url": "resource://rawfile/hanglv/pages/index/entry.html",
+          "type": 2
+        },
+        {
+          "url": "resource://rawfile/hanglv/pages/mapTest1/entry.html",
+          "type": 2
+        },
+        {
+          "url": "resource://rawfile/hanglv/pages/mapTest2/entry.html",
+          "type": 2
+        },
+        {
+          "url": "resource://rawfile/hanglv/pages/mapTest3/entry.html",
+          "type": 2
+        },
+        {
+          "url": "resource://rawfile/hanglv/pages/mapTest4/entry.html",
+          "type": 2
+        },
+        {
+          "url": "resource://rawfile/hanglv/pages/mapTest5/entry.html",
+          "type": 2
+        },
+        {
+          "url": "resource://rawfile/hanglv/pages/umewebview-communication/entry.html",
+          "type": 2
+        },
+        {
+          "url": "resource://rawfile/hanglv/pages/lottie_complete/entry.html",
+          "type": 2
+        },
+        {
+          "url": "resource://rawfile/hanglv/pages/lottie_test/entry.html",
+          "type": 2
+        },
+        {
+          "url": "resource://rawfile/hanglv/pages/lottie_test2/entry.html",
+          "type": 2
+        },
+        {
+          "url": "resource://rawfile/hanglv/pages/multiPage1/entry.html",
+          "type": 2
+        },
+        {
+          "url": "resource://rawfile/hanglv/pages/multiPage2/entry.html",
+          "type": 2
+        },
+        {
+          "url": "resource://rawfile/hanglv/pages/multiPage3/entry.html",
+          "type": 2
+        },
+        {
+          "url": "resource://rawfile/hanglv/pages/multiPage4/entry.html",
+          "type": 2
+        },
+        {
+          "url": "resource://rawfile/hanglv/pages/multiPage5/entry.html",
+          "type": 2
+        },
+        {
+          "url": "resource://rawfile/hanglv/pages/multiPage6/entry.html",
+          "type": 2
+        },
+        {
+          "url": "resource://rawfile/hanglv/pages/multiPage7/entry.html",
+          "type": 2
+        },
+        {
+          "url": "resource://rawfile/hanglv/pages/multiPage8/entry.html",
+          "type": 2
+        },
+        {
+          "url": "resource://rawfile/hanglv/pages/multiPage9/entry.html",
+          "type": 2
+        },
+        {
+          "url": "resource://rawfile/hanglv/pages/multiPage10/entry.html",
+          "type": 2
+        },
+        {
+          "url": "resource://rawfile/hanglv/pages/multiPage11/entry.html",
+          "type": 2
+        },
+        {
+          "url": "resource://rawfile/hanglv/pages/multiPage12/entry.html",
+          "type": 2
+        },
+        {
+          "url": "resource://rawfile/hanglv/pages/multiPage13/entry.html",
+          "type": 2
+        },
+        {
+          "url": "resource://rawfile/hanglv/pages/multiPage14/entry.html",
+          "type": 2
+        },
+        {
+          "url": "resource://rawfile/hanglv/pages/multiPage15/entry.html",
+          "type": 2
+        },
+        {
+          "url": "resource://rawfile/hybrid1.html",
+          "type": 4
+        },
+        {
+          "url": "resource://rawfile/hybrid2.html",
+          "type": 4
+        },
+        {
+          "url": "resource://rawfile/web.html",
+          "type": 2
+        }
+      ],
+      "preLoad": [
+        "pushState",
+        "测试"
+      ]
+    },
+    {
+      "projectName": "pushState",
+      "urls": [
+        {
+          "url": "resource://rawfile/hanglv/pages/pushState/entry.html",
+          "type": 1
+        }
+      ],
+      "preLoad": [
+      ]
+    },
+    {
+      "projectName": "测试",
+      "urls": [
+        {
+          "url": "https://gray.umetrip.com/weex/airTicketProd/airTicketProd_web/pages/index/entry.html",
+          "type": 1
+        }
+      ],
+      "preLoad": [
+        "机票"
+      ]
+    },
+    {
+      "projectName": "机票",
+      "urls": [
+        {
+          "url": "https://gray.umetrip.com/weex/airTicketProd/airTicketProd_web/pages/airticketList/entry.html",
+          "type": 1
+        },
+        {
+          "url": "https://gray.umetrip.com/weex/airTicketProd/airTicketProd_web/pages/cabinSelect/entry.html",
+          "type": 1
+        },
+        {
+          "url": "https://gray.umetrip.com/weex/airTicketProd/airTicketProd_web/pages/addPassenger/entry.html",
+          "type": 1
+        },
+        {
+          "url": "https://gray.umetrip.com/weex/airTicketProd/airTicketProd_web/pages/orderList/entry.html",
+          "type": 1
+        }
+      ],
+      "preLoad": [
+        "圈子",
+        "我的"
+      ]
+    }
+  ]
+}

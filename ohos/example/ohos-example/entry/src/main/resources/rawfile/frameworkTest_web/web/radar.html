@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>radar</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+    .page {
+      width: 7.5rem;
+      height: 5.0rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #charts {
+      width: 7rem;
+	    height: 4.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div id="charts" class="charts"></div>
+    <!-- 本机场在附近各城市设有城市候机楼。详情访问:<a href="http://www.wuxiairport.com/web101/lkfw/cshjl/index.shtml" style="text-decoration: none;">城市候机楼</a> -->
+  </div>
+</body>
+<script src="./echarts.min.js" type="text/javascript"></script>
+<script src="./umeH5Flexible.js" type="text/javascript"></script>
+<script type="text/javascript">
+  var myChart = null, indicator = [], seriesData = [{ value: [], name: 'comfortRadar'}]
+  myChart = echarts.init(document.getElementById('charts'))
+  function query(key) {
+    let url = location.href
+    const reg = new RegExp(`[?|&|#]${key}=([^&#]+)`)
+    const match = url.match(reg)
+    return match && decodeURIComponent(match[1])
+  }
+  function setOption() {
+    let certesian2d = {
+      radar: {
+        nameGap: 7,
+        name: {
+          formatter: (params) => {
+            return '{total|' + params.substr(0,2) +'}'+ '\n\r' + '{total|' + params.substr(2)+' }'
+          },
+          rich: {
+            total:{
+              lineHeight: 17,
+              fontSize: 13,
+              fontWeight: 'bold',
+              color: '#333333',
+              align: 'center'
+            }
+          }
+        },
+        radius: '65%',
+        legend: {
+          data: ["comfortRadar", "maxLine"]
+        },
+        axisLine:{
+          lineStyle: {
+            color: '#41B24E'
+          },
+        },
+        splitLine: {
+          lineStyle: {
+            color: {
+              type: 'linear',
+              x: 0,
+              y: 0,
+              x2: 0,
+              y2: 1,
+              colorStops: [{
+                  offset: 0, color: '#8AD875' // 0% 处的颜色
+              }, {
+                  offset: 1, color: '#41B24E' // 100% 处的颜色
+              }],
+              global: false // 缺省为 false
+            },
+            type: 'dashed'
+          },
+        },
+        splitArea: {                       
+          show: true,
+          areaStyle: {                   
+            color: '#F8FCF8',
+          }
+        },
+        shape: 'polygon',
+        indicator: indicator
+      },
+      series: [{
+        name: "舒适度雷达图",
+        type: "radar",
+        label: {
+          color: '#333333',
+        },
+        symbolSize: 4,
+        itemStyle: {
+          color: '#fff',
+          borderColor: '#41b24e',
+          borderWidth: 1
+        },
+        lineStyle: {
+          opacity: 0
+        },
+        areaStyle: {
+          color: {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [{
+                offset: 0, color: '#8AD875' // 0% 处的颜色
+            }, {
+                offset: 1, color: '#41B24E' // 100% 处的颜色
+            }],
+            global: false // 缺省为 false
+          }
+        },
+        data: seriesData
+      },
+      {
+        name: "舒适度雷达图MaxLine",
+        type: "radar",
+        symbol: "none",
+        lineStyle: {
+            normal: {
+              color: {
+                type: 'linear',
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [{
+                    offset: 0, color: '#8AD875' // 0% 处的颜色
+                }, {
+                    offset: 1, color: '#41B24E' // 100% 处的颜色
+                }],
+                global: false // 缺省为 false
+              },
+              width: 1
+            }
+        },
+        animation: false,
+        data: [{ value: [5.5,5.5,5.5,5.5,5.5,5.5]}]
+      }]
+    }
+    myChart.resize()
+    myChart.setOption(certesian2d)
+  }
+  function filter(key) {
+    var name = ''
+    switch (key) {
+      case 'airplaneAgeScore':
+        name = '机型崭新度' 
+        break;
+      case 'seatComfortScore':
+        name = '座椅舒适度' 
+        break;
+      case 'flightCrowdScore':
+        name = '机上拥挤度' 
+        break;
+      case 'flightQuietScore':
+        name = '机上安静度' 
+        break;
+      case 'checkSpeedScore':
+        name = '值机过检速度' 
+        break;
+      case 'flightRoomyScore':
+        name = '机型宽敞度' 
+        break;
+      default: name = ''
+        break;
+    }
+    return name
+  }
+  function initData() {
+    var comfortRadarData = query('radarData')
+    try {
+      comfortRadarData = JSON.parse(comfortRadarData) || {
+        airplaneAgeScore: 2, seatComfortScore: 5, flightCrowdScore: 3.4, flightQuietScore: 1.1, checkSpeedScore: 2.9, flightRoomyScore: 0
+      }
+    } catch (error) {
+      comfortRadarData = {
+        airplaneAgeScore: 0, seatComfortScore: 0, flightCrowdScore: 0, flightQuietScore: 0, checkSpeedScore: 0, flightRoomyScore: 0
+      }
+    }
+    console.log('comfortRadarData', comfortRadarData)
+    for (const key in comfortRadarData) {
+      if (Object.hasOwnProperty.call(comfortRadarData, key)) {
+        let indicatorItem = {
+          min: 0,
+          max: 5.5
+        }
+        indicatorItem.name = filter(key)
+        indicator.push(indicatorItem)
+        const element = comfortRadarData[key]
+        seriesData[0].value.push(element)
+      }
+    }
+  }
+  initData()
+  setOption()
+</script>
+</html>

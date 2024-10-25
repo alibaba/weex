@@ -1,0 +1,9 @@
+{
+   "AppName":"WeexApp",
+   "Version":"0.1",
+   "BuildVersion":"0.1.0",
+   "AppId":"com.alibaba.weex",
+   "CodeSign":"",
+   "Profile":"",
+   "WeexBundle":"index.js"
+}

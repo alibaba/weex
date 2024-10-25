@@ -1,0 +1,20 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "modules": false, // 将esModule语法转化为其他模块语法
+        "useBuiltIns": "usage", // 处理垫片引入方式，usage为按需引入
+        "corejs": 3
+      }
+    ]
+  ],
+  "plugins": [["@babel/plugin-transform-runtime"], [
+    "component",
+    {
+      "libraryName": "@umetrip/ume-weex-ui",
+      "libDir": "packages",
+      "style": false
+    }
+  ]]
+}

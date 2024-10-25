@@ -1,0 +1,94 @@
+.controlbar-box {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 6px;
+  z-index: 4;
+}
+.controlbar-bg {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 6px;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+.controlbar-buffered {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 6px;
+  width: 0;
+  background-color: rgba(255, 255, 255, 0.1);
+  background-color: red;
+}
+.controlbar-played {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 6px;
+  width: 0;
+  background-color: #41b24e;
+}
+
+.controlbar-mask {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 60px;
+  z-index: 9;
+}
+
+.controlbar-handle {
+  position: absolute;
+  left: -21px;
+  bottom: 0;
+  width: 60px;
+  height: 60px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 99px;
+  background-color: rgba(65, 178, 78, 0.25);
+  z-index: 10;
+  opacity: 0;
+}
+.show {
+  opacity: 1;
+}
+
+.controlbar-handle-inner {
+  width: 18px;
+  height: 18px;
+  border-radius: 99px;
+  background-color: #41b24e;
+}
+
+/* time */
+.time-wrapper {
+  position: absolute;
+  bottom: 96px;
+  left: 0;
+  right: 0;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  opacity: 0;
+}
+.time-line {
+  width: 2px;
+  height: 24px;
+  margin-left: 30px;
+  margin-right: 30px;
+  background-color: rgba(255, 255, 255, .7);
+}
+.time1 {
+  font-size: 50px;
+  color: #fff;
+}
+.time2 {
+  font-size: 50px;
+  color: rgba(255, 255, 255, .7);
+}
