@@ -1,0 +1,9 @@
+{
+  "AppName": "WeexApp",
+  "Version": "0.1",
+  "BuildVersion": "0.1.0",
+  "AppId": "com.travelsky.umetrip",
+  "CodeSign": "",
+  "Profile": "",
+  "WeexBundle": "http://192.168.0.104:8000/dist/pages/index/entry.js"
+}

@@ -1,0 +1,64 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "模块描述"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "weex demo"
+    },
+    {
+      "name": "Location_reason",
+      "value": "申请定位权限"
+    },
+    {
+      "name": "EntryFormAbility_desc",
+      "value": "form_description"
+    },
+    {
+      "name": "EntryFormAbility_label",
+      "value": "form_label"
+    },
+    {
+      "name": "page_title",
+      "value": "首页"
+    },
+    {
+      "name": "bluetooth_reason",
+      "value": "申请蓝牙权限"
+    },
+    {
+      "name": "pasteboard_reason",
+      "value": "剪贴板权限"
+    },
+    {
+      "name": "calendar_write_reason",
+      "value": "申请日历写权限"
+    },
+    {
+      "name": "calendar_read_reason",
+      "value": "申请日历读权限"
+    },
+    {
+      "name": "microphone_reason",
+      "value": "申请麦克风权限"
+    },
+    {
+      "name": "media_read_reason",
+      "value": "申请读媒体权限"
+    },
+    {
+      "name": "media_write_reason",
+      "value": "申请写媒体权限"
+    },
+    {
+      "name": "camera_reason",
+      "value": "申请相机权限"
+    }
+  ]
+}

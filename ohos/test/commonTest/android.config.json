@@ -1,0 +1,6 @@
+{
+  "AppName": "WeexProj",
+  "AppId": "com.weex.app",
+  "SplashText": "Hello\nWeex",
+  "WeexBundle": "http://172.24.83.209:8000/dist/pages/index/entry.js"
+}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./assets/jquery.min.js"></script>
+  <style>
+    #save {
+      font-size: 0.32rem;
+    }
+    #test {
+      font-size: 0.32rem;
+    }
+    .navigate {
+      font-size: 0.32rem;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <button id="save">向weex发送数据</button>
+    <div id="test">来自weex的数据</div>
+    <a class="navigate" href="https://m.ximalaya.com/gatekeeper/gohome-2021?utm_source=hlzhwyb&alias=white1&hardwareAcceleration=1&did=673&token=nRa%2BW2e8F1Ti5WnvK%2FLH4UKUEA4sOi%2B3e6T3bTR%2FZhTQkYN%2FVuoBFcrn4jOji%2Ba%2FIJ9bjl%2FyLkZWIsC5kRrqpVcc2UKlbycWKKwbF5Dh54RIKhHCC20UbCibLpQ81zz5">跳转到喜马拉雅(用外网，公司内网用不了)</a>
+  </div>
+</body>
+<script>
+  window.onload = function() {
+    console.log('执行onload回调')
+    var meta = document.createElement('meta')
+    meta.setAttribute('name', 'viewport')
+    meta.setAttribute('content', '"width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover')
+    document.getElementsByTagName('head')[0].appendChild(meta);
+  }
+  function setFontSize() {
+    var deviceWidth = document.documentElement.clientWidth;
+    if (deviceWidth === 0) {
+      setTimeout(function () {
+        setFontSize();
+      },100)
+    }
+    if(deviceWidth > 750) deviceWidth = 750;
+    document.documentElement.style.fontSize = deviceWidth / 7.5 + 'px';
+  }
+  setFontSize();
+  function getWeexData() {
+    window.addEventListener('message', e => {
+      var test = document.getElementById('test')
+      test.innerHTML = JSON.stringify(e.data)
+    })
+  }
+  getWeexData();
+  function postDataToWeex() {
+    var agent = navigator.userAgent.toLowerCase()
+    if (/(iphone|ipad)/.test(agent)) {
+      window.webkit.messageHandlers.callNative.postMessage({
+        svg: '我是来自h5的数据hello'
+      })
+    } else {
+      postMessage({
+        svg: '我是来自h5_test.html的数据hello'
+      }, '*')
+    }
+  }
+  $('#save').click(postDataToWeex)
+  console.log('第一段script执行完毕')
+</script>
+
+</html>

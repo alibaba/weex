@@ -1,0 +1,21 @@
+{
+  "name": "@ohos/weex-harmony",
+  "version": "1.0.5",
+  "description": "weex harmony adapter",
+  "main": "index.js",
+  "scripts": {},
+  "dependencies": {
+    "fs-extra": "10.0.1",
+    "istanbul-lib-coverage": "3.2.0",
+    "istanbul-lib-report": "3.0.0",
+    "istanbul-reports": "3.1.5",
+    "nyc": "15.1.0",
+    "source-map": "0.7.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keyword": [],
+  "devDependencies": {}
+}

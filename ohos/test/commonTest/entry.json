@@ -1,0 +1,15 @@
+{
+  "targetPageId": "200201",
+  "parameter": {
+    "sessionParams": "",
+    "weexParams": {
+      "weexId": "ume_80672c0309414cc5bce841fa81f1dd99",
+      "jsBundleEntry": "dist/pages/index/entry.js",
+      "serviceName": "遇见更大的航旅世界",
+      "weexName": "",
+      "commonJsEntry": "",
+      "weexUrl": "",
+      "webUrl": ""
+    }
+  }
+}

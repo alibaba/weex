@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Index</title>
+  <meta name="weex-viewport" content="750">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-touch-fullscreen" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no, email=no">
+  <style>
+    html, body, #weex {
+      width: 100%;
+      height: 100%;
+    }
+    html, body {
+      -ms-overflow-style: scrollbar;
+      -webkit-tap-highlight-color: transparent;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+    body::before {
+      content: "1";
+      height: 1px;
+      overflow: hidden;
+      color: transparent;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+</body>
+<%= htmlWebpackPlugin.options.devScripts %>
+</html>

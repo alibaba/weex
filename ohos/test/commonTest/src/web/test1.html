@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./assets/jquery.min.js"></script>
+  <style>
+    #save {
+      font-size: 0.32rem;
+    }
+    #test {
+      font-size: 0.32rem;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <button id="save">向weex发送数据</button>
+    <div id="test">来自weex的数据</div>
+    <button onclick="videoPause()">手动停止数据</button>
+    <video autoplay="autoplay" controls style="width: 375px;">
+      <source src="" type="video/mp4" />
+    </video>
+  </div>
+</body>
+<script>
+  window.onload = function() {
+    console.log('执行onload回调')
+    var meta = document.createElement('meta')
+    meta.setAttribute('name', 'viewport')
+    meta.setAttribute('content', '"width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover')
+    document.getElementsByTagName('head')[0].appendChild(meta);
+  }
+  function setFontSize() {
+    var deviceWidth = document.documentElement.clientWidth;
+    if (deviceWidth === 0) {
+      setTimeout(function () {
+        setFontSize();
+      },100)
+    }
+    if(deviceWidth > 750) deviceWidth = 750;
+    document.documentElement.style.fontSize = deviceWidth / 7.5 + 'px';
+  }
+  setFontSize();
+  function videoPause() {
+    var videos = document.getElementsByTagName('video')
+    for (var i = 0; i < videos.length; i++) {
+      videos[i].pause()
+    }
+  }
+  function getWeexData() {
+    window.addEventListener('message', e => {
+      var test = document.getElementById('test')
+      test.innerHTML = JSON.stringify(e.data)
+    })
+  }
+  getWeexData();
+  function postDataToWeex() {
+    var agent = navigator.userAgent.toLowerCase()
+    if (/(iphone|ipad)/.test(agent)) {
+      window.webkit.messageHandlers.callNative.postMessage({
+        svg: '我是来自h5的数据hello'
+      })
+    } else {
+      postMessage({
+        svg: '我是来自h5_test1.html的数据hello'
+      }, '*')
+    }
+  }
+  $('#save').click(postDataToWeex)
+  console.log('第一段script执行完毕')
+</script>
+
+</html>

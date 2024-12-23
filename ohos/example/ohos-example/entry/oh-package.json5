@@ -1,0 +1,15 @@
+{
+  "license": "ISC",
+  "devDependencies": {},
+  "name": "entry",
+  "description": "example description",
+  "repository": {},
+  "version": "1.0.0",
+  "dynamicDependencies": {},
+  "dependencies": {
+    "advancedApi": "./src/main/ets/har/advanced_api_har.har",
+    "webSceneAPI": "./src/main/ets/har/WebSceneAPI.har",
+    "@ohos/lottie": "2.0.10-rc.4",
+    "WebSceneKitHsp": "file:../WebScenekitHsp-default.tgz"
+  }
+}

@@ -1,0 +1,17 @@
+.idea/
+*.zip
+*.wume
+*.rar
+*.log
+.history
+.svn
+.DS_Store
+.com.apple.timemachine.supported
+node_modules
+.temp
+.history
+
+dist/
+release/
+platforms/
+dist_web/

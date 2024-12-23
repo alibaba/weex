@@ -1,0 +1,11 @@
+{
+  "module": {
+    "name": "advanced_api_har",
+    "type": "har",
+    "deviceTypes": [
+      "default",
+      "tablet",
+      "2in1"
+    ]
+  }
+}

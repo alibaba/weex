@@ -1,0 +1,32 @@
+{
+  "float": [
+    {
+      "name": "mini_title_font_size",
+      "value": "16fp"
+    },
+    {
+      "name": "mini_title_margin",
+      "value": "12vp"
+    },
+    {
+      "name": "image_border_radius",
+      "value": "10vp"
+    },
+    {
+      "name": "normal_title_font_size",
+      "value": "16fp"
+    },
+    {
+      "name": "normal_content_font_size",
+      "value": "20fp"
+    },
+    {
+      "name": "row_padding",
+      "value": "5vp"
+    },
+    {
+      "name": "subTitle_marginTop",
+      "value": "5vp"
+    }
+  ]
+}

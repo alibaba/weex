@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Weex Preview</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-touch-fullscreen" content="yes">
+  <meta name="format-detection" content="telephone=no, email=no">
+  <link rel="stylesheet" href="./assets/preview.css">
+  <script src="./assets/qrcode.js"></script>
+</head>
+<body>
+  <!-- <header class="header center">
+    <h1 class="page-title">Weex Preview</h1>
+  </header> -->
+  <div class="content center">
+    <main class="main">
+      <div class="mock-phone">
+        <div class="camera"></div>
+        <div class="earpiece"></div>
+        <div class="inner">
+          <a class="web-page-link" href="" target="_blank" title="Open on new tab">
+            <svg t="1526896599773" class="icon" style="" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2499" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20"><defs><style type="text/css"></style></defs><path d="M466 146c41.6 0 82.1 7.9 120.4 23.4 39.7 16.1 75.3 39.7 105.8 70.3 58.2 58.3 91.5 135.7 93.6 218 2.1 82-26.8 160.7-81.4 221.6l-11.9 13.3-13.3 11.9C620.7 757 544.9 786 465.9 786c-41.6 0-82.1-7.9-120.4-23.4-39.7-16.1-75.3-39.7-105.8-70.3-30.6-30.6-54.2-66.2-70.3-105.8-15.6-38.4-23.4-79-23.4-120.5 0-41.6 7.9-82.1 23.4-120.4 16.1-39.7 39.7-75.3 70.3-105.8 30.6-30.6 66.2-54.2 105.8-70.3C383.9 153.8 424.4 146 466 146m0-40c-92.1 0-184.3 35.1-254.6 105.4-140.6 140.6-140.6 368.5 0 509.1C281.7 790.8 373.8 826 465.9 826c85.9 0 171.8-30.6 240-91.7L889.8 918l28.3-28.3L734.3 706C861 564.7 856.4 347.3 720.5 211.4 650.2 141.1 558.1 106 466 106z" fill="" p-id="2500"></path></svg>
+          </a>
+          <iframe id="preview" src="/" frameborder="0"></iframe>
+        </div>
+        <div class="home-btn"></div>
+      </div>
+      <div class="qrcode-box">
+        <a class="qrcode" id="qrcode" target="_blank"></a>
+        <p class="qrcode-tips">Use <a target="_blank" href="https://weex-project.io/playground.html">Weex playground app</a> to scan it.</p>
+        <div class="pages-box">
+
+        </div>
+      </div>
+    </main>
+  </div>
+  <script>
+    (function(){
+      const page = getUrlParam('page');
+      const wsport = getUrlParam('wsport');
+      const entrys = getUrlParam('entrys');
+      function getUrlParam (key) {
+        var reg = new RegExp('[?|&]' + key + '=([^&]+)')
+        var match = location.search.match(reg)
+        return match && match[1]
+      }
+      function createQRCode (url, wsport) {
+        var $QR = document.querySelector('#qrcode')
+        var QR = qrcode(0, 'L')
+        url += `${wsport ? `?wsport=${wsport}&`: '?'}_wx_tpl=${url}`
+        $QR.setAttribute('href', url)
+        QR.addData(url)
+        QR.make()
+        $QR.innerHTML = QR.createImgTag(6, 12)
+      }
+      if (page) {
+        var $preview = document.querySelector('#preview')
+        var $webPageLink = document.querySelector('.web-page-link')
+        $preview.src = `/${page.replace('.js', '.html')}`;
+        $webPageLink.setAttribute('href', `/${page.replace('.js', '.html')}`);
+      }
+      if (entrys) {
+        var pageEntrys = decodeURI(entrys).replace('\\', '/').split('|');
+        var $pages = document.querySelector('.pages-box');
+        var contents = '';
+        pageEntrys.forEach(function(entry){
+          if (entry === getUrlParam('page').replace('.js', '')) {
+            contents += `<a href="?page=${entry}.js&entrys=${entrys}" class="page-item active">${entry}</a>`
+          }
+          else {
+            contents += `<a href="?page=${entry}.js&entrys=${entrys}" class="page-item">${entry}</a>`
+          }
+        })
+        $pages.innerHTML = contents;
+      }
+      var host = window.location.host;
+      createQRCode(`http://${host}/dist/${page || 'index.js'}`, wsport)
+    })();
+  </script>
+</body>
+<!-- Webpack Dev Server reload -->
+<script src="/webpack-dev-server.js"></script>
+</html>
