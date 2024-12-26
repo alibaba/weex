@@ -90,6 +90,12 @@ namespace WeexCore {
       switch (mCssStyle->mPositionType) {
         case kAbsolute:
           containingBlockWidth = mParent->mLayoutResult->mLayoutSize.width;
+          if (!isnan(mParent->mCssStyle->mBorderWidth.getBorderWidth(kBorderWidthLeft))) {
+            containingBlockWidth -= mParent->mCssStyle->mBorderWidth.getBorderWidth(kBorderWidthLeft);
+          }
+          if (!isnan(mParent->mCssStyle->mBorderWidth.getBorderWidth(kBorderWidthRight))) {
+            containingBlockWidth -= mParent->mCssStyle->mBorderWidth.getBorderWidth(kBorderWidthRight);
+          }
           break;
         case kFixed:
           if (!isnan(renderPageWidth)) {
@@ -126,6 +132,12 @@ namespace WeexCore {
       switch (mCssStyle->mPositionType) {
         case kAbsolute:
           containingBlockHeight = mParent->mLayoutResult->mLayoutSize.height;
+          if (!isnan(mParent->mCssStyle->mBorderWidth.getBorderWidth(kBorderWidthTop))) {
+            containingBlockHeight -= mParent->mCssStyle->mBorderWidth.getBorderWidth(kBorderWidthTop);
+          }
+          if (!isnan(mParent->mCssStyle->mBorderWidth.getBorderWidth(kBorderWidthBottom))) {
+            containingBlockHeight -= mParent->mCssStyle->mBorderWidth.getBorderWidth(kBorderWidthBottom);
+          }
           break;
         case kFixed:
           if (!isnan(renderPageHeight)) {
