@@ -51,7 +51,7 @@ public class GraphicActionRemoveElement extends BasicGraphicAction {
   }
 
   private void clearRegistryForComponent(WXComponent component) {
-    WXComponent removedComponent = WXSDKManager.getInstance().getWXRenderManager().unregisterComponent(getPageId(), getRef());
+    WXComponent removedComponent = WXSDKManager.getInstance().getWXRenderManager().unregisterComponent(getPageId(), component.getRef());
     if (removedComponent != null) {
       removedComponent.removeAllEvent();
       removedComponent.removeStickyStyle();
