@@ -310,7 +310,7 @@ public class WXEnvironment {
         if (!desDir.exists()) {
           desDir.mkdirs();
         }
-        COPY_SO_DES_DIR = desDir.getAbsolutePath();
+        COPY_SO_DES_DIR = desDir.getCanonicalPath();
       }
     } catch (Throwable e) {
       WXLogUtils.e(WXLogUtils.getStackTrace(e));
@@ -473,7 +473,12 @@ public class WXEnvironment {
     if (dir == null)
         return "";
 
-    String crashDir = dir.getAbsolutePath();
+    String crashDir = null;
+    try {
+      crashDir = dir.getCanonicalPath();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     return crashDir;
   }
@@ -523,7 +528,7 @@ public class WXEnvironment {
     final String soDesPath = copySoDesDir();
     if (sourceFile.exists() && !TextUtils.isEmpty(soDesPath)) {
       try {
-        WXFileUtils.extractSo(sourceFile.getAbsolutePath(), soDesPath);
+        WXFileUtils.extractSo(sourceFile.getCanonicalPath(), soDesPath);
       } catch (IOException e) {
         WXLogUtils.e("extractSo error " + e.getMessage());
 //        e.printStackTrace();
@@ -593,7 +598,11 @@ public class WXEnvironment {
       File soFile = new File(soPath);
       if (soFile.exists()) {
         WXLogUtils.e(libName + "'s Path is" + soPath);
-        return soFile.getAbsolutePath();
+        try {
+          return soFile.getCanonicalPath();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
       } else {
         WXLogUtils.e(libName + "'s Path is " + soPath + " but file does not exist");
       }
@@ -608,10 +617,12 @@ public class WXEnvironment {
 
 
     if (cacheDir.indexOf("/cache") > 0) {
-      soPath = new File(cacheDir.replace("/cache", "/lib"), realName).getAbsolutePath();
+      try {
+        soPath = new File(cacheDir.replace("/cache", "/lib"), realName).getCanonicalPath();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
-
-
     final File soFile = new File(soPath);
     if (soFile.exists()) {
       WXLogUtils.e(libName + "use lib so");
@@ -620,7 +631,11 @@ public class WXEnvironment {
       //unzip from apk file
       final String extractSoPath = extractSo();
       if (!TextUtils.isEmpty(extractSoPath)) {
-        return new File(extractSoPath, realName).getAbsolutePath();
+        try {
+          return new File(getCacheDir(), realName).getCanonicalPath();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
       }
     }
     return soPath;

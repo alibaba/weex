@@ -147,9 +147,14 @@ public class TypefaceUtil {
         if(!dir.exists()){
           dir.mkdirs();
         }
-        final String fullPath =  dir.getAbsolutePath()+ File.separator +fileName;
-        if (!loadLocalFontFile(fullPath, fontFamily, false)) {
-          downloadFontByNetwork(url, fullPath, fontFamily);
+        final String fullPath;
+        try {
+          fullPath = dir.getCanonicalPath()+ File.separator +fileName;
+          if (!loadLocalFontFile(fullPath, fontFamily, false)) {
+            downloadFontByNetwork(url, fullPath, fontFamily);
+          }
+        } catch (IOException e) {
+          e.printStackTrace();
         }
       } else if (fontDo.getType() == FontDO.TYPE_FILE || fontDo.getType() == FontDO.TYPE_BASE64) {
         boolean result = loadLocalFontFile(fontDo.getUrl(), fontDo.getFontFamilyName(), false);

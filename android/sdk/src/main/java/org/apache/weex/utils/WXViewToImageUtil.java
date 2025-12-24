@@ -115,15 +115,24 @@ public class WXViewToImageUtil {
         // Insert the image file into the system gallery
         try {
             MediaStore.Images.Media.insertImage(context.getContentResolver(),
-                    file.getAbsolutePath(), fileName, null);
-        } catch (FileNotFoundException e) {
+                    file.getCanonicalPath(), fileName, null);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         // Notify the system gallery update
-        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + appDir.getAbsolutePath() + "/" + fileName)));
+        try {
+            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + appDir.getCanonicalPath() + "/" + fileName)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        return file.getAbsolutePath();
+        try {
+            return file.getCanonicalPath();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     /**
