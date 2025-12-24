@@ -953,7 +953,10 @@ static BOOL bNeedRemoveEvents = YES;
 
 - (UIImage *)imageFromLayer:(CALayer *)layer
 {
-    UIGraphicsBeginImageContextWithOptions(layer.frame.size, NO, 0);
+    CGFloat width = layer.frame.size.width ?: 1;
+    CGFloat height = layer.frame.size.height ?: 1;
+    CGSize size = CGSizeMake(width, height);
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
     [layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *outputImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
