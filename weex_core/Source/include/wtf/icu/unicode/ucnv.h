@@ -182,7 +182,7 @@ typedef enum {
 
 /**
  * Function pointer for error callback in the codepage to unicode direction.
- * Called when an error has occured in conversion to unicode, or on open/close of the callback (see reason).
+ * Called when an error has occurred in conversion to unicode, or on open/close of the callback (see reason).
  * @param context Pointer to the callback's private data
  * @param args Information about the conversion in progress
  * @param codeUnits Points to 'length' bytes of the concerned codepage sequence
